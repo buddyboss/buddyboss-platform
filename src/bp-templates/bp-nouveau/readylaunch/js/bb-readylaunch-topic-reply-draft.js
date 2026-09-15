@@ -1176,6 +1176,30 @@ window.bp = window.bp || {};
 							// A stored draft exists again (or the discard has
 							// landed), so the reload guard has served its purpose.
 							bp.Nouveau.TopicReplyDraft.markDiscarded( draft_payload.data_key, false );
+						},
+						error: function ( jqXHR, textStatus ) {
+							// A transport failure - network drop, 500, timeout -
+							// never reached success:, so the member saw NOTHING: the
+							// composer looked normal while the server copy silently
+							// stopped updating. The activity pack surfaces this
+							// (M3); this pack did not.
+							//
+							// An abort is excluded because this pack aborts its own
+							// in-flight autosave before each new save (above) and
+							// before the unload beacon, so treating it as a failure
+							// would warn about data loss on a completely normal path.
+							if (
+								'abort' === textStatus ||
+								( jqXHR && ( 0 === jqXHR.readyState || 'abort' === jqXHR.statusText ) )
+							) {
+								return;
+							}
+
+							self.showDraftFeedback(
+								is_discard_request ?
+									( BP_Nouveau.forums.draft_discard_failed_message || '' ) :
+									( BP_Nouveau.forums.draft_save_failed_message || '' )
+							);
 						}
 					}
 				);

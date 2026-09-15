@@ -1565,8 +1565,26 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// the reference only exists once the draft is stored, so invalidating
 			// before it let a sweep rebuild the set without the new reference and
 			// pin it for the TTL (F3). Matches the forum handler's order.
+			// Keyed on every attachment the STORED draft keeps, resolved through
+			// the same collector the sweep's scan uses, so the two agree by
+			// construction (F7). Handing it over lets the helper skip the token
+			// bump when the cached set already covers all of them, so an ordinary
+			// autosave of an unchanged attachment list no longer aborts a running
+			// sweep (H-4).
+			// No separate append for the feature image: bb_draft_collect_attachment_ids()
+			// already returns it when the draft carries one, and the sweep builds
+			// its cached referenced-set through that SAME collector
+			// ({@see bb_drafts_collect_referenced_attachment_ids()}), so both sides
+			// of the superset comparison agree by construction. Appending it again
+			// would only duplicate an id already in the list.
+			//
+			// Separate, and still open: a feature image that carries ONLY
+			// `bb_activity_post_feature_image_draft` is never a candidate of the
+			// orphan-stamp sweep, whose query requires `bb_media_draft`. That is a
+			// gap in the RELEASE path, not in this set — noted here so the two are
+			// not conflated.
 			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
-				bb_draft_invalidate_referenced_cache();
+				bb_draft_invalidate_referenced_cache( bb_draft_collect_attachment_ids( $draft_activity ) );
 			}
 
 			// Release the stamps of attachments the replaced draft held and the

@@ -1710,6 +1710,64 @@ function bb_draft_topic_reply_key_context( $data_key ) {
 }
 
 /**
+ * Prime the post and meta caches for a batch of forum draft keys.
+ *
+ * The bb_draft_topic_reply_key_context() resolver reads each key through
+ * get_post(), and the reply shape resolves two more values -
+ * bbp_get_reply_topic_id() and bbp_get_topic_forum_id() - out of post meta.
+ * Called once per key in a loop
+ * that is bounded only by how many drafts a member has stored, that is a textbook
+ * N+1: the unload beacon replays every key the tab holds, so a member with many
+ * small drafts turns one autosave into one uncached query per draft (H-5).
+ *
+ * Priming collapses those into a single `IN (...)` post query plus one meta
+ * query. It changes no behaviour - every guard still runs per key, and a key
+ * naming a post that does not exist still resolves to false, just from cache.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string[] $data_keys Draft keys about to be resolved.
+ * @return void
+ */
+function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
+	if ( ! is_array( $data_keys ) || empty( $data_keys ) ) {
+		return;
+	}
+
+	$post_ids = array();
+
+	foreach ( $data_keys as $data_key ) {
+		$data_key = (string) $data_key;
+
+		// The bare 'draft_topic' / 'draft_reply' shapes name no post at all.
+		if ( preg_match( '/^draft_discussion_(\d+)$/', $data_key, $matches ) ) {
+			$post_ids[] = (int) $matches[1];
+
+			continue;
+		}
+
+		if ( preg_match( '/^draft_reply_(\d+)(?:_(\d+))?$/', $data_key, $matches ) ) {
+			$post_ids[] = (int) $matches[1];
+
+			if ( isset( $matches[2] ) ) {
+				$post_ids[] = (int) $matches[2];
+			}
+		}
+	}
+
+	$post_ids = array_filter( array_unique( $post_ids ) );
+
+	if ( empty( $post_ids ) ) {
+		return;
+	}
+
+	// Meta is primed too, not just the posts: the reply shape reads its topic and
+	// that topic's forum out of post meta, so leaving meta cold would only move
+	// the N+1 from the post table to the meta table.
+	_prime_post_caches( $post_ids, false, true );
+}
+
+/**
  * Validate a forum draft inner data key against the shapes the forum JS builds.
  *
  * Thin wrapper over {@see bb_draft_topic_reply_key_context()}, kept because
@@ -1998,6 +2056,12 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 			'rows'     => array(),
 			'last_id'  => (int) $last_umeta_id,
 			'has_more' => false,
+			// Declined, NOT finished - but PERMANENT, unlike 'failed'. A filter is
+			// either invertible or it is not, so a caller that retries on this
+			// would retry for ever. Callers must stop without acting and without
+			// scheduling a retry (M2).
+			'failed'   => false,
+			'declined' => true,
 		);
 	}
 
@@ -2023,11 +2087,32 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 		ARRAY_A
 	);
 
+	// A FAILED query and an exhausted table both arrive here as an empty result,
+	// and telling them apart is the whole point: get_results() returns null on
+	// failure while a genuinely empty window returns array(). wpdb::query() calls
+	// flush(), which clears last_error, so it describes only the query above.
+	//
+	// Conflating the two is a data-loss bug, not a reporting one: a failed scan
+	// reads as "no draft references exist anywhere", and the orphan-stamp sweep
+	// then releases bb_media_draft from every stamped file and caches that answer
+	// network-wide for the TTL (BLOCKER-2).
+	if ( null === $rows || '' !== $wpdb->last_error ) {
+		return array(
+			'rows'     => array(),
+			'last_id'  => (int) $last_umeta_id,
+			'has_more' => false,
+			'failed'   => true,
+			'declined' => false,
+		);
+	}
+
 	if ( empty( $rows ) ) {
 		return array(
 			'rows'     => array(),
 			'last_id'  => (int) $last_umeta_id,
 			'has_more' => false,
+			'failed'   => false,
+			'declined' => false,
 		);
 	}
 
@@ -2075,6 +2160,19 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 		);
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
+		// Same trap one query later: a failure here leaves $by_id empty, every row
+		// reads as an empty meta_value, and the callers' shape checks skip them -
+		// so a failed fetch would look like "these drafts reference nothing".
+		if ( null === $values || '' !== $wpdb->last_error ) {
+			return array(
+				'rows'     => array(),
+				'last_id'  => (int) $last_umeta_id,
+				'has_more' => false,
+				'failed'   => true,
+				'declined' => false,
+			);
+		}
+
 		$by_id = array();
 		foreach ( (array) $values as $value_row ) {
 			$by_id[ (int) $value_row['umeta_id'] ] = $value_row['meta_value'];
@@ -2114,6 +2212,8 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 		),
 		'last_id'  => $max_id,
 		'has_more' => $window_full,
+		'failed'   => false,
+		'declined' => false,
 	);
 }
 
@@ -2224,6 +2324,25 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 
 	do {
 		$batch = bb_draft_get_rows_batch( $cursor, 200, true );
+
+		// A failed batch is not an empty one: continuing would move the cursor
+		// past rows this pass never read, so they would never be examined again.
+		// $complete = false persists the cursor and schedules a retry, which is
+		// right for a TRANSIENT database error (BLOCKER-2).
+		if ( ! empty( $batch['failed'] ) ) {
+			$complete = false;
+
+			break;
+		}
+
+		// A DECLINED batch is permanent - a bp_get_user_meta_key filter this code
+		// cannot invert. Marking it incomplete would reschedule this pass every
+		// minute, for ever, to do nothing. Stop instead, exactly as this function
+		// behaved before the failure signal existed. That it is silent is tracked
+		// separately as M2; making it noisy must not make it a spin.
+		if ( ! empty( $batch['declined'] ) ) {
+			break;
+		}
 
 		foreach ( $batch['rows'] as $row ) {
 			$user_id = (int) $row['user_id'];
@@ -2591,6 +2710,22 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 		do {
 			$batch = bb_draft_get_rows_batch( $cursor, 200, false );
 
+			// Same rule as the expiry pass: stop rather than advance the cursor
+			// over rows that were never read. $complete = false persists the
+			// cursor and leaves scan_done UNSET, so the next slice resumes here
+			// instead of declaring the scan finished (BLOCKER-2).
+			if ( ! empty( $batch['failed'] ) ) {
+				$complete = false;
+
+				break;
+			}
+
+			// Permanent decline: stop without marking the pass incomplete, so the
+			// one-shot does not re-defer itself for ever (see the expiry pass).
+			if ( ! empty( $batch['declined'] ) ) {
+				break;
+			}
+
 			foreach ( $batch['rows'] as $row ) {
 				$row_user  = (int) $row['user_id'];
 				$row_bytes = (int) $row['bytes'];
@@ -2810,6 +2945,249 @@ function bb_draft_oneshot_unschedule() {
 }
 
 /**
+ * Acquire the orphan-stamp sweep lock, atomically where that is possible.
+ *
+ * The previous shape was `get_transient()` then `set_transient()` - a
+ * check-then-set with a window between the two. Two sweeps (the daily cron and a
+ * WP-CLI drain, or two overlapping cron workers) could both read "free" and both
+ * proceed, and they share ONE cursor option: the slower one then writes its older
+ * position over the faster one's, so a range is skipped for that cycle. No data
+ * is lost - the skipped range is re-examined on the next run - but the sweep does
+ * less work than it reports.
+ *
+ * `wp_cache_add()` is atomic on a persistent object cache: it fails if the key
+ * already exists, so exactly one caller can win. It writes to the SAME store and
+ * group that set/get/delete_transient() use, so the refresh and release calls
+ * elsewhere keep working unchanged.
+ *
+ * Without a persistent object cache there is no atomic primitive available here:
+ * transients live in options, and add_option() is `INSERT … ON DUPLICATE KEY
+ * UPDATE`, which succeeds for a concurrent second caller. WordPress core reaches
+ * for a raw `INSERT IGNORE` in that situation ({@see WP_Upgrader::create_lock()}).
+ * That is deliberately NOT done here: it would only cover the configuration where
+ * this race is least likely - a site small enough to run without an object cache
+ * is unlikely to have overlapping sweeps - and the consequence is a skipped range,
+ * not lost member data. That configuration therefore keeps the previous
+ * check-then-set behaviour, stated rather than hidden.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $timeout Lock lifetime in seconds.
+ * @return bool True when this caller now holds the lock.
+ */
+function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
+	$timeout = (int) $timeout;
+
+	if ( wp_using_ext_object_cache() ) {
+		// Atomic: fails outright when another sweep already holds it.
+		return (bool) wp_cache_add( 'bb_draft_stamp_sweep_lock', 1, 'transient', $timeout );
+	}
+
+	if ( get_transient( 'bb_draft_stamp_sweep_lock' ) ) {
+		return false;
+	}
+
+	set_transient( 'bb_draft_stamp_sweep_lock', 1, $timeout );
+
+	return true;
+}
+
+/**
+ * Maximum attachment IDs the pending-reference ledger will hold for one scan.
+ *
+ * The ledger only ever collects references added DURING a reference scan, so on
+ * any realistic site it holds a handful. The cap exists so a pathological window
+ * cannot grow a site option without bound; crossing it makes the sweep fall back
+ * to abstaining, which is the safe direction.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+const BB_DRAFT_PENDING_REFERENCE_CAP = 5000;
+
+/**
+ * Maximum attachment IDs the shared referenced-set cache will store.
+ *
+ * The set is an aggregate of every draft-referenced attachment on the network and
+ * is written whole into one cache entry, so it is unbounded by construction -
+ * exactly the shape this ticket exists to fix, one tier down. An object cache
+ * with a per-item size limit (Memcached's default is 1 MB) silently REFUSES an
+ * oversized entry, so the cache would never warm, every save would fall through
+ * the superset check, and the sweep would rebuild from scratch for ever.
+ *
+ * Declining to cache above this bound makes that outcome explicit and bounded
+ * instead of silent. The cost is that very large networks lose the skip and
+ * return to invalidating on every attachment-bearing save; correctness is
+ * unaffected, because the set is a performance aid and never an authority the
+ * sweep cannot rebuild.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+const BB_DRAFT_REFERENCED_CACHE_MAX_IDS = 50000;
+
+/**
+ * Whether a network-wide reference scan is currently running.
+ *
+ * Invalidations consult this so the ledger below is only written while a scan
+ * could actually miss something. Outside a scan window there is nothing to
+ * record - the next scan reads the drafts straight from the database.
+ *
+ * Network-wide on purpose: the sweep runs per blog but scans drafts across the
+ * network, so a save on blog A can add a reference that blog B's in-flight scan
+ * would otherwise miss. A per-blog transient would not be visible to it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True while a scan is in progress.
+ */
+function bb_draft_reference_scan_is_active() {
+	return (bool) get_site_transient( 'bb_draft_reference_scan_active' );
+}
+
+/**
+ * Record attachment IDs referenced by a draft written DURING a reference scan.
+ *
+ * This is what lets the sweep tolerate a concurrent save instead of throwing its
+ * whole scan away. A scan walks the draft rows with a cursor, so a draft edited
+ * after the cursor has passed it contributes nothing to the result. Unioning the
+ * ledger into that result restores the "cache is a SUPERSET of the live set"
+ * invariant without requiring the scan to be atomic - and atomicity is exactly
+ * what could never be achieved on a busy community, where the multi-minute scan
+ * essentially never survives without a concurrent draft save (H-4 livelock).
+ *
+ * Over-collection is harmless and deliberate: an id recorded here that turns out
+ * not to be referenced just keeps its stamp for one more cycle.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int[] $attachment_ids Attachment IDs the just-written draft keeps.
+ * @return void
+ */
+function bb_draft_record_pending_reference_ids( $attachment_ids ) {
+	if ( empty( $attachment_ids ) || ! is_array( $attachment_ids ) || ! bb_draft_reference_scan_is_active() ) {
+		return;
+	}
+
+	$ledger = get_site_option( 'bb_draft_pending_reference_ids', array() );
+
+	if ( ! is_array( $ledger ) ) {
+		$ledger = array();
+	}
+
+	// Already over the cap: the sweep will abstain anyway, so stop growing it.
+	if ( isset( $ledger['overflow'] ) ) {
+		return;
+	}
+
+	$ids = isset( $ledger['ids'] ) && is_array( $ledger['ids'] ) ? $ledger['ids'] : array();
+
+	foreach ( $attachment_ids as $attachment_id ) {
+		$attachment_id = (int) $attachment_id;
+
+		if ( $attachment_id > 0 ) {
+			$ids[ $attachment_id ] = true;
+		}
+	}
+
+	if ( count( $ids ) > BB_DRAFT_PENDING_REFERENCE_CAP ) {
+		// Cannot prove the union is complete any more, so say so rather than
+		// silently under-collecting. The sweep reads this and abstains.
+		update_site_option( 'bb_draft_pending_reference_ids', array( 'overflow' => true ) );
+
+		return;
+	}
+
+	update_site_option( 'bb_draft_pending_reference_ids', array( 'ids' => $ids ) );
+}
+
+/**
+ * Open a reference-scan window: start recording concurrent additions.
+ *
+ * The ledger is reset here, not at the end, so a window always begins empty even
+ * if a previous scan died mid-run.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_draft_reference_scan_begin() {
+	delete_site_option( 'bb_draft_pending_reference_ids' );
+	set_site_transient( 'bb_draft_reference_scan_active', 1, 30 * MINUTE_IN_SECONDS );
+}
+
+/**
+ * Read the pending-reference ledger WITHOUT closing the window.
+ *
+ * The release loop folds this in before judging each batch, so a save that lands
+ * mid-drain protects its own attachments straight away instead of waiting for
+ * the next run.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array{ids:int[],overflow:bool} Recorded IDs, and whether the cap was hit.
+ */
+function bb_draft_peek_pending_reference_ids() {
+	$ledger = get_site_option( 'bb_draft_pending_reference_ids', array() );
+
+	if ( ! is_array( $ledger ) ) {
+		return array(
+			'ids'      => array(),
+			'overflow' => false,
+		);
+	}
+
+	return array(
+		'ids'      => isset( $ledger['ids'] ) && is_array( $ledger['ids'] ) ? array_keys( $ledger['ids'] ) : array(),
+		'overflow' => ! empty( $ledger['overflow'] ),
+	);
+}
+
+/**
+ * Close a reference-scan window and return what was recorded during it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array{ids:int[],overflow:bool} Recorded IDs, and whether the cap was hit.
+ */
+function bb_draft_reference_scan_end() {
+	$ledger = get_site_option( 'bb_draft_pending_reference_ids', array() );
+
+	delete_site_transient( 'bb_draft_reference_scan_active' );
+	delete_site_option( 'bb_draft_pending_reference_ids' );
+
+	if ( ! is_array( $ledger ) ) {
+		return array(
+			'ids'      => array(),
+			'overflow' => false,
+		);
+	}
+
+	return array(
+		'ids'      => isset( $ledger['ids'] ) && is_array( $ledger['ids'] ) ? array_keys( $ledger['ids'] ) : array(),
+		'overflow' => ! empty( $ledger['overflow'] ),
+	);
+}
+
+/**
+ * Read the referenced-attachment cache's change token.
+ *
+ * The sweep reads this twice - once before it gathers anything, once before it
+ * commits - and abstains if the two differ. Both reads and the write in
+ * {@see bb_draft_invalidate_referenced_cache()} must therefore agree about where
+ * the token lives, so the read is centralised here rather than repeated at each
+ * site. Tests assert the token's DURABILITY through this accessor for the same
+ * reason: a test that hard-coded the storage call would keep passing if the
+ * storage moved somewhere non-durable, which is exactly the regression the
+ * durability requirement exists to prevent.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The current token, or '' when no invalidation has been recorded.
+ */
+function bb_draft_get_referenced_cache_token() {
+	return (string) get_site_option( 'bb_draft_referenced_stamp_ids_token', '' );
+}
+
+/**
  * Invalidate the shared referenced-attachment cache after a draft write adds a
  * reference, and record that the invalidation happened.
  *
@@ -2825,14 +3203,113 @@ function bb_draft_oneshot_unschedule() {
  *
  * The token turns that otherwise-silent overwrite into a detectable event: the
  * sweep captures the token before it gathers data and refuses to cache or
- * release a set built across a change. The value must differ on every call
- * because update_site_option() no-ops on an unchanged value.
+ * release a set built across a change. The value must differ on every call, so
+ * a no-op write can never hide a change.
+ *
+ * The token is a SITE OPTION, and its DURABILITY is the correctness property -
+ * do not move it back to a transient or the object cache.
+ *
+ * It was briefly a site transient, for performance: this sits on the draft-save
+ * path, and a site option write here cost a full autoloaded-option rebuild
+ * (~900 rows / ~0.6 MB on a mature install, measured). That was a real cost, but
+ * the trade was unsound. A transient shares the object cache it is meant to
+ * guard, so the token can be lost by eviction or by any wp_cache_flush() - and
+ * the loss is SYMMETRIC:
+ *
+ *   1. the sweep starts on a cache miss and captures the token - absent, ''
+ *   2. its unbudgeted network-wide scan runs, for minutes on a large site
+ *   3. a save adds a genuinely NEW reference and writes a token
+ *   4. the cache evicts it, or anything calls wp_cache_flush()
+ *   5. the sweep re-reads - absent, '' - and compares EQUAL to step 1
+ *   6. it commits a set missing the step-3 reference and releases that stamp,
+ *      and the orphan cron hard-deletes a file a live draft still holds
+ *
+ * An earlier version of this docblock asserted that a lost token could only ever
+ * make the sweep abstain. That is true only for ASYMMETRIC loss; the timeline
+ * above is the symmetric case, and it loses member data. A successful
+ * update_site_option() persists, so step 4 has no equivalent.
+ *
+ * The performance objection is now largely moot: the superset check below means
+ * an ordinary autosave of an unchanged attachment list writes NOTHING at all, so
+ * the option write only happens when a genuinely new reference appears - rarely,
+ * and exactly when correctness demands a durable record of it (H-4).
+ *
+ * Residual, stated rather than hidden: a FAILED option write (a DB error) still
+ * reads as "no change". At that point the site has larger problems, but the
+ * window is real and is not closed here.
+ *
+ * On the mechanism, for anyone re-testing the cost: update_site_option() routes
+ * through update_network_option(), which on single site calls update_option()
+ * with an EXPLICIT autoload of false. It therefore does not take update_option()'s
+ * "no autoload argument" branch - it takes the final else, which reloads
+ * alloptions too. Every branch of update_option() rebuilds it; the earlier claim
+ * here that it happens "before it even looks at whether the option is autoloaded"
+ * described a branch this call path never reaches.
+ *
+ * Pass `$kept_attachment_ids` wherever the caller knows every attachment the
+ * draft it just wrote keeps. When the cached set ALREADY contains all of them it
+ * is still a superset of the live referenced set, so there is nothing to
+ * invalidate and no reason to move the token - and moving it anyway is what let
+ * ordinary autosaves starve the sweep (H-4). This is an exact test of the
+ * superset invariant, not a heuristic.
+ *
+ * It is deliberately NOT the other tempting test - "did we just stamp something
+ * new?". A restored draft echoes `bb_media_draft` back already set and a stamp
+ * can outlive the draft that created it, so stamp-presence is not set-membership
+ * and a draft newly referencing an already-stamped attachment grows the live set
+ * with no stamp transition at all (F7). Key on what the draft KEEPS, always.
+ *
+ * Omit the argument (or pass a non-array) to invalidate unconditionally, which
+ * is the correct conservative default for any caller that cannot enumerate the
+ * kept set.
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param int[]|null $kept_attachment_ids Attachment IDs the just-written draft
+ *                                        still references. Default null
+ *                                        (invalidate unconditionally).
  * @return void
  */
-function bb_draft_invalidate_referenced_cache() {
+function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
+	if ( is_array( $kept_attachment_ids ) ) {
+		$referenced = get_site_transient( 'bb_draft_referenced_stamp_ids' );
+
+		// Only a PRESENT cache can prove the superset still holds. On a miss the
+		// sweep may be mid-scan with nothing cached, which is exactly when the
+		// token has to move so that scan abstains.
+		if ( is_array( $referenced ) ) {
+			$adds_reference = false;
+
+			foreach ( $kept_attachment_ids as $kept_attachment_id ) {
+				if ( ! isset( $referenced[ (int) $kept_attachment_id ] ) ) {
+					$adds_reference = true;
+					break;
+				}
+			}
+
+			if ( ! $adds_reference ) {
+				return;
+			}
+		}
+	}
+
+	// Recorded BEFORE the cache is dropped, so a scan running right now cannot
+	// finish between the two and miss this reference. No-ops unless a scan is
+	// actually in flight ({@see bb_draft_record_pending_reference_ids()}).
+	if ( is_array( $kept_attachment_ids ) ) {
+		bb_draft_record_pending_reference_ids( $kept_attachment_ids );
+	} elseif ( bb_draft_reference_scan_is_active() ) {
+		// A caller that cannot enumerate what it kept has told us something
+		// changed without telling us what. The union below is only a provable
+		// superset when every concurrent addition was recorded, so an unenumerated
+		// change makes it unprovable - mark the window and let the sweep fall back
+		// to abstaining, which is what it did for every change before H-4.
+		//
+		// This is why the livelock fix is safe: it relaxes the guard ONLY for
+		// callers that say exactly which attachments they kept.
+		update_site_option( 'bb_draft_pending_reference_ids', array( 'overflow' => true ) );
+	}
+
 	delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 	update_site_option( 'bb_draft_referenced_stamp_ids_token', uniqid( (string) wp_rand(), true ) );
 }
@@ -2856,8 +3333,10 @@ function bb_draft_invalidate_referenced_cache() {
  * @param callable|null $keep_alive  Optional. Invoked once per scan window so a
  *                                   long unbudgeted scan can refresh the caller's
  *                                   lock. Default null.
- * @return array|false Map of attachment ID => true, or false when the scan
- *                     could not finish inside the budget.
+ * @return array|false Map of attachment ID => true, or false when the scan could
+ *                     not be completed authoritatively - either it ran out of
+ *                     budget, or a batch query failed / declined. Callers MUST
+ *                     treat false as "unknown", never as "nothing referenced".
  */
 function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0, $keep_alive = null ) {
 	$referenced  = array();
@@ -2882,6 +3361,15 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 	// returns false and the caller releases nothing this time (M3 HIGH).
 	do {
 		$batch = bb_draft_get_rows_batch( $cursor, $batch_size, true );
+
+		// Both are "not authoritative", and for the release decision they mean the
+		// same thing: this scan cannot prove what is referenced, so nothing may be
+		// freed against it. Returning false routes them into the same path the
+		// budget-exhaustion case already uses - release nothing, cache nothing
+		// (BLOCKER-2).
+		if ( ! empty( $batch['failed'] ) || ! empty( $batch['declined'] ) ) {
+			return false;
+		}
 
 		foreach ( $batch['rows'] as $row ) {
 			$value = bb_draft_safe_unserialize( $row['meta_value'] );
@@ -2993,15 +3481,16 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 
 	// Serialize against a second sweep (a concurrent daily fire, or a CLI drain
 	// racing the cron) so two runs cannot advance the cursor over each other.
-	if ( get_transient( 'bb_draft_stamp_sweep_lock' ) ) {
+	// Acquired in ONE atomic step where the backend allows it - the previous
+	// check-then-set let both runs read "free" and proceed
+	// ({@see bb_draft_acquire_stamp_sweep_lock()}).
+	if ( ! bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ) ) {
 		return array(
 			'released' => 0,
 			'complete' => false,
 			'locked'   => true,
 		);
 	}
-
-	set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 	// The referenced set must be COMPLETE before any release, or an attachment a
 	// not-yet-scanned draft still holds would be wrongly freed. The scan
@@ -3033,8 +3522,15 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// token on every such add; capture it BEFORE reading the cache or scanning,
 	// and refuse to cache or release a set built across a change (below) - the
 	// bare delete alone cannot cancel a scan that has not yet written its result.
-	$reference_token = get_site_option( 'bb_draft_referenced_stamp_ids_token', '' );
-	$referenced      = get_site_transient( 'bb_draft_referenced_stamp_ids' );
+	$reference_token = bb_draft_get_referenced_cache_token();
+
+	// Opened for the WHOLE sweep, before the cache is even read, and closed on
+	// every exit below. The scan is not the only place a concurrent save can be
+	// missed - the release loop judges batch after batch against a set that was
+	// fixed before it started - so the window has to span both (H-4).
+	bb_draft_reference_scan_begin();
+
+	$referenced = get_site_transient( 'bb_draft_referenced_stamp_ids' );
 
 	if ( ! is_array( $referenced ) ) {
 		// Hold the lock across the (unbudgeted) scan too, not just the release
@@ -3047,15 +3543,19 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 			}
 		);
 
-		// Defensive: the scan is unbudgeted above, so it returns the full set.
-		// The guard stays in case the call ever regains a budget - a partial set
-		// must never reach the release loop or seed the cache.
+		// false means the scan is NOT authoritative - it ran out of budget, or a
+		// batch query failed or was declined. A partial set must never reach the
+		// release loop or seed the cache: "I could not read the drafts" and "the
+		// drafts reference nothing" have opposite consequences, and conflating
+		// them releases every stamp on the site (BLOCKER-2).
 		if ( false === $referenced ) {
+			bb_draft_reference_scan_end();
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 			return array(
-				'released' => 0,
-				'complete' => false,
+				'released'  => 0,
+				'complete'  => false,
+				'abstained' => true,
 			);
 		}
 
@@ -3069,24 +3569,80 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		 *
 		 * @param int $ttl Cache lifetime in seconds. Default 12 hours.
 		 */
-		// A save invalidated the set while this unbudgeted scan was running, so
-		// the scan may have missed a reference added after its cursor passed the
-		// edited draft. Committing it would pin a NON-superset for the full TTL -
-		// the TOCTOU that lets the release loop free a still-referenced
-		// attachment. Abstain: cache nothing and release nothing this run; the
-		// next daily or CLI run rebuilds cleanly against a stable token.
-		if ( get_site_option( 'bb_draft_referenced_stamp_ids_token', '' ) !== $reference_token ) {
+		// Close the recording window and fold in everything that was written
+		// while the scan ran. The scan walks the draft rows with a cursor, so a
+		// draft edited after the cursor passed it contributes nothing to
+		// $referenced - and that is precisely what the union repairs.
+		//
+		// This REPLACES the previous behaviour, which abstained outright whenever
+		// the token moved during the scan. That was safe but unachievable on the
+		// sites it was written for: while the cache is cold every attachment-
+		// bearing save network-wide bumps the token, the scan takes minutes, and
+		// the chance of zero such saves across it is nil - so the sweep abstained
+		// every run, for ever, and the stamps it exists to reclaim accumulated
+		// without bound (the H-4 livelock). Tolerating the change is strictly
+		// better than requiring an atomicity the system cannot provide.
+		$pending = bb_draft_peek_pending_reference_ids();
+
+		foreach ( $pending['ids'] as $pending_id ) {
+			$referenced[ (int) $pending_id ] = true;
+		}
+
+		// The one case the union cannot cover: so many references arrived during
+		// the window that the ledger stopped recording, so it is no longer a
+		// provable superset. Fall back to the old conservative behaviour.
+		if ( $pending['overflow'] ) {
+			bb_draft_reference_scan_end();
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 			return array(
-				'released' => 0,
-				'complete' => false,
+				'released'  => 0,
+				'complete'  => false,
+				'abstained' => true,
 			);
 		}
 
 		$referenced_ttl = (int) apply_filters( 'bb_draft_referenced_cache_ttl', 12 * HOUR_IN_SECONDS );
 
-		set_site_transient( 'bb_draft_referenced_stamp_ids', $referenced, $referenced_ttl );
+		// $referenced is now a superset of the live set and is SAFE to release
+		// against. Caching it is a separate question: if the token moved, the set
+		// is correct for right now but would be pinned for the whole TTL while
+		// the drafts behind it keep changing, so it is used and discarded.
+		/**
+		 * Filters the maximum number of attachment IDs the referenced-set cache
+		 * will hold before it declines to cache at all.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $max_ids Maximum IDs. Default BB_DRAFT_REFERENCED_CACHE_MAX_IDS.
+		 */
+		$referenced_max = (int) apply_filters( 'bb_draft_referenced_cache_max_ids', BB_DRAFT_REFERENCED_CACHE_MAX_IDS );
+
+		// Two independent reasons to use the set and then throw it away.
+		//
+		// Token moved: the set is correct for right now, but caching it would pin
+		// it for the whole TTL while the drafts behind it keep changing.
+		//
+		// Too large: one cache entry holding every referenced attachment on the
+		// network is unbounded, and a backend with a per-item cap refuses it
+		// SILENTLY - the write appears to succeed and the read comes back empty
+		// for ever. Declining above a known bound turns that into a stated
+		// limitation instead of a permanent invisible cache miss.
+		$referenced_fits = ( $referenced_max <= 0 || count( $referenced ) <= $referenced_max );
+
+		if ( ! $referenced_fits && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- gated behind WP_DEBUG; a silent decline here is what this logs.
+				sprintf(
+					'BuddyBoss drafts: referenced-attachment set (%d ids) exceeds the cache bound (%d); not caching. The orphan-stamp sweep will rebuild it each run.',
+					count( $referenced ),
+					$referenced_max
+				)
+			);
+		}
+
+		if ( $referenced_fits && bb_draft_get_referenced_cache_token() === $reference_token ) {
+			set_site_transient( 'bb_draft_referenced_stamp_ids', $referenced, $referenced_ttl );
+		}
 	}
 
 	// Measure the release budget from AFTER the mandatory scan, so a slow scan
@@ -3097,6 +3653,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	$cursor   = (int) get_option( 'bb_draft_stamp_sweep_cursor', 0 );
 	$released = 0;
 	$complete = true;
+	$abstained = false;
 
 	/**
 	 * Filters the candidate batch size for the orphan-stamp sweep.
@@ -3108,25 +3665,70 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	$batch_size = max( 1, (int) apply_filters( 'bb_draft_stamp_sweep_batch_size', 200 ) );
 
 	do {
-		// A save that stamps a NEW attachment mid-sweep invalidates the set and
-		// bumps the token. The batch about to be judged may pre-date that
-		// reference, so stop releasing the moment the token moves: the cursor is
-		// persisted each window, so the next run resumes against a rebuilt set.
-		// Only attachment-stamping saves bump the token - text-only autosaves do
-		// not - so this yields to a genuinely new reference, not to every
-		// keystroke, and cannot starve the sweep on a busy site.
-		if ( get_site_option( 'bb_draft_referenced_stamp_ids_token', '' ) !== $reference_token ) {
-			$complete = false;
+		// A save that adds a reference the cached set does not already hold
+		// invalidates the set and bumps the token. The batch about to be judged
+		// may pre-date that reference, so stop releasing the moment the token
+		// moves: the cursor is persisted each window, so the next run resumes
+		// against a rebuilt set.
+		//
+		// This CAN still starve, and the previous claim that it could not was
+		// wrong. Text-only autosaves never bumped the token, but every autosave
+		// of a draft that merely KEEPS an attachment did - which is an ordinary
+		// composer with one photo in it, ticking for as long as the member
+		// types. bb_draft_invalidate_referenced_cache() now skips the bump when
+		// the cached set already covers every attachment the draft keeps (H-4),
+		// so only a genuinely NEW reference yields the sweep. The window that
+		// remains is a cold cache: while the unbudgeted rebuild scan runs there
+		// is no cached set to prove the superset against, so any attachment-
+		// bearing save bumps and this run abstains. Callers must therefore treat
+		// `complete => false` as "try again later", never as "retry now" - see
+		// the WP-CLI loop, which stops instead of spinning.
+		// Fold in anything recorded since the set was fixed, then judge this
+		// batch against the result. Breaking out here (the previous behaviour)
+		// meant an ordinary save mid-drain ended the run, which on a busy site
+		// is most runs - the same livelock as the scan, one level down.
+		$batch_pending = bb_draft_peek_pending_reference_ids();
+
+		foreach ( $batch_pending['ids'] as $batch_pending_id ) {
+			$referenced[ (int) $batch_pending_id ] = true;
+		}
+
+		if ( $batch_pending['overflow'] ) {
+			$complete  = false;
+			$abstained = true;
+
 			break;
 		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- maintenance sweep over draft-stamped attachments, cursored.
 		$candidate_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT p.ID
+				// Two kinds of draft attachment, each with its OWN pair of markers:
+				// photos/documents/videos use bb_media_draft + bp_media_saved, while
+				// an activity feature image uses bb_activity_post_feature_image_draft
+				// + bb_activity_post_feature_image_saved. The pairs are matched
+				// explicitly so a marker is never read against the wrong "saved" flag.
+				//
+				// Feature images were previously absent from this list, so their
+				// marker was only ever cleared by the normal discard/replace/expiry
+				// paths. Anything those missed - an interrupted request, a refused
+				// save, an evicted row - kept its marker for ever, and no cleanup in
+				// either plugin could reclaim the file. The release loop below
+				// already clears BOTH markers, so only this selection was missing.
+				"SELECT DISTINCT p.ID
 				FROM {$wpdb->posts} p
-				INNER JOIN {$wpdb->postmeta} d ON ( d.post_id = p.ID AND d.meta_key = 'bb_media_draft' )
-				INNER JOIN {$wpdb->postmeta} s ON ( s.post_id = p.ID AND s.meta_key = 'bp_media_saved' AND s.meta_value = '0' )
+				INNER JOIN {$wpdb->postmeta} d ON (
+					d.post_id = p.ID
+					AND d.meta_key IN ( 'bb_media_draft', 'bb_activity_post_feature_image_draft' )
+				)
+				INNER JOIN {$wpdb->postmeta} s ON (
+					s.post_id = p.ID
+					AND s.meta_value = '0'
+					AND (
+						( d.meta_key = 'bb_media_draft' AND s.meta_key = 'bp_media_saved' )
+						OR ( d.meta_key = 'bb_activity_post_feature_image_draft' AND s.meta_key = 'bb_activity_post_feature_image_saved' )
+					)
+				)
 				WHERE p.post_type = 'attachment'
 				AND p.post_date_gmt < %s
 				AND p.ID > %d
@@ -3177,6 +3779,11 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		}
 	} while ( $batch_was_full );
 
+	// Close the recording window: the release decisions are made, so anything
+	// written from here is the NEXT run's concern and the ledger must not carry
+	// it over and grow.
+	bb_draft_reference_scan_end();
+
 	// A finished pass restarts from the top next time (attachments freshly
 	// stamped since, and any that became unreferenced, get re-examined).
 	if ( $complete ) {
@@ -3186,8 +3793,13 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 	return array(
-		'released' => $released,
-		'complete' => $complete,
+		'released'  => $released,
+		'complete'  => $complete,
+		// True only when the pending-reference ledger overflowed, i.e. the union
+		// could not be proven complete and this run judged nothing. Callers use
+		// it to tell "no progress, and retrying now will not help" apart from
+		// "no progress, because there was nothing left to do".
+		'abstained' => $abstained,
 	);
 }
 
@@ -3280,6 +3892,19 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 					$batch   = bb_draft_get_rows_batch( $last_id, 500, false );
 					$last_id = $batch['last_id'];
 
+					// Reporting a partial count as if it were the total is its own
+					// small harm: an operator sizing the migration would read
+					// "Draft rows: 0" off a failed query (BLOCKER-2).
+					if ( ! empty( $batch['failed'] ) || ! empty( $batch['declined'] ) ) {
+						WP_CLI::warning(
+							! empty( $batch['declined'] )
+								? 'Draft row scan declined: a bp_get_user_meta_key filter this code cannot invert is active, so stored keys cannot be matched to drafts. The counts below are PARTIAL.'
+								: 'Draft row scan could not complete: a query failed. The counts below are PARTIAL.'
+						);
+
+						break;
+					}
+
 					foreach ( $batch['rows'] as $row ) {
 						$total_rows++;
 						if ( (int) $row['bytes'] > bb_draft_max_size() ) {
@@ -3320,6 +3945,9 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
 			} while ( empty( $expired['complete'] ) );
 
+			$stamp_abstentions     = 0;
+			$stamp_max_abstentions = 3;
+
 			do {
 				$stamp_pass = bb_drafts_release_orphaned_draft_stamps( 0 );
 
@@ -3329,6 +3957,46 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				}
 
 				WP_CLI::log( 'Orphaned draft stamps released: ' . $stamp_pass['released'] . '.' );
+
+				// Three outcomes, and they need different handling.
+				//
+				// A pass that RELEASED something made real progress, so keep
+				// going; the number of stamps is finite, which terminates.
+				//
+				// A pass that ABSTAINED hit the pending-reference ledger cap -
+				// the union could not be proven complete. That is transient, so
+				// retry a bounded number of times rather than giving up: on a
+				// busy community there is no "quieter moment" to wait for, and an
+				// operator who runs this command needs a way to actually drain
+				// the stamps. This is the escape hatch; an earlier revision broke
+				// out immediately here and left no way to make progress at all.
+				//
+				// Anything else incomplete is budget/cursor work, and the loop
+				// continues as before.
+				if ( ! empty( $stamp_pass['abstained'] ) ) {
+					++$stamp_abstentions;
+
+					if ( $stamp_abstentions >= $stamp_max_abstentions ) {
+						WP_CLI::warning(
+							sprintf(
+								'Orphan-stamp sweep abstained %d times: more draft references arrived during the scan than the ledger could hold, so no release could be proven safe. Nothing was released. Re-run later, or raise the cap if this persists.',
+								$stamp_abstentions
+							)
+						);
+
+						break;
+					}
+
+					WP_CLI::log( sprintf( 'Orphan-stamp sweep abstained (ledger full); retrying (%d/%d).', $stamp_abstentions, $stamp_max_abstentions ) );
+
+					continue;
+				}
+
+				if ( empty( $stamp_pass['complete'] ) && 0 === (int) $stamp_pass['released'] ) {
+					WP_CLI::warning( 'Orphan-stamp sweep made no progress and did not complete; stopping to avoid an unbounded loop. Re-run to continue.' );
+
+					break;
+				}
 			} while ( empty( $stamp_pass['complete'] ) );
 
 				WP_CLI::success( 'Draft cleanup complete.' );

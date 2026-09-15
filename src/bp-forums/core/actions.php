@@ -477,14 +477,40 @@ function bb_post_topic_reply_draft() {
 	}
 
 	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
-		$all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
+		$decoded_all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
+
+		// Narrowed at the boundary, where the rest of this handler's slash and
+		// shape normalisation already happens. json_decode() returns a SCALAR
+		// for a scalar document - `all_data=5`, `true`, `"x"` are all valid
+		// JSON - while every consumer below assumes an array. Un-narrowed, that
+		// scalar reached array_intersect_key() and raised a TypeError on PHP 8:
+		// a fatal on an ordinary authenticated request, landing AFTER the
+		// attachment stamping and BEFORE the row write, so the member lost the
+		// draft and the stamps were left orphaned (H-5).
+		$all_data = is_array( $decoded_all_data ) ? $decoded_all_data : array();
 	}
 
 	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
 
+		// Coerce only scalars, and do it before anything reads the key. A
+		// crafted request can submit data_key as an array, and this handler
+		// uses it as an ARRAY KEY on the member's stored row (the isset, unset
+		// and assignment below) - an illegal offset type, which is a fatal
+		// TypeError on PHP 8 rather than the notice the (string) cast alone
+		// would raise. The authorization gate cannot stop it either: a primary
+		// rejection is deliberately recorded and not thrown, so the request
+		// carries the bad key past the gate and into those writes.
+		//
+		// Normalising once here keeps every downstream use safe. A non-scalar
+		// becomes '' and fails bb_draft_topic_reply_key_context() cleanly,
+		// taking the same indistinguishable rejection path as any other
+		// unusable key. Mirrors the activity handler, which already coerces
+		// this way (bp-templates/bp-nouveau/includes/activity/ajax.php).
+		$draft_topic_reply['data_key'] = is_scalar( $draft_topic_reply['data_key'] ) ? (string) $draft_topic_reply['data_key'] : '';
+
 		// Accept only the draft key shapes the forum composer actually builds,
 		// resolved against real forum/topic/reply IDs (hardening).
-		$draft_key_context = bb_draft_topic_reply_key_context( (string) $draft_topic_reply['data_key'] );
+		$draft_key_context = bb_draft_topic_reply_key_context( $draft_topic_reply['data_key'] );
 
 		$is_draft_update = ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] );
 
@@ -917,7 +943,22 @@ function bb_post_topic_reply_draft() {
 		// or over-cap primary must not cost a sibling its last-ever save (GH1).
 		if ( $is_draft_update && ! empty( $all_data ) ) {
 
-			foreach ( $all_data as $data_key => $d_data ) {
+			// Iterate the member's OWN stored keys, not the raw request. Every
+			// branch in this loop is gated on isset( $existing_draft[ $data_key ] )
+			// anyway, so intersecting first is behaviour-identical - but it stops
+			// an arbitrarily large `all_data` payload from being walked entry by
+			// entry, and bounds the work below to the row this member actually
+			// holds (H-5).
+			$mergeable_data = array_intersect_key( $all_data, $existing_draft );
+
+			// One batched read for every post those keys name, so the per-sibling
+			// bb_draft_topic_reply_key_context() calls below resolve from cache
+			// instead of issuing a query each. The row is capped by BYTES, not by
+			// entry count, so a member holding many small drafts otherwise turned
+			// a single autosave into one uncached get_post() per draft (H-5).
+			bb_draft_prime_topic_reply_key_posts( array_keys( $mergeable_data ) );
+
+			foreach ( $mergeable_data as $data_key => $d_data ) {
 
 				// Avoid conflict with current data.
 				if ( $draft_topic_reply['data_key'] === $data_key ) {
@@ -1341,21 +1382,58 @@ function bb_post_topic_reply_draft() {
 			}
 		}
 
-		$reference_added = false;
-		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
-			if ( isset( $surviving_stamp_ids[ (int) $stamp_attachment_id ] ) ) {
-				update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
-				$reference_added = true;
+		// Re-stamp EVERYTHING the stored row references, not only what THIS
+		// request's payload happened to carry.
+		//
+		// The merged row above keeps entries for keys this request never decided
+		// about, copied from the fresh read. Their attachments are referenced by a
+		// live stored draft, but they are absent from $stamp_attachment_ids - so
+		// filtering by that list left them unstamped whenever anything had
+		// released their stamp meanwhile (a concurrent discard of the same key
+		// that this merge then resurrected). The row then referenced a file with
+		// no bb_media_draft, and bp_media_delete_orphaned_attachments() deleted
+		// it within 6h from a draft the member never discarded.
+		//
+		// Iterating the surviving set makes "everything the stored row references
+		// is stamped" an invariant of every write. Evicted entries were unset from
+		// $existing_draft before the set was built, so they are correctly absent
+		// and stay unstamped.
+		$restamp_attachment_ids = array_keys( $surviving_stamp_ids );
+
+		if ( ! empty( $restamp_attachment_ids ) && function_exists( '_prime_post_caches' ) ) {
+			// One batched read: the ownership check below calls get_post() per id
+			// and update_post_meta() reads the existing value, so without this the
+			// loop is a query per referenced attachment on every autosave.
+			_prime_post_caches( $restamp_attachment_ids, false, true );
+		}
+
+		foreach ( $restamp_attachment_ids as $restamp_attachment_id ) {
+			// Kept deliberately: the merged row is reachable from client JSON, so
+			// a crafted sibling entry could name another member's attachment. The
+			// stamp must never be applied on that basis.
+			if ( bb_draft_user_can_manage_attachment( $restamp_attachment_id, $user_id ) ) {
+				update_post_meta( $restamp_attachment_id, 'bb_media_draft', 1 );
 			}
 		}
+
+		// Keyed on what the row KEEPS, never on whether a stamp transitioned -
+		// a restored draft echoes bb_media_draft back already set, so a
+		// transition-gated invalidation leaves the cache stale (F7).
+		$reference_added = ! empty( $restamp_attachment_ids );
 
 		// A re-stamped sibling is a reference the orphan-stamp sweep's cached
 		// referenced-set must not miss (H3) - see the matching drop in
 		// activity/ajax.php. Drop the cache AND bump the token so a sweep whose
 		// in-flight scan already passed this draft cannot commit a set missing
 		// this reference (L4 TOCTOU).
+		// $surviving_stamp_ids is built above from the row this request just
+		// wrote, so it IS every attachment the stored draft keeps - the key the
+		// invalidation must use (F7). Handing it over lets the helper skip the
+		// token bump when the cached set already covers all of them, so an
+		// ordinary autosave of an unchanged attachment list no longer aborts a
+		// running sweep (H-4).
 		if ( $reference_added ) {
-			bb_draft_invalidate_referenced_cache();
+			bb_draft_invalidate_referenced_cache( array_keys( $surviving_stamp_ids ) );
 		}
 
 		// A kept stored primary answers with the STORED entry, never the empty

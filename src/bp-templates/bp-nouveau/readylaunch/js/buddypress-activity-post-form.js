@@ -1253,8 +1253,9 @@ window.bp = window.bp || {};
 					// transient network blip at page load no longer disables server
 					// sync for the rest of the page view - postDraftActivity()
 					// re-attempts the read while the flag is set (M12).
-					bp.draft_fetch_failed   = false;
-					bp.draft_fetch_attempts = 0;
+					bp.draft_fetch_failed        = false;
+					bp.draft_fetch_attempts      = 0;
+					bp.draft_tick_retry_attempts = 0;
 
 					if ( ! response.draft_activity || ! response.draft_activity.data ) {
 						self.settleDeferredDraftLoadedEvent();
@@ -1942,8 +1943,33 @@ window.bp = window.bp || {};
 				// instead of refusing for the whole page view - a success clears
 				// draft_fetch_failed in fetchServerDraftActivity()'s done handler and
 				// the next tick saves normally (M12).
-				if ( ! bp.draft_fetch_in_progress && ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data_key ) {
-					bp.draft_fetch_attempts = 0;
+				// Ceiling on the per-tick re-attempt so a DURABLE failure (an
+				// expired nonce that never recovers on a long-open tab, a 403, a
+				// dead endpoint) does not fire a request every autosave tick
+				// forever. Without it the inner budget below is reset on each
+				// tick and can never be exhausted, so the composer retries for as
+				// long as the tab stays open. A success clears the flag and
+				// resets this counter in fetchServerDraftActivity()'s done
+				// handler, so a later fresh failure gets its own budget.
+				//
+				// The budget, stated exactly because it is NOT the same as the
+				// forum packs': this allows up to 5 re-attempt ticks, and each one
+				// resets draft_fetch_attempts, so fetchServerDraftActivity() may
+				// still make its own second try within that tick - up to 2
+				// requests per permitted tick, 10 across the five. The forum
+				// twin's retryDraftFetch() issues exactly ONE request per
+				// permitted attempt. The inner reset is kept deliberately, so a
+				// re-attempt gets a real chance rather than a single shot against
+				// a blip; the point of this gate is that the total is BOUNDED, not
+				// that it matches the twin (M16).
+				if (
+					! bp.draft_fetch_in_progress &&
+					! _.isUndefined( bp.draft_activity ) &&
+					bp.draft_activity.data_key &&
+					( bp.draft_tick_retry_attempts || 0 ) < 5
+				) {
+					bp.draft_tick_retry_attempts = ( bp.draft_tick_retry_attempts || 0 ) + 1;
+					bp.draft_fetch_attempts      = 0;
 					this.fetchServerDraftActivity();
 				}
 
@@ -2045,7 +2071,19 @@ window.bp = window.bp || {};
 						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
 					}
 				).fail(
-					function ( response ) {
+					function ( response, textStatus ) {
+						// An abort is not a failure. This pack aborts its own
+						// in-flight autosave before each new save and before the
+						// unload beacon (M14), so treating an abort as a failed save
+						// showed the member a data-loss warning on the way out of a
+						// page that had saved perfectly well.
+						if (
+							'abort' === textStatus ||
+							( response && ( 0 === response.readyState || 'abort' === response.statusText ) )
+						) {
+							return;
+						}
+
 						// A budget refusal may have evicted older drafts before it
 						// gave up; drop their local copies so the UI does not keep
 						// listing drafts that no longer exist (H1). No-op when the

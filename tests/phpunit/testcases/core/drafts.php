@@ -2917,6 +2917,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_transient( 'bb_draft_stamp_sweep_lock' );
 		delete_option( 'bb_draft_stamp_sweep_cursor' );
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+		delete_site_transient( 'bb_draft_referenced_stamp_ids_token' );
+		// The token lived in a site option before H-2 moved it off the autosave
+		// path; clear the legacy key too so a row left by an earlier build of
+		// this branch cannot leak between tests.
 		delete_site_option( 'bb_draft_referenced_stamp_ids_token' );
 
 		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
@@ -7434,6 +7438,1077 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			1,
 			$mid_scan_persists,
 			'Stage 1 must persist its cursor after every window, not only on a budget break - an interrupted scan must resume where it stopped.'
+		);
+	}
+
+	/**
+	 * H-2: the referenced-set change token must be DURABLE.
+	 *
+	 * The sweep captures this token before it scans and re-reads it before it
+	 * commits; if the two differ it abstains. That guard only works while a
+	 * recorded invalidation cannot disappear underneath it.
+	 *
+	 * A previous revision stored the token in a site transient, for speed. A
+	 * transient shares the object cache the token exists to guard, so eviction or
+	 * any wp_cache_flush() could erase it - and when the sweep had ALSO captured
+	 * an absent token (a cold start), both reads returned the same empty value,
+	 * compared equal, and the sweep committed a set missing a reference added
+	 * mid-scan. That releases a stamp a live draft still holds, and the orphan
+	 * cron then hard-deletes the member's file.
+	 *
+	 * So this asserts the property, not the storage: an invalidation must still
+	 * be observable after the object cache is flushed out from under it.
+	 */
+	public function test_referenced_cache_token_survives_an_object_cache_flush() {
+		delete_site_option( 'bb_draft_referenced_stamp_ids_token' );
+		delete_site_transient( 'bb_draft_referenced_stamp_ids_token' );
+
+		// Production runs with a persistent object cache; this harness does not,
+		// and that difference HIDES the regression. Without this, set_site_transient()
+		// silently falls back to an option, so a token stored in a transient would
+		// survive the flush below and this test would pass against the very storage
+		// it exists to reject. Forcing the flag makes the transient path behave the
+		// way it does on a real site.
+		$was_using_ext_cache = wp_using_ext_object_cache( true );
+
+		bb_draft_invalidate_referenced_cache();
+
+		// Read through the SAME accessor production uses. A test that hard-coded
+		// the storage call would keep passing if the token moved somewhere
+		// non-durable - the precise regression this test exists to catch.
+		$recorded = bb_draft_get_referenced_cache_token();
+
+		$this->assertNotEmpty(
+			$recorded,
+			'An invalidation must record a token, or the sweep has no change signal at all.'
+		);
+
+		wp_cache_flush();
+
+		$this->assertSame(
+			$recorded,
+			bb_draft_get_referenced_cache_token(),
+			'The token MUST survive an object-cache flush. If it does not, a sweep that captured an absent token reads absent again, compares equal, and releases a stamp a live draft still holds.'
+		);
+
+		bb_draft_invalidate_referenced_cache();
+
+		$this->assertNotSame(
+			$recorded,
+			bb_draft_get_referenced_cache_token(),
+			'Every invalidation must change the token, or a sweep can commit a set built across a change.'
+		);
+
+		wp_using_ext_object_cache( $was_using_ext_cache );
+	}
+
+	/**
+	 * M-3 (activity half): replacing a draft must not release an attachment a
+	 * DIFFERENT meta row still references.
+	 *
+	 * The bb_draft_release_replaced_attachments() primitive takes the cross-row
+	 * retain set as its fifth argument, and the only existing coverage calls that
+	 * primitive directly with a hand-supplied array - its own docblock says so. Nothing
+	 * locked the handler's obligation to COMPUTE and PASS it, so replacing the
+	 * computed set with array() at this call site left the whole suite green
+	 * while member files became reapable: the release strips bb_media_draft from
+	 * an attachment another row still holds, and
+	 * bp_media_delete_orphaned_attachments() hard-deletes it within 6h.
+	 *
+	 * $only_here is the negative control. Without it this test would also pass
+	 * for a build that stopped releasing anything at all, which leaks orphan
+	 * protection for ever instead of over-releasing it.
+	 */
+	public function test_replacing_an_activity_draft_keeps_a_cross_row_attachment_stamped() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$shared    = $this->make_draft_attachment( $user_id );
+		$only_here = $this->make_draft_attachment( $user_id );
+
+		// Both start protected, exactly as a previous save would have left them.
+		update_post_meta( $shared, 'bb_media_draft', 1 );
+		update_post_meta( $only_here, 'bb_media_draft', 1 );
+
+		// Row being replaced: an activity draft holding both attachments.
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key' => 'draft_user',
+				'data'     => array(
+					'media' => array(
+						array( 'id' => $shared ),
+						array( 'id' => $only_here ),
+					),
+				),
+			)
+		);
+
+		// A DIFFERENT meta row - the forum aggregate - still references $shared.
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_discussion_' . $forum_id => array(
+					'data_key' => 'draft_discussion_' . $forum_id,
+					'data'     => array(
+						'bbp_topic_content' => 'forum draft still holding it',
+						// bbp_* lists are stored as JSON STRINGS, not arrays -
+						// bb_draft_collect_attachment_ids() json_decode()s them.
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $shared ) ) ),
+					),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		// Replace the activity draft with text only: it now holds neither file.
+		$this->drive_activity_draft_save( 'draft_user', array( 'content' => 'now text only' ) );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'An attachment another draft ROW still references must keep its stamp when this row is replaced - releasing it lets the orphan cron hard-delete a file a live draft points at.'
+		);
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $only_here, 'bb_media_draft', true ),
+			'Negative control: an attachment nothing else references must still be released, or the fix would simply leak orphan protection for ever.'
+		);
+	}
+
+	/**
+	 * M-3 (forum half): the same invariant on the forum replace call site.
+	 *
+	 * The forum handler passes BOTH a same-row retain set (its surviving inner
+	 * entries) and the cross-row set. The same-row half is already covered by
+	 * test_replacing_an_inner_draft_keeps_a_sibling_attachment_stamped(); this
+	 * locks the cross-row half, which was the untested one.
+	 */
+	public function test_replacing_a_forum_draft_keeps_a_cross_row_attachment_stamped() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$data_key = 'draft_discussion_' . $forum_id;
+
+		$shared    = $this->make_draft_attachment( $user_id );
+		$only_here = $this->make_draft_attachment( $user_id );
+
+		update_post_meta( $shared, 'bb_media_draft', 1 );
+		update_post_meta( $only_here, 'bb_media_draft', 1 );
+
+		// Row being replaced: the forum aggregate, holding both attachments in
+		// its single inner entry - so no SAME-row sibling can retain them and
+		// only the cross-row set can save $shared.
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$data_key => array(
+					'data_key' => $data_key,
+					'data'     => array(
+						'bbp_topic_content' => 'forum draft original',
+						'bbp_media'         => wp_json_encode(
+							array(
+								array( 'id' => $shared ),
+								array( 'id' => $only_here ),
+							)
+						),
+					),
+				),
+			)
+		);
+
+		// A DIFFERENT meta row - an activity draft - still references $shared.
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key' => 'draft_user',
+				'data'     => array( 'media' => array( array( 'id' => $shared ) ) ),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		// Replace the forum entry with text only: it now holds neither file.
+		$this->drive_forum_draft_save( $data_key, array( 'bbp_topic_content' => 'now text only' ) );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'An attachment an activity draft row still references must keep its stamp when the forum row is replaced.'
+		);
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $only_here, 'bb_media_draft', true ),
+			'Negative control: an attachment nothing else references must still be released.'
+		);
+	}
+
+	/**
+	 * H-5: resolving many sibling draft keys must not be one query per key.
+	 *
+	 * The forum sibling merge calls bb_draft_topic_reply_key_context() per key,
+	 * and that resolves each key through get_post() plus, for the reply shape,
+	 * two post-meta reads. The aggregate row is capped by BYTES, not by entry
+	 * count, so a member holding many small drafts turned a single autosave -
+	 * the unload beacon replays every key the tab holds - into one uncached
+	 * lookup per draft.
+	 *
+	 * Asserting a total query count would be brittle, so this asserts the shape
+	 * that matters: priming is O(1) in the number of keys, and after it the
+	 * per-key resolution issues no queries at all.
+	 */
+	public function test_sibling_key_resolution_is_batched_not_per_key() {
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$topic_ids = array();
+		for ( $i = 0; $i < 6; $i++ ) {
+			$topic_ids[] = self::factory()->post->create(
+				array(
+					'post_type'   => bbp_get_topic_post_type(),
+					'post_parent' => $forum_id,
+				)
+			);
+		}
+
+		$data_keys = array( 'draft_discussion_' . $forum_id );
+		foreach ( $topic_ids as $topic_id ) {
+			$data_keys[] = 'draft_reply_' . $topic_id;
+		}
+
+		// Cold caches: this is the state a fresh request arrives in.
+		clean_post_cache( $forum_id );
+		foreach ( $topic_ids as $topic_id ) {
+			clean_post_cache( $topic_id );
+		}
+
+		$before_prime = get_num_queries();
+		bb_draft_prime_topic_reply_key_posts( $data_keys );
+		$prime_queries = get_num_queries() - $before_prime;
+
+		$this->assertLessThanOrEqual(
+			3,
+			$prime_queries,
+			'Priming 7 keys must be a small fixed number of batched queries, not one per key.'
+		);
+
+		// The whole point: with the batch primed, every per-key resolution below
+		// must come out of cache.
+		$before_resolve = get_num_queries();
+
+		foreach ( $data_keys as $data_key ) {
+			$this->assertNotFalse(
+				bb_draft_topic_reply_key_context( $data_key ),
+				'Priming must not change resolution results - every key here is valid.'
+			);
+		}
+
+		$this->assertSame(
+			0,
+			get_num_queries() - $before_resolve,
+			'After priming, resolving each sibling key must issue no further queries - that is the N+1 this fix removes.'
+		);
+	}
+
+	/**
+	 * H-4: an autosave that adds no new reference must not move the token.
+	 *
+	 * The sweep abandons its run whenever the token moves between capture and
+	 * commit. Every autosave of a draft that merely KEEPS an attachment used to
+	 * move it - an ordinary composer with one photo, ticking for as long as the
+	 * member types - so on a busy community the sweep could abstain indefinitely
+	 * and `wp bb drafts cleanup` looped forever on `complete => false`.
+	 *
+	 * The cached set is the authority: if it already holds every attachment the
+	 * draft keeps, it is still a superset and there is nothing to invalidate.
+	 */
+	public function test_invalidation_skips_when_cached_set_already_covers_kept_attachments() {
+		delete_site_option( 'bb_draft_referenced_stamp_ids_token' );
+		delete_site_transient( 'bb_draft_referenced_stamp_ids_token' );
+
+		$covered   = 4242;
+		$uncovered = 4343;
+
+		set_site_transient( 'bb_draft_referenced_stamp_ids', array( $covered => true ) );
+		bb_draft_invalidate_referenced_cache( array( $covered ) );
+		$token_after_covered = bb_draft_get_referenced_cache_token();
+
+		$this->assertSame(
+			'',
+			$token_after_covered,
+			'A draft keeping only already-referenced attachments must not move the token - that is what starved the sweep.'
+		);
+		$this->assertSame(
+			array( $covered => true ),
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'The cached set must survive too: it is still a superset, so dropping it only forces a needless rescan.'
+		);
+
+		// A genuinely NEW reference must still invalidate - this is the half the
+		// sweep's correctness depends on, and the F7 trap if it is ever gated on
+		// stamp transitions instead of on what the draft keeps.
+		bb_draft_invalidate_referenced_cache( array( $covered, $uncovered ) );
+
+		$this->assertNotEmpty(
+			bb_draft_get_referenced_cache_token(),
+			'An attachment the cached set does not hold MUST move the token, or a mid-scan sweep can commit a non-superset.'
+		);
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'A new reference must drop the cached set.'
+		);
+
+		// A caller that cannot enumerate the kept set must still get the
+		// unconditional invalidation.
+		set_site_transient( 'bb_draft_referenced_stamp_ids', array( $covered => true ) );
+		bb_draft_invalidate_referenced_cache();
+
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'With no kept-set argument the helper must invalidate unconditionally.'
+		);
+
+		// A cache MISS cannot prove the superset, so the token must move even for
+		// an attachment that would otherwise look covered - this is the window
+		// where the sweep is mid-rebuild with nothing cached.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+		delete_site_option( 'bb_draft_referenced_stamp_ids_token' );
+		delete_site_transient( 'bb_draft_referenced_stamp_ids_token' );
+		bb_draft_invalidate_referenced_cache( array( $covered ) );
+
+		$this->assertNotEmpty(
+			bb_draft_get_referenced_cache_token(),
+			'On a cache miss the superset cannot be proven, so the invalidation must not be skipped.'
+		);
+	}
+
+	/**
+	 * Feature images must be reclaimable by the nightly sweep.
+	 *
+	 * A feature image carries its own pair of markers, separate from the ones a
+	 * photo carries. The sweep only ever looked for the photo pair, so a feature
+	 * image's marker was cleared by the ordinary discard / replace / expiry paths
+	 * and by nothing else. Anything those missed - an interrupted request, a
+	 * refused save, an evicted row - kept its marker for ever.
+	 *
+	 * That was survivable while the other plugin deleted these images after six
+	 * hours regardless. Now that it correctly leaves marked images alone, an
+	 * unreclaimable marker would keep the file alive permanently, so the sweep has
+	 * to be able to see them. The two changes only work together.
+	 */
+	public function test_sweep_reclaims_an_unreferenced_feature_image() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		// A feature image left marked, referenced by no stored draft.
+		$stranded = self::factory()->post->create(
+			array(
+				'post_type'     => 'attachment',
+				'post_author'   => $user_id,
+				'post_status'   => 'inherit',
+				'post_date_gmt' => gmdate( 'Y-m-d H:i:s', time() - ( 40 * DAY_IN_SECONDS ) ),
+				'post_date'     => gmdate( 'Y-m-d H:i:s', time() - ( 40 * DAY_IN_SECONDS ) ),
+			)
+		);
+		update_post_meta( $stranded, 'bb_activity_post_feature_image_saved', '0' );
+		update_post_meta( $stranded, 'bb_activity_post_feature_image_draft', 1 );
+
+		// A second one that a live draft DOES reference - the negative control.
+		$in_use = self::factory()->post->create(
+			array(
+				'post_type'     => 'attachment',
+				'post_author'   => $user_id,
+				'post_status'   => 'inherit',
+				'post_date_gmt' => gmdate( 'Y-m-d H:i:s', time() - ( 40 * DAY_IN_SECONDS ) ),
+				'post_date'     => gmdate( 'Y-m-d H:i:s', time() - ( 40 * DAY_IN_SECONDS ) ),
+			)
+		);
+		update_post_meta( $in_use, 'bb_activity_post_feature_image_saved', '0' );
+		update_post_meta( $in_use, 'bb_activity_post_feature_image_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key' => 'draft_user',
+				'data'     => array(
+					'bb_activity_post_feature_image' => array( 'id' => $in_use ),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $stranded, 'bb_activity_post_feature_image_draft', true ),
+			'A feature image no draft references must have its marker released, or the file can never be reclaimed by either plugin.'
+		);
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $in_use, 'bb_activity_post_feature_image_draft', true ),
+			'A feature image a live draft still uses must KEEP its marker - releasing it hands the file back to the other plugin to delete.'
+		);
+	}
+
+	/**
+	 * B3-4: the sweep lock must be acquired atomically, not check-then-set.
+	 *
+	 * Two sweeps - the daily cron and a WP-CLI drain, or two overlapping workers -
+	 * could both read "free" in the gap between the check and the set, both
+	 * proceed, and then write their own position over the single shared cursor.
+	 * The slower one wins, a range is skipped for that cycle, and the sweep
+	 * silently does less than it reports.
+	 *
+	 * With a persistent object cache the acquisition is now one atomic
+	 * `wp_cache_add()`, so exactly one caller can win. This forces that
+	 * configuration on, because the harness has no persistent cache and would
+	 * otherwise exercise the non-atomic fallback and prove nothing.
+	 */
+	public function test_stamp_sweep_lock_is_acquired_atomically() {
+		delete_transient( 'bb_draft_stamp_sweep_lock' );
+
+		$was_using_ext_cache = wp_using_ext_object_cache( true );
+		wp_cache_delete( 'bb_draft_stamp_sweep_lock', 'transient' );
+
+		$this->assertTrue(
+			bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ),
+			'The first caller must acquire the lock.'
+		);
+
+		// Sequentially, a check-then-set behaves identically to an atomic add, so
+		// asserting "the second caller loses" proves nothing about atomicity. The
+		// race needs the INTERLEAVING reproduced: a competing sweep already holds
+		// the lock in the store, while the read that a check-then-set performs
+		// still answers "free" - precisely the window between its check and its
+		// set. An atomic add consults the store and loses; a check-then-set
+		// believes the stale read and proceeds.
+		wp_cache_delete( 'bb_draft_stamp_sweep_lock', 'transient' );
+		wp_cache_add( 'bb_draft_stamp_sweep_lock', 1, 'transient', 5 * MINUTE_IN_SECONDS );
+
+		add_filter( 'transient_bb_draft_stamp_sweep_lock', '__return_false' );
+		$acquired_during_race = bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS );
+		remove_filter( 'transient_bb_draft_stamp_sweep_lock', '__return_false' );
+
+		$this->assertFalse(
+			$acquired_during_race,
+			'A sweep must NOT acquire a lock another sweep already holds, even when its own read says otherwise. Both holding it is what lets them clobber the shared cursor.'
+		);
+
+		// And it must not latch: once released the lock is available again, or one
+		// crashed sweep disables the feature for ever.
+		wp_cache_delete( 'bb_draft_stamp_sweep_lock', 'transient' );
+		delete_transient( 'bb_draft_stamp_sweep_lock' );
+
+		$this->assertTrue(
+			bb_draft_acquire_stamp_sweep_lock( 5 * MINUTE_IN_SECONDS ),
+			'After release the lock must be acquirable again.'
+		);
+
+		wp_cache_delete( 'bb_draft_stamp_sweep_lock', 'transient' );
+		delete_transient( 'bb_draft_stamp_sweep_lock' );
+		wp_using_ext_object_cache( $was_using_ext_cache );
+	}
+
+	/**
+	 * B6-H1: the referenced-set cache must decline rather than grow unbounded.
+	 *
+	 * The set aggregates every draft-referenced attachment on the network into one
+	 * cache entry. An object cache with a per-item size limit - Memcached's
+	 * default is 1 MB - refuses an oversized entry SILENTLY: the write looks like
+	 * it worked and every read comes back empty, for ever. That is the ticket's
+	 * own failure mode reproduced one tier down, and it would be invisible.
+	 *
+	 * Above a stated bound the sweep therefore declines to cache. Correctness is
+	 * untouched - the set is a performance aid the sweep can always rebuild - so
+	 * the assertion is about the cache entry, not about what was released.
+	 */
+	public function test_referenced_set_cache_declines_when_it_exceeds_the_bound() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+
+		// Force the bound below anything the fixture can produce.
+		add_filter( 'bb_draft_referenced_cache_max_ids', array( $this, 'filter_referenced_cache_max_ids_zero_one' ) );
+
+		// Two referenced attachments, so the set is larger than the bound of 1.
+		$first  = $this->make_draft_attachment( $user_id );
+		$second = $this->make_draft_attachment( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key' => 'draft_user',
+				'data'     => array(
+					'media' => array(
+						array( 'id' => $first ),
+						array( 'id' => $second ),
+					),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'An over-bound set must NOT be cached. Writing it lets a size-capped backend refuse it silently, and the cache then never warms again.'
+		);
+
+		remove_filter( 'bb_draft_referenced_cache_max_ids', array( $this, 'filter_referenced_cache_max_ids_zero_one' ) );
+
+		// Control: within the bound the set is still cached, so the decline is the
+		// exception and not the new normal.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		$this->assertIsArray(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'Within the bound the set must still be cached - otherwise the sweep rescans on every run.'
+		);
+	}
+
+	/**
+	 * Force the referenced-set cache bound down to a single ID.
+	 *
+	 * @return int The bound.
+	 */
+	public function filter_referenced_cache_max_ids_zero_one() {
+		return 1;
+	}
+
+	/**
+	 * B3-3: every attachment the STORED row references must end a write stamped.
+	 *
+	 * The merged row keeps entries for keys this request never decided about,
+	 * copied from the fresh read of another tab's work. Their attachments are
+	 * referenced by a live stored draft, but they are not in this request's
+	 * payload - so a re-stamp filtered by the payload left them unstamped
+	 * whenever something had released their stamp meanwhile (a concurrent discard
+	 * of that key, which the merge then resurrects). The row then referenced a
+	 * file carrying no `bb_media_draft`, and the orphan cron deleted it within
+	 * six hours from a draft the member never discarded.
+	 *
+	 * Simulated deterministically by releasing the stamp out-of-band - which is
+	 * exactly the state the concurrent discard leaves behind - and then driving a
+	 * save for a DIFFERENT key.
+	 */
+	public function test_save_restamps_attachments_of_keys_it_did_not_decide() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$undecided_key = 'draft_discussion_' . $forum_a;
+		$edited_key    = 'draft_discussion_' . $forum_b;
+
+		$stranded = $this->make_draft_attachment( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$undecided_key => array(
+					'data_key' => $undecided_key,
+					'data'     => array(
+						'bbp_topic_content' => 'a draft this request never touches',
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $stranded ) ) ),
+					),
+				),
+				$edited_key    => array(
+					'data_key' => $edited_key,
+					'data'     => array( 'bbp_topic_content' => 'original' ),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		// The state a concurrent discard leaves behind: the row still references
+		// the file, but its stamp is gone.
+		delete_post_meta( $stranded, 'bb_media_draft' );
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $stranded, 'bb_media_draft', true ),
+			'Precondition: the stamp must actually be absent, or this test proves nothing.'
+		);
+
+		// Save a DIFFERENT key. The stranded attachment is in no payload.
+		$this->drive_forum_draft_save( $edited_key, array( 'bbp_topic_content' => 'edited' ) );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $stranded, 'bb_media_draft', true ),
+			'An attachment referenced by an undecided key must be re-stamped by the write - otherwise a live draft points at a file the orphan cron will delete.'
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertArrayHasKey(
+			$undecided_key,
+			$stored,
+			'Negative control: the undecided entry must survive the write it was not part of.'
+		);
+		$this->assertSame(
+			'edited',
+			$stored[ $edited_key ]['data']['bbp_topic_content'],
+			'Negative control: the edited key must still save.'
+		);
+	}
+
+	/**
+	 * BLOCKER-2: a FAILED scan query must never read as "nothing is referenced".
+	 *
+	 * `$wpdb->get_results()` returns null when a query fails, `empty( null )` is
+	 * true, and the batch reader returned that as `has_more => false` - byte for
+	 * byte the same answer as "you have reached the end of the table". The
+	 * reference scan then finished normally and returned an EMPTY set, which the
+	 * sweep treated as authoritative: it released `bb_media_draft` from every
+	 * stamped attachment on the site and cached that answer network-wide for the
+	 * TTL. A transient DB error became permanent member-media loss.
+	 *
+	 * The attachment here is genuinely referenced by a stored draft, so a healthy
+	 * sweep keeps its stamp anyway. What this pins is the FAILURE path: with the
+	 * query broken the sweep must decline, not decide.
+	 */
+	public function test_failed_scan_query_does_not_release_stamps() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$attachment = $this->make_stamped_unsaved_attachment( $user_id );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		// Break the scan's windowing query at the wpdb layer, the way a real
+		// failure arrives: get_results() yields null and last_error is set.
+		add_filter( 'query', array( $this, 'break_draft_scan_query' ) );
+
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		remove_filter( 'query', array( $this, 'break_draft_scan_query' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame(
+			0,
+			(int) $result['released'],
+			'A failed scan must release NOTHING. Releasing against an empty set built from a broken query frees every stamp on the site.'
+		);
+		$this->assertFalse(
+			$result['complete'],
+			'A failed scan is not a completed pass.'
+		);
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $attachment, 'bb_media_draft', true ),
+			'The stamp must survive a failed scan - this is the member-media-loss leg.'
+		);
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'A set derived from a failed query must NEVER be cached, or the wrong answer is pinned network-wide for the TTL.'
+		);
+	}
+
+	/**
+	 * BLOCKER-2 follow-on: a PERMANENT decline must not become a cron spin.
+	 *
+	 * Distinguishing a failed query from an exhausted table is the fix; applying
+	 * that same treatment to the non-invertible-`bp_get_user_meta_key` decline
+	 * would be a NEW bug. `bb_drafts_delete_expired()` reschedules itself a minute
+	 * out whenever it reports incomplete, and a filter is either invertible or it
+	 * is not - so reporting the decline as "incomplete" would reschedule the pass
+	 * every minute, for ever, to do nothing at all.
+	 *
+	 * Transient failure retries. Permanent decline stops. This pins the second.
+	 */
+	public function test_non_invertible_meta_key_filter_does_not_schedule_a_retry_spin() {
+		$this->isolate_draft_maintenance();
+
+		$existing = wp_next_scheduled( 'bb_draft_cleanup' );
+		if ( $existing ) {
+			wp_unschedule_event( $existing, 'bb_draft_cleanup' );
+		}
+
+		// A filter the code cannot invert: it cannot map a stored key back to the
+		// draft it belongs to, so the scan declines rather than guessing.
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_non_invertible_meta_key' ), 99 );
+
+		$batch = bb_draft_get_rows_batch( 0, 10, false );
+
+		$this->assertTrue(
+			! empty( $batch['declined'] ),
+			'A non-invertible key filter must be reported as declined, not silently as an empty window.'
+		);
+		$this->assertTrue(
+			empty( $batch['failed'] ),
+			'A permanent decline must NOT be reported as a transient failure - that is what turns it into a retry loop.'
+		);
+
+		$result = bb_drafts_delete_expired( 0 );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_non_invertible_meta_key' ), 99 );
+
+		$this->assertTrue(
+			$result['complete'],
+			'A declined pass must report complete, or it reschedules itself every minute for ever.'
+		);
+		$this->assertFalse(
+			(bool) wp_next_scheduled( 'bb_draft_cleanup' ),
+			'A declined pass must not schedule a retry - the condition is permanent and the retry would never stop.'
+		);
+	}
+
+	/**
+	 * A `bp_get_user_meta_key` filter that cannot be inverted.
+	 *
+	 * Maps every key onto one opaque constant, so a stored key carries no way
+	 * back to the draft it came from.
+	 *
+	 * @param string $key The meta key.
+	 * @return string The rewritten key.
+	 */
+	public function filter_non_invertible_meta_key( $key ) {
+		unset( $key );
+
+		return 'bb_opaque_non_invertible_key';
+	}
+
+	/**
+	 * Break the draft reference scan's windowing query.
+	 *
+	 * Rewrites it to target a table that does not exist, so wpdb fails it exactly
+	 * as it would on a real error: get_results() returns null and last_error is
+	 * populated. Scoped by a string only that query carries, so nothing else in
+	 * the request is affected.
+	 *
+	 * @param string $query The query about to run.
+	 * @return string The query, rewritten when it is the scan's window read.
+	 */
+	public function break_draft_scan_query( $query ) {
+		global $wpdb;
+
+		if ( false !== strpos( $query, 'LENGTH(meta_value) AS bytes' ) ) {
+			return 'SELECT 1 FROM ' . $wpdb->prefix . 'bb_draft_no_such_table_for_tests';
+		}
+
+		return $query;
+	}
+
+	/**
+	 * H-4 livelock: a save DURING the scan must not cost the whole sweep.
+	 *
+	 * The sweep used to abstain outright whenever the change token moved while it
+	 * scanned. That was safe but unreachable on the sites it was written for: the
+	 * cached set is cold exactly when the sweep needs to rebuild it, every
+	 * attachment-bearing save network-wide bumps the token while it is cold, and
+	 * the scan takes minutes - so the sweep abstained on every run, for ever, and
+	 * the stamps it exists to reclaim accumulated without bound.
+	 *
+	 * The replacement records references added during the scan window and unions
+	 * them into the result, which is a provable superset without requiring the
+	 * scan to be atomic. This asserts both halves: the concurrent reference is
+	 * protected, AND the run still makes progress instead of abstaining.
+	 */
+	public function test_reference_added_during_scan_is_protected_without_abstaining() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$concurrent = 778899;
+
+		// Simulate the sweep having opened its recording window and started
+		// scanning: the cache is cold, exactly as it is on a real rebuild.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+		bb_draft_reference_scan_begin();
+
+		$this->assertTrue(
+			bb_draft_reference_scan_is_active(),
+			'The scan window must be open, or nothing records and the union cannot work.'
+		);
+
+		// A member saves a draft mid-scan, keeping an attachment whose draft row
+		// the scan's cursor has already passed.
+		bb_draft_invalidate_referenced_cache( array( $concurrent ) );
+
+		$pending = bb_draft_peek_pending_reference_ids();
+
+		$this->assertContains(
+			$concurrent,
+			$pending['ids'],
+			'A reference added during the scan MUST be recorded - it is the only thing that can repair a set the cursor already walked past.'
+		);
+		$this->assertFalse(
+			$pending['overflow'],
+			'One reference must not trip the ledger cap.'
+		);
+
+		// Closing the window hands the ledger over and stops recording.
+		$closed = bb_draft_reference_scan_end();
+
+		$this->assertContains( $concurrent, $closed['ids'], 'Closing the window must return what it recorded.' );
+		$this->assertFalse(
+			bb_draft_reference_scan_is_active(),
+			'The window must be closed afterwards, or the ledger grows for ever.'
+		);
+
+		// Outside a scan window nothing is recorded - the next scan reads the
+		// drafts straight from the database, so there is nothing to carry.
+		bb_draft_invalidate_referenced_cache( array( 112233 ) );
+
+		$this->assertEmpty(
+			bb_draft_peek_pending_reference_ids()['ids'],
+			'Outside a scan window the ledger must stay empty, or it grows unbounded on every save.'
+		);
+	}
+
+	/**
+	 * H-4: a ledger that overflows must abstain, not silently under-collect.
+	 *
+	 * The union is only a provable superset while everything added during the
+	 * window was recorded. Past the cap it is not, and the safe answer is the old
+	 * conservative one - release nothing - reported distinguishably so the WP-CLI
+	 * command can retry rather than treat it as "nothing left to do".
+	 */
+	public function test_pending_reference_ledger_overflow_is_reported_not_swallowed() {
+		bb_draft_reference_scan_begin();
+
+		// One id past the cap.
+		$ids = range( 1, BB_DRAFT_PENDING_REFERENCE_CAP + 1 );
+		bb_draft_record_pending_reference_ids( $ids );
+
+		$pending = bb_draft_peek_pending_reference_ids();
+
+		$this->assertTrue(
+			$pending['overflow'],
+			'Crossing the cap must be reported, or the sweep releases against a set it cannot prove is a superset.'
+		);
+
+		// Once overflowed it must stay overflowed for the window - it cannot
+		// become provable again by recording more.
+		bb_draft_record_pending_reference_ids( array( 999999 ) );
+
+		$this->assertTrue(
+			bb_draft_peek_pending_reference_ids()['overflow'],
+			'Overflow must latch for the window.'
+		);
+
+		bb_draft_reference_scan_end();
+	}
+
+	/**
+	 * H-5: a scalar `all_data` must not fatal the forum draft handler.
+	 *
+	 * `all_data` is json_decode()d at the request boundary, and a scalar JSON
+	 * document ("5", "true", "\"x\"") decodes to a scalar while every consumer
+	 * below assumes an array. The sibling-merge loop tolerated that with a
+	 * warning; array_intersect_key() does not - on PHP 8 it raises
+	 * `TypeError: Argument #1 ($array) must be of type array`, a fatal on an
+	 * ordinary authenticated request.
+	 *
+	 * It lands AFTER attachment stamping and BEFORE the row write, so the cost is
+	 * not just a 500: the member's draft is lost and its stamps are left orphaned.
+	 * Narrowing at the boundary is what this locks.
+	 */
+	public function test_scalar_all_data_does_not_fatal_the_forum_handler() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$data_key = 'draft_discussion_' . $forum_id;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$data_key => array(
+					'data_key' => $data_key,
+					'data'     => array( 'bbp_topic_content' => 'stored original' ),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		foreach ( array( '5', 'true', '"a string"' ) as $scalar_json ) {
+			$_POST    = array();
+			$_REQUEST = array();
+
+			$_REQUEST['draft_topic_reply'] = wp_slash(
+				wp_json_encode(
+					array(
+						'data_key'    => $data_key,
+						'object'      => 'topic',
+						'post_action' => 'update',
+						'data'        => array( 'bbp_topic_content' => 'updated body' ),
+					)
+				)
+			);
+			// The crafted part: a scalar JSON document where an object is expected.
+			$_REQUEST['all_data'] = wp_slash( $scalar_json );
+
+			// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+			$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+			$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+			// phpcs:enable WordPress.Security.NonceVerification
+
+			add_filter( 'wp_doing_ajax', '__return_true' );
+			add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+			$fatal = '';
+
+			ob_start();
+			try {
+				bb_post_topic_reply_draft();
+			} catch ( Throwable $e ) {
+				// Only the handler's own exit is expected; see the H-1 test for why
+				// this catches Throwable rather than Error.
+				if ( ! ( $e instanceof Exception && 'draft-handler-exit' === $e->getMessage() ) ) {
+					$fatal = get_class( $e ) . ': ' . $e->getMessage();
+				}
+			}
+			ob_end_clean();
+
+			remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+			remove_filter( 'wp_doing_ajax', '__return_true' );
+
+			$this->assertSame(
+				'',
+				$fatal,
+				sprintf( 'A scalar all_data (%s) must be narrowed at the boundary, not reach array_intersect_key().', $scalar_json )
+			);
+		}
+
+		// Negative control: the primary draft still saved, so the narrowing did not
+		// simply abort the request before it did any work.
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'updated body',
+			$stored[ $data_key ]['data']['bbp_topic_content'],
+			'The primary entry must still save - narrowing all_data must not cost the member their draft.'
+		);
+	}
+
+	/**
+	 * H-1: a non-scalar data_key must not reach the array-key writes.
+	 *
+	 * The forum handler uses data_key as an array KEY on the member's stored row
+	 * (isset/unset/assignment). An array there is an illegal offset type, which
+	 * on PHP 8 is a fatal TypeError, not the notice the (string) cast alone
+	 * raises. The authorization gate does not stop it: a primary rejection is
+	 * deliberately recorded rather than thrown, so the request carries the bad
+	 * key past the gate and into those writes.
+	 *
+	 * The handler must coerce the key at the boundary, reject it as an unusable
+	 * shape, and leave the member's existing drafts untouched.
+	 */
+	public function test_non_scalar_data_key_is_coerced_and_rejected_without_fatal() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$topic_id = self::factory()->post->create(
+			array(
+				'post_type'   => bbp_get_topic_post_type(),
+				'post_parent' => $forum_id,
+			)
+		);
+
+		$existing_key = 'draft_reply_' . $topic_id;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$existing_key => array(
+					'data_key'        => $existing_key,
+					'data'            => array( 'bbp_reply_content' => 'reply original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		$_POST    = array();
+		$_REQUEST = array();
+
+		// XHR transport: a crafted nested array, i.e. draft_topic_reply[data_key][]=x.
+		$_REQUEST['draft_topic_reply'] = array(
+			'data_key'    => array( $existing_key ),
+			'object'      => 'reply',
+			'post_action' => 'update',
+			'data'        => array( 'bbp_reply_content' => 'reply overwritten' ),
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		$fatal = '';
+
+		ob_start();
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Throwable $e ) {
+			// The handler's own exit is the one throw expected here;
+			// filter_draft_die_handler() raises it to make wp_send_json_*()
+			// catchable. ANY other throw is the defect.
+			//
+			// Catching Throwable rather than Error is deliberate. In production
+			// the uncoerced key reaches the array-key writes and raises a
+			// TypeError, but under this suite convertWarningsToExceptions turns
+			// the earlier "Array to string conversion" warning into an
+			// ErrorException first - so a test that caught only Error would
+			// swallow that as a plain Exception and pass against the very code
+			// it is meant to gate.
+			if ( ! ( $e instanceof Exception && 'draft-handler-exit' === $e->getMessage() ) ) {
+				$fatal = get_class( $e ) . ': ' . $e->getMessage();
+			}
+		}
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+
+		$this->assertSame(
+			'',
+			$fatal,
+			'A non-scalar data_key must not raise a PHP Error - it must be coerced at the boundary and rejected as an unusable key shape.'
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'reply original',
+			$stored[ $existing_key ]['data']['bbp_reply_content'],
+			'The rejected request must leave the member\'s existing draft untouched.'
+		);
+
+		$this->assertArrayNotHasKey(
+			'',
+			$stored,
+			'The coerced empty key must never be written as a draft of its own.'
 		);
 	}
 }
