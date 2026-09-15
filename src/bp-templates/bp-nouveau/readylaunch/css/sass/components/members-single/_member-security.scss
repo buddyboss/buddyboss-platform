@@ -1,0 +1,420 @@
+/*
+ * Security tab.
+ *
+ * The tab prints the Two Factor plugin's wp-admin markup verbatim, so
+ * everything below restyles that markup - form tables, wp-admin buttons
+ * and notices - to ReadyLaunch's account settings language.
+ */
+.bb-rl-account-settings-section {
+
+	.security-info {
+
+		@include bb-rl-label-heading-md-thin;
+		max-width: 640px;
+		margin-bottom: var(--bb-rl-space-300);
+		color: var(--bb-rl-text-secondary-color);
+	}
+
+	.bb-two-factor-form {
+
+		h2 {
+
+			@include bb-rl-base-heading-xl;
+			margin-bottom: var(--bb-rl-space-100);
+			color: var(--bb-rl-text-color);
+		}
+
+		fieldset {
+			margin: 0;
+		}
+
+		fieldset[disabled] {
+			opacity: 0.6;
+		}
+
+		fieldset > p {
+
+			@include bb-rl-label-heading-md-thin;
+			max-width: 640px;
+			margin-bottom: var(--bb-rl-space-300);
+			color: var(--bb-rl-text-secondary-color);
+		}
+
+		hr {
+			height: 1px;
+			margin: var(--bb-rl-space-300) 0;
+			border: 0;
+			background-color: var(--bb-rl-border-secondary-color);
+		}
+
+		// Method cards: the th becomes the group label above each card, matching
+		// the notification settings rhythm.
+		.two-factor-methods-table,
+		.two-factor-primary-method-table {
+			display: block;
+			width: 100%;
+			margin: 0;
+			border: 0;
+
+			tbody,
+			tr,
+			th,
+			td {
+				display: block;
+				padding: 0;
+				border: 0;
+			}
+
+			tr {
+				margin-bottom: var(--bb-rl-space-300);
+			}
+
+			tr:last-child {
+				margin-bottom: 0;
+			}
+
+			th {
+
+				@include bb-rl-label-heading-md;
+				margin-bottom: var(--bb-rl-space-100);
+				color: var(--bb-rl-text-tertiary-color);
+				text-align: left;
+			}
+
+			th label {
+				margin: 0;
+				color: inherit;
+				font: inherit;
+			}
+
+			td {
+				padding: var(--bb-rl-space-300);
+				border: 1px solid var(--bb-rl-border-secondary-color);
+				border-radius: var(--bb-rl-radius-lg);
+				background-color: var(--bb-rl-background-color);
+			}
+		}
+
+		// ReadyLaunch hides every checkbox and draws the box on the next element,
+		// which here is the provider's own <strong>, not a sibling <label>.
+		.two-factor-method-label {
+			position: relative;
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			margin: 0;
+			cursor: pointer;
+
+			strong {
+
+				@include bb-rl-label-heading-md;
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+				color: var(--bb-rl-text-color);
+			}
+
+			strong:before {
+				content: "";
+				flex-shrink: 0;
+				width: 16px;
+				height: 16px;
+				margin-right: var(--bb-rl-space-100);
+				border: 1px solid var(--bb-rl-border-tertiary-color);
+				border-radius: var(--bb-rl-radius-sm);
+				background: var(--bb-rl-background-color);
+			}
+
+			input[type="checkbox"]:focus + strong:before {
+				border-color: var(--bb-rl-background-brand-primary-color);
+			}
+
+			input[type="checkbox"]:checked + strong:before {
+				border-color: var(--bb-rl-background-brand-primary-color);
+				background: var(--bb-rl-background-brand-primary-color);
+			}
+
+			input[type="checkbox"]:checked + strong:after {
+				content: "\e182";
+				position: absolute;
+				top: 50%;
+				left: 0;
+				width: 16px;
+				color: var(--bb-rl-text-white-color);
+				font-family: bb-icons-rl;
+				font-size: 13px;
+				font-weight: 700;
+				line-height: 1;
+				text-align: center;
+				transform: translateY(-50%);
+			}
+
+			input[type="checkbox"]:disabled + strong {
+				color: var(--bb-rl-text-disabled-color);
+				cursor: auto;
+			}
+
+			input[type="checkbox"]:disabled + strong:before {
+				background: var(--bb-rl-border-disabled-color);
+				box-shadow: none;
+			}
+		}
+
+		.two-factor-method-recommended {
+
+			@include bb-rl-label-heading-xs;
+			margin-left: var(--bb-rl-space-100);
+			padding: 2px var(--bb-rl-space-100);
+			border: 0;
+			border-radius: var(--bb-rl-radius-sm);
+			background-color: var(--bb-rl-background-positive-secondary-color);
+			color: var(--bb-rl-text-positive-primary-color);
+			text-decoration: none;
+			cursor: help;
+		}
+
+		#two-factor-totp-options,
+		#two-factor-backup-codes,
+		.two-factor-backup-codes-wrapper {
+
+			@include bb-rl-label-heading-md-thin;
+			margin-top: var(--bb-rl-space-200);
+			padding: var(--bb-rl-space-200);
+			border-radius: var(--bb-rl-radius-base);
+			background-color: var(--bb-rl-background-secondary-color);
+			color: var(--bb-rl-text-secondary-color);
+
+			p {
+				margin-bottom: var(--bb-rl-space-100);
+			}
+
+			p:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		.two-factor-backup-codes-wrapper {
+			margin-top: var(--bb-rl-space-100);
+		}
+
+		// Providers that render a plain description instead of a panel, e.g. Email.
+		.two-factor-methods-table td > p {
+
+			@include bb-rl-label-heading-md-thin;
+			margin: var(--bb-rl-space-100) 0 0;
+			color: var(--bb-rl-text-secondary-color);
+		}
+
+		.totp-steps {
+			margin: 0;
+			padding-left: var(--bb-rl-space-200);
+
+			> li {
+				margin-bottom: var(--bb-rl-space-200);
+			}
+
+			> li:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		// The QR modules are always dark, so this panel stays light in either scheme.
+		#two-factor-qr-code {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 204px;
+			min-width: 0;
+			height: 204px;
+			min-height: 0;
+			margin: var(--bb-rl-space-200) 0;
+			padding: var(--bb-rl-space-200);
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-base);
+			background-color: #fff;
+
+			svg {
+				display: block;
+				width: 180px;
+				height: 180px;
+			}
+		}
+
+		code {
+			display: inline-block;
+			padding: 6px var(--bb-rl-space-100);
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-sm);
+			background-color: var(--bb-rl-background-color);
+			color: var(--bb-rl-text-color);
+			font-size: 14px;
+			letter-spacing: 1px;
+			word-break: break-all;
+		}
+
+		label[for="two-factor-totp-authcode"] {
+
+			@include bb-rl-label-heading-md;
+			display: block;
+			color: var(--bb-rl-text-color);
+		}
+
+		#two-factor-totp-authcode {
+			display: block;
+			width: 100%;
+			max-width: 220px;
+			margin-top: var(--bb-rl-space-100);
+			letter-spacing: 0.2em;
+		}
+
+		.totp-submit {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+			margin-top: var(--bb-rl-space-200);
+		}
+
+		.two-factor-backup-codes-count {
+
+			@include bb-rl-label-heading-md;
+			color: var(--bb-rl-text-color);
+		}
+
+		.two-factor-backup-codes-list-wrap {
+			display: block;
+			margin-top: 0;
+			padding: var(--bb-rl-space-200);
+			border: 1px solid var(--bb-rl-border-secondary-color);
+			border-radius: var(--bb-rl-radius-base);
+			background-color: var(--bb-rl-background-color);
+		}
+
+		.two-factor-backup-codes-unused-codes {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 6px var(--bb-rl-space-300);
+			margin: 0;
+			padding: 0;
+			list-style-position: inside;
+
+			li {
+				margin: 0;
+				color: var(--bb-rl-text-tertiary-color);
+			}
+		}
+
+		.two-factor-backup-codes-token {
+			color: var(--bb-rl-text-color);
+			letter-spacing: 0.2em;
+		}
+
+		#two-factor-primary-provider {
+			width: 100%;
+			max-width: 320px;
+		}
+
+		.description {
+
+			@include bb-rl-label-heading-xs;
+			margin: var(--bb-rl-space-100) 0 0;
+			color: var(--bb-rl-text-tertiary-color);
+			font-weight: 400;
+		}
+
+		#two-factor-backup-codes em {
+
+			@include bb-rl-label-heading-xs;
+			display: inline-block;
+			margin-left: var(--bb-rl-space-100);
+			color: var(--bb-rl-text-tertiary-color);
+			font-weight: 400;
+		}
+
+		// wp-admin notices, plus the error the TOTP script injects after Verify.
+		.notice,
+		#totp-setup-error {
+
+			@include bb-rl-notice;
+			@include bb-rl-notice--plain;
+			@include bb-rl-notice--plain-info;
+			margin: 0 0 var(--bb-rl-space-200);
+
+			p {
+				margin: 0 0 var(--bb-rl-space-100);
+			}
+
+			p {
+				font-size: 13px;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			&.notice-warning {
+
+				@include bb-rl-notice--plain-warning;
+			}
+
+			&.notice-error {
+
+				@include bb-rl-notice--plain-error;
+			}
+
+			&.notice-success {
+
+				@include bb-rl-notice--plain-success;
+			}
+		}
+
+		#totp-setup-error {
+
+			@include bb-rl-notice--plain-error;
+			margin: var(--bb-rl-space-200) 0 0;
+		}
+
+		// wp-admin buttons.
+		.button {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			@include bb-rl-button--small;
+		}
+
+		.button-secondary {
+
+			@include bb-rl-button--secondary-outline;
+		}
+
+		.button-two-factor-backup-codes-copy,
+		.button-two-factor-backup-codes-download {
+			margin-right: var(--bb-rl-space-100);
+		}
+
+		.submit {
+			margin-top: var(--bb-rl-space-300);
+		}
+
+		#submit {
+
+			@include bb-rl-button;
+			@include bb-rl-button--brand-fill;
+			font-size: var(--bb-rl-font-size-sm);
+			padding: 6px var(--bb-rl-space-200);
+			line-height: var(--bb-rl-base-line-small);
+		}
+
+		@media screen and (max-width: $sm) {
+
+			.two-factor-methods-table td,
+			.two-factor-primary-method-table td {
+				padding: var(--bb-rl-space-200);
+			}
+
+			.two-factor-backup-codes-unused-codes {
+				grid-template-columns: minmax(0, 1fr);
+			}
+		}
+	}
+}
