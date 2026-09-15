@@ -2,9 +2,11 @@
 /**
  * Two-Factor integration public API.
  *
- * Every read of the Two Factor plugin goes through these wrappers. Several
+ * Status reads of the Two Factor plugin go through these wrappers. Several
  * Two_Factor_Core methods wp_die() or fatal for a member whose configured
- * providers no longer resolve, so no caller may reach the class directly.
+ * providers no longer resolve, so no caller may reach those directly; the
+ * wrappers answer from get_available_providers_for_user(), which returns a
+ * WP_Error instead of dying on one.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Features\Integrations\TwoFactor

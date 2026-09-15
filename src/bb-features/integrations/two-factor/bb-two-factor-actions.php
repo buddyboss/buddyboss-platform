@@ -3,7 +3,9 @@
  * Two-Factor integration actions.
  *
  * Loaded from the integration's includes() on bp_include @8, only when the Two
- * Factor plugin is active and the feature is enabled.
+ * Factor plugin is active and the feature is enabled. The bb_two_factor_is_active()
+ * guards below are therefore belt-and-braces, for a caller that ever reaches one
+ * of these functions from somewhere that does not load behind that gate.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Features\Integrations\TwoFactor
@@ -93,8 +95,6 @@ function bb_two_factor_settings_save() {
 		return;
 	}
 
-	// The plugin can be deactivated, or the feature switched off, between the
-	// render and this request.
 	if ( ! bb_two_factor_is_active() ) {
 		return;
 	}
@@ -225,7 +225,6 @@ add_action( 'set_logged_in_cookie', 'bb_two_factor_capture_sso_session', 10, 6 )
  */
 function bb_two_factor_skip_sso_challenge() {
 
-	// Check if two-factor is active.
 	if ( ! bb_two_factor_is_active() ) {
 		return;
 	}
