@@ -231,6 +231,38 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// bb_get_known_buddyboss_addon_slugs() for why that matters.
 			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_addon_fallback' ), 999, 3 );
 
+			/*
+			 * Give the BuddyBoss theme update row a working details modal.
+			 *
+			 * Themes have no plugins_api() equivalent: wp_theme_update_row() and
+			 * get_theme_update_available() both build the thickbox URL out of the
+			 * update transient's own 'url' field, so whatever is put there is what
+			 * the modal loads. Left empty - which is what the add-on server sends -
+			 * add_query_arg() returns a bare '?TB_iframe=true', the iframe resolves
+			 * back to the admin page it was opened from, and the modal comes up
+			 * blank. Pointing it at buddyboss.com instead does not work either:
+			 * that host answers with X-Frame-Options: SAMEORIGIN, so the frame is
+			 * refused on every customer domain. An admin-post.php URL on the
+			 * customer's own site is same-origin, so it frames, and the notes reach
+			 * it server-side where that header does not apply.
+			 *
+			 * This lives here rather than in the theme because WordPress only loads
+			 * the active theme's files. A BuddyBoss theme that is installed but not
+			 * active still shows an update row with this link, and the theme cannot
+			 * run a line of code to fix it. A plugin can.
+			 */
+			/*
+			 * Priority 11 is the only window that works, and both edges are load
+			 * bearing. The Mothership updater rebuilds this transient's theme
+			 * entries at 10, discarding anything written before it - so 9, or any
+			 * earlier priority, is silently undone. The theme's own handler runs at
+			 * 20 and fills the same field with a link that leaves the admin; getting
+			 * in first is what makes the modal win when the theme is active. Neither
+			 * this nor the theme overwrites a URL a third-party updater supplied.
+			 */
+			add_filter( 'site_transient_update_themes', array( $this, 'bb_fix_theme_details_link' ), 11 );
+			add_action( 'admin_post_bb_theme_changelog', array( $this, 'bb_render_theme_changelog' ) );
+
 			// Keep the licensed package URL out of the plugin dependency cache.
 			add_filter( 'pre_set_site_transient_wp_plugin_dependencies_plugin_data', array( $this, 'bb_strip_dependency_api_data' ) );
 		}
@@ -3437,6 +3469,189 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$types = apply_filters( 'bb_addon_release_post_types', $types );
 
 			return isset( $types[ $slug ] ) ? (string) $types[ $slug ] : '';
+		}
+
+		/**
+		 * Themes distributed by BuddyBoss, and where their release notes live.
+		 *
+		 * Keyed by stylesheet directory, which is what the update transient keys
+		 * its entries by. 'rest_base' is the releases post type on
+		 * buddyboss.com/resources; 'page_base' is the human release notes archive
+		 * the fallback link points at when no notes can be fetched.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Map of stylesheet to theme release metadata.
+		 */
+		protected function bb_get_known_buddyboss_themes() {
+			$themes = array(
+				'buddyboss-theme' => array(
+					'name'      => __( 'BuddyBoss Theme', 'buddyboss' ),
+					'rest_base' => 'releases-theme',
+					'page_base' => 'https://buddyboss.com/resources/buddyboss-theme-releases/',
+				),
+			);
+
+			/**
+			 * Filters the BuddyBoss themes given a details modal.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $themes Map of stylesheet to release metadata.
+			 */
+			return (array) apply_filters( 'bb_known_buddyboss_themes', $themes );
+		}
+
+		/**
+		 * Build the admin URL that renders a theme's release notes.
+		 *
+		 * Uses admin_url() rather than self_admin_url(): admin-post.php exists only at
+		 * /wp-admin/, so the network spelling would be a 404 on every multisite
+		 * Themes screen. The absolute /wp-admin/ URL is reachable from both.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $stylesheet Theme directory.
+		 * @param string $version    Version being offered.
+		 *
+		 * @return string Admin URL.
+		 */
+		protected function bb_get_theme_changelog_url( $stylesheet, $version ) {
+			return add_query_arg(
+				array(
+					'action'  => 'bb_theme_changelog',
+					'theme'   => rawurlencode( $stylesheet ),
+					'version' => rawurlencode( $version ),
+				),
+				admin_url( 'admin-post.php' )
+			);
+		}
+
+		/**
+		 * Point a BuddyBoss theme's "View version details" link at the modal.
+		 *
+		 * Why this is the whole fix: both renderers - wp_theme_update_row() for
+		 * the network Themes table and get_theme_update_available() for the
+		 * single-site screen - read this same 'url' and wrap it in thickbox
+		 * markup themselves. Filling it is enough for both; no markup rewriting
+		 * and no JavaScript are involved.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $value The update_themes site transient.
+		 *
+		 * @return mixed The transient, with details URLs filled in.
+		 */
+		public function bb_fix_theme_details_link( $value ) {
+			if ( empty( $value ) || ! is_object( $value ) || empty( $value->response ) ) {
+				return $value;
+			}
+
+			/*
+			 * Only a container core itself wrote gets written back to. A cache or
+			 * staging plugin that round-trips this transient through JSON leaves
+			 * an object here, and assigning into it by key throws.
+			 */
+			if ( ! is_array( $value->response ) ) {
+				return $value;
+			}
+
+			foreach ( $this->bb_get_known_buddyboss_themes() as $stylesheet => $theme ) {
+				if ( ! isset( $value->response[ $stylesheet ] ) || ! is_array( $value->response[ $stylesheet ] ) ) {
+					continue;
+				}
+
+				// Never overwrite a URL another updater already supplied; its modal
+				// works and this one would replace it with notes for a release that
+				// updater may not be offering.
+				if ( ! empty( $value->response[ $stylesheet ]['url'] ) ) {
+					continue;
+				}
+
+				$version = isset( $value->response[ $stylesheet ]['new_version'] )
+					? $value->response[ $stylesheet ]['new_version']
+					: '';
+
+				if ( ! is_scalar( $version ) || '' === (string) $version ) {
+					continue;
+				}
+
+				$value->response[ $stylesheet ]['url'] = $this->bb_get_theme_changelog_url( $stylesheet, (string) $version );
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Render a BuddyBoss theme's release notes inside the details modal.
+		 *
+		 * Read-only and nonceless by design. The URL is stored in a site
+		 * transient that outlives any nonce and is shared by every administrator
+		 * on the site, so a nonce here would expire the modal rather than protect
+		 * it. Nothing is written and nothing is disclosed that the capability
+		 * check below does not already allow, so there is no state for CSRF to
+		 * act on.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		public function bb_render_theme_changelog() {
+			if ( ! current_user_can( 'update_themes' ) ) {
+				wp_die(
+					esc_html__( 'Sorry, you are not allowed to view theme release notes.', 'buddyboss' ),
+					'',
+					array( 'response' => 403 )
+				);
+			}
+
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only
+			// view; see the method docblock for why a nonce cannot be used here. Both
+			// values are sanitized below and $stylesheet is matched against a fixed map.
+			$stylesheet = isset( $_GET['theme'] ) ? sanitize_key( wp_unslash( $_GET['theme'] ) ) : '';
+			$version    = isset( $_GET['version'] ) ? sanitize_text_field( wp_unslash( $_GET['version'] ) ) : '';
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+			$themes = $this->bb_get_known_buddyboss_themes();
+
+			// Resolve against the known map rather than trusting the query string,
+			// so this cannot be turned into a fetcher for arbitrary feeds.
+			if ( ! isset( $themes[ $stylesheet ] ) ) {
+				wp_die(
+					esc_html__( 'Release notes are not available for this theme.', 'buddyboss' ),
+					'',
+					array( 'response' => 404 )
+				);
+			}
+
+			$theme     = $themes[ $stylesheet ];
+			$page_url  = $this->bb_get_release_notes_page_url( $version, $theme['page_base'] );
+			$state     = 'skipped';
+			$notes     = $this->bb_get_release_notes_html( $version, $theme['rest_base'], $state );
+			$link_text = __( 'View all release notes on buddyboss.com', 'buddyboss' );
+
+			$installed = wp_get_theme( $stylesheet );
+			$name      = ( $installed instanceof WP_Theme && $installed->exists() )
+				? $installed->display( 'Name' )
+				: $theme['name'];
+
+			// Name and version, not a translatable sentence: a "%1$s %2$s" msgid
+			// gives translators nothing to act on and clutters the POT.
+			$heading = '' !== $version ? $name . ' ' . $version : $name;
+
+			iframe_header( __( 'Theme Release Notes', 'buddyboss' ) );
+			?>
+			<div class="bb-theme-changelog" style="padding: 10px 20px 20px;">
+				<h2 style="margin-top: 0;"><?php echo esc_html( $heading ); ?></h2>
+				<?php
+				// bb_build_changelog_section() returns markup it has sanitized
+				// itself, through the same pipeline the plugin modal uses.
+				echo $this->bb_build_changelog_section( $notes, $page_url, $link_text, $state ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				?>
+			</div>
+			<?php
+			iframe_footer();
+			exit;
 		}
 
 		/**
