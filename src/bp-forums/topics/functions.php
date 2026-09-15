@@ -3885,7 +3885,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 					<title><![CDATA[<?php bbp_topic_title(); ?>]]></title>
 					<link><?php bbp_topic_permalink(); ?></link>
 					<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_meta( bbp_get_topic_id(), '_bbp_last_active_time', true ) ); ?></pubDate>
-					<dc:creator><?php the_author(); ?></dc:creator>
+					<dc:creator><?php echo esc_html( bbp_get_topic_author_display_name() ); ?></dc:creator>
 
 					<?php if ( ! post_password_required() ) : ?>
 

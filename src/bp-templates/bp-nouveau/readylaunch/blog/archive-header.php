@@ -19,7 +19,7 @@ if ( is_category() || is_tag() ) {
 	$bb_rl_blog_description = term_description();
 } elseif ( is_author() ) {
 	/* translators: %s: author display name. */
-	$bb_rl_blog_title = sprintf( __( 'Posts by %s', 'buddyboss' ), get_the_author_meta( 'display_name', (int) get_query_var( 'author' ) ) );
+	$bb_rl_blog_title = sprintf( __( 'Posts by %s', 'buddyboss' ), bp_core_get_user_displayname( (int) get_query_var( 'author' ) ) );
 } elseif ( is_date() ) {
 	$bb_rl_blog_title = get_the_archive_title();
 }

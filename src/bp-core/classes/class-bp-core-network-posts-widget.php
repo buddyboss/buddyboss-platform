@@ -135,7 +135,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 
 							<div class="item">
 								<div class="item-title">
-									<a class="post-author" href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ); ?>"><?php the_author(); ?></a>
+									<a class="post-author" href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ); ?>"><?php echo esc_html( bp_core_get_user_displayname( get_the_author_meta( 'ID' ) ) ); ?></a>
 									<span class="netowrk-post-type">created a post:</span>
 
 								</div>

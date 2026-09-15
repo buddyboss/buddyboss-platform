@@ -33,3 +33,12 @@ PHP_TESTS_NEXT_STEPS.md
 TEST_COMMANDS.md
 TEST_IMPLEMENTATION_SUMMARY.md
 docs/*
+
+# WordPress-generated intermediate image sizes. WordPress writes these next to the source image
+# whenever a bundled image is added to the media library on a dev install, so they reappear after
+# every such run; they are build artefacts, never source (see ee9e446fc4).
+src/bp-core/images/*-[0-9]*x[0-9]*.png
+src/bp-core/images/*-[0-9]*x[0-9]*.jpg
+src/bp-core/images/*-[0-9]*x[0-9]*.jpeg
+src/bp-core/images/*-[0-9]*x[0-9]*.gif
+src/bp-core/images/*-[0-9]*x[0-9]*.webp

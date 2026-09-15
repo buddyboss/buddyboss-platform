@@ -810,7 +810,12 @@ function bp_member_avatar( $args = '' ) {
 function bp_get_member_avatar( $args = '' ) {
 	global $members_template;
 
-	$fullname = ! empty( $members_template->member->fullname ) ? $members_template->member->fullname : $members_template->member->display_name;
+	// Used only for the avatar alt/title. The default members query populates `fullname` from a
+	// viewer-scoped value, but the alphabetical (A-Z / BP_Core_User letter) directory path sets
+	// `fullname` to the RAW xprofile Full Name (class-bp-core-user.php), which would expose a last
+	// name hidden from this viewer. Resolve through the viewer-scoped bp_core_get_user_displayname()
+	// so the alt never leaks a hidden name part regardless of which query populated the loop.
+	$fullname = bp_core_get_user_displayname( $members_template->member->id );
 
 	$defaults = array(
 		'type'   => 'thumb',
@@ -926,44 +931,39 @@ function bp_member_name() {
 function bp_get_member_name() {
 	global $members_template;
 
-	// Generally, this only fires when xprofile is disabled.
-	if ( empty( $members_template->member->fullname ) ) {
-		// Our order of preference for alternative fullnames.
-		$name_stack = array(
-			'display_name',
-			'user_nicename',
-			'user_login',
-		);
+	$member_id = 0;
+	if ( isset( $members_template->member->ID ) ) {
+		$member_id = (int) $members_template->member->ID;
+	} elseif ( isset( $members_template->member->id ) ) {
+		$member_id = (int) $members_template->member->id;
+	}
 
-		foreach ( $name_stack as $source ) {
+	// Resolve through the canonical, viewer-scoped function rather than trusting the loop's own
+	// `fullname`. Two shapes made the previous logic leak a name part the viewer may not see:
+	//
+	// (1) `fullname` is empty on loops that do not populate it, and the fallback chain then
+	// reached for the raw `display_name` column, which always holds the member's full name.
+	// (2) The redaction was a naive str_replace( ' ' . $last_name, ... ), which silently no-ops on
+	// a display_name that has drifted - glued ("AnnaSmith"), punctuation-joined, casing-drifted or
+	// reduced to the surname alone - and on the letter-browse directory, where BP_Core_User
+	// populates `fullname` from raw xprofile data that was never viewer-filtered.
+	//
+	// bp_core_get_user_displayname() handles every one of those and is the same function
+	// bp_get_member_avatar() below uses for the avatar alt text.
+	$full_name = $member_id ? bp_core_get_user_displayname( $member_id ) : '';
+
+	if ( ! is_string( $full_name ) || '' === trim( $full_name ) ) {
+		// No resolvable member (a loop that carries no ID, or a deleted user): fall back to the
+		// loop's own non-name identifiers, never to display_name, which is the raw full name.
+		$full_name = '';
+		foreach ( array( 'user_nicename', 'user_login' ) as $source ) {
 			if ( ! empty( $members_template->member->{$source} ) ) {
-				// When a value is found, set it as fullname and be done with it.
-				$members_template->member->fullname = $members_template->member->{$source};
+				$full_name = $members_template->member->{$source};
 				break;
 			}
 		}
 	}
 
-	$list_fields = bp_xprofile_get_hidden_fields_for_user( $members_template->member->ID, bp_loggedin_user_id() );
-	if ( empty( $list_fields ) ) {
-		$full_name = $members_template->member->fullname;
-	} else {
-		$last_name_field_id = bp_xprofile_lastname_field_id();
-		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $members_template->member->ID ) ) ) {
-			$last_name = xprofile_get_field_data( $last_name_field_id, $members_template->member->ID );
-			$full_name = str_replace( ' ' . $last_name, '', $members_template->member->fullname );
-		} else {
-			$full_name = $members_template->member->fullname;
-		}
-	}
-
-	/**
-	 * Filters the display name of current member in the loop.
-	 *
-	 * @since BuddyPress 1.2.0
-	 *
-	 * @param string $fullname Display name for current member.
-	 */
 	return apply_filters( 'bp_get_member_name', trim( $full_name ) );
 }
 	add_filter( 'bp_get_member_name', 'wp_filter_kses' );

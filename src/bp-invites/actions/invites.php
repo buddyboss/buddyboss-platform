@@ -116,13 +116,15 @@ function bp_member_invite_submit() {
 		$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 		$member_type    = $value['member_type'];
 		$query_string[] = $email;
-		$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
+		// Delivered to a plain email address with no member behind it - resolve the inviter's name
+		// as the public, logged-out view rather than as the inviter sees their own profile.
+		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 
 		$message .= '
 
 ' . bp_get_member_invites_wildcard_replace( stripslashes( strip_tags( bp_get_invites_member_invite_url() ) ), $email );
 
-		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 		$site_name    = get_bloginfo( 'name' );
 		$inviter_url  = bp_loggedin_user_domain();
 

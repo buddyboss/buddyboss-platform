@@ -63,6 +63,44 @@ class BB_XProfile_Visibility {
 	public $last_updated;
 
 	/**
+	 * Per-request memo of get_user_field_ids_by_visibility_levels() results.
+	 *
+	 * Display names are viewer-dependent and get resolved at many independent points in a single
+	 * request (activity action strings, author links, append_user_fullnames(), comment trees,
+	 * member loops, avatar alts, RSS), so the same (user, levels) visibility lookup would
+	 * otherwise re-run its uncached query several times per request. Keyed by
+	 * "{user_id}:{sha1 of the sorted levels}". Invalidated per user on every write below.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array $field_ids_cache
+	 */
+	private static $field_ids_cache = array();
+
+	/**
+	 * Per-request memo of user_data_exists() results, keyed by user ID.
+	 *
+	 * A class property rather than a method-local static so prime_user_data_exists_cache() can
+	 * fill it for a whole batch: the getter is called once per member by
+	 * bp_xprofile_get_fields_by_visibility_levels(), which member search reaches once per matched
+	 * row, and its query is uncached.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array $user_data_exists_cache
+	 */
+	private static $user_data_exists_cache = array();
+
+	/**
+	 * Per-request memo of the visibility table's existence.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool|null $table_exists_cache Null until resolved.
+	 */
+	private static $table_exists_cache = null;
+
+	/**
 	 * BB_XProfile_Visibility constructor.
 	 *
 	 * @since BuddyBoss 2.6.50
@@ -159,41 +197,26 @@ class BB_XProfile_Visibility {
 	 */
 	public static function user_data_exists( $user_id = 0 ) {
 		global $wpdb;
-		$bp = buddypress();
 
-		// Static cache for user data existence results and table existence check.
-		static $cache = array();
-		static $table_exists = '';
+		$user_id = (int) $user_id;
 
-		// Check if the result for this user is already cached.
-		if ( isset( $cache[ $user_id ] ) ) {
-			return $cache[ $user_id ];
-		}
+		if ( ! isset( self::$user_data_exists_cache[ $user_id ] ) ) {
+			if ( self::visibility_table_exists() ) {
+				$table_name_visibility = self::get_visibility_table_name();
 
-		// Resolve visibility table name with a safe fallback when xprofile globals
-		// have not been set up yet (e.g., fresh install before bp_setup_globals).
-		$table_name_visibility = ! empty( $bp->profile->table_name_visibility )
-			? $bp->profile->table_name_visibility
-			: bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$retval = $wpdb->get_row(
+					$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+						"SELECT id FROM {$table_name_visibility} WHERE user_id = %d LIMIT 1",
+						$user_id
+					)
+				);
 
-		if ( '' == $table_exists ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name_visibility ) );
-		}
-
-		if ( $table_exists ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$retval            = $wpdb->get_row(
-				$wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					"SELECT id FROM {$table_name_visibility} WHERE user_id = %d LIMIT 1",
-					$user_id
-				)
-			);
-			$cache[ $user_id ] = ! empty( $retval );
-		} else {
-			$cache[ $user_id ] = false;
-			$retval            = false;
+				self::$user_data_exists_cache[ $user_id ] = ! empty( $retval );
+			} else {
+				self::$user_data_exists_cache[ $user_id ] = false;
+			}
 		}
 
 		/**
@@ -204,7 +227,102 @@ class BB_XProfile_Visibility {
 		 * @param bool $retval  Whether data already exists.
 		 * @param int  $user_id User id.
 		 */
-		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( ! empty( $retval ), $user_id ) );
+		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( self::$user_data_exists_cache[ $user_id ], $user_id ) );
+	}
+
+	/**
+	 * Resolve the visibility table name.
+	 *
+	 * Falls back to the prefixed name when the xprofile globals have not been set up yet (a fresh
+	 * install, before bp_setup_globals).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string
+	 */
+	private static function get_visibility_table_name() {
+		$bp = buddypress();
+
+		return ! empty( $bp->profile->table_name_visibility )
+			? $bp->profile->table_name_visibility
+			: bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+	}
+
+	/**
+	 * Whether the visibility table is present, resolved once per request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool
+	 */
+	private static function visibility_table_exists() {
+		global $wpdb;
+
+		if ( is_null( self::$table_exists_cache ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			self::$table_exists_cache = (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', self::get_visibility_table_name() ) );
+		}
+
+		return self::$table_exists_cache;
+	}
+
+	/**
+	 * Prime the per-request user_data_exists() memo for a batch of users in a single query.
+	 *
+	 * The single-user getter issues one uncached query per user, and
+	 * bp_xprofile_get_fields_by_visibility_levels() calls it once per member whose visibility is
+	 * resolved. Member search resolves one member per matched row, so on a term that matches a
+	 * large part of the member table that probe alone is one query per match.
+	 *
+	 * Users with no row are memoized as false on purpose: without that they would miss the memo
+	 * and fall through to an individual query each, which is the cost this exists to remove.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $user_ids User IDs to prime.
+	 */
+	public static function prime_user_data_exists_cache( $user_ids ) {
+		global $wpdb;
+
+		$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+
+		if ( empty( $user_ids ) ) {
+			return;
+		}
+
+		// Only query users that are not already memoized.
+		$uncached_ids = array();
+		foreach ( $user_ids as $user_id ) {
+			if ( ! isset( self::$user_data_exists_cache[ $user_id ] ) ) {
+				$uncached_ids[ $user_id ] = $user_id;
+			}
+		}
+
+		if ( empty( $uncached_ids ) ) {
+			return;
+		}
+
+		if ( ! self::visibility_table_exists() ) {
+			foreach ( $uncached_ids as $user_id ) {
+				self::$user_data_exists_cache[ $user_id ] = false;
+			}
+
+			return;
+		}
+
+		$table_name_visibility = self::get_visibility_table_name();
+		$user_ids_sql          = implode( ',', $uncached_ids );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- the id list is built from intval()ed values.
+		$with_rows = $wpdb->get_col(
+			"SELECT DISTINCT user_id FROM {$table_name_visibility} WHERE user_id IN ( {$user_ids_sql} )"
+		);
+
+		$with_rows = array_flip( array_map( 'intval', (array) $with_rows ) );
+
+		foreach ( $uncached_ids as $user_id ) {
+			self::$user_data_exists_cache[ $user_id ] = isset( $with_rows[ $user_id ] );
+		}
 	}
 
 	/**
@@ -340,6 +458,8 @@ class BB_XProfile_Visibility {
 				return false;
 			}
 
+			self::flush_field_ids_cache( (int) $this->user_id );
+
 			/**
 			 * Fires after the current profile data instance gets saved.
 			 *
@@ -390,6 +510,8 @@ class BB_XProfile_Visibility {
 			return false;
 		}
 
+		self::flush_field_ids_cache( (int) $this->user_id );
+
 		/**
 		 * Fires after the current profile data instance gets deleted.
 		 *
@@ -427,6 +549,9 @@ class BB_XProfile_Visibility {
 			return false;
 		}
 
+		// Affects rows across all users - clear the whole memo.
+		self::flush_field_ids_cache();
+
 		return true;
 	}
 
@@ -461,6 +586,8 @@ class BB_XProfile_Visibility {
 			xprofile_delete_field_data( $field_id, $user_id );
 		}
 
+		self::flush_field_ids_cache( (int) $user_id );
+
 		return count( $field_ids );
 	}
 
@@ -483,6 +610,8 @@ class BB_XProfile_Visibility {
 			return false;
 		}
 
+		self::flush_field_ids_cache( (int) $user_id );
+
 		return true;
 	}
 
@@ -504,6 +633,15 @@ class BB_XProfile_Visibility {
 
 		if ( empty( $user_id ) || empty( $levels ) ) {
 			return $fields;
+		}
+
+		// Per-request memo: the same (user, levels) pair is resolved many times per request and
+		// the query below is uncached. Key on the sorted levels so equivalent level sets hit.
+		$sorted_levels = $levels;
+		sort( $sorted_levels );
+		$cache_key = (int) $user_id . ':' . sha1( implode( ',', $sorted_levels ) );
+		if ( isset( self::$field_ids_cache[ $cache_key ] ) ) {
+			return self::$field_ids_cache[ $cache_key ];
 		}
 
 		// Prepare the levels array by quoting each element.
@@ -535,7 +673,118 @@ class BB_XProfile_Visibility {
 			}
 		}
 
+		self::$field_ids_cache[ $cache_key ] = $fields;
+
 		return $fields;
+	}
+
+	/**
+	 * Prime the per-request field-ids memo for a batch of users in a single query.
+	 *
+	 * The single-user getter issues one uncached query per user. Resolving a
+	 * member loop, an activity stream or a REST collection asks it once per row, so a directory of
+	 * 50 members costs 50 queries before any name is rendered. This fills the same memo the getter
+	 * reads, keyed identically, so the per-row calls become array lookups.
+	 *
+	 * Users with no matching row are memoized as an empty array on purpose: without that they would
+	 * miss the memo and fall through to an individual query each, which is the cost this exists to
+	 * remove.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $user_ids User IDs to prime.
+	 * @param array $levels   Visibility levels to prime for. Must be the same set the subsequent
+	 *                        get_user_field_ids_by_visibility_levels() calls will pass, or those
+	 *                        calls simply miss the memo and behave as they do today.
+	 */
+	public static function prime_field_ids_cache( $user_ids, $levels = array() ) {
+		global $wpdb;
+
+		$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+		$levels   = array_filter( (array) $levels );
+
+		if ( empty( $user_ids ) || empty( $levels ) ) {
+			return;
+		}
+
+		$sorted_levels = $levels;
+		sort( $sorted_levels );
+		$key_suffix = ':' . sha1( implode( ',', $sorted_levels ) );
+
+		// Only query users that are not already memoized.
+		$uncached_ids = array();
+		foreach ( $user_ids as $user_id ) {
+			if ( ! isset( self::$field_ids_cache[ $user_id . $key_suffix ] ) ) {
+				$uncached_ids[ $user_id ] = $user_id;
+			}
+		}
+
+		if ( empty( $uncached_ids ) ) {
+			return;
+		}
+
+		$bp = buddypress();
+
+		$quoted_levels = implode(
+			',',
+			array_map(
+				function ( $level ) use ( $wpdb ) {
+					return $wpdb->prepare( '%s', $level );
+				},
+				$levels
+			)
+		);
+
+		$user_ids_sql = implode( ',', $uncached_ids );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- levels are prepared above, ids are ints.
+		$results = $wpdb->get_results(
+			"SELECT DISTINCT user_id, field_id FROM {$bp->profile->table_name_visibility} WHERE user_id IN ( {$user_ids_sql} ) AND value IN ( {$quoted_levels} )"
+		);
+
+		$grouped = array();
+		foreach ( (array) $results as $row ) {
+			$grouped[ (int) $row->user_id ][ (int) $row->field_id ] = (int) $row->field_id;
+		}
+
+		foreach ( $uncached_ids as $user_id ) {
+			self::$field_ids_cache[ $user_id . $key_suffix ] = isset( $grouped[ $user_id ] ) ? $grouped[ $user_id ] : array();
+		}
+	}
+
+	/**
+	 * Invalidate the per-request visibility memos.
+	 *
+	 * Called by every writer that changes rows in the visibility table so a read that follows a
+	 * write in the same request never returns a stale result. Clears both memos this class keeps:
+	 * the field-ids lookup and the user_data_exists() probe. The latter matters because a write
+	 * can create a member's FIRST visibility row, flipping that answer - and because
+	 * prime_user_data_exists_cache() now fills it for whole batches, so a stale entry is far more
+	 * likely to be present than when it was populated one lazy read at a time.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id Optional. Clear only this user's entries; 0 clears the whole memo (used
+	 *                     when a write affects rows across all users).
+	 */
+	public static function flush_field_ids_cache( $user_id = 0 ) {
+		$user_id = (int) $user_id;
+
+		if ( $user_id <= 0 ) {
+			self::$field_ids_cache        = array();
+			self::$user_data_exists_cache = array();
+
+			return;
+		}
+
+		unset( self::$user_data_exists_cache[ $user_id ] );
+
+		$prefix = $user_id . ':';
+		foreach ( array_keys( self::$field_ids_cache ) as $key ) {
+			if ( 0 === strpos( $key, $prefix ) ) {
+				unset( self::$field_ids_cache[ $key ] );
+			}
+		}
 	}
 
 }

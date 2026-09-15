@@ -5397,25 +5397,10 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- clauses built above.
+		$matched_user_data = $wpdb->get_results( "SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
 
-		if ( ! empty( $matched_user_data ) ) {
-			foreach ( $matched_user_data as $k => $user ) {
-				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-			}
-		}
+		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
 	if ( ! empty( $matched_user_ids ) ) {
@@ -10980,4 +10965,268 @@ function bb_has_paid_product() {
 	 * @param bool $detected Whether a paid product was detected.
 	 */
 	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
+
+/**
+ * Resolve the ID of the user on whose behalf the current request is being rendered.
+ *
+ * `bp_loggedin_user_id()` reads `buddypress()->loggedin_user->id`, which is populated by
+ * `bp_setup_current_user()` on WordPress' `set_current_user` action. On a normal page load that
+ * always tracks `get_current_user_id()`. In a REST request it can lag behind: the authentication
+ * handler may resolve the user before BuddyPress has registered that action, leaving the BP global
+ * at 0 while WordPress already knows who is calling. Anything that derives a *viewer* from
+ * `bp_loggedin_user_id()` then behaves as though the request were anonymous — for
+ * `bp_core_get_user_displayname()` that means an authenticated member is served the guest-level
+ * redaction of another member's name.
+ *
+ * Prefer the BuddyPress global, because code that deliberately re-points the viewer does so by
+ * assigning to it (see `bp_messages_*` and the personal-data exporters), and fall back to the
+ * WordPress current user only when BP has no value at all. That makes this a no-op on every path
+ * where the two already agree.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int User ID of the current viewer, or 0 when the request is anonymous.
+ */
+function bb_core_get_viewer_user_id() {
+	$viewer_id = function_exists( 'bp_loggedin_user_id' ) ? (int) bp_loggedin_user_id() : 0;
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = (int) get_current_user_id();
+	}
+
+	/**
+	 * Filters the resolved viewer user ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $viewer_id User ID of the current viewer, 0 when anonymous.
+	 */
+	return (int) apply_filters( 'bb_core_get_viewer_user_id', $viewer_id );
+}
+
+/**
+ * Viewer ID that means "an anonymous visitor", explicitly.
+ *
+ * Throughout the profile-visibility API a viewer ID of `0` does NOT mean "logged out" - it means
+ * "resolve the viewer from the current request". `bp_core_get_user_displayname()` replaces it with
+ * `bb_core_get_viewer_user_id()`, and `bp_xprofile_get_hidden_fields_for_user()` replaces it with
+ * `bp_loggedin_user_id()`. There is therefore no way to say "render this name for someone who is
+ * not a member of this site" while a member happens to be logged in.
+ *
+ * That case is real: a member invitation is composed in the inviter's own session but is delivered
+ * to a plain email address with no member behind it. Resolved with the request's viewer, the
+ * inviter sees their own profile, so the email carries name parts the site hides from everyone
+ * else. Passing this ID pins the resolution to the public, logged-out view.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Sentinel viewer ID representing an anonymous visitor.
+ */
+function bb_core_guest_viewer_id() {
+	return -1;
+}
+
+/**
+ * Evaluate a MySQL `LIKE` pattern against a string in PHP.
+ *
+ * Used where a row set produced by a `LIKE` comparison in SQL has to be re-tested against a value
+ * that only exists in PHP — for example a display name that has been redacted for the current
+ * viewer, which no column holds. Re-implementing the comparison by hand invites subtle drift from
+ * the SQL that produced the candidate rows, so this mirrors it directly: the caller passes the very
+ * pattern it gave to `$wpdb`.
+ *
+ * Supports the two wildcards WordPress' `$wpdb->esc_like()` / `bp_esc_like()` protect (`%` and `_`)
+ * and their backslash escaping, so a literal `%` typed by a member stays literal. Matching is
+ * case-insensitive and multibyte-aware, matching MySQL's default `utf8mb4_*_ci` collation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $pattern LIKE pattern, exactly as passed to the SQL comparison.
+ * @param string $subject String to test.
+ * @return bool Whether $subject satisfies $pattern.
+ */
+function bb_core_sql_like_match( $pattern, $subject ) {
+	$pattern = (string) $pattern;
+	$subject = (string) $subject;
+
+	$regex  = '';
+	$length = strlen( $pattern );
+
+	for ( $i = 0; $i < $length; $i++ ) {
+		$char = $pattern[ $i ];
+
+		if ( '\\' === $char && $i + 1 < $length ) {
+			// An escaped wildcard is a literal character; consume both bytes.
+			++$i;
+			$regex .= preg_quote( $pattern[ $i ], '/' );
+			continue;
+		}
+
+		if ( '%' === $char ) {
+			$regex .= '.*';
+			continue;
+		}
+
+		if ( '_' === $char ) {
+			$regex .= '.';
+			continue;
+		}
+
+		$regex .= preg_quote( $char, '/' );
+	}
+
+	$matched = preg_match( '/^' . $regex . '$/iu', $subject );
+
+	// preg_match() returns false only on a malformed pattern or invalid UTF-8. Retry without the
+	// unicode modifier so a byte-wise comparison still answers, rather than silently reporting "no
+	// match" — for the privacy filter that calls this, "no match" is the destructive answer.
+	if ( false === $matched ) {
+		$matched = preg_match( '/^' . $regex . '$/i', $subject );
+	}
+
+	return ( 1 === $matched );
+}
+
+/**
+ * Build the name a viewer may see from the member's own profile fields.
+ *
+ * `wp_users.display_name` is a DERIVED column: BuddyBoss writes it from the profile fields when a
+ * member saves, and nothing keeps it in step afterwards. An import, the wp-admin "Display name
+ * publicly as" dropdown or any third-party write can leave it spelling something a long way from
+ * "First Last" - glued ("AlexQuillfeather"), punctuation-joined, reordered, suffixed, or holding a
+ * name the member no longer has. Members cannot set it themselves.
+ *
+ * So when a name part has to be withheld from this viewer, the visible name is NOT that column
+ * minus the hidden part. Subtracting one string from another is undecidable on drifted data: a
+ * surname sits inside unrelated names as often as it is the name being hidden ("Ng" inside
+ * "Armstrong", "Ann" inside "Cann"), and a suffix or a de-duplication digit welded to the hidden
+ * part ("AnnJr", "Zebrastripe2") is indistinguishable by shape from somebody else's name. Every
+ * heuristic that separates those cases is load-bearing for one shape and wrong for another.
+ *
+ * The name is therefore assembled from the fields this viewer may see, in the order the site-wide
+ * Display Name Format asks for - which is how the logged-in path has always built it
+ * (bp_xprofile_get_member_display_name()), so the guest view and the member view agree by
+ * construction rather than by two implementations happening to match.
+ *
+ * The stored column is still returned untouched when nothing is hidden, so a deliberately
+ * customised display name only gives way to the rebuild when something has to be withheld.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id          ID of the member whose name is being resolved.
+ * @param array $hidden_field_ids XProfile field IDs this viewer may not see, as returned by
+ *                                bp_xprofile_get_hidden_fields_for_user(). The site-wide format
+ *                                hide never appears in that list and is applied here instead.
+ * @return string The visible name; the nickname, then the user_nicename, when no permitted name
+ *                part has a value. '' only for an unusable user ID.
+ */
+function bb_core_build_visible_display_name( $user_id, $hidden_field_ids = array() ) {
+	$user_id = (int) $user_id;
+
+	if ( $user_id <= 0 ) {
+		return '';
+	}
+
+	$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+	// Under the Nickname format the visible name is the nickname and nothing else - neither name
+	// field is part of it - so there is nothing to assemble and nothing a visibility level could
+	// remove. The Nickname field itself is never excludable (bp_xprofile_get_fields_by_visibility_levels()).
+	if ( 'nickname' === $format ) {
+		return bb_core_get_name_fallback_label( $user_id );
+	}
+
+	$hidden_field_ids    = array_map( 'intval', (array) $hidden_field_ids );
+	$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+	$last_name_field_id  = (int) bp_xprofile_lastname_field_id();
+
+	$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $hidden_field_ids, true ) );
+
+	// The "First Name" format leaves the surname out of the visible name for EVERY viewer, whether
+	// or not the Last Name field is enabled as a profile field, and that hide never enters the
+	// per-viewer list. Gating on bp_core_hide_display_name_field() instead would be too narrow: it
+	// only reports the field being DISABLED, missing the common enabled-field case.
+	$last_name_hidden = (
+		'first_name' === $format
+		|| ( $last_name_field_id > 0 && in_array( $last_name_field_id, $hidden_field_ids, true ) )
+	);
+
+	$parts = array();
+
+	if ( ! $first_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $first_name_field_id, $user_id, 'first_name' );
+	}
+
+	if ( ! $last_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $last_name_field_id, $user_id, 'last_name' );
+	}
+
+	$name = trim( implode( ' ', array_filter( $parts, 'strlen' ) ) );
+
+	return ( '' !== $name ) ? $name : bb_core_get_name_fallback_label( $user_id );
+}
+
+/**
+ * Read one name profile field for bb_core_build_visible_display_name().
+ *
+ * Unicode-aware trim, because a value padded with a non-ASCII space - U+00A0 pasted from a word
+ * processor, which PHP's trim() leaves in place - would otherwise reach the assembled name.
+ * preg_replace() returns null only on a subject that is not valid UTF-8, which normalises to '' so
+ * the caller applies its fallback rather than concatenating a null.
+ *
+ * The WordPress user meta is read when the profile field has no stored row. That is not a
+ * convenience: bp_xprofile_get_member_display_name() back-fills a missing name field from exactly
+ * this meta, and on an imported member the xprofile row genuinely does not exist yet, so reading
+ * only the field would drop a name this viewer is entitled to see.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
+ * @param int    $user_id  ID of the member the field belongs to.
+ * @param string $meta_key WordPress user meta key holding the same name part.
+ * @return string The stored value, or '' when there is none.
+ */
+function bb_core_get_name_field_value( $field_id, $user_id, $meta_key ) {
+	$field_id = (int) $field_id;
+	$value    = '';
+
+	if ( $field_id > 0 ) {
+		$stored = xprofile_get_field_data( $field_id, $user_id );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+	}
+
+	if ( '' === $value && '' !== (string) $meta_key ) {
+		$stored = get_user_meta( $user_id, $meta_key, true );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+	}
+
+	return $value;
+}
+
+/**
+ * The label to show for a member whose permitted name parts hold nothing.
+ *
+ * Never a blank: the nickname first - it carries no hidden name part - then the public
+ * user_nicename, which WordPress guarantees for every real user.
+ *
+ * The `nickname` USER META is what is read, not the xprofile Nickname field, because that is the
+ * chain bp_xprofile_get_member_display_name() itself falls back through when a name field is empty.
+ * The two are kept in step by bp_xprofile_sync_bp_profile() on every save; where they have drifted
+ * apart it is on an unhealed import, whose xprofile row does not exist at all - so the meta is both
+ * the more faithful source and the one that still has a value.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the member.
+ * @return string The nickname, else the user_nicename, else ''.
+ */
+function bb_core_get_name_fallback_label( $user_id ) {
+	$nickname = trim( (string) get_the_author_meta( 'nickname', $user_id ) );
+
+	if ( '' !== $nickname ) {
+		return $nickname;
+	}
+
+	return trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
 }
