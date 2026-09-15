@@ -1022,11 +1022,28 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$platform_file = $this->bb_get_platform_plugin_file();
 
 			foreach ( array( 'response', 'no_update' ) as $key ) {
-				if ( empty( $value->{$key} ) || ! is_array( $value->{$key} ) ) {
+				if ( empty( $value->{$key} ) ) {
 					continue;
 				}
 
-				foreach ( $value->{$key} as $file => $entry ) {
+				/*
+				 * A cache, staging or update-manager plugin that round-trips this
+				 * transient through JSON leaves the container as an object rather than
+				 * an array. Read it the same way bb_get_plugin_update_entry() does, or
+				 * the two disagree about the same transient: this one would skip the
+				 * entry and leave the slug wrong while that one still returned it, and
+				 * a details modal carrying a download_link with a slug that names no
+				 * installed directory sends core off to delete the whole update
+				 * transient. Entries are objects, so assigning through the cast still
+				 * reaches the entry the transient holds.
+				 */
+				$entries = is_object( $value->{$key} ) ? (array) $value->{$key} : $value->{$key};
+
+				if ( ! is_array( $entries ) ) {
+					continue;
+				}
+
+				foreach ( $entries as $file => $entry ) {
 					// Third-party update managers are known to rewrite this transient
 					// with array entries; assigning a property on one fatals on PHP 8.
 					if ( ! is_object( $entry ) ) {
@@ -1235,6 +1252,58 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/**
+		 * Read one plugin's entry from the 'update_plugins' site transient.
+		 *
+		 * Note: reading this transient re-runs the site_transient_update_plugins
+		 * filters, including bb_fix_plugin_details_link() - harmless, since that
+		 * filter only normalizes the entry's slug.
+		 *
+		 * The container is normalized rather than indexed where it is found.
+		 * 'response' is an array as core writes it, but a plugin that round-trips
+		 * this transient through JSON - which caching, staging-sync and update
+		 * manager plugins do routinely - hands back a stdClass, and indexing an
+		 * object with [] is an uncaught Error, on 7.4 as much as on 8.x; it has
+		 * never been a notice. isset() is no protection at all here: the
+		 * dimension fetch is evaluated before the existence test, so it throws
+		 * from inside isset() itself, and it throws whether or not the property
+		 * is present. Casting to array restores the JSON shape to what core
+		 * wrote, and disarms every other object as well - the cast reads the
+		 * property table and never calls offsetExists(), so an ArrayAccess
+		 * implementation whose offsetExists() throws cannot reach out of here
+		 * either. A container that is not an object at all never gets indexed in
+		 * the first place.
+		 *
+		 * What this does not buy is survivability of that transient shape, and
+		 * the cast should not be read as a claim to it. WordPress core indexes
+		 * the same container unguarded - wp_plugin_update_row() opens with
+		 * isset( $current->response[ $file ] ) - so on the very screen this
+		 * feature serves, an object-shaped 'response' fatals in core whatever
+		 * this function does. What the cast buys is narrower and still worth
+		 * having: this filter is not the one that fatals, and it agrees with
+		 * bb_fix_plugin_details_link() about the same transient, which is what
+		 * stops the pair from disagreeing over whether an entry exists.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $plugin_file Plugin basename, e.g. 'buddyboss-platform/bp-loader.php'.
+		 *
+		 * @return object|null Update entry for the plugin, or null when there is none to read.
+		 */
+		protected function bb_get_plugin_update_entry( $plugin_file ) {
+			$update_data = get_site_transient( 'update_plugins' );
+
+			$response = ( is_object( $update_data ) && isset( $update_data->response ) )
+				? (array) $update_data->response
+				: array();
+
+			$update = isset( $response[ $plugin_file ] ) ? $response[ $plugin_file ] : null;
+
+			// Third-party update managers are known to rewrite this transient with
+			// array entries; reading a property off one warns under WP_DEBUG.
+			return is_object( $update ) ? $update : null;
+		}
+
+		/**
 		 * Resolve a "last updated" date for locally served plugin information.
 		 *
 		 * WP_Plugin_Dependencies::get_dependency_api_data() caches plugin API data
@@ -1244,6 +1313,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * every plugins.php and plugin-install.php load, so always answer with a
 		 * real date.
 		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string      $plugin_file Plugin basename, e.g. 'buddyboss-platform/bp-loader.php'.
@@ -1251,7 +1332,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @return string Last updated date in GMT 'Y-m-d H:i:s' format.
 		 */
-		protected function bb_get_plugin_last_updated( $plugin_file, $update = null ) {
+		public function bb_get_plugin_last_updated( $plugin_file, $update = null ) {
 			// Third-party update managers are known to rewrite this transient with
 			// array entries; reading a property off one warns under WP_DEBUG.
 			if ( is_object( $update ) && ! empty( $update->last_updated ) ) {
@@ -1300,13 +1381,25 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * otherwise have been persisted, so this decides who is handed it in a
 		 * response, not what is written to the database.
 		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $package Package URL from the update transient, if any.
 		 *
 		 * @return string Package URL, or empty string.
 		 */
-		protected function bb_get_plugin_download_link( $package ) {
+		public function bb_get_plugin_download_link( $package ) {
 			if (
 				empty( $package ) ||
 				( ! current_user_can( 'install_plugins' ) && ! current_user_can( 'update_plugins' ) )
@@ -1349,11 +1442,29 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * fetches notes - execution exits before this transient is written, so
 		 * the key is only ever present carrying data nothing asked for.
 		 *
-		 * Only this plugin's own entry is touched. Every add-on in the suite
-		 * names this plugin in its "Requires Plugins" header, so this plugin's
-		 * slug is the only dependency slug it answers for today; should a product
-		 * ever depend on an add-on instead, bb_plugins_api_addon_fallback() would
-		 * answer for that slug too and it would want the same treatment.
+		 * Every BuddyBoss entry is covered, not only this plugin's own. Each
+		 * add-on in the suite now answers plugins_api for its own slug, and
+		 * bb_plugins_api_addon_fallback() answers for any that does not, so the
+		 * payload carrying a licensed package URL is no longer this plugin's
+		 * alone. Nothing has to name an add-on as a dependency today for that to
+		 * matter: this store never expires, so a single entry written once -
+		 * after a product declares "Requires Plugins: buddyboss-<add-on>", or
+		 * after someone copies an add-on's example plugin into wp-content/plugins
+		 * - is a credential left in the database until somebody deletes the row
+		 * by hand. Covering the whole suite here costs one array walk and spares
+		 * six add-ons an identical fix each.
+		 *
+		 * Scope is decided by bb_get_installed_buddyboss_addon(), which is the
+		 * same narrow test the add-on fallback answers on: BuddyBoss-authored,
+		 * and either naming this plugin in "Requires Plugins" or listed in
+		 * bb_get_known_buddyboss_addon_slugs(). A slug that is not this plugin
+		 * and does not pass that test is another plugin's entry and is left
+		 * exactly as it was handed over. That test does reach the filesystem,
+		 * but only after bb_maybe_buddyboss_addon_slug() has rejected on the
+		 * directory name, and then only as far as an author-header read for a
+		 * directory that survived it. This filter also runs on the write rather
+		 * than the read - core writes this transient once per dependency slug it
+		 * newly resolves, not once per page load.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1366,15 +1477,26 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return $value;
 			}
 
-			$slug = $this->bb_get_platform_plugin_slug();
+			$platform_slug = $this->bb_get_platform_plugin_slug();
 
-			// Core stores each entry as (array) $information; anything else was
-			// not written from here and is left exactly as it was handed over.
-			if ( ! isset( $value[ $slug ] ) || ! is_array( $value[ $slug ] ) ) {
-				return $value;
+			foreach ( $value as $slug => $entry ) {
+				// Core stores each entry as (array) $information; anything else was
+				// not written from here and is left exactly as it was handed over.
+				if ( ! is_array( $entry ) ) {
+					continue;
+				}
+
+				// Cheap compare first, then the filesystem test - and only for a
+				// slug that could plausibly be ours. See the scope note above.
+				if (
+					$slug !== $platform_slug &&
+					! $this->bb_get_installed_buddyboss_addon( $slug )
+				) {
+					continue;
+				}
+
+				unset( $value[ $slug ]['download_link'], $value[ $slug ]['sections'] );
 			}
-
-			unset( $value[ $slug ]['download_link'], $value[ $slug ]['sections'] );
 
 			return $value;
 		}
@@ -1472,15 +1594,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$new_version = BP_PLATFORM_VERSION;
 			$package     = '';
-			// Note: reading this transient re-runs the site_transient_update_plugins
-			// filters, including bb_fix_plugin_details_link() above — harmless, since
-			// that filter only normalizes the entry's slug.
-			$update_data = get_site_transient( 'update_plugins' );
-			$update      = isset( $update_data->response[ $plugin_file ] ) ? $update_data->response[ $plugin_file ] : null;
+			$update      = $this->bb_get_plugin_update_entry( $plugin_file );
 
-			// Third-party update managers are known to rewrite this transient with
-			// array entries; reading a property off one warns under WP_DEBUG.
-			if ( is_object( $update ) && ! empty( $update->new_version ) ) {
+			if ( ! empty( $update->new_version ) ) {
 				$new_version = $update->new_version;
 				$package     = ! empty( $update->package ) ? $update->package : '';
 			}
@@ -1507,12 +1623,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$release_url  = $this->bb_get_release_notes_page_url( $linked_version );
 				$release_text = sprintf(
 					/* translators: %s: version number. */
-					esc_html__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
-					esc_html( $linked_version )
+					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					$linked_version
 				);
 			} else {
 				$release_url  = $this->bb_get_release_notes_page_url();
-				$release_text = esc_html__( 'View all release notes on buddyboss.com', 'buddyboss' );
+				$release_text = __( 'View all release notes on buddyboss.com', 'buddyboss' );
 			}
 
 			$information = array(
@@ -1520,15 +1636,41 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				// into the modal's <h2> without escaping it, and it is a product name.
 				'name'          => 'BuddyBoss Platform',
 				'slug'          => $args->slug,
-				// Normalized, not raw. install_plugin_information() puts 'version'
-				// through the installer's own short wp_kses() allowlist and then
-				// echoes it unescaped, and that allowlist still passes links, images
-				// and class attributes - so an update feed is one compromise away
-				// from putting markup in wp-admin through this key. Reducing it to
-				// digits and dots closes that, at the cost of a suffixed version
-				// reading as its base release, which is what the release link
-				// beside it already says.
-				'version'       => $linked_version,
+
+				/*
+				 * Sanitized, not normalized, and the difference matters: see
+				 * bb_sanitize_plugin_version(). The short of it is that this key is
+				 * both printed and fed to version_compare(), and the value that is
+				 * right for the release link beside it - 3.4.4 for a 3.4.4-beta1
+				 * build - is the wrong value here, because it compares greater than
+				 * what is installed.
+				 *
+				 * Greater is the one answer install_plugin_install_status() cannot
+				 * absorb: it runs delete_site_transient( 'update_plugins' ) plus a
+				 * blocking wp_update_plugins() and recurses, on every modal open.
+				 * Two paths reach that comparison and they need different things.
+				 *
+				 * No update pending: core's lookup scans only the transient's
+				 * 'response' container, and an up-to-date plugin sits in
+				 * 'no_update', so the lookup cannot match and the comparison always
+				 * runs. Nothing filters this path. The only defence is that the
+				 * value below still names the release that is installed, which is
+				 * exactly what sanitizing preserves and normalizing destroyed.
+				 * bb_fix_plugin_details_link() does not help here and must not be
+				 * cited as though it did.
+				 *
+				 * An update is pending: the lookup matches on slug, reports
+				 * 'update_available' and returns before comparing - but only if the
+				 * entry carries the right slug, which is what
+				 * bb_fix_plugin_details_link() does exist to guarantee. See the note
+				 * on bb_get_installed_buddyboss_addon() for why the two predicates
+				 * behind that have to stay identical.
+				 *
+				 * Residual: this reports BP_PLATFORM_VERSION where core reads the
+				 * plugin's Version header. They are the same string in every shipped
+				 * build; a build where they diverge would land in the branch above.
+				 */
+				'version'       => $this->bb_sanitize_plugin_version( $new_version ),
 				'author'        => '<a href="https://buddyboss.com/" target="_blank" rel="noopener noreferrer">BuddyBoss</a>',
 				'homepage'      => 'https://buddyboss.com/',
 				'last_updated'  => $this->bb_get_plugin_last_updated( $plugin_file, $update ),
@@ -1586,13 +1728,25 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * still renders, still links to the full notes - which is why it gates this
 		 * and nothing that matters more.
 		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param object $args Plugin API arguments.
 		 *
 		 * @return bool True when release notes should be fetched for this caller.
 		 */
-		protected function bb_should_fetch_release_notes( $args ) {
+		public function bb_should_fetch_release_notes( $args ) {
 			$fields = isset( $args->fields ) ? (array) $args->fields : array();
 
 			$wants_sections = ! isset( $fields['sections'] ) || $fields['sections'];
@@ -1617,12 +1771,41 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * would be false. All three are reachable; saying "could not be loaded" for
 		 * all three was wrong for two of them.
 		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
+		 * $link_text is plain, unescaped text, and is escaped here. So is
+		 * bb_get_addon_changelog_section()'s, which wraps this - one rule for
+		 * both, because two public methods taking link text under opposite
+		 * contracts is a trap that cannot be undone once add-ons ship against
+		 * it. This one used to interpolate raw, on the grounds that its only
+		 * callers were in this class and handed it escaped strings; that stopped
+		 * being true when add-ons began calling it, and three of them wrote
+		 * comments refusing to adopt the convention rather than propagate it.
+		 *
+		 * Escaping here rather than trusting callers is the direction that fails
+		 * safely. A caller that escapes anyway renders "&amp;" where it meant
+		 * "&" - visible, reported, fixed. A caller that forgets puts remote text
+		 * into wp-admin markup, and nothing says so. There is no runtime way to
+		 * tell the two apart, so the default has to be the one whose failure is
+		 * loud.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $notes     Sanitized release notes HTML; empty when none
 		 *                          could be fetched.
 		 * @param string $url       URL the trailing link points at.
-		 * @param string $link_text Already-escaped text for the trailing link.
+		 * @param string $link_text Plain, unescaped text for the trailing link;
+		 *                          escaped here. Do not pass esc_html() output.
 		 * @param string $state     Why there are no notes, when there are none:
 		 *                          'failed' for a fetch that did not complete,
 		 *                          'empty' for a release with nothing published,
@@ -1632,7 +1815,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @return string Changelog section HTML.
 		 */
-		protected function bb_build_changelog_section( $notes, $url, $link_text, $state = 'failed' ) {
+		public function bb_build_changelog_section( $notes, $url, $link_text, $state = 'failed' ) {
 			$section = '';
 
 			if ( '' !== $notes ) {
@@ -1670,7 +1853,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$section .= sprintf(
 				'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s<span class="screen-reader-text"> %3$s</span></a></p>',
 				esc_url( $url ),
-				$link_text,
+				esc_html( (string) $link_text ),
 				esc_html__( '(opens in a new tab)', 'buddyboss' )
 			);
 
@@ -1706,13 +1889,25 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * cache key or link text goes through this, so the link a user reads
 		 * always names the same release the link actually opens.
 		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $version Version number from the update feed.
 		 *
 		 * @return string Normalized version number, or an empty string.
 		 */
-		protected function bb_normalize_release_version( $version ) {
+		public function bb_normalize_release_version( $version ) {
 			// Nothing scalar to read: an array or object cannot be a version.
 			if ( ! is_scalar( $version ) ) {
 				return '';
@@ -1745,7 +1940,68 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/**
+		 * Make a version safe to print without changing which release it names.
+		 *
+		 * The sibling of bb_normalize_release_version(), and deliberately not the
+		 * same function. That one answers "which release page does this belong
+		 * to", and reducing 3.4.4-beta1 to 3.4.4 is the right answer to that
+		 * question. This one answers "what is installed", where the suffix is the
+		 * whole point and dropping it produces a value that names a different
+		 * release from the one on disk.
+		 *
+		 * The distinction is load-bearing, because the 'version' key is not
+		 * display-only. install_plugin_information() prints it - core applies
+		 * wp_kses() with its own short allowlist and then echoes the result
+		 * unescaped, and that allowlist still passes links, images and class
+		 * attributes - but install_plugin_install_status() also feeds it to
+		 * version_compare() against the installed plugin's own Version header.
+		 * A value that is neither equal to nor lower than the installed one
+		 * sends core into a branch that runs delete_site_transient(
+		 * 'update_plugins' ) and a blocking wp_update_plugins(), then recurses.
+		 * Handing that comparison a version with its pre-release suffix removed
+		 * is exactly how to land there: '2.0.3' against an installed
+		 * '2.0.3-beta2' is greater, not equal and not lower.
+		 *
+		 * So the two jobs are separated rather than compromised between. Removing
+		 * every character a version cannot contain is what makes printing safe -
+		 * with no '<' left there is no tag for kses to pass through - while '-',
+		 * '+', '_' and letters survive, so version_compare() still orders a
+		 * pre-release below its release and the comparison above resolves the way
+		 * the installed copy deserves.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $version Version number from a plugin header or update feed.
+		 *
+		 * @return string Version safe to print and to compare, or an empty string.
+		 */
+		protected function bb_sanitize_plugin_version( $version ) {
+			// Nothing scalar to read: an array or object cannot be a version.
+			if ( ! is_scalar( $version ) ) {
+				return '';
+			}
+
+			// Bounded for the same reason bb_normalize_release_version() bounds:
+			// the value can arrive from a remote feed, and it is printed.
+			$version = substr( trim( (string) $version ), 0, 128 );
+
+			return (string) preg_replace( '/[^0-9A-Za-z.+_-]/', '', $version );
+		}
+
+		/**
 		 * Get the buddyboss.com release notes page URL.
+		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1777,6 +2033,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * screen never hammers the remote site, and the caller falls back to a
 		 * plain release notes link.
 		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $version   Version number, e.g. '3.4.4'.
@@ -1793,7 +2061,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return string Sanitized release notes HTML, or empty string if unavailable.
 		 */
 		public function bb_get_release_notes_html( $version, $rest_base = 'releases-platform', &$state = null ) {
-			$state     = 'empty';
+			/*
+			 * 'skipped' until something is actually asked of the remote. The
+			 * bail below is reached when the version or the feed name could not
+			 * be resolved, and no request is made - so reporting 'empty' there
+			 * would render "no release notes have been published for this
+			 * version yet", a statement about the release that nothing checked
+			 * and that is not knowable from here.
+			 */
+			$state     = 'skipped';
 			$version   = $this->bb_normalize_release_version( $version );
 			$rest_base = sanitize_key( str_replace( '/', '', (string) $rest_base ) );
 
@@ -1807,6 +2083,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( '' === $version || '' === $rest_base ) {
 				return '';
 			}
+
+			// Past the bail, so a request is going to be made or a cached answer
+			// read. From here 'empty' is a finding rather than an assumption.
+			$state = 'empty';
 
 			$cache_key = 'bb_release_notes_' . md5( $rest_base . '_' . $version );
 			$cached    = get_site_transient( $cache_key );
@@ -2000,6 +2280,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * Not atomic - WordPress offers no atomic transient add - but losing the
 		 * race only costs a duplicate request, never a wrong answer.
 		 *
+		 * The window this reports 'locked' for is the network phase, not the
+		 * whole fetch. Both callers read the cache before they reach this, and
+		 * both write a pessimistic 'failed' entry once the network work is done
+		 * and before the markup transforms run - so a request arriving during
+		 * those transforms is answered from that entry and told the notes could
+		 * not be loaded, about a fetch that is in fact about to succeed. The
+		 * transforms are milliseconds against a five-second request, so the
+		 * mislabelled window is the small one, and the alternative - deferring
+		 * the pessimistic write - is what lets a fetch that dies mid-transform
+		 * stall every page load after it.
+		 *
 		 * The lifetime has to outlast the work it guards, or it stops guarding
 		 * anything: the add-on path makes three requests in series, so at the
 		 * request timeout its worst case is already past a minute once the
@@ -2063,9 +2354,21 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			/*
 			 * Everything below walks the markup, and the remote is what decides
 			 * how much of it there is. Refuse a document larger than any release
-			 * ever produces instead of walking it: the caller renders its existing
-			 * "could not be loaded" message, which is the honest answer for a
-			 * payload this cannot vouch for.
+			 * ever produces instead of walking it.
+			 *
+			 * Belt and braces, and deliberately so: the same number is already
+			 * passed to wp_remote_get() as 'limit_response_size', so an oversized
+			 * response is truncated on the wire, fails json_decode() and arrives
+			 * here as an empty string rather than as a large one. This is the
+			 * second line, for a caller that hands over markup from somewhere
+			 * other than bb_release_notes_request_args().
+			 *
+			 * Returning empty is reported by both callers as 'empty', not
+			 * 'failed', so the reader is told the release has nothing published.
+			 * That is a shade off the truth for a refusal, and it is left that
+			 * way on purpose: correcting it means threading a state out of a
+			 * function whose whole job is string in, string out, to distinguish a
+			 * case the caller cannot currently reach.
 			 */
 			if ( strlen( $html ) > $this->bb_release_notes_max_bytes() ) {
 				return '';
@@ -2307,6 +2610,37 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * testing before any of them runs. Counting is a handful of linear scans
 		 * and costs nothing next to what it avoids.
 		 *
+		 * The running total is tested at every step, not only at the end, and
+		 * that is the whole of what makes this a guard. A final total of zero
+		 * says the document has as many closings as openings; it does not say
+		 * each opening has one *after* it. "</tr></tr><tr><tr>" balances on the
+		 * final count while still leaving two openings with no partner ahead of
+		 * them, which is exactly the shape the patterns scan to the end of the
+		 * document for - so a closings-first payload sized just under
+		 * bb_release_notes_max_bytes() passed the end-of-loop test and still
+		 * cost tens of seconds. Refusing the moment the total goes negative
+		 * catches that, because a closing tag arriving with nothing open is the
+		 * first observable sign of it.
+		 *
+		 * td and th are counted apart, and that is not tidiness. The patterns
+		 * pair a cell with a backreference - "</\1>" - so a <th> is satisfied
+		 * only by a </th>, never by a </td>. Counted together, N openings of one
+		 * spelling followed by N closings of the other is a balanced tally and a
+		 * document in which not one opening has a partner: every <th> then scans
+		 * to the end of the document for a </th> that is not there. Measured at
+		 * the byte cap this fetch allows, that shape - and its alternating
+		 * sibling, "<td>x</th>" repeated - cost 164 and 91 seconds respectively
+		 * while this function answered true. One tally per spelling is what
+		 * makes the answer match what the patterns actually pair.
+		 *
+		 * Scoped per element, and only per element. Tags of different names are
+		 * not checked against each other, so "<tr><td></tr></td>" still passes -
+		 * correctly, for this purpose: both patterns find their partner and
+		 * neither scans past it, so nothing here is quadratic. This answers the
+		 * question the conversion needs answered, which is whether any single
+		 * pattern will hunt to the end of the document, not whether the markup
+		 * is well-formed.
+		 *
 		 * A word boundary keeps the names exact: "<th" must not count "<thead",
 		 * and "<tr" must not count "<track".
 		 *
@@ -2314,12 +2648,20 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @param string $html Release notes HTML.
 		 *
-		 * @return bool True when no element has more openings than closings.
+		 * @return bool True when, within each element name, every opening tag has
+		 *              a closing partner after it.
 		 */
 		protected function bb_release_notes_tags_balance( $html ) {
+			/*
+			 * One entry per element name the conversion pairs up. Splitting or
+			 * merging entries here changes which documents are refused: an entry
+			 * must cover exactly the tags one pattern treats as interchangeable,
+			 * and the cell patterns treat none.
+			 */
 			$pairs = array(
 				'tr'      => '#</?tr\b#i',
-				'cell'    => '#</?t[dh]\b#i',
+				'td'      => '#</?td\b#i',
+				'th'      => '#</?th\b#i',
 				'caption' => '#</?caption\b#i',
 			);
 
@@ -2333,6 +2675,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				foreach ( $matches[0] as $tag ) {
 					// A closing tag is the only one whose second character is '/'.
 					$open += ( '/' === $tag[1] ) ? -1 : 1;
+
+					// Closed something that was never opened: the tags are
+					// interleaved, so the end-of-loop total proves nothing.
+					if ( $open < 0 ) {
+						return false;
+					}
 				}
 
 				if ( 0 !== $open ) {
@@ -2433,6 +2781,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * entirely - but the post title is always the plain version number, so the
 		 * version is matched on that.
 		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $version   Version number, e.g. '2.1.2'.
@@ -2445,13 +2805,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return string Sanitized release notes HTML, or empty string if unavailable.
 		 */
 		public function bb_get_addon_release_notes_html( $version, $term_slug, &$state = null ) {
-			$state     = 'empty';
+			// 'skipped' until something is asked of the remote; see the same
+			// opening in bb_get_release_notes_html() for why.
+			$state     = 'skipped';
 			$version   = $this->bb_normalize_release_version( $version );
 			$term_slug = sanitize_title( (string) $term_slug );
 
 			if ( '' === $version || '' === $term_slug ) {
 				return '';
 			}
+
+			$state = 'empty';
 
 			$cache_key = 'bb_release_notes_addon_' . md5( $term_slug . '_' . $version );
 			$cached    = get_site_transient( $cache_key );
@@ -2510,6 +2874,150 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			delete_site_transient( $lock_key );
 
 			return $html;
+		}
+
+		/**
+		 * Get the buddyboss.com releases archive URL for an add-on.
+		 *
+		 * Add-on releases are grouped under a term in the releases taxonomy, and
+		 * that term's archive is the only stable page an add-on can link to.
+		 *
+		 * Deliberately an archive and never a single release. The per-release
+		 * permalinks exist, but they are filed under a prefix that differs per
+		 * product and cannot be derived from anything an add-on holds
+		 * (buddyboss-learndash 1.0.3 is 'bbld-1-0-3', offload media 2.1.2 is
+		 * 'om-2-1-2', sharing 2.0.3 is 'sharing-2-0-3') - which is the same reason
+		 * bb_find_addon_release_id() matches releases on post title rather than
+		 * slug. Appending a version to the term archive instead produces a URL
+		 * that looks right and 404s, so the version is not passed on.
+		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $term_slug Term slug of the add-on in the releases taxonomy.
+		 *
+		 * @return string Releases archive URL.
+		 */
+		public function bb_get_addon_release_archive_url( $term_slug ) {
+			$term_slug = sanitize_title( (string) $term_slug );
+
+			// Without a term there is no archive to name, so fall back to the one
+			// that lists every add-on release.
+			$base = '' !== $term_slug
+				? 'https://buddyboss.com/resources/addons/' . $term_slug . '/'
+				: 'https://buddyboss.com/resources/buddyboss-addons/';
+
+			return $this->bb_get_release_notes_page_url( '', $base );
+		}
+
+		/**
+		 * Build a finished changelog section for a BuddyBoss add-on.
+		 *
+		 * One call for the whole of what an add-on's plugins_api handler needs in
+		 * its 'changelog' section: the notes are fetched, every reason for having
+		 * none is turned into the right sentence, and the trailing link resolves
+		 * to that add-on's own releases archive. An add-on therefore has no fetch
+		 * state to interpret, no link to assemble and no archive URL to derive -
+		 * the three things six separate implementations each had to get right.
+		 *
+		 * $link_text is plain, unescaped text, and so is bb_build_changelog_
+		 * section()'s - the two agree, and the agreement is the point. They used
+		 * to disagree, which meant two public methods taking link text under
+		 * opposite contracts with nothing in either signature to say which was
+		 * which. Callers got it right, but only by writing it down each time.
+		 * Do not reintroduce the split: a contract like that freezes the moment
+		 * add-ons ship against it, and there is no runtime way to tell a
+		 * pre-escaping caller from a naive one afterwards.
+		 *
+		 * Hand over $args and the fetch is gated the same way this plugin gates
+		 * its own, by bb_should_fetch_release_notes(). That gate is not a nicety:
+		 * WP_Plugin_Dependencies::get_dependency_api_data() calls plugins_api()
+		 * for every "Requires Plugins" slug on every plugins.php and
+		 * plugin-install.php load, and the add-on fetch below is three sequential
+		 * requests at the request timeout - so an ungated caller puts up to
+		 * fifteen seconds of blocking HTTP into an ordinary admin page render,
+		 * for a section that page never displays.
+		 *
+		 * The default is null rather than an empty array or false, and the
+		 * distinction is load-bearing. bb_should_fetch_release_notes() reads
+		 * isset( $args->fields ), so an empty object is indistinguishable from
+		 * real arguments that name no fields - which is the permissive case, and
+		 * answers true. Only null can mean "not supplied", and "not supplied"
+		 * has to keep fetching, because every add-on calling this today gates
+		 * for itself before it gets here and must not silently stop rendering a
+		 * changelog.
+		 *
+		 * Public API. BuddyBoss add-on plugins call this from their own
+		 * plugins_api handlers behind an is_callable() guard, which reports
+		 * false for a method they cannot reach. Narrowing this does not fatal,
+		 * then - each add-on silently drops the changelog it would have built
+		 * and renders a bare link instead - and that is the reason to treat the
+		 * visibility as fixed rather than a reason to relax about it: the
+		 * failure is six products quietly losing a section, with nothing raised
+		 * anywhere to say so. data_contract_methods() in tests/phpunit/
+		 * testcases/core/class-bp-admin-release-notes.php lists the whole
+		 * contract; keep it in step. It is a record, not a gate - that suite
+		 * does not currently run on this branch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string      $version   Version number the notes should describe.
+		 * @param string      $term_slug Term slug of the add-on in the releases taxonomy.
+		 * @param string      $link_url  Optional. URL for the trailing link; defaults to
+		 *                               the add-on's releases archive.
+		 * @param string      $link_text Optional. Plain, unescaped text for the trailing
+		 *                               link; defaults to a generic release notes label.
+		 * @param object|null $args      Optional. The plugins_api() arguments this is
+		 *                               answering for, so the remote fetch is gated to
+		 *                               the caller that renders a changelog. Null means
+		 *                               the caller has gated already; see above.
+		 *
+		 * @return string Changelog section HTML.
+		 */
+		public function bb_get_addon_changelog_section( $version, $term_slug, $link_url = '', $link_text = '', $args = null ) {
+			$term_slug = sanitize_title( (string) $term_slug );
+
+			$fetch = ( null === $args ) || $this->bb_should_fetch_release_notes( $args );
+
+			/*
+			 * 'skipped' renders the trailing link on its own with no sentence
+			 * beside it, which is the only honest answer when nothing was asked
+			 * of the remote - a caller that wanted no sections, a term slug this
+			 * does not recognize, or a version that could not be resolved.
+			 * Saying "no release notes have been published" in any of those
+			 * cases is a claim about the release that nothing checked.
+			 *
+			 * Only the fetch replaces it, and bb_get_addon_release_notes_html()
+			 * holds the same rule internally: it stays on 'skipped' through its
+			 * own unresolvable-input bail and moves to 'empty' only once it is
+			 * committed to reading an answer.
+			 */
+			$state = 'skipped';
+			$notes = ( $fetch && '' !== $term_slug )
+				? $this->bb_get_addon_release_notes_html( $version, $term_slug, $state )
+				: '';
+
+			$link_url = '' !== (string) $link_url
+				? (string) $link_url
+				: $this->bb_get_addon_release_archive_url( $term_slug );
+
+			// Plain text both ways: bb_build_changelog_section() escapes it.
+			$link_text = '' !== (string) $link_text
+				? (string) $link_text
+				: __( 'Visit the plugin website for release information', 'buddyboss' );
+
+			return $this->bb_build_changelog_section( $notes, $link_url, $link_text, $state );
 		}
 
 		/**
@@ -2631,11 +3139,23 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
+		 * Only a completed lookup is cached, and that is what makes a cached 0
+		 * mean something. Caching a failure as 0 reads back an hour later as "the
+		 * remote has no term for this add-on", which the caller turns into "no
+		 * release notes have been published for this version yet" - a statement
+		 * about the product, made on the strength of a request that never
+		 * arrived. Leaving the failure uncached costs no retry storm either: the
+		 * caller has already written its own hour-long 'failed' entry over the
+		 * whole fetch before this could be reached again.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @param string $term_slug Term slug in the releases taxonomy.
 		 * @param bool   $failed    Set to true when the request did not complete, as
-		 *                          opposed to completing with no such term. Not set
-		 *                          for an answer served from the cache, which is
-		 *                          already an hour of not retrying either way.
+		 *                          opposed to completing with no such term. Always
+		 *                          set, including for an answer served from the
+		 *                          cache - where it is false, and truthfully so,
+		 *                          because only a completed lookup is ever cached.
 		 *                          Passed by reference.
 		 *
 		 * @return int Term ID, or 0 when it cannot be resolved.
@@ -2663,12 +3183,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 				$failed = true;
-			} else {
-				$terms = json_decode( wp_remote_retrieve_body( $response ), true );
 
-				if ( is_array( $terms ) && ! empty( $terms[0]['id'] ) ) {
-					$term_id = (int) $terms[0]['id'];
-				}
+				// Nothing was learned, so nothing is recorded; see the note above.
+				return 0;
+			}
+
+			$terms = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			if ( is_array( $terms ) && ! empty( $terms[0]['id'] ) ) {
+				$term_id = (int) $terms[0]['id'];
 			}
 
 			set_site_transient( $cache_key, $term_id, $term_id ? WEEK_IN_SECONDS : HOUR_IN_SECONDS );
@@ -2729,12 +3252,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$new_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : '';
 			$package     = '';
-			$update_data = get_site_transient( 'update_plugins' );
-			$update      = isset( $update_data->response[ $plugin_file ] ) ? $update_data->response[ $plugin_file ] : null;
+			$update      = $this->bb_get_plugin_update_entry( $plugin_file );
 
-			// Third-party update managers are known to rewrite this transient with
-			// array entries; reading a property off one warns under WP_DEBUG.
-			if ( is_object( $update ) && ! empty( $update->new_version ) ) {
+			if ( ! empty( $update->new_version ) ) {
 				$new_version = $update->new_version;
 				$package     = ! empty( $update->package ) ? $update->package : '';
 			}
@@ -2752,9 +3272,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 */
 			$changelog = '';
 			$state     = 'skipped';
+			$term      = $this->bb_get_addon_release_term( $args->slug );
 
 			if ( $this->bb_should_fetch_release_notes( $args ) ) {
-				$term      = $this->bb_get_addon_release_term( $args->slug );
 				$rest_base = $this->bb_get_addon_release_post_type( $args->slug );
 
 				if ( '' !== $term ) {
@@ -2764,13 +3284,31 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				}
 			}
 
+			/*
+			 * An add-on with a releases archive gets linked to it. The plugin's own
+			 * URI is the fallback for one that has none, and it is a weak link for
+			 * the purpose - every BuddyBoss add-on ships the same marketing site as
+			 * its PluginURI, so a link captioned "release information" would land on
+			 * a page with none.
+			 */
+			$release_url = '' !== $term
+				? $this->bb_get_addon_release_archive_url( $term )
+				: $plugin_uri;
+
 			$information = array(
 				'name'          => wp_strip_all_tags( $plugin_data['Name'] ),
 				'slug'          => $args->slug,
-				// Normalized for the same reason as in
-				// bb_plugins_api_information(); here the raw value can come from
-				// the add-on's own Version header as well as the update feed.
-				'version'       => $this->bb_normalize_release_version( $new_version ),
+
+				/*
+				 * Sanitized for the same reason as in bb_plugins_api_information(),
+				 * and the hazard documented there is sharper here: this value comes
+				 * from the add-on's own Version header whenever no update is
+				 * pending, which is precisely the path where core's slug lookup
+				 * cannot match and the version_compare() always runs. An add-on
+				 * shipping a pre-release header is the ordinary case for that
+				 * branch, so the suffix has to survive this far.
+				 */
+				'version'       => $this->bb_sanitize_plugin_version( $new_version ),
 				'author'        => '<a href="' . esc_url( $author_uri ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $author ) . '</a>',
 				'homepage'      => esc_url( $plugin_uri ),
 				'last_updated'  => $this->bb_get_plugin_last_updated( $plugin_file, $update ),
@@ -2778,8 +3316,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'description' => '<p>' . wp_kses_post( $plugin_data['Description'] ) . '</p>',
 					'changelog'   => $this->bb_build_changelog_section(
 						$changelog,
-						$plugin_uri,
-						esc_html__( 'Visit the plugin website for release information', 'buddyboss' ),
+						$release_url,
+						__( 'Visit the plugin website for release information', 'buddyboss' ),
 						$state
 					),
 				),
@@ -2989,6 +3527,34 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				false !== strpbrk( $slug, '/\\' ) ||
 				0 === strpos( $slug, '.' )
 			) {
+				return array();
+			}
+
+			/*
+			 * The same directory-name pre-filter bb_is_buddyboss_addon_file()
+			 * applies, and applied here for correctness rather than for speed.
+			 *
+			 * These two are the suite's two answers to "is this one of ours", and
+			 * they have to give the same answer. bb_fix_plugin_details_link() uses
+			 * that one to decide whether to normalize an entry's slug; this one
+			 * decides whether bb_plugins_api_addon_fallback() answers for that
+			 * slug, and bb_get_plugin_update_entry() then looks the entry up by
+			 * plugin file. Let the two disagree and a plugin exists whose modal
+			 * carries a download_link found by file while its transient slug was
+			 * never corrected - and install_plugin_install_status() matches on
+			 * slug, so it misses, drops into its "install" branch, and runs
+			 * delete_site_transient( 'update_plugins' ) plus a blocking
+			 * wp_update_plugins() on every modal open, settling on no button at
+			 * all. Nothing shipped reaches that today, because every add-on
+			 * directory in the suite starts with "buddyboss" or is named in
+			 * bb_get_known_buddyboss_addon_slugs(); one predicate is how it stays
+			 * that way.
+			 *
+			 * A genuine add-on installed into a renamed directory is refused by
+			 * both, consistently, and bb_possible_buddyboss_addon_slug is the one
+			 * filter that brings it back to both at once.
+			 */
+			if ( ! $this->bb_maybe_buddyboss_addon_slug( $slug ) ) {
 				return array();
 			}
 

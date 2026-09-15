@@ -151,6 +151,77 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 		$this->assertSame( '', $this->normalize( new stdClass() ) );
 	}
 
+	/* bb_sanitize_plugin_version ********************************************/
+
+	/**
+	 * The 'version' key served to plugins_api() is both printed and compared,
+	 * so it must keep the suffix that bb_normalize_release_version() drops.
+	 *
+	 * install_plugin_install_status() feeds it to version_compare() against the
+	 * installed plugin's own Version header. For an up-to-date plugin core's
+	 * slug lookup scans only the transient's 'response' container and therefore
+	 * cannot match, so that comparison always runs - and an api version that is
+	 * greater than the installed one sends core into a branch that runs
+	 * delete_site_transient( 'update_plugins' ) and a blocking
+	 * wp_update_plugins(), on every modal open. A normalized '2.0.3' against an
+	 * installed '2.0.3-beta2' is exactly that case.
+	 */
+	public function test_sanitize_plugin_version_keeps_prerelease_suffixes() {
+		$sanitize = function ( $v ) {
+			return $this->call( 'bb_sanitize_plugin_version', array( $v ) );
+		};
+
+		foreach ( array( '2.0.3-beta2', '3.4.1-RC1', '1.2.3b', '2.0.3', '1.2.3+build.9' ) as $raw ) {
+			$this->assertSame( $raw, $sanitize( $raw ), 'A real version must survive unchanged.' );
+
+			// The property that matters: core reports 'latest_installed' rather
+			// than falling through to the transient-deleting branch.
+			$this->assertTrue(
+				version_compare( $sanitize( $raw ), $raw, '=' ),
+				sprintf( 'Sanitized "%s" must still compare equal to the installed header.', $raw )
+			);
+		}
+
+		// The contrast that makes the two helpers different functions.
+		$this->assertSame( '3.4.4', $this->normalize( '3.4.4-beta1' ) );
+		$this->assertSame( '3.4.4-beta1', $sanitize( '3.4.4-beta1' ) );
+		$this->assertFalse( version_compare( '3.4.4', '3.4.4-beta1', '=' ) );
+		$this->assertFalse( version_compare( '3.4.4', '3.4.4-beta1', '<' ) );
+	}
+
+	/**
+	 * Core echoes this key after wp_kses() with an allowlist that still passes
+	 * links, images and class attributes, so nothing that can open a tag may
+	 * survive sanitizing.
+	 */
+	public function test_sanitize_plugin_version_cannot_carry_markup() {
+		$sanitize = function ( $v ) {
+			return $this->call( 'bb_sanitize_plugin_version', array( $v ) );
+		};
+
+		foreach (
+			array(
+				'3.4.4<img src=x onerror=alert(1)>',
+				'3.4.4"><a href="//evil">x</a>',
+				"3.4.4'onmouseover='x",
+			) as $hostile
+		) {
+			$out = $sanitize( $hostile );
+
+			$this->assertStringNotContainsString( '<', $out );
+			$this->assertStringNotContainsString( '>', $out );
+			$this->assertStringNotContainsString( '"', $out );
+			$this->assertStringNotContainsString( "'", $out );
+			$this->assertSame( $out, wp_kses( $out, array() ), 'Nothing left for kses to strip.' );
+		}
+
+		// Bounded, and non-scalars name no version.
+		$this->assertLessThanOrEqual( 128, strlen( $sanitize( str_repeat( '9', 500 ) ) ) );
+		$this->assertSame( '', $sanitize( array( '1.0' ) ) );
+		$this->assertSame( '', $sanitize( null ) );
+		$this->assertSame( '', $sanitize( new stdClass() ) );
+	}
+
 	/* bb_get_release_notes_page_url *****************************************/
 
 	/**
@@ -312,6 +383,83 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Interleaved tags balance on the final count while still leaving openings
+	 * with no partner ahead of them, so the end-of-loop total proves nothing on
+	 * its own. This is the payload that passed the guard and still cost tens of
+	 * seconds in the conversion, so it is the case that must stay covered.
+	 */
+	public function test_tags_balance_rejects_closings_before_openings() {
+		$this->assertFalse(
+			$this->call(
+				'bb_release_notes_tags_balance',
+				array( '<table>' . str_repeat( '</tr>', 5 ) . str_repeat( '<tr><td>x</td>', 5 ) . '</table>' )
+			)
+		);
+
+		// The smallest shape of it: nets to zero, still interleaved.
+		$this->assertFalse(
+			$this->call( 'bb_release_notes_tags_balance', array( '</tr><tr>' ) )
+		);
+	}
+
+	/**
+	 * td and th are counted apart, because the conversion pairs a cell with a
+	 * backreference and so never matches a <th> against a </td>.
+	 *
+	 * Counted together, both shapes below balance on every test the guard used
+	 * to apply - the running total never goes negative and ends at zero - while
+	 * not one opening has a partner, so every one of them scans to the end of
+	 * the document. Measured at the byte cap the fetch allows, the first cost
+	 * 164 seconds and the second 91, with the guard answering true throughout.
+	 * These are the two payloads that got through; they are the two that must
+	 * stay refused.
+	 */
+	public function test_tags_balance_counts_td_and_th_separately() {
+		$this->assertFalse(
+			$this->call(
+				'bb_release_notes_tags_balance',
+				array( '<table>' . str_repeat( '<th>', 40 ) . str_repeat( '</td>', 40 ) . '</table>' )
+			),
+			'<th> openings closed by </td> must not be treated as balanced.'
+		);
+
+		$this->assertFalse(
+			$this->call(
+				'bb_release_notes_tags_balance',
+				array( '<table>' . str_repeat( '<td>x</th>', 40 ) . '</table>' )
+			),
+			'Alternating <td>x</th> must not be treated as balanced.'
+		);
+
+		// Valid markup is unaffected by the split, including the shapes where
+		// th and td appear in the same document and the same row.
+		foreach (
+			array(
+				'<table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table>',
+				'<table><caption>C</caption><thead><tr><th>A</th></tr></thead><tbody><tr><td>1</td></tr></tbody></table>',
+				'<table><tr><td><table><tr><td>x</td></tr></table></td></tr></table>',
+				"<table class=\"x\">\n<tr id=\"r\">\n<th scope=\"col\">A</th>\n<td colspan=\"2\">1</td>\n</tr>\n</table>",
+			) as $valid
+		) {
+			$this->assertTrue(
+				$this->call( 'bb_release_notes_tags_balance', array( $valid ) ),
+				'Valid table markup must still convert: ' . $valid
+			);
+		}
+
+		/*
+		 * Scoped per element, and only per element. Tags of different names are
+		 * not checked against each other, so this still passes - correctly:
+		 * both patterns find their partner, neither scans past it, and nothing
+		 * here is quadratic. The guard answers "will a pattern hunt to the end
+		 * of the document", not "is this well-formed".
+		 */
+		$this->assertTrue(
+			$this->call( 'bb_release_notes_tags_balance', array( '<tr><td></tr></td>' ) )
+		);
+	}
+
+	/**
 	 * Unbalanced table markup passes through untouched rather than being
 	 * converted at quadratic cost. Nothing is lost: it still reaches
 	 * wp_kses_post() afterwards.
@@ -320,14 +468,25 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 		$html = '<table>' . str_repeat( '<tr><td>cell</td>', 200 ) . '</table>';
 
 		$this->assertSame( $html, $this->call( 'bb_convert_release_notes_tables', array( $html ) ) );
+
+		// Interleaved, and therefore refused for the same reason.
+		$interleaved = '<table>' . str_repeat( '</tr>', 200 ) . str_repeat( '<tr><td>cell</td>', 200 ) . '</table>';
+
+		$this->assertSame( $interleaved, $this->call( 'bb_convert_release_notes_tables', array( $interleaved ) ) );
 	}
 
 	/**
-	 * The guard is what keeps the conversion linear. A document that would
-	 * previously have taken tens of seconds must now return promptly.
+	 * The guard is what keeps the conversion linear, and it has to hold for
+	 * both shapes of unbalanced markup: a surplus of openings, and openings
+	 * interleaved behind closings so the net count is zero. The second is not
+	 * a variant of the first - it passed an end-of-loop total test while still
+	 * taking tens of seconds - so both are timed here.
+	 *
+	 * @dataProvider data_unbalanced_table_markup
+	 *
+	 * @param string $html Unbalanced table markup.
 	 */
-	public function test_convert_tables_is_not_quadratic_on_unbalanced_markup() {
-		$html  = '<table>' . str_repeat( '<tr><td>cell</td>', 4000 ) . '</table>';
+	public function test_convert_tables_is_not_quadratic_on_unbalanced_markup( $html ) {
 		$start = microtime( true );
 
 		$this->call( 'bb_convert_release_notes_tables', array( $html ) );
@@ -336,6 +495,30 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 			5,
 			microtime( true ) - $start,
 			'Unbalanced table conversion should short-circuit, not backtrack.'
+		);
+	}
+
+	/**
+	 * Data provider for test_convert_tables_is_not_quadratic_on_unbalanced_markup().
+	 *
+	 * @return array[] Each entry is one unbalanced document.
+	 */
+	public function data_unbalanced_table_markup() {
+		return array(
+			'surplus openings' => array(
+				'<table>' . str_repeat( '<tr><td>cell</td>', 4000 ) . '</table>',
+			),
+			'closings first'   => array(
+				'<table>' . str_repeat( '</tr>', 4000 ) . str_repeat( '<tr><td>cell</td>', 4000 ) . '</table>',
+			),
+			// Balanced on a combined td/th tally, and 164 seconds to convert.
+			'th open, td close' => array(
+				'<table>' . str_repeat( '<th>', 4000 ) . str_repeat( '</td>', 4000 ) . '</table>',
+			),
+			// The same hole reached by alternating rather than by grouping.
+			'alternating cells' => array(
+				'<table>' . str_repeat( '<td>x</th>', 4000 ) . '</table>',
+			),
 		);
 	}
 
@@ -677,5 +860,120 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 			'https://downloads.wordpress.org/plugin/other.zip',
 			$stripped['some-other-plugin']['download_link']
 		);
+	}
+
+	/* Cross-repo API surface ************************************************/
+
+	/**
+	 * Every method the BuddyBoss add-on plugins call must stay public.
+	 *
+	 * This is not a style assertion, and it is not a loud failure either. The
+	 * add-ons guard every one of these calls with is_callable(), which reports
+	 * false for a method they cannot reach - so narrowing one does not fatal.
+	 * Each add-on silently renders a bare link where its changelog was, on a
+	 * screen nobody watches, and no error is raised in any of the seven
+	 * repositories. Quiet is what makes it worth asserting: a fatal would find
+	 * itself.
+	 *
+	 * Read this as a record of the contract rather than as a gate on it. The
+	 * PHPUnit suite does not currently run on this branch, so nothing here has
+	 * executed; treat a change to the list below as a change to six products'
+	 * behaviour and verify it in those products.
+	 *
+	 * @dataProvider data_contract_methods
+	 *
+	 * @param string $method Method name that add-on plugins call.
+	 */
+	public function test_contract_methods_are_public( $method ) {
+		$this->assertTrue(
+			method_exists( 'BP_Admin', $method ),
+			sprintf( 'BP_Admin::%s() is part of the add-on API and has gone missing.', $method )
+		);
+
+		$reflection = new ReflectionMethod( 'BP_Admin', $method );
+
+		$this->assertTrue(
+			$reflection->isPublic(),
+			sprintf(
+				'BP_Admin::%s() is part of the add-on API and must stay public: '
+					. 'the add-ons guard on is_callable(), which reports false for a method '
+					. 'they cannot reach, so narrowing it costs six products their changelog '
+					. 'section without raising anything anywhere.',
+				$method
+			)
+		);
+
+		$this->assertFalse(
+			$reflection->isStatic(),
+			sprintf( 'BP_Admin::%s() is called on an instance by the add-ons.', $method )
+		);
+	}
+
+	/**
+	 * Data provider for test_contract_methods_are_public().
+	 *
+	 * @return array[] Each entry is one method name.
+	 */
+	public function data_contract_methods() {
+		$methods = array(
+			'bb_build_changelog_section',
+			'bb_get_addon_changelog_section',
+			'bb_get_addon_release_archive_url',
+			'bb_get_addon_release_notes_html',
+			'bb_get_plugin_download_link',
+			'bb_get_plugin_last_updated',
+			'bb_get_release_notes_html',
+			'bb_get_release_notes_page_url',
+			'bb_normalize_release_version',
+			'bb_should_fetch_release_notes',
+		);
+
+		return array_map(
+			function ( $method ) {
+				return array( $method );
+			},
+			$methods
+		);
+	}
+
+	/**
+	 * The add-on wrapper must keep accepting a plugins_api $args object, and
+	 * must keep treating "not supplied" as "fetch".
+	 *
+	 * Both halves are contract. An add-on that hands over its $args gets the
+	 * same gate this plugin applies to itself; one that gated already and
+	 * passes nothing must keep getting its changelog.
+	 */
+	public function test_addon_changelog_section_gate_is_optional_and_defaults_to_fetching() {
+		$reflection = new ReflectionMethod( 'BP_Admin', 'bb_get_addon_changelog_section' );
+		$parameters = $reflection->getParameters();
+
+		$this->assertCount( 5, $parameters );
+		$this->assertSame( 'args', $parameters[4]->getName() );
+		$this->assertTrue( $parameters[4]->isOptional() );
+		$this->assertNull( $parameters[4]->getDefaultValue() );
+
+		// A caller that asks for no sections gets the link alone, no fetch and
+		// no sentence claiming the release has nothing published.
+		$args = (object) array( 'fields' => array( 'sections' => false ) );
+
+		$section = $this->admin->bb_get_addon_changelog_section( '2.0.3', 'buddyboss-sharing-releases', '', '', $args );
+
+		$this->assertStringNotContainsString( 'No release notes have been published', $section );
+		$this->assertStringNotContainsString( 'could not be loaded', $section );
+		$this->assertStringContainsString( 'buddyboss.com/resources/addons/buddyboss-sharing-releases/', $section );
+	}
+
+	/**
+	 * An unrecognized term slug is not a claim about the remote.
+	 *
+	 * Nothing was asked of buddyboss.com, so "no release notes have been
+	 * published for this version yet" would be an invention.
+	 */
+	public function test_addon_changelog_section_says_nothing_it_did_not_check() {
+		$section = $this->admin->bb_get_addon_changelog_section( '2.0.3', '' );
+
+		$this->assertStringNotContainsString( 'No release notes have been published', $section );
+		$this->assertStringContainsString( 'buddyboss.com/resources/buddyboss-addons/', $section );
 	}
 }
