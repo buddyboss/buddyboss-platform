@@ -1641,6 +1641,258 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * An SEO plugin's graph must be redacted when there is no main query to identify the member.
+	 *
+	 * Yoast serialises the same head it prints on a page into the REST API - `yoast_head` and
+	 * `yoast_head_json` on wp/v2/users and wp/v2/posts, both readable with no authentication. On a
+	 * REST request is_author() and is_singular() are both false, so the member could not be
+	 * identified from the query and the graph went out with the raw column in it: an unauthenticated
+	 * GET /wp-json/wp/v2/users/<id> returned "name":"Alex Quillfeather" for a member whose surname
+	 * the same site hides on every page (PROD-9896 QA finding F-1).
+	 *
+	 * The member is taken from the plugin's own context object instead, which is what makes this
+	 * work on REST and on a collection response where each item has a different author.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_seo_plugin_schema_graph_is_redacted_without_a_query() {
+		$user_id = $this->create_member_with_hidden_surname( 'loggedin', 'Quillfeather', 'Alex' );
+
+		$this->set_current_user( 0 );
+
+		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BB_SEO_Helpers::instance();
+
+		// No go_to(): this is the REST shape, where nothing has been queried.
+		$this->assertFalse( is_author(), 'The test must run with no author query for this to mean anything.' );
+		$this->assertFalse( is_singular(), 'The test must run with no singular query for this to mean anything.' );
+
+		// Stand in for Yoast's Meta_Tags_Context: an object whose `indexable` names the entity.
+		$context                         = new stdClass();
+		$context->indexable              = new stdClass();
+		$context->indexable->object_type = 'user';
+		$context->indexable->object_id   = $user_id;
+
+		$graph = array(
+			array(
+				'@type' => 'Person',
+				'name'  => 'Alex Quillfeather',
+			),
+			array(
+				'@type' => 'ProfilePage',
+				'name'  => 'Alex Quillfeather - Test Site',
+			),
+		);
+
+		$redacted = $helper->redact_schema_graph( $graph, $context );
+
+		$this->assertStringNotContainsString(
+			'Quillfeather',
+			wp_json_encode( $redacted ),
+			'A REST-rendered schema graph carried a surname hidden from the requester.'
+		);
+		$this->assertSame(
+			'Alex',
+			$redacted[0]['name'],
+			'The Person name should be the visible name, not blank or mangled.'
+		);
+		$this->assertSame(
+			'Alex - Test Site',
+			$redacted[1]['name'],
+			'Only the member name should be replaced; the rest of the plugin template must survive.'
+		);
+	}
+
+	/**
+	 * The same graph must keep the full name for a viewer who is allowed to see it.
+	 *
+	 * The over-strip guard for the context path. Identifying the member from the plugin's own
+	 * context must not make the redaction unconditional.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_seo_plugin_schema_graph_keeps_name_for_permitted_viewer() {
+		$user_id = $this->create_member_with_hidden_surname( 'loggedin', 'Quillfeather', 'Alex' );
+		$viewer  = self::factory()->user->create();
+
+		$this->set_current_user( $viewer );
+
+		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BB_SEO_Helpers::instance();
+
+		$context                         = new stdClass();
+		$context->indexable              = new stdClass();
+		$context->indexable->object_type = 'user';
+		$context->indexable->object_id   = $user_id;
+
+		$graph = array(
+			array(
+				'@type' => 'Person',
+				'name'  => 'Alex Quillfeather',
+			),
+		);
+
+		$redacted = $helper->redact_schema_graph( $graph, $context );
+
+		$this->assertSame(
+			'Alex Quillfeather',
+			$redacted[0]['name'],
+			'A logged-in member may see a surname hidden only from logged-out visitors; it must not be stripped.'
+		);
+
+		$this->set_current_user( 0 );
+	}
+
+	/**
+	 * An SEO plugin's author meta tag must not carry a name part hidden from the viewer.
+	 *
+	 * Yoast's Meta_Author_Presenter reads $user_data->display_name - the WP_User property, which no
+	 * WordPress filter reaches - and prints it as <meta name="author">. The schema graph and the
+	 * document title were redacted while this tag was not, so a guest page source still carried the
+	 * full name (PROD-9896 QA finding F-2). The plugin offers `wpseo_meta_author`, which is what
+	 * BB_SEO_Helpers hooks.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_seo_plugin_author_meta_tag_is_redacted() {
+		$user_id = $this->create_member_with_hidden_surname( 'loggedin', 'Quillfeather', 'Alex' );
+		$post_id = self::factory()->post->create( array( 'post_author' => $user_id ) );
+
+		$this->set_current_user( 0 );
+
+		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BB_SEO_Helpers::instance();
+
+		// Stand in for Yoast's Indexable_Presentation: `model` is the indexable, not `indexable`.
+		$presentation                     = new stdClass();
+		$presentation->model              = new stdClass();
+		$presentation->model->object_type = 'post';
+		$presentation->model->object_id   = $post_id;
+		$presentation->model->author_id   = $user_id;
+
+		$name = $helper->redact_author_name( 'Alex Quillfeather', $presentation );
+
+		$this->assertSame(
+			'Alex',
+			$name,
+			'The author meta tag carried a surname hidden from an anonymous visitor.'
+		);
+	}
+
+	/**
+	 * The author meta tag must keep the full name for a viewer who is allowed to see it.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_seo_plugin_author_meta_tag_keeps_name_for_permitted_viewer() {
+		$user_id = $this->create_member_with_hidden_surname( 'loggedin', 'Quillfeather', 'Alex' );
+		$post_id = self::factory()->post->create( array( 'post_author' => $user_id ) );
+		$viewer  = self::factory()->user->create();
+
+		$this->set_current_user( $viewer );
+
+		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BB_SEO_Helpers::instance();
+
+		$presentation                     = new stdClass();
+		$presentation->model              = new stdClass();
+		$presentation->model->object_type = 'post';
+		$presentation->model->object_id   = $post_id;
+		$presentation->model->author_id   = $user_id;
+
+		$this->assertSame(
+			'Alex Quillfeather',
+			$helper->redact_author_name( 'Alex Quillfeather', $presentation ),
+			'A permitted viewer must still get the real name in the author meta tag.'
+		);
+
+		$this->set_current_user( 0 );
+	}
+
+	/**
+	 * BuddyBoss must actually contribute its personal-data exporters and erasers.
+	 *
+	 * BP_Core_Gdpr is constructed on `bp_loaded` priority 0 and used to schedule its registration on
+	 * `bp_loaded` priority 0 as well - the priority already executing. WordPress iterates one
+	 * priority bucket with a foreach over a snapshot of that bucket, and WP_Hook::add_filter() can
+	 * only resort the list of priorities, never rewind the inner loop, so the callback was never
+	 * reached. The result: not one BuddyBoss exporter or eraser registered, and Tools > Export
+	 * Personal Data produced a report containing the WordPress groups and none of the member's
+	 * connections, group memberships, messages, activity, profile fields or forum content
+	 * (PROD-9896 QA). Registering on a LATER priority of the same action is what makes it run - and
+	 * it has to be later than priority 2 in any case, because every check in the callback is a
+	 * bp_is_active() call and the components are not set up until then.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_buddyboss_registers_its_personal_data_exporters() {
+		$exporters = apply_filters( 'wp_privacy_personal_data_exporters', array() );
+		$erasers   = apply_filters( 'wp_privacy_personal_data_erasers', array() );
+
+		foreach ( array( 'bp_xprofile', 'bp_activity', 'bp_notification', 'bp_message', 'bp_groups', 'bp_group_memberships', 'bp_friendship', 'bp_settings' ) as $key ) {
+			$this->assertArrayHasKey(
+				$key,
+				$exporters,
+				sprintf( 'The %s exporter did not register, so its data never reaches a member\'s personal-data export.', $key )
+			);
+			$this->assertArrayHasKey(
+				$key,
+				$erasers,
+				sprintf( 'The %s eraser did not register, so its data is never removed on an erasure request.', $key )
+			);
+		}
+	}
+
+	/**
+	 * A notification exported for a member must not name someone they may not see.
+	 *
+	 * A notification's text is produced by the component that created it, and those callbacks
+	 * resolve the actor's name for whoever is browsing - during an export that is the administrator
+	 * running it, not the member the export belongs to. The report therefore read "Alex Quillfeather
+	 * replied to your post" for a data subject the surname is hidden from (PROD-9896 QA finding F-3,
+	 * reachable only once the exporters above started registering).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_notification_export_resolves_names_for_the_data_subject() {
+		$actor   = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather', 'Alex' );
+		$subject = self::factory()->user->create( array( 'user_email' => 'subject-9896@example.com' ) );
+
+		// The administrator is the one running the export, and may see the surname.
+		$this->set_current_user( 1 );
+
+		$exporters = apply_filters( 'wp_privacy_personal_data_exporters', array() );
+		$this->assertArrayHasKey( 'bp_notification', $exporters, 'The notification exporter must register for this test to mean anything.' );
+
+		bp_notifications_add_notification(
+			array(
+				'user_id'           => $subject,
+				'item_id'           => 1,
+				'secondary_item_id' => $actor,
+				'component_name'    => 'activity',
+				'component_action'  => 'new_at_mention',
+				'is_new'            => 1,
+			)
+		);
+
+		$export = call_user_func( $exporters['bp_notification']['callback'], 'subject-9896@example.com', 1 );
+
+		$values = array();
+		foreach ( $export['data'] as $group ) {
+			foreach ( $group['data'] as $row ) {
+				$values[] = (string) $row['value'];
+			}
+		}
+
+		$this->assertNotEmpty( $values, 'The export produced no notification rows.' );
+		$this->assertStringNotContainsString(
+			'Quillfeather',
+			implode( ' | ', $values ),
+			'A personal-data export carried a surname hidden from the member it was produced for.'
+		);
+	}
+
+	/**
 	 * An unhealed member's restricted surname must not survive in the resolved name.
 	 *
 	 * bp_xprofile_get_member_display_name() back-fills a name field that has no stored row from the
