@@ -36,7 +36,19 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 	 * - Rank Math        - the author breadcrumb crumb (class-breadcrumbs.php:455).
 	 *
 	 * Each plugin's remaining schema goes through get_the_author_meta() and is already redacted by
-	 * the member name filters in bp-members-filters.php.
+	 * the member name filters in bp-members-filters.php, with two boundaries this layer does not
+	 * reach. Both were established by reading the plugins' source rather than at runtime:
+	 *
+	 * - All in One SEO resolves its own smart tags AFTER the graph filter has run - getOutput()
+	 *   calls cleanAndParseData() on the filtered graph (Schema/Helpers.php:83), which resolves
+	 *   `#author_name` through a raw WP_User property read (Utils/Tags.php:1038). A graph string
+	 *   still holding that tag is therefore resolved past this redaction; the Article graph takes
+	 *   its author name from the schema type options, which hold the literal tag on a site whose
+	 *   options were seeded with it (Schema/Graphs/Article/Article.php:39, Main/Updates.php:884).
+	 *   AIOSEO exposes no filter between that resolution and the output, so there is no hook here
+	 *   to take.
+	 * - Rank Math's visible breadcrumb trail reads the same raw property its schema breadcrumb
+	 *   does (class-breadcrumbs.php:455) and is printed as HTML, not through the JSON-LD graph.
 	 *
 	 * The interception is the same for every one of these plugins - take the structure they are
 	 * about to output and replace the member names the current viewer may not see - so the plugins
@@ -66,11 +78,19 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * Per-request memo of each resolved member's raw => viewer-visible name entry.
 		 *
 		 * Resolving a name is several cached reads and each registered filter asks for the same
-		 * answer, so it is resolved once per member per request. Keyed by user id; an entry is an
-		 * empty array when that member has nothing hidden from this viewer.
+		 * answer, so it is resolved once per member per request. An entry is an empty array when that
+		 * member has nothing hidden from this viewer.
 		 *
 		 * Memoised per member rather than per request because one REST request can render the head
 		 * of a whole collection, each item written by a different author.
+		 *
+		 * Keyed by member, VIEWER and display-name format - the same key the memo this wraps uses
+		 * (bb_core_get_redacted_core_author_name()). The entry is viewer-dependent: an administrator
+		 * sees every name part and produces an empty entry, and under a user-id-only key that empty
+		 * entry then answered for a guest, handing the unredacted name to the JSON-LD graph and the
+		 * author meta tag. One request really can resolve for more than one viewer or format -
+		 * wp_set_current_user(), a REST batch, and the `bb_core_get_viewer_user_id` and
+		 * `bp_core_display_name_format` filters all change them mid-request.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -132,9 +152,27 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * All three hook names are verified against the plugins' own source:
 		 * `aioseo_schema_output` (AIOSEO Schema/Helpers.php:82), `wpseo_schema_graph` (Yoast
 		 * src/generators/schema-generator.php:161) and `rank_math/json_ld` (Rank Math
-		 * class-jsonld.php:73 via the `do_filter()` helper, which prefixes `rank_math/`). The
-		 * priority is above every registration those plugins make on their own graph, so this runs
-		 * on the finished structure.
+		 * class-jsonld.php:149 via the `do_filter()` helper, which prefixes `rank_math/`;
+		 * class-jsonld.php:73 dispatches the same filter for the admin schema preview).
+		 *
+		 * Priority 20 is not a promise that the structure is finished. The narrower claim it does
+		 * carry is that it is above every point at which a plugin writes a member name into its
+		 * own graph:
+		 *
+		 * - Yoast and All in One SEO register no callback of their own on these filters, so 20 is
+		 *   last by default. Yoast reads the member name while building each graph piece
+		 *   (generators/schema/person.php:145 and :243), which is before the graph filter
+		 *   (schema-generator.php:161); what it does afterwards only appends block-authored
+		 *   schema and drops an empty breadcrumb (schema-generator.php:73-74).
+		 * - Rank Math registers up to seven, module activation permitting: 8
+		 *   (Block_Parser::parse), 9 (Local_Seo::organization_or_person), 10 twice
+		 *   (JsonLD::add_context_data and Frontend::add_schema), 11 (BuddyPress::json_ld) and 99
+		 *   twice (Frontend::connect_schema_entities and Web_Stories::change_publisher_logo).
+		 *   The two at 99 run after this one and neither writes a name: connect_schema_entities
+		 *   rewrites only `@id` references, `isPartOf`, `inLanguage`, `mainEntityOfPage` and
+		 *   `@type` (class-frontend.php:157-240 with class-jsonld.php:488-535), and
+		 *   change_publisher_logo swaps a logo ImageObject (class-web-stories.php:58). Raise this
+		 *   priority above 99 if either of those stops being true.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -160,7 +198,8 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 					'aioseo_schema_output' => 20,
 					// Yoast SEO.
 					'wpseo_schema_graph'   => 20,
-					// Rank Math - its own registrations run at 8, 10 and 11.
+					// Rank Math - its own registrations run at 8, 9, 10, 11 and 99; see above for
+					// why the two at 99 do not need this to move.
 					'rank_math/json_ld'    => 20,
 				)
 			);
@@ -226,7 +265,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 				return $name;
 			}
 
-			return strtr( $name, $map );
+			return bb_core_replace_names( $name, $map );
 		}
 
 		/**
@@ -258,6 +297,11 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * is preserved exactly. A value that is a URL is skipped: permalinks are built from
 		 * user_nicename, never from the display name, so a name found inside one would be a
 		 * coincidence and rewriting it would break the link.
+		 *
+		 * The walk is not limited to name keys - a member's name is redacted wherever it appears,
+		 * a headline or a description included - so the replacement matches whole words only. An
+		 * unbounded substitution rewrote the middle of unrelated ones: a member called "Ann" turned
+		 * "Annapolis Anniversary" into "A.apolis A.iversary". See bb_core_replace_names().
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -298,7 +342,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 				return $value;
 			}
 
-			return strtr( $value, $map );
+			return bb_core_replace_names( $value, $map );
 		}
 
 		/**
@@ -421,13 +465,18 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 
 			$map = array();
 
+			// Resolved once per call rather than per member: neither can change inside the loop.
+			$viewer_key = bb_core_get_viewer_user_id() . ':' . bp_core_display_name_format();
+
 			foreach ( array_unique( array_filter( array_map( 'intval', (array) $user_ids ) ) ) as $user_id ) {
 
-				if ( ! isset( $this->name_map[ $user_id ] ) ) {
-					$this->name_map[ $user_id ] = $this->build_name_entry( $user_id );
+				$memo_key = $user_id . ':' . $viewer_key;
+
+				if ( ! isset( $this->name_map[ $memo_key ] ) ) {
+					$this->name_map[ $memo_key ] = $this->build_name_entry( $user_id );
 				}
 
-				$map += $this->name_map[ $user_id ];
+				$map += $this->name_map[ $memo_key ];
 			}
 
 			return $map;

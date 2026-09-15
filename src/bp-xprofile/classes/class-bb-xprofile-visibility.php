@@ -201,7 +201,17 @@ class BB_XProfile_Visibility {
 		$user_id = (int) $user_id;
 
 		if ( ! isset( self::$user_data_exists_cache[ $user_id ] ) ) {
-			if ( self::visibility_table_exists() ) {
+			$table_exists = self::visibility_table_exists();
+
+			// null is "the probe failed", not "the table is absent". Memoising false there would
+			// tell every caller this member resolves from user meta when they may in fact hold a
+			// restricting row, so answer false for THIS call without memoising it: the next read
+			// re-probes instead of inheriting a fabricated answer.
+			if ( is_null( $table_exists ) ) {
+				return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( false, $user_id ) );
+			}
+
+			if ( $table_exists ) {
 				$table_name_visibility = self::get_visibility_table_name();
 
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -240,7 +250,7 @@ class BB_XProfile_Visibility {
 	 *
 	 * @return string
 	 */
-	private static function get_visibility_table_name() {
+	public static function get_visibility_table_name() {
 		$bp = buddypress();
 
 		return ! empty( $bp->profile->table_name_visibility )
@@ -251,16 +261,38 @@ class BB_XProfile_Visibility {
 	/**
 	 * Whether the visibility table is present, resolved once per request.
 	 *
+	 * Three answers, not two, because "the table is not there" and "the probe did not answer" need
+	 * opposite handling and are the same empty value coming out of wpdb. A MISSING table is the
+	 * pre-migration shape of an install: no member has a row, visibility resolves from the
+	 * `bp_xprofile_visibility_levels` user meta, and every caller should carry on reading that
+	 * branch normally. A FAILED probe is not an answer at all, and reporting it as "missing" turns
+	 * the per-member half of the name-search protection off for the whole request - silently, and
+	 * on the one configuration every real community is in.
+	 *
+	 * So only a probe that SUCCEEDED is memoised. A failure returns null and leaves the memo
+	 * unfilled, so the next call retries and a caller that must fail closed can tell the two apart -
+	 * the same shape prime_user_data_exists_cache() and prime_user_field_ids_cache() already use
+	 * when their own reads fail.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return bool
+	 * @return bool|null True when the table exists, false when it is genuinely absent, null when
+	 *                   the probe failed and the question is unanswered.
 	 */
-	private static function visibility_table_exists() {
+	public static function visibility_table_exists() {
 		global $wpdb;
 
 		if ( is_null( self::$table_exists_cache ) ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			self::$table_exists_cache = (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', self::get_visibility_table_name() ) );
+			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', self::get_visibility_table_name() ) );
+
+			// wpdb::query() clears last_error through flush() before every statement, so this
+			// reports on the probe just issued.
+			if ( ! empty( $wpdb->last_error ) ) {
+				return null;
+			}
+
+			self::$table_exists_cache = (bool) $found;
 		}
 
 		return self::$table_exists_cache;
@@ -302,7 +334,16 @@ class BB_XProfile_Visibility {
 			return;
 		}
 
-		if ( ! self::visibility_table_exists() ) {
+		$table_exists = self::visibility_table_exists();
+
+		// null is "the probe failed". Return without memoising so those reads fall through to their
+		// own uncached path rather than to a fabricated "nobody has a row" - the same fail-closed
+		// direction the failed-read branch below takes.
+		if ( is_null( $table_exists ) ) {
+			return;
+		}
+
+		if ( ! $table_exists ) {
 			foreach ( $uncached_ids as $user_id ) {
 				self::$user_data_exists_cache[ $user_id ] = false;
 			}
@@ -317,6 +358,15 @@ class BB_XProfile_Visibility {
 		$with_rows = $wpdb->get_col(
 			"SELECT DISTINCT user_id FROM {$table_name_visibility} WHERE user_id IN ( {$user_ids_sql} )"
 		);
+
+		// A failed query returns the same empty result as "nobody has a row", and memoising that
+		// would tell every caller the member resolves from user meta when they may in fact hold a
+		// restricting row - a member whose name field is hidden would then be judged on meta they
+		// never wrote and served. Leave the memo unfilled so those reads fall through to their own
+		// uncached path, the same fail-closed direction prime_user_field_ids_cache() takes.
+		if ( ! empty( $wpdb->last_error ) ) {
+			return;
+		}
 
 		$with_rows = array_flip( array_map( 'intval', (array) $with_rows ) );
 
@@ -723,7 +773,16 @@ class BB_XProfile_Visibility {
 			return;
 		}
 
-		$bp = buddypress();
+		// A missing table - and a probe that failed, which reports null - returns the same empty
+		// result as "nobody restricted anything", and the memo below is read back as authoritative
+		// by the per-user getter. Return without memoising so those reads fall through to their own
+		// uncached path instead of to a fabricated answer - the same fail-closed direction
+		// user_data_exists() and prime_user_data_exists_cache() take.
+		if ( true !== self::visibility_table_exists() ) {
+			return;
+		}
+
+		$table_name_visibility = self::get_visibility_table_name();
 
 		$quoted_levels = implode(
 			',',
@@ -739,8 +798,15 @@ class BB_XProfile_Visibility {
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- levels are prepared above, ids are ints.
 		$results = $wpdb->get_results(
-			"SELECT DISTINCT user_id, field_id FROM {$bp->profile->table_name_visibility} WHERE user_id IN ( {$user_ids_sql} ) AND value IN ( {$quoted_levels} )"
+			"SELECT DISTINCT user_id, field_id FROM {$table_name_visibility} WHERE user_id IN ( {$user_ids_sql} ) AND value IN ( {$quoted_levels} )"
 		);
+
+		// wpdb::get_results() initialises its return to array() and never hands back null, so an
+		// error and an empty result set are the same value; ask $wpdb directly, as
+		// bb_xprofile_filter_possible_hidden_users() does for the same reason.
+		if ( ! empty( $wpdb->last_error ) ) {
+			return;
+		}
 
 		$grouped = array();
 		foreach ( (array) $results as $row ) {

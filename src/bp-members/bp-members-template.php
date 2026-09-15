@@ -964,6 +964,16 @@ function bp_get_member_name() {
 		}
 	}
 
+	/**
+	 * Filters the display name of current member in the loop.
+	 *
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyBoss [BBVERSION] The value is now resolved for the current viewer, so it already
+	 *                              has the name parts this viewer may not see removed. A callback
+	 *                              that rebuilds it from the member's stored fields undoes that.
+	 *
+	 * @param string $fullname Display name for current member.
+	 */
 	return apply_filters( 'bp_get_member_name', trim( $full_name ) );
 }
 	add_filter( 'bp_get_member_name', 'wp_filter_kses' );

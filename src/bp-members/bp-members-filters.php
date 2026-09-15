@@ -1093,9 +1093,36 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	// wp-admin screens are left alone. They are an authenticated, capability-gated context that
 	// renders names core's own way throughout, and user management needs the canonical column: a
 	// site on the "First Name" format would otherwise list a dozen identical "Peter" rows with no
-	// way to tell them apart. admin-ajax.php is NOT exempt - it serves front-end requests.
-	if ( is_admin() && ! wp_doing_ajax() ) {
-		return null;
+	// way to tell them apart.
+	//
+	// admin-ajax.php serves BOTH wp-admin and the front end, and is_admin() reports true on it, so
+	// the exemption cannot simply follow is_admin() there. Left unqualified it never applied on that
+	// endpoint at all, and a Quick Edit save - which re-renders the row through
+	// wp_ajax_inline_save() -> the_author - showed a different name than the page load it replaced.
+	// Qualified by the caller's capability alone it applies too widely instead: a member holding
+	// `list_users` would then read one name on a front-end page and another in the front-end AJAX
+	// response that same page fires - the identical "two names for one member" defect, moved rather
+	// than removed. Both therefore have to hold.
+	if ( is_admin() ) {
+		$is_wp_admin_request = ! wp_doing_ajax();
+
+		if ( ! $is_wp_admin_request && current_user_can( 'list_users' ) ) {
+			// Where the request was fired FROM. The referer is the only signal admin-ajax.php
+			// carries about that, and it does not have to be trustworthy here: the exemption is a
+			// readability choice on a screen, not an access control, and forging it buys nothing -
+			// it still needs `list_users`, and a caller holding that reads the raw column off the
+			// users screen anyway. No referer, or one from another host (wp_get_referer() drops
+			// those), or a front-end one all read as the front end and stay redacted - the safe
+			// direction, and the one that keeps a member's name consistent across that page.
+			$referer_path = (string) wp_parse_url( (string) wp_get_referer(), PHP_URL_PATH );
+			$admin_path   = (string) wp_parse_url( admin_url(), PHP_URL_PATH );
+
+			$is_wp_admin_request = '' !== $admin_path && 0 === strpos( $referer_path, $admin_path );
+		}
+
+		if ( $is_wp_admin_request ) {
+			return null;
+		}
 	}
 
 	/**
@@ -1114,9 +1141,27 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 		return null;
 	}
 
-	if ( ! function_exists( 'bp_core_get_user_displayname' ) ) {
-		return null;
+	// Per-request memo, keyed by member, viewer AND display-name format. Each registered filter asks
+	// for the same answer - the archive title, the feed, `the_author` in a loop, the SEO name map -
+	// and one request can ask for a whole archive of authors, so the resolution is performed once per
+	// key. The viewer belongs in it because a single request can resolve for more than one:
+	// wp_set_current_user() and the `bb_core_get_viewer_user_id` filter both change it mid-request
+	// and the answers differ. So does the format: it decides on its own whether the surname is part
+	// of the visible name at all - the "First Name" and "Nickname" formats drop it for every viewer,
+	// see bp_core_get_user_displayname() - and `bp_core_display_name_format` and
+	// `pre_option_bp-display-name-format` are both filterable, so one request can see more than one.
+	static $memo = array();
+
+	$memo_key = $user_id . ':' . bb_core_get_viewer_user_id() . ':' . bp_core_display_name_format();
+
+	if ( array_key_exists( $memo_key, $memo ) ) {
+		return $memo[ $memo_key ];
 	}
+
+	// The answer is recorded only once it has been reached, never up front. A pre-seeded "nothing to
+	// replace" would survive a throw from any filter on the resolution below and stand the core
+	// author filters down for the rest of the request - the same fail-open the try/finally guards
+	// against. Left unset, the next call simply resolves again.
 
 	// The raw wp_users row. get_userdata() resolves to the same value, but wraps the row in a
 	// WP_User whose construction also loads and maps the member's capabilities - work nothing here
@@ -1124,12 +1169,16 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	$user_data = BP_Core_User::get_core_userdata( $user_id );
 
 	if ( empty( $user_data ) ) {
+		$memo[ $memo_key ] = null;
+
 		return null;
 	}
 
 	$raw_display_name = (string) $user_data->display_name;
 
 	if ( '' === $raw_display_name ) {
+		$memo[ $memo_key ] = null;
+
 		return null;
 	}
 
@@ -1143,15 +1192,41 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	// on the resolution must not be able to do that.
 	bb_core_is_resolving_user_displayname( true );
 
+	// Emitting an author name is a READ. The resolution reaches
+	// bp_xprofile_get_member_display_name(), which back-fills a missing name field from the user
+	// meta and DELETEs the row when the back-filled value is empty - two write queries per distinct
+	// author, on every archive page, author feed, wp/v2/users response and SEO name map this filter
+	// set newly routes here. Suspend the repair for the duration, exactly as the search re-test
+	// does: the resolved value is identical, only the persistence is skipped, and the resolver
+	// declines to memoise while suspended so the next legitimate call still performs it.
+	bb_xprofile_is_display_name_self_heal_suspended( true );
+
 	try {
 		$resolved = bp_core_get_user_displayname( $user_id );
 	} finally {
+		bb_xprofile_is_display_name_self_heal_suspended( false );
 		bb_core_is_resolving_user_displayname( false );
 	}
 
+	// bp_core_get_user_displayname() runs its result through esc_html(), and the
+	// wp_specialchars_decode() filter behind it uses the default ENT_NOQUOTES - which does NOT undo
+	// `&#039;` or `&quot;`. So for every member with an apostrophe or a double quote in their name the
+	// resolved string can never equal the raw wp_users column, the "nothing to replace" branch below
+	// is skipped, and the entity-encoded spelling is handed to `the_author`, `rest_prepare_user` and
+	// the JSON-LD name map - surfaces where the caller is substituting for a RAW core value and an
+	// entity is not decoded again. Decoding here compares like with like and returns the same kind of
+	// string the column holds. On a name with no special character it is the identity.
+	if ( is_string( $resolved ) ) {
+		$resolved = wp_specialchars_decode( $resolved, ENT_QUOTES );
+	}
+
 	if ( ! is_string( $resolved ) || '' === $resolved || $resolved === $raw_display_name ) {
+		$memo[ $memo_key ] = null;
+
 		return null;
 	}
+
+	$memo[ $memo_key ] = $resolved;
 
 	return $resolved;
 }
@@ -1230,7 +1305,7 @@ function bb_core_filter_author_document_title_parts( $title_parts ) {
 		return $title_parts;
 	}
 
-	$title_parts['title'] = str_replace( $author->display_name, $redacted, $title_parts['title'] );
+	$title_parts['title'] = bb_core_replace_names( $title_parts['title'], array( $author->display_name => $redacted ) );
 
 	return $title_parts;
 }
@@ -1274,7 +1349,7 @@ function bb_core_filter_author_pre_document_title( $title ) {
 		return $title;
 	}
 
-	return str_replace( $author->display_name, $redacted, $title );
+	return bb_core_replace_names( $title, array( $author->display_name => $redacted ) );
 }
 add_filter( 'pre_get_document_title', 'bb_core_filter_author_pre_document_title', 1000000 );
 

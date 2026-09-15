@@ -474,7 +474,7 @@ class BP_User_Query {
 			// time, but its presence in the results is itself a disclosure — searching a guessed
 			// surname and getting one hit confirms it. Drop the matches that exist only in a hidden
 			// name part. See bb_xprofile_filter_user_search_matches().
-			if ( ! empty( $matched_user_ids ) && function_exists( 'bb_xprofile_filter_user_search_matches' ) ) {
+			if ( ! empty( $matched_user_ids ) ) {
 				$matched_user_ids = bb_xprofile_filter_user_search_matches(
 					$matched_user_ids,
 					array( $search_terms_nospace, $search_terms_space )

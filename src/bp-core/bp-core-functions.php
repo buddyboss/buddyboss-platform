@@ -5397,7 +5397,6 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- clauses built above.
 		$matched_user_data = $wpdb->get_results( "SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
 
 		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
@@ -11040,6 +11039,14 @@ function bb_core_guest_viewer_id() {
  * and their backslash escaping, so a literal `%` typed by a member stays literal. Matching is
  * case-insensitive and multibyte-aware, matching MySQL's default `utf8mb4_*_ci` collation.
  *
+ * That collation is also ACCENT-insensitive and PCRE is not, so a second pass folds both sides with
+ * remove_accents() when the first finds nothing. remove_accents() is WordPress' ASCII-folding
+ * APPROXIMATION of the collation rather than an equivalent, and it is LOCALE-DEPENDENT: under a
+ * German locale it expands a character to more than one ASCII character ('ß' to 'ss', 'ä' to 'ae'),
+ * which a `_` single-character wildcard can see, while under every other locale the same 'ß' folds
+ * to a single 's'. So it is used only to ADD a match the collation would have made, never to
+ * withdraw one the first pass found.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $pattern LIKE pattern, exactly as passed to the SQL comparison.
@@ -11085,7 +11092,193 @@ function bb_core_sql_like_match( $pattern, $subject ) {
 		$matched = preg_match( '/^' . $regex . '$/i', $subject );
 	}
 
-	return ( 1 === $matched );
+	if ( 1 === $matched ) {
+		return true;
+	}
+
+	// The rows this re-tests were selected by MySQL under an accent-insensitive collation, which
+	// answers 1 for `'Jose' LIKE '%José%'` where PCRE answers no. Without this fold a member who
+	// restricted one name part vanished from a search for the unaccented spelling of a part they
+	// publish — over-redaction with no privacy benefit, since the member is permitted to appear.
+	$folded_pattern = remove_accents( $pattern );
+	$folded_subject = remove_accents( $subject );
+
+	if ( $folded_pattern === $pattern && $folded_subject === $subject ) {
+		return false;
+	}
+
+	// One level only: the folded strings fold to themselves, so this returns above.
+	return bb_core_sql_like_match( $folded_pattern, $folded_subject );
+}
+
+/**
+ * Character class matching the scripts that are written without word separators.
+ *
+ * Japanese, Chinese, Korean, Thai and their neighbours do not put a space between words, so a
+ * character of one of these scripts standing beside a name ENDS that name. Every other script does
+ * separate words, and a letter beside a name there really does continue it - "Ann" inside
+ * "Annapolis" is one word, not a member's name followed by something else.
+ *
+ * WordPress answers the same question with wp_get_word_count_type(), but that is a single answer for
+ * the whole installation, read from the site's locale. A community is one site running many
+ * languages at once: a Latin name sits inside Japanese content on an English site, and a Japanese
+ * member posts on a German one. The question has to be asked of the neighbouring character, not of
+ * the installation - so the site locale cannot answer it here.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Regex character-class body, without the enclosing brackets.
+ */
+function bb_core_get_continuous_script_class() {
+	$class = '\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Thai}\p{Lao}\p{Khmer}\p{Myanmar}\p{Tibetan}\p{Yi}';
+
+	/**
+	 * Filters the scripts treated as written without word separators.
+	 *
+	 * Extending this class makes name redaction MORE aggressive for the scripts added, never less:
+	 * a script listed here gives up the boundary that would have protected an ordinary word.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $class Regex character-class body, without the enclosing brackets.
+	 */
+	return (string) apply_filters( 'bb_core_continuous_script_class', $class );
+}
+
+/**
+ * Build the assertion that stops one edge of a name from matching inside a longer word.
+ *
+ * `\b` cannot be used: it is defined against ASCII word characters and fires in the middle of a
+ * non-ASCII name. A plain `(?![\p{L}\p{N}_])` is no better, because in "山田太郎さんが投稿しました"
+ * nothing but a letter ever follows the name, so the assertion can never hold and the name is left
+ * standing in full - the disclosure this exists to prevent. The same assertion fails a LATIN name on
+ * a Japanese site ("Alex Quillfeatherさんの記事"), because the kana that follows is still `\p{L}`.
+ *
+ * So a character from a script written without separators counts as a boundary, and everything else
+ * word-forming does not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $char     First or last character of the name being matched.
+ * @param bool   $trailing Optional. Whether this is the name's trailing edge. Default false.
+ * @return string A lookaround assertion, or an empty string where no boundary can be asserted.
+ */
+function bb_core_get_name_boundary_assertion( $char, $trailing = false ) {
+	$char = (string) $char;
+
+	// A non-word edge character already stands at a boundary, and asserting one after it would
+	// invert the test: after "Ann<emoji>" a word-boundary assertion demands that a letter FOLLOWS.
+	if ( '' === $char || 1 !== preg_match( '/[\p{L}\p{N}_]/u', $char ) ) {
+		return '';
+	}
+
+	$continuous = bb_core_get_continuous_script_class();
+
+	// The name's own edge is written without separators, so no boundary is expressible on this side.
+	// Assert nothing rather than an assertion that can never hold: an assertion that never holds
+	// withholds nothing, and a name that was supposed to be withheld and silently was not is the leak.
+	if ( 1 === preg_match( '/[' . $continuous . ']/u', $char ) ) {
+		return '';
+	}
+
+	// A combining mark continues the grapheme it follows, so it closes the trailing edge the way a
+	// letter of the same script does. It cannot open the leading edge - it belongs to whatever
+	// stands before it.
+	$word = $trailing ? '\p{L}\p{N}\p{M}_' : '\p{L}\p{N}_';
+
+	return $trailing
+		? '(?:(?=[' . $continuous . '])|(?![' . $word . ']))'
+		: '(?:(?<=[' . $continuous . '])|(?<![' . $word . ']))';
+}
+
+/**
+ * Replace member names inside a string, matching whole words only.
+ *
+ * `str_replace()` and `strtr()` match anywhere, so a member whose name is a prefix of an ordinary
+ * word rewrote the middle of it: a member called "Ann" turned "Ann joined the Annapolis Anniversary
+ * group" into "A. joined the A.apolis A.iversary group". Short names, and names that are prefixes of
+ * longer words, are common at community scale and the corruption is silent.
+ *
+ * Each edge of each name is guarded by bb_core_get_name_boundary_assertion(), which decides from the
+ * script of that edge whether a boundary can be asserted there at all.
+ *
+ * The number of replacements is deliberately NOT limited: a name that genuinely appears twice is
+ * replaced twice. Leaving the later occurrence standing would leave a name part this viewer may not
+ * see in the string, and that is the direction that discloses.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $text Text that may embed the members' stored names.
+ * @param array  $map  Map of stored name => the name this viewer may see.
+ * @return string The text with each mapped name replaced where it stands as a whole word.
+ */
+function bb_core_replace_names( $text, $map ) {
+	$text = (string) $text;
+
+	if ( '' === $text || empty( $map ) || ! is_array( $map ) ) {
+		return $text;
+	}
+
+	$replacements = array();
+
+	foreach ( $map as $search => $replace ) {
+		$search = (string) $search;
+
+		if ( '' === $search ) {
+			continue;
+		}
+
+		$replacements[ $search ] = (string) $replace;
+
+		// The entity-encoded spelling as well as the raw one. Callers hand over the raw
+		// `wp_users.display_name` column, but the text being searched is not always raw: Yoast
+		// escapes the document title before passing it on (front-end-integration.php), so the later
+		// filters - including this one - see `O&#039;Brien` where the column holds `O'Brien`.
+		// Matching only the column found nothing there, and the redaction failed OPEN and silently.
+		// esc_html() is idempotent on its own output, so for a name with no special character the
+		// two spellings are the same string and this adds nothing.
+		$escaped_search = esc_html( $search );
+
+		if ( $escaped_search !== $search && ! isset( $replacements[ $escaped_search ] ) ) {
+			$replacements[ $escaped_search ] = esc_html( (string) $replace );
+		}
+	}
+
+	if ( empty( $replacements ) ) {
+		return $text;
+	}
+
+	// Longest needle first. PCRE alternation is leftmost-first, so without this a member called
+	// "Ann" would claim the opening of a member called "Ann Lee" - which is also how strtr(), the
+	// call this replaces, resolved the same ambiguity.
+	$needles = array_map( 'strval', array_keys( $replacements ) );
+	$lengths = array_map( 'strlen', $needles );
+
+	array_multisort( $lengths, SORT_DESC, SORT_NUMERIC, $needles );
+
+	$branches = array();
+
+	foreach ( $needles as $needle ) {
+		$first = ( 1 === preg_match( '/\A./us', $needle, $edge ) ) ? $edge[0] : '';
+		$last  = ( 1 === preg_match( '/.\z/us', $needle, $edge ) ) ? $edge[0] : '';
+
+		$branches[] = bb_core_get_name_boundary_assertion( $first ) .
+			'(?:' . preg_quote( $needle, '/' ) . ')' .
+			bb_core_get_name_boundary_assertion( $last, true );
+	}
+
+	$replaced = preg_replace_callback(
+		'/(?:' . implode( '|', $branches ) . ')/u',
+		static function ( $matches ) use ( $replacements ) {
+			return isset( $replacements[ $matches[0] ] ) ? $replacements[ $matches[0] ] : $matches[0];
+		},
+		$text
+	);
+
+	// preg_replace_callback() returns null on invalid UTF-8 or a PCRE limit. Fall back to the
+	// unbounded replacement rather than returning the text untouched: a cosmetic over-replacement is
+	// recoverable, a name that was supposed to be withheld and silently was not is the leak.
+	return ( null === $replaced ) ? strtr( $text, $replacements ) : $replaced;
 }
 
 /**
@@ -11128,13 +11321,23 @@ function bb_core_build_visible_display_name( $user_id, $hidden_field_ids = array
 		return '';
 	}
 
-	$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+	$format = bp_core_display_name_format();
 
 	// Under the Nickname format the visible name is the nickname and nothing else - neither name
 	// field is part of it - so there is nothing to assemble and nothing a visibility level could
 	// remove. The Nickname field itself is never excludable (bp_xprofile_get_fields_by_visibility_levels()).
 	if ( 'nickname' === $format ) {
-		return bb_core_get_name_fallback_label( $user_id );
+		// From the xprofile Nickname FIELD, because that is what the canonical resolver reads for this
+		// format (bp_xprofile_get_member_display_name()'s `case 'nickname'`). Resolving it from the
+		// `nickname` user meta instead made the guest view disagree with the member view wherever the
+		// two have drifted - which is whenever bp_disable_profile_sync() is on, since
+		// xprofile_sync_wp_profile() then bails outright, and the product ships a repair tool for
+		// exactly that drift. No meta key is passed: the fallback below reads the meta anyway, in the
+		// same order, so passing one here would only duplicate it.
+		$nickname_field_id = (int) bp_xprofile_nickname_field_id();
+		$nickname          = ( $nickname_field_id > 0 ) ? bb_core_get_name_field_value( $nickname_field_id, $user_id, '' ) : '';
+
+		return ( '' !== $nickname ) ? $nickname : bb_core_get_name_fallback_label( $user_id );
 	}
 
 	$hidden_field_ids    = array_map( 'intval', (array) $hidden_field_ids );
@@ -11211,10 +11414,11 @@ function bb_core_get_name_field_value( $field_id, $user_id, $meta_key ) {
  * user_nicename, which WordPress guarantees for every real user.
  *
  * The `nickname` USER META is what is read, not the xprofile Nickname field, because that is the
- * chain bp_xprofile_get_member_display_name() itself falls back through when a name field is empty.
- * The two are kept in step by bp_xprofile_sync_bp_profile() on every save; where they have drifted
- * apart it is on an unhealed import, whose xprofile row does not exist at all - so the meta is both
- * the more faithful source and the one that still has a value.
+ * chain bp_xprofile_get_member_display_name() itself falls back through when a name field is empty
+ * under the "First Name" and "First Name & Last Name" formats: an empty first-name field is
+ * back-filled from `first_name` and then from `nickname`, both user meta. The Nickname FORMAT is the
+ * one case that resolves from the field instead, and bb_core_build_visible_display_name() reads the
+ * field itself for that branch before falling through to here.
  *
  * @since BuddyBoss [BBVERSION]
  *

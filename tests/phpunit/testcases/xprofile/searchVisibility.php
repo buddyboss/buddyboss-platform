@@ -33,6 +33,20 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	protected $fn_allow_backup;
 
 	/**
+	 * Display Name Fields "Last Name" toggle backup.
+	 *
+	 * @var mixed
+	 */
+	protected $hide_last_name_backup;
+
+	/**
+	 * Display Name Fields "First Name" toggle backup, for the "Nickname" format.
+	 *
+	 * @var mixed
+	 */
+	protected $hide_nickname_first_name_backup;
+
+	/**
 	 * The harness default is the "First Name" format, under which the surname is not part of any
 	 * member's visible name and every assertion below about surname visibility would be decided by
 	 * the format rather than by the field's visibility level. Pin the "First Name & Last Name"
@@ -41,9 +55,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->format_backup     = bp_get_option( 'bp-display-name-format' );
-		$this->fn_default_backup = bp_xprofile_get_meta( bp_xprofile_firstname_field_id(), 'field', 'default_visibility' );
-		$this->fn_allow_backup   = bp_xprofile_get_meta( bp_xprofile_firstname_field_id(), 'field', 'allow_custom_visibility' );
+		$this->format_backup                   = bp_get_option( 'bp-display-name-format' );
+		$this->fn_default_backup               = bp_xprofile_get_meta( bp_xprofile_firstname_field_id(), 'field', 'default_visibility' );
+		$this->fn_allow_backup                 = bp_xprofile_get_meta( bp_xprofile_firstname_field_id(), 'field', 'allow_custom_visibility' );
+		// Read with a null default so an option that was never stored is restored by deleting it:
+		// both toggles fall back to "shown" only while the row is absent, and writing back the ''
+		// that bp_get_option() otherwise returns would flip that default for every later test.
+		$this->hide_last_name_backup           = bp_get_option( 'bp-hide-last-name', null );
+		$this->hide_nickname_first_name_backup = bp_get_option( 'bp-hide-nickname-first-name', null );
 
 		bp_update_option( 'bp-display-name-format', 'first_last_name' );
 	}
@@ -53,11 +72,28 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 */
 	public function tearDown(): void {
 		bp_update_option( 'bp-display-name-format', $this->format_backup );
+		$this->restore_option( 'bp-hide-last-name', $this->hide_last_name_backup );
+		$this->restore_option( 'bp-hide-nickname-first-name', $this->hide_nickname_first_name_backup );
 		bp_xprofile_update_meta( bp_xprofile_firstname_field_id(), 'field', 'default_visibility', $this->fn_default_backup );
 		bp_xprofile_update_meta( bp_xprofile_firstname_field_id(), 'field', 'allow_custom_visibility', $this->fn_allow_backup );
 		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Put an option back exactly as it was found, absent row included.
+	 *
+	 * @param string $option_name Option key.
+	 * @param mixed  $value       Value read before the test, null when the row did not exist.
+	 */
+	protected function restore_option( $option_name, $value ) {
+		if ( is_null( $value ) ) {
+			bp_delete_option( $option_name );
+			return;
+		}
+
+		bp_update_option( $option_name, $value );
 	}
 
 	/**
@@ -512,7 +548,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The budget also bounds the per-user visibility sources, and fails closed there too.
+	 * The budget also bounds the per-user visibility sources, and past it the leg is WITHHELD.
 	 *
 	 * Sources (1) and (2) are bounded by stored rows rather than by the search term, which is not
 	 * the same as small: on a community where a name field's default visibility is restricted, or
@@ -520,15 +556,29 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * as large as the match count again. Exercised under the "First Name & Last Name" format so
 	 * the site-wide format source is not involved at all.
 	 *
+	 * The answer past the bound is nothing at all, never a slice. Every member in this fixture is
+	 * legitimately visible - their first name matches the term - so a truncating bound returns two
+	 * of them and drops the other two purely for their POSITION in an unordered candidate set. That
+	 * is indistinguishable from a complete answer, which is what made the same shape a 99.3% result
+	 * cull on a populated community. An empty answer is at least honest about having withheld
+	 * everything, and the caller ORs this comparison with user_login, user_nicename, user_email,
+	 * user meta and the profile fields, so the search still answers.
+	 *
 	 * @group bb_search_visibility_display_format
 	 */
 	public function test_candidate_budget_also_bounds_the_per_user_visibility_sources() {
-		$user_ids = array();
+		$candidate_ids = array();
 		for ( $i = 0; $i < 4; $i++ ) {
 			// Restricted surname, but a FIRST name that matches the term - so the re-test keeps
 			// them, and a truncated re-test is observable as a member going missing.
-			$user_ids[] = $this->create_member_with_hidden_surname( 'adminsonly', 'Underbough' . $i, 'Underbough' );
+			$candidate_ids[] = $this->create_member_with_hidden_surname( 'adminsonly', 'Underbough' . $i, 'Underbough' );
 		}
+
+		// Matches the same term with nothing restricted at all, so no source can make them a
+		// candidate. Past the budget this member must still be served: the answer is the candidate
+		// set, never false, and a false would take the caller's whole display_name leg down with it.
+		$non_candidate_id = $this->create_member_with_hidden_surname( 'public', 'Underbough9', 'Underbough' );
+		$user_ids         = array_merge( $candidate_ids, array( $non_candidate_id ) );
 
 		bp_update_option( 'bp-display-name-format', 'first_last_name' );
 		$this->set_current_user( 0 );
@@ -544,6 +594,16 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'Fixture: with no budget every one of these members is kept, because their visible first name matches.'
 		);
 
+		// Fixture: exactly the four restricted members are candidates, so the assertion past the
+		// budget can tell "withhold the candidates" apart from "withhold the leg".
+		$candidates = bb_xprofile_get_hidden_name_search_user_ids( array( '%Underbough%' ), 0 );
+		$this->assertIsArray( $candidates, 'Fixture: the candidate set could not be resolved.' );
+		$this->assertNotContains(
+			(int) $non_candidate_id,
+			array_map( 'intval', $candidates ),
+			'Fixture: the unrestricted member is a candidate, so nothing below distinguishes the two answers.'
+		);
+
 		$cap = function () {
 			return 2;
 		};
@@ -557,16 +617,12 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', $cap );
 
-		$this->assertCount(
-			2,
-			$result,
-			'Past the budget the unverified matches were served instead of dropped.'
+		$this->assertSame(
+			array( (int) $non_candidate_id ),
+			array_map( 'intval', $result ),
+			'Past the budget the candidates must be withheld and nothing else - not a slice of them, and not the caller\'s whole display_name leg.'
 		);
-		$this->assertSame( 2, $resolutions, 'The budget did not bound the number of names resolved.' );
-		$this->assertEmpty(
-			array_diff( $result, $user_ids ),
-			'The budget removed members that were never candidates.'
-		);
+		$this->assertSame( 0, $resolutions, 'The budget was exceeded, so no name should have been resolved at all.' );
 	}
 
 	/**
@@ -1366,12 +1422,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * The mutation-surviving arm: the site-wide Display Name Format hide.
 	 *
-	 * The Last Name field here is PUBLIC with no visibility row of any kind, so only the "First Name"
-	 * format removes it from every visible name. bb_xprofile_filter_user_search_matches() honours
-	 * that; this second producer must apply the identical rule, or a surname-only field match
-	 * discloses exactly the part the format suppresses. The "First Name & Last Name" run is the
-	 * negative control - nothing hides the surname there, so the filter must not become a blanket
-	 * surname block.
+	 * The Last Name field here is PUBLIC with no visibility row of any kind, so the only thing that
+	 * can withhold it is the Display Name Fields toggle the "First Name" format exposes. The format
+	 * alone is not that decision: "bp-hide-last-name" reads as 1 = SHOW, and on its default the
+	 * Last Name field stays on the public profile while merely sitting outside the display name, so
+	 * a surname-only match is a hit on a field the community publishes and must survive. Turn the
+	 * toggle off and the field is genuinely withheld, and the same match must then be dropped or it
+	 * discloses exactly the part the profile suppresses. The "First Name & Last Name" run is the
+	 * outer negative control - that format offers no toggle at all.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -1389,17 +1447,27 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bp_update_option( 'bp-hide-last-name', 1 );
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			'The Last Name field is still rendered on the profile under this format, so the match must be kept.'
+		);
+
+		bp_update_option( 'bp-hide-last-name', 0 );
 		$this->assertSame(
 			array(),
 			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
-			'The First Name format hide was not applied by the profile-field search producer.'
+			'The withheld Last Name field was not applied by the profile-field search producer.'
 		);
 	}
 
 	/**
-	 * Under "Nickname" the visible name is the nickname alone, so BOTH the first name and the
-	 * surname are out of it. A match that lives only in the first-name field must be dropped - the
-	 * arm that force-adds the first-name field to the hidden set under this format.
+	 * Under "Nickname" the visible name is the nickname alone, and the format exposes a toggle for
+	 * the First Name field as well. On its default ("bp-hide-nickname-first-name" = 1 = SHOW) the
+	 * field is still published on the profile, so a first-name-only match is legitimate; switch it
+	 * off and the field is withheld, and the same match must be dropped - the arm that force-adds
+	 * the first-name field to the hidden set under this format.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -1409,10 +1477,19 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		bp_update_option( 'bp-display-name-format', 'nickname' );
 		$this->set_current_user( 0 );
+
+		bp_update_option( 'bp-hide-nickname-first-name', 1 );
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			'The First Name field is still rendered on the profile under this format, so the match must be kept.'
+		);
+
+		bp_update_option( 'bp-hide-nickname-first-name', 0 );
 		$this->assertSame(
 			array(),
 			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
-			'The Nickname format hides the first name, but a first-name-only field match survived.'
+			'The Nickname format withholds the first name, but a first-name-only field match survived.'
 		);
 	}
 
@@ -1809,6 +1886,184 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Each SEO plugin BuddyBoss ships support for, and the contract the redaction depends on.
+	 *
+	 * @return array
+	 */
+	public function seo_plugin_contract_provider() {
+		return array(
+			'Yoast schema graph' => array(
+				'wordpress-seo',
+				'Yoast SEO',
+				'wpseo_schema_graph',
+				'redact_schema_graph',
+				array(
+					'passes its schema graph through this filter with a second context argument' => '/apply_filters\(\s*\'wpseo_schema_graph\'\s*,\s*\$\w+\s*,\s*\$\w+/',
+					'exposes the context `indexable` the member is resolved from' => '/public\s+\$indexable\s*;/',
+					'stores `object_type` on the indexable' => '/@property\s+string\s+\$object_type/',
+					'stores `object_id` on the indexable' => '/@property\s+int\s+\$object_id/',
+					'stores `author_id` on the indexable' => '/@property\s+int\s+\$author_id/',
+				),
+			),
+			'Yoast author name'  => array(
+				'wordpress-seo',
+				'Yoast SEO',
+				'wpseo_meta_author',
+				'redact_author_name',
+				array(
+					'passes the bare display_name string through this filter with a presentation' => '/apply_filters\(\s*\'wpseo_meta_author\'\s*,\s*\$\w+->display_name\s*,\s*\$[\w>$-]+/',
+					'exposes the presentation `model` the member is resolved from' => '/public\s+\$model\s*;/',
+				),
+			),
+			'All in One SEO'     => array(
+				'all-in-one-seo-pack',
+				'All in One SEO',
+				'aioseo_schema_output',
+				'redact_schema_graph',
+				array(
+					'passes its @graph through this filter' => '/apply_filters\(\s*\'aioseo_schema_output\'\s*,/',
+				),
+			),
+			'Rank Math schema'   => array(
+				'seo-by-rank-math',
+				'Rank Math',
+				'rank_math/json_ld',
+				'redact_schema_graph',
+				array(
+					'dispatches its JSON-LD filter' => '/do_filter\(\s*\'json_ld\'/',
+					'still prefixes its dispatched hook names with rank_math/' => '/\'rank_math\/\'\s*\.\s*\$args\[0\]/',
+				),
+			),
+		);
+	}
+
+	/**
+	 * The redaction must be registered on a hook the installed SEO plugin actually dispatches, and
+	 * on the data shape it actually passes.
+	 *
+	 * The registration half is asserted against the singleton production already built, read
+	 * through reflection. Asking BB_SEO_Helpers::instance() for it instead would construct the
+	 * class - and the constructor is what registers the filters - so the assertion would be
+	 * satisfied by the act of making it.
+	 *
+	 * The six simulations above each register their own closure standing in for the plugin. That is
+	 * the right unit test for BuddyBoss's own ordering and for what the callbacks do with a value,
+	 * but it proves nothing about the plugin: a simulation goes on passing after the real plugin
+	 * renames the hook, changes its argument count, or stops exposing the property the member is
+	 * resolved from - which is exactly when the leak this covers comes back, silently, on a plugin
+	 * update nobody reviewed. The plugins cannot be booted inside this suite (their filters are
+	 * applied while they render a head, not registered up front), so the contract is read from the
+	 * installed plugin's own source, which is what the helper's docblocks assert by hand today.
+	 *
+	 * @dataProvider seo_plugin_contract_provider
+	 * @group bb_search_visibility_display_format
+	 *
+	 * @param string $slug        Plugin directory name.
+	 * @param string $plugin_name Human name, for the failure messages.
+	 * @param string $hook        Hook BB_SEO_Helpers registers on.
+	 * @param string $callback    BB_SEO_Helpers method registered on it.
+	 * @param array  $contract    Map of `what the plugin must still do` => regex over its source.
+	 */
+	public function test_seo_plugin_contract_holds_against_the_installed_plugin( $slug, $plugin_name, $hook, $callback, $contract ) {
+		$plugin_dir = $this->seo_plugin_dir( $slug );
+
+		if ( '' === $plugin_dir ) {
+			$this->markTestSkipped( sprintf( '%s is not installed in this configuration.', $plugin_name ) );
+		}
+
+		if ( ! class_exists( 'BB_SEO_Helpers', false ) ) {
+			$this->markTestSkipped( 'The SEO compatibility layer is not available in this configuration.' );
+		}
+
+		// Read the instance production built, rather than asking for one. BB_SEO_Helpers registers
+		// its filters in its own constructor, so `has_filter( $hook, array( BB_SEO_Helpers::instance(),
+		// ... ) )` registers the very thing it then asserts is registered, and passes whether or not
+		// any production code ever instantiates the class. Reflection observes the singleton without
+		// creating it; the production wiring that fills it is proved separately, in
+		// test_the_production_path_registers_the_seo_redaction().
+		$helper = $this->existing_seo_helper_instance();
+
+		$this->assertNotNull(
+			$helper,
+			'Nothing instantiated BB_SEO_Helpers, so none of its redaction filters are registered.'
+		);
+
+		// Priority 20 is above every registration these plugins make on their own graph, so the
+		// redaction runs on the finished structure rather than on a half-built one.
+		$this->assertSame(
+			20,
+			has_filter( $hook, array( $helper, $callback ) ),
+			sprintf( 'The redaction is not registered on %s at the priority it needs.', $hook )
+		);
+
+		foreach ( $contract as $expectation => $pattern ) {
+			$this->assertTrue(
+				$this->seo_plugin_source_matches( $plugin_dir, $pattern ),
+				sprintf( '%s no longer %s, so the redaction registered for it cannot work.', $plugin_name, $expectation )
+			);
+		}
+	}
+
+	/**
+	 * Locate an installed SEO plugin.
+	 *
+	 * The suite runs against a WordPress checkout whose plugins directory holds nothing, while the
+	 * install this plugin is checked out in is the one that has the SEO plugins - so both are
+	 * searched, and on a normal site they are the same directory.
+	 *
+	 * @param string $slug Plugin directory name.
+	 * @return string Absolute path, or '' when the plugin is not installed.
+	 */
+	protected function seo_plugin_dir( $slug ) {
+		$roots = array( WP_PLUGIN_DIR, dirname( untrailingslashit( buddypress()->plugin_dir ), 2 ) );
+
+		foreach ( array_unique( $roots ) as $root ) {
+			if ( is_dir( $root . '/' . $slug ) ) {
+				return $root . '/' . $slug;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Whether any PHP file shipped by a plugin matches a pattern.
+	 *
+	 * The whole tree is searched rather than one named file so that a plugin moving its own code
+	 * around does not read as a broken contract - only losing the thing entirely does.
+	 *
+	 * @param string $plugin_dir Absolute plugin path.
+	 * @param string $pattern    Regular expression.
+	 * @return bool
+	 */
+	protected function seo_plugin_source_matches( $plugin_dir, $pattern ) {
+		$skip_dirs = array( 'vendor', 'vendor_prefixed', 'node_modules', 'languages', 'assets', 'images', 'css', 'js', 'dist', 'build' );
+
+		$files = new RecursiveIteratorIterator(
+			new RecursiveCallbackFilterIterator(
+				new RecursiveDirectoryIterator( $plugin_dir, FilesystemIterator::SKIP_DOTS ),
+				function ( $current ) use ( $skip_dirs ) {
+					if ( $current->isDir() ) {
+						return ! in_array( $current->getFilename(), $skip_dirs, true );
+					}
+
+					return 'php' === strtolower( $current->getExtension() );
+				}
+			)
+		);
+
+		foreach ( $files as $file ) {
+			$contents = file_get_contents( $file->getPathname() );
+
+			if ( false !== $contents && preg_match( $pattern, $contents ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * BuddyBoss must actually contribute its personal-data exporters and erasers.
 	 *
 	 * BP_Core_Gdpr is constructed on `bp_loaded` priority 0 and used to schedule its registration on
@@ -1843,17 +2098,37 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
-	 * A notification exported for a member must not name someone they may not see.
+	 * Every changed exporter, with the fixture that makes it name another member.
 	 *
-	 * A notification's text is produced by the component that created it, and those callbacks
-	 * resolve the actor's name for whoever is browsing - during an export that is the administrator
-	 * running it, not the member the export belongs to. The report therefore read "Alex Quillfeather
-	 * replied to your post" for a data subject the surname is hidden from (QA finding F-3,
-	 * reachable only once the exporters above started registering).
-	 *
-	 * @group bb_search_visibility_display_format
+	 * @return array
 	 */
-	public function test_notification_export_resolves_names_for_the_data_subject() {
+	public function export_name_scope_provider() {
+		return array(
+			'notification' => array( 'bp_notification', 'fixture_notification_naming_the_actor' ),
+			'friendship'   => array( 'bp_friendship', 'fixture_friendship_naming_the_actor' ),
+			'message'      => array( 'bp_message', 'fixture_message_naming_the_actor' ),
+		);
+	}
+
+	/**
+	 * Data exported for a member must not name someone they may not see.
+	 *
+	 * An export is built in the request of whoever runs it - an administrator, who may read every
+	 * field - and then handed permanently to the member it belongs to. Each of these exporters
+	 * resolves another member's name in its own right, so each has to resolve it for the data
+	 * subject: the notification exporter through the component callback that writes the notification
+	 * text (QA finding F-3, "Alex Quillfeather replied to your post" in a report produced for a
+	 * member the surname is hidden from), the other two through their own direct
+	 * bp_core_get_user_displayname() call. One predicate, several independent sites, and a leak here
+	 * lands in a file the member keeps.
+	 *
+	 * @dataProvider export_name_scope_provider
+	 * @group bb_search_visibility_display_format
+	 *
+	 * @param string $exporter_key Exporter key registered on wp_privacy_personal_data_exporters.
+	 * @param string $fixture      Method that creates the data naming the actor.
+	 */
+	public function test_export_resolves_names_for_the_data_subject( $exporter_key, $fixture ) {
 		$actor   = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather', 'Alex' );
 		$subject = self::factory()->user->create( array( 'user_email' => 'subject-9896@example.com' ) );
 
@@ -1861,8 +2136,48 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$this->set_current_user( 1 );
 
 		$exporters = apply_filters( 'wp_privacy_personal_data_exporters', array() );
-		$this->assertArrayHasKey( 'bp_notification', $exporters, 'The notification exporter must register for this test to mean anything.' );
+		$this->assertArrayHasKey(
+			$exporter_key,
+			$exporters,
+			sprintf( 'The %s exporter must register for this test to mean anything.', $exporter_key )
+		);
 
+		$this->{$fixture}( $actor, $subject );
+
+		$export = call_user_func( $exporters[ $exporter_key ]['callback'], 'subject-9896@example.com', 1 );
+
+		$values = array();
+		foreach ( $export['data'] as $group ) {
+			foreach ( $group['data'] as $row ) {
+				$values[] = (string) $row['value'];
+			}
+		}
+
+		$this->assertNotEmpty( $values, 'The export produced no rows.' );
+
+		$report = implode( ' | ', $values );
+
+		// Without this the test would pass on an export that never names the actor at all, which is
+		// exactly the state a broken fixture leaves it in.
+		$this->assertStringContainsString(
+			'Alex',
+			$report,
+			'Fixture: the export does not name the other member, so it cannot show whether the name was scoped.'
+		);
+		$this->assertStringNotContainsString(
+			'Quillfeather',
+			$report,
+			'A personal-data export carried a surname hidden from the member it was produced for.'
+		);
+	}
+
+	/**
+	 * A notification whose text names the actor.
+	 *
+	 * @param int $actor   Member whose name the export renders.
+	 * @param int $subject Member the export belongs to.
+	 */
+	protected function fixture_notification_naming_the_actor( $actor, $subject ) {
 		bp_notifications_add_notification(
 			array(
 				'user_id'           => $subject,
@@ -1873,21 +2188,35 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 				'is_new'            => 1,
 			)
 		);
+	}
 
-		$export = call_user_func( $exporters['bp_notification']['callback'], 'subject-9896@example.com', 1 );
+	/**
+	 * A confirmed connection between the two members.
+	 *
+	 * @param int $actor   Member whose name the export renders.
+	 * @param int $subject Member the export belongs to.
+	 */
+	protected function fixture_friendship_naming_the_actor( $actor, $subject ) {
+		friends_add_friend( $subject, $actor, true );
+	}
 
-		$values = array();
-		foreach ( $export['data'] as $group ) {
-			foreach ( $group['data'] as $row ) {
-				$values[] = (string) $row['value'];
-			}
-		}
-
-		$this->assertNotEmpty( $values, 'The export produced no notification rows.' );
-		$this->assertStringNotContainsString(
-			'Quillfeather',
-			implode( ' | ', $values ),
-			'A personal-data export carried a surname hidden from the member it was produced for.'
+	/**
+	 * A message thread the subject sent to the actor.
+	 *
+	 * The exporter reports the messages the data subject SENT, and renders every participant of
+	 * those threads by name - so the subject has to be the sender for the actor to appear.
+	 *
+	 * @param int $actor   Member whose name the export renders.
+	 * @param int $subject Member the export belongs to.
+	 */
+	protected function fixture_message_naming_the_actor( $actor, $subject ) {
+		messages_new_message(
+			array(
+				'sender_id'  => $subject,
+				'recipients' => array( $actor ),
+				'subject'    => 'Thursday',
+				'content'    => 'The hall is open.',
+			)
 		);
 	}
 
@@ -2121,6 +2450,191 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			);
 		}
 	}
+
+	/**
+	 * The group-message email fan-out must resolve {{sender.name}} for the recipient on BOTH of its
+	 * branches.
+	 *
+	 * group_messages_notification_new_message() either queues the batch or sends it inline, and
+	 * which one runs is decided by nothing but bb_is_email_queue() and the recipient count - so the
+	 * two have to agree about the name they deliver. The inline branch resolves the name per
+	 * recipient. The queued branch cannot: it builds its tokens once, in the sender's own request,
+	 * where nobody is ever denied their own name, so what it stores is the unredacted name and the
+	 * only thing keeping the withheld surname out of the inbox is
+	 * bb_render_messages_recipients() overwriting the token for each recipient as it sends. On a
+	 * populated community the queued branch is the one that runs, because the queue exists for
+	 * exactly the recipient counts a real community produces.
+	 *
+	 * Equality across the two branches is necessary but not sufficient - two branches can agree on
+	 * the unredacted name - so each branch is additionally pinned to the literal visible name and
+	 * asserted not to carry the withheld surname, and only then compared to the other.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_group_message_sender_name_agrees_across_the_email_queue_branches() {
+		global $wpdb, $bb_background_updater;
+
+		$sender_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Wrenfield', 'Marguerite' );
+
+		// Both branches skip a recipient whose group-message email preference is off, so give the
+		// recipients the preference a member who wants these emails has.
+		$type_key = 'notification_group_messages_new_message';
+		if ( ! bb_enabled_legacy_email_preference() ) {
+			$type_key = bb_get_prefences_key( 'legacy', $type_key );
+		}
+
+		$recipients = array();
+		foreach ( self::factory()->user->create_many( 3 ) as $recipient_id ) {
+			bp_update_user_meta( $recipient_id, $type_key, 'yes' );
+
+			$recipient            = new stdClass();
+			$recipient->user_id   = (int) $recipient_id;
+			$recipient->is_hidden = 0;
+			$recipients[]         = $recipient;
+		}
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// bp_send_email() returns a WP_Error before it ever sets tokens when the email post for the
+		// type is absent, and the harness has no bp-email posts at all.
+		if ( is_wp_error( bp_get_email( 'group-message-email' ) ) ) {
+			$email_post_id = wp_insert_post(
+				array(
+					'post_status'  => 'publish',
+					'post_type'    => bp_get_email_post_type(),
+					'post_title'   => '[{{{site.name}}}] New message from group: "{{{group.name}}}"',
+					'post_content' => '{{{sender.name}}} sent you a message.',
+					'post_excerpt' => '{{{sender.name}}} sent you a message.',
+				)
+			);
+			wp_set_object_terms( $email_post_id, 'group-message-email', bp_get_email_tax_type() );
+		}
+
+		$args = array(
+			'id'         => 0,
+			'thread_id'  => 4242,
+			'sender_id'  => $sender_id,
+			'subject'    => 'Neighbourhood notice',
+			'message'    => 'The hall is open on Thursday.',
+			'recipients' => $recipients,
+		);
+
+		$captured = array();
+		$capture  = function ( &$email, $email_type, $to, $send_args ) use ( &$captured ) {
+			if ( isset( $send_args['tokens']['receiver-user.id'], $send_args['tokens']['sender.name'] ) ) {
+				$captured[ (int) $send_args['tokens']['receiver-user.id'] ] = (string) $send_args['tokens']['sender.name'];
+			}
+		};
+		// Stop the send once the tokens exist: the capture hook runs before validate().
+		$halt = function () {
+			return new WP_Error( 'bb_test_halt', 'halted' );
+		};
+
+		add_action( 'bp_send_email', $capture, 10, 4 );
+		add_filter( 'bp_email_validate', $halt, 99 );
+
+		// group_messages_notification_new_message() returns before either branch while "Delay Email
+		// Notifications" is on, which is the default. Turn it off, as a site that mails its group
+		// messages has to.
+		add_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
+
+		// The actor is the sender - the context in which the surname is never withheld.
+		$this->set_current_user( $sender_id );
+
+		// Branch one: the queue is off, so the recipients are served inline.
+		add_filter( 'bb_is_email_queue', '__return_false' );
+		group_messages_notification_new_message( $args );
+		remove_filter( 'bb_is_email_queue', '__return_false' );
+
+		$unqueued = $captured;
+		$captured = array();
+
+		// Branch two: the queue is on and the recipient count clears the batch threshold, so the
+		// tokens are built now and the send happens later, out of the sender's request.
+		$table = BB_Background_Process::$table_name;
+		$this->assertNotEmpty( $table, 'Fixture: the background queue table name is not resolved.' );
+		$last_job_id = (int) $wpdb->get_var( "SELECT MAX(id) FROM {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		$one_per_batch = function () {
+			return 1;
+		};
+		$block_dispatch = function () {
+			return array(
+				'headers'  => array(),
+				'body'     => '',
+				'response' => array(
+					'code'    => 200,
+					'message' => 'OK',
+				),
+			);
+		};
+
+		add_filter( 'bb_email_queue_min_count', $one_per_batch );
+		add_filter( 'pre_http_request', $block_dispatch );
+		group_messages_notification_new_message( $args );
+		remove_filter( 'pre_http_request', $block_dispatch );
+		remove_filter( 'bb_email_queue_min_count', $one_per_batch );
+
+		$jobs = $wpdb->get_col( $wpdb->prepare( "SELECT data FROM {$table} WHERE id > %d ORDER BY id ASC", $last_job_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$this->assertNotEmpty( $jobs, 'Fixture: the queued branch stored no background job.' );
+
+		// Run the queued jobs the way BB_Background_Updater::task() does, so the tokens under test
+		// are the ones the sender's request actually stored.
+		foreach ( $jobs as $job ) {
+			$job = maybe_unserialize( $job );
+			if ( empty( $job['callback'] ) || ! is_callable( $job['callback'] ) ) {
+				continue;
+			}
+			call_user_func_array( $job['callback'], (array) $job['args'] );
+		}
+
+		$queued = $captured;
+
+		remove_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
+		remove_action( 'bp_send_email', $capture, 10 );
+		remove_filter( 'bp_email_validate', $halt, 99 );
+
+		$this->assertNotEmpty( $unqueued, 'Fixture: the inline branch sent nothing to capture.' );
+		$this->assertNotEmpty( $queued, 'Fixture: the queued branch sent nothing to capture.' );
+
+		foreach ( $recipients as $recipient ) {
+			// The literal, not bp_core_get_user_displayname() re-asked here: deriving the
+			// expectation from the same resolver that produced the token reduces the assertion to
+			// "the token equals whatever the resolver returns", which holds just as well when the
+			// resolver hands back the full name on both branches.
+			$this->assertSame(
+				'Marguerite',
+				$unqueued[ $recipient->user_id ],
+				'The inline branch delivered a sender name that was not resolved for this recipient.'
+			);
+			$this->assertSame(
+				'Marguerite',
+				$queued[ $recipient->user_id ],
+				'The queued branch delivered a sender name that was not resolved for this recipient.'
+			);
+
+			// Named separately from the equality above: the surname is what the adminsonly level
+			// withholds, and a prefix-equal name ("Marguerite Wrenfield") would satisfy neither
+			// assertion but only this one says why.
+			$this->assertStringNotContainsStringIgnoringCase(
+				'Wrenfield',
+				$unqueued[ $recipient->user_id ],
+				'The inline branch put the withheld surname in the recipient inbox.'
+			);
+			$this->assertStringNotContainsStringIgnoringCase(
+				'Wrenfield',
+				$queued[ $recipient->user_id ],
+				'The queued branch put the withheld surname in the recipient inbox - permanently, since the token is stored.'
+			);
+
+			$this->assertSame(
+				$unqueued[ $recipient->user_id ],
+				$queued[ $recipient->user_id ],
+				'The queued and inline branches disagree about the sender name delivered to the same recipient.'
+			);
+		}
+	}
+
 	/**
 	 * Re-testing a batch of search candidates must not cost a user-meta query per member.
 	 *
@@ -2213,4 +2727,1181 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			)
 		);
 	}
+
+	/**
+	 * The BB_SEO_Helpers singleton production built, observed without building one.
+	 *
+	 * @return BB_SEO_Helpers|null
+	 */
+	protected function existing_seo_helper_instance() {
+		if ( ! class_exists( 'BB_SEO_Helpers', false ) ) {
+			return null;
+		}
+
+		$instance = new ReflectionProperty( 'BB_SEO_Helpers', 'instance' );
+		$instance->setAccessible( true );
+
+		return $instance->getValue();
+	}
+
+	/**
+	 * The production wiring - not the test - is what instantiates the SEO redaction.
+	 *
+	 * BB_SEO_Helpers registers its filters from its own constructor, so any assertion phrased as
+	 * `has_filter( $hook, array( BB_SEO_Helpers::instance(), ... ) )` creates the object it is about
+	 * to look for and passes on an install where nothing in the plugin ever loads the class. The
+	 * contract test above therefore reads the singleton through reflection, and this test proves the
+	 * singleton is filled by production: the instance is dropped, every redaction filter it had
+	 * registered is removed, and `bp_helper_plugins_loaded_callback()` - the `init` priority 0
+	 * callback that requires the file and calls instance() - is run on its own. The assertion that
+	 * the singleton is no longer null is made BEFORE anything asks for it, so it can only be
+	 * satisfied by that callback.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_the_production_path_registers_the_seo_redaction() {
+		if ( ! function_exists( 'bp_helper_plugins_loaded_callback' ) ) {
+			$this->markTestSkipped( 'The compatibility loader is not available in this configuration.' );
+		}
+
+		if ( ! class_exists( 'BB_SEO_Helpers', false ) ) {
+			$this->markTestSkipped( 'The SEO compatibility layer is not available in this configuration.' );
+		}
+
+		// The registration runs on `init` at priority 0, which is where the plugin puts it.
+		$this->assertSame(
+			0,
+			has_action( 'init', 'bp_helper_plugins_loaded_callback' ),
+			'The compatibility loader is no longer hooked, so nothing runs the SEO registration at all.'
+		);
+
+		$previous = $this->existing_seo_helper_instance();
+
+		$this->assertNotNull(
+			$previous,
+			'BB_SEO_Helpers was never instantiated during boot, so its redaction filters are not registered on this request.'
+		);
+
+		$registered_hooks = array_merge(
+			array_keys( (array) $previous->get_schema_graph_filters() ),
+			array_keys( (array) $previous->get_author_name_filters() )
+		);
+
+		$this->assertNotEmpty( $registered_hooks, 'Fixture: the helper registers no hooks at all, so this proves nothing.' );
+
+		// Tear the registration down completely, so what is asserted afterwards can only have been
+		// put back by the production callback.
+		foreach ( (array) $previous->get_schema_graph_filters() as $hook => $priority ) {
+			remove_filter( $hook, array( $previous, 'redact_schema_graph' ), (int) $priority );
+		}
+
+		foreach ( (array) $previous->get_author_name_filters() as $hook => $priority ) {
+			remove_filter( $hook, array( $previous, 'redact_author_name' ), (int) $priority );
+		}
+
+		$instance = new ReflectionProperty( 'BB_SEO_Helpers', 'instance' );
+		$instance->setAccessible( true );
+		$instance->setValue( null, null );
+
+		$sample_hook = $registered_hooks[0];
+
+		$this->assertFalse(
+			has_filter( $sample_hook, array( $previous, 'redact_schema_graph' ) ),
+			'Fixture: the old registration survived the teardown, so the re-registration below proves nothing.'
+		);
+
+		try {
+			bp_helper_plugins_loaded_callback();
+
+			$rebuilt = $instance->getValue();
+
+			$this->assertNotNull(
+				$rebuilt,
+				'bp_helper_plugins_loaded_callback() did not instantiate BB_SEO_Helpers, so on a real request the member-name redaction is never registered with any SEO plugin.'
+			);
+
+			foreach ( (array) $rebuilt->get_schema_graph_filters() as $hook => $priority ) {
+				$this->assertSame(
+					(int) $priority,
+					has_filter( $hook, array( $rebuilt, 'redact_schema_graph' ) ),
+					sprintf( 'The production path left %s without its schema redaction.', $hook )
+				);
+			}
+
+			foreach ( (array) $rebuilt->get_author_name_filters() as $hook => $priority ) {
+				$this->assertSame(
+					(int) $priority,
+					has_filter( $hook, array( $rebuilt, 'redact_author_name' ), (int) $priority ),
+					sprintf( 'The production path left %s without its author-name redaction.', $hook )
+				);
+			}
+		} finally {
+			// The harness restores $wp_filter to the snapshot it took at boot, and that snapshot
+			// holds the ORIGINAL object's callbacks - so the singleton has to go back with it, or
+			// every later test in this process reads an instance whose callbacks are registered
+			// under a different object identity.
+			$instance->setValue( null, $previous );
+		}
+	}
+
+	/**
+	 * Load the site-wide search engine into a harness that never boots the Search component.
+	 *
+	 * The class autoloader require()s any bp-* class file it is asked for whether the component was
+	 * booted or not, so probing for Bp_Search_Members with autoloading on is a fatal: its base class
+	 * is defined by an include the component never ran. Load the base class first, then the subclass.
+	 *
+	 * @return bool Whether the engine is usable in this configuration.
+	 */
+	protected function load_search_members_engine() {
+		$search_dir = buddypress()->plugin_dir . 'bp-search/';
+
+		foreach ( array( 'bp-search-functions.php', 'bp-search-settings.php' ) as $search_file ) {
+			if ( file_exists( $search_dir . $search_file ) ) {
+				require_once $search_dir . $search_file;
+			}
+		}
+
+		if ( ! class_exists( 'Bp_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
+			require_once $search_dir . 'classes/class-bp-search-types.php';
+		}
+
+		if ( ! class_exists( 'Bp_Search_Type', false ) ) {
+			return false;
+		}
+
+		if ( ! class_exists( 'Bp_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
+			require_once $search_dir . 'classes/class-bp-search-members.php';
+		}
+
+		return class_exists( 'Bp_Search_Members', false )
+			&& function_exists( 'bp_get_search_user_fields' )
+			&& function_exists( 'bp_is_search_user_field_enable' );
+	}
+
+	/**
+	 * Build the site-wide member search query with only the Display Name field switched on.
+	 *
+	 * Every other wp_users comparison - user_login, user_nicename, user_email, user meta - is a
+	 * separate leg of the same OR and is off by default, so leaving them off is what makes the
+	 * result attributable to the display_name leg this rule narrows.
+	 *
+	 * @param string $term       Search term.
+	 * @param bool   $count_only Ask for the COUNT form.
+	 * @return string Prepared SQL.
+	 */
+	protected function search_members_sql( $term, $count_only = false ) {
+		$field_option = 'bp_search_user_field_display_name';
+		$field_backup = get_option( $field_option );
+		update_option( $field_option, 1 );
+
+		try {
+			return Bp_Search_Members::instance()->sql( $term, $count_only );
+		} finally {
+			if ( false === $field_backup ) {
+				delete_option( $field_option );
+			} else {
+				update_option( $field_option, $field_backup );
+			}
+		}
+	}
+
+	/**
+	 * The exclusions the search engine resolves for a term.
+	 *
+	 * Protected on the engine because nothing outside it may assemble the display_name leg, and
+	 * memoized per term and viewer for the life of the request - so every test that reads it uses
+	 * its own term.
+	 *
+	 * @param string $term Search term.
+	 * @return array
+	 */
+	protected function display_name_visibility_exclusions( $term ) {
+		$method = new ReflectionMethod( 'Bp_Search_Members', 'bb_get_display_name_visibility_exclusions' );
+		$method->setAccessible( true );
+
+		return $method->invoke( Bp_Search_Members::instance(), $term );
+	}
+
+	/**
+	 * A member whose search match exists only in the stored display_name column, with last activity
+	 * recorded so the site-wide engine's last_activity join keeps them.
+	 *
+	 * @param string $display_name Stored display name.
+	 * @return int
+	 */
+	protected function create_searchable_member_with_display_name( $display_name ) {
+		global $wpdb;
+
+		$user_id = self::factory()->user->create();
+
+		$wpdb->update( $wpdb->users, array( 'display_name' => $display_name ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+
+		return $user_id;
+	}
+
+	/**
+	 * There is no ceiling on the display_name leg any more, and no shape that could carry one.
+	 *
+	 * The engine used to bound its own work with Bp_Search_Members::bb_get_display_name_visibility_bounds(),
+	 * which returned a `max_id` fence: matches above it were excluded outright. That bounded RESULTS
+	 * where only WORK ever needed bounding, because it was computed from the MATCH SET rather than
+	 * from the restricted population - a term matching 70,000 members admitted 500 and fenced off
+	 * 69,500, while the set that actually needed hiding was empty.
+	 *
+	 * The replacement is bounded by the restricted population and cannot express a fence: it returns
+	 * the members to exclude, a predicate, and whether the leg is withheld entirely. This pins the
+	 * shape so a ceiling cannot be reintroduced quietly.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_the_display_name_visibility_ceiling_is_gone() {
+		if ( ! $this->load_search_members_engine() ) {
+			$this->markTestSkipped( 'The Search component is not available in this configuration.' );
+		}
+
+		$this->assertFalse(
+			method_exists( 'Bp_Search_Members', 'bb_get_display_name_visibility_bounds' ),
+			'The match-set ceiling is back on the search engine.'
+		);
+
+		$this->assertTrue(
+			method_exists( 'Bp_Search_Members', 'bb_get_display_name_visibility_exclusions' ),
+			'The engine no longer resolves display_name visibility exclusions at all.'
+		);
+
+		$this->set_current_user( 0 );
+
+		$exclusions = $this->display_name_visibility_exclusions( 'Ceilinglessness' );
+
+		$this->assertSame(
+			array( 'suppress_leg', 'hidden_ids', 'visible_name_sql', 'values' ),
+			array_keys( $exclusions ),
+			'The exclusion contract changed shape - a caller assembling the display_name leg reads these four keys by name.'
+		);
+
+		$this->assertIsBool( $exclusions['suppress_leg'] );
+		$this->assertIsArray( $exclusions['hidden_ids'] );
+		$this->assertIsString( $exclusions['visible_name_sql'] );
+		$this->assertIsArray( $exclusions['values'] );
+
+		foreach ( array( 'max_id', 'limit', 'ceiling', 'bound' ) as $fence ) {
+			$this->assertArrayNotHasKey(
+				$fence,
+				$exclusions,
+				'The exclusions carry a fence again, which bounds results rather than work.'
+			);
+		}
+	}
+
+	/**
+	 * An empty exclusion set means EXCLUDE NOBODY: 70,000 matches in, 70,000 matches out.
+	 *
+	 * This is the release blocker. Every mechanism the visibility work added is a narrowing, and on
+	 * the overwhelmingly common configuration - a community where nobody has restricted a name field
+	 * - all of them resolve to "nothing is hidden". The defect was that the work was bounded by the
+	 * MATCH SET instead of by the RESTRICTED POPULATION, so a budget meant to cap a handful of
+	 * visibility resolutions capped the results instead: 70,000 matched members, 500 served, a 99.3%
+	 * cull of people nothing was hidden from.
+	 *
+	 * The budget is therefore forced far BELOW the match set here. Nobody in the fixture has
+	 * restricted anything, so the candidate set is empty, the budget is never reached, and every
+	 * match survives - through both xprofile producers and through the site-wide engine, whose
+	 * count is asserted against the fixture size rather than against a shape. A fixture this size
+	 * stands in for the 70,000: what matters is that it is many times the budget.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_an_empty_exclusion_set_leaves_the_whole_match_set_intact() {
+		global $wpdb;
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( 0 );
+
+		$match_size = 40;
+		$user_ids   = array();
+
+		for ( $i = 0; $i < $match_size; $i++ ) {
+			// The token lives only in the stored column, so the display_name leg is the only leg of
+			// the site-wide query that can match it.
+			$user_ids[] = $this->create_searchable_member_with_display_name( 'Member Zanthorpe' . $i );
+		}
+
+		$pattern  = '%Zanthorpe%';
+		$expected = $user_ids;
+		sort( $expected );
+
+		$this->assertSame(
+			array(),
+			bb_xprofile_get_hidden_name_search_user_ids( array( $pattern ), 0 ),
+			'Nobody restricted a name field, so the exclusion set must be an authoritative empty - never false, never a subset.'
+		);
+
+		// A budget forty times smaller than the match set. It bounds the restricted population, and
+		// that population is empty, so it must never be reached.
+		$cap = function () {
+			return 1;
+		};
+		add_filter( 'bb_xprofile_user_search_visibility_candidate_limit', $cap );
+
+		try {
+			list( $kept, $resolutions ) = $this->count_name_resolutions(
+				function () use ( $user_ids, $pattern ) {
+					return bb_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
+				}
+			);
+
+			$rows = array();
+			foreach ( $user_ids as $user_id ) {
+				$rows[] = $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() );
+			}
+
+			$field_kept = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+
+			sort( $kept );
+			sort( $field_kept );
+
+			$this->assertSame(
+				$expected,
+				$kept,
+				sprintf( 'The display_name producer returned %d of %d matches with nothing hidden from anybody.', count( $kept ), $match_size )
+			);
+			$this->assertSame( 0, $resolutions, 'Names were resolved for a match set in which nobody restricted anything.' );
+			$this->assertSame(
+				$expected,
+				$field_kept,
+				sprintf( 'The profile-field producer returned %d of %d matches with nothing hidden from anybody.', count( $field_kept ), $match_size )
+			);
+
+			if ( ! $this->load_search_members_engine() ) {
+				$this->markTestSkipped( 'The Search component is not available in this configuration.' );
+			}
+
+			$exclusions = $this->display_name_visibility_exclusions( 'Zanthorpe' );
+
+			$this->assertFalse( $exclusions['suppress_leg'], 'The engine withheld its display_name leg with nothing to withhold.' );
+			$this->assertSame( array(), $exclusions['hidden_ids'], 'The engine excluded members nothing is hidden about.' );
+			$this->assertSame( '', $exclusions['visible_name_sql'], 'The format hides nothing under this format, so no predicate belongs on the leg.' );
+
+			$sql = $this->search_members_sql( 'Zanthorpe', true );
+
+			$this->assertStringNotContainsString( '1 = 0', $sql, 'The engine withheld the display_name comparison entirely.' );
+			$this->assertStringNotContainsString( 'ID NOT IN', $sql, 'The engine fenced members off a leg nothing is hidden on.' );
+
+			$this->assertSame(
+				$match_size,
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the engine returns its own prepared statement, and the test exists to run it.
+				(int) $wpdb->get_var( $sql ),
+				'The site-wide engine culled matches that no privacy rule applies to - matches in, matches out is the whole contract here.'
+			);
+		} finally {
+			remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', $cap );
+		}
+	}
+
+	/**
+	 * A read that fails withholds the whole leg, on every producer - and never a slice of it.
+	 *
+	 * The visibility answer cannot be resolved, so serving the matches would publish exactly what
+	 * the rule exists to withhold and serving part of them would decide the results by position in
+	 * an unordered set. Both producers return an empty array; the site-wide engine replaces its
+	 * display_name comparison with a false predicate. user_login, user_nicename, user_email, user
+	 * meta and the profile fields are separate legs of the same OR, so a search still answers.
+	 *
+	 * Paired with the missing-table direction in
+	 * BP_Tests_XProfile_NameVisibilityRegressions::test_a_missing_visibility_table_filters_normally():
+	 * a failed read is an error, an absent table is the pre-migration shape, and treating the second
+	 * like the first would withhold member search on every install that has not migrated yet.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_a_failed_visibility_read_withholds_the_leg_on_every_producer() {
+		global $wpdb;
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( 0 );
+
+		$user_ids = array();
+		for ( $i = 0; $i < 3; $i++ ) {
+			$user_ids[] = $this->create_member_with_hidden_surname( 'public', 'Marrowgate' . $i, 'Perpetua' );
+		}
+
+		$pattern = '%Marrowgate%';
+		$rows    = array();
+		foreach ( $user_ids as $user_id ) {
+			$rows[] = $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() );
+		}
+
+		$expected = $user_ids;
+		sort( $expected );
+
+		// Control: with the read healthy every one of these is kept, so the empty answers below are
+		// attributable to the failure and not to the fixture.
+		$healthy_user  = bb_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
+		$healthy_field = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+		sort( $healthy_user );
+		sort( $healthy_field );
+
+		$this->assertSame( $expected, $healthy_user, 'Fixture: nothing is hidden here, so the healthy answer must keep everybody.' );
+		$this->assertSame( $expected, $healthy_field, 'Fixture: nothing is hidden here, so the healthy answer must keep everybody.' );
+
+		$break_query = function ( $query ) {
+			if ( false !== strpos( $query, 'DISTINCT user_id' ) && false !== stripos( $query, 'visibility' ) ) {
+				return 'SELECT DISTINCT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			$broken_user  = bb_xprofile_filter_user_search_matches( $user_ids, array( $pattern ), 0 );
+			$broken_field = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+
+			$engine_sql = null;
+			if ( $this->load_search_members_engine() ) {
+				// Its own term: the engine memoizes the resolved exclusions per term and viewer for
+				// the life of the request, so a term used while the read was healthy would be
+				// answered from that memo.
+				$engine_sql = $this->search_members_sql( 'Marrowgate', true );
+			}
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$this->assertSame(
+			array(),
+			$broken_user,
+			'A failed visibility read served the display_name matches it could not verify.'
+		);
+		$this->assertSame(
+			array(),
+			$broken_field,
+			'A failed visibility read served the profile-field matches it could not verify.'
+		);
+
+		if ( ! is_null( $engine_sql ) ) {
+			$this->assertStringContainsString(
+				'1 = 0',
+				$engine_sql,
+				'The site-wide engine served an unverified display_name comparison after a failed visibility read.'
+			);
+			$this->assertStringNotContainsString(
+				'display_name LIKE',
+				$engine_sql,
+				'The site-wide engine kept the display_name comparison it cannot verify.'
+			);
+		}
+	}
+
+	/**
+	 * A moderator is exempt from BOTH halves of the rule, in the display_name producer.
+	 *
+	 * The rule has two independent halves - the per-member restriction and the site-wide Display
+	 * Name Format hide - and each is answered in a different place, so each needs its own bypass.
+	 * The per-member half answers it inside the resolver; the format half is decided in the
+	 * producer, and a revision that left the bypass off the producer dropped a moderator's match
+	 * under a format hide even though they are shown every name part.
+	 *
+	 * The fixture puts both halves in play at once: an admins-only surname, under a format that
+	 * hides the surname from everybody.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_moderator_is_exempt_from_both_halves_of_the_display_name_producer() {
+		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Grimthwaite', 'Peregrine' );
+		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+
+		// Fixture: both halves really would drop this match for anybody else.
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimthwaite%' ), 0 ),
+			'Fixture: a guest must be denied this match, or the moderator assertion proves nothing.'
+		);
+
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimthwaite%' ), $admin ),
+			'A moderator lost a surname match they are allowed to read - one of the two halves is not checking the bypass.'
+		);
+	}
+
+	/**
+	 * The same exemption, in the profile-field producer.
+	 *
+	 * This producer answers the format half through bp_core_hide_display_name_field() and the
+	 * per-member half through bp_xprofile_get_hidden_fields_for_user(), and the moderator bypass
+	 * has to stand in front of both - it is one rule and two filters, and they must not disagree
+	 * about who a moderator is.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_moderator_is_exempt_from_both_halves_of_the_field_producer() {
+		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Thornbury', 'Peregrine' );
+		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$rows    = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		bp_update_option( 'bp-hide-last-name', 0 );
+
+		// Fixture: both halves really would drop this match for anybody else.
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $rows, 0 ),
+			'Fixture: a guest must be denied this match, or the moderator assertion proves nothing.'
+		);
+
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $rows, $admin ),
+			'A moderator lost a profile-field match they are allowed to read.'
+		);
+	}
+
+	/**
+	 * The same exemption, in the site-wide search engine.
+	 *
+	 * The engine excludes the per-member half with a `NOT IN` list and the format half with a SQL
+	 * predicate. Neither applies to a moderator, and the predicate is the half that has no bypass
+	 * of its own to fall back on - it is built from the term, not from the viewer.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_moderator_is_exempt_from_both_halves_of_the_site_search_engine() {
+		if ( ! $this->load_search_members_engine() ) {
+			$this->markTestSkipped( 'The Search component is not available in this configuration.' );
+		}
+
+		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Wrackmoor', 'Peregrine' );
+		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+
+		// Fixture: for a guest both halves are in play - the member is excluded by id AND the
+		// format predicate is added to the leg.
+		$this->set_current_user( 0 );
+		$guest_exclusions = $this->display_name_visibility_exclusions( 'Wrackmoorguest' );
+		$guest_hidden     = $this->display_name_visibility_exclusions( 'Wrackmoor' );
+
+		$this->assertSame(
+			array( $user_id ),
+			$guest_hidden['hidden_ids'],
+			'Fixture: a guest must be excluded from this surname match, or the moderator assertion proves nothing.'
+		);
+		$this->assertNotSame(
+			'',
+			$guest_exclusions['visible_name_sql'],
+			'Fixture: the format predicate must apply to a guest, or the second half is not exercised.'
+		);
+
+		$this->set_current_user( $admin );
+		$moderator_exclusions = $this->display_name_visibility_exclusions( 'Wrackmoor' );
+
+		$this->assertFalse( $moderator_exclusions['suppress_leg'], 'A moderator had the display_name leg withheld.' );
+		$this->assertSame(
+			array(),
+			$moderator_exclusions['hidden_ids'],
+			'A moderator was fenced away from a surname match they are allowed to read.'
+		);
+		$this->assertSame(
+			'',
+			$moderator_exclusions['visible_name_sql'],
+			'The format predicate was applied to a moderator, who is shown every name part.'
+		);
+
+		$sql = $this->search_members_sql( 'Wrackmoor' );
+
+		$this->assertContains(
+			(int) $user_id,
+			array_map( 'intval', (array) $GLOBALS['wpdb']->get_col( $sql ) ),
+			'A moderator searching the site-wide engine lost a member they are allowed to find.'
+		);
+
+		$this->set_current_user( 0 );
+	}
+
+	/**
+	 * Both answers to "which matches does the format still show" have to be the same answer.
+	 *
+	 * The ID-returning resolver and the subquery one - bb_xprofile_get_format_visible_name_matches()
+	 * and bb_xprofile_get_format_visible_name_sql() - exist as two shapes because their callers
+	 * differ: the member directory can afford an ID list, the site-wide engine cannot materialise
+	 * one. The RULE must not differ, or the member directory and the site-wide search answer the
+	 * same question differently, which is the defect this whole area exists to close.
+	 *
+	 * Three readings are compared on every term, and they must be one answer:
+	 *
+	 * - the ID list;
+	 * - the subquery applied through an ALIASED outer column, `u.ID IN ( ... )`;
+	 * - the subquery applied through the BARE `ID IN ( ... )` of a plain `SELECT ID FROM wp_users`,
+	 *   which is exactly the call site the site-wide engine uses.
+	 *
+	 * The bare form is the one that matters. An earlier revision took an outer id column and
+	 * spliced it into `EXISTS ( SELECT 1 FROM wp_bp_xprofile_data d WHERE d.user_id = <column> )`;
+	 * that table has an `id` column of its own, so a bare `ID` bound to `d.id` instead of to the
+	 * outer row, the subquery stopped being correlated, and it evaluated once and applied its
+	 * answer to every member - silently, in whichever direction the data happened to fall. The
+	 * subquery is uncorrelated now and references nothing of the enclosing query, so there is no
+	 * column left to mis-bind. Asserting the bare reading is what turns that from "the test routes
+	 * around the ambiguity" into "the ambiguity cannot exist".
+	 *
+	 * Every source either side compares is exercised, each by exactly one member: the profile field
+	 * the format shows, the user meta that field falls back to, the Nickname field, the `nickname`
+	 * meta, user_nicename, and a term that lives only in a name part the format hides. Each member
+	 * is stripped to a single source first, deliberately - on a natural fixture WordPress mirrors
+	 * the profile first name into user meta, so the meta arm of the union answers for the field arm
+	 * and a broken arm is masked by the OR. The expected member is asserted per term for the same
+	 * reason: two shapes that agree on nothing agree, and prove nothing.
+	 *
+	 * @dataProvider format_visible_name_format_provider
+	 * @group bb_search_visibility_display_format
+	 *
+	 * @param string $format          Display Name Format.
+	 * @param array  $expected_by_key Expected matching fixture key per term key, '' for nobody.
+	 */
+	public function test_format_visible_name_sql_and_matches_give_the_same_answer( $format, $expected_by_key ) {
+		global $wpdb;
+
+		$members = array(
+			// First Name profile field only.
+			'first_field' => self::factory()->user->create(),
+			// First name only in WordPress user meta - the imported, unhealed member.
+			'first_meta'  => self::factory()->user->create(),
+			// Nickname profile field only.
+			'nick_field'  => self::factory()->user->create(),
+			// `nickname` user meta only.
+			'nick_meta'   => self::factory()->user->create(),
+			// user_nicename only - the last resort the resolver falls back to.
+			'nicename'    => self::factory()->user->create(),
+			// Last Name only, which neither format shows.
+			'last_field'  => self::factory()->user->create(),
+		);
+
+		foreach ( $members as $member_id ) {
+			foreach ( array( bp_xprofile_firstname_field_id(), bp_xprofile_lastname_field_id(), bp_xprofile_nickname_field_id() ) as $field_id ) {
+				xprofile_set_field_data( $field_id, $member_id, '' );
+			}
+			delete_user_meta( $member_id, 'first_name' );
+			delete_user_meta( $member_id, 'nickname' );
+		}
+
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $members['first_field'], 'Alberic' );
+		update_user_meta( $members['first_meta'], 'first_name', 'Bramwell' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $members['nick_field'], 'Cindervale' );
+		update_user_meta( $members['nick_meta'], 'nickname', 'Dellowbrook' );
+		$wpdb->update( $wpdb->users, array( 'user_nicename' => 'everwick' ), array( 'ID' => $members['nicename'] ) );
+		clean_user_cache( $members['nicename'] );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $members['last_field'], 'Fennimore' );
+
+		$terms = array(
+			'first_field' => 'Alberic',
+			'first_meta'  => 'Bramwell',
+			'nick_field'  => 'Cindervale',
+			'nick_meta'   => 'Dellowbrook',
+			'nicename'    => 'everwick',
+			'last_field'  => 'Fennimore',
+		);
+
+		// No outer id column, by design: a parameter the caller could get wrong is what made the
+		// subquery bind into itself. Pinned here because removing the argument is the fix, and a
+		// reintroduced one would make the mis-binding possible again without changing any answer
+		// this test compares.
+		$signature = new ReflectionFunction( 'bb_xprofile_get_format_visible_name_sql' );
+
+		$this->assertSame(
+			2,
+			$signature->getNumberOfParameters(),
+			'bb_xprofile_get_format_visible_name_sql() takes an outer column again, which is the argument that used to bind inside the subquery instead of to the enclosing row.'
+		);
+
+		foreach ( $terms as $term_key => $term ) {
+			$patterns = array( '%' . $term . '%' );
+
+			$by_ids = bb_xprofile_get_format_visible_name_matches( $format, $patterns );
+			sort( $by_ids );
+
+			$built = bb_xprofile_get_format_visible_name_sql( $format, $patterns );
+
+			$this->assertNotSame( '', $built['sql'], 'Fixture: the format must build a subquery, or the comparison is vacuous.' );
+
+			// Applied through an aliased outer column...
+			$by_sql_aliased = array_map(
+				'intval',
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the subquery is built by the function under test and is prepared here.
+				(array) $wpdb->get_col( $wpdb->prepare( "SELECT u.ID FROM {$wpdb->users} u WHERE u.ID IN ( " . $built['sql'] . ' )', $built['values'] ) )
+			);
+			sort( $by_sql_aliased );
+
+			// ...and through the bare `ID` of a plain SELECT, which is the site-wide engine's own
+			// call site and the one the old correlated shape answered wrongly.
+			$by_sql_bare = array_map(
+				'intval',
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the subquery is built by the function under test and is prepared here.
+				(array) $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->users} WHERE ID IN ( " . $built['sql'] . ' )', $built['values'] ) )
+			);
+			sort( $by_sql_bare );
+
+			$expected = '' === $expected_by_key[ $term_key ] ? array() : array( (int) $members[ $expected_by_key[ $term_key ] ] );
+			sort( $expected );
+
+			// One assertion over all three readings: a wrong subquery moves the two SQL readings
+			// together, and the diff names which reading drifted and from what.
+			$this->assertSame(
+				array(
+					'id list'                   => $expected,
+					'subquery via aliased u.ID' => $expected,
+					'subquery via bare ID'      => $expected,
+				),
+				array(
+					'id list'                   => $by_ids,
+					'subquery via aliased u.ID' => $by_sql_aliased,
+					'subquery via bare ID'      => $by_sql_bare,
+				),
+				sprintf(
+					'The two shapes disagree, or agree on the wrong members, about the term "%s" under the %s format.',
+					$term,
+					$format
+				)
+			);
+		}
+	}
+
+	/**
+	 * Formats that hide a name part site-wide, and who each fixture term should resolve to.
+	 *
+	 * @return array
+	 */
+	public function format_visible_name_format_provider() {
+		return array(
+			'First Name format' => array(
+				'first_name',
+				array(
+					'first_field' => 'first_field',
+					'first_meta'  => 'first_meta',
+					'nick_field'  => 'nick_field',
+					'nick_meta'   => 'nick_meta',
+					'nicename'    => 'nicename',
+					// The surname is not part of the visible name under this format.
+					'last_field'  => '',
+				),
+			),
+			'Nickname format'   => array(
+				'nickname',
+				array(
+					// Neither name field is part of the visible name under this format.
+					'first_field' => '',
+					'first_meta'  => '',
+					'nick_field'  => 'nick_field',
+					'nick_meta'   => 'nick_meta',
+					'nicename'    => 'nicename',
+					'last_field'  => '',
+				),
+			),
+		);
+	}
+
+	/**
+	 * The candidate set is "restricted AND matched", and never includes the viewer.
+	 *
+	 * Two properties of the same set, and each one is load-bearing on its own:
+	 *
+	 * - A member is never hidden from themselves, so the viewer can never be a drop candidate. That
+	 *   is applied before the extension filter runs, so a site adding candidates back is not
+	 *   narrowed away - and re-applied after it, so a listener cannot make a member invisible to
+	 *   themselves.
+	 * - A member whose display_name does not match the term is in nobody's match set and can never
+	 *   be dropped, so re-testing them is pure cost. Excluding them in the correlated subquery is
+	 *   what keeps the candidate set to the restricted population intersected with the term, and it
+	 *   is also why a visibility row left behind by a deleted member can never surface: the row has
+	 *   no wp_users row to correlate to.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_hidden_name_candidates_exclude_the_viewer_and_anyone_the_term_missed() {
+		global $wpdb;
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		$viewer = $this->create_member_with_hidden_surname( 'adminsonly', 'Sablewick', 'Ottoline' );
+		// Restricted in exactly the same way, but their display_name does not contain the term.
+		$unmatched = $this->create_member_with_hidden_surname( 'adminsonly', 'Pellingsworth', 'Ottoline' );
+		// The orphan: a visibility row whose member no longer exists.
+		$orphan_id = 99000000;
+
+		$orphan_row        = new BB_XProfile_Visibility( bp_xprofile_lastname_field_id(), $orphan_id );
+		$orphan_row->value = 'adminsonly';
+		$orphan_row->save();
+
+		// Fixture: the unmatched member carries the same restriction as the viewer, so the term is
+		// the only thing that can keep them out of the candidate set.
+		$this->assertSame(
+			'adminsonly',
+			xprofile_get_field_visibility_level( bp_xprofile_lastname_field_id(), $unmatched ),
+			'Fixture: the unmatched member must be restricted in exactly the same way.'
+		);
+
+		$seen_candidates = null;
+		$observer        = function ( $candidate_ids ) use ( &$seen_candidates ) {
+			$seen_candidates = array_map( 'intval', (array) $candidate_ids );
+
+			return $candidate_ids;
+		};
+
+		add_filter( 'bb_xprofile_user_search_visibility_candidates', $observer );
+
+		try {
+			$hidden = bb_xprofile_get_hidden_name_search_user_ids( array( '%Sablewick%' ), $viewer );
+		} finally {
+			remove_filter( 'bb_xprofile_user_search_visibility_candidates', $observer );
+		}
+
+		$this->assertIsArray( $hidden );
+		$this->assertIsArray( $seen_candidates, 'Fixture: the candidate filter never ran, so nothing below is observed.' );
+
+		$this->assertNotContains(
+			(int) $viewer,
+			$seen_candidates,
+			'The viewer reached the candidate set, so a site adding candidates back could hide a member from themselves.'
+		);
+		$this->assertNotContains(
+			(int) $unmatched,
+			$seen_candidates,
+			'A restricted member whose display_name does not match the term was re-tested - the candidate set is bounded by the restriction alone again.'
+		);
+		$this->assertNotContains(
+			$orphan_id,
+			$seen_candidates,
+			'A visibility row belonging to no member surfaced as a candidate.'
+		);
+
+		$this->assertNotContains( (int) $viewer, $hidden, 'A member was hidden from themselves.' );
+		$this->assertNotContains( (int) $unmatched, $hidden );
+		$this->assertNotContains( $orphan_id, $hidden );
+
+		// A listener that adds the viewer back must not be able to hide them from themselves either.
+		$re_add = function ( $candidate_ids ) use ( $viewer ) {
+			$candidate_ids[] = $viewer;
+
+			return $candidate_ids;
+		};
+
+		add_filter( 'bb_xprofile_user_search_visibility_candidates', $re_add );
+
+		try {
+			$hidden_after_filter = bb_xprofile_get_hidden_name_search_user_ids( array( '%Sablewickagain%' ), $viewer );
+		} finally {
+			remove_filter( 'bb_xprofile_user_search_visibility_candidates', $re_add );
+		}
+
+		$this->assertNotContains(
+			(int) $viewer,
+			(array) $hidden_after_filter,
+			'A listener put the viewer back into the candidate set and the viewer was hidden from their own search.'
+		);
+	}
+
+	/**
+	 * The name leak stays closed on both producers, under every Display Name Format.
+	 *
+	 * The hidden surname must answer nothing on either producer, and the name part the viewer IS
+	 * shown must keep the member findable on both - a filter that closed the leak by dropping the
+	 * member from every search would pass the first assertion alone and silently break the member
+	 * directory. The formats are covered separately because each resolves the visible name from a
+	 * different set of sources, and only the last of them ("First Name & Last Name") leaves the
+	 * rule to the per-member visibility level on its own.
+	 *
+	 * Each case carries its own terms: the site-wide engine memoizes the exclusions it resolves per
+	 * term and viewer for the life of the PHP process, so a term reused under a second format would
+	 * be answered from the first format's memo.
+	 *
+	 * @dataProvider name_leak_format_provider
+	 * @group bb_search_visibility_display_format
+	 *
+	 * @param string $format      Display Name Format.
+	 * @param string $first_name  First name, which every format resolves to a visible name part.
+	 * @param string $surname     Restricted surname, which no format may answer for.
+	 * @param string $nickname    Nickname, deliberately containing the first-name token so the
+	 *                            member stays findable under the Nickname format too.
+	 */
+	public function test_the_name_leak_stays_closed_on_both_producers( $format, $first_name, $surname, $nickname ) {
+		global $wpdb;
+
+		bp_update_option( 'bp-display-name-format', $format );
+		$this->set_current_user( 0 );
+
+		$user_id = self::factory()->user->create( array( 'nickname' => $nickname ) );
+
+		wp_update_user(
+			array(
+				'ID'           => $user_id,
+				'first_name'   => $first_name,
+				'last_name'    => $surname,
+				'display_name' => $first_name . ' ' . $surname,
+			)
+		);
+
+		// wp_update_user() resets the `nickname` user meta to the user_login whenever the update
+		// does not carry one - and that meta, not the Nickname profile field, is what
+		// bb_core_build_visible_display_name() resolves the visible name from under the Nickname
+		// format. Written back afterwards so the member's visible name is the nickname the fixture
+		// intends rather than their login.
+		update_user_meta( $user_id, 'nickname', $nickname );
+
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $first_name );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $surname );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, $nickname );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+
+		$this->assertStringNotContainsString(
+			$surname,
+			(string) bp_core_get_user_displayname( $user_id, 0 ),
+			'Fixture: the surname must be redacted from the rendered name, or there is nothing to leak.'
+		);
+
+		// The display_name producer.
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%' . $surname . '%' ), 0 ),
+			sprintf( 'A guest confirmed a restricted surname under the %s format.', $format )
+		);
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%' . $first_name . '%' ), 0 ),
+			sprintf( 'A member became unfindable by a name part the %s format shows.', $format )
+		);
+
+		// The profile-field producer, on the same two terms.
+		$surname_rows = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+		$visible_rows = array( $this->field_match_row( $user_id, bp_xprofile_nickname_field_id() ) );
+
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $surname_rows, 0 ),
+			sprintf( 'A guest confirmed a restricted surname through the profile-field producer under the %s format.', $format )
+		);
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $visible_rows, 0 ),
+			sprintf( 'The profile-field producer dropped a match on a field the %s format shows.', $format )
+		);
+
+		if ( ! $this->load_search_members_engine() ) {
+			return;
+		}
+
+		$hidden_sql  = $this->search_members_sql( $surname );
+		$visible_sql = $this->search_members_sql( $first_name );
+
+		$this->assertNotContains(
+			(int) $user_id,
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the engine returns its own prepared statement, and the test exists to run it.
+			array_map( 'intval', (array) $wpdb->get_col( $hidden_sql ) ),
+			sprintf( 'The site-wide engine confirmed a restricted surname under the %s format.', $format )
+		);
+		$this->assertContains(
+			(int) $user_id,
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the engine returns its own prepared statement, and the test exists to run it.
+			array_map( 'intval', (array) $wpdb->get_col( $visible_sql ) ),
+			sprintf( 'The site-wide engine lost a member findable by a name part the %s format shows.', $format )
+		);
+	}
+
+	/**
+	 * One case per Display Name Format, each with its own terms.
+	 *
+	 * @return array
+	 */
+	public function name_leak_format_provider() {
+		return array(
+			'First Name & Last Name format' => array( 'first_last_name', 'Alexfl', 'Quillfeatherfl', 'alexflnick' ),
+			'First Name format'             => array( 'first_name', 'Alexfn', 'Quillfeatherfn', 'alexfnnick' ),
+			'Nickname format'               => array( 'nickname', 'Alexnk', 'Quillfeathernk', 'alexnknick' ),
+		);
+	}
+	/**
+	 * The visibility-table probe has THREE answers, and the two empty ones are opposites.
+	 *
+	 * A MISSING table is the pre-migration shape of an install: nobody has a row, visibility
+	 * resolves from the `bp_xprofile_visibility_levels` user meta, and every caller carries on
+	 * filtering normally. A FAILED probe is not an answer at all - the table may be there and full
+	 * of restricting rows - so the callers that cannot resolve their candidate set without it have
+	 * to withhold their leg instead. Collapsing the two, which is what a plain bool does, turns the
+	 * per-member half of the name-search protection off for the whole request on the one
+	 * configuration every real community is in.
+	 *
+	 * The failure is also deliberately NOT memoised, so the next call re-probes rather than serving
+	 * a transient error for the rest of the request.
+	 *
+	 * @group bb_search_visibility
+	 */
+	public function test_the_visibility_table_probe_is_tri_state_and_a_failed_probe_is_not_memoised() {
+		global $wpdb;
+
+		$memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'table_exists_cache' );
+		$memo->setAccessible( true );
+		$memo_backup = $memo->getValue();
+
+		$bp             = buddypress();
+		$table_backup   = isset( $bp->profile->table_name_visibility ) ? $bp->profile->table_name_visibility : null;
+		$user_id        = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather' );
+		$like_patterns  = array( '%Quillfeather%' );
+
+		$this->set_current_user( 0 );
+
+		$break_probe = function ( $query ) {
+			if ( 0 === stripos( ltrim( (string) $query ), 'SHOW TABLES LIKE' ) ) {
+				return 'SHOW TABLES LIKE FROM __bb_not_sql__';
+			}
+
+			return $query;
+		};
+
+		try {
+			// (a) Healthy install: the table is there.
+			$memo->setValue( null, null );
+			$this->assertTrue(
+				BB_XProfile_Visibility::visibility_table_exists(),
+				'Fixture: the visibility table is missing, so nothing below is what it claims to be.'
+			);
+
+			// (b) A probe that could not answer reports null - never false - and leaves the memo
+			// empty so the next call asks again.
+			$memo->setValue( null, null );
+			$suppress = $wpdb->suppress_errors( true );
+			add_filter( 'query', $break_probe );
+
+			try {
+				$failed = BB_XProfile_Visibility::visibility_table_exists();
+
+				$this->assertNull( $failed, 'A failed probe was reported as an answer.' );
+				$this->assertNull( $memo->getValue(), 'A failed probe was memoised, so the rest of the request cannot recover from it.' );
+
+				// While the question is unanswered, the producers that need the candidate set fail
+				// closed rather than serving matches they could not verify.
+				$this->assertFalse(
+					bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, 0 ),
+					'An unanswered probe was treated as "no restricting rows" and the display_name leg was served.'
+				);
+				$this->assertFalse(
+					bb_xprofile_filter_possible_hidden_users( array( $user_id ) ),
+					'An unanswered probe was treated as "no restricting rows" and the narrowing answered anyway.'
+				);
+			} finally {
+				remove_filter( 'query', $break_probe );
+				$wpdb->suppress_errors( $suppress );
+			}
+
+			// The failure was not memoised, so a healthy call straight afterwards resolves again.
+			$this->assertTrue(
+				BB_XProfile_Visibility::visibility_table_exists(),
+				'The probe did not retry after a failure, so one transient error stands for the whole request.'
+			);
+
+			// (c) A genuinely ABSENT table is the opposite case: it is an answer, it IS memoised,
+			// and the callers carry on filtering from the user meta instead of withholding.
+			$memo->setValue( null, null );
+			$bp->profile->table_name_visibility = $wpdb->prefix . 'bb_no_such_visibility_table';
+
+			$this->assertFalse(
+				BB_XProfile_Visibility::visibility_table_exists(),
+				'An absent table must be reported as an answer, not as an unresolved probe.'
+			);
+			$this->assertFalse( $memo->getValue(), 'An absent table is a stable answer and must be memoised.' );
+
+			$this->assertIsArray(
+				bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, 0 ),
+				'A pre-migration install was treated as a read failure and lost its whole display_name leg.'
+			);
+			$this->assertNotFalse(
+				bb_xprofile_filter_possible_hidden_users( array( $user_id ) ),
+				'A pre-migration install was treated as a read failure by the narrowing.'
+			);
+		} finally {
+			if ( null === $table_backup ) {
+				unset( $bp->profile->table_name_visibility );
+			} else {
+				$bp->profile->table_name_visibility = $table_backup;
+			}
+
+			$memo->setValue( null, $memo_backup );
+		}
+	}
+
+	/**
+	 * Both memos behind the core-author redaction are keyed by the Display Name Format.
+	 *
+	 * The format decides on its own whether the surname is part of the visible name at all, and one
+	 * request can see more than one of them: `bp_core_display_name_format` and
+	 * `pre_option_bp-display-name-format` are both filterable. A memo keyed by member and viewer
+	 * alone therefore serves the first format's answer for the rest of the request - on the author
+	 * archive, its feed, `the_author` in a loop and the SEO name map alike.
+	 *
+	 * @group bb_search_visibility
+	 * @group bb_core_author_surfaces
+	 */
+	public function test_the_core_author_name_memos_are_keyed_by_the_display_name_format() {
+		$author = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather', 'Alex' );
+
+		// Under the Nickname format the visible name is the xprofile Nickname FIELD, so store one.
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, 'quillnick' );
+
+		$this->set_current_user( 0 );
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$first = bb_core_get_redacted_core_author_name( $author );
+
+		$this->assertSame( 'Alex', $first, 'Fixture: the surname is not being withheld under the first format.' );
+
+		bp_update_option( 'bp-display-name-format', 'nickname' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$second = bb_core_get_redacted_core_author_name( $author );
+
+		$this->assertSame(
+			'quillnick',
+			$second,
+			'The per-request memo served the first format\'s answer after the format changed.'
+		);
+
+		// The SEO name map keeps a memo of its own, on the singleton, and has to be keyed the same
+		// way - it is the one that runs once per author for a whole archive page.
+		$helper = $this->existing_seo_helper_instance();
+
+		if ( null === $helper ) {
+			$this->markTestIncomplete( 'Nothing in this process instantiated BB_SEO_Helpers, so its memo cannot be observed here.' );
+		}
+
+		$name_map = new ReflectionMethod( 'BB_SEO_Helpers', 'get_name_map' );
+		$name_map->setAccessible( true );
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$map_first = $name_map->invoke( $helper, array( $author ) );
+
+		$this->assertSame(
+			array( 'Alex Quillfeather' => 'Alex' ),
+			$map_first,
+			'Fixture: the SEO name map is not redacting under the first format.'
+		);
+
+		bp_update_option( 'bp-display-name-format', 'nickname' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$map_second = $name_map->invoke( $helper, array( $author ) );
+
+		$this->assertSame(
+			array( 'Alex Quillfeather' => 'quillnick' ),
+			$map_second,
+			'The SEO name map served the first format\'s answer after the format changed.'
+		);
+	}
+
 }

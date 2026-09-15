@@ -878,17 +878,27 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		// forum-imported users. The no-leak guarantee must hold under EVERY Display Name Format
 		// option and both glue orders, so changing bp-display-name-format (or which fields are the
 		// first/last name) can never reopen the leak. 'annanick' is the safe fallback across the
-		// board: dropped-glue -> empty first-name field -> nickname; and the nickname format returns
-		// the nickname outright.
+		// board: under the two name formats the dropped glue leaves an empty first-name field, which
+		// falls through to the `nickname` user META ('annanick'); under the Nickname format the
+		// visible name is the xprofile Nickname FIELD ('annafield'), which is what the canonical
+		// resolver bp_xprofile_get_member_display_name() reads for that format. The two sources are
+		// given deliberately different values so this leg cannot pass by reading the wrong one - they
+		// drift apart on any site running with profile syncing off, and the product ships a repair
+		// tool for exactly that drift.
 		$fn_id   = bp_xprofile_firstname_field_id();
 		$ln_id   = bp_xprofile_lastname_field_id();
-		$formats = array( 'first_name', 'first_last_name', 'nickname' );
+		$nick_id = bp_xprofile_nickname_field_id();
+		$labels  = array(
+			'first_name'      => 'annanick',
+			'first_last_name' => 'annanick',
+			'nickname'        => 'annafield',
+		);
 		$glues   = array(
 			'AnnaSmith', // surname suffix (first_last order).
 			'SmithAnna', // surname prefix (last_first order).
 		);
 
-		foreach ( $formats as $format ) {
+		foreach ( $labels as $format => $expected ) {
 			bp_update_option( 'bp-display-name-format', $format );
 
 			foreach ( $glues as $display ) {
@@ -899,7 +909,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				// first name genuinely empty.
 				xprofile_set_field_data( $ln_id, $u, 'Smith' );
 				xprofile_set_field_data( $fn_id, $u, '' );
+				xprofile_set_field_data( $nick_id, $u, 'annafield' );
 				xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
+
+				// Fixture: the field and the meta really do hold different values, so the Nickname
+				// leg below is answered by one source and not the other.
+				$this->assertSame( 'annafield', xprofile_get_field_data( $nick_id, $u ), 'Fixture: the Nickname field was not stored.' );
+				$this->assertSame( 'annanick', get_user_meta( $u, 'nickname', true ), 'Fixture: the nickname meta was not stored.' );
 
 				// Drift the stored column exactly as a direct SQL import would, bypassing every sync.
 				$wpdb->update( $wpdb->users, array( 'display_name' => $display ), array( 'ID' => $u ) );
@@ -910,7 +926,21 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				$guest = bp_core_get_user_displayname( $u, 0 );
 
 				$this->assertStringNotContainsStringIgnoringCase( 'smith', $guest, "leak for '{$display}' under format '{$format}'" );
-				$this->assertSame( 'annanick', $guest, "fallback for '{$display}' under format '{$format}'" );
+				$this->assertSame( $expected, $guest, "fallback for '{$display}' under format '{$format}'" );
+
+				// Under the Nickname format nothing about the name is viewer-dependent - the surname
+				// is not part of anybody's visible name - so the guest label has to be the same
+				// string a logged-in member is shown. A guest-only source for this branch is a label
+				// that drifts between the two audiences, which is the defect this leg pins.
+				if ( 'nickname' === $format ) {
+					$member                               = self::factory()->user->create();
+					$GLOBALS['bb_default_display_avatar'] = true;
+					$this->assertSame(
+						bp_core_get_user_displayname( $u, $member ),
+						$guest,
+						"the guest and member labels disagree under format '{$format}'"
+					);
+				}
 			}
 		}
 	}
@@ -936,14 +966,19 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function test_get_user_displayname_empty_last_name_field_does_not_leak_drifted_surname() {
 		global $wpdb;
 
-		$fn_id = bp_xprofile_firstname_field_id();
-		$ln_id = bp_xprofile_lastname_field_id();
+		$fn_id   = bp_xprofile_firstname_field_id();
+		$ln_id   = bp_xprofile_lastname_field_id();
+		$nick_id = bp_xprofile_nickname_field_id();
 
-		// format => expected guest label for a hidden, EMPTY last name with a drifted column.
+		// format => expected guest label for a hidden, EMPTY last name with a drifted column. The
+		// xprofile Nickname FIELD and the `nickname` user META are given different values on
+		// purpose: under the Nickname format the visible name is the field, which is what the
+		// canonical resolver bp_xprofile_get_member_display_name() reads, so a leg answered from the
+		// meta instead would show this member one name to a guest and another to a member.
 		$cases = array(
-			'first_name'      => 'Peter',    // first-name field (visible), never the drifted column.
-			'first_last_name' => 'Peter',    // last name empty + hidden -> first name only.
-			'nickname'        => 'petenick', // nickname field, drift irrelevant.
+			'first_name'      => 'Peter',     // first-name field (visible), never the drifted column.
+			'first_last_name' => 'Peter',     // last name empty + hidden -> first name only.
+			'nickname'        => 'petefield', // Nickname FIELD, drift irrelevant.
 		);
 
 		foreach ( $cases as $format => $expected ) {
@@ -957,7 +992,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			// the first_last_name case). Set directly, no profile_update sync.
 			xprofile_set_field_data( $fn_id, $u, 'Peter' );
 			xprofile_set_field_data( $ln_id, $u, '' );
+			xprofile_set_field_data( $nick_id, $u, 'petefield' );
 			xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
+
+			// Fixture: the two nickname sources really do differ, so the Nickname leg is answered by
+			// one of them and not the other.
+			$this->assertSame( 'petefield', xprofile_get_field_data( $nick_id, $u ), 'Fixture: the Nickname field was not stored.' );
+			$this->assertSame( 'petenick', get_user_meta( $u, 'nickname', true ), 'Fixture: the nickname meta was not stored.' );
 
 			// Drift the stored column exactly as a direct SQL import would, bypassing every sync.
 			$wpdb->update( $wpdb->users, array( 'display_name' => 'Peter Zebrastripe' ), array( 'ID' => $u ) );
@@ -969,6 +1010,18 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 			$this->assertStringNotContainsStringIgnoringCase( 'zebrastripe', $guest, "empty-last-name leak under format '{$format}'" );
 			$this->assertSame( $expected, $guest, "empty-last-name resolution under format '{$format}'" );
+
+			// Under the Nickname format the label is not viewer-dependent, so the guest has to be
+			// shown the same string a logged-in member is.
+			if ( 'nickname' === $format ) {
+				$member                               = self::factory()->user->create();
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->assertSame(
+					bp_core_get_user_displayname( $u, $member ),
+					$guest,
+					"the guest and member labels disagree under format '{$format}'"
+				);
+			}
 		}
 	}
 
@@ -2021,6 +2074,141 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * Create a member whose Last Name is withheld from every viewer except a moderator.
+	 *
+	 * The 'loggedin' fixture the rest of this class uses cannot exercise the wp-admin exemption:
+	 * the only viewer who can reach an admin screen is logged in, and nothing is hidden from them
+	 * at that level, so the function returns null whatever the exemption decides.
+	 *
+	 * @return int User ID.
+	 */
+	protected function create_member_with_adminsonly_last_name() {
+		$u = self::factory()->user->create();
+
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'adminsonly' );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+
+		return $u;
+	}
+
+	/**
+	 * The wp-admin exemption from the core-author redaction needs BOTH of its conditions.
+	 *
+	 * wp-admin is left alone on purpose - it renders names core's own way and user management needs
+	 * the canonical column - but admin-ajax.php serves the front end as well and is_admin() reports
+	 * true on it. Following is_admin() alone therefore hands the raw column to every front-end AJAX
+	 * response, and this community renders most of its front end through admin-ajax.php. Following
+	 * the capability alone is the same defect moved: a member holding `list_users` would read one
+	 * name on a page and another in the AJAX call that page fires.
+	 *
+	 * The fixture is a SUBSCRIBER granted `list_users`, because an administrator is invariant here -
+	 * bb_bypass_name_privacy_for_admin() exempts them from name privacy before this decision is
+	 * reached, so every row would read null and prove nothing.
+	 *
+	 * Each row uses its own author: the answer is memoised per member, viewer and format, so reusing
+	 * one member would serve later rows from the first row's memo.
+	 *
+	 * @group bb_name_privacy
+	 * @group bb_core_author_surfaces
+	 */
+	public function test_admin_exemption_requires_both_a_wp_admin_request_and_the_capability() {
+		$viewer = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$plain  = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		$privileged = new WP_User( $viewer );
+		$privileged->add_cap( 'list_users' );
+
+		$screen_backup      = isset( $GLOBALS['current_screen'] ) ? $GLOBALS['current_screen'] : null;
+		$referer_backup     = isset( $_REQUEST['_wp_http_referer'] ) ? $_REQUEST['_wp_http_referer'] : null;
+		$request_uri_backup = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : null;
+
+		$_SERVER['REQUEST_URI'] = '/wp-admin/admin-ajax.php';
+
+		// screen, AJAX, referer, viewer, expected answer.
+		$rows = array(
+			'front-end page load'                 => array( 'front', false, null, $viewer, 'Alex' ),
+			'wp-admin page load'                  => array( 'dashboard', false, null, $viewer, null ),
+			'admin-ajax fired from wp-admin'      => array( 'dashboard', true, admin_url( 'users.php' ), $viewer, null ),
+			'admin-ajax fired from the front end' => array( 'dashboard', true, home_url( '/members/alex/' ), $viewer, 'Alex' ),
+			'admin-ajax with no referer'          => array( 'dashboard', true, null, $viewer, 'Alex' ),
+			'admin-ajax with a foreign referer'   => array( 'dashboard', true, 'https://not-this-site.example.net/wp-admin/users.php', $viewer, 'Alex' ),
+			'admin-ajax without list_users'       => array( 'dashboard', true, admin_url( 'users.php' ), $plain, 'Alex' ),
+		);
+
+		try {
+			foreach ( $rows as $label => $row ) {
+				list( $screen, $doing_ajax, $referer, $row_viewer, $expected ) = $row;
+
+				$author = $this->create_member_with_adminsonly_last_name();
+
+				$this->set_current_user( $row_viewer );
+				set_current_screen( $screen );
+
+				if ( null === $referer ) {
+					unset( $_REQUEST['_wp_http_referer'] );
+				} else {
+					$_REQUEST['_wp_http_referer'] = $referer;
+				}
+
+				if ( $doing_ajax ) {
+					add_filter( 'wp_doing_ajax', '__return_true' );
+				}
+
+				// Fixture: the row really is in the admin/AJAX state it is named for, so a row that
+				// passes cannot be passing because the staging did not take.
+				$this->assertSame( 'front' !== $screen, is_admin(), "Fixture: is_admin() is wrong for '{$label}'." );
+				$this->assertSame( $doing_ajax, wp_doing_ajax(), "Fixture: wp_doing_ajax() is wrong for '{$label}'." );
+
+				$answer = bb_core_get_redacted_core_author_name( $author );
+
+				if ( $doing_ajax ) {
+					remove_filter( 'wp_doing_ajax', '__return_true' );
+				}
+
+				$this->assertSame( $expected, $answer, "The wp-admin exemption decided '{$label}' wrongly." );
+
+				if ( null !== $expected ) {
+					$this->assertStringNotContainsStringIgnoringCase(
+						'Quillfeather',
+						(string) $answer,
+						"The withheld surname was served on '{$label}'."
+					);
+				}
+			}
+		} finally {
+			remove_filter( 'wp_doing_ajax', '__return_true' );
+
+			if ( null === $referer_backup ) {
+				unset( $_REQUEST['_wp_http_referer'] );
+			} else {
+				$_REQUEST['_wp_http_referer'] = $referer_backup;
+			}
+
+			if ( null === $request_uri_backup ) {
+				unset( $_SERVER['REQUEST_URI'] );
+			} else {
+				$_SERVER['REQUEST_URI'] = $request_uri_backup;
+			}
+
+			if ( null === $screen_backup ) {
+				unset( $GLOBALS['current_screen'] );
+			} else {
+				$GLOBALS['current_screen'] = $screen_backup;
+			}
+		}
+	}
+
+	/**
 	 * The guest sentinel is a non-existent user ID, so every listener on the hidden-level filters
 	 * has to survive it. Platform's own listener did not: get_userdata( -1 ) is false, reading
 	 * ->roles off it is null, and in_array( 'administrator', null, true ) is a PHP 8 TypeError.
@@ -2164,5 +2352,63 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				unset( buddypress()->active_components['invites'] );
 			}
 		}
+	}
+
+	/**
+	 * An email body rendered without a usable `receiver-user.id` token must resolve member names
+	 * for the PUBLIC viewer, never for whoever's request is sending the mail.
+	 *
+	 * Every token callback in BP_Email_Tokens runs once per recipient, but inside the request of
+	 * whoever triggered the send - usually the author, who is never denied any part of their own
+	 * name. Passing 0 as the viewer means "resolve the viewer from the current request", which is
+	 * that sender's session, so a token set carrying no recipient would render the SENDER'S view of
+	 * a name into a stranger's inbox. bb_get_receiver_user_id() answers bb_core_guest_viewer_id()
+	 * instead, and a recipient token that is present but empty is the same absence.
+	 *
+	 * No bundled fan-out omits the token today - each one sets it from a recipient row - so the
+	 * token sets here are constructed, as a caller composing an email of its own produces them.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_email_receiver_viewer_falls_back_to_the_guest_viewer() {
+		$author = $this->create_member_with_hidden_last_name();
+		$sender = self::factory()->user->create();
+
+		// The request belongs to the sender: a logged-in member, who may see the hidden surname.
+		$this->set_current_user( $sender );
+		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $author, 0 ) );
+
+		$method = new ReflectionMethod( 'BP_Email_Tokens', 'bb_get_receiver_user_id' );
+		$method->setAccessible( true );
+
+		// Built without the constructor: it registers the live email filters, which this has no use
+		// for and must not leave behind.
+		$reflection   = new ReflectionClass( 'BP_Email_Tokens' );
+		$email_tokens = $reflection->newInstanceWithoutConstructor();
+
+		$no_recipient = array(
+			'absent' => array(),
+			'zero'   => array( 'receiver-user.id' => 0 ),
+			'empty'  => array( 'receiver-user.id' => '' ),
+		);
+
+		foreach ( $no_recipient as $label => $token_set ) {
+			$viewer = (int) $method->invoke( $email_tokens, $token_set );
+
+			$this->assertSame(
+				bb_core_guest_viewer_id(),
+				$viewer,
+				"a {$label} recipient token resolved a viewer other than the guest"
+			);
+			$this->assertSame(
+				'Alex',
+				bp_core_get_user_displayname( $author, $viewer ),
+				"a {$label} recipient token rendered the sender's view of the name"
+			);
+		}
+
+		// A real recipient is still resolved as themselves, and still sees what a member may see.
+		$this->assertSame( $sender, (int) $method->invoke( $email_tokens, array( 'receiver-user.id' => $sender ) ) );
+		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $author, $sender ) );
 	}
 }

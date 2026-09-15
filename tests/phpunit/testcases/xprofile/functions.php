@@ -1543,8 +1543,7 @@ Bar!';
 	}
 
 	/**
-	 * A failed visibility query must be indistinguishable from "everyone is a candidate", never
-	 * from "nobody restricted anything".
+	 * A failed visibility query must report "could not resolve", never "nobody restricted anything".
 	 *
 	 * bb_xprofile_filter_possible_hidden_users() narrows the set of members whose search match has
 	 * to be re-tested against their viewer-visible name. Its callers treat an array as an
@@ -1555,6 +1554,12 @@ Bar!';
 	 * It cannot be detected from the return value of the query: wpdb::get_col() initialises its
 	 * return to array() and never hands back null, so an error and an empty result set are the same
 	 * value. This pins the $wpdb->last_error check that replaced that dead comparison.
+	 *
+	 * The sentinel is three-valued and the two non-array answers mean opposite things, so they are
+	 * pinned separately: `false` here, "the narrowing could not be RESOLVED", on which the callers
+	 * withhold their leg; `null` in the companion below, "the narrowing does not APPLY", on which
+	 * the callers keep their whole set. Collapsing the two is what turned one transient read
+	 * failure into a 90% result cull.
 	 *
 	 * @group xprofile
 	 * @group bb_xprofile_filter_possible_hidden_users
@@ -1589,10 +1594,140 @@ Bar!';
 			$wpdb->suppress_errors( $suppress );
 		}
 
-		$this->assertNull(
+		$this->assertFalse(
 			$result,
-			'A failed visibility query must return null so the caller keeps its whole candidate set, rather than an empty array it would treat as an authoritative narrowing.'
+			'A failed visibility query must return false so the caller withholds its leg, rather than an empty array it would treat as an authoritative narrowing.'
 		);
+	}
+
+	/**
+	 * A community-wide forced default means the narrowing does not APPLY, which is not a failure.
+	 *
+	 * `allow_custom_visibility = 'disabled'` makes the admin default replace every member's own
+	 * setting on both branches of bp_xprofile_get_fields_by_visibility_levels(), so the field is
+	 * restricted for the whole community and no candidate set is smaller than the set handed in.
+	 * The answer is null, and the callers keep everything they were given and let their own budget
+	 * decide - reading it as `false` would withhold the leg on an ordinary configuration, and
+	 * reading it as an empty array would publish the names.
+	 *
+	 * The companion to the query-error test above: the two answers are one character apart in the
+	 * callers and mean opposite things, so both directions are pinned.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_filter_possible_hidden_users_returns_null_when_a_forced_default_disables_narrowing() {
+		$field_id = bp_xprofile_lastname_field_id();
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+
+		$default_backup = bp_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
+		$allow_backup   = bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' );
+
+		// Both members hold their own, entirely public, row - so the only thing that can make them
+		// candidates is the forced default.
+		foreach ( $user_ids as $user_id ) {
+			xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+		}
+
+		bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
+		bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
+		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+		try {
+			// Control: with custom visibility allowed the default does not reach a member who has
+			// their own row, so the narrowing still applies and returns an array.
+			$this->assertIsArray(
+				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				'With custom visibility allowed the narrowing must still apply.'
+			);
+
+			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'disabled' );
+			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+			$this->assertNull(
+				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				'A forced community-wide default must stand the narrowing down with null, not report a read failure or an authoritative empty set.'
+			);
+		} finally {
+			bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', $default_backup );
+			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', $allow_backup );
+			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+		}
+	}
+
+	/**
+	 * The user_data_exists() memo must not be filled from a read that failed.
+	 *
+	 * BB_XProfile_Visibility::prime_user_data_exists_cache() fills, for a whole batch, the probe
+	 * that decides which branch bp_xprofile_get_fields_by_visibility_levels() takes per member. A
+	 * failed query returns the same empty result as "nobody has a row" - wpdb::get_col() never
+	 * hands back null - so memoising it would tell every later caller in the request that a member
+	 * resolves from user meta when they may in fact hold a restricting row, and a member whose name
+	 * field is hidden would be judged on meta they never wrote and served.
+	 *
+	 * Leaving the memo unfilled costs an uncached read per member and is the fail-closed direction.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_prime_user_data_exists_cache_does_not_memoise_a_failed_read() {
+		global $wpdb;
+
+		if ( ! class_exists( 'BB_XProfile_Visibility' ) ) {
+			$this->markTestSkipped( 'The visibility class is not available in this configuration.' );
+		}
+
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+
+		$memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'user_data_exists_cache' );
+		$memo->setAccessible( true );
+
+		$break_query = function ( $query ) {
+			if ( false !== strpos( $query, 'DISTINCT user_id' ) && false !== stripos( $query, 'visibility' ) ) {
+				return 'SELECT DISTINCT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		BB_XProfile_Visibility::flush_field_ids_cache();
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$after_failure = $memo->getValue();
+
+		foreach ( $user_ids as $user_id ) {
+			$this->assertArrayNotHasKey(
+				$user_id,
+				$after_failure,
+				'A failed batch read was memoised, so every later caller in this request reads "no visibility row" for a member who may hold one.'
+			);
+		}
+
+		// Control: the healthy read does fill the memo, so the assertion above is about the error
+		// handling rather than about the priming never working.
+		BB_XProfile_Visibility::flush_field_ids_cache();
+		BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+
+		$after_success = $memo->getValue();
+
+		foreach ( $user_ids as $user_id ) {
+			$this->assertArrayHasKey(
+				$user_id,
+				$after_success,
+				'A healthy batch read did not fill the memo it exists to fill.'
+			);
+		}
+
+		BB_XProfile_Visibility::flush_field_ids_cache();
 	}
 
 }

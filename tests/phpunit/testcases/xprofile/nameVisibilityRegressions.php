@@ -196,10 +196,10 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 	 * always returned the FORMAT-assembled name rather than the stored column, and under
 	 * "First Name & Last Name" with both fields populated the rebuild produces the same string - so a
 	 * test of it would pass whether or not the gate is fixed. Adding one would assert nothing. The
-	 * change there is a consistency fix, verified by reading, and the two paths only observably
-	 * diverge under the Nickname format, where bp_xprofile_get_member_display_name() reads the
-	 * xprofile Nickname FIELD and bb_core_build_visible_display_name() reads the nickname user META.
-	 * That divergence is its own open issue and is not what these tests cover.
+	 * change there is a consistency fix, verified by reading. Both paths read the xprofile Nickname
+	 * FIELD under the Nickname format, so they agree there too; the guest-path leg that used to read
+	 * the `nickname` user META instead is pinned in
+	 * BP_Tests_Activity_Functions_BbActivityNamePrivacy.
 	 */
 
 	/**
@@ -395,6 +395,163 @@ class BP_Tests_XProfile_NameVisibilityRegressions extends BP_UnitTestCase {
 			(int) $user_id,
 			array_map( 'intval', $after ),
 			'a fresh restriction was not seen by the narrowing'
+		);
+	}
+
+	/**
+	 * Past the budget the profile-field leg withholds exactly the CANDIDATES, and serves every
+	 * other match untouched.
+	 *
+	 * Its sibling, the display_name producer, is pinned the same way in
+	 * BP_Tests_XProfile_SearchVisibility::test_candidate_budget_also_bounds_the_per_user_visibility_sources().
+	 * One rule, two filters, and the answer past the bound has to be the same on both.
+	 *
+	 * Three answers are possible past the bound and only one of them is right, so the fixture has to
+	 * be able to tell them apart - which is why every member here matches on a PUBLIC custom field
+	 * rather than on the restricted one. The keep-test therefore keeps all five, and an unbounded run
+	 * returns the whole match set: that is the control asserted first, and without it the budget rule
+	 * could be deleted outright and this test would still pass. Only three of the five have restricted
+	 * a name field, so they alone are candidates. Slicing would re-test two of those three and hand
+	 * back all five; withholding the whole leg would hand back none; withholding the candidates hands
+	 * back exactly the two members who restricted nothing.
+	 */
+	public function test_budget_exceeded_withholds_the_field_search_candidates_not_the_whole_leg() {
+		$last_name_field_id = bp_xprofile_lastname_field_id();
+		$public_field_id    = $this->create_non_name_field();
+
+		// The Last Name default must stay public, or the members who restricted nothing become
+		// candidates too and the two groups below stop being distinguishable.
+		bp_xprofile_update_meta( $last_name_field_id, 'field', 'default_visibility', 'public' );
+
+		$restricted_ids = array();
+		for ( $i = 0; $i < 3; $i++ ) {
+			$user_id = self::factory()->user->create();
+			xprofile_set_field_data( $public_field_id, $user_id, 'Cardingley' . $i );
+			xprofile_set_field_visibility_level( $last_name_field_id, $user_id, 'adminsonly' );
+			$restricted_ids[] = (int) $user_id;
+		}
+
+		$unrestricted_ids = array();
+		for ( $i = 0; $i < 2; $i++ ) {
+			$user_id = self::factory()->user->create();
+			xprofile_set_field_data( $public_field_id, $user_id, 'Cardingley' . ( 3 + $i ) );
+			$unrestricted_ids[] = (int) $user_id;
+		}
+
+		$this->flush_visibility_caches();
+
+		$user_ids = array_merge( $restricted_ids, $unrestricted_ids );
+		$rows     = $this->matched_rows_for( $user_ids, $public_field_id );
+
+		// Fixture: the narrowing is live and names exactly the three members who restricted
+		// something. If it stood down, every match would be a candidate and the assertions below
+		// could not tell "withhold the candidates" from "withhold the leg".
+		$possible_hidden = bb_xprofile_filter_possible_hidden_users( $user_ids );
+		$this->assertIsArray( $possible_hidden, 'Fixture: the narrowing stood down, so the candidate set is the whole match set.' );
+		sort( $possible_hidden );
+		$expected_candidates = $restricted_ids;
+		sort( $expected_candidates );
+		$this->assertSame( $expected_candidates, array_map( 'intval', $possible_hidden ), 'Fixture: the candidate set is not the three restricted members.' );
+
+		// Control: under the shipped budget nothing is withheld at all, because every member matched
+		// on a field that is public to this viewer.
+		$unbounded = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+		sort( $unbounded );
+		$all_ids = $user_ids;
+		sort( $all_ids );
+		$this->assertSame( $all_ids, array_map( 'intval', $unbounded ), 'Fixture: an unbounded run must keep every match, or the bounded run below proves nothing.' );
+
+		add_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
+		$kept = bb_xprofile_filter_field_search_matches( $user_ids, $rows, 0 );
+		remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', array( $this, 'force_candidate_limit_of_two' ) );
+
+		sort( $kept );
+		$expected_kept = $unrestricted_ids;
+		sort( $expected_kept );
+
+		$this->assertSame(
+			$expected_kept,
+			array_map( 'intval', $kept ),
+			'Past the budget the profile-field leg must withhold the candidates and nothing else - not a slice of them, and not the whole match set.'
+		);
+	}
+
+	/**
+	 * A MISSING visibility table is the pre-migration shape, not an error.
+	 *
+	 * The two answers are one character apart in the callers and mean opposite things, and this is
+	 * the direction that is easy to get wrong: a read that FAILED cannot be resolved and the leg is
+	 * withheld, while a table that is not there yet resolves perfectly well - every member's
+	 * visibility comes from the `bp_xprofile_visibility_levels` user meta, which is exactly what
+	 * BB_XProfile_Visibility::user_data_exists() reports for such a site. Failing closed on the
+	 * absent table would withhold member search on every install that has not migrated yet.
+	 *
+	 * Both directions are asserted here, against the same input, so they cannot be confused: table
+	 * missing narrows normally, read failing returns false.
+	 */
+	public function test_a_missing_visibility_table_filters_normally_through_the_user_meta_branch() {
+		global $wpdb;
+
+		$field_id   = bp_xprofile_lastname_field_id();
+		$restricted = self::factory()->user->create();
+		$permitted  = self::factory()->user->create();
+
+		xprofile_set_field_visibility_level( $field_id, $restricted, 'adminsonly' );
+		xprofile_set_field_visibility_level( $field_id, $permitted, 'public' );
+		$this->flush_visibility_caches();
+
+		$levels   = array( 'friends', 'loggedin', 'adminsonly' );
+		$user_ids = array( $restricted, $permitted );
+
+		$table_memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'table_exists_cache' );
+		$table_memo->setAccessible( true );
+		$table_memo->setValue( null, false );
+
+		try {
+			$narrowed = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+
+			$this->assertIsArray(
+				$narrowed,
+				'An install whose visibility table has not been created yet had its search leg withheld - a missing table is the pre-migration shape, not a read failure.'
+			);
+			$this->assertContains(
+				(int) $restricted,
+				array_map( 'intval', $narrowed ),
+				'The user-meta branch did not recognise a member who restricted the field, so the match would have been served unchecked.'
+			);
+			$this->assertNotContains(
+				(int) $permitted,
+				array_map( 'intval', $narrowed ),
+				'The user-meta branch made a candidate of a member who restricted nothing.'
+			);
+		} finally {
+			$table_memo->setValue( null, null );
+			$this->flush_visibility_caches();
+		}
+
+		// The other direction, on the same input: the table is there, the read fails, and that is
+		// the one answer that cannot be worked around.
+		$break_query = function ( $query ) {
+			if ( false !== strpos( $query, 'DISTINCT user_id' ) && false !== stripos( $query, 'visibility' ) ) {
+				return 'SELECT DISTINCT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			$failed = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$this->assertFalse(
+			$failed,
+			'A failed read was reported as a narrowing, which is the answer that publishes the names.'
 		);
 	}
 }

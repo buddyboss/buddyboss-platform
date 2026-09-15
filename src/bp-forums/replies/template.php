@@ -1163,12 +1163,11 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
  *                            is someone other than the current user - an email fan-out resolves one
  *                            author's name for many different recipients, and profile-field
  *                            visibility is evaluated per recipient.
- *                            Feed output (the RSS <dc:creator> element in
- *                            bp-forums/replies/functions.php) deliberately passes nothing: a feed's
- *                            audience IS the requester, so an anonymous fetch resolves as a guest
- *                            and a subscribed member as themselves. Pinning it to
- *                            bb_core_guest_viewer_id() would show a logged-in subscriber less than
- *                            the site shows them on screen.
+ *                            The RSS <dc:creator> element resolves through WordPress' own
+ *                            the_author() instead, as it always has: a feed's audience IS the
+ *                            requester, so the `the_author` filter already answers for that viewer,
+ *                            it stays the hook third parties can reach there, and it keeps an
+ *                            anonymous post unnamed in a machine-readable feed.
  *
  * @return string Reply's author's display name
  * @uses                           bbp_is_reply_anonymous() To check if the reply is by an

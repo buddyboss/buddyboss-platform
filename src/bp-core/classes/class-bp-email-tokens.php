@@ -1675,7 +1675,7 @@ class BP_Email_Tokens {
 		// recipient - not for whoever's request triggered the send. Without this the header line of
 		// the email is redacted while the discussion card below it still carries the full name.
 		// token__reply_content() already does exactly this.
-		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 0;
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
 
 		$settings = bp_email_get_appearance_settings();
 
@@ -2337,7 +2337,7 @@ class BP_Email_Tokens {
 		}
 
 		// Per-recipient, for the same reason as token__discussion_content().
-		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 0;
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
 
 		$settings = bp_email_get_appearance_settings();
 
@@ -3070,17 +3070,25 @@ class BP_Email_Tokens {
 	 * whoever triggered the send - usually the author, who is never denied any part of their own
 	 * name. Resolving a member's display name without a viewer therefore renders the AUTHOR'S view
 	 * of it into every recipient's inbox, past the profile-field visibility the site enforces on
-	 * screen. `receiver-user.id` is set by every fan-out that sends these emails; when
-	 * it is absent this returns 0, which is the pre-existing "use the current request" behaviour.
+	 * screen. `receiver-user.id` is set by every fan-out that sends these emails.
+	 *
+	 * When it is absent the fallback is the GUEST viewer, not 0. Throughout this API 0 does not mean
+	 * "logged out", it means "resolve the viewer from the current request" - which is the sender's
+	 * session, the one viewer this must never be. bp_send_email() does not inject the token, so a
+	 * caller that composes an email of its own reaches this, and the fallback has to be the safe
+	 * direction: the public view withholds a name part from a recipient permitted to see it, which
+	 * is recoverable, where the sender's view publishes one nobody else may see.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $tokens Email tokens.
 	 *
-	 * @return int Recipient user ID, or 0 when the email carries no recipient token.
+	 * @return int Recipient user ID, or the guest viewer ID when the email carries no recipient token.
 	 */
 	protected function bb_get_receiver_user_id( $tokens ) {
-		return isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 0;
+		$receiver_id = isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 0;
+
+		return ( $receiver_id > 0 ) ? $receiver_id : bb_core_guest_viewer_id();
 	}
 
 }
