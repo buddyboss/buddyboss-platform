@@ -981,6 +981,14 @@ class BB_Admin_Settings_Ajax {
 				// the plugin folder slug (e.g. "buddyboss-member-blogging").
 				'addon_action'              => ! empty( $field['addon_action'] ) ? sanitize_key( $field['addon_action'] ) : null,
 				'addon_slug'                => ! empty( $field['addon_slug'] ) ? sanitize_key( $field['addon_slug'] ) : null,
+				// Which `window.bbAdminData` nonce the handler named above expects.
+				// Left null for the Mothership handlers (mosh_addon_*), whose nonce
+				// (`addonNonce`) is AddonActivateButton's default; Platform-owned
+				// handlers set it to 'ajaxNonce'.
+				'addon_nonce_key'           => ! empty( $field['addon_nonce_key'] ) ? sanitize_text_field( $field['addon_nonce_key'] ) : null,
+				// Label while the request is in flight. Without it the button reads
+				// "Activating…" during an install, which is the wrong verb.
+				'addon_busy_label'          => ! empty( $field['addon_busy_label'] ) ? sanitize_text_field( $field['addon_busy_label'] ) : null,
 				'related_fields'            => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				// Per-option descriptions for select fields (description swaps on value change).
 				// map_deep handles nested structures safely; each leaf string is kses-filtered.
