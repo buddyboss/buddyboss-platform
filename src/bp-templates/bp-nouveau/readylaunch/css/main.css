@@ -10564,7 +10564,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   content: "\e4d6";
 }
 
-.bb-rl-group-admin-subnav .bb-rl-admin-subnav-item#bb-rl-forum-groups-li a::before {
+.bb-rl-group-admin-subnav .bb-rl-admin-subnav-item.bb-rl-admin-subnav-item--forum a::before {
   content: "\e4d6";
 }
 
