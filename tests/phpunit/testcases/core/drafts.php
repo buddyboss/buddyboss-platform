@@ -163,18 +163,18 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $reply_id, '_bbp_topic_id', $topic_id );
 
 		// The five shapes the forum composer builds.
-		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_topic' ) );
-		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_reply' ) );
-		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_discussion_' . $forum_id ) );
-		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_reply_' . $topic_id ) );
-		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_reply_' . $topic_id . '_' . $reply_id ) );
+		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_topic' ) );
+		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply' ) );
+		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id ) );
+		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id ) );
+		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id . '_' . $reply_id ) );
 
 		// Wrong post types and unknown IDs: rejected.
-		$this->assertFalse( bb_draft_validate_topic_reply_data_key( 'draft_discussion_' . $topic_id ) );
-		$this->assertFalse( bb_draft_validate_topic_reply_data_key( 'draft_reply_' . $forum_id ) );
-		$this->assertFalse( bb_draft_validate_topic_reply_data_key( 'draft_reply_' . $topic_id . '_' . $forum_id ) );
-		$this->assertFalse( bb_draft_validate_topic_reply_data_key( 'draft_discussion_999999999' ) );
-		$this->assertFalse( bb_draft_validate_topic_reply_data_key( 'topic_' . $topic_id ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_' . $topic_id ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $forum_id ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id . '_' . $forum_id ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_999999999' ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'topic_' . $topic_id ) );
 	}
 
 	public function test_budget_eviction_removes_oldest_and_spares_third_party_meta() {
@@ -566,8 +566,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$result = bb_drafts_oneshot_batch( 0 );
 
 		$this->assertTrue( $result['complete'] );
-		$this->assertSame( 1, (int) get_option( 'bb_draft_oneshot_done' ) );
-		$this->assertFalse( get_option( 'bb_draft_oneshot_state' ), 'The persisted stage state is cleared on completion.' );
+		$this->assertSame( 1, (int) get_site_option( 'bb_draft_oneshot_done' ) );
+		$this->assertFalse( get_site_option( 'bb_draft_oneshot_state' ), 'The persisted stage state is cleared on completion.' );
 
 		$this->assertFalse( metadata_exists( 'user', $corrupt, 'draft_user' ), 'A corrupt oversized row is disposed.' );
 
@@ -1977,8 +1977,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_' . $topic_id ), 'A topic ID in a forum slot is not a forum.' );
 
 		// The bool wrapper keeps its contract.
-		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_reply_' . $topic_id ) );
-		$this->assertFalse( bb_draft_validate_topic_reply_data_key( 'draft_nonsense' ) );
+		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_nonsense' ) );
 	}
 
 	/**
@@ -2066,24 +2066,70 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
 		}
 
-		delete_option( 'bb_drafts_cleanup_on_upgrade' );
-		delete_option( 'bb_draft_oneshot_done' );
-		delete_option( 'bb_draft_oneshot_state' );
-		delete_option( 'bb_draft_cleanup_epoch' );
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_cleanup_epoch' );
 
 		// A slice that already ran inside this window must not be repeated.
-		update_option( 'bb_drafts_cleanup_on_upgrade', time(), false );
+		update_site_option( 'bb_drafts_cleanup_on_upgrade', time() );
 
 		bb_drafts_cleanup_on_upgrade();
 
-		$this->assertFalse( (bool) get_option( 'bb_draft_oneshot_done' ), 'The guard must block a second synchronous slice in the same window.' );
-		$this->assertNotEmpty( get_option( 'bb_draft_cleanup_epoch' ), 'The epoch is still recorded even when the slice is skipped.' );
+		$this->assertFalse( (bool) get_site_option( 'bb_draft_oneshot_done' ), 'The guard must block a second synchronous slice in the same window.' );
+		$this->assertNotEmpty( get_site_option( 'bb_draft_cleanup_epoch' ), 'The epoch is still recorded even when the slice is skipped.' );
 
-		// The guard is an option, not a transient: it is readable as one, and a
-		// stale one lets the slice run again.
-		$this->assertIsNumeric( get_option( 'bb_drafts_cleanup_on_upgrade' ) );
+		// The guard is an option, not a transient. This asserts the PROPERTY
+		// rather than the storage, and it has to read state the PRODUCT wrote:
+		// the seed above is this test's own write, so asserting on it was true
+		// for a transient-backed guard too.
+		//
+		// Production runs with a persistent object cache; this harness does not,
+		// and that difference HIDES the regression - set_site_transient() would
+		// silently fall back to an option and survive the flush below. Forcing
+		// the flag makes the transient path behave the way it does on a real
+		// site, which is the whole point: a transient lives in the very object
+		// cache this routine exists to repair.
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_transient( 'bb_drafts_cleanup_on_upgrade' );
 
-		update_option( 'bb_drafts_cleanup_on_upgrade', time() - ( 2 * HOUR_IN_SECONDS ), false );
+		$was_using_ext_cache = wp_using_ext_object_cache( true );
+
+		bb_drafts_cleanup_on_upgrade();
+
+		$durable_scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $durable_scheduled ) {
+			wp_unschedule_event( $durable_scheduled, 'bb_draft_oneshot' );
+		}
+
+		wp_cache_flush();
+
+		$this->assertIsNumeric(
+			get_site_option( 'bb_drafts_cleanup_on_upgrade' ),
+			'The guard the routine itself recorded must still be readable after the object cache is flushed out from under it - a transient would be gone.'
+		);
+
+		// And it must still BLOCK: a guard that survives the flush but is no
+		// longer consulted costs the same 10-second synchronous slice on every
+		// admin request in the upgrade window.
+		bb_drafts_cleanup_on_upgrade();
+
+		$this->assertFalse(
+			(bool) wp_next_scheduled( 'bb_draft_oneshot' ),
+			'A guard recorded less than an hour ago must block the repeat run, which queues its continuation before doing any work.'
+		);
+
+		wp_using_ext_object_cache( $was_using_ext_cache );
+
+		// The durability leg above drove a real slice, so rewind the one-shot
+		// state and its locks - the window leg below must start from a fresh
+		// pass or it measures the leftovers of this one.
+		delete_site_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_oneshot_done' );
+		delete_site_transient( 'bb_draft_oneshot_lock' );
+		delete_site_transient( 'bb_draft_maintenance_lock' );
+
+		update_site_option( 'bb_drafts_cleanup_on_upgrade', time() - ( 2 * HOUR_IN_SECONDS ) );
 
 		bb_drafts_cleanup_on_upgrade();
 
@@ -2099,15 +2145,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$guard_result = bb_drafts_oneshot_batch( 0 );
 		} while ( empty( $guard_result['complete'] ) && $guard_iterations < 20 );
 
-		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ), 'The pass must complete once its continuation drains.' );
+		$this->assertTrue( (bool) get_site_option( 'bb_draft_oneshot_done' ), 'The pass must complete once its continuation drains.' );
 
 		$guard_scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $guard_scheduled ) {
 			wp_unschedule_event( $guard_scheduled, 'bb_draft_oneshot' );
 		}
 
-		delete_option( 'bb_drafts_cleanup_on_upgrade' );
-		delete_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_draft_oneshot_done' );
 	}
 
 	/**
@@ -2337,9 +2383,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
 		}
 
-		delete_option( 'bb_drafts_cleanup_on_upgrade' );
-		delete_option( 'bb_draft_oneshot_done' );
-		delete_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_state' );
 		$existing = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $existing ) {
 			wp_unschedule_event( $existing, 'bb_draft_oneshot' );
@@ -2365,7 +2411,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		// The synchronous slice defers the stage-2 aggregate to cron, so the
 		// continuation is still queued and completion is not yet signalled.
-		$this->assertFalse( (bool) get_option( 'bb_draft_oneshot_done' ), 'The synchronous slice must hand stage 2 to the continuation, not run it inline.' );
+		$this->assertFalse( (bool) get_site_option( 'bb_draft_oneshot_done' ), 'The synchronous slice must hand stage 2 to the continuation, not run it inline.' );
 		$this->assertNotEmpty( wp_next_scheduled( 'bb_draft_oneshot' ), 'The deferred continuation must remain queued.' );
 
 		// Draining the continuation the way cron would completes the pass and
@@ -2376,11 +2422,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$queue_result = bb_drafts_oneshot_batch( 0 );
 		} while ( empty( $queue_result['complete'] ) && $queue_iterations < 20 );
 
-		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ) );
+		$this->assertTrue( (bool) get_site_option( 'bb_draft_oneshot_done' ) );
 		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'A completed pass must not leave a pointless cron event behind.' );
 
-		delete_option( 'bb_drafts_cleanup_on_upgrade' );
-		delete_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_draft_oneshot_done' );
 	}
 
 	/**
@@ -2905,11 +2951,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		delete_site_option( 'bb_draft_cleanup_cursor' );
-		delete_option( 'bb_draft_oneshot_state' );
 		delete_site_option( 'bb_draft_oneshot_state' );
-		delete_option( 'bb_draft_oneshot_done' );
 		delete_site_option( 'bb_draft_oneshot_done' );
-		delete_option( 'bb_drafts_cleanup_on_upgrade' );
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
 		delete_site_option( 'bb_draft_cleanup_epoch' );
 		delete_site_transient( 'bb_draft_cleanup_lock' );
@@ -4638,7 +4681,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertGreaterThan( bb_draft_max_size(), strlen( maybe_serialize( $entry ) ), 'Premise: the seeded row must exceed the cap.' );
 		$this->assertLessThanOrEqual( bb_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: shedding the poster must be enough to fit.' );
 
-		delete_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_oneshot_state' );
 		bb_drafts_oneshot_batch( 0 );
 
 		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
@@ -4681,7 +4724,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		unset( $shed['data']['video'][0]['js_preview'] );
 		$this->assertGreaterThan( bb_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: this row must still exceed the cap after shedding.' );
 
-		delete_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_oneshot_state' );
 		bb_drafts_oneshot_batch( 0 );
 
 		$this->assertEmpty(
@@ -6764,13 +6807,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertTrue( ! empty( $result['complete'] ), 'The one-shot must converge, not loop forever deferring the aggregate.' );
 		$this->assertLessThanOrEqual( $cap, $after, 'Stage 2 must trim the aggregate-oversized user under the cap.' );
-		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ), 'Completion must set the durable done marker.' );
+		$this->assertTrue( (bool) get_site_option( 'bb_draft_oneshot_done' ), 'Completion must set the durable done marker.' );
 
 		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $scheduled ) {
 			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
 		}
-		delete_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_done' );
 	}
 
 	/**
@@ -6802,7 +6845,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertTrue( ! empty( $result['complete'] ), 'The unbudgeted drain must complete in one call.' );
 		$this->assertLessThanOrEqual( $cap, $after, 'Stage 2 must run inline for the unbudgeted drain.' );
 
-		delete_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_done' );
 	}
 
 	/**
@@ -7039,6 +7082,23 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * @return void
 	 */
 	public function record_oneshot_state_updated( $option, $old_value, $value ) {
+		if ( 'bb_draft_oneshot_state' === $option ) {
+			$this->oneshot_state_writes[] = $value;
+		}
+	}
+
+	/**
+	 * Record a bb_draft_oneshot_state write (network option updated).
+	 *
+	 * Separate from {@see record_oneshot_state_updated()} because the argument
+	 * order differs: `update_site_option` passes the NEW value second, where
+	 * `updated_option` passes the old one.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  Stored value.
+	 * @return void
+	 */
+	public function record_oneshot_state_site_updated( $option, $value ) {
 		if ( 'bb_draft_oneshot_state' === $option ) {
 			$this->oneshot_state_writes[] = $value;
 		}
@@ -7408,36 +7468,71 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			);
 		}
 
-		delete_option( 'bb_draft_oneshot_state' );
-		delete_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_oneshot_done' );
 
 		$this->oneshot_state_writes = array();
 
+		// The product writes this state with update_site_option(). On single site
+		// that delegates to update_option() and fires the added_option /
+		// updated_option actions; on MULTISITE it writes wp_sitemeta and fires
+		// add_site_option / update_site_option instead, so listening only for the
+		// single-site pair recorded nothing there and the assertion below failed
+		// for a reason that had nothing to do with the behaviour it guards. Watch
+		// both pairs so the test means the same thing on both configurations.
 		add_action( 'added_option', array( $this, 'record_oneshot_state_added' ), 10, 2 );
 		add_action( 'updated_option', array( $this, 'record_oneshot_state_updated' ), 10, 3 );
+		add_action( 'add_site_option', array( $this, 'record_oneshot_state_added' ), 10, 2 );
+		add_action( 'update_site_option', array( $this, 'record_oneshot_state_site_updated' ), 10, 2 );
 
 		$result = bb_drafts_oneshot_batch( 0 );
 
 		remove_action( 'added_option', array( $this, 'record_oneshot_state_added' ), 10 );
 		remove_action( 'updated_option', array( $this, 'record_oneshot_state_updated' ), 10 );
+		remove_action( 'add_site_option', array( $this, 'record_oneshot_state_added' ), 10 );
+		remove_action( 'update_site_option', array( $this, 'record_oneshot_state_site_updated' ), 10 );
 
-		delete_option( 'bb_draft_oneshot_state' );
-		delete_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_oneshot_done' );
 
 		$this->assertNotEmpty( $result['complete'], 'The unbudgeted run must complete.' );
 
-		$mid_scan_persists = 0;
+		$mid_scan_cursors = array();
 
 		foreach ( $this->oneshot_state_writes as $state ) {
 			if ( is_array( $state ) && ! empty( $state['cursor'] ) && ( ! isset( $state['heavy_users'] ) || null === $state['heavy_users'] ) ) {
-				++$mid_scan_persists;
+				$mid_scan_cursors[] = (int) $state['cursor'];
 			}
 		}
 
+		// The 201 seeded rows span more than one 200-row window, so a scan that
+		// persists after EVERY window writes the cursor at least twice before the
+		// post-loop scan_done write. `>= 1` was satisfied by that post-loop write
+		// on its own, which is why the per-window persist could be deleted with
+		// this test staying green.
 		$this->assertGreaterThanOrEqual(
-			1,
-			$mid_scan_persists,
-			'Stage 1 must persist its cursor after every window, not only on a budget break - an interrupted scan must resume where it stopped.'
+			2,
+			count( $mid_scan_cursors ),
+			'Stage 1 must persist its cursor after every window, not only once the scan has finished.'
+		);
+
+		// The discriminating half: at least one persisted cursor must be an
+		// INTERMEDIATE position. Only the final cursor ever being written is
+		// exactly the state the fix removed - an interruption (a fatal, an OOM
+		// inside a heal, a killed worker) then discards every completed window
+		// and the continuation walks the same multi-megabyte rows again. Under
+		// WP-CLI, where the budget is 0, a drain that died at 90% restarted at 0%
+		// (H5).
+		$final_cursor = max( $mid_scan_cursors );
+
+		$this->assertNotEmpty(
+			array_filter(
+				$mid_scan_cursors,
+				function ( $persisted_cursor ) use ( $final_cursor ) {
+					return $persisted_cursor < $final_cursor;
+				}
+			),
+			'Stage 1 must persist an INTERMEDIATE cursor mid-scan - writing only the final position means an interruption loses every window already completed.'
 		);
 	}
 
@@ -8509,6 +8604,514 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'',
 			$stored,
 			'The coerced empty key must never be written as a draft of its own.'
+		);
+	}
+	/**
+	 * Ordered log of the two writes an accepted draft save makes: the usermeta
+	 * row and the referenced-cache token.
+	 *
+	 * Ordering is the whole point, so both are recorded into ONE array in the
+	 * order they actually land. An "it happened" assertion is true in BOTH
+	 * orderings, which is exactly how a token bump moved back in front of the
+	 * row write without a single test noticing.
+	 *
+	 * @var string[]
+	 */
+	protected $draft_write_order = array();
+
+	/**
+	 * Which usermeta key counts as the draft row write for the ordering log.
+	 *
+	 * @var string
+	 */
+	protected $draft_write_order_meta_key = '';
+
+	/**
+	 * Record the draft ROW write into the ordering log.
+	 *
+	 * Bound to both added_user_meta and updated_user_meta: a first save adds the
+	 * row and every later one updates it, and only one of the two fires.
+	 *
+	 * @param int    $meta_id   Meta ID.
+	 * @param int    $object_id User ID.
+	 * @param string $meta_key  Meta key.
+	 * @return void
+	 */
+	public function record_draft_row_meta_write( $meta_id, $object_id, $meta_key ) {
+		if ( '' !== $this->draft_write_order_meta_key && $this->draft_write_order_meta_key === $meta_key ) {
+			$this->draft_write_order[] = 'meta';
+		}
+	}
+
+	/**
+	 * Record the referenced-cache TOKEN write into the ordering log (2-arg form).
+	 *
+	 * Serves added_option, add_site_option and update_site_option, all of which
+	 * pass the option name first and the NEW value second.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  Stored value.
+	 * @return void
+	 */
+	public function record_referenced_token_write( $option, $value ) {
+		if ( 'bb_draft_referenced_stamp_ids_token' === $option ) {
+			$this->draft_write_order[] = 'token';
+		}
+	}
+
+	/**
+	 * Record the referenced-cache TOKEN write into the ordering log (3-arg form).
+	 *
+	 * Separate from {@see record_referenced_token_write()} because
+	 * `updated_option` passes the OLD value second, where the site-option
+	 * actions pass the new one.
+	 *
+	 * @param string $option    Option name.
+	 * @param mixed  $old_value Previous value.
+	 * @param mixed  $value     Stored value.
+	 * @return void
+	 */
+	public function record_referenced_token_write_updated( $option, $old_value, $value ) {
+		if ( 'bb_draft_referenced_stamp_ids_token' === $option ) {
+			$this->draft_write_order[] = 'token';
+		}
+	}
+
+	/**
+	 * Start recording the draft-row / token write order.
+	 *
+	 * Both option pairs are watched because the product writes the token with
+	 * update_site_option(): on single site that delegates to update_option() and
+	 * fires added_option / updated_option, while on MULTISITE it writes
+	 * wp_sitemeta and fires add_site_option / update_site_option instead - with a
+	 * different argument order.
+	 *
+	 * @param string $meta_key The draft usermeta key this request writes.
+	 * @return void
+	 */
+	protected function start_recording_draft_write_order( $meta_key ) {
+		$this->draft_write_order          = array();
+		$this->draft_write_order_meta_key = $meta_key;
+
+		add_action( 'added_user_meta', array( $this, 'record_draft_row_meta_write' ), 10, 3 );
+		add_action( 'updated_user_meta', array( $this, 'record_draft_row_meta_write' ), 10, 3 );
+		add_action( 'added_option', array( $this, 'record_referenced_token_write' ), 10, 2 );
+		add_action( 'updated_option', array( $this, 'record_referenced_token_write_updated' ), 10, 3 );
+		add_action( 'add_site_option', array( $this, 'record_referenced_token_write' ), 10, 2 );
+		add_action( 'update_site_option', array( $this, 'record_referenced_token_write' ), 10, 2 );
+	}
+
+	/**
+	 * Stop recording the draft-row / token write order.
+	 *
+	 * @return void
+	 */
+	protected function stop_recording_draft_write_order() {
+		remove_action( 'added_user_meta', array( $this, 'record_draft_row_meta_write' ), 10 );
+		remove_action( 'updated_user_meta', array( $this, 'record_draft_row_meta_write' ), 10 );
+		remove_action( 'added_option', array( $this, 'record_referenced_token_write' ), 10 );
+		remove_action( 'updated_option', array( $this, 'record_referenced_token_write_updated' ), 10 );
+		remove_action( 'add_site_option', array( $this, 'record_referenced_token_write' ), 10 );
+		remove_action( 'update_site_option', array( $this, 'record_referenced_token_write' ), 10 );
+
+		$this->draft_write_order_meta_key = '';
+	}
+
+	/**
+	 * Assert the referenced-cache token was bumped AFTER the draft row write.
+	 *
+	 * The reference only exists once the draft is STORED. Bumping the token (and
+	 * dropping the cached referenced-set) before the write leaves a window in
+	 * which a running sweep can rebuild its set from a table that does not yet
+	 * contain this draft, and then pin that set - missing this attachment - for
+	 * the whole cache TTL. The sweep releases the stamp, and the pre-existing
+	 * 6-hour orphan cron hard-deletes a file out of a draft the member is still
+	 * writing.
+	 *
+	 * The LAST token write is compared against the LAST row write so the
+	 * assertion means "a bump follows the write", which is the property, rather
+	 * than depending on how many of either a given payload happens to produce.
+	 *
+	 * @param string $message Failure message.
+	 * @return void
+	 */
+	protected function assert_token_bump_follows_the_row_write( $message ) {
+		$meta_indexes  = array_keys( $this->draft_write_order, 'meta', true );
+		$token_indexes = array_keys( $this->draft_write_order, 'token', true );
+
+		$this->assertNotEmpty( $meta_indexes, 'Premise: the handler must have written the draft row.' );
+		$this->assertNotEmpty( $token_indexes, 'Premise: the handler must have bumped the referenced-cache token.' );
+
+		$this->assertGreaterThan( max( $meta_indexes ), max( $token_indexes ), $message );
+	}
+
+	/**
+	 * M8 (activity leg): a save the per-draft cap REFUSES must still protect the
+	 * uploads its payload carried.
+	 *
+	 * BLOCKER-1: the caps judge the draft's TEXT; they must never decide whether
+	 * a file the member already uploaded survives the 6-hour orphan cron. The
+	 * composer uploads first and autosaves after, so by the time the cap refuses
+	 * the file is already on disk with `bp_media_saved = 0` - and unstamped is
+	 * exactly what bp_media_delete_orphaned_attachments() hard-deletes.
+	 *
+	 * The forum leg of this is
+	 * {@see test_size_capped_save_still_protects_uploaded_attachments()}. This is
+	 * the ACTIVITY composer - the busiest draft writer on a community - which had
+	 * no coverage at all: moving its protection pass behind the size check left
+	 * the whole suite green.
+	 *
+	 * Mutation check: skip bb_draft_protect_payload_attachments() in
+	 * bp-templates/bp-nouveau/includes/activity/ajax.php when the payload is
+	 * already over bb_draft_max_size(), and this goes red.
+	 */
+	public function test_size_capped_activity_save_still_protects_uploaded_attachments() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$mine     = $this->make_draft_attachment( $user_id );
+		$somebody = $this->make_draft_attachment( self::factory()->user->create() );
+
+		$rejected = '';
+		$cb       = function ( $uid, $k, $size, $reason ) use ( &$rejected ) {
+			$rejected = $reason;
+		};
+		add_action( 'bb_draft_cap_rejected', $cb, 10, 4 );
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				// Over the 100 KB per-draft cap, which refuses before the draft
+				// is ever stored.
+				'content' => str_repeat( 'x', 150 * KB_IN_BYTES ),
+				'media'   => array( array( 'id' => $mine ), array( 'id' => $somebody ) ),
+			)
+		);
+
+		remove_action( 'bb_draft_cap_rejected', $cb, 10 );
+
+		// Premise: the cap really did refuse. Without this the test would pass
+		// for a build that simply accepted the oversized draft.
+		$this->assertSame( 'per_draft', $rejected, 'The oversized activity draft must still be refused - the fix must not weaken the cap.' );
+		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'draft_user', true ), 'Premise: a refused save stores no draft, so nothing else can release these stamps.' );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $mine, 'bb_media_draft', true ),
+			'A refused activity save must still protect the uploads it carried, or the orphan cron deletes the member files.'
+		);
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $somebody, 'bb_media_draft', true ),
+			'Protection is per owner - a crafted payload must not stamp another member attachment.'
+		);
+	}
+
+	/**
+	 * M9 / L7: disposing ONE inner forum draft must not release a stamp a
+	 * DIFFERENT usermeta row still references.
+	 *
+	 * bb_draft_dispose() has three release branches and only two were covered:
+	 * the whole-row branch ({@see test_dispose_keeps_a_stamp_a_different_row_still_references()})
+	 * and the batch path bb_draft_dispose_forum_inner_keys()
+	 * ({@see test_forum_inner_dispose_keeps_a_stamp_another_row_references()}).
+	 * The INNER-KEY branch of bb_draft_dispose() is the one the member's own
+	 * discard, the per-user budget eviction and the healer all route through, and
+	 * its cross-row retain set could be dropped with the suite staying green.
+	 *
+	 * The composer carries an upload across composers, so one attachment being
+	 * referenced by both a forum inner draft and an activity/group draft is
+	 * ordinary use, not a crafted payload.
+	 *
+	 * Mutation check: pass array() instead of
+	 * bb_draft_collect_other_referenced_ids() to bb_draft_unstamp_attachments()
+	 * in the inner-key branch of bb_draft_dispose(), and this goes red.
+	 */
+	public function test_disposing_one_inner_forum_draft_keeps_a_stamp_another_row_references() {
+		$user_id = self::factory()->user->create();
+
+		$shared = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// Referenced by a GROUP activity row AND by one inner forum draft. The
+		// surviving forum sibling deliberately holds NO attachment, so the
+		// same-row retain set cannot be what protects it.
+		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_discussion_9' => array(
+					'data_key' => 'draft_discussion_9',
+					'data'     => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $shared ) ) ) ),
+				),
+				'draft_discussion_7' => array(
+					'data_key' => 'draft_discussion_7',
+					'data'     => array( 'bbp_reply_content' => 'a sibling with no uploads' ),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		$this->assertTrue(
+			bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_discussion_9' ),
+			'Premise: the inner draft must actually have been disposed.'
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertArrayNotHasKey( 'draft_discussion_9', $stored, 'Premise: the disposed inner draft must be gone from the row.' );
+		$this->assertArrayHasKey( 'draft_discussion_7', $stored, 'Premise: the sibling inner draft must survive.' );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'Disposing one inner forum draft must not release a stamp a DIFFERENT stored row still references (L7).'
+		);
+
+		// And it is a retain, not a blanket leak: once the last row that
+		// references it goes, the stamp is released as before.
+		bb_draft_dispose( $user_id, 'draft_group_5' );
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'Once no stored draft references it, the stamp must still be released.'
+		);
+	}
+
+	/**
+	 * The attachment ID a sweep filter records as a concurrent reference.
+	 *
+	 * @var int
+	 */
+	protected $mid_sweep_reference_id = 0;
+
+	/**
+	 * Test hook: record a reference for {@see $mid_sweep_reference_id} exactly as
+	 * a reference-keeping save does, and return the batch size unchanged.
+	 *
+	 * Attaching it to the scan batch-size filter or the release batch-size filter
+	 * simulates a real save landing at that phase of the sweep. Unlike
+	 * {@see bump_referenced_token_return()} this uses the ENUMERATED form, which
+	 * is what the ledger can prove a superset from - so the sweep must protect
+	 * the attachment WITHOUT abstaining.
+	 *
+	 * @param int $batch_size The filtered batch size.
+	 * @return int The same batch size.
+	 */
+	public function record_reference_during_sweep( $batch_size ) {
+		if ( $this->mid_sweep_reference_id ) {
+			bb_draft_invalidate_referenced_cache( array( $this->mid_sweep_reference_id ) );
+		}
+
+		return $batch_size;
+	}
+
+	/**
+	 * M13b (scan fold): a reference recorded while the SCAN runs must be folded
+	 * into the set before it is cached.
+	 *
+	 * The scan walks the draft rows with a cursor, so a draft saved after the
+	 * cursor passed it contributes nothing to the scan result. The ledger records
+	 * it and the post-scan fold repairs the set - and the repaired set is what
+	 * gets cached network-wide for the TTL. Without the fold the run itself still
+	 * looks correct (the release loop's own fold covers it one level down), but
+	 * the SEEDED CACHE is missing the reference, and every later sweep that reads
+	 * that warm cache - with a fresh, empty ledger - releases the stamp of an
+	 * attachment a live draft holds. The orphan cron then hard-deletes the
+	 * member's file.
+	 *
+	 * So the cached set is asserted directly, not just the outcome of this run:
+	 * that is the half of the behaviour the sibling fold cannot stand in for.
+	 *
+	 * Mutation check: drop the `foreach ( $pending['ids'] ... )` fold before the
+	 * set_site_transient() in bb_drafts_release_orphaned_draft_stamps(), and this
+	 * goes red.
+	 */
+	public function test_reference_added_during_the_scan_is_folded_into_the_cached_set() {
+		$this->isolate_draft_maintenance();
+
+		$user_id  = self::factory()->user->create();
+		$mid_scan = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// Cold cache: the scan (and its fold) must actually run.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+
+		$this->mid_sweep_reference_id = $mid_scan;
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'record_reference_during_sweep' ) );
+
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'record_reference_during_sweep' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->mid_sweep_reference_id = 0;
+
+		// Premise: the enumerated ledger must let the run finish rather than fall
+		// back to abstaining - abstaining would make the cache assertion vacuous.
+		$this->assertTrue( (bool) $result['complete'], 'An enumerated mid-scan reference must not cost the whole run (H-4 livelock).' );
+		$this->assertSame( 0, $result['released'], 'The concurrently referenced attachment must not be released.' );
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $mid_scan, 'bb_media_draft', true ),
+			'A reference added during the scan must keep its stamp.'
+		);
+
+		$cached = get_site_transient( 'bb_draft_referenced_stamp_ids' );
+
+		$this->assertIsArray( $cached, 'Premise: a completed scan must seed the network-wide referenced-set cache.' );
+		$this->assertArrayHasKey(
+			$mid_scan,
+			$cached,
+			'The CACHED set must carry the mid-scan reference. A cache missing it is pinned for the whole TTL, and the next sweep - with an empty ledger - releases a stamp a live draft still holds.'
+		);
+	}
+
+	/**
+	 * M13b (release-loop fold): a reference recorded while the RELEASE LOOP runs
+	 * must be folded in before the next batch is judged.
+	 *
+	 * The referenced set is fixed before the loop starts, so a save that lands
+	 * mid-drain exists nowhere but the ledger - and `wp bb drafts cleanup` drains
+	 * the whole candidate set in one unbudgeted call, which on a large library is
+	 * minutes of drain during which members keep composing.
+	 *
+	 * Driven with a WARM cache on purpose: that skips the scan branch entirely,
+	 * so the post-scan fold cannot stand in for this one and the assertion is
+	 * about the release loop alone.
+	 *
+	 * Mutation check: drop the `foreach ( $batch_pending['ids'] ... )` fold at the
+	 * top of the release-loop batch, and this goes red.
+	 */
+	public function test_reference_added_during_the_release_loop_is_folded_in() {
+		$this->isolate_draft_maintenance();
+
+		$user_id     = self::factory()->user->create();
+		$mid_release = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// A warm cache that does NOT cover this attachment: the scan is skipped,
+		// so only the release loop's own fold can protect it.
+		set_site_transient( 'bb_draft_referenced_stamp_ids', array( 999999 => true ) );
+
+		$this->mid_sweep_reference_id = $mid_release;
+		$this->reference_scans        = 0;
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
+		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'record_reference_during_sweep' ) );
+
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'record_reference_during_sweep' ) );
+		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->mid_sweep_reference_id = 0;
+
+		// Premise: the warm cache really did skip the scan, so the post-scan fold
+		// played no part in this run.
+		$this->assertSame( 0, $this->reference_scans, 'Premise: a warm cache must skip the reference scan.' );
+
+		$this->assertSame( 0, $result['released'], 'A reference recorded mid-release must protect that attachment in the very next batch.' );
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $mid_release, 'bb_media_draft', true ),
+			'A save that lands while the sweep is draining must keep its attachment stamped - the ledger is the only record of it, so a missing fold hands the orphan cron a live draft file.'
+		);
+	}
+
+	/**
+	 * M18: the forum save must bump the referenced-cache token AFTER it writes
+	 * the draft row, not before.
+	 *
+	 * Asserted as an ORDERING, because both orderings pass an "it was
+	 * invalidated" assertion - which is precisely why this could be moved in
+	 * front of the write with the suite staying green. Before the write, the
+	 * cache drop and token bump describe a draft that is not in the table yet: a
+	 * sweep can rebuild its referenced set in that window, miss this attachment,
+	 * and - since the token no longer moves afterwards - cache that set for the
+	 * full TTL.
+	 *
+	 * Mutation check: move the bb_draft_invalidate_referenced_cache() call in
+	 * bp-forums/core/actions.php above the bp_update_user_meta() row write, and
+	 * this goes red.
+	 */
+	public function test_forum_draft_save_bumps_the_referenced_token_after_the_row_write() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$mine  = $this->make_draft_attachment( $user_id );
+
+		// Cold cache, so the helper cannot short-circuit on a set that already
+		// covers this attachment.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+
+		$this->start_recording_draft_write_order( 'bb_user_topic_reply_draft' );
+
+		$this->drive_forum_draft_save(
+			'draft_discussion_' . $forum,
+			array(
+				'bbp_topic_content' => 'a forum draft holding one upload',
+				'bbp_media'         => wp_json_encode( array( array( 'id' => $mine ) ) ),
+			)
+		);
+
+		$this->stop_recording_draft_write_order();
+
+		// Premise: the save was accepted and the attachment really is referenced
+		// by the STORED row.
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertArrayHasKey( 'draft_discussion_' . $forum, $stored, 'Premise: the draft row must have been written.' );
+		$this->assertSame( '1', (string) get_post_meta( $mine, 'bb_media_draft', true ), 'Premise: the kept attachment must be stamped.' );
+
+		$this->assert_token_bump_follows_the_row_write(
+			'The forum save must drop the referenced-set cache AFTER the row write - before it, a sweep can rebuild and pin a set that does not yet contain this draft.'
+		);
+	}
+
+	/**
+	 * M19: the activity save must bump the referenced-cache token AFTER it writes
+	 * the draft row, not before.
+	 *
+	 * Same contract and same failure as the forum leg
+	 * ({@see test_forum_draft_save_bumps_the_referenced_token_after_the_row_write()}),
+	 * on the busiest draft writer on a community. The two handlers state in their
+	 * comments that they match each other's order, so both are pinned rather than
+	 * leaving one to drift.
+	 *
+	 * Mutation check: move the bb_draft_invalidate_referenced_cache() call in
+	 * bp-templates/bp-nouveau/includes/activity/ajax.php above the
+	 * bp_update_user_meta() row write, and this goes red.
+	 */
+	public function test_activity_draft_save_bumps_the_referenced_token_after_the_row_write() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$mine = $this->make_draft_attachment( $user_id );
+
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+
+		$this->start_recording_draft_write_order( 'draft_user' );
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content' => 'an activity draft holding one upload',
+				'media'   => array( array( 'id' => $mine ) ),
+			)
+		);
+
+		$this->stop_recording_draft_write_order();
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$this->assertSame( 'an activity draft holding one upload', $stored['data']['content'], 'Premise: the draft row must have been written.' );
+		$this->assertSame( '1', (string) get_post_meta( $mine, 'bb_media_draft', true ), 'Premise: the kept attachment must be stamped.' );
+
+		$this->assert_token_bump_follows_the_row_write(
+			'The activity save must drop the referenced-set cache AFTER the row write - before it, a sweep can rebuild and pin a set that does not yet contain this draft.'
 		);
 	}
 }
