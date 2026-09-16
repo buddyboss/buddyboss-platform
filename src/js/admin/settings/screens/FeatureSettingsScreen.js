@@ -936,13 +936,57 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							message: __('Settings saved.', 'buddyboss'),
 						});
 
-						apply.setChangedFields({});
+						// Work out what the admin has edited SINCE this request was
+						// dispatched, before clearing anything. A save carries a
+						// snapshot taken when the 1s debounce fired; every keystroke
+						// after that is newer than the echo coming back. Clearing
+						// changedFields wholesale and merging `actualSaved` over the
+						// live state therefore reverted in-flight typing — the field
+						// visibly lost its most recent characters — and, because the
+						// field was no longer marked dirty, nothing re-saved them: the
+						// reverted text was also lost on the server. Most visible in a
+						// textarea, where a save lands mid-sentence.
+						//
+						// The GET/refresh path above already reconciles exactly this
+						// way (it overlays pending edits on the server payload); this
+						// applies the same rule to the save echo. When nothing was
+						// typed during the round trip `stillDirty` is empty and the
+						// behaviour is identical to before.
+						const pendingNow = changedFieldsRef.current || {};
+						const liveNow    = settingsRef.current || {};
+						const stillDirty = {};
+						Object.keys( pendingNow ).forEach( ( k ) => {
+							// A `true` sentinel means "use the current live value"
+							// (same convention as the auto-save effect), so resolve it
+							// before comparing — comparing the sentinel itself against
+							// the dispatched scalar would mark the field permanently
+							// dirty and loop the save.
+							const pendingVal = ( true === pendingNow[ k ] ) ? liveNow[ k ] : pendingNow[ k ];
+							const wasSent    = Object.prototype.hasOwnProperty.call( fieldsToSave, k );
+							if ( ! wasSent || JSON.stringify( pendingVal ) !== JSON.stringify( fieldsToSave[ k ] ) ) {
+								stillDirty[ k ] = pendingNow[ k ];
+							}
+						} );
+
+						// Keep fields edited mid-flight dirty so the debounce saves them.
+						apply.setChangedFields( stillDirty );
 
 						// Reactions screen state was already handled above via the
 						// helper's shouldApplyScreen() (same condition as this guard);
 						// refresh_panels was handled above the guard.
 						if ( 'reactions' !== featureId ) {
-							apply.setSettings((prev) => ({ ...prev, ...actualSaved }));
+							apply.setSettings((prev) => {
+								const merged = { ...prev, ...actualSaved };
+								// Re-assert the live value for anything still dirty:
+								// for those keys the echo is older than the edit.
+								Object.keys( stillDirty ).forEach( ( k ) => {
+									merged[ k ] = prev[ k ];
+								} );
+								return merged;
+							});
+							// originalSettings stays server truth on purpose — that is
+							// what makes a still-dirty field continue to read as
+							// changed until its own save confirms it.
 							apply.setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 						}
 					} else {
