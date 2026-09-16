@@ -1610,11 +1610,14 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// of the superset comparison agree by construction. Appending it again
 			// would only duplicate an id already in the list.
 			//
-			// Separate, and still open: a feature image that carries ONLY
-			// `bb_activity_post_feature_image_draft` is never a candidate of the
-			// orphan-stamp sweep, whose query requires `bb_media_draft`. That is a
-			// gap in the RELEASE path, not in this set — noted here so the two are
-			// not conflated.
+			// The sweep DOES cover a feature image that carries only
+			// `bb_activity_post_feature_image_draft`: its candidate query selects
+			// `d.meta_key IN ( 'bb_media_draft', 'bb_activity_post_feature_image_draft' )`
+			// and pairs each marker with its own "saved" flag
+			// ({@see bb_drafts_release_orphaned_draft_stamps()}). This comment used
+			// to claim the opposite, which mattered because the coupled Platform
+			// Pro reaper change depends on exactly that coverage - a stale note
+			// denying it is how a correct fix gets reverted in a later round.
 			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
 				bb_draft_invalidate_referenced_cache( bb_draft_collect_attachment_ids( $draft_activity ) );
 			}

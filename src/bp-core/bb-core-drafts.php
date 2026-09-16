@@ -375,6 +375,10 @@ function bb_draft_strip_data_urls( $content ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param string $type Optional. Attachment type the cap is being read for -
+ *                     'media', 'document' or 'video'. Each has its own
+ *                     independently configurable upload limit, so the type is
+ *                     load-bearing, not cosmetic. Default 'media'.
  * @return int Maximum entries accepted per attachment type.
  */
 function bb_draft_max_attachments_per_type( $type = 'media' ) {
@@ -888,9 +892,16 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int    $user_id       User ID.
- * @param string $exclude_key   Meta key of the entry being disposed.
- * @param string $exclude_inner Inner key being disposed, or '' for a whole row.
+ * @param int         $user_id       User ID.
+ * @param string      $exclude_key   Meta key of the entry being disposed.
+ * @param string|null $exclude_inner Inner key being disposed; '' for a whole
+ *                                   activity row; null to exclude the excluded
+ *                                   row entirely, inner entries included (the
+ *                                   mode {@see bb_draft_collect_other_row_referenced_ids()}
+ *                                   uses). Note that '' is NOT the whole-row
+ *                                   mode for the aggregated forum row: no real
+ *                                   inner key equals '', so '' excludes nothing
+ *                                   there.
  * @return int[] Attachment IDs still referenced by the user's other drafts.
  */
 function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner = '' ) {
@@ -907,7 +918,15 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
 		return $ids;
 	}
 
+	// null means "skip the excluded row ENTIRELY", so the caller that already
+	// holds its own row's surviving set never re-reads it.
+	$exclude_whole_row = ( null === $exclude_inner );
+
 	foreach ( array_keys( $sizes['drafts'] ) as $meta_key ) {
+		if ( $exclude_whole_row && $meta_key === $exclude_key ) {
+			continue;
+		}
+
 		$stored = bp_get_user_meta( $user_id, $meta_key, true );
 
 		if ( empty( $stored ) || ! is_array( $stored ) ) {
@@ -951,45 +970,18 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * Delegates to {@see bb_draft_collect_other_referenced_ids()} rather than
+ * repeating its loop: both compute the retain set that decides whether a
+ * still-referenced attachment keeps its `bb_media_draft` protection, and two
+ * copies of that invariant means a fix landing on one of them silently reopens
+ * L7 on the paths that use the other.
+ *
  * @param int    $user_id          User ID.
  * @param string $exclude_meta_key Meta key whose row the caller handles itself.
  * @return int[] Attachment IDs referenced by the user's other draft rows.
  */
 function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
-	$user_id = (int) $user_id;
-	$ids     = array();
-
-	if ( $user_id <= 0 ) {
-		return $ids;
-	}
-
-	$sizes = bb_draft_get_user_meta_sizes( $user_id );
-
-	if ( empty( $sizes['drafts'] ) || ! is_array( $sizes['drafts'] ) ) {
-		return $ids;
-	}
-
-	foreach ( array_keys( $sizes['drafts'] ) as $meta_key ) {
-		if ( $meta_key === $exclude_meta_key ) {
-			continue;
-		}
-
-		$stored = bp_get_user_meta( $user_id, $meta_key, true );
-
-		if ( empty( $stored ) || ! is_array( $stored ) ) {
-			continue;
-		}
-
-		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
-			foreach ( $stored as $inner_draft ) {
-				$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $inner_draft ) );
-			}
-		} else {
-			$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $stored ) );
-		}
-	}
-
-	return array_values( array_unique( array_map( 'intval', $ids ) ) );
+	return bb_draft_collect_other_referenced_ids( $user_id, $exclude_meta_key, null );
 }
 
 /**
@@ -1007,7 +999,7 @@ function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key 
  * what its siblings still hold let the orphan crons delete files a stored
  * draft was still pointing at. {@see bb_draft_heal_forum_row()} and the
  * forum handler's eviction branch already apply this whole-row exclusion
- *
+ * themselves.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1225,7 +1217,19 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 	if ( ! $defer_attachment_release ) {
 		// The whole row goes, so nothing in it survives to retain; the retain set
 		// is whatever the user's OTHER draft rows still reference (L7).
-		$retain_ids = bb_draft_collect_other_referenced_ids( $user_id, $meta_key, '' );
+		//
+		// Use the WHOLE-ROW collector. The inner-key collector takes an
+		// exclude_inner and skips an entry only on an exact match, and no real
+		// inner key equals '' - so passing '' here excluded nothing and folded
+		// every inner draft of the row being disposed into its own retain set,
+		// making the unstamp loop below retain precisely the attachments it was
+		// called to release. Demonstrated on a two-inner-draft row: both
+		// attachments kept `bb_media_draft` after the row was disposed. No
+		// production caller reaches this branch with a forum row today - the
+		// expiry sweep routes populated rows to bb_draft_dispose_forum_inner_keys()
+		// and the healer does its own release - so this was latent, which is
+		// exactly why the comment above needed to stop being wrong about it.
+		$retain_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $meta_key );
 
 		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
 			foreach ( $stored as $inner_draft ) {
@@ -1814,21 +1818,6 @@ function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
 	// that topic's forum out of post meta, so leaving meta cold would only move
 	// the N+1 from the post table to the meta table.
 	_prime_post_caches( $post_ids, false, true );
-}
-
-/**
- * Validate a forum draft inner data key against the shapes the forum JS builds.
- *
- * Thin wrapper over {@see bb_draft_topic_reply_key_context()}, kept because
- * the key shape alone is all the fetch and discard paths need.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $data_key Client-supplied inner draft key.
- * @return bool True when the key matches a real forum/topic/reply.
- */
-function bb_draft_validate_topic_reply_data_key( $data_key ) {
-	return false !== bb_draft_topic_reply_key_context( $data_key );
 }
 
 /**
