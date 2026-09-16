@@ -5327,6 +5327,90 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 }
 
 /**
+ * Build a search leg's WHERE clause without inlining a match set the size of the member table.
+ *
+ * Every search leg in this codebase resolves its matches in PHP - it has to, because the
+ * visibility filters run over them - and then spells the survivors out as `IN ( … )`. On a term
+ * that matches most of the community that is a statement measured in hundreds of kilobytes: the
+ * member directory sent 140,698 ids across two OR'd lists in one 824 KB statement to exclude a
+ * grand total of ONE member.
+ *
+ * The survivors and the removals describe the same set, so the clause is built from whichever of
+ * the two is smaller. Where the removals win, the match set is named by the subquery that produced
+ * it rather than by its ids, and only the removals are spelled out. The visibility filters are what
+ * make this worth doing: they are built to remove the few members who restricted something, so the
+ * removals are normally a handful and the survivors are nearly everybody.
+ *
+ * Never worse than the inclusive list, by construction - when the removals are NOT the smaller
+ * half, or no subquery is available to stand in for the match set, the inclusive list is what comes
+ * back. The clause is parenthesised because callers OR these legs together, and `A AND B OR C AND D`
+ * is only correct by SQL's precedence rules; spelling it out removes the question.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $column           Qualified column the clause tests, e.g. `u.ID`.
+ * @param array  $matched_user_ids Ids the producer matched, BEFORE visibility filtering.
+ * @param array  $kept_user_ids    Ids that survived visibility filtering.
+ * @param string $match_subquery   Optional. A prepared SELECT returning the same ids as
+ *                                 $matched_user_ids. Without it the inclusive list is used.
+ * @return string WHERE clause. `IN (NULL)` - which matches nothing - when nothing survived.
+ */
+function bb_core_get_search_match_clause( $column, $matched_user_ids, $kept_user_ids, $match_subquery = '' ) {
+	$kept = array_values( array_unique( array_filter( array_map( 'intval', (array) $kept_user_ids ) ) ) );
+
+	// Nothing survived the visibility filter: the leg must match nobody. This is the shape the
+	// released code used for an empty match set and callers already OR it with their other legs.
+	if ( empty( $kept ) ) {
+		return $column . ' IN (NULL)';
+	}
+
+	$matched = array_values( array_unique( array_filter( array_map( 'intval', (array) $matched_user_ids ) ) ) );
+
+	// array_flip + isset rather than array_diff(): this runs on sets the size of the member table
+	// and array_diff() sorts and string-casts both operands. The lookup is O(n) and the whole point
+	// of the exercise is to stop paying member-table-sized costs on an anonymous request.
+	$keep_lookup = array_flip( $kept );
+	$removed     = array();
+
+	foreach ( $matched as $matched_user_id ) {
+		if ( ! isset( $keep_lookup[ $matched_user_id ] ) ) {
+			$removed[] = $matched_user_id;
+		}
+	}
+
+	// Below the threshold the inclusive list is already small enough to be a non-issue, and it is
+	// what every released version of these legs emitted. Leaving it alone there keeps the rewritten
+	// shape - and the planner's subquery - off the overwhelming majority of searches, which match a
+	// handful of members; the rewrite then applies only where the list was the actual problem.
+	/**
+	 * Filters how many surviving ids a search leg may spell out before the clause is inverted.
+	 *
+	 * At or below this many ids the clause stays the inclusive `IN ( … )` list every released
+	 * version emitted. Above it, the match set is named by the subquery that produced it and only
+	 * the removals are listed - which is a large win exactly when the list is large, and pointless
+	 * churn when it is not.
+	 *
+	 * Raising this is how a site opts back out of the rewrite; 0 applies it to every leg.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $inline_limit Maximum surviving ids to inline. Default 1000.
+	 * @param string $column       Qualified column the clause tests, e.g. `u.ID`.
+	 */
+	$inline_limit = (int) apply_filters( 'bb_core_search_match_clause_inline_limit', 1000, $column );
+
+	if ( '' === $match_subquery || count( $kept ) <= $inline_limit || count( $removed ) >= count( $kept ) ) {
+		return $column . ' IN (' . implode( ',', $kept ) . ')';
+	}
+
+	if ( empty( $removed ) ) {
+		return '( ' . $column . ' IN ( ' . $match_subquery . ' ) )';
+	}
+
+	return '( ' . $column . ' IN ( ' . $match_subquery . ' ) AND ' . $column . ' NOT IN ( ' . implode( ',', $removed ) . ' ) )';
+}
+
+/**
  * When search_terms are passed to BP_User_Query, search against xprofile fields.
  *
  * @since BuddyBoss 1.6.3
@@ -5402,6 +5486,11 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
+	// Deliberately NOT rewritten the way the two member-directory legs are. The clause this one
+	// would name its match set with is $where_condition, which interpolates the search term rather
+	// than binding it - bp_esc_like() escapes LIKE wildcards, not quotes - so reusing it as a
+	// subquery would copy an unbound user string into a second statement. That interpolation is
+	// pre-existing and unchanged here; it is reported separately rather than widened.
 	if ( ! empty( $matched_user_ids ) ) {
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";

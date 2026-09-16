@@ -1717,6 +1717,78 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Rank Math's Slack enhanced-sharing tags must not carry a hidden surname.
+	 *
+	 * These are emitted as `twitter:label1` / `twitter:data1`, never as JSON-LD, so the graph
+	 * filter this class already covers does not see them. On an author archive
+	 * RankMath\OpenGraph\Slack::get_author_data() reads `$author->display_name` straight off the
+	 * queried object - a raw property read no WordPress filter reaches - and prints it under the
+	 * label `Name`, so the surname went out on a page whose `<title>`, `og:title`,
+	 * `twitter:title` and JSON-LD were all correctly withheld.
+	 *
+	 * The tag NAMES are built with sprintf( 'twitter:data%d', ... ), which is why grepping that
+	 * plugin for the literal tag finds nothing and the surface was missed.
+	 *
+	 * Asserted through apply_filters() rather than by calling the callback, because the defect was
+	 * a MISSING REGISTRATION, not a broken redactor - a test that called redact_schema_graph()
+	 * directly would have passed against the unfixed code.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_seo_plugin_slack_enhanced_data_is_redacted() {
+		$this->setExpectedIncorrectUsage( 'WP_Block_Type_Registry::register' );
+
+		$user_id = $this->create_member_with_hidden_surname( 'loggedin', 'Fennimore', 'Rosalind' );
+		$reader  = self::factory()->user->create();
+
+		$this->set_current_user( 0 );
+		$this->go_to( get_author_posts_url( $user_id ) );
+
+		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+		BB_SEO_Helpers::instance();
+
+		// Exactly the shape Slack::get_author_data() builds: a flat label => value map whose
+		// second entry is an integer, so the redactor must leave both labels and the count alone.
+		$payload = array(
+			'Name'  => 'Rosalind Fennimore',
+			'Posts' => 7,
+		);
+
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Rank Math's own hook name; it is not ours to rename.
+		$guest = apply_filters( 'rank_math/opengraph/slack_enhanced_data', $payload );
+
+		$this->assertStringNotContainsString(
+			'Fennimore',
+			wp_json_encode( $guest ),
+			'The Slack enhanced-data tags published a surname hidden from a logged-out visitor.'
+		);
+		$this->assertSame(
+			'Rosalind',
+			$guest['Name'],
+			'The name should be the visible name, not blank or mangled.'
+		);
+		$this->assertSame( 7, $guest['Posts'], 'A non-name value must not be rewritten.' );
+		$this->assertSame(
+			array( 'Name', 'Posts' ),
+			array_keys( $guest ),
+			'The labels are array KEYS and must survive untouched, or the tag pairs stop matching.'
+		);
+
+		// Negative control: a viewer the surname is NOT hidden from must keep it. Without this the
+		// test would pass just as well against a redactor that blanked every name it was handed.
+		$this->set_current_user( $reader );
+
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Rank Math's own hook name; it is not ours to rename.
+		$permitted = apply_filters( 'rank_math/opengraph/slack_enhanced_data', $payload );
+
+		$this->assertSame(
+			'Rosalind Fennimore',
+			$permitted['Name'],
+			'A logged-in viewer is permitted the surname and must not be over-stripped.'
+		);
+	}
+
+	/**
 	 * An SEO plugin's graph must be redacted when there is no main query to identify the member.
 	 *
 	 * Yoast serialises the same head it prints on a page into the REST API - `yoast_head` and
@@ -3147,9 +3219,18 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$this->assertSame( $expected, $healthy_user, 'Fixture: nothing is hidden here, so the healthy answer must keep everybody.' );
 		$this->assertSame( $expected, $healthy_field, 'Fixture: nothing is hidden here, so the healthy answer must keep everybody.' );
 
-		$break_query = function ( $query ) {
-			if ( false !== strpos( $query, 'DISTINCT user_id' ) && false !== stripos( $query, 'visibility' ) ) {
-				return 'SELECT DISTINCT user_id FROM __bb_no_such_table__ WHERE 1=1';
+		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text
+		// ('DISTINCT user_id') this stopped breaking the profile-field producer the moment its two
+		// reads were merged into one aggregate - the query still read the same table, the fixture
+		// just no longer recognised it, and the test went green against a leg that was never
+		// broken. `FROM` keeps BB_XProfile_Visibility::visibility_table_exists() out of scope: it
+		// probes with `SHOW TABLES LIKE`, and breaking that would withhold the leg through the
+		// missing-table path instead of the failed-read path this test is about.
+		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+
+		$break_query = function ( $query ) use ( $visibility_table ) {
+			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
+				return 'SELECT user_id FROM __bb_no_such_table__ WHERE 1=1';
 			}
 
 			return $query;

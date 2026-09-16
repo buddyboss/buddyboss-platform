@@ -1517,16 +1517,33 @@ add_filter( 'rest_user_query', 'bb_core_filter_rest_user_query_name_matches', 99
 /**
  * Members whose display_name matches a term, used when the visibility producer cannot answer.
  *
+ * Members whose PUBLIC identifier matches the term in its own right are excluded here, in SQL,
+ * rather than read into PHP and removed afterwards. The caller drops them either way - it applies
+ * bb_core_remove_public_identifier_matches() to whichever branch produced the ids - so the set it
+ * ends up with is identical; what changes is that a term matching most of the member table no
+ * longer becomes a 70,000-element PHP array and a 410 KB `IN ( … )` statement on the way there.
+ * This runs on the fail-closed path, which an anonymous REST search reaches on a transient read
+ * error, so it is precisely the moment the site can least afford the extra work.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $like LIKE pattern, already escaped.
- * @return int[] User ids.
+ * @return int[] User ids whose display_name matches and whose public identifier does not.
  */
 function bb_core_get_name_only_search_match_ids( $like ) {
 	global $wpdb;
 
+	// NOT ( login OR nicename ) expressed as NOT login AND NOT nicename - the same set
+	// bb_core_remove_public_identifier_matches() computes, decided by the database.
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
-	$ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->users} WHERE display_name LIKE %s", $like ) );
+	$ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT ID FROM {$wpdb->users} WHERE display_name LIKE %s AND user_login NOT LIKE %s AND user_nicename NOT LIKE %s",
+			$like,
+			$like,
+			$like
+		)
+	);
 
 	return array_filter( array_map( 'intval', (array) $ids ) );
 }
@@ -1552,18 +1569,29 @@ function bb_core_remove_public_identifier_matches( $user_ids, $like ) {
 		return array();
 	}
 
-	$ids_sql = implode( ',', $user_ids );
+	// Chunked: the ids handed in are whatever the producer resolved, and past its budget that is
+	// the candidate set rather than a handful of matches. Only the members who DO match a public
+	// identifier come back, so the collected set is bounded by the answer and not by the input.
+	$public = array();
 
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- ids are ints, the pattern is bound.
-	$public = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT ID FROM {$wpdb->users} WHERE ID IN ( {$ids_sql} ) AND ( user_login LIKE %s OR user_nicename LIKE %s )",
-			$like,
-			$like
-		)
-	);
+	foreach ( array_chunk( $user_ids, 1000 ) as $id_chunk ) {
+		$ids_sql = implode( ',', $id_chunk );
 
-	$public = array_filter( array_map( 'intval', (array) $public ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- ids are ints, the pattern is bound.
+		$matched = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->users} WHERE ID IN ( {$ids_sql} ) AND ( user_login LIKE %s OR user_nicename LIKE %s )",
+				$like,
+				$like
+			)
+		);
+
+		foreach ( (array) $matched as $public_user_id ) {
+			$public[] = (int) $public_user_id;
+		}
+	}
+
+	$public = array_filter( $public );
 
 	return array_values( array_diff( $user_ids, $public ) );
 }

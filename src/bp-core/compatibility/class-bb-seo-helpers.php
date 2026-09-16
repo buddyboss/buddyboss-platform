@@ -201,6 +201,25 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 					// Rank Math - its own registrations run at 8, 9, 10, 11 and 99; see above for
 					// why the two at 99 do not need this to move.
 					'rank_math/json_ld'    => 20,
+					// Rank Math's "Slack enhanced sharing" data, which is emitted as Twitter card
+					// tags and so never touches the JSON-LD graph above.
+					//
+					// RankMath\OpenGraph\Slack::get_author_data() reads `$author->display_name`
+					// straight off the queried object (includes/opengraph/class-slack.php) and
+					// Slack::enhanced_data_tag() prints it as `twitter:data1` under the label
+					// `Name`, built with sprintf( 'twitter:data%d', ... ) - which is why a literal
+					// grep for the tag finds nothing in that plugin. A raw property read takes no
+					// filter, so the author archive published a surname the same page's
+					// `<title>`, `og:title`, `twitter:title` and JSON-LD all correctly withheld.
+					//
+					// The single-post tag is NOT this defect and needs no entry: get_post_data()
+					// builds `Written by` from get_the_author(), which passes through the
+					// `the_author` filter this bridge already covers.
+					//
+					// The array is a flat label => value map, so redact_recursive() rewrites the
+					// values and leaves the labels alone. Nothing else listens on this filter, so
+					// 20 is last.
+					'rank_math/opengraph/slack_enhanced_data' => 20,
 				)
 			);
 		}

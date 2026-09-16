@@ -1576,9 +1576,17 @@ Bar!';
 			'A healthy query should return the narrowed candidate array.'
 		);
 
-		$break_query = function ( $query ) {
-			if ( false !== strpos( $query, 'DISTINCT user_id' ) && false !== stripos( $query, 'visibility' ) ) {
-				return 'SELECT DISTINCT user_id FROM __bb_no_such_table__ WHERE 1=1';
+		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text
+		// ('DISTINCT user_id') this silently stopped breaking any read whose SELECT list was
+		// reworded - the query still read the same table, the fixture just no longer recognised it,
+		// and the test went green against a leg that was never broken. `FROM` keeps
+		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
+		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
+		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+
+		$break_query = function ( $query ) use ( $visibility_table ) {
+			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
+				return 'SELECT user_id FROM __bb_no_such_table__ WHERE 1=1';
 			}
 
 			return $query;
@@ -1682,9 +1690,17 @@ Bar!';
 		$memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'user_data_exists_cache' );
 		$memo->setAccessible( true );
 
-		$break_query = function ( $query ) {
-			if ( false !== strpos( $query, 'DISTINCT user_id' ) && false !== stripos( $query, 'visibility' ) ) {
-				return 'SELECT DISTINCT user_id FROM __bb_no_such_table__ WHERE 1=1';
+		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text
+		// ('DISTINCT user_id') this silently stopped breaking any read whose SELECT list was
+		// reworded - the query still read the same table, the fixture just no longer recognised it,
+		// and the test went green against a leg that was never broken. `FROM` keeps
+		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
+		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
+		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+
+		$break_query = function ( $query ) use ( $visibility_table ) {
+			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
+				return 'SELECT user_id FROM __bb_no_such_table__ WHERE 1=1';
 			}
 
 			return $query;

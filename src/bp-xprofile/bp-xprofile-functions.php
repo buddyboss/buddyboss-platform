@@ -855,13 +855,18 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	// Combine the core search (against wp_users) into a single OR clause.
 	// with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-			$search_terms_nospace,
-			$search_terms_space
-		)
+	$match_subquery = $wpdb->prepare(
+		"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+		$search_terms_nospace,
+		$search_terms_space
 	);
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $match_subquery is the return of $wpdb->prepare() directly above; search visibility must read current values.
+	$matched_user_ids = $wpdb->get_col( $match_subquery );
+
+	// Kept so the clause below can name the match set by the query that produced it rather than by
+	// its ids. The rows still have to come back: the visibility filter runs over them.
+	$unfiltered_user_ids = $matched_user_ids;
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
@@ -877,9 +882,19 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 	}
 
 	if ( ! empty( $matched_user_ids ) ) {
-		$search_core            = $sql['where']['search'];
-		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
-		$sql['where']['search'] = $search_combined;
+		$search_core = $sql['where']['search'];
+
+		// Built from whichever of "who survived" and "who was removed" is smaller - this leg and
+		// the display_name leg it is OR'd with were each spelling out the whole match set, which is
+		// what made one member search a single 824 KB statement.
+		$search_profile = bb_core_get_search_match_clause(
+			"u.{$query->uid_name}",
+			$unfiltered_user_ids,
+			$matched_user_ids,
+			$match_subquery
+		);
+
+		$sql['where']['search'] = " ( {$search_profile} OR {$search_core} )";
 	}
 
 	$cache[ $cache_key ] = $sql;
@@ -1657,7 +1672,6 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 		$default_reaches_unset_fields = true;
 	}
 
-	$ids_sql       = implode( ',', $user_ids );
 	$quoted_levels = implode(
 		',',
 		array_map(
@@ -1669,7 +1683,11 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 	);
 
 	$candidates = array();
-	$with_rows  = array();
+
+	// Members with no visibility row at all: the user-meta branch, where an unset field falls back
+	// to the field default. Accumulated chunk by chunk below rather than derived at the end from a
+	// materialised "who has a row" set - see the chunk loop for why that set must never be built.
+	$no_rows = array();
 
 	// A missing visibility table is not an error and must not be answered like one: it is the
 	// pre-migration shape of this install, where NO member has a row and every member's visibility
@@ -1687,54 +1705,82 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 	}
 
 	if ( $visibility_table_exists ) {
-		// Members who explicitly restricted a field. Returns at most the restricted population,
-		// whatever the size of the set handed in.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- levels are prepared above, ids are ints.
-		$rows = $wpdb->get_col(
-			"SELECT DISTINCT user_id FROM {$table} WHERE user_id IN ( {$ids_sql} ) AND value IN ( {$quoted_levels} )"
-		);
+		// Chunked, and the "who has a row" answer consumed inside the chunk rather than collected.
+		//
+		// Both reads are bounded by the set handed in, and that set is the CALLER'S WHOLE MATCH SET
+		// - bb_xprofile_filter_field_search_matches() passes every member a profile-field search
+		// matched, before pagination, on a request an anonymous visitor can issue. Unchunked, a
+		// 70,000-member match sent these two statements at 410 KB each.
+		//
+		// Chunking alone would not have been enough. The second read returns one row per member who
+		// has a row, and on a migrated community that is EVERY member - 70,470 of 70,452 here - so
+		// collecting it across chunks rebuilds the same 70,000-entry PHP array the chunking was
+		// meant to avoid, just in 71 instalments. The rows exist only to work out which ids have no
+		// row, and that is a question about the chunk, so it is answered and discarded per chunk.
+		// What survives the loop is $candidates (bounded by the restricted population - 19 members
+		// of 70,452 here) and $no_rows (bounded by the unmigrated remainder, which the per-member
+		// meta read below walks anyway).
+		foreach ( array_chunk( $user_ids, 1000 ) as $id_chunk ) {
+			$ids_sql = implode( ',', $id_chunk );
 
-		// A failed query must be reported as "could not resolve", never read as "nobody restricted
-		// anything". It cannot be detected from $rows: wpdb::get_col() initialises its return to
-		// array() and never hands back null, so an error and an empty result set are the same
-		// value. Ask $wpdb directly - wpdb::query() clears last_error through flush() before every
-		// query, so this reports on the query just issued. Getting this wrong is not a degraded
-		// search, it is the leak: both callers treat an array as an authoritative narrowing, and
-		// the field-search one returns the whole matched set unfiltered when it comes back empty.
-		if ( ! empty( $wpdb->last_error ) ) {
-			return false;
+			// One read answers both questions this loop asks. A returned row means the member HAS a
+			// visibility row, which is what decides the branch
+			// bp_xprofile_get_fields_by_visibility_levels() will take for them; the aggregate says
+			// whether any of their rows sits at a level hidden from this viewer, which is what makes
+			// them a candidate. Asked together rather than as two statements because they are two
+			// questions about the same rows: it halves the round trips on a large match set, and it
+			// removes the window in which a concurrent visibility write could land between a
+			// "restricted" read and a separate "has a row" read and have the two disagree about the
+			// same member.
+			//
+			// Not through the per-member memo: the memo answers the same question, but filling it
+			// for the batch also stores an entry per id and pulled a user-meta cache fill alongside
+			// it, and that pair - not the query - is what forced the abandoned ceiling.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- levels are prepared above, ids are ints.
+			$rows = $wpdb->get_results(
+				"SELECT user_id, MAX( CASE WHEN value IN ( {$quoted_levels} ) THEN 1 ELSE 0 END ) AS bb_restricted FROM {$table} WHERE user_id IN ( {$ids_sql} ) GROUP BY user_id"
+			);
+
+			// A failed query must be reported as "could not resolve", never read as "nobody
+			// restricted anything". It cannot be detected from $rows: wpdb::get_results()
+			// initialises its return and an error and an empty result set are indistinguishable in
+			// it. Ask $wpdb directly - wpdb::query() clears last_error through flush() before every
+			// query, so this reports on the query just issued. Getting this wrong is not a degraded
+			// search, it is the leak: both callers treat an array as an authoritative narrowing, and
+			// the field-search one returns the whole matched set unfiltered when it comes back
+			// empty.
+			//
+			// Checked per chunk, so a failure on chunk 40 of 71 fails closed rather than returning
+			// the 39 chunks that happened to succeed as if they were the whole answer.
+			if ( ! empty( $wpdb->last_error ) ) {
+				return false;
+			}
+
+			$with_rows = array();
+
+			foreach ( (array) $rows as $row ) {
+				$row_user_id               = (int) $row->user_id;
+				$with_rows[ $row_user_id ] = true;
+
+				if ( ! empty( $row->bb_restricted ) ) {
+					$candidates[ $row_user_id ] = true;
+				}
+			}
+
+			foreach ( $id_chunk as $user_id ) {
+				if ( isset( $with_rows[ $user_id ] ) ) {
+					continue;
+				}
+
+				$no_rows[] = $user_id;
+			}
+
+			unset( $rows, $with_rows );
 		}
-
-		$candidates = array_flip( array_map( 'intval', (array) $rows ) );
-
-		// Who has ANY row, which is what decides the branch bp_xprofile_get_fields_by_visibility_levels()
-		// will take per member. Asked once for the whole batch rather than through the per-member
-		// memo: the memo answers the same question, but filling it for the batch also stores an
-		// entry per id and pulled a user-meta cache fill alongside it, and that pair - not the
-		// query - is what forced the abandoned ceiling.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- ids are ints.
-		$any_rows = $wpdb->get_col(
-			"SELECT DISTINCT user_id FROM {$table} WHERE user_id IN ( {$ids_sql} )"
-		);
-
-		if ( ! empty( $wpdb->last_error ) ) {
-			return false;
-		}
-
-		$with_rows = array_flip( array_map( 'intval', (array) $any_rows ) );
-	}
-
-	// Members with no visibility row at all: the user-meta branch, where an unset field falls back
-	// to the field default. On a populated community this is a handful of members, so the per-member
-	// read below is bounded by that remainder rather than by the set handed in.
-	$no_rows = array();
-
-	foreach ( $user_ids as $user_id ) {
-		if ( isset( $candidates[ $user_id ] ) || isset( $with_rows[ $user_id ] ) ) {
-			continue;
-		}
-
-		$no_rows[] = $user_id;
+	} else {
+		// No table means no member has a row, so every id takes the user-meta branch - the same
+		// answer the per-id loop above produces when both reads come back empty.
+		$no_rows = $user_ids;
 	}
 
 	if ( ! empty( $no_rows ) ) {
