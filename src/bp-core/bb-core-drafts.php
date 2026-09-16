@@ -2425,7 +2425,11 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 		// mid-run, the daily cron would acquire it, and the two runs would then
 		// share the single cursor - the clobbering the lock exists to prevent
 		// (M6). Refreshing per window keeps it held for the life of the drain.
+		// The shared maintenance gate is refreshed with it: it has the same TTL
+		// and the same unbudgeted-drain exposure, and a gate that expires
+		// mid-drain lets the one-shot in against this sweep's own rows.
 		set_site_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+		set_site_transient( 'bb_draft_maintenance_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 		// Window-level budget check: a window whose rows are ALL filtered-out
 		// third-party draft_* keys never reaches the per-row check above, so
@@ -2793,6 +2797,20 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 			$state['cursor'] = $cursor;
 			update_site_option( 'bb_draft_oneshot_state', $state );
 
+			// Refresh the locks each window. This was the one sweep of the three
+			// whose lock was written exactly once and never renewed, while both
+			// siblings already refreshed theirs for precisely this reason:
+			// `wp bb drafts cleanup` runs this with an UNLIMITED budget, so a
+			// stage-1 drain longer than 5 minutes let the transient lapse
+			// mid-run, after which the daily expiry sweep read both keys as free
+			// and started read-modify-writing the same aggregated usermeta rows.
+			// Last writer wins on those rows, so a heal could resurrect an inner
+			// draft the expiry pass had just removed - with its attachment stamps
+			// already released, which hands the 6-hour orphan cron a live draft's
+			// media.
+			set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
+			set_site_transient( 'bb_draft_maintenance_lock', 1, 5 * MINUTE_IN_SECONDS );
+
 			// Window-level budget check - see bb_drafts_delete_expired(): a
 			// window of only filtered-out keys never reaches the per-row check.
 			if ( 0 < $time_budget && $batch['has_more'] && ( time() - $started_at ) >= $time_budget ) {
@@ -2865,6 +2883,12 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 			$budget_result = bb_draft_enforce_user_budget( $heavy_user_id, '', 0, 'heal' );
 			$healed       += count( $budget_result['evicted'] );
+
+			// Stage 2 is unbudgeted under WP-CLI exactly as stage 1 is, and it
+			// evicts rows network-wide, so it needs the same per-iteration lock
+			// renewal.
+			set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
+			set_site_transient( 'bb_draft_maintenance_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 			if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget && ! empty( $state['heavy_users'] ) ) {
 				$complete = false;
