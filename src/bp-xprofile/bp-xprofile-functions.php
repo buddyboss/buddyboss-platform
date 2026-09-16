@@ -1795,14 +1795,21 @@ function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) 
 		$viewer_id = bb_core_get_viewer_user_id();
 	}
 
-	// (a) The "does this member have any visibility row at all" probe, which decides which of the
-	// two branches below bp_xprofile_get_fields_by_visibility_levels() takes.
-	BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+	// Chunked, because both reads below build an `IN ( … )` list and an object-cache fill in
+	// proportion to the batch handed to them, and the batch here is the caller's whole match set -
+	// not a budgeted candidate set. Unchunked, a 70,000-member match produced a single 823 KB
+	// statement. The sibling primer in bb_xprofile_filter_possible_hidden_users() already chunks at
+	// the same size; this one was missed.
+	foreach ( array_chunk( $user_ids, 1000 ) as $prime_chunk ) {
+		// (a) The "does this member have any visibility row at all" probe, which decides which of
+		// the two branches below bp_xprofile_get_fields_by_visibility_levels() takes.
+		BB_XProfile_Visibility::prime_user_data_exists_cache( $prime_chunk );
 
-	// (b) The user-meta branch, taken by every member who has no visibility row - on a community
-	// that has never used custom visibility that is ALL of them. update_meta_cache() queries only
-	// the ids the object cache does not already hold.
-	update_meta_cache( 'user', $user_ids );
+		// (b) The user-meta branch, taken by every member who has no visibility row - on a
+		// community that has never used custom visibility that is ALL of them. update_meta_cache()
+		// queries only the ids the object cache does not already hold.
+		update_meta_cache( 'user', $prime_chunk );
+	}
 
 	// (c) The field-ids memo, primed per distinct hidden-level set. The level set is read from
 	// bp_xprofile_get_hidden_field_types_for_user() per user rather than re-derived here, so a
@@ -1821,7 +1828,12 @@ function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) 
 	}
 
 	foreach ( $by_levels as $levels => $grouped_ids ) {
-		BB_XProfile_Visibility::prime_field_ids_cache( $grouped_ids, explode( ',', $levels ) );
+		// Chunked for the same reason as the two reads above: on a community that has never used
+		// custom visibility every member shares one level set, so $grouped_ids is the whole match
+		// set and this built the single largest statement of the three.
+		foreach ( array_chunk( $grouped_ids, 1000 ) as $level_chunk ) {
+			BB_XProfile_Visibility::prime_field_ids_cache( $level_chunk, explode( ',', $levels ) );
+		}
 	}
 }
 
@@ -4070,6 +4082,22 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
 }
 
 /**
+ * Default ceiling on how many matches ONE PASS of a search may re-resolve in PHP.
+ *
+ * Two independent budgets apply the same contract - the per-member visibility pass and the
+ * profile-field pass - and both fire on a single search. Holding the number in one place keeps them
+ * from drifting apart, which would make the ceiling a site hits depend on which leg it hit first.
+ * The filter is what sites tune; this is only the default it is handed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Default candidate limit.
+ */
+function bb_xprofile_default_search_candidate_limit() {
+	return 500;
+}
+
+/**
  * Whether every name part is readable by this viewer, so no name search of theirs can be filtered.
  *
  * A moderator reads every field, so no match can be hidden from them - and that has to be answered
@@ -4327,7 +4355,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	$display_name_format = bp_core_display_name_format();
 
 	/**
-	 * Filters how many matches a single search may re-resolve in PHP before it stops.
+	 * Filters how many matches ONE PASS of a search may re-resolve in PHP before it stops.
 	 *
 	 * Re-testing a candidate resolves a full display name for them. That is cheap per member and
 	 * ruinous in bulk: on a community where a name field's default visibility is restricted, every
@@ -4344,12 +4372,16 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int    $limit               Maximum number of matches to re-resolve. 0 removes the
-	 *                                    bound entirely. Default 500.
+	 * @param int    $limit               Maximum number of matches ONE PASS may re-resolve, not one
+	 *                                    search: this filter is dispatched by the per-member
+	 *                                    visibility pass and by the profile-field pass, which both
+	 *                                    run for a single search, so a site tuning this is setting
+	 *                                    a per-pass ceiling and the worst case is twice the value.
+	 *                                    0 removes the bound entirely. Default 500.
 	 * @param string $display_name_format Active Display Name Format.
 	 * @param int    $viewer_id           Viewer the visibility is evaluated for.
 	 */
-	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', 500, $display_name_format, $viewer_id );
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bb_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
 
 	$candidate_ids = array_unique( $candidate_ids );
 
@@ -5016,7 +5048,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	}
 
 	/** This filter is documented in bp-xprofile/bp-xprofile-functions.php */
-	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', 500, $display_name_format, $viewer_id );
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bb_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
 
 	$remove_ids = array();
 

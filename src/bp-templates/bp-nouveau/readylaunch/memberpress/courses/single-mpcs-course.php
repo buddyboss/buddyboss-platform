@@ -51,8 +51,11 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div class="bb-rl-course-meta">
 					<div class="bb-rl-meta-item">
 						<?php
-						// Course author name as the current viewer may see it (respects last-name visibility).
-						$course_author_fullname = bp_core_get_user_displayname( $post->post_author );
+						// Course author name as the current viewer may see it. get_the_author_meta() is
+						// redacted by bb_core_filter_the_author_display_name() on the core
+						// `get_the_author_display_name` hook, so this yields the same string AND
+						// leaves that documented hook firing for third parties.
+						$course_author_fullname = get_the_author_meta( 'display_name', $post->post_author );
 
 						if ( ! empty( $course_author_fullname ) ) {
 							?>

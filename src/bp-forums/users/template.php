@@ -1711,8 +1711,11 @@ function bbp_get_author_link( $args = '' ) {
 	// Neither a reply nor a topic, so could be a revision
 	if ( ! empty( $r['post_id'] ) ) {
 
-		// Author name as the current viewer may see it (respects last-name visibility).
-		$author_display_name = bp_core_get_user_displayname( $user_id );
+		// Author name as the current viewer may see it. get_the_author_meta() is redacted by
+		// bb_core_filter_the_author_display_name() on `get_the_author_display_name`, so the core call
+		// is kept: it yields the same string AND leaves that documented hook firing for third
+		// parties, which calling the resolver directly would have silently taken away.
+		$author_display_name = get_the_author_meta( 'display_name', $user_id );
 
 		// Generate title with the display name of the author
 		if ( empty( $r['link_title'] ) ) {

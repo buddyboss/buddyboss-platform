@@ -350,6 +350,10 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 *
 		 * Two sources, in order of reliability:
 		 *
+		 * 0. The member a BuddyBoss member page is about. Asked FIRST, because such a page is a
+		 *    virtual page ON the members directory: is_author() is false and the queried object is
+		 *    the directory post, so every source below would either miss the member or name the
+		 *    wrong entity.
 		 * 1. The SEO plugin's own context for the entity it is rendering. Yoast hands its
 		 *    Meta_Tags_Context to both `wpseo_schema_graph` and `wpseo_meta_author`, and its
 		 *    `indexable` names the entity - `object_type` 'user' with the user id, or 'post' with
@@ -368,6 +372,24 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * @return int[] User ids, possibly empty.
 		 */
 		private function resolve_user_ids( $source = null ) {
+
+			// The BuddyBoss question is asked FIRST, before the SEO plugin's own context.
+			//
+			// A member page is a virtual page ON the members directory: is_author() is false and
+			// get_queried_object() is the directory post, so no generic branch can name the member.
+			// An SEO plugin's context is no better - Yoast resolves an indexable of type `post` for
+			// the directory page and hands back ITS author, which is a real user id, so
+			// resolve_user_ids_from_context() returns non-empty and wins. Asking it first therefore
+			// silently mapped the wrong member on exactly the pages this class exists for: the
+			// profile OG tags, the Person graph piece and the breadcrumb.
+			if ( function_exists( 'bp_is_user' ) && bp_is_user() ) {
+				$displayed_user_id = (int) bp_displayed_user_id();
+
+				if ( $displayed_user_id ) {
+					// Exactly one subject, and return - the directory post's author must not join it.
+					return array( $displayed_user_id );
+				}
+			}
 
 			$user_ids = $this->resolve_user_ids_from_context( $source );
 

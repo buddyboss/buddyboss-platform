@@ -1551,7 +1551,7 @@ class BP_Email_Tokens {
 	 */
 	public function token__reply_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output           = '';
-		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? $tokens['receiver-user.id'] : 0;
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
 
 		// `bbp_*` reply/topic helpers are loaded by the forums component.
 		// A queued forums-reply notification email can dispatch after

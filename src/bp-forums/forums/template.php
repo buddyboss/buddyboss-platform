@@ -409,6 +409,8 @@ function bbp_forum_permalink( $forum_id = 0 ) {
  * @uses                  apply_filters() Calls 'bbp_get_forum_permalink' with the forum
  *                        link
  * @uses                  bbp_get_forum_id() To get the forum id
+ * @uses                  get_the_author_meta() To get the author display name, redacted for the
+ *                        current viewer by bb_core_filter_the_author_display_name()
  */
 function bbp_get_forum_permalink( $forum_id = 0, $redirect_to = '' ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
@@ -2162,7 +2164,7 @@ function bbp_forum_author_display_name( $forum_id = 0 ) {
  */
 function bbp_get_forum_author_display_name( $forum_id = 0 ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
-	$author   = bp_core_get_user_displayname( bbp_get_forum_author_id( $forum_id ) );
+	$author   = get_the_author_meta( 'display_name', bbp_get_forum_author_id( $forum_id ) );
 
 	return apply_filters( 'bbp_get_forum_author_display_name', $author, $forum_id );
 }

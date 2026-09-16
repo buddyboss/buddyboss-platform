@@ -1097,7 +1097,7 @@ function bbp_get_reply_author( $reply_id = 0 ) {
 	if ( ! bbp_is_reply_anonymous( $reply_id ) ) {
 		// Resolved for the current viewer: the raw display_name ignores the Last Name
 		// field's visibility level.
-		$author = bp_core_get_user_displayname( bbp_get_reply_author_id( $reply_id ) );
+		$author = get_the_author_meta( 'display_name', bbp_get_reply_author_id( $reply_id ) );
 	} else {
 		$author = get_post_meta( $reply_id, '_bbp_anonymous_name', true );
 	}

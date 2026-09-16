@@ -3904,4 +3904,412 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * The matcher must replace a name in a script written without word separators.
+	 *
+	 * Platform owns bb_core_replace_names() and had no test for it. The first version of the
+	 * whole-word boundary asserted `(?![\p{L}\p{N}_])` for every script; in Japanese, Chinese,
+	 * Korean and Thai the next character is always a letter, so the assertion never held, the
+	 * replacement never fired, and the surname was published in full. Compared against strtr(),
+	 * the call the boundary replaced, because that is the behaviour that must not be lost.
+	 *
+	 * @dataProvider continuous_script_name_provider
+	 * @group bb_core_replace_names
+	 *
+	 * @param string $text   Text containing the stored name.
+	 * @param string $stored Stored name.
+	 * @param string $safe   Name this viewer may see.
+	 */
+	public function test_replace_names_redacts_a_name_in_a_separatorless_script( $text, $stored, $safe ) {
+		$map = array( $stored => $safe );
+
+		$this->assertSame(
+			strtr( $text, $map ),
+			bb_core_replace_names( $text, $map ),
+			'The name was left standing where strtr() would have replaced it.'
+		);
+	}
+
+	/**
+	 * Names in scripts written without word separators, plus the mixed-script shape.
+	 *
+	 * @return array
+	 */
+	public function continuous_script_name_provider() {
+		return array(
+			'japanese'      => array( "\u{5C71}\u{7530}\u{592A}\u{90CE}\u{3055}\u{3093}\u{304C}\u{6295}\u{7A3F}", "\u{5C71}\u{7530}\u{592A}\u{90CE}", "\u{5C71}\u{7530}" ),
+			'korean'        => array( "\u{AE40}\u{CCA0}\u{C218}\u{B2D8}\u{C774}", "\u{AE40}\u{CCA0}\u{C218}", "\u{AE40}" ),
+			'chinese'       => array( "\u{674E}\u{660E}\u{53D1}\u{5E03}\u{4E86}", "\u{674E}\u{660E}", "\u{674E}" ),
+			'thai'          => array( "\u{0E2A}\u{0E21}\u{0E0A}\u{0E32}\u{0E22}\u{0E43}\u{0E08}\u{0E14}\u{0E35}\u{0E42}\u{0E1E}\u{0E2A}\u{0E15}", "\u{0E2A}\u{0E21}\u{0E0A}\u{0E32}\u{0E22}\u{0E43}\u{0E08}\u{0E14}\u{0E35}", "\u{0E2A}\u{0E21}\u{0E0A}\u{0E32}\u{0E22}" ),
+			'latin-in-kana' => array( "Alex Quillfeather\u{3055}\u{3093}\u{306E}\u{8A18}\u{4E8B}", 'Alex Quillfeather', 'Alex' ),
+		);
+	}
+
+	/**
+	 * The boundary must still protect an ordinary word that merely starts with a member's name.
+	 *
+	 * The other half of the same rule: this is the defect the boundary was added for, and a fix for
+	 * the separator-less scripts must not undo it.
+	 *
+	 * @group bb_core_replace_names
+	 */
+	public function test_replace_names_does_not_rewrite_the_middle_of_a_longer_word() {
+		$this->assertSame(
+			'A. joined the Annapolis Anniversary group',
+			bb_core_replace_names( 'Ann joined the Annapolis Anniversary group', array( 'Ann' => 'A.' ) ),
+			'A longer word starting with the name was rewritten.'
+		);
+
+		$this->assertSame(
+			'Zoey and Z. are friends',
+			bb_core_replace_names( 'Zoey and Zoe are friends', array( 'Zoe' => 'Z.' ) ),
+			'The standalone name was missed, or the longer word was corrupted.'
+		);
+	}
+
+	/**
+	 * A filter may only ever ADD scripts to the continuous class.
+	 *
+	 * The filter's own docblock promises a listener can make the redaction more aggressive and
+	 * never less. A returned value that is narrower, empty, or not a valid class body would
+	 * otherwise restore a boundary that cannot hold and leave the name standing - the filter would
+	 * then be a way to switch the redaction off.
+	 *
+	 * @dataProvider hostile_script_class_provider
+	 * @group bb_core_replace_names
+	 *
+	 * @param mixed $returned What the listener returns.
+	 * @param bool  $append   Optional. Append $returned to the default class instead of replacing
+	 *                        it, which is what a well-meaning listener extending the class does -
+	 *                        and the shape an escape-aware check has to get right. Default false.
+	 */
+	public function test_a_hostile_script_class_filter_cannot_disable_the_redaction( $returned, $append = false ) {
+		$callback = function ( $class_body ) use ( $returned, $append ) {
+			return $append ? $class_body . $returned : $returned;
+		};
+
+		add_filter( 'bb_core_continuous_script_class', $callback, 99 );
+
+		$text = "\u{5C71}\u{7530}\u{592A}\u{90CE}\u{3055}\u{3093}\u{304C}\u{6295}\u{7A3F}";
+		$map  = array( "\u{5C71}\u{7530}\u{592A}\u{90CE}" => "\u{5C71}\u{7530}" );
+		$out  = bb_core_replace_names( $text, $map );
+
+		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
+
+		$this->assertSame( strtr( $text, $map ), $out, 'A listener was able to switch the redaction off.' );
+	}
+
+	/**
+	 * Return values a listener must not be able to weaken the redaction with.
+	 *
+	 * @return array
+	 */
+	public function hostile_script_class_provider() {
+		return array(
+			'empty'                  => array( '' ),
+			'unbalanced'             => array( '\p{Han}]' ),
+			'not a class'            => array( 'NOT_A_CLASS' ),
+			'unknown script'         => array( '\p{Nosuchscript}' ),
+			'narrowed'               => array( '\p{Thai}' ),
+
+			// Appended to the default, which is how a listener that means to EXTEND the class
+			// writes it. A one-character lookbehind cannot tell an escaped `]` from a `]` that
+			// follows an escaped backslash, so `\\]` closed the class early and every name
+			// against a separator-less script was left standing while Latin text still redacted.
+			'escaped backslash then bracket' => array( '\\\\]', true ),
+			'two escaped backslashes'        => array( '\\\\\\\\]', true ),
+			'bracket appended'               => array( ']', true ),
+
+		);
+	}
+
+	/**
+	 * A listener that does not return a string is refused outright.
+	 *
+	 * Asserted on the resolved class rather than on the redaction, because the redaction still
+	 * works for these shapes whether or not the guard exists - `(string) array()` yields "Array",
+	 * which is a perfectly valid class body, so the hostile-return test above passes for them
+	 * either way and proves nothing. What the guard actually prevents is a PHP warning raised on a
+	 * public filter and a junk script spliced into the class.
+	 *
+	 * @dataProvider non_string_script_class_provider
+	 * @group bb_core_replace_names
+	 *
+	 * @param mixed $returned What the listener returns.
+	 */
+	public function test_a_non_string_script_class_return_is_refused( $returned ) {
+		$default = bb_core_get_continuous_script_class();
+
+		$callback = function () use ( $returned ) {
+			return $returned;
+		};
+
+		add_filter( 'bb_core_continuous_script_class', $callback, 99 );
+		$resolved = bb_core_get_continuous_script_class();
+		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
+
+		$this->assertSame( $default, $resolved, 'A non-string listener return reached the class body.' );
+		$this->assertStringNotContainsString( 'Array', $resolved, 'An array return was cast into the class.' );
+	}
+
+	/**
+	 * Listener returns that are not strings at all.
+	 *
+	 * @return array
+	 */
+	public function non_string_script_class_provider() {
+		return array(
+			'array'   => array( array( 'x' ) ),
+			'null'    => array( null ),
+			'integer' => array( 5 ),
+			'object'  => array( new stdClass() ),
+		);
+	}
+
+	/**
+	 * A combining mark is word-forming on BOTH edges of a name.
+	 *
+	 * The leading edge omitted `\p{M}` on the argument that a mark belongs to whatever precedes it.
+	 * That is exactly why a name must not start matching straight after one: in decomposed (NFD)
+	 * text "Ann" matched inside "Jose<combining acute>Ann" and rewrote the middle of a word nobody
+	 * was redacting. The trailing edge already had a case; this is the mirror of it, and without it
+	 * reverting the fix leaves every suite green.
+	 *
+	 * @group bb_core_replace_names
+	 */
+	public function test_a_combining_mark_is_word_forming_on_the_leading_edge() {
+		$subject = "Jose\xCC\x81Ann posted";
+
+		$this->assertSame(
+			$subject,
+			bb_core_replace_names( $subject, array( 'Ann' => 'A.' ) ),
+			'A name matched straight after a combining mark and corrupted a decomposed word.'
+		);
+
+		// The mirror direction, which already passed, kept here so the pair cannot drift apart.
+		$this->assertSame(
+			"Z. and Zoe\xCC\x88 Muller",
+			bb_core_replace_names( "Zoe and Zoe\xCC\x88 Muller", array( 'Zoe' => 'Z.' ) ),
+			'A decomposed word was split on the trailing edge.'
+		);
+
+		// ...and an ordinary standalone name still matches, so the assertion above cannot pass by
+		// the matcher simply having stopped working.
+		$this->assertSame(
+			'A. posted',
+			bb_core_replace_names( 'Ann posted', array( 'Ann' => 'A.' ) ),
+			'The standalone name stopped matching.'
+		);
+	}
+
+	/**
+	 * The entity-encoded spelling is found from a RAW-only map.
+	 *
+	 * Callers hand over the raw `wp_users.display_name` column, but the text being searched is not
+	 * always raw: Yoast escapes the document title before passing it on, so the later filters see
+	 * `O&#039;Brien` where the column holds `O'Brien`. Matching only the column found nothing there
+	 * and the redaction failed OPEN and silently - the mechanism behind this ticket's original
+	 * report. The map here carries ONLY the raw spelling, so the expansion has to be the matcher's
+	 * own work; a test that pre-expands the map passes whether or not the code does anything.
+	 *
+	 * @dataProvider entity_spelling_provider
+	 * @group bb_core_replace_names
+	 *
+	 * @param string $subject Text as a filter further down the chain sees it.
+	 * @param string $stored  Raw stored name.
+	 * @param string $safe    Name this viewer may see.
+	 * @param string $leak    Fragment that must not survive.
+	 */
+	public function test_the_entity_spelling_is_expanded_from_a_raw_map( $subject, $stored, $safe, $leak ) {
+		$out = bb_core_replace_names( $subject, array( $stored => $safe ) );
+
+		$this->assertStringNotContainsString( $leak, $out, 'The entity-encoded spelling was not matched.' );
+		$this->assertStringContainsString( $safe, $out, 'The permitted name is missing from the result.' );
+	}
+
+	/**
+	 * Names whose escaped spelling differs from the column.
+	 *
+	 * @return array
+	 */
+	public function entity_spelling_provider() {
+		return array(
+			'apostrophe' => array( 'posted by Fiona O&#039;Brien today', "Fiona O'Brien", 'Fiona', 'Brien' ),
+			'quotes'     => array( 'posted by Jo &quot;Q&quot; Smith today', 'Jo "Q" Smith', 'Jo', 'Smith' ),
+			'ampersand'  => array( 'posted by Ben &amp; Co today', 'Ben & Co', 'Ben', 'Co' ),
+		);
+	}
+
+	/**
+	 * The continuous-script class is actually dispatched through its public filter.
+	 *
+	 * Every other assertion here observes what a listener could not DO. If the dispatch were
+	 * removed the class would simply be the hard-coded default, every hostile-return case above
+	 * would pass for the wrong reason, and the documented extension point would silently not
+	 * exist.
+	 *
+	 * @group bb_core_replace_names
+	 */
+	public function test_the_continuous_script_class_is_dispatched_through_its_filter() {
+		$seen     = 0;
+		$callback = function ( $class_body ) use ( &$seen ) {
+			++$seen;
+
+			return $class_body;
+		};
+
+		add_filter( 'bb_core_continuous_script_class', $callback, 99 );
+		bb_core_replace_names( 'Ann posted', array( 'Ann' => 'A.' ) );
+		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
+
+		$this->assertGreaterThan( 0, $seen, 'bb_core_continuous_script_class was never dispatched.' );
+	}
+
+	/**
+	 * A listener that legitimately extends the class is still honoured.
+	 *
+	 * The guard above refuses bodies that would close the class early. It must not refuse the
+	 * ordinary case as well, or the extension point is documented and inert.
+	 *
+	 * @group bb_core_replace_names
+	 */
+	public function test_a_listener_may_add_a_script_to_the_continuous_class() {
+		$callback = function ( $class_body ) {
+			return $class_body . '\p{Cyrillic}';
+		};
+
+		add_filter( 'bb_core_continuous_script_class', $callback, 99 );
+		$class = bb_core_get_continuous_script_class();
+		remove_filter( 'bb_core_continuous_script_class', $callback, 99 );
+
+		$this->assertStringContainsString( '\p{Cyrillic}', $class, 'A valid addition was discarded.' );
+		$this->assertStringContainsString( '\p{Han}', $class, 'The defaults were not preserved.' );
+	}
+
+	/**
+	 * The `wp/v2/users` name exemption must not be reachable by an ordinary member.
+	 *
+	 * buddyboss-app grants `list_users` to EVERY caller for the duration of
+	 * WP_REST_Users_Controller::get_item(), and wp_get_referer() reads the caller-supplied
+	 * `_wp_http_referer` parameter, so both halves of the previous gate were forgeable and a
+	 * subscriber could read a withheld surname from `?_fields=name`. The exemption now turns on
+	 * `edit_users`, which that grant does not cover.
+	 *
+	 * @group bb_rest_name_exemption
+	 */
+	public function test_rest_users_name_exemption_is_not_reachable_by_a_subscriber() {
+		$member = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather', 'Alex' );
+		$viewer = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		$this->set_current_user( $viewer );
+
+		// Forge both halves of the old gate.
+		$grant = function ( $allcaps ) {
+			$allcaps['list_users'] = true;
+
+			return $allcaps;
+		};
+		add_filter( 'user_has_cap', $grant, 10, 1 );
+		$_REQUEST['_wp_http_referer'] = '/wp-admin/post-new.php';
+		$_GET['_wp_http_referer']     = '/wp-admin/post-new.php';
+
+		$request = new WP_REST_Request( 'GET', '/wp/v2/users/' . $member );
+		$request->set_param( '_fields', 'name' );
+		$data = rest_do_request( $request )->get_data();
+
+		remove_filter( 'user_has_cap', $grant, 10 );
+		unset( $_REQUEST['_wp_http_referer'], $_GET['_wp_http_referer'] );
+
+		$this->assertIsArray( $data );
+		$this->assertArrayHasKey( 'name', $data );
+
+		// Both halves. Asserting only the absence of the surname passes on an empty string, so a
+		// gate that redacted EVERYTHING would look correct here.
+		$this->assertStringNotContainsString(
+			'Quillfeather',
+			(string) $data['name'],
+			'A subscriber read the withheld surname by forging list_users and the referer.'
+		);
+		$this->assertStringContainsString(
+			'Alex',
+			(string) $data['name'],
+			'The permitted name part was withheld too - the gate over-redacts.'
+		);
+	}
+
+	/**
+	 * A caller who genuinely holds `edit_users` must still receive the canonical column.
+	 *
+	 * The exemption exists so wp-admin user management can tell two members with the same first
+	 * name apart. Without this the suite stays green when the gate is replaced by `if ( false )`.
+	 *
+	 * @group bb_rest_name_exemption
+	 */
+	public function test_rest_users_name_exemption_still_applies_to_a_user_editor() {
+		$member = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather', 'Alex' );
+		$editor = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		$this->set_current_user( $editor );
+
+		$this->assertTrue( current_user_can( 'edit_users' ), 'Fixture: the viewer must hold edit_users.' );
+
+		$request = new WP_REST_Request( 'GET', '/wp/v2/users/' . $member );
+		$request->set_param( '_fields', 'name' );
+		$data = rest_do_request( $request )->get_data();
+
+		$this->assertStringContainsString(
+			'Quillfeather',
+			(string) $data['name'],
+			'A user editor lost the canonical name the exemption exists to preserve.'
+		);
+	}
+
+	/**
+	 * `wp/v2/users?search=` must not confirm a name part the viewer may not read.
+	 *
+	 * Redacting `name` is not enough on a search route: the query matches the raw columns, so the
+	 * presence or absence of a result answers "does this member's hidden surname contain X?" - an
+	 * oracle an anonymous caller can walk a character at a time.
+	 *
+	 * @group bb_rest_name_exemption
+	 */
+	public function test_rest_users_search_does_not_confirm_a_withheld_name_part() {
+		$member = $this->create_member_with_hidden_surname( 'adminsonly', 'Quillfeather', 'Alex' );
+
+		// WordPress only lists a user to an anonymous caller once they have a published post.
+		// Without this the member is absent from every response and the "surname is not confirmed"
+		// assertion below would pass because nothing was listed at all, not because the fix works.
+		self::factory()->post->create(
+			array(
+				'post_author' => $member,
+				'post_status' => 'publish',
+			)
+		);
+
+		$this->set_current_user( 0 );
+
+		$search = function ( $term ) {
+			$request = new WP_REST_Request( 'GET', '/wp/v2/users' );
+			$request->set_param( 'search', $term );
+			$request->set_param( '_fields', 'id' );
+			$data = rest_do_request( $request )->get_data();
+
+			return is_array( $data ) ? wp_list_pluck( $data, 'id' ) : array();
+		};
+
+		$this->assertNotContains(
+			$member,
+			$search( 'Quillfeather' ),
+			'An anonymous search for the withheld surname returned the member - the oracle is open.'
+		);
+
+		// The other half: a search on the part the viewer MAY read must still find them, or the
+		// fix has replaced a disclosure with a broken search.
+		$this->assertContains(
+			$member,
+			$search( 'Alex' ),
+			'The member is no longer findable by the name part this viewer is shown.'
+		);
+	}
+
 }

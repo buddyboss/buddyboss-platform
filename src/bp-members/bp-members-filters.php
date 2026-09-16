@@ -1129,8 +1129,12 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	 * Filters whether BuddyBoss name visibility is applied to WordPress core author output.
 	 *
 	 * Covers the author archive title, the author feed, the feed autodiscovery link, `the_author`
-	 * and the `wp/v2/users` REST response. Return false to leave WordPress core emitting the raw
-	 * `display_name` column on those surfaces.
+	 * and the `wp/v2/users` REST response - and, through BB_SEO_Helpers::get_name_map(), the name an
+	 * SEO plugin emits in its Open Graph tags and JSON-LD graph. That sixth surface is easy to miss:
+	 * returning false here does not only restore core's own author output, it also stops Yoast,
+	 * Rank Math and All in One SEO being corrected, so a hidden surname reaches social scrapers.
+	 * Return false to leave WordPress core emitting the raw `display_name` column on those
+	 * surfaces.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1376,7 +1380,30 @@ function bb_core_filter_rest_prepare_user( $response, $user ) {
 	// on the capability those screens require instead, for the same reason: user management needs
 	// the canonical column to tell two members with the same first name apart. Anonymous callers
 	// and ordinary members - the audience this ticket is about - never hold it.
-	if ( current_user_can( 'list_users' ) ) {
+	// is_user_logged_in() FIRST, and not as a shortcut. current_user_can() was observed returning
+	// true for user 0 on this very route when `_fields` is set - the capability check is answered
+	// from a cap cache that a full-response build happens to reset and a trimmed one does not - so
+	// the exemption fired for an ANONYMOUS caller and `?_fields=name` published the withheld
+	// surname while the same route without the parameter redacted it. A logged-out request can
+	// never be one of the wp-admin screens this exemption exists for, so the login state is the
+	// reliable half of the test and is asked first.
+	// `list_users` cannot carry this exemption. buddyboss-app's
+	// BuddyBossApp\ClientCommon::give_permissions_list_users() attaches a `user_has_cap` filter that
+	// answers `list_users` TRUE for EVERY caller - user 0 included - for the duration of
+	// WP_REST_Users_Controller::get_item(), which is exactly the window `rest_prepare_user` fires
+	// in. An ordinary subscriber could therefore read a withheld surname straight off
+	// `wp/v2/users/<id>?_fields=name`. A referer test is no help either: wp_get_referer() reads the
+	// `_wp_http_referer` REQUEST parameter, so the caller supplies that too.
+	//
+	// `edit_users` is what the wp-admin user-management screens this exemption exists for actually
+	// require, and the App's grant returns early for every capability except `list_users`, so it
+	// cannot be forged through that window.
+	// `edit_users` maps to `do_not_allow` for a non-super-admin on multisite
+	// (wp-includes/capabilities.php), so a SITE administrator would lose this exemption and the
+	// users table would show two indistinguishable "Alex" rows - the disambiguation the exemption
+	// exists for. `manage_network_users` restores it for them without widening it to the
+	// `list_users` the App grants to everyone.
+	if ( current_user_can( 'edit_users' ) || current_user_can( 'manage_network_users' ) ) {
 		return $response;
 	}
 
@@ -1398,3 +1425,182 @@ function bb_core_filter_rest_prepare_user( $response, $user ) {
 	return $response;
 }
 add_filter( 'rest_prepare_user', 'bb_core_filter_rest_prepare_user', 10, 2 );
+
+/**
+ * Stop `wp/v2/users?search=` confirming a name part the viewer may not read.
+ *
+ * Redacting the `name` field is not enough on a search route. WP_User_Query matches `search` against
+ * the raw `user_nicename`/`display_name` columns, so a caller who cannot be SHOWN a surname can still
+ * ask whether it exists: `?search=Quillfeather` returns the member, `?search=Xylophone` returns
+ * nothing, and the difference between those two responses is the withheld name. Repeated a character
+ * at a time that reconstructs it, anonymously.
+ *
+ * The same rule the member directory applies is applied here, through the same producer, so the two
+ * cannot answer the question differently. Only members whose match lies ONLY in a part this viewer
+ * may not read are excluded - a member matching on a public name part is a legitimate hit and is
+ * still returned.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array           $prepared_args WP_User_Query arguments.
+ * @param WP_REST_Request $request       The REST request.
+ * @return array Arguments, with the members whose only match is withheld excluded.
+ */
+function bb_core_filter_rest_user_query_name_matches( $prepared_args, $request ) {
+	global $wpdb;
+
+	if ( empty( $prepared_args['search'] ) || ! function_exists( 'bb_xprofile_get_hidden_name_search_user_ids' ) ) {
+		return $prepared_args;
+	}
+
+	// WP 6.8+ lets a caller restrict which columns the search runs against. When `display_name` is
+	// not among them the search cannot be answering from a name part at all, so there is nothing
+	// here to withhold and narrowing the set would only drop legitimate hits.
+	$search_columns = array();
+
+	if ( $request instanceof WP_REST_Request ) {
+		$search_columns = (array) $request->get_param( 'search_columns' );
+	}
+
+	if ( ! empty( $search_columns ) && ! in_array( 'name', $search_columns, true ) ) {
+		return $prepared_args;
+	}
+
+	$viewer_id = bb_core_get_viewer_user_id();
+
+	if ( function_exists( 'bb_xprofile_search_viewer_sees_every_name' ) && bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+		return $prepared_args;
+	}
+
+	$term = trim( (string) $prepared_args['search'], '*' );
+
+	if ( '' === $term ) {
+		return $prepared_args;
+	}
+
+	$like   = '%' . $wpdb->esc_like( $term ) . '%';
+	$hidden = bb_xprofile_get_hidden_name_search_user_ids( array( $like ), $viewer_id );
+
+	// false is "this could not be resolved", never "nobody is hidden". The member directory answers
+	// that by withholding the display_name leg only, so this does the same: the members whose name
+	// match cannot be verified are excluded, and every other search column still answers. Returning
+	// no results at all would turn one transient database error into a site-wide empty member
+	// search, which is a worse failure than the one being guarded against.
+	if ( false === $hidden ) {
+		$hidden = bb_core_get_name_only_search_match_ids( $like );
+	}
+
+	$hidden = array_filter( array_map( 'intval', (array) $hidden ) );
+
+	if ( empty( $hidden ) ) {
+		return $prepared_args;
+	}
+
+	// A member whose PUBLIC identifier also matches is a legitimate hit and must stay. Excluding by
+	// user id removes them from every search column at once, so without this a member called `bbde`
+	// vanished from a search for "b" because their withheld surname happened to match too.
+	$hidden = bb_core_remove_public_identifier_matches( $hidden, $like );
+
+	if ( empty( $hidden ) ) {
+		return $prepared_args;
+	}
+
+	$existing                 = isset( $prepared_args['exclude'] ) ? (array) $prepared_args['exclude'] : array();
+	$prepared_args['exclude'] = array_values( array_unique( array_merge( array_map( 'intval', $existing ), $hidden ) ) );
+
+	return $prepared_args;
+}
+// Priority 99: buddyboss-app registers its own `rest_user_query` listeners at 10 and overwrites
+// `include`/`exclude` wholesale, so a lower priority here is silently discarded.
+add_filter( 'rest_user_query', 'bb_core_filter_rest_user_query_name_matches', 99, 2 );
+
+/**
+ * Members whose display_name matches a term, used when the visibility producer cannot answer.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $like LIKE pattern, already escaped.
+ * @return int[] User ids.
+ */
+function bb_core_get_name_only_search_match_ids( $like ) {
+	global $wpdb;
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+	$ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->users} WHERE display_name LIKE %s", $like ) );
+
+	return array_filter( array_map( 'intval', (array) $ids ) );
+}
+
+/**
+ * Drop members whose public identifier matches the term in its own right.
+ *
+ * `user_login` and `user_nicename` are public - they appear in the member's permalink - so a match
+ * on either is not a disclosure and the member must remain findable by it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int[]  $user_ids Ids about to be excluded.
+ * @param string $like     LIKE pattern, already escaped.
+ * @return int[] The subset that matched ONLY on a withheld name part.
+ */
+function bb_core_remove_public_identifier_matches( $user_ids, $like ) {
+	global $wpdb;
+
+	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+
+	if ( empty( $user_ids ) ) {
+		return array();
+	}
+
+	$ids_sql = implode( ',', $user_ids );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- ids are ints, the pattern is bound.
+	$public = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT ID FROM {$wpdb->users} WHERE ID IN ( {$ids_sql} ) AND ( user_login LIKE %s OR user_nicename LIKE %s )",
+			$like,
+			$like
+		)
+	);
+
+	$public = array_filter( array_map( 'intval', (array) $public ) );
+
+	return array_values( array_diff( $user_ids, $public ) );
+}
+
+/**
+ * Redact the author name WordPress publishes in an oEmbed response.
+ *
+ * The sixth WP-core surface this bridge covers, and the one that reaches furthest: core builds the
+ * payload in get_oembed_response_data() with a raw `$author->display_name` property read, and every
+ * page advertises the endpoint itself through a `<link rel="alternate" type="application/json+oembed">`
+ * tag. Slack, Discord, Flipboard and Embedly follow that link, so a member whose surname is withheld
+ * had it published in the link preview of every post they wrote, to an unauthenticated GET, in JSON
+ * and in XML - from a page whose own HTML was correctly redacted.
+ *
+ * bb_core_get_redacted_core_author_name() returns null in wp-admin, during a re-entrant resolution
+ * and when `bb_core_redact_core_author_name` is filtered false; the payload is left untouched in all
+ * three, so no other oEmbed consumer changes behaviour.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array   $data The response data.
+ * @param WP_Post $post The post object.
+ * @return array The response data, with the author name resolved for this viewer.
+ */
+function bb_core_filter_oembed_author_name( $data, $post ) {
+	if ( ! is_array( $data ) || empty( $data['author_name'] ) || empty( $post->post_author ) ) {
+		return $data;
+	}
+
+	$redacted = bb_core_get_redacted_core_author_name( (int) $post->post_author );
+
+	if ( null === $redacted ) {
+		return $data;
+	}
+
+	$data['author_name'] = $redacted;
+
+	return $data;
+}
+add_filter( 'oembed_response_data', 'bb_core_filter_oembed_author_name', 10, 2 );

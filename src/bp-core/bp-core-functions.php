@@ -11138,11 +11138,67 @@ function bb_core_get_continuous_script_class() {
 	 * Extending this class makes name redaction MORE aggressive for the scripts added, never less:
 	 * a script listed here gives up the boundary that would have protected an ordinary word.
 	 *
+	 * The return is interpolated into a character class and must be a valid class body. A value
+	 * that does not compile is discarded in favour of the default, because the alternative is a
+	 * pattern that matches nothing: preg_replace() would then return null, the name would be left
+	 * standing in full, and the filter would have made the redaction LESS aggressive - the one
+	 * outcome this docblock rules out.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $class Regex character-class body, without the enclosing brackets.
 	 */
-	return (string) apply_filters( 'bb_core_continuous_script_class', $class );
+	$filtered = apply_filters( 'bb_core_continuous_script_class', $class );
+
+	// A listener that returns an array, an object or null is not offering a class body. Casting it
+	// would emit "Array to string conversion" on a public extension point and splice the word
+	// "Array" into the class; refusing it keeps the default, which is the safe direction.
+	if ( ! is_string( $filtered ) || $class === $filtered ) {
+		return $class;
+	}
+
+	// Union, never replace. The docblock above promises a listener can only make the redaction more
+	// aggressive, and only a union delivers that: a listener that RETURNS a narrower body - or one
+	// that simply does not repeat the defaults - would otherwise take a script out of the class,
+	// restore the boundary it had given up, and leave that script's names standing. The defaults
+	// are therefore always present, and the filter adds to them.
+	$addition = str_replace( $class, '', $filtered );
+
+	// An unescaped `]` would close the class early wherever it is interpolated, turning the rest of
+	// the body into literal pattern text. It compiles, so it cannot be caught by a compile test.
+	//
+	// Every escape sequence is removed before the check rather than looking behind one character:
+	// a one-character lookbehind cannot tell an escaped `]` (`\]`, safe) from one that merely
+	// follows an escaped backslash (`\\]`, which closes the class). Any `]` still standing after
+	// the escapes are gone is unescaped. A failed preg_replace() returns null and is refused too,
+	// because the alternative is accepting a body this check never actually inspected.
+	$unescaped = preg_replace( '/\\\\./s', '', $addition );
+
+	if ( '' === $addition || null === $unescaped || false !== strpos( $unescaped, ']' ) ) {
+		return $class;
+	}
+
+	$combined = $class . $addition;
+
+	return bb_core_is_valid_character_class( $combined ) ? $combined : $class;
+}
+
+/**
+ * Whether a string is usable as the body of a regex character class.
+ *
+ * Compiled against a throwaway subject with the same `u` modifier the matcher uses, because a class
+ * body can be well-formed for a byte pattern and invalid for a Unicode one. preg_match() emits a
+ * warning and returns false on a bad pattern, so the warning is suppressed and the return value is
+ * what is trusted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $class_body Regex character-class body, without the enclosing brackets.
+ * @return bool True when `[$class_body]` compiles.
+ */
+function bb_core_is_valid_character_class( $class_body ) {
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- an invalid pattern is the thing being detected; preg_match() reports it by returning false.
+	return false !== @preg_match( '/[' . $class_body . ']/u', '' );
 }
 
 /**
@@ -11159,11 +11215,13 @@ function bb_core_get_continuous_script_class() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $char     First or last character of the name being matched.
- * @param bool   $trailing Optional. Whether this is the name's trailing edge. Default false.
+ * @param string      $char       First or last character of the name being matched.
+ * @param bool        $trailing   Optional. Whether this is the name's trailing edge. Default false.
+ * @param string|null $continuous Optional. Continuous-script class body, resolved once by a caller
+ *                                that builds several assertions. Null resolves it here. Default null.
  * @return string A lookaround assertion, or an empty string where no boundary can be asserted.
  */
-function bb_core_get_name_boundary_assertion( $char, $trailing = false ) {
+function bb_core_get_name_boundary_assertion( $char, $trailing = false, $continuous = null ) {
 	$char = (string) $char;
 
 	// A non-word edge character already stands at a boundary, and asserting one after it would
@@ -11172,7 +11230,14 @@ function bb_core_get_name_boundary_assertion( $char, $trailing = false ) {
 		return '';
 	}
 
-	$continuous = bb_core_get_continuous_script_class();
+	// Resolved by the caller where one call builds several assertions, so the filter behind it is
+	// dispatched once for the whole pattern instead of twice per name. Passing null keeps the
+	// single-argument behaviour every other caller relies on.
+	if ( null === $continuous ) {
+		$continuous = bb_core_get_continuous_script_class();
+	} else {
+		$continuous = (string) $continuous;
+	}
 
 	// The name's own edge is written without separators, so no boundary is expressible on this side.
 	// Assert nothing rather than an assertion that can never hold: an assertion that never holds
@@ -11181,10 +11246,11 @@ function bb_core_get_name_boundary_assertion( $char, $trailing = false ) {
 		return '';
 	}
 
-	// A combining mark continues the grapheme it follows, so it closes the trailing edge the way a
-	// letter of the same script does. It cannot open the leading edge - it belongs to whatever
-	// stands before it.
-	$word = $trailing ? '\p{L}\p{N}\p{M}_' : '\p{L}\p{N}_';
+	// A combining mark continues the grapheme it follows, so it is word-forming on BOTH edges. The
+	// leading edge used to omit it on the argument that a mark belongs to whatever stands before
+	// it - true, and beside the point: that is exactly why a name must not start matching straight
+	// after one. Omitting it let "oe" match inside a decomposed "Z<combining diaeresis>oe".
+	$word = '\p{L}\p{N}\p{M}_';
 
 	return $trailing
 		? '(?:(?=[' . $continuous . '])|(?![' . $word . ']))'
@@ -11256,15 +11322,19 @@ function bb_core_replace_names( $text, $map ) {
 
 	array_multisort( $lengths, SORT_DESC, SORT_NUMERIC, $needles );
 
+	// Resolved once for the whole pattern. Each needle contributes two boundary assertions and each
+	// of those would otherwise dispatch the `bb_core_continuous_script_class` filter again.
+	$continuous_class = bb_core_get_continuous_script_class();
+
 	$branches = array();
 
 	foreach ( $needles as $needle ) {
 		$first = ( 1 === preg_match( '/\A./us', $needle, $edge ) ) ? $edge[0] : '';
 		$last  = ( 1 === preg_match( '/.\z/us', $needle, $edge ) ) ? $edge[0] : '';
 
-		$branches[] = bb_core_get_name_boundary_assertion( $first ) .
+		$branches[] = bb_core_get_name_boundary_assertion( $first, false, $continuous_class ) .
 			'(?:' . preg_quote( $needle, '/' ) . ')' .
-			bb_core_get_name_boundary_assertion( $last, true );
+			bb_core_get_name_boundary_assertion( $last, true, $continuous_class );
 	}
 
 	$replaced = preg_replace_callback(
