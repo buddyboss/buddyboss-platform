@@ -1434,7 +1434,22 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// is still judged on its post-strip width (M4).
 			foreach ( $draft_content_keys as $draft_content_key ) {
 				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
-					$draft_activity['data'][ $draft_content_key ] = bb_draft_strip_data_urls( $draft_activity['data'][ $draft_content_key ] );
+					// Unslash across the call, then re-slash. This handler keeps the
+					// payload SLASHED for its whole length, but the forum caller
+					// hands the same helper UNSLASHED content - and two of the
+					// helper's three rules match on `=\s*"`, which a backslash
+					// between the `=` and the quote defeats. So on this path the
+					// base64 rule fired while the non-base64 data: rule and the
+					// empty-<img> cleanup silently did not, and an SVG or
+					// percent-encoded data URI over the cap was refused on every
+					// 20-second autosave while the identical content saved fine in
+					// the forum composer. One predicate, two slash states, opposite
+					// outcomes. The round trip is byte-lossless, and re-slashing
+					// before returning keeps this function's all-slashed invariant
+					// (and update_metadata()'s own wp_unslash()) exactly as it was.
+					$draft_activity['data'][ $draft_content_key ] = wp_slash(
+						bb_draft_strip_data_urls( wp_unslash( $draft_activity['data'][ $draft_content_key ] ) )
+					);
 				}
 			}
 

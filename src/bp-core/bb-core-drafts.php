@@ -278,10 +278,18 @@ function bb_draft_user_meta_budget() {
  * drops the `data:` protocol via kses — stripping the whole tag here keeps
  * megabytes out of the request pipeline before kses runs.
  *
+ * MUST be handed UNSLASHED content. Two of the three rules below anchor on
+ * `=\s*"`, and on slashed input a backslash sits between the `=` and the quote,
+ * which `\s` does not match - so they silently no-op while the base64 rule still
+ * fires, and the caller sees a partial strip with no error. The activity handler
+ * keeps its payload slashed throughout and therefore unslashes across this call;
+ * the forum caller normalises earlier and passes unslashed content directly. Any
+ * new caller must do one or the other.
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $content Draft content.
- * @return string Content without data-URL images.
+ * @param string $content Draft content, UNSLASHED.
+ * @return string Content without data-URL images, in the slash state it was given.
  */
 function bb_draft_strip_data_urls( $content ) {
 	if ( ! is_string( $content ) || false === stripos( $content, 'data:' ) ) {
@@ -3223,7 +3231,23 @@ function bb_draft_record_pending_reference_ids( $attachment_ids ) {
 		}
 	}
 
-	if ( count( $ids ) > BB_DRAFT_PENDING_REFERENCE_CAP ) {
+	/**
+	 * Filters the maximum number of attachment IDs the pending-reference ledger
+	 * will hold for one scan window before the orphan-stamp sweep abstains.
+	 *
+	 * Every other policy bound in this file is filterable, and the WP-CLI drain
+	 * tells an operator to "raise the cap" when the sweep keeps abstaining - so
+	 * without this filter that instruction named a lever that did not exist, on
+	 * exactly the busy networks where the abstention repeats. Zero or less means
+	 * no cap, matching `bb_draft_referenced_cache_max_ids`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $cap Maximum IDs. Default BB_DRAFT_PENDING_REFERENCE_CAP.
+	 */
+	$pending_cap = (int) apply_filters( 'bb_draft_pending_reference_cap', BB_DRAFT_PENDING_REFERENCE_CAP );
+
+	if ( 0 < $pending_cap && count( $ids ) > $pending_cap ) {
 		// Cannot prove the union is complete any more, so say so rather than
 		// silently under-collecting. The sweep reads this and abstains.
 		update_site_option( 'bb_draft_pending_reference_ids', array( 'overflow' => true ) );
