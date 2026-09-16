@@ -2275,7 +2275,17 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// stale copy over the other's change - the daily cron's just-expired key
 	// silently resurrected by the one-shot's size heal, or vice versa. They must
 	// serialize against each other, not only against themselves.
-	if ( get_site_transient( 'bb_draft_cleanup_lock' ) || get_site_transient( 'bb_draft_oneshot_lock' ) ) {
+	//
+	// The two reads below are necessary but NOT sufficient, and on their own they
+	// were the very check-then-set this file already diagnosed and fixed for the
+	// stamp sweep: each party reads the OTHER's key and then sets its OWN, so
+	// there is no instant at which a winner is decided and both can read "free"
+	// and proceed. Mutual exclusion between two parties needs ONE shared key,
+	// acquired atomically - that is what bb_draft_maintenance_lock is. The two
+	// per-sweep keys are kept because they are what the other party reads, and
+	// because the reads short-circuit before the gate is taken, so a caller
+	// blocked by them never acquires (and never has to release) it.
+	if ( get_site_transient( 'bb_draft_cleanup_lock' ) || get_site_transient( 'bb_draft_oneshot_lock' ) || ! bb_draft_acquire_lock( 'bb_draft_maintenance_lock', 5 * MINUTE_IN_SECONDS, true ) ) {
 		// Re-arm the continuation on a lock collision when a drain is already
 		// in progress (a cursor is persisted). WP core deletes a single-event
 		// cron entry BEFORE invoking its callback, so a `bb_draft_cleanup`
@@ -2304,6 +2314,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	if ( 1 > $retention_seconds ) {
 		delete_site_option( 'bb_draft_cleanup_cursor' );
 		delete_site_transient( 'bb_draft_cleanup_lock' );
+		bb_draft_release_lock( 'bb_draft_maintenance_lock', true );
 
 		return array(
 			'deleted'  => 0,
@@ -2438,6 +2449,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// Released only after the cursor is settled, so a run starting the instant
 	// this one returns cannot read a half-updated cursor.
 	delete_site_transient( 'bb_draft_cleanup_lock' );
+	bb_draft_release_lock( 'bb_draft_maintenance_lock', true );
 
 	return array(
 		'deleted'  => $deleted,
@@ -2683,7 +2695,9 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	// run (each holding only its own lock) could resurrect a key the other just
 	// removed. The two must serialize against each other. This pairs with the
 	// same cross-check in bb_drafts_delete_expired().
-	if ( get_site_transient( 'bb_draft_oneshot_lock' ) || get_site_transient( 'bb_draft_cleanup_lock' ) ) {
+	// See bb_drafts_delete_expired(): the two reads are what the other party
+	// observes, and the shared gate is what actually decides a winner.
+	if ( get_site_transient( 'bb_draft_oneshot_lock' ) || get_site_transient( 'bb_draft_cleanup_lock' ) || ! bb_draft_acquire_lock( 'bb_draft_maintenance_lock', 5 * MINUTE_IN_SECONDS, true ) ) {
 		return array(
 			'healed'   => 0,
 			'complete' => false,
@@ -2873,6 +2887,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	// Released after the state and the schedule are settled, so a run starting
 	// the instant this one returns cannot read half-updated state.
 	delete_site_transient( 'bb_draft_oneshot_lock' );
+	bb_draft_release_lock( 'bb_draft_maintenance_lock', true );
 
 	return array(
 		'healed'   => $healed,
@@ -2976,20 +2991,75 @@ function bb_draft_oneshot_unschedule() {
  * @return bool True when this caller now holds the lock.
  */
 function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
+	return bb_draft_acquire_lock( 'bb_draft_stamp_sweep_lock', $timeout );
+}
+
+/**
+ * Acquire a draft-maintenance lock, atomically where that is possible.
+ *
+ * The generic form of {@see bb_draft_acquire_stamp_sweep_lock()}, which now
+ * delegates here. Three sweeps need the same primitive and two of them need it
+ * NETWORK-scoped, so the scope is a parameter rather than three near-copies:
+ *
+ * - `transient` is NOT a global cache group, so a lock taken there is per blog.
+ * - `site-transient` IS global, so a lock taken there covers the whole network.
+ *
+ * Getting that pairing wrong is not a style problem. The orphan-stamp sweep took
+ * a per-blog lock around a network-global reference-scan window, so two blogs'
+ * sweeps could run concurrently and the second would reset the first's ledger -
+ * after which the first released stamps against a set that was no longer a
+ * superset, and the 6-hour orphan cron deleted a member's file out of a draft
+ * they were still writing. Scope the lock to the resource, not to the caller.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $key     Lock key, without any prefix.
+ * @param int    $timeout Lock lifetime in seconds.
+ * @param bool   $network Whether the lock must cover the whole network.
+ *                        Default false (per blog).
+ * @return bool True when this caller now holds the lock.
+ */
+function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
 	$timeout = (int) $timeout;
+	$group   = $network ? 'site-transient' : 'transient';
 
 	if ( wp_using_ext_object_cache() ) {
 		// Atomic: fails outright when another sweep already holds it.
-		return (bool) wp_cache_add( 'bb_draft_stamp_sweep_lock', 1, 'transient', $timeout );
+		return (bool) wp_cache_add( $key, 1, $group, $timeout );
 	}
 
-	if ( get_transient( 'bb_draft_stamp_sweep_lock' ) ) {
+	if ( $network ? get_site_transient( $key ) : get_transient( $key ) ) {
 		return false;
 	}
 
-	set_transient( 'bb_draft_stamp_sweep_lock', 1, $timeout );
+	if ( $network ) {
+		set_site_transient( $key, 1, $timeout );
+	} else {
+		set_transient( $key, 1, $timeout );
+	}
 
 	return true;
+}
+
+/**
+ * Release a lock taken with {@see bb_draft_acquire_lock()}.
+ *
+ * Deliberately a named counterpart rather than a bare delete at each exit: a
+ * lock released on some return paths and not others is held until its TTL, which
+ * on these sweeps means a whole day of doing nothing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $key     Lock key, without any prefix.
+ * @param bool   $network Whether the lock was taken network-wide. Default false.
+ * @return void
+ */
+function bb_draft_release_lock( $key, $network = false ) {
+	if ( $network ) {
+		delete_site_transient( $key );
+	} else {
+		delete_transient( $key );
+	}
 }
 
 /**
@@ -3105,13 +3175,78 @@ function bb_draft_record_pending_reference_ids( $attachment_ids ) {
  * The ledger is reset here, not at the end, so a window always begins empty even
  * if a previous scan died mid-run.
  *
+ * The returned token identifies THIS window. Because the reset above destroys
+ * whatever a still-running sweep had recorded, a caller must hold on to the
+ * token and re-check it ({@see bb_draft_reference_scan_token()}) before trusting
+ * the ledger - otherwise it cannot tell its own window from a replacement.
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @return void
+ * @return string Token identifying the window that was just opened.
  */
 function bb_draft_reference_scan_begin() {
+	$token = uniqid( 'bbdrs', true );
+
 	delete_site_option( 'bb_draft_pending_reference_ids' );
-	set_site_transient( 'bb_draft_reference_scan_active', 1, 30 * MINUTE_IN_SECONDS );
+	set_site_transient( 'bb_draft_reference_scan_active', $token, 30 * MINUTE_IN_SECONDS );
+
+	return $token;
+}
+
+/**
+ * Read the identity of the reference-scan window that is currently open.
+ *
+ * The window used to be a bare `1`, which made it impossible to tell "my window
+ * is still open" from "my window closed and somebody else opened a new one".
+ * Both of those look identical to {@see bb_draft_reference_scan_is_active()},
+ * and they have opposite consequences: in the second case the ledger the sweep
+ * is about to trust was reset by the other run, so it is no longer a record of
+ * everything added since THIS scan started.
+ *
+ * A sweep therefore keeps the token it was handed by
+ * {@see bb_draft_reference_scan_begin()} and re-checks it before it trusts the
+ * ledger. Anything other than an exact match means abstain.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The open window's token, or '' when no window is open.
+ */
+function bb_draft_reference_scan_token() {
+	$token = get_site_transient( 'bb_draft_reference_scan_active' );
+
+	return is_string( $token ) ? $token : '';
+}
+
+/**
+ * Extend the reference-scan window, but only while this caller still owns it.
+ *
+ * The window is a 30-minute transient and was written exactly once, at
+ * `begin()`. The scan it protects is deliberately unbudgeted, and
+ * `wp bb drafts cleanup` removes the bound from the release drain as well, so a
+ * run on a large community can outlive its own window. Nothing detected that:
+ * once the transient expired, {@see bb_draft_record_pending_reference_ids()}
+ * silently stopped recording, the ledger read back empty with
+ * `overflow => false`, and the sweep could not tell "nothing was added" from
+ * "I stopped listening" - so it released stamps for attachments a live draft
+ * had just claimed.
+ *
+ * This is the same treatment the sweep LOCK already gets two lines away, for the
+ * identical reason. The ownership check matters: a stale run must not resurrect
+ * a window that now belongs to somebody else.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $token The token this caller received from `begin()`.
+ * @return bool True when the window is still this caller's and was extended.
+ */
+function bb_draft_reference_scan_refresh( $token ) {
+	if ( '' === (string) $token || bb_draft_reference_scan_token() !== (string) $token ) {
+		return false;
+	}
+
+	set_site_transient( 'bb_draft_reference_scan_active', $token, 30 * MINUTE_IN_SECONDS );
+
+	return true;
 }
 
 /**
@@ -3492,6 +3627,34 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		);
 	}
 
+	// That lock is per BLOG - `transient` is not a global cache group - which is
+	// correct for the cursor it protects, because the cursor is a per-blog
+	// option. The reference-scan window and its ledger below are NETWORK-global,
+	// so the blog lock does not serialize them at all.
+	//
+	// That gap was reachable by design, not by accident: D2 schedules this sweep
+	// on EVERY blog. Blog B's bb_draft_reference_scan_begin() resets blog A's
+	// in-flight ledger while A is still scanning, and B's end() closes the shared
+	// window from under A. A then read an empty ledger with overflow => false,
+	// could not distinguish that from "nothing was added", and released stamps
+	// against a set that was no longer a superset - after which the pre-existing
+	// 6-hour orphan cron hard-deleted a member's photo out of a draft they were
+	// still writing. Serialize the resource that is actually shared.
+	//
+	// Abstaining (rather than reporting `locked`) is deliberate: the other blog's
+	// run is doing this network's scan, so there is nothing for this one to do
+	// and nothing here to retry immediately.
+	if ( ! bb_draft_acquire_lock( 'bb_draft_reference_scan_lock', 30 * MINUTE_IN_SECONDS, true ) ) {
+		delete_transient( 'bb_draft_stamp_sweep_lock' );
+
+		return array(
+			'released'  => 0,
+			'complete'  => false,
+			'abstained' => true,
+			'reason'    => 'scan_locked',
+		);
+	}
+
 	// The referenced set must be COMPLETE before any release, or an attachment a
 	// not-yet-scanned draft still holds would be wrongly freed. The scan
 	// therefore CANNOT be sliced across runs (a draft edited between slices
@@ -3518,28 +3681,48 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// re-scans on quiet cleanup windows.
 	//
 	// That SUPERSET guarantee holds only while no reference is ADDED across the
-	// scan/commit boundary. bb_draft_invalidate_referenced_cache() records a
-	// token on every such add; capture it BEFORE reading the cache or scanning,
-	// and refuse to cache or release a set built across a change (below) - the
-	// bare delete alone cannot cancel a scan that has not yet written its result.
-	$reference_token = bb_draft_get_referenced_cache_token();
-
+	// scan/commit boundary. Two independent mechanisms cover that, and they cover
+	// different halves of it:
+	//
+	// The recording window below logs every reference added while this sweep
+	// runs, and the union of the scan result with that ledger restores the
+	// superset property. That is what makes a release decision safe.
+	//
+	// The cache token ({@see bb_draft_invalidate_referenced_cache()}) is captured
+	// much later, immediately before that union is read, and governs CACHING
+	// only - see the comment at the set_site_transient() call.
+	//
 	// Opened for the WHOLE sweep, before the cache is even read, and closed on
 	// every exit below. The scan is not the only place a concurrent save can be
 	// missed - the release loop judges batch after batch against a set that was
 	// fixed before it started - so the window has to span both (H-4).
-	bb_draft_reference_scan_begin();
+	//
+	// The token this returns identifies this window. Everything that trusts the
+	// ledger re-checks it first: a window that expired, or that another run
+	// replaced, means the ledger is no longer a record of everything added since
+	// this scan started, and the only safe response is to abstain.
+	$scan_token = bb_draft_reference_scan_begin();
 
 	$referenced = get_site_transient( 'bb_draft_referenced_stamp_ids' );
 
 	if ( ! is_array( $referenced ) ) {
 		// Hold the lock across the (unbudgeted) scan too, not just the release
 		// loop below - on a large library the scan alone can outlast the TTL.
+		//
+		// The recording WINDOW has exactly the same exposure and used to be left
+		// out, which was worse than losing the lock: an expired lock costs
+		// duplicate work, but an expired window makes
+		// bb_draft_record_pending_reference_ids() silently stop recording, and
+		// the ledger then reads back empty and indistinguishable from "nothing
+		// was added". Refresh all three together or the sweep can go blind
+		// halfway through and never know.
 		$referenced = bb_drafts_collect_referenced_attachment_ids(
 			0,
 			$started_at,
-			function () {
+			function () use ( $scan_token ) {
 				set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
+				set_site_transient( 'bb_draft_reference_scan_lock', 1, 30 * MINUTE_IN_SECONDS );
+				bb_draft_reference_scan_refresh( $scan_token );
 			}
 		);
 
@@ -3550,25 +3733,17 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// them releases every stamp on the site (BLOCKER-2).
 		if ( false === $referenced ) {
 			bb_draft_reference_scan_end();
+			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 			return array(
 				'released'  => 0,
 				'complete'  => false,
 				'abstained' => true,
+				'reason'    => 'scan_incomplete',
 			);
 		}
 
-		/**
-		 * Filters the TTL (seconds) of the network-wide referenced-attachment
-		 * cache shared by every blog's orphan-stamp sweep. Correctness does not
-		 * depend on it (stamping invalidates the cache); it only bounds how long
-		 * a released reference lingers as safe over-protection.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $ttl Cache lifetime in seconds. Default 12 hours.
-		 */
 		// Close the recording window and fold in everything that was written
 		// while the scan ran. The scan walks the draft rows with a cursor, so a
 		// draft edited after the cursor passed it contributes nothing to
@@ -3582,6 +3757,34 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// every run, for ever, and the stamps it exists to reclaim accumulated
 		// without bound (the H-4 livelock). Tolerating the change is strictly
 		// better than requiring an atomicity the system cannot provide.
+		//
+		// Tolerating it still requires the ledger to be TRUSTWORTHY, and the two
+		// ways it silently stops being trustworthy are an expired window and a
+		// window another run replaced. Both read back as an empty ledger with
+		// overflow => false, i.e. exactly like "nothing was added". Check the
+		// window is still ours before believing it.
+		if ( ! bb_draft_reference_scan_refresh( $scan_token ) ) {
+			bb_draft_reference_scan_end();
+			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
+			delete_transient( 'bb_draft_stamp_sweep_lock' );
+
+			return array(
+				'released'  => 0,
+				'complete'  => false,
+				'abstained' => true,
+				'reason'    => 'scan_window_lost',
+			);
+		}
+
+		// Captured HERE, not before the scan. The token governs caching only, and
+		// capturing it before a multi-minute scan meant it had essentially always
+		// moved by the time the cache write was reached - so on any populated
+		// community the set was rebuilt and thrown away every single run and the
+		// cache could never warm, which is precisely the site the cache exists
+		// for. Read across the narrow peek-to-write gap instead, which is the
+		// only window the union below does not already cover.
+		$reference_token = bb_draft_get_referenced_cache_token();
+
 		$pending = bb_draft_peek_pending_reference_ids();
 
 		foreach ( $pending['ids'] as $pending_id ) {
@@ -3593,15 +3796,27 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// provable superset. Fall back to the old conservative behaviour.
 		if ( $pending['overflow'] ) {
 			bb_draft_reference_scan_end();
+			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 			return array(
 				'released'  => 0,
 				'complete'  => false,
 				'abstained' => true,
+				'reason'    => 'ledger_overflow',
 			);
 		}
 
+		/**
+		 * Filters the TTL (seconds) of the network-wide referenced-attachment
+		 * cache shared by every blog's orphan-stamp sweep. Correctness does not
+		 * depend on it (stamping invalidates the cache); it only bounds how long
+		 * a released reference lingers as safe over-protection.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $ttl Cache lifetime in seconds. Default 12 hours.
+		 */
 		$referenced_ttl = (int) apply_filters( 'bb_draft_referenced_cache_ttl', 12 * HOUR_IN_SECONDS );
 
 		// $referenced is now a superset of the live set and is SAFE to release
@@ -3649,11 +3864,12 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// does not eat the slice the sliceable release loop is entitled to.
 	$started_at = time();
 
-	$cutoff   = gmdate( 'Y-m-d H:i:s', time() - $retention_seconds );
-	$cursor   = (int) get_option( 'bb_draft_stamp_sweep_cursor', 0 );
-	$released = 0;
-	$complete = true;
-	$abstained = false;
+	$cutoff         = gmdate( 'Y-m-d H:i:s', time() - $retention_seconds );
+	$cursor         = (int) get_option( 'bb_draft_stamp_sweep_cursor', 0 );
+	$released       = 0;
+	$complete       = true;
+	$abstained      = false;
+	$abstain_reason = '';
 
 	/**
 	 * Filters the candidate batch size for the orphan-stamp sweep.
@@ -3665,28 +3881,35 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	$batch_size = max( 1, (int) apply_filters( 'bb_draft_stamp_sweep_batch_size', 200 ) );
 
 	do {
-		// A save that adds a reference the cached set does not already hold
-		// invalidates the set and bumps the token. The batch about to be judged
-		// may pre-date that reference, so stop releasing the moment the token
-		// moves: the cursor is persisted each window, so the next run resumes
-		// against a rebuilt set.
+		// The ledger is the ONLY thing standing between a save that lands mid-
+		// drain and this loop releasing that draft's stamps: the referenced set
+		// was fixed before the loop started, so a reference added since then
+		// exists nowhere else. Re-check the window is still ours and still open
+		// before trusting it - an expired or replaced window makes the ledger
+		// read back empty, which is indistinguishable from "nothing was added"
+		// and has the opposite consequence. Refreshing here also keeps the window
+		// alive for the rest of the drain, which `wp bb drafts cleanup` runs with
+		// no budget at all.
 		//
-		// This CAN still starve, and the previous claim that it could not was
-		// wrong. Text-only autosaves never bumped the token, but every autosave
-		// of a draft that merely KEEPS an attachment did - which is an ordinary
-		// composer with one photo in it, ticking for as long as the member
-		// types. bb_draft_invalidate_referenced_cache() now skips the bump when
-		// the cached set already covers every attachment the draft keeps (H-4),
-		// so only a genuinely NEW reference yields the sweep. The window that
-		// remains is a cold cache: while the unbudgeted rebuild scan runs there
-		// is no cached set to prove the superset against, so any attachment-
-		// bearing save bumps and this run abstains. Callers must therefore treat
-		// `complete => false` as "try again later", never as "retry now" - see
-		// the WP-CLI loop, which stops instead of spinning.
+		// The cache token plays NO part in this loop. It is read in exactly two
+		// places and both govern CACHING: once immediately before the union
+		// above, and once at the set_site_transient() call. An earlier version of
+		// this comment described the loop as stopping when the token moved, and
+		// as abstaining on any attachment-bearing save. It never did either, and
+		// the paragraph below is the reason stopping would be wrong.
+		//
 		// Fold in anything recorded since the set was fixed, then judge this
 		// batch against the result. Breaking out here (the previous behaviour)
 		// meant an ordinary save mid-drain ended the run, which on a busy site
 		// is most runs - the same livelock as the scan, one level down.
+		if ( ! bb_draft_reference_scan_refresh( $scan_token ) ) {
+			$complete       = false;
+			$abstained      = true;
+			$abstain_reason = 'scan_window_lost';
+
+			break;
+		}
+
 		$batch_pending = bb_draft_peek_pending_reference_ids();
 
 		foreach ( $batch_pending['ids'] as $batch_pending_id ) {
@@ -3694,8 +3917,9 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		}
 
 		if ( $batch_pending['overflow'] ) {
-			$complete  = false;
-			$abstained = true;
+			$complete       = false;
+			$abstained      = true;
+			$abstain_reason = 'ledger_overflow';
 
 			break;
 		}
@@ -3768,8 +3992,11 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// refresh the lock would expire mid-drain, the daily cron would acquire
 		// it, and both runs would advance the single bb_draft_stamp_sweep_cursor
 		// over each other - the clobber the lock exists to prevent (M6, matching
-		// bb_drafts_delete_expired).
+		// bb_drafts_delete_expired). The network scan lock is refreshed with it
+		// for the same reason: it is held for the life of this sweep, and an
+		// unbudgeted drain outlives its TTL just as easily as the scan does.
 		set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
+		set_site_transient( 'bb_draft_reference_scan_lock', 1, 30 * MINUTE_IN_SECONDS );
 
 		$batch_was_full = ( count( $candidate_ids ) === $batch_size );
 
@@ -3783,6 +4010,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// written from here is the NEXT run's concern and the ledger must not carry
 	// it over and grow.
 	bb_draft_reference_scan_end();
+	bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 
 	// A finished pass restarts from the top next time (attachments freshly
 	// stamped since, and any that became unreferenced, get re-examined).
@@ -3795,11 +4023,19 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	return array(
 		'released'  => $released,
 		'complete'  => $complete,
-		// True only when the pending-reference ledger overflowed, i.e. the union
-		// could not be proven complete and this run judged nothing. Callers use
-		// it to tell "no progress, and retrying now will not help" apart from
-		// "no progress, because there was nothing left to do".
+		// True when this run could not PROVE a release was safe and therefore
+		// judged nothing. Callers use it to tell "no progress, and retrying now
+		// will not help" apart from "no progress, because there was nothing left
+		// to do".
+		//
+		// It used to have exactly one cause (the pending-reference ledger
+		// overflowing), and callers hard-coded that cause into their messages.
+		// There are now four, and two of them - another blog's sweep holding the
+		// network scan lock, and this run's own scan window expiring or being
+		// replaced - call for different operator advice. `reason` carries which,
+		// so nobody has to infer it.
 		'abstained' => $abstained,
+		'reason'    => $abstain_reason,
 	);
 }
 
@@ -3963,31 +4199,71 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				// A pass that RELEASED something made real progress, so keep
 				// going; the number of stamps is finite, which terminates.
 				//
-				// A pass that ABSTAINED hit the pending-reference ledger cap -
-				// the union could not be proven complete. That is transient, so
-				// retry a bounded number of times rather than giving up: on a
-				// busy community there is no "quieter moment" to wait for, and an
-				// operator who runs this command needs a way to actually drain
-				// the stamps. This is the escape hatch; an earlier revision broke
-				// out immediately here and left no way to make progress at all.
+				// A pass that ABSTAINED could not prove a release safe. That is
+				// transient, so retry a bounded number of times rather than
+				// giving up: on a busy community there is no "quieter moment" to
+				// wait for, and an operator who runs this command needs a way to
+				// actually drain the stamps. This is the escape hatch; an earlier
+				// revision broke out immediately here and left no way to make
+				// progress at all.
+				//
+				// Report the actual cause. This message used to state the ledger
+				// cap as the only possibility and tell the operator to raise it;
+				// there are now four causes, and for two of them that advice is
+				// simply wrong - another blog's sweep holding the network scan
+				// lock needs no action at all, and a lost scan window is a
+				// duration problem, not a capacity one.
 				//
 				// Anything else incomplete is budget/cursor work, and the loop
 				// continues as before.
 				if ( ! empty( $stamp_pass['abstained'] ) ) {
 					++$stamp_abstentions;
 
+					$abstain_reason = isset( $stamp_pass['reason'] ) ? $stamp_pass['reason'] : '';
+
+					switch ( $abstain_reason ) {
+						case 'scan_locked':
+							$abstain_detail = 'another site on this network is already running the reference scan';
+							$abstain_remedy = 'Nothing to do - re-run once it finishes.';
+							break;
+						case 'scan_window_lost':
+							$abstain_detail = 'the reference-recording window closed before this run finished, so concurrent draft saves may not have been recorded';
+							$abstain_remedy = 'Re-run; if it persists, the scan is outlasting its window and the draft table likely needs to be drained in smaller pieces.';
+							break;
+						case 'scan_incomplete':
+							$abstain_detail = 'the reference scan could not be completed, so the referenced set was not authoritative';
+							$abstain_remedy = 'Re-run; check the error log for a failed database query.';
+							break;
+						case 'ledger_overflow':
+						default:
+							$abstain_detail = 'more draft references arrived during the scan than the ledger could hold';
+							$abstain_remedy = 'Re-run later, or raise the cap with the bb_draft_pending_reference_cap filter if this persists.';
+							break;
+					}
+
 					if ( $stamp_abstentions >= $stamp_max_abstentions ) {
 						WP_CLI::warning(
 							sprintf(
-								'Orphan-stamp sweep abstained %d times: more draft references arrived during the scan than the ledger could hold, so no release could be proven safe. Nothing was released. Re-run later, or raise the cap if this persists.',
-								$stamp_abstentions
+								/* translators: 1: number of abstentions, 2: cause, 3: suggested remedy. */
+								'Orphan-stamp sweep abstained %1$d times: %2$s, so no release could be proven safe. Nothing was released. %3$s',
+								$stamp_abstentions,
+								$abstain_detail,
+								$abstain_remedy
 							)
 						);
 
 						break;
 					}
 
-					WP_CLI::log( sprintf( 'Orphan-stamp sweep abstained (ledger full); retrying (%d/%d).', $stamp_abstentions, $stamp_max_abstentions ) );
+					WP_CLI::log(
+						sprintf(
+							/* translators: 1: cause, 2: attempt number, 3: maximum attempts. */
+							'Orphan-stamp sweep abstained (%1$s); retrying (%2$d/%3$d).',
+							$abstain_detail,
+							$stamp_abstentions,
+							$stamp_max_abstentions
+						)
+					);
 
 					continue;
 				}
