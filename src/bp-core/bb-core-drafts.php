@@ -316,7 +316,18 @@ function bb_draft_strip_data_urls( $content ) {
 	// rule's payload class has to allow ordinary prose characters, so matching
 	// it anywhere in the content deleted everything from a member's plain-text
 	// mention of `data:image/svg+xml,` to the next quote or `>` - in prose with
-	// neither, to the end of the draft. Requiring `="` (or `='`, or a bare
+	// neither, to the end of the draft.
+	//
+	// The anchor narrows that but does not eliminate it, and the residual is now
+	// carried by BOTH composers rather than only the forum one. A member writing
+	// *about* a data URI and quoting it in attribute form - `src="data:image/…,…"`
+	// inside a code sample, say - still loses that fragment. Accepted knowingly:
+	// the two paths agree, which is worth more than either behaving uniquely, and
+	// the alternative is tag-anchoring the rule, which trades this narrow prose
+	// case for a pattern that can no longer stay a plain negated class. A draft is
+	// unpublished text a member can retype; an unbounded row is the bug this
+	// ticket exists for. Anyone revisiting this should change both callers, never
+	// one. Requiring `="` (or `='`, or a bare
 	// unquoted attribute) in front confines it to the shape a pasted image
 	// actually arrives in, and lets the payload run to its real delimiter
 	// instead of stopping early at a `>` inside an SVG.
@@ -3041,11 +3052,28 @@ function bb_draft_oneshot_unschedule() {
  * transients live in options, and add_option() is `INSERT … ON DUPLICATE KEY
  * UPDATE`, which succeeds for a concurrent second caller. WordPress core reaches
  * for a raw `INSERT IGNORE` in that situation ({@see WP_Upgrader::create_lock()}).
- * That is deliberately NOT done here: it would only cover the configuration where
- * this race is least likely - a site small enough to run without an object cache
- * is unlikely to have overlapping sweeps - and the consequence is a skipped range,
- * not lost member data. That configuration therefore keeps the previous
- * check-then-set behaviour, stated rather than hidden.
+ * That is deliberately NOT done here, and the reasoning differs by KEY - read
+ * this before assuming the gate is atomic everywhere:
+ *
+ * - `bb_draft_stamp_sweep_lock` protects a cursor. Two runs racing it skip a
+ *   range that the next run re-examines. No member data is at risk, so
+ *   check-then-set is an acceptable degradation.
+ * - `bb_draft_maintenance_lock` serialises the expiry sweep against the upgrade
+ *   one-shot, which read-modify-write the SAME aggregated usermeta rows. Losing
+ *   that race is a last-writer-wins overwrite - a heal can resurrect an inner
+ *   draft the expiry pass just removed, with its attachment stamps already
+ *   released. **On a site with no persistent object cache this gate is therefore
+ *   advisory, not atomic**, and the guarantee the calling comments describe holds
+ *   only where `wp_using_ext_object_cache()` is true.
+ *
+ * Closing that gap properly means giving this key a different storage primitive
+ * from the transient API its refresh and release calls use, on both the options
+ * and sitemeta tables, which is a larger change than this function - it is
+ * recorded rather than half-done.
+ *
+ * The exposure is bounded: both callers of `bb_draft_maintenance_lock` are
+ * root-blog-only, so the race needs two cron workers on one blog of a site
+ * running no object cache.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -3359,9 +3387,27 @@ function bb_draft_peek_pending_reference_ids() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param string $token Optional. The token this caller received from
+ *                      {@see bb_draft_reference_scan_begin()}. When given, the
+ *                      window is closed only if it is still that window; a run
+ *                      that has already lost ownership tears down nothing.
+ *                      Default '' (close whatever is open).
  * @return array{ids:int[],overflow:bool} Recorded IDs, and whether the cap was hit.
  */
-function bb_draft_reference_scan_end() {
+function bb_draft_reference_scan_end( $token = '' ) {
+	// Close only a window this caller still owns. The window and the ledger are
+	// network-global, so a stalled run reaching its teardown after another run
+	// has opened a fresh window would otherwise delete the successor's ledger -
+	// and an empty ledger reads exactly like "nothing was added", which is the
+	// failure this whole mechanism exists to prevent. Callers that pass no token
+	// keep the old unconditional behaviour.
+	if ( '' !== (string) $token && bb_draft_reference_scan_token() !== (string) $token ) {
+		return array(
+			'ids'      => array(),
+			'overflow' => false,
+		);
+	}
+
 	$ledger = get_site_option( 'bb_draft_pending_reference_ids', array() );
 
 	delete_site_transient( 'bb_draft_reference_scan_active' );
@@ -3673,7 +3719,20 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $time_budget Seconds to spend this run; 0 for unlimited.
- * @return array { @type int $released @type bool $complete @type bool $locked }
+ * @return array {
+ *     @type int    $released  Stamps released this pass.
+ *     @type bool   $complete  Whether the pass reached the end of its candidates.
+ *     @type bool   $locked    Present when another sweep on this blog holds the lock.
+ *     @type bool   $abstained Present when the pass could not PROVE a release safe and
+ *                             therefore judged nothing. The WP-CLI drain branches on it.
+ *     @type string $reason    Why it abstained, and the CLI turns this into operator
+ *                             advice: 'scan_locked' (another blog holds the network scan
+ *                             lock), 'scan_incomplete' (the reference scan was not
+ *                             authoritative), 'scan_window_lost' (this run's recording
+ *                             window expired or was replaced), 'ledger_overflow' (too
+ *                             many concurrent references to prove the union complete),
+ *                             or 'candidate_query_failed'.
+ * }
  */
 function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	global $wpdb;
@@ -3719,11 +3778,23 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// 6-hour orphan cron hard-deleted a member's photo out of a draft they were
 	// still writing. Serialize the resource that is actually shared.
 	//
-	// Abstaining (rather than reporting `locked`) is deliberate: the other blog's
-	// run is doing this network's scan, so there is nothing for this one to do
-	// and nothing here to retry immediately.
+	// Abstaining (rather than reporting `locked`) is deliberate for the SCAN: the
+	// other blog's run is building the same network-global referenced set, so
+	// there is nothing for this run to add to it.
+	//
+	// It is NOT true of the release loop below, and an earlier version of this
+	// comment claimed it was. That loop is per blog - its candidate query runs
+	// against this blog's posts/postmeta and its cursor is a per-blog option -
+	// so a blog that loses this lock does no work of its own at all. Both sweep
+	// events are exactly 24h periodic, so the collision is stable: the same blog
+	// can lose every day, for ever, and its stamped orphans are never released.
+	// That is the leak this sweep exists to close, one level up.
+	//
+	// So re-arm on this blog rather than waiting a full day. This is the pattern
+	// bb_drafts_delete_expired() already uses on a lock collision.
 	if ( ! bb_draft_acquire_lock( 'bb_draft_reference_scan_lock', 30 * MINUTE_IN_SECONDS, true ) ) {
 		delete_transient( 'bb_draft_stamp_sweep_lock' );
+		bb_draft_reschedule_stamp_sweep();
 
 		return array(
 			'released'  => 0,
@@ -3810,9 +3881,10 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// drafts reference nothing" have opposite consequences, and conflating
 		// them releases every stamp on the site (BLOCKER-2).
 		if ( false === $referenced ) {
-			bb_draft_reference_scan_end();
+			bb_draft_reference_scan_end( $scan_token );
 			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
+			bb_draft_reschedule_stamp_sweep();
 
 			return array(
 				'released'  => 0,
@@ -3842,9 +3914,10 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// overflow => false, i.e. exactly like "nothing was added". Check the
 		// window is still ours before believing it.
 		if ( ! bb_draft_reference_scan_refresh( $scan_token ) ) {
-			bb_draft_reference_scan_end();
+			bb_draft_reference_scan_end( $scan_token );
 			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
+			bb_draft_reschedule_stamp_sweep();
 
 			return array(
 				'released'  => 0,
@@ -3873,9 +3946,10 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// the window that the ledger stopped recording, so it is no longer a
 		// provable superset. Fall back to the old conservative behaviour.
 		if ( $pending['overflow'] ) {
-			bb_draft_reference_scan_end();
+			bb_draft_reference_scan_end( $scan_token );
 			bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 			delete_transient( 'bb_draft_stamp_sweep_lock' );
+			bb_draft_reschedule_stamp_sweep();
 
 			return array(
 				'released'  => 0,
@@ -4054,7 +4128,20 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 			)
 		);
 
+		// An empty result can mean "no candidates left" or "the query failed".
+		// They have opposite consequences: the first legitimately completes the
+		// pass and resets this blog's cursor to the top, the second would report
+		// a pass that examined nothing as complete and lose the cursor position.
 		if ( empty( $candidate_ids ) ) {
+			if ( '' !== $wpdb->last_error ) {
+				$complete  = false;
+				$abstained = true;
+
+				if ( '' === $abstain_reason ) {
+					$abstain_reason = 'candidate_query_failed';
+				}
+			}
+
 			break;
 		}
 
@@ -4099,8 +4186,14 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// Close the recording window: the release decisions are made, so anything
 	// written from here is the NEXT run's concern and the ledger must not carry
 	// it over and grow.
-	bb_draft_reference_scan_end();
+	bb_draft_reference_scan_end( $scan_token );
 	bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
+
+	// An abstention here means this blog's candidates were not judged, so re-arm
+	// rather than leaving them for the next 24-hour slot.
+	if ( $abstained ) {
+		bb_draft_reschedule_stamp_sweep();
+	}
 
 	// A finished pass restarts from the top next time (attachments freshly
 	// stamped since, and any that became unreferenced, get re-examined).
@@ -4167,6 +4260,41 @@ add_action( 'bb_draft_stamp_release_hook', 'bb_drafts_release_orphaned_draft_sta
  * - `bb_draft_cleanup_hook` runs on the root blog only. Its usermeta expiry
  *   sweep reads network-global usermeta, so one root-blog run covers every user
  *   network-wide; per-subsite events would duplicate the same sweep.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+/**
+ * Re-arm this blog's orphan-stamp sweep after it abstained.
+ *
+ * The sweep runs on every blog, but the reference scan it depends on is
+ * network-global and serialised by one lock. A blog that loses that lock - or
+ * whose scan window is lost or whose ledger overflows - judges none of its OWN
+ * candidates, and both sweep events are exactly 24 hours apart, so without a
+ * retry the same blog can lose every day indefinitely and its stamped orphans
+ * are never released.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_draft_reschedule_stamp_sweep() {
+	// Per blog, deliberately: the release loop this re-arms is per blog, and so
+	// is its cursor. Guarded by wp_next_scheduled() so repeated abstentions in
+	// one window queue exactly one retry.
+	//
+	// 15 minutes rather than the 60 seconds the expiry sweep uses, because the
+	// thing being waited on is another blog's full reference scan, which is
+	// measured in minutes. Retrying sooner just burns a cron slot to abstain
+	// again.
+	if ( ! wp_next_scheduled( 'bb_draft_stamp_release_hook' ) ) {
+		wp_schedule_single_event( time() + 15 * MINUTE_IN_SECONDS, 'bb_draft_stamp_release_hook' );
+	}
+}
+
+/**
+ * Schedule the daily draft maintenance jobs.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -4258,6 +4386,20 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				}
 
 				WP_CLI::log( 'Healing pass: ' . $oneshot['healed'] . ' drafts removed/evicted.' );
+
+				// Stop on a pass that reported incomplete without healing
+				// anything. With no budget the only way to reach that is a
+				// durable failure of the windowing query - a crashed or locked
+				// table, a lost grant after a restore, a proxy refusing the
+				// statement - and the cursor does not move, so re-entering
+				// re-issues the identical failing query for ever. The
+				// orphan-stamp drain below has always guarded this; these two
+				// did not, and one predicate resolved three ways across sibling
+				// paths is how that goes unnoticed.
+				if ( empty( $oneshot['complete'] ) && 0 === (int) $oneshot['healed'] ) {
+					WP_CLI::warning( 'Healing pass made no progress and did not complete; stopping to avoid an unbounded loop. Check the error log for a failed database query, then re-run.' );
+					break;
+				}
 			} while ( empty( $oneshot['complete'] ) );
 
 			do {
@@ -4269,6 +4411,14 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				}
 
 				WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
+
+				// See the healing drain above: no progress and not complete, with
+				// no budget in play, means a durable query failure rather than
+				// more work to do.
+				if ( empty( $expired['complete'] ) && 0 === (int) $expired['deleted'] ) {
+					WP_CLI::warning( 'Expiry pass made no progress and did not complete; stopping to avoid an unbounded loop. Check the error log for a failed database query, then re-run.' );
+					break;
+				}
 			} while ( empty( $expired['complete'] ) );
 
 			$stamp_abstentions     = 0;
@@ -4324,6 +4474,10 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 							$abstain_detail = 'the reference scan could not be completed, so the referenced set was not authoritative';
 							$abstain_remedy = 'Re-run; check the error log for a failed database query.';
 							break;
+						case 'candidate_query_failed':
+							$abstain_detail = 'the candidate query failed, so this pass could not tell an exhausted range from an unreadable one';
+							$abstain_remedy = 'Check the error log and the wp_posts / wp_postmeta tables, then re-run.';
+							break;
 						case 'ledger_overflow':
 						default:
 							$abstain_detail = 'more draft references arrived during the scan than the ledger could hold';
@@ -4334,7 +4488,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 					if ( $stamp_abstentions >= $stamp_max_abstentions ) {
 						WP_CLI::warning(
 							sprintf(
-								/* translators: 1: number of abstentions, 2: cause, 3: suggested remedy. */
 								'Orphan-stamp sweep abstained %1$d times: %2$s, so no release could be proven safe. Nothing was released. %3$s',
 								$stamp_abstentions,
 								$abstain_detail,
@@ -4347,7 +4500,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 					WP_CLI::log(
 						sprintf(
-							/* translators: 1: cause, 2: attempt number, 3: maximum attempts. */
 							'Orphan-stamp sweep abstained (%1$s); retrying (%2$d/%3$d).',
 							$abstain_detail,
 							$stamp_abstentions,
