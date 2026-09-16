@@ -429,11 +429,39 @@ window.bp = window.bp || {};
 			// member's draft (#7).
 			this.topic_reply_draft.bb_draft_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
 
+			// Declared outside the try so the quota retry below can reuse the
+			// stripped copy rather than re-serialising the base64 original.
+			var draft_to_store = this.topic_reply_draft;
+
 			try {
-				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
+				// Strip inline base64 data: URLs before storing. The paste guard
+				// converts pasted images to uploads, but a drag-and-drop drops a raw
+				// base64 <img> straight into the editor, outside that guard - a single
+				// dropped photo can be several MB and blow the per-origin localStorage
+				// quota, whose failure the catch below silently swallows, disabling
+				// local persistence for every draft on the origin. The server strips
+				// these on save too, so neither store persists the blob (M19).
+				var content_keys = [ 'bbp_topic_content', 'bbp_reply_content' ];
+
+				for ( var c = 0; c < content_keys.length; c++ ) {
+					var content_key = content_keys[c];
+
+					if ( draft_to_store.data && 'string' === typeof draft_to_store.data[content_key] && /data:[^"']*base64/i.test( draft_to_store.data[content_key] ) ) {
+						if ( draft_to_store === this.topic_reply_draft ) {
+							draft_to_store = JSON.parse( JSON.stringify( this.topic_reply_draft ) );
+						}
+
+						draft_to_store.data[content_key] = draft_to_store.data[content_key].replace(
+							/(\s(?:src|href)\s*=\s*)(["'])data:[^"']*base64[^"']*\2/gi,
+							'$1$2$2'
+						);
+					}
+				}
+
+				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( draft_to_store ) );
 			} catch ( quota_error ) {
 				try {
-					var slim = JSON.parse( JSON.stringify( this.topic_reply_draft ) );
+					var slim = JSON.parse( JSON.stringify( draft_to_store ) );
 
 					if (
 						slim.data &&
