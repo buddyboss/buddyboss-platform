@@ -1531,7 +1531,11 @@ window.bp = window.bp || {};
 					localStorage.setItem( draft_activity.data_key, json_data );
 				}
 			} catch ( e ) {
-				console.error( 'Error checking draft data size', e );
+				// Deliberately swallowed, and not logged. localStorage is the
+				// convenience copy only - the draft is still autosaved to the
+				// server on its own tick - so a quota rejection or a private
+				// window costs this session its local copy and nothing else.
+				// Production code here must not write to the console.
 			}
 		},
 
