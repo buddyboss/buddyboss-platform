@@ -1019,21 +1019,17 @@ function bb_admin_settings_register_email_digest_locked_form() {
 		)
 	);
 
-	$register(
-		array(
-			'name'        => '_bb_email_digest_placeholder_templates_notice',
-			'label'       => __( 'Digest Heading', 'buddyboss' ),
-			'type'        => 'notice',
-			'notice_type' => 'info',
-			'description' => sprintf(
-				/* translators: %s: link to the Emails admin screen. */
-				__( 'Customize the digest design and wording under %s.', 'buddyboss' ),
-				'<a href="' . esc_url( admin_url( 'edit.php?post_type=bp-email' ) ) . '">' . esc_html__( 'Emails', 'buddyboss' ) . '</a>'
-			),
-			'order'       => 90,
-			'group'       => array( 'key' => 'digest_heading' ),
-		)
-	);
+	// FIELD 8 on the live panel — the "Customize the digest design and wording under
+	// Emails" notice — is deliberately NOT registered here, for the same reason the
+	// last-run row is omitted: it is advice about a mail this plan cannot send.
+	//
+	// It also could not be locked even if we wanted it. The $register closure marks every
+	// field pro_only + disabled + unwritable, and a `notice` honours none of the three:
+	// SettingsForm renders its description through dangerouslySetInnerHTML and never
+	// consumes `disabled`, and `pro_only` is not read by the renderer at all. Its anchor
+	// to the Emails screen therefore stayed fully clickable while every control beside it
+	// was inert — the one operable thing on a panel whose whole point is that nothing on
+	// it works yet. Omitting the row is the fix; do not re-add it "locked".
 
 	// FIELD 9 — the test-send row. Rendered, but pointed nowhere: the handler that would
 	// service it ships with the add-on, so on this panel it can only ever be scenery.
