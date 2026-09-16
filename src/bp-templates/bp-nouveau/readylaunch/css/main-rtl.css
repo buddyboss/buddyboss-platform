@@ -10565,7 +10565,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 }
 
 .bb-rl-group-admin-subnav .bb-rl-admin-subnav-item.bb-rl-admin-subnav-item--forum a::before {
-  content: "\e4d6";
+  content: "\e17a";
 }
 
 .bb-rl-group-admin-subnav .bb-rl-admin-subnav-item#bb-rl-zoom-groups-li a::before {
