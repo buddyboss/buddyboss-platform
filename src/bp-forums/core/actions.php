@@ -1239,12 +1239,21 @@ function bb_post_topic_reply_draft() {
 				$draft_budget = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size );
 
 				if ( empty( $draft_budget['allowed'] ) ) {
+					$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
+
 					/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, $forum_row_size, 'meta_budget' );
+					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, $forum_row_size, $budget_reason );
+
+					// See the activity handler: when the member's NON-draft stored
+					// data is what leaves no room, discarding drafts cannot help,
+					// because the eviction loop only ever deletes drafts.
+					$budget_message = 'meta_budget' === $budget_reason
+						? __( 'Your draft could not be saved because your account has reached its stored-data limit. Removing other drafts will not help.', 'buddyboss' )
+						: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' );
 
 					wp_send_json_error(
 						array(
-							'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+							'message' => $budget_message,
 							// Report ONLY the budget evictions here (F2): those were
 							// disposed to storage by bb_draft_enforce_user_budget().
 							// The row-trim keys in $evicted_draft_keys were held back

@@ -1378,6 +1378,12 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
  * @return array {
  *     @type bool     $allowed Whether the save may proceed.
  *     @type string[] $evicted Draft keys evicted to make room ("meta_key" or "meta_key:inner_key").
+ *     @type string   $reason  Why the save was refused, '' when allowed. 'drafts_over_cap' when the
+ *                             member's own drafts are over budget and eviction cannot recover
+ *                             enough; 'meta_budget' when their NON-draft meta leaves no room, which
+ *                             discarding drafts cannot fix. These are the same values the
+ *                             `bb_draft_cap_rejected` action reports, so one vocabulary describes a
+ *                             refusal wherever it is observed.
  * }
  */
 function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context = 'save' ) {
@@ -1386,23 +1392,56 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 	$result   = array(
 		'allowed' => true,
 		'evicted' => array(),
+		'reason'  => '',
 	);
 
 	$sizes        = bb_draft_get_user_meta_sizes( $user_id );
 	$current_size = isset( $sizes['drafts'][ $current_key ] ) ? $sizes['drafts'][ $current_key ] : 0;
 
-	// Refuse outright when total user meta would exceed the platform budget -
-	// but only for live saves. The healing context exists precisely for users
-	// already OVER that budget; refusing them would make the one-shot a no-op
-	// for the users it targets, so healing always proceeds to eviction.
-	if ( 'heal' !== $context && ( $sizes['total'] - $current_size + $new_size ) > bb_draft_user_meta_budget() ) {
-		$result['allowed'] = false;
+	$draft_bytes     = array_sum( $sizes['drafts'] );
+	$non_draft_bytes = max( 0, $sizes['total'] - $draft_bytes );
 
-		return $result;
-	}
-
-	$draft_total = array_sum( $sizes['drafts'] ) - $current_size + $new_size;
+	$draft_total = $draft_bytes - $current_size + $new_size;
 	$total_cap   = bb_draft_user_total_max_size();
+
+	// How many bytes of DRAFTS the platform meta budget still leaves room for,
+	// once the member's non-draft meta is accounted for.
+	//
+	// This used to be a flat refusal on `$sizes['total'] > budget`, which read
+	// the right number and drew the wrong conclusion. `$sizes['total']` is EVERY
+	// meta value the member holds - course progress, favourites, integration
+	// payloads - so a long-tenured member with 800 KB of non-draft meta was
+	// refused every draft save for ever, including their first, and told to
+	// "discard some drafts" they might not have. The eviction loop can only ever
+	// delete draft rows, so that instruction could not work, and the `heal`
+	// context deliberately skips this branch, so the one-shot never helped them
+	// either. Members most invested in a community carry the most meta, so the
+	// refusal landed hardest on exactly the wrong people. Against the released
+	// base, which had no budget check at all, it was a regression.
+	//
+	// Bounding the cache entry is still the point - drafts must never be what
+	// pushes it over - so the arithmetic is unchanged in what it permits. Only
+	// the attribution changes: the draft cap tightens to whatever headroom the
+	// member's own drafts are entitled to, and the existing oldest-first
+	// eviction and no-delete feasibility refusal below do the rest.
+	if ( 'heal' !== $context ) {
+		$draft_headroom = bb_draft_user_meta_budget() - $non_draft_bytes;
+
+		if ( $draft_headroom < $total_cap ) {
+			$total_cap = $draft_headroom;
+		}
+
+		// No amount of draft eviction can help: even a member holding zero
+		// drafts could not store this one. Report it as 'meta_budget' - the
+		// member's stored data as a whole is the constraint - so the caller does
+		// not blame drafts for meta that is not drafts.
+		if ( $new_size > $draft_headroom ) {
+			$result['allowed'] = false;
+			$result['reason']  = 'meta_budget';
+
+			return $result;
+		}
+	}
 
 	if ( $draft_total <= $total_cap ) {
 		return $result;
@@ -1483,6 +1522,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 	// ignores 'allowed' and counts 'evicted'.
 	if ( 'heal' !== $context && ( $draft_total - $reclaimable ) > $total_cap ) {
 		$result['allowed'] = false;
+		$result['reason']  = 'drafts_over_cap';
 
 		return $result;
 	}
@@ -1531,6 +1571,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 	// longer exist.
 	if ( $draft_total > $total_cap ) {
 		$result['allowed'] = false;
+		$result['reason']  = 'drafts_over_cap';
 	}
 
 	return $result;

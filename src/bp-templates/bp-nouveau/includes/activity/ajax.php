@@ -1496,7 +1496,13 @@ function bb_nouveau_ajax_post_draft_activity() {
 				 * @param int    $user_id  User whose draft was rejected.
 				 * @param string $data_key Draft usermeta key.
 				 * @param int    $size     Serialized draft size in bytes.
-				 * @param string $reason   Which cap rejected it: 'per_draft' or 'meta_budget'.
+				 * @param string $reason   Which cap rejected it, and why it cannot be
+				 *                         resolved by the member where relevant:
+				 *                         'per_draft'      - the single-draft size cap;
+				 *                         'drafts_over_cap' - their own drafts are over
+				 *                         budget and eviction could not recover enough;
+				 *                         'meta_budget'    - their NON-draft stored meta
+				 *                         leaves no room, which discarding drafts cannot fix.
 				 */
 				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, 'per_draft' );
 
@@ -1510,12 +1516,23 @@ function bb_nouveau_ajax_post_draft_activity() {
 			$draft_budget = bb_draft_enforce_user_budget( $draft_user_id, $draft_activity['data_key'], $draft_size );
 
 			if ( empty( $draft_budget['allowed'] ) ) {
+				$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
+
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, 'meta_budget' );
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, $budget_reason );
+
+				// Two different refusals, and telling them apart matters. When the
+				// member's NON-draft stored data is what leaves no room, discarding
+				// drafts cannot help - the eviction loop only ever deletes drafts -
+				// so sending them to do that is advice that cannot work and reads as
+				// blame for something they did not do.
+				$budget_message = 'meta_budget' === $budget_reason
+					? __( 'Your draft could not be saved because your account has reached its stored-data limit. Removing other drafts will not help.', 'buddyboss' )
+					: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' );
 
 				wp_send_json_error(
 					array(
-						'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+						'message' => $budget_message,
 						// A refusal after a mid-loop eviction race may have deleted
 						// some drafts; hand the keys back so the client can drop them
 						// from its localStorage/UI rather than list drafts that are
