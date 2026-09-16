@@ -2411,4 +2411,106 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$this->assertSame( $sender, (int) $method->invoke( $email_tokens, array( 'receiver-user.id' => $sender ) ) );
 		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $author, $sender ) );
 	}
+	/**
+	 * The SAME email block, rendered for two recipients, must carry a different name in each.
+	 *
+	 * This is the fan-out itself - TC-138 and TC-139 - and it was the ticket's largest untested
+	 * area: the existing coverage proves bb_get_receiver_user_id() RESOLVES a recipient, not that
+	 * the rendered body actually differs per recipient. Those are different claims, and only the
+	 * second one is the feature.
+	 *
+	 * BP_Email_Tokens::token__group_card() is the surface with the sharpest edge: it writes the
+	 * member name into an `<img alt="">`, which renders invisibly and so survives every visual
+	 * check, while still being readable by a mail client and by anyone the mail is forwarded to.
+	 *
+	 * Asserted in both directions on purpose. A redactor that blanked every name would satisfy the
+	 * denied recipient and fail the community: the entitled recipient must still receive the
+	 * surname they are allowed to see.
+	 *
+	 * @group bb_activity_name_privacy
+	 */
+	public function test_email_group_card_resolves_the_member_name_per_recipient() {
+		if ( ! class_exists( 'BP_Email_Tokens' ) || ! bp_is_active( 'groups' ) ) {
+			$this->markTestSkipped( 'BP_Email_Tokens or the groups component is unavailable.' );
+		}
+
+		// adminsonly, not loggedin: a plain logged-in member is a PERMITTED viewer of a
+		// `loggedin`-hidden field, so with that helper the "denied" recipient would not be denied
+		// anything and the test could not fail.
+		$member    = $this->create_member_with_adminsonly_last_name();
+		$denied    = self::factory()->user->create();
+		$entitled  = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		$group_id = self::factory()->group->create(
+			array(
+				'creator_id' => $member,
+				'status'     => 'public',
+			)
+		);
+		groups_join_group( $group_id, $member );
+
+		// The avatar strip in token__group_card() is built from the GROUP ACTIVITY table, not the
+		// member list, so a group with members but no activity renders an empty strip and the alt
+		// assertions below would prove nothing.
+		if ( bp_is_active( 'activity' ) && function_exists( 'groups_post_update' ) ) {
+			groups_post_update(
+				array(
+					'user_id'  => $member,
+					'group_id' => $group_id,
+					'content'  => 'PROD-9896 fan-out fixture',
+				)
+			);
+		}
+
+		$tokens_class = new BP_Email_Tokens();
+		$email        = new BP_Email( 'groups-invitation' );
+
+		$render = function ( $receiver_id ) use ( $tokens_class, $email, $group_id ) {
+			// Only `group.id` - the shape the bundled fan-outs pass. Supplying the `group` object
+			// instead leaves $group_id undefined inside token__group_card()'s cover-image branch;
+			// that is pre-existing (identical on `release`) and belongs to its own ticket, not here.
+			$tokens = array(
+				'group.id'         => $group_id,
+				'receiver-user.id' => $receiver_id,
+			);
+
+			ob_start();
+			$returned = $tokens_class->token__group_card( $email, array(), $tokens );
+			$buffered = ob_get_clean();
+
+			return is_string( $returned ) && '' !== $returned ? $returned : $buffered;
+		};
+
+		$for_denied   = $render( $denied );
+		$for_entitled = $render( $entitled );
+
+		$this->assertNotEmpty( $for_denied, 'Fixture: the group card rendered nothing, so nothing below is meaningful.' );
+
+		$this->assertStringNotContainsString(
+			'Quillfeather',
+			$for_denied,
+			'The email body carried a surname the recipient is not allowed to see.'
+		);
+		$this->assertStringContainsString(
+			'Alex',
+			$for_denied,
+			'The denied recipient should still get the visible part of the name, not a blank.'
+		);
+
+		// The over-redaction guard: without this, blanking every name would pass the assertion above.
+		$this->assertStringContainsString(
+			'Quillfeather',
+			$for_entitled,
+			'An administrator is entitled to the surname and was short-changed.'
+		);
+
+		// And specifically in the alt attribute, which is where the name is invisible to a reviewer.
+		preg_match_all( '/alt=["\']([^"\']+)["\']/', $for_denied, $denied_alts );
+		preg_match_all( '/alt=["\']([^"\']+)["\']/', $for_entitled, $entitled_alts );
+
+		$this->assertNotEmpty( $denied_alts[1], 'Fixture: no alt attribute was rendered, so the alt assertions prove nothing.' );
+		$this->assertNotContains( 'Alex Quillfeather', $denied_alts[1], 'The avatar alt text leaked the withheld surname.' );
+		$this->assertContains( 'Alex Quillfeather', $entitled_alts[1], 'The entitled recipient lost the surname in the avatar alt text.' );
+	}
+
 }
