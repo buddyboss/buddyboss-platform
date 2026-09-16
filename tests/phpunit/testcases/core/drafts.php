@@ -1197,6 +1197,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		update_post_meta( $id, 'bp_media_saved', '0' );
 		update_post_meta( $id, 'bb_media_draft', 1 );
 
+		$this->assertNotWPError( $id, 'Fixture: the factory must return an ID, not a WP_Error.' );
+
 		return (int) $id;
 	}
 
@@ -8743,6 +8745,17 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertNotEmpty( $token_indexes, 'Premise: the handler must have bumped the referenced-cache token.' );
 
 		$this->assertGreaterThan( max( $meta_indexes ), max( $token_indexes ), $message );
+
+		// max() alone only proves that SOME bump follows the write. It stays true
+		// if a second, pre-write invalidation is ADDED alongside the correct one -
+		// and a pre-write bump is exactly the window this asserts against, because
+		// it lets a sweep re-cache a set that is missing the new reference and pin
+		// it for the whole TTL. Assert that NO bump precedes the write either.
+		$this->assertGreaterThan(
+			max( $meta_indexes ),
+			min( $token_indexes ),
+			$message . ' (no invalidation may precede the row write either)'
+		);
 	}
 
 	/**
