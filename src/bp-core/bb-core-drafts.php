@@ -3927,11 +3927,23 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- maintenance sweep over draft-stamped attachments, cursored.
 		$candidate_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				// Two kinds of draft attachment, each with its OWN pair of markers:
-				// photos/documents/videos use bb_media_draft + bp_media_saved, while
-				// an activity feature image uses bb_activity_post_feature_image_draft
-				// + bb_activity_post_feature_image_saved. The pairs are matched
-				// explicitly so a marker is never read against the wrong "saved" flag.
+				// Two kinds of draft attachment, each with its OWN set of markers.
+				// bb_media_draft is written for photos, documents AND videos alike
+				// ({@see bb_draft_protect_payload_attachments()}), but the "saved"
+				// flag beside it is type-specific: bp_media_saved for a photo,
+				// bp_document_saved for a document, bp_video_saved for a video. An
+				// activity feature image is the separate pair
+				// bb_activity_post_feature_image_draft +
+				// bb_activity_post_feature_image_saved.
+				//
+				// Pairing bb_media_draft with bp_media_saved alone - as this did -
+				// made every stamped document and video structurally unselectable,
+				// so their stamps could never be released and their files could
+				// never be reclaimed by bp_document_delete_orphaned_attachments() /
+				// bp_video_delete_orphaned_attachments(), both of which require the
+				// stamp to be absent. Those are the largest files a community
+				// stores. The pairs stay matched explicitly so a marker is still
+				// never read against another type's "saved" flag.
 				//
 				// Feature images were previously absent from this list, so their
 				// marker was only ever cleared by the normal discard/replace/expiry
@@ -3949,7 +3961,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 					s.post_id = p.ID
 					AND s.meta_value = '0'
 					AND (
-						( d.meta_key = 'bb_media_draft' AND s.meta_key = 'bp_media_saved' )
+						( d.meta_key = 'bb_media_draft' AND s.meta_key IN ( 'bp_media_saved', 'bp_document_saved', 'bp_video_saved' ) )
 						OR ( d.meta_key = 'bb_activity_post_feature_image_draft' AND s.meta_key = 'bb_activity_post_feature_image_saved' )
 					)
 				)
