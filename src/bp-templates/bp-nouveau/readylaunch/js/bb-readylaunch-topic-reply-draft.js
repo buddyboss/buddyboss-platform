@@ -614,6 +614,10 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.resetTopicReplyDraftPostForm = function() {
+			// Discard and close both land here, so the notices come down with the
+			// rest of the composer rather than outliving the draft they describe.
+			this.clearDraftNotices();
+
 			var target                      = this.currentForm ? this.currentForm : $( 'form#new-post' );
 			var editor_key                  = target.find( '.bbp-the-content' ).data( 'key' ),
 				$editor,
@@ -1358,17 +1362,29 @@ window.bp = window.bp || {};
 		 *
 		 * @return {void}
 		 */
-		this.showDraftRetentionNotice = function () {
+		this.showDraftRetentionNotice = function ( show ) {
 			var $form   = this.draftNoticeForm(),
 				message = ( 'undefined' !== typeof BP_Nouveau.forums ) ? BP_Nouveau.forums.draft_retention_message : '',
 				$note;
 
-			// Expiry disabled (empty message) - say nothing.
-			if ( ! $form.length || ! message ) {
+			if ( ! $form.length ) {
 				return;
 			}
 
 			$note = $form.find( '.bb-draft-retention-note' );
+
+			// Hiding, or expiry disabled (empty message) - say nothing, and take
+			// down any notice already on screen. Without this branch the function
+			// could only ever ADD the note: discarding a forum draft emptied the
+			// composer and hid its discard button while "Drafts are kept for 30
+			// days." stayed on screen, describing a draft that no longer existed,
+			// until the next page load. The activity packs have had this branch
+			// from the start; the forum packs shipped show-only.
+			if ( false === show || ! message ) {
+				$note.remove();
+
+				return;
+			}
 
 			if ( $note.length ) {
 				$note.text( message );
@@ -1471,6 +1487,24 @@ window.bp = window.bp || {};
 			// screen readers, and this is the only signal a member gets that a
 			// save was refused.
 			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
+		};
+
+		/**
+		 * Tear down both draft notices.
+		 *
+		 * The notices belong to the OPEN composer, not to the stored draft, so
+		 * every path that resets the form has to take them down with it -
+		 * discard and close both funnel through resetTopicReplyDraftPostForm().
+		 *
+		 * Both calls are no-ops when the nodes are absent.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		this.clearDraftNotices = function () {
+			this.showDraftRetentionNotice( false );
+			this.showDraftFeedback( '' );
 		};
 
 		/**
