@@ -1603,7 +1603,30 @@ window.bp = window.bp || {};
 
 			if ( ! message ) {
 				$notice.remove();
+				this.lastSpokenDraftFeedback = '';
 				return;
+			}
+
+			// The visible notice is CSS-gated to the OPEN composer, so one raised
+			// while the composer is shut renders display:none - and a role="alert"
+			// that is hidden at insertion is never announced, nor is it announced
+			// by being revealed later. M2 and M3 are raised by the page-load draft
+			// fetch, with the composer still closed, so without this a screen-reader
+			// user is never told the draft failed to load.
+			//
+			// Only while the composer is SHUT: when it is open the visible alert
+			// announces on its own and speaking as well would say it twice.
+			// Deduped because the fetch retries on later autosave ticks, and
+			// feature-guarded because wp-a11y can be dequeued by a site.
+			if ( ! $form.hasClass( 'bb-rl-focus-in' ) ) {
+				if (
+					message !== this.lastSpokenDraftFeedback &&
+					window.wp && wp.a11y && _.isFunction( wp.a11y.speak )
+				) {
+					wp.a11y.speak( message, 'assertive' );
+				}
+
+				this.lastSpokenDraftFeedback = message;
 			}
 
 			if ( $notice.length ) {

@@ -1664,6 +1664,14 @@ a.layout-grid-view {
   font-size: 12px;
   margin-left: 5px;
 }
+#whats-new-form .bb-draft-save-feedback,
+#whats-new-form .bb-draft-retention-note {
+  display: none;
+}
+#whats-new-form.focus-in .bb-draft-save-feedback,
+#whats-new-form.focus-in .bb-draft-retention-note {
+  display: flex;
+}
 
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;

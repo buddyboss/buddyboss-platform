@@ -139,6 +139,21 @@
 		}
 	}
 
+	// Draft notices belong to the OPEN composer, not the collapsed bar - same
+	// default-hidden / shown-on-focus-in pattern as the rest of the chrome.
+	.bb-draft-save-feedback,
+	.bb-draft-retention-note {
+		display: none;
+	}
+
+	&.bb-rl-focus-in {
+
+		.bb-draft-save-feedback,
+		.bb-draft-retention-note {
+			display: flex;
+		}
+	}
+
 	// Activity Post Form in modal view
 	&.bb-rl-focus-in {
 		position: relative;
