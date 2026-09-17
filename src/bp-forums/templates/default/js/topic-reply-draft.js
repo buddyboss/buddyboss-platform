@@ -1398,6 +1398,48 @@ window.bp = window.bp || {};
 		};
 
 		/**
+		 * Put a draft notice at the top of the composer BODY, below the header.
+		 *
+		 * Not `$form.prepend()`, which placed the notice above the modal title and
+		 * outside the modal's rounded top edge. Core solves the same problem by
+		 * absolutely positioning `#message-feedabck` at the header's height;
+		 * inserting after the header in normal flow reaches the same spot without
+		 * pinning to a hard-coded 58px.
+		 *
+		 * The header's depth differs by composer, so both levels are searched. In
+		 * the activity composers it is a direct child of the form; in every forum
+		 * composer it is a grandchild wrapped in `fieldset.bbp-form` - a `legend`
+		 * on the default pack, `.bb-rl-forum-modal-header` on ReadyLaunch. An
+		 * earlier revision of this docblock claimed forum composers had no header
+		 * at all; they do, and `.children()` alone could never see it.
+		 *
+		 * The fallback still matters: a composer rendered without a header, or one
+		 * a theme has restructured, prepends as before.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} $form The composer form.
+		 * @param {jQuery} $node The notice node to insert.
+		 *
+		 * @return {void}
+		 */
+		this.insertDraftNotice = function ( $form, $node ) {
+			var headerSelector = '#activity-header, #bb-rl-activity-header, .bb-model-header, .bb-rl-bb-model-header',
+				forumSelector  = 'fieldset.bbp-form > legend, fieldset.bbp-form > .bb-rl-forum-modal-header, fieldset.bbp-form > .bbp_topic_title_wrapper',
+				$header        = $form.children( headerSelector ).first();
+
+			if ( ! $header.length ) {
+				$header = $form.find( forumSelector ).first();
+			}
+
+			if ( $header.length ) {
+				$node.insertAfter( $header );
+			} else {
+				$form.prepend( $node );
+			}
+		};
+
+		/**
 		 * Show the draft-retention notice on the composer.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1429,21 +1471,23 @@ window.bp = window.bp || {};
 			}
 
 			if ( $note.length ) {
-				$note.text( message );
+				$note.find( 'p' ).text( message );
 
 				return;
 			}
 
 			// Text set before insertion, and placed BELOW any refusal notice, so
 			// the two notices keep one fixed order whichever is created first.
-			$note = $( '<div class="bb-draft-retention-note"></div>' ).text( message );
+			$note = $( '<div class="bb-draft-retention-note bp-messages bp-feedback info"></div>' )
+				.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
+				.append( $( '<p></p>' ).text( message ) );
 
 			var $feedback = $form.find( '.bb-draft-save-feedback' );
 
 			if ( $feedback.length ) {
 				$note.insertAfter( $feedback );
 			} else {
-				$form.prepend( $note );
+				this.insertDraftNotice( $form, $note );
 			}
 		};
 
@@ -1519,7 +1563,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( $notice.length ) {
-				$notice.text( message );
+				$notice.find( 'p' ).text( message );
 
 				return;
 			}
@@ -1528,7 +1572,12 @@ window.bp = window.bp || {};
 			// inserted first and filled afterwards is not announced by several
 			// screen readers, and this is the only signal a member gets that a
 			// save was refused.
-			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
+			this.insertDraftNotice(
+				$form,
+				$( '<div class="bb-draft-save-feedback bp-messages bp-feedback error" role="alert"></div>' )
+					.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
+					.append( $( '<p></p>' ).text( message ) )
+			);
 		};
 
 		/**

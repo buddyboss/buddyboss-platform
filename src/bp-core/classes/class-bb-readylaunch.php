@@ -114,7 +114,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// display_topic() -> BBP_Shortcodes::start() -> bbp_enqueue_scripts),
 				// and bb_rl_required_load() is itself called from a later
 				// `template_include` callback. A filter added there is registered
-				// too late to see the only pass that matters (PROD-9621 O2).
+				// too late to see the only pass that matters.
 				add_filter( 'bbp_default_scripts', array( $this, 'bb_rl_remove_default_topic_reply_draft_script' ) );
 			}
 
@@ -3497,8 +3497,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * So the handle is removed before it is ever enqueued instead.
 		 * `bbp_default_scripts` is applied inside `enqueue_scripts()`
 		 * immediately before the enqueue loop, which means it applies on both
-		 * of those invocation paths and the result cannot be undone later
-		 * (PROD-9621 O2).
+		 * of those invocation paths and the result cannot be undone later.
 		 *
 		 * Gated on the page context and NOT on whether the ReadyLaunch handle
 		 * is already enqueued, which was the first thing tried here and is
