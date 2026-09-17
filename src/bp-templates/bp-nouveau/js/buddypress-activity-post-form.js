@@ -1709,6 +1709,30 @@ window.bp = window.bp || {};
 			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
 		},
 
+		/**
+		 * Tear down both draft notices.
+		 *
+		 * Called from the one statement that actually hides the composer, so the
+		 * notices disappear in the SAME frame as the modal. Clearing them from
+		 * the close handlers instead left a ~190ms window in which the member
+		 * watched the notice vanish and only then the modal close - two steps
+		 * where there is one action.
+		 *
+		 * Closing is not discarding, so this must never be routed through
+		 * resetDraftActivity(): the stored draft has to survive. The notices
+		 * belong to the OPEN composer; the draft does not.
+		 *
+		 * Both calls are no-ops when the nodes are absent.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		clearDraftNotices: function() {
+			this.showDraftRetentionNotice( false );
+			this.showDraftFeedback( '' );
+		},
+
 		collectDraftActivity: function() {
 			var self = this,
 				meta = {};
@@ -6280,6 +6304,17 @@ window.bp = window.bp || {};
 			initialize: function () {
 				$( '#whats-new-form' ).addClass( 'focus-in' ).parent().addClass( 'modal-popup' ).closest( 'body' ).addClass( 'activity-modal-open' ); // add some class to form so that DOM knows about focus.
 
+				// When the draft is already in hand - the warm localStorage path,
+				// which is the common one - render the retention note with the
+				// modal rather than waiting for displayDraftActivity()'s deferred
+				// pass. That pass lands ~60ms later, so the note used to drop in
+				// after the composer was already on screen and shove it down. The
+				// cold path still shows it when the fetched draft arrives; this
+				// call is idempotent.
+				if ( ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data ) {
+					bp.Nouveau.Activity.postForm.showDraftRetentionNotice( true );
+				}
+
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
@@ -6780,6 +6815,10 @@ window.bp = window.bp || {};
 				);
 
 				$( '#whats-new-form' ).removeClass( 'focus-in focus-in--privacy focus-in--group focus-in--scroll has-draft' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
+
+				// Same frame as the hide above: the notices belong to the open
+				// composer, and the member must not watch them leave separately.
+				bp.Nouveau.Activity.postForm.clearDraftNotices();
 
 				// Remove Post title tooltip on reset.
 				$( 'body' ).removeClass( 'ac-title-required' );
