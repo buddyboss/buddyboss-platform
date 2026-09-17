@@ -2154,9 +2154,19 @@ window.bp = window.bp || {};
 						// unload beacon (M14), so treating an abort as a failed save
 						// showed the member a data-loss warning on the way out of a
 						// page that had saved perfectly well.
+						//
+						// `readyState === 0` is deliberately NOT part of this test. It is true
+						// for a real abort AND for any request the client kills before it
+						// completes - an ad blocker or privacy extension targeting
+						// admin-ajax.php, a corporate proxy, a connection dropping mid-save.
+						// Those are genuine failures, reported as `statusText: 'error'`, and
+						// swallowing them left the member typing into a composer that had
+						// silently stopped saving: the exact regression this notice exists to
+						// prevent. jQuery sets BOTH textStatus and statusText to 'abort' on a
+						// real abort, so the checks below already cover that case.
 						if (
 							'abort' === textStatus ||
-							( response && ( 0 === response.readyState || 'abort' === response.statusText ) )
+							( response && 'abort' === response.statusText )
 						) {
 							return;
 						}
