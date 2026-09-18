@@ -4190,9 +4190,14 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	bb_draft_release_lock( 'bb_draft_reference_scan_lock', true );
 
 	// An abstention here means this blog's candidates were not judged, so re-arm
-	// rather than leaving them for the next 24-hour slot.
+	// rather than leaving them for the next 24-hour slot. A run that DID judge
+	// them resets the per-day retry allowance, so a later abstention on the same
+	// day gets its full set of retries rather than whatever an earlier collision
+	// left over.
 	if ( $abstained ) {
 		bb_draft_reschedule_stamp_sweep();
+	} else {
+		delete_transient( 'bb_draft_stamp_sweep_retries' );
 	}
 
 	// A finished pass restarts from the top next time (attachments freshly
@@ -4241,6 +4246,10 @@ add_action( 'bb_draft_cleanup_hook', 'bb_drafts_delete_expired' );
 // it to the root-only hook meant every subsite's stamped orphans were never
 // released, on any network, forever (D2).
 add_action( 'bb_draft_stamp_release_hook', 'bb_drafts_release_orphaned_draft_stamps' );
+// The bounded 15-minute retry an abstaining run queues for itself
+// ({@see bb_draft_reschedule_stamp_sweep()}). A separate single-event hook, not
+// a second occurrence of the daily one, so its guard can actually open.
+add_action( 'bb_draft_stamp_release_retry', 'bb_drafts_release_orphaned_draft_stamps' );
 
 /**
  * Schedule the daily draft cleanup events.
@@ -4281,15 +4290,43 @@ add_action( 'bb_draft_stamp_release_hook', 'bb_drafts_release_orphaned_draft_sta
  */
 function bb_draft_reschedule_stamp_sweep() {
 	// Per blog, deliberately: the release loop this re-arms is per blog, and so
-	// is its cursor. Guarded by wp_next_scheduled() so repeated abstentions in
-	// one window queue exactly one retry.
+	// is its cursor.
 	//
+	// The retry has its OWN single-event hook, `bb_draft_stamp_release_retry`,
+	// and is guarded on that name so repeated abstentions in one window queue
+	// exactly one retry. It used to be queued on - and guarded by - the daily
+	// hook itself, and that guard never opened: WP-Cron re-schedules a
+	// recurring event's next occurrence BEFORE it fires the callback
+	// (wp-cron.php), and bb_drafts_schedule_cleanup() re-creates the daily
+	// event on every bp_init anyway, so wp_next_scheduled() for the daily hook
+	// is truthy at every point this can run. Every abstention still cost the
+	// full 24 hours, which is exactly what this function exists to avoid -
+	// the same shape bb_drafts_delete_expired() already gets right by pairing
+	// its daily `bb_draft_cleanup_hook` with a separate `bb_draft_cleanup`
+	// continuation event.
+	//
+	// Bounded, unlike the expiry re-arm, which is gated on a persisted cursor
+	// (it only re-arms while there is recorded work). Nothing here says whether
+	// the next attempt can succeed - the thing being waited on is another
+	// blog's scan or a lost window - so an unbounded retry on a blog that
+	// loses every time would fire every 15 minutes for ever. Four retries per
+	// day covers an hour, which is longer than a full network reference scan;
+	// after that the blog waits for its daily slot like it did before. The
+	// counter is a per-blog transient reset by any run that judged its own
+	// candidates (see the caller).
+	$retries = (int) get_transient( 'bb_draft_stamp_sweep_retries' );
+
+	if ( $retries >= 4 ) {
+		return;
+	}
+
 	// 15 minutes rather than the 60 seconds the expiry sweep uses, because the
 	// thing being waited on is another blog's full reference scan, which is
 	// measured in minutes. Retrying sooner just burns a cron slot to abstain
 	// again.
-	if ( ! wp_next_scheduled( 'bb_draft_stamp_release_hook' ) ) {
-		wp_schedule_single_event( time() + 15 * MINUTE_IN_SECONDS, 'bb_draft_stamp_release_hook' );
+	if ( ! wp_next_scheduled( 'bb_draft_stamp_release_retry' ) ) {
+		set_transient( 'bb_draft_stamp_sweep_retries', $retries + 1, DAY_IN_SECONDS );
+		wp_schedule_single_event( time() + 15 * MINUTE_IN_SECONDS, 'bb_draft_stamp_release_retry' );
 	}
 }
 

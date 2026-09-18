@@ -1485,6 +1485,114 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * An abstaining sweep must queue its 15-minute retry while the daily event
+	 * is scheduled - which, in production, is always.
+	 *
+	 * The re-arm used to queue a single event on the DAILY hook and guard on
+	 * wp_next_scheduled() of that same hook. WP-Cron re-schedules a recurring
+	 * event's next occurrence before it fires the callback, and
+	 * bb_drafts_schedule_cleanup() re-creates the daily event on every bp_init,
+	 * so that guard was truthy at every point the re-arm could run and no retry
+	 * was ever queued. Every abstention still cost the full 24 hours, and on a
+	 * network with a stable daily lock collision the losing blog's stamped
+	 * orphans were never released - the exact leak the re-arm was added to
+	 * close. The retry now has its own single-event hook.
+	 */
+	public function test_stamp_sweep_rearm_queues_a_retry_while_the_daily_event_is_scheduled() {
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_retry' );
+		delete_transient( 'bb_draft_stamp_sweep_retries' );
+
+		// Production state: the daily recurring event is present.
+		bb_drafts_schedule_cleanup();
+		$this->assertNotFalse( wp_next_scheduled( 'bb_draft_stamp_release_hook' ), 'Premise: the daily event must be scheduled, as it always is in production.' );
+
+		bb_draft_reschedule_stamp_sweep();
+
+		$retry = wp_next_scheduled( 'bb_draft_stamp_release_retry' );
+
+		$this->assertNotFalse( $retry, 'An abstention must queue a retry even though the daily event is scheduled.' );
+		$this->assertLessThanOrEqual( time() + 15 * MINUTE_IN_SECONDS, $retry, 'The retry must be due within 15 minutes, not at the next daily slot.' );
+		$this->assertNotFalse(
+			has_action( 'bb_draft_stamp_release_retry', 'bb_drafts_release_orphaned_draft_stamps' ),
+			'The retry hook must run the orphan-stamp sweep, or queuing it does nothing.'
+		);
+
+		// Repeated abstentions inside one window queue exactly one retry.
+		bb_draft_reschedule_stamp_sweep();
+
+		$this->assertSame( $retry, wp_next_scheduled( 'bb_draft_stamp_release_retry' ), 'A second abstention in the same window must not queue a second retry.' );
+		$this->assertSame( 1, $this->count_scheduled_events( 'bb_draft_stamp_release_retry' ), 'Exactly one retry event may be queued at a time.' );
+
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_retry' );
+		delete_transient( 'bb_draft_stamp_sweep_retries' );
+	}
+
+	/**
+	 * The retry is bounded per day. Unlike the expiry re-arm, which is gated on
+	 * a persisted cursor, nothing here says whether the next attempt can
+	 * succeed, so an unbounded retry on a blog that loses every time would fire
+	 * every 15 minutes for ever.
+	 */
+	public function test_stamp_sweep_rearm_is_bounded_per_day() {
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_retry' );
+		delete_transient( 'bb_draft_stamp_sweep_retries' );
+
+		for ( $attempt = 1; $attempt <= 4; $attempt++ ) {
+			bb_draft_reschedule_stamp_sweep();
+
+			$this->assertNotFalse( wp_next_scheduled( 'bb_draft_stamp_release_retry' ), "Retry {$attempt} of the day must be queued." );
+
+			// The retry fires: WP-Cron removes a single event before dispatching it.
+			wp_clear_scheduled_hook( 'bb_draft_stamp_release_retry' );
+		}
+
+		bb_draft_reschedule_stamp_sweep();
+
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_stamp_release_retry' ), 'A fifth abstention in one day must wait for the daily slot instead of retrying again.' );
+
+		delete_transient( 'bb_draft_stamp_sweep_retries' );
+	}
+
+	/**
+	 * A run that judged this blog's own candidates resets the retry allowance,
+	 * so a later abstention on the same day gets its full set of retries rather
+	 * than whatever an earlier collision left over.
+	 */
+	public function test_stamp_sweep_run_that_judges_its_candidates_resets_the_retry_allowance() {
+		$this->isolate_draft_maintenance();
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_retry' );
+
+		// The allowance is spent.
+		set_transient( 'bb_draft_stamp_sweep_retries', 4, DAY_IN_SECONDS );
+
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		$this->assertFalse( $result['abstained'], 'Premise: an uncontended run on an empty site must judge its (zero) candidates, not abstain.' );
+		$this->assertFalse( get_transient( 'bb_draft_stamp_sweep_retries' ), 'A run that judged its candidates must reset the retry allowance.' );
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_stamp_release_retry' ), 'A run that judged its candidates has nothing to retry.' );
+	}
+
+	/**
+	 * Count the queued cron events for one hook.
+	 *
+	 * @param string $hook Cron hook name.
+	 * @return int
+	 */
+	protected function count_scheduled_events( $hook ) {
+		$count = 0;
+
+		foreach ( (array) _get_cron_array() as $events ) {
+			if ( isset( $events[ $hook ] ) ) {
+				$count += count( $events[ $hook ] );
+			}
+		}
+
+		return $count;
+	}
+
+	/**
 	 * Counts how many times the reference scan runs (its batch-size filter fires
 	 * exactly once per scan invocation).
 	 */
@@ -2960,6 +3068,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_site_transient( 'bb_draft_cleanup_lock' );
 		delete_site_transient( 'bb_draft_oneshot_lock' );
 		delete_transient( 'bb_draft_stamp_sweep_lock' );
+		delete_transient( 'bb_draft_stamp_sweep_retries' );
 		delete_option( 'bb_draft_stamp_sweep_cursor' );
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 		delete_site_transient( 'bb_draft_referenced_stamp_ids_token' );
