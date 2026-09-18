@@ -412,8 +412,10 @@ export function ActivityListScreen( { onNavigate } ) {
 	 *
 	 * Uses dateI18n() from @wordpress/date so the output respects the
 	 * WordPress timezone setting and translates month names.
-	 * date_recorded is stored as UTC in the database; passing the raw
-	 * string lets dateI18n convert it to the site's local time.
+	 * date_recorded is stored as a naive UTC datetime string (no
+	 * timezone designator), so it must be normalized to an explicit
+	 * UTC ISO string first — otherwise dateI18n()/moment() parses it
+	 * as the browser's local time instead of UTC before converting.
 	 *
 	 * @param {string} dateStr UTC date string (e.g. "2026-02-27 14:23:45").
 	 * @returns {string} Formatted date in site timezone.
@@ -422,7 +424,7 @@ export function ActivityListScreen( { onNavigate } ) {
 		if ( ! dateStr ) {
 			return '';
 		}
-		return dateI18n( 'j M, H:i:s', dateStr );
+		return dateI18n( 'j M, H:i:s', dateStr.replace( ' ', 'T' ) + 'Z' );
 	};
 
 	// Build action type options for select.
