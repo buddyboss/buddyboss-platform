@@ -91,6 +91,29 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 									if ( initVal !== editor.getContent() ) {
 										editor.setContent( initVal );
 									}
+
+									// Route the link button and its Ctrl/Cmd+K shortcut to
+									// WordPress's link modal (the same one the Text/Code view
+									// uses) instead of TinyMCE's inline link toolbar.
+									//
+									// The inline toolbar positions itself assuming the editor's
+									// own toolbar sits ABOVE the text area — it folds the
+									// toolbar's bottom edge into the "blocked" region at the top
+									// of the usable area. This editor's toolbar is styled to sit
+									// BELOW the text area (.mce-top-part { order: 3 }), so that
+									// region swallows the whole field, WP computes no room to
+									// place the toolbar, and it silently hides itself. The link
+									// command has already applied its placeholder anchor by then,
+									// which is why the selection looked linked but no URL field
+									// ever appeared.
+									//
+									// Registered on 'init' so it lands after the wplink plugin
+									// has registered its own version of this command.
+									if ( window.wpLink ) {
+										editor.addCommand( 'WP_Link', function () {
+											window.wpLink.open( editor.id );
+										} );
+									}
 								} );
 
 								editor.on( 'change keyup', function () {
