@@ -1366,7 +1366,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function bb_get_plugin_last_updated( $plugin_file, $update = null ) {
 			// Third-party update managers are known to rewrite this transient with
 			// array entries; reading a property off one warns under WP_DEBUG.
-			if ( is_object( $update ) && ! empty( $update->last_updated ) ) {
+			if (
+				is_object( $update ) &&
+				! empty( $update->last_updated ) &&
+				is_scalar( $update->last_updated ) &&
+				false !== strtotime( (string) $update->last_updated )
+			) {
+				// Core prints human_time_diff( strtotime( ... ) ); a date it cannot
+				// parse would read as "56 years ago", so one it cannot parse is
+				// treated as absent.
 				return (string) $update->last_updated;
 			}
 
@@ -1994,11 +2002,16 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * '2.0.3-beta2' is greater, not equal and not lower.
 		 *
 		 * So the two jobs are separated rather than compromised between. Removing
-		 * every character a version cannot contain is what makes printing safe -
-		 * with no '<' left there is no tag for kses to pass through - while '-',
-		 * '+', '_' and letters survive, so version_compare() still orders a
-		 * pre-release below its release and the comparison above resolves the way
-		 * the installed copy deserves.
+		 * everything after a character a version cannot contain is what makes
+		 * printing safe - with no '<' left there is no tag for kses to pass
+		 * through - while a '-' or '+' suffix survives, so version_compare()
+		 * still orders a pre-release below its release and the comparison above
+		 * resolves the way the installed copy deserves.
+		 *
+		 * Public API, like bb_normalize_release_version(): the add-ons build the
+		 * same 'version' key and need the same two treatments kept apart - this
+		 * one for what is printed and compared, the normalizer for URLs and
+		 * lookups. See data_contract_methods() in the release-notes test case.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -2006,17 +2019,28 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @return string Version safe to print and to compare, or an empty string.
 		 */
-		protected function bb_sanitize_plugin_version( $version ) {
-			// Nothing scalar to read: an array or object cannot be a version.
+		public function bb_sanitize_plugin_version( $version ) {
 			if ( ! is_scalar( $version ) ) {
 				return '';
 			}
 
-			// Bounded for the same reason bb_normalize_release_version() bounds:
-			// the value can arrive from a remote feed, and it is printed.
 			$version = substr( trim( (string) $version ), 0, 128 );
+			$version = (string) preg_replace( '/^[vV](?=[0-9])/', '', $version );
 
-			return (string) preg_replace( '/[^0-9A-Za-z.+_-]/', '', $version );
+			/*
+			 * Anchored, so the result is a version and nothing else: digits and
+			 * dots, then an optional pre-release or build suffix introduced by
+			 * '-' or '+' - "3.4.4-RC1", "1.0.0-beta1", "2.0.0+build.5". Anything
+			 * after a character a version cannot contain is dropped rather than
+			 * squeezed together: "9.9 <img>" is "9.9", not "9.9img", and "3,4,4"
+			 * is nothing at all rather than "344", which version_compare() would
+			 * rank far above the installed copy.
+			 */
+			if ( ! preg_match( '/^[0-9]+(?:\.[0-9]+)+(?:[-+][0-9A-Za-z.+_-]*)?/', $version, $matches ) ) {
+				return '';
+			}
+
+			return $matches[0];
 		}
 
 		/**
@@ -3294,8 +3318,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * hard-coding an ID. Cached separately from the notes: term IDs change far
 		 * less often than releases appear.
 		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
 		 * Only a completed lookup is cached, and that is what makes a cached 0
 		 * mean something. Caching a failure as 0 reads back an hour later as "the
 		 * remote has no term for this add-on", which the caller turns into "no
@@ -3636,6 +3658,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		protected function bb_get_addon_release_page_base( $slug ) {
 			$bases = array(
 				'buddyboss-platform-pro' => 'https://buddyboss.com/resources/buddyboss-platform-pro-releases/',
+				'buddyboss-app'          => 'https://buddyboss.com/resources/buddyboss-app-releases/',
 			);
 
 			/**
@@ -3834,9 +3857,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			<div class="bb-theme-changelog" style="padding: 10px 20px 20px;">
 				<h2 style="margin-top: 0;"><?php echo esc_html( $heading ); ?></h2>
 				<?php
-				// bb_build_changelog_section() returns markup it has sanitized
-				// itself, through the same pipeline the plugin modal uses.
-				echo $this->bb_build_changelog_section( $notes, $page_url, $link_text, $state ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				/*
+				 * Core runs links_add_target() over every plugin-modal section
+				 * (install_plugin_information()), and that is the only thing that
+				 * keeps a link inside fetched notes from navigating the thickbox
+				 * iframe to buddyboss.com, which refuses to be framed and leaves
+				 * it blank. This modal is rendered here rather than by core, so
+				 * it has to do the same for itself.
+				 *
+				 * bb_build_changelog_section() returns markup it has sanitized
+				 * itself, through the same pipeline the plugin modal uses.
+				 */
+				echo $this->bb_build_changelog_section( links_add_target( $notes, '_blank' ), $page_url, $link_text, $state ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				?>
 			</div>
 			<?php

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.4.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-09-18 08:55:18+00:00\n"
+"POT-Creation-Date: 2026-09-18 09:20:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,7 +42,7 @@ msgstr ""
 
 #. Description of the plugin
 #: bp-loader.php
-#: bp-core/classes/class-bp-admin.php:1709
+#: bp-core/classes/class-bp-admin.php:1717
 msgid "The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!"
 msgstr ""
 
@@ -16685,52 +16685,52 @@ msgid "<strong>You are offline.</strong> Documentation requires internet access.
 msgstr ""
 
 #. translators: %s: version number.
-#: bp-core/classes/class-bp-admin.php:1657
-#: bp-core/classes/class-bp-admin.php:3087
-#: bp-core/classes/class-bp-admin.php:3468
+#: bp-core/classes/class-bp-admin.php:1665
+#: bp-core/classes/class-bp-admin.php:3111
+#: bp-core/classes/class-bp-admin.php:3490
 #, php-format
 msgid "View the full release notes for version %s on buddyboss.com"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:1662
-#: bp-core/classes/class-bp-admin.php:3810
+#: bp-core/classes/class-bp-admin.php:1670
+#: bp-core/classes/class-bp-admin.php:3833
 msgid "View all release notes on buddyboss.com"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:1859
+#: bp-core/classes/class-bp-admin.php:1867
 msgid "No release notes have been published for this version yet."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:1862
+#: bp-core/classes/class-bp-admin.php:1870
 msgid "The release notes are still loading. Reload this window in a moment to see them."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:1867
+#: bp-core/classes/class-bp-admin.php:1875
 msgid "The release notes for this version could not be loaded right now."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:1888
+#: bp-core/classes/class-bp-admin.php:1896
 msgid "(opens in a new tab)"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:3101
-#: bp-core/classes/class-bp-admin.php:3475
+#: bp-core/classes/class-bp-admin.php:3125
+#: bp-core/classes/class-bp-admin.php:3497
 msgid "Visit the plugin website for release information"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:3668
+#: bp-core/classes/class-bp-admin.php:3691
 msgid "BuddyBoss Theme"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:3781
+#: bp-core/classes/class-bp-admin.php:3804
 msgid "Sorry, you are not allowed to view theme release notes."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:3800
+#: bp-core/classes/class-bp-admin.php:3823
 msgid "Release notes are not available for this theme."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:3832
+#: bp-core/classes/class-bp-admin.php:3855
 msgid "Theme Release Notes"
 msgstr ""
 

@@ -36,6 +36,63 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 
 		$reflection  = new ReflectionClass( 'BP_Admin' );
 		$this->admin = $reflection->newInstanceWithoutConstructor();
+
+		// The permalink tests share these keys; do not rely on transaction
+		// rollback alone to keep one test's cache out of the next.
+		delete_site_transient( 'bb_release_notes_addon_' . md5( 'buddyboss-addons_1.1.1' ) );
+		delete_site_transient( 'bb_release_addon_term_' . md5( 'buddyboss-addons' ) );
+	}
+
+	public function tear_down() {
+		foreach ( $this->temp_plugins as $dir ) {
+			$this->remove_temp_plugin( $dir );
+		}
+		$this->temp_plugins = array();
+
+		parent::tear_down();
+	}
+
+	/**
+	 * Plugin directories created under WP_PLUGIN_DIR by a test.
+	 *
+	 * @var string[]
+	 */
+	protected $temp_plugins = array();
+
+	/**
+	 * Write a throwaway plugin under WP_PLUGIN_DIR.
+	 *
+	 * @param string $dir     Directory name (the plugins_api slug).
+	 * @param string $headers Header lines for the main file.
+	 *
+	 * @return string Plugin basename, e.g. 'my-dir/my-dir.php'.
+	 */
+	protected function make_temp_plugin( $dir, $headers ) {
+		$path = WP_PLUGIN_DIR . '/' . $dir;
+
+		if ( ! is_dir( $path ) ) {
+			mkdir( $path, 0777, true );
+		}
+
+		file_put_contents( $path . '/' . $dir . '.php', "<?php\n/**\n" . $headers . "\n */\n" );
+		$this->temp_plugins[] = $dir;
+
+		wp_clean_plugins_cache( false );
+
+		return $dir . '/' . $dir . '.php';
+	}
+
+	protected function remove_temp_plugin( $dir ) {
+		$path = WP_PLUGIN_DIR . '/' . $dir;
+
+		if ( is_dir( $path ) ) {
+			foreach ( glob( $path . '/*' ) as $file ) {
+				unlink( $file );
+			}
+			rmdir( $path );
+		}
+
+		wp_clean_plugins_cache( false );
 	}
 
 	/**
@@ -925,6 +982,7 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 			'bb_get_release_notes_html',
 			'bb_get_release_notes_page_url',
 			'bb_normalize_release_version',
+			'bb_sanitize_plugin_version',
 			'bb_should_fetch_release_notes',
 		);
 
@@ -957,7 +1015,13 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 		// no sentence claiming the release has nothing published.
 		$args = (object) array( 'fields' => array( 'sections' => false ) );
 
+		// A gate regression must fail here, not make a live request.
+		$forbid = $this->forbid_remote_requests();
+		add_filter( 'pre_http_request', $forbid, 10, 3 );
+
 		$section = $this->admin->bb_get_addon_changelog_section( '2.0.3', 'buddyboss-sharing-releases', '', '', $args );
+
+		remove_filter( 'pre_http_request', $forbid, 10 );
 
 		$this->assertStringNotContainsString( 'No release notes have been published', $section );
 		$this->assertStringNotContainsString( 'could not be loaded', $section );
@@ -1103,5 +1167,77 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( 'https://example.com/buddyboss.com/' ) ) );
 		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( 'javascript:alert(1)' ) ) );
 		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( array( 'https://buddyboss.com/' ) ) ), 'Only a string is a link.' );
+	}
+
+	/* who is "ours" ***********************************************************/
+
+	public function test_addon_detection_requires_buddyboss_author_and_platform_dependency() {
+		$ours = $this->make_temp_plugin( 'buddyboss-testaddon', " * Plugin Name: BuddyBoss Test Add-on\n * Author: BuddyBoss\n * Version: 1.2.3\n * Requires Plugins: buddyboss-platform" );
+		$this->make_temp_plugin( 'buddyboss-wporg-plugin', " * Plugin Name: BuddyBoss On WordPress.org\n * Author: BuddyBoss\n * Version: 1.0.0" );
+		$this->make_temp_plugin( 'buddyboss-lookalike', " * Plugin Name: Lookalike\n * Author: Someone Else\n * Version: 1.0.0\n * Requires Plugins: buddyboss-platform" );
+
+		$found = $this->call( 'bb_get_installed_buddyboss_addon', array( 'buddyboss-testaddon' ) );
+		$this->assertSame( $ours, $found['file'] );
+		$this->assertSame( '1.2.3', $found['data']['Version'] );
+
+		$this->assertSame( array(), $this->call( 'bb_get_installed_buddyboss_addon', array( 'buddyboss-wporg-plugin' ) ), 'A BuddyBoss plugin without the dependency header stays on wordpress.org.' );
+		$this->assertSame( array(), $this->call( 'bb_get_installed_buddyboss_addon', array( 'buddyboss-lookalike' ) ), 'The dependency header alone does not make a plugin ours.' );
+		$this->assertSame( array(), $this->call( 'bb_get_installed_buddyboss_addon', array( 'akismet' ) ), 'A directory that cannot be ours is refused before the filesystem is read.' );
+		$this->assertSame( array(), $this->call( 'bb_get_installed_buddyboss_addon', array( '../buddyboss-testaddon' ) ) );
+		$this->assertSame( array(), $this->call( 'bb_get_installed_buddyboss_addon', array( array( 'buddyboss-testaddon' ) ) ) );
+	}
+
+	public function test_addon_fallback_answers_only_for_an_installed_addon() {
+		$this->make_temp_plugin( 'buddyboss-testaddon', " * Plugin Name: BuddyBoss Test Add-on\n * Author: BuddyBoss\n * Version: 1.2.3-beta1\n * Requires Plugins: buddyboss-platform" );
+
+		$forbid = $this->forbid_remote_requests();
+		add_filter( 'pre_http_request', $forbid, 10, 3 );
+
+		$args   = (object) array( 'slug' => 'buddyboss-testaddon', 'fields' => array( 'sections' => false ) );
+		$result = $this->admin->bb_plugins_api_addon_fallback( false, 'plugin_information', $args );
+
+		$this->assertIsObject( $result );
+		$this->assertSame( 'BuddyBoss Test Add-on', $result->name );
+		$this->assertSame( '1.2.3-beta1', $result->version, 'The printed version keeps its suffix so core never sees a newer version than the one installed.' );
+		$this->assertArrayHasKey( 'changelog', $result->sections );
+
+		$this->assertFalse( $this->admin->bb_plugins_api_addon_fallback( false, 'plugin_information', (object) array( 'slug' => 'akismet' ) ) );
+		$this->assertFalse( $this->admin->bb_plugins_api_addon_fallback( false, 'plugin_information', (object) array( 'slug' => 'buddyboss-not-installed' ) ) );
+		$this->assertSame( 'kept', $this->admin->bb_plugins_api_addon_fallback( 'kept', 'plugin_information', $args ), 'An answer already given is never overridden.' );
+		$this->assertFalse( $this->admin->bb_plugins_api_addon_fallback( false, 'query_plugins', $args ) );
+
+		remove_filter( 'pre_http_request', $forbid, 10 );
+	}
+
+	public function test_release_notes_fetch_is_confined_to_the_modal() {
+		$modal      = (object) array( 'slug' => 'x' );
+		$dependency = (object) array( 'slug' => 'x', 'fields' => array( 'sections' => false, 'short_description' => true ) );
+
+		if ( defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
+			$this->assertTrue( $this->admin->bb_should_fetch_release_notes( $modal ) );
+		} else {
+			$this->assertFalse( $this->admin->bb_should_fetch_release_notes( $modal ), 'Outside the thickbox iframe nothing fetches, whatever the fields say.' );
+		}
+
+		$this->assertFalse( $this->admin->bb_should_fetch_release_notes( $dependency ), "Core's dependency call opts out of sections and must never fetch." );
+	}
+
+	public function test_details_link_fix_tolerates_every_transient_shape() {
+		$this->assertFalse( $this->admin->bb_fix_plugin_details_link( false ) );
+		$this->assertSame( array(), $this->admin->bb_fix_plugin_details_link( array() ) );
+
+		$object_container = (object) array( 'response' => (object) array( 'akismet/akismet.php' => (object) array( 'slug' => 'akismet' ) ) );
+		$this->assertEquals( $object_container, $this->admin->bb_fix_plugin_details_link( $object_container ), 'A container another plugin reshaped is handed back untouched.' );
+
+		$array_entry = (object) array( 'response' => array( 'buddyboss-thing/buddyboss-thing.php' => array( 'slug' => 'buddyboss-thing' ) ) );
+		$this->assertEquals( $array_entry, $this->admin->bb_fix_plugin_details_link( $array_entry ), 'An array-shaped entry is never assigned into.' );
+	}
+
+	public function test_last_updated_ignores_a_date_core_cannot_parse() {
+		$good = (object) array( 'last_updated' => '2026-09-18 08:00:00' );
+		$bad  = (object) array( 'last_updated' => 'not a date' );
+
+		$this->assertSame( '2026-09-18 08:00:00', $this->admin->bb_get_plugin_last_updated( 'akismet/akismet.php', $good ) );
+		$this->assertMatchesRegularExpression( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $this->admin->bb_get_plugin_last_updated( 'akismet/akismet.php', $bad ) );
 	}
 }
