@@ -4275,6 +4275,94 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The all_data sibling merge must not STORE attachment ids the member does
+	 * not own.
+	 *
+	 * The primary entry drops un-owned ids from bbp_media/document/video before
+	 * the row write. The sibling merge consulted ownership only to decide what
+	 * to stamp, and stored the client list verbatim, so a crafted all_data
+	 * payload put another member's attachment id - or a fabricated one - into
+	 * this member's row. The stored row is what the global reference scan
+	 * reads, and bb_draft_collect_attachment_ids() applies no ownership filter,
+	 * so the foreign id pinned that member's stamp against the orphan-stamp
+	 * sweep for as long as the poisoned draft lived (the L6 pin, reopened
+	 * through this shape's own sibling write path), and fed the
+	 * pending-reference ledger whose overflow makes the sweep abstain
+	 * network-wide. Browser-verified on PROD-9621: sibling stored
+	 * [own, foreign, fabricated] verbatim while the primary path stored [].
+	 */
+	public function test_all_data_sibling_merge_drops_attachment_ids_the_member_does_not_own() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		$mine       = $this->make_draft_attachment( $user_id );
+		$somebody   = $this->make_draft_attachment( self::factory()->user->create() );
+		$fabricated = 999901;
+
+		$this->assertNull( get_post( $fabricated ), 'Premise: the fabricated id must not exist.' );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array(
+					'data_key'        => $primary_key,
+					'data'            => array( 'bbp_topic_content' => 'primary original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+				$sibling_key => array(
+					'data_key'        => $sibling_key,
+					'data'            => array( 'bbp_topic_content' => 'sibling original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'primary updated' ),
+			array(
+				$sibling_key => array(
+					'bbp_topic_content' => 'sibling updated',
+					'bbp_media'         => wp_json_encode( array( array( 'id' => $mine ), array( 'id' => $somebody ), array( 'id' => $fabricated ) ) ),
+				),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		// Premise: the sibling really was merged.
+		$this->assertSame( 'sibling updated', $stored[ $sibling_key ]['data']['bbp_topic_content'], 'The sibling merge must have happened, or this test proves nothing about it.' );
+
+		$stored_media = $stored[ $sibling_key ]['data']['bbp_media'];
+
+		$this->assertIsString( $stored_media, 'The forum draft attachment list must keep its JSON-string transport shape.' );
+		$this->assertSame(
+			array( $mine ),
+			array_map( 'intval', wp_list_pluck( json_decode( $stored_media, true ), 'id' ) ),
+			'A sibling merge must store only the attachment ids the member owns - a foreign or fabricated id must never reach the row.'
+		);
+
+		// The consequence the filter exists for: the stored row must not pin
+		// another member's stamp against the orphan-stamp sweep.
+		$this->assertSame(
+			array( $mine ),
+			array_map( 'intval', bb_draft_collect_attachment_ids( $stored[ $sibling_key ] ) ),
+			'The reference scan reads the stored row unfiltered, so a foreign id stored here would pin another member attachment for ever.'
+		);
+
+		// Negative control: the owned attachment still went through and is
+		// protected, so the filter is not simply dropping everything.
+		$this->assertSame( '1', (string) get_post_meta( $mine, 'bb_media_draft', true ), 'The member own attachment must still be stored and stamped.' );
+	}
+
+	/**
 	 * Cap the per-type attachment count on the sibling-merge path.
 	 *
 	 * The primary draft entry refuses a save whose media/document/video list

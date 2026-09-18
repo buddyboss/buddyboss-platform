@@ -1124,6 +1124,51 @@ function bb_post_topic_reply_draft() {
 						continue;
 					}
 
+					// Drop every attachment reference the member does not own BEFORE
+					// the entry is stored - the same per-type ownership filter the
+					// primary entry runs (bbp_media/document/video above). Ownership
+					// was only consulted here to decide what to STAMP, so a crafted
+					// all_data payload stored another member's attachment id (or a
+					// fabricated one) verbatim in this member's row. The stored row
+					// is what the global reference scan reads, and
+					// bb_draft_collect_attachment_ids() applies no ownership filter,
+					// so the foreign id pinned that member's stamp against the
+					// orphan-stamp sweep for as long as the poisoned draft lived -
+					// the L6 pin closed for the activity-shape keys below, reopened
+					// through this shape's own sibling write path - and the ids fed
+					// the pending-reference ledger, whose overflow makes the sweep
+					// abstain network-wide. Runs after the per-type count cap, so a
+					// crafted list cannot force unbounded get_post() lookups here.
+					foreach ( array( 'bbp_media', 'bbp_document', 'bbp_video' ) as $sibling_owned_key ) {
+						if ( empty( $merged_entry['data'][ $sibling_owned_key ] ) ) {
+							continue;
+						}
+
+						$sibling_owned_list = $merged_entry['data'][ $sibling_owned_key ];
+						$sibling_list_json  = is_string( $sibling_owned_list );
+
+						if ( $sibling_list_json ) {
+							$sibling_owned_list = json_decode( $sibling_owned_list, true );
+						}
+
+						if ( ! is_array( $sibling_owned_list ) ) {
+							continue;
+						}
+
+						foreach ( $sibling_owned_list as $sibling_owned_index => $sibling_owned_attachment ) {
+							if ( empty( $sibling_owned_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $sibling_owned_attachment['id'], $user_id ) ) {
+								unset( $sibling_owned_list[ $sibling_owned_index ] );
+							}
+						}
+
+						$sibling_owned_list = array_values( $sibling_owned_list );
+
+						// Keep the transport shape the entry arrived in: forum drafts
+						// carry each list as a JSON string, and the consumers below and
+						// on restore parse it as one.
+						$merged_entry['data'][ $sibling_owned_key ] = $sibling_list_json ? wp_json_encode( $sibling_owned_list ) : $sibling_owned_list;
+					}
+
 					// This sibling is now part of the row this request writes,
 					// so its attachments need the same orphan protection the
 					// primary entry gets. The three per-type normalisation
