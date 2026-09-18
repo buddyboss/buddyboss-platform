@@ -210,6 +210,50 @@ class BB_Tests_XProfile_Bio_Repeater extends BP_UnitTestCase {
 		$this->assertNotContains( $bio_id, $field_ids );
 	}
 
+	public function test_rest_update_refuses_to_enable_the_repeater_on_a_bio_set() {
+		if ( ! class_exists( 'BP_REST_XProfile_Field_Groups_Endpoint' ) ) {
+			$this->markTestSkipped( 'REST field-groups endpoint not loaded.' );
+		}
+
+		$group_id = self::factory()->xprofile_group->create();
+		$this->create_bio_field( $group_id );
+
+		$original_name = xprofile_get_field_group( $group_id )->name;
+
+		$request = new WP_REST_Request( 'PATCH', '/buddyboss/v1/xprofile/groups/' . $group_id );
+		$request->set_param( 'id', $group_id );
+		$request->set_param( 'name', 'Renamed by the rejected request' );
+		$request->set_param( 'repeater_enabled', true );
+
+		$endpoint = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$result   = $endpoint->update_item( $request );
+
+		$this->assertWPError( $result );
+		$this->assertEquals( 'bp_rest_xprofile_field_group_repeater_bio_conflict', $result->get_error_code() );
+		$this->assertFalse( bb_xprofile_is_repeater_group( $group_id ) );
+
+		// Rejected before any write: the rest of the payload must not have landed.
+		$this->assertEquals( $original_name, xprofile_get_field_group( $group_id )->name );
+	}
+
+	public function test_rest_update_still_enables_the_repeater_without_a_bio_field() {
+		if ( ! class_exists( 'BP_REST_XProfile_Field_Groups_Endpoint' ) ) {
+			$this->markTestSkipped( 'REST field-groups endpoint not loaded.' );
+		}
+
+		$group_id = self::factory()->xprofile_group->create();
+
+		$request = new WP_REST_Request( 'PATCH', '/buddyboss/v1/xprofile/groups/' . $group_id );
+		$request->set_param( 'id', $group_id );
+		$request->set_param( 'repeater_enabled', true );
+
+		$endpoint = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$result   = $endpoint->update_item( $request );
+
+		$this->assertNotWPError( $result );
+		$this->assertTrue( bb_xprofile_is_repeater_group( $group_id ) );
+	}
+
 	/**
 	 * Flatten the field IDs out of a profile-loop group list.
 	 *
