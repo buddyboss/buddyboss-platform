@@ -2903,7 +2903,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			foreach ( (array) $rebuilt->get_author_name_filters() as $hook => $priority ) {
 				$this->assertSame(
 					(int) $priority,
-					has_filter( $hook, array( $rebuilt, 'redact_author_name' ), (int) $priority ),
+					has_filter( $hook, array( $rebuilt, 'redact_author_name' ) ),
 					sprintf( 'The production path left %s without its author-name redaction.', $hook )
 				);
 			}
