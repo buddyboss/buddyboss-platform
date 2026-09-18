@@ -3826,11 +3826,29 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				);
 			}
 
-			$theme     = $themes[ $stylesheet ];
-			$page_url  = $this->bb_get_release_notes_page_url( $version, $theme['page_base'] );
-			$state     = 'skipped';
-			$notes     = $this->bb_get_release_notes_html( $version, $theme['rest_base'], $state );
-			$link_text = __( 'View all release notes on buddyboss.com', 'buddyboss' );
+			$theme = $themes[ $stylesheet ];
+			$state = 'skipped';
+			$notes = $this->bb_get_release_notes_html( $version, $theme['rest_base'], $state );
+
+			/*
+			 * Same rule as the plugin modal: notes in hand are the evidence that
+			 * a page for this version exists, so it is linked by version and
+			 * named for it. With none, the releases archive - which always
+			 * exists - rather than a likely 404 captioned as "all release notes".
+			 */
+			$linked_version = $this->bb_normalize_release_version( $version );
+
+			if ( '' !== $notes && '' !== $linked_version ) {
+				$page_url  = $this->bb_get_release_notes_page_url( $linked_version, $theme['page_base'] );
+				$link_text = sprintf(
+					/* translators: %s: version number. */
+					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					$linked_version
+				);
+			} else {
+				$page_url  = $this->bb_get_release_notes_page_url( '', $theme['page_base'] );
+				$link_text = __( 'View all release notes on buddyboss.com', 'buddyboss' );
+			}
 
 			$installed = wp_get_theme( $stylesheet );
 			$name      = ( $installed instanceof WP_Theme && $installed->exists() )
