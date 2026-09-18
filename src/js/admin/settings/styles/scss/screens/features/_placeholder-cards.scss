@@ -71,16 +71,26 @@
 		box-shadow: none;
 	}
 
-	// UPGRADE PLUS — solid gradient, white text.
+	// UPGRADE SCALE — solid gradient, white text.
 	&--plus {
 		background: linear-gradient(132.89deg, #E0623D 4.86%, #3E34FF 91.52%);
 		color: #fff;
 	}
 
-	// UPGRADE PRO — 10% opacity gradient, dark text.
+	// UPGRADE LAUNCH — 10% opacity gradient, dark text.
 	&--pro {
 		background: linear-gradient(114.36deg, rgba(224, 98, 61, 0.1) 4.86%, rgba(62, 52, 255, 0.1) 91.52%);
 		color: #2f2f2f;
+	}
+
+	// UPGRADE START — white fill with a gradient border (BuddyBoss Addons plan).
+	// padding-box/border-box keeps the pill radius while the border is a gradient.
+	&--start {
+		color: #2f2f2f;
+		background:
+			linear-gradient(#fff, #fff) padding-box,
+			linear-gradient(114.36deg, #E0623D 4.86%, #3E34FF 91.52%) border-box;
+		border: 1px solid transparent;
 	}
 }
 
@@ -239,7 +249,7 @@
 			box-shadow: none;
 		}
 
-		// UPGRADE PLUS — solid gradient, white text.
+		// UPGRADE SCALE — solid gradient, white text.
 		&--plus {
 			background: linear-gradient(100deg, #E0623D 4.86%, #3E34FF 91.52%);
 			color: $bb-text-inverse-color;
@@ -250,10 +260,26 @@
 			}
 		}
 
-		// UPGRADE PRO — 10% opacity gradient, dark text.
+		// UPGRADE LAUNCH — 10% opacity gradient, dark text.
 		&--pro {
 			background: linear-gradient(100deg, #F7DFDB 4.86%, #D8D6FF 91.52%);
 			color: $bb-text-secondary-color;
+
+			&:hover,
+			&:focus {
+				color: $bb-text-secondary-color;
+			}
+		}
+
+		// UPGRADE START — white fill with a gradient border (BuddyBoss Addons plan).
+		// padding-box/border-box keeps the rounded corners while the border is a
+		// gradient, matching the design's outlined CTA.
+		&--start {
+			color: $bb-text-secondary-color;
+			background:
+				linear-gradient(#fff, #fff) padding-box,
+				linear-gradient(100deg, #E0623D 4.86%, #3E34FF 91.52%) border-box;
+			border: 1px solid transparent;
 
 			&:hover,
 			&:focus {

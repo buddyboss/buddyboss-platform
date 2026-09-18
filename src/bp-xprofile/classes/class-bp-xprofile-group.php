@@ -184,7 +184,28 @@ class BP_XProfile_Group {
 		 */
 		do_action_ref_array( 'xprofile_group_after_save', array( &$this ) );
 
+		// A new or renamed group changes the memoized ID list for this request.
+		self::reset_group_ids_cache();
+
 		return $this->id;
+	}
+
+	/**
+	 * Reset the per-request memo of ordered group IDs.
+	 *
+	 * The static self::$bp_xprofile_group_ids caches the ordered ID list returned by
+	 * self::get() for the lifetime of the request. The object cache is purged by the
+	 * mutators, but this static is not, so a request that creates, reorders or deletes a
+	 * group and then reads groups back (wp-admin reorder, WP-CLI, tests) would keep the
+	 * stale order. Call this from every mutator that changes which groups exist or in what
+	 * order.
+	 *
+	 * @since BuddyBoss 3.4.4
+	 *
+	 * @return void
+	 */
+	public static function reset_group_ids_cache() {
+		self::$bp_xprofile_group_ids = array();
 	}
 
 	/**
@@ -254,6 +275,9 @@ class BP_XProfile_Group {
 		 * @param BP_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
 		 */
 		do_action_ref_array( 'xprofile_group_after_delete', array( &$this ) );
+
+		// A deleted group must drop out of the memoized ID list for this request.
+		self::reset_group_ids_cache();
 
 		return true;
 	}
@@ -739,7 +763,14 @@ class BP_XProfile_Group {
 
 		$bp = buddypress();
 
-		return $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_groups} SET group_order = %d WHERE id = %d", $position, $field_group_id ) );
+		$updated = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_groups} SET group_order = %d WHERE id = %d", $position, $field_group_id ) );
+
+		// Reset AFTER the write. Purging before it leaves a window in which anything that
+		// reads groups re-primes the memo from the pre-update order; save() and delete()
+		// already reset post-write for the same reason.
+		self::reset_group_ids_cache();
+
+		return $updated;
 	}
 
 	/**

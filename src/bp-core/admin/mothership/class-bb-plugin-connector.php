@@ -60,6 +60,17 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 
 	/**
 	 * Clear the dynamic plugin ID.
+	 *
+	 * Deliberately does NOT clear the STABLE_LICENSE_KEY_OPTION mirror. Every
+	 * caller except the explicit licence reset reaches this from a transient
+	 * failure path — a rejected activation attempt or a failed legacy
+	 * migration — where the previously activated key is still the customer's
+	 * real licence and must survive, or the failure strands the site as
+	 * unlicensed and DRM-nags a paying customer (the exact defect the mirror
+	 * exists to fix). A failed activation never persists its candidate key,
+	 * so the mirror only ever holds the last successfully activated one. The
+	 * reset path is the one place that clears user intent, and it pairs this
+	 * call with updateLicenseKey( '' ).
 	 */
 	public function clearDynamicPluginId(): void {
 		// Clear caches with old plugin ID before clearing.
@@ -123,24 +134,65 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	}
 
 	/**
+	 * Option holding the licence key under a name that never changes.
+	 *
+	 * The per-SKU option (`{plugin_id}_license_key`) is addressed by a mutable
+	 * id, so changing or clearing that id strands the key. This mirror is the
+	 * durable copy; the per-SKU option is kept in step for backwards
+	 * compatibility with anything reading it directly.
+	 *
+	 * @since BuddyBoss 3.4.3
+	 *
+	 * @var string
+	 */
+	const STABLE_LICENSE_KEY_OPTION = 'buddyboss_license_key';
+
+	/**
 	 * Gets the license key option.
+	 *
+	 * Reads the per-SKU option first, then the stable mirror. Both hold the
+	 * currently activated key. Superseded `{old_sku}_license_key` rows are
+	 * deliberately never read — reporting a stale key is worse than reporting
+	 * none, because it looks correct.
 	 *
 	 * @return string The license key.
 	 */
 	public function getLicenseKey(): string {
 		$pluginId    = $this->getCurrentPluginId();
-		$license_key = get_option( $pluginId . '_license_key', '' );
-		return (string) $license_key;
+		$license_key = (string) get_option( $pluginId . '_license_key', '' );
+
+		if ( '' !== $license_key ) {
+			return $license_key;
+		}
+
+		$license_key = (string) get_option( self::STABLE_LICENSE_KEY_OPTION, '' );
+
+		if ( '' !== $license_key ) {
+			return $license_key;
+		}
+
+		return '';
 	}
 
 	/**
 	 * Updates the license key option.
+	 *
+	 * Writes both the per-SKU option and the stable mirror so a later id change
+	 * cannot strand the key. An empty value clears both, so resets stay clean.
 	 *
 	 * @param string $licenseKey The license key to update.
 	 */
 	public function updateLicenseKey( string $licenseKey ): void {
 		$pluginId = $this->getCurrentPluginId();
 		update_option( $pluginId . '_license_key', $licenseKey );
+
+		if ( '' === $licenseKey ) {
+			delete_option( self::STABLE_LICENSE_KEY_OPTION );
+
+			return;
+		}
+
+		update_option( self::STABLE_LICENSE_KEY_OPTION, $licenseKey );
 	}
 
 	/**

@@ -293,18 +293,25 @@ function bb_admin_settings_page() {
 	//
 	// - `hasActiveLicense`: true when the BuddyBoss license is activated
 	// (the raw Mothership activation status, not the DRM `is_valid()` gate).
-	// - `hasPlusTier`: true when the user's plan includes a Plus-tier product.
-	// Gamification is Plus-only, so its presence in the addon plan is the
+	// - `hasPlusTier`: true when the user's plan includes a Scale-tier product.
+	// Gamification is Scale-only, so its presence in the addon plan is the
 	// tier probe; `checkProductBySlug()` returns null when the license is
 	// not activated, so this is always false without an active license.
 	//
 	// Help tab logic (HelpScreen.js): no active license -> show the "Pro"
-	// promo; active license without Plus -> show the "Plus" promo.
+	// promo; active license without Scale -> show the "Scale" promo.
 	$bb_license_connector  = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 	$bb_has_active_license = $bb_license_connector->getLicenseActivationStatus();
 	$bb_has_plus_tier      = false;
 	if ( $bb_has_active_license && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		$bb_has_plus_tier = null !== \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-gamification' );
+
+		// A failed products lookup (outage, rate limit backoff) is not evidence
+		// the plan lacks Scale — suppress the Scale promo rather than upsell a
+		// customer whose tier we could not verify.
+		if ( ! $bb_has_plus_tier && \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
+			$bb_has_plus_tier = true;
+		}
 	}
 	$localize_data['hasActiveLicense'] = $bb_has_active_license;
 	$localize_data['hasPlusTier']      = $bb_has_plus_tier;
@@ -567,6 +574,14 @@ function bb_admin_settings_page() {
 		 */
 		?>
 		<hr class="wp-header-end">
+		<?php
+		// Free-install "Register your email" banner — rendered outside the
+		// React mount so React never manages (or clobbers) it. Renders
+		// nothing on properly licensed sites (see bb_admin_register_banner_mode()).
+		if ( function_exists( 'bb_admin_render_register_banner' ) ) {
+			bb_admin_render_register_banner();
+		}
+		?>
 		<div id="bb-admin-settings"></div>
 		<?php
 		/*
