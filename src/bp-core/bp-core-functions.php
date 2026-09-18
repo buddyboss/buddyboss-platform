@@ -5470,28 +5470,63 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
 	}
 
+	// Bound, never interpolated. bp_esc_like() escapes the LIKE wildcards `%` and `_`; it does NOT
+	// escape quotes, so spelling the term into the statement let a single quote in a member's search
+	// close the string literal early - an at-mention autocomplete is reachable by any logged-in
+	// member, and bp_core_get_suggestions() is where this leg is registered. The placeholders carry
+	// the same three values per enabled field, in the same order, so the clause is unchanged.
 	$where_condition = array();
+	$where_values    = array();
 	if ( ! empty( $enabled_fields ) ) {
 		foreach ( $enabled_fields as $field_name => $field_id ) {
-			$where_condition[] = ' ( ( field_id = ' . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+			$where_condition[] = ' ( ( field_id = %d ) AND ( value LIKE %s OR value LIKE %s ) )';
+			$where_values[]    = (int) $field_id;
+			$where_values[]    = $search_terms_nospace;
+			$where_values[]    = $search_terms_space;
 		}
 	}
+
+	// No enabled name field means no clause to build; returning here avoids emitting a statement
+	// that ends in a bare `WHERE`.
+	if ( empty( $where_condition ) ) {
+		return $sql;
+	}
+
+	$where_sql = implode( ' OR ', $where_condition );
+
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- search must read current values.
+	$matched_user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the clause is built from the literal placeholder strings above; the table name is trusted and every user value is bound via $where_values.
+			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . $where_sql,
+			$where_values
+		)
+	);
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- search must read current values.
+		$matched_user_data = $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the clause is built from the literal placeholder strings above; the table name is trusted and every user value is bound via $where_values.
+				"SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . $where_sql,
+				$where_values
+			)
+		);
 
 		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
-	// Deliberately NOT rewritten the way the two member-directory legs are. The clause this one
-	// would name its match set with is $where_condition, which interpolates the search term rather
-	// than binding it - bp_esc_like() escapes LIKE wildcards, not quotes - so reusing it as a
-	// subquery would copy an unbound user string into a second statement. That interpolation is
-	// pre-existing and unchanged here; it is reported separately rather than widened.
+	// Not rewritten the way the two member-directory legs are. That rewrite names the match set by
+	// the subquery that produced it, and this leg's clause is a prepared statement, so reusing it
+	// would mean threading its bound values through a second prepare(). The inversion is a
+	// performance change rather than a correctness one, so it is left to a separate pass.
 	if ( ! empty( $matched_user_ids ) ) {
+		// Cast before inlining: these are ids read back from the database, and the list is spliced
+		// into the clause rather than bound.
+		$matched_user_ids = array_map( 'intval', (array) $matched_user_ids );
+
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
