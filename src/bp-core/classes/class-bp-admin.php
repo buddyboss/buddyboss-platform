@@ -2202,13 +2202,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @param string $cache_key Site transient key.
 		 * @param string $html      Sanitized release notes HTML, or empty string.
 		 * @param string $state     Why there are no notes; see bb_build_changelog_section().
+		 * @param string $link      Optional. Permalink of the release page the notes
+		 *                          came from, when one is known. Add-on permalinks
+		 *                          cannot be rebuilt from a version, so the one the
+		 *                          lookup found is kept with the notes.
 		 *
 		 * @return void
 		 */
-		protected function bb_cache_release_notes( $cache_key, $html, $state ) {
+		protected function bb_cache_release_notes( $cache_key, $html, $state, $link = '' ) {
 			$payload = array(
 				'html'  => (string) $html,
 				'state' => (string) $state,
+				'link'  => (string) $link,
 			);
 
 			set_site_transient( $cache_key, $payload, '' !== $html ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
@@ -2226,13 +2231,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @param mixed  $cached Cached value, already known not to be false.
 		 * @param string $state  Set to the cached reason. Passed by reference.
+		 * @param string $link   Optional. Set to the cached release permalink, or
+		 *                       empty string when none was stored. Passed by reference.
 		 *
 		 * @return string Sanitized release notes HTML, or empty string.
 		 */
-		protected function bb_read_release_notes_cache( $cached, &$state ) {
+		protected function bb_read_release_notes_cache( $cached, &$state, &$link = null ) {
+			$link = '';
+
 			if ( is_array( $cached ) ) {
 				$html  = isset( $cached['html'] ) && is_string( $cached['html'] ) ? $cached['html'] : '';
 				$state = isset( $cached['state'] ) && is_string( $cached['state'] ) ? $cached['state'] : 'empty';
+				$link  = isset( $cached['link'] ) && is_string( $cached['link'] ) ? $cached['link'] : '';
 
 				return $html;
 			}
@@ -2832,13 +2842,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *                          there are none: 'ok', 'empty', 'failed' or
 		 *                          'locked'. See bb_build_changelog_section().
 		 *                          Passed by reference.
+		 * @param string $link      Optional. Set to the permalink of the release
+		 *                          page the notes came from, or empty string when
+		 *                          no notes were found. Passed by reference.
 		 *
 		 * @return string Sanitized release notes HTML, or empty string if unavailable.
 		 */
-		public function bb_get_addon_release_notes_html( $version, $term_slug, &$state = null ) {
+		public function bb_get_addon_release_notes_html( $version, $term_slug, &$state = null, &$link = null ) {
 			// 'skipped' until something is asked of the remote; see the same
 			// opening in bb_get_release_notes_html() for why.
 			$state     = 'skipped';
+			$link      = '';
 			$version   = $this->bb_normalize_release_version( $version );
 			$term_slug = sanitize_title( (string) $term_slug );
 
@@ -2852,7 +2866,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$cached    = get_site_transient( $cache_key );
 
 			if ( false !== $cached ) {
-				return $this->bb_read_release_notes_cache( $cached, $state );
+				return $this->bb_read_release_notes_cache( $cached, $state, $link );
 			}
 
 			$lock_key = $this->bb_claim_release_notes_lock( $cache_key );
@@ -2879,10 +2893,11 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$term_id = $this->bb_get_addon_release_term_id( $term_slug, $failed );
 
 			if ( ! $failed && $term_id ) {
-				$release_id = $this->bb_find_addon_release_id( $term_id, $version, $failed );
+				$release = $this->bb_find_addon_release( $term_id, $version, $failed );
 
-				if ( ! $failed && $release_id ) {
-					$html = $this->bb_get_addon_release_body( $release_id, $failed );
+				if ( ! $failed && ! empty( $release['id'] ) ) {
+					$html = $this->bb_get_addon_release_body( $release['id'], $failed );
+					$link = $release['link'];
 				}
 			}
 
@@ -2901,7 +2916,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$state = 'empty';
 			}
 
-			$this->bb_cache_release_notes( $cache_key, $html, $state );
+			// A permalink is only worth handing on together with the notes it
+			// carries: a release post whose body sanitized down to nothing is
+			// not a page worth sending anyone to for "the full notes".
+			if ( '' === $html ) {
+				$link = '';
+			}
+
+			$this->bb_cache_release_notes( $cache_key, $html, $state, $link );
 			delete_site_transient( $lock_key );
 
 			return $html;
@@ -3005,10 +3027,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @param string      $version   Version number the notes should describe.
 		 * @param string      $term_slug Term slug of the add-on in the releases taxonomy.
-		 * @param string      $link_url  Optional. URL for the trailing link; defaults to
-		 *                               the add-on's releases archive.
-		 * @param string      $link_text Optional. Plain, unescaped text for the trailing
-		 *                               link; defaults to a generic release notes label.
+		 * @param string      $link_url  Optional. URL for the trailing link when no
+		 *                               release page was found; defaults to the
+		 *                               add-on's releases archive. When notes are
+		 *                               fetched, the link points at the release
+		 *                               page they came from instead.
+		 * @param string      $link_text Optional. Plain, unescaped text for that
+		 *                               fallback link; defaults to a generic release
+		 *                               notes label.
 		 * @param object|null $args      Optional. The plugins_api() arguments this is
 		 *                               answering for, so the remote fetch is gated to
 		 *                               the caller that renders a changelog. Null means
@@ -3035,9 +3061,35 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * committed to reading an answer.
 			 */
 			$state = 'skipped';
+			$link  = '';
 			$notes = ( $fetch && '' !== $term_slug )
-				? $this->bb_get_addon_release_notes_html( $version, $term_slug, $state )
+				? $this->bb_get_addon_release_notes_html( $version, $term_slug, $state, $link )
 				: '';
+
+			/*
+			 * Notes in hand mean the release post was found, and its permalink is
+			 * the one page that carries these notes in full - so that is where
+			 * the trailing link goes, named for the version, exactly as the
+			 * Platform's own modal links its release page. Add-on permalinks
+			 * cannot be rebuilt from a version (see bb_find_addon_release()), so
+			 * the lookup is the only place that URL is ever known. The caller's
+			 * URL and text stand in whenever nothing was fetched or found, which
+			 * is the archive: the page that always exists.
+			 */
+			$linked_version = $this->bb_normalize_release_version( $version );
+
+			if ( '' !== $notes && '' !== $link && '' !== $linked_version ) {
+				return $this->bb_build_changelog_section(
+					$notes,
+					$link,
+					sprintf(
+						/* translators: %s: version number. */
+						__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+						$linked_version
+					),
+					$state
+				);
+			}
 
 			$link_url = '' !== (string) $link_url
 				? (string) $link_url
@@ -3070,6 +3122,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * The title is compared again in PHP either way, because a search is a
 		 * substring match: 2.1.2 also matches a 2.1.21 release.
 		 *
+		 * The permalink is read off the same response. It is the only place it
+		 * can come from: add-on release slugs carry a per-product prefix and, for
+		 * older posts, no convention at all ('om-2-1-2', 'addons-1-1-1-2',
+		 * '128964'), so nothing held locally can rebuild the page URL for a
+		 * version. The archive is the fallback for callers that never get here.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int    $term_id Releases taxonomy term ID for the add-on.
@@ -3078,10 +3136,19 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *                        opposed to completing with no match. Passed by
 		 *                        reference.
 		 *
-		 * @return int Release post ID, or 0 when no release carries that version.
+		 * @return array {
+		 *     The matching release, or an empty match when no release carries that version.
+		 *
+		 *     @type int    $id   Release post ID, or 0.
+		 *     @type string $link Release page permalink on buddyboss.com, or empty string.
+		 * }
 		 */
-		protected function bb_find_addon_release_id( $term_id, $version, &$failed = null ) {
+		protected function bb_find_addon_release( $term_id, $version, &$failed = null ) {
 			$failed = false;
+			$none   = array(
+				'id'   => 0,
+				'link' => '',
+			);
 
 			$endpoint = add_query_arg(
 				array(
@@ -3089,7 +3156,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'search'         => $version,
 					'search_columns' => 'post_title',
 					'per_page'       => 100,
-					'_fields'        => 'id,title',
+					'_fields'        => 'id,title,link',
 				),
 				'https://buddyboss.com/resources/wp-json/wp/v2/bb-addons'
 			);
@@ -3099,13 +3166,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 				$failed = true;
 
-				return 0;
+				return $none;
 			}
 
 			$items = json_decode( wp_remote_retrieve_body( $response ), true );
 
 			if ( ! is_array( $items ) ) {
-				return 0;
+				return $none;
 			}
 
 			foreach ( $items as $item ) {
@@ -3116,11 +3183,70 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$title = isset( $item['title']['rendered'] ) ? trim( wp_strip_all_tags( $item['title']['rendered'] ) ) : '';
 
 				if ( $title === $version ) {
-					return (int) $item['id'];
+					return array(
+						'id'   => (int) $item['id'],
+						'link' => $this->bb_sanitize_release_link( isset( $item['link'] ) ? $item['link'] : '' ),
+					);
 				}
 			}
 
-			return 0;
+			return $none;
+		}
+
+		/**
+		 * Find the release post ID for an add-on version.
+		 *
+		 * Thin wrapper over bb_find_addon_release() for callers that want the ID
+		 * alone; see there for how the lookup works.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $term_id Releases taxonomy term ID for the add-on.
+		 * @param string $version Normalized version number, e.g. '2.1.2'.
+		 * @param bool   $failed  Set to true when the request did not complete.
+		 *                        Passed by reference.
+		 *
+		 * @return int Release post ID, or 0 when no release carries that version.
+		 */
+		protected function bb_find_addon_release_id( $term_id, $version, &$failed = null ) {
+			$release = $this->bb_find_addon_release( $term_id, $version, $failed );
+
+			return isset( $release['id'] ) ? (int) $release['id'] : 0;
+		}
+
+		/**
+		 * Keep a release permalink only if it is an https page on buddyboss.com.
+		 *
+		 * The value comes off a remote JSON response and ends up in an href
+		 * inside wp-admin. esc_url() at render time handles markup; this handles
+		 * destination, so a compromised or misconfigured remote cannot point the
+		 * "full release notes" link anywhere else.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $link Raw 'link' value from the REST response.
+		 *
+		 * @return string The permalink, or empty string when it is not acceptable.
+		 */
+		protected function bb_sanitize_release_link( $link ) {
+			if ( ! is_string( $link ) || '' === $link || 2048 < strlen( $link ) ) {
+				return '';
+			}
+
+			$link = esc_url_raw( $link, array( 'https' ) );
+			$host = wp_parse_url( $link, PHP_URL_HOST );
+
+			if ( ! is_string( $host ) ) {
+				return '';
+			}
+
+			$host = strtolower( $host );
+
+			if ( 'buddyboss.com' !== $host && '.buddyboss.com' !== substr( $host, -14 ) ) {
+				return '';
+			}
+
+			return $link;
 		}
 
 		/**
@@ -3301,30 +3427,53 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * one that is not - inactive, or with its handler behind an integration
 			 * that has not booted - would otherwise be left with a bare link.
 			 */
-			$changelog = '';
-			$state     = 'skipped';
-			$term      = $this->bb_get_addon_release_term( $args->slug );
+			$changelog    = '';
+			$state        = 'skipped';
+			$release_link = '';
+			$term         = $this->bb_get_addon_release_term( $args->slug );
 
 			if ( $this->bb_should_fetch_release_notes( $args ) ) {
 				$rest_base = $this->bb_get_addon_release_post_type( $args->slug );
 
 				if ( '' !== $term ) {
-					$changelog = $this->bb_get_addon_release_notes_html( $new_version, $term, $state );
+					$changelog = $this->bb_get_addon_release_notes_html( $new_version, $term, $state, $release_link );
 				} elseif ( '' !== $rest_base ) {
 					$changelog = $this->bb_get_release_notes_html( $new_version, $rest_base, $state );
+
+					// Products with their own releases post type have derivable
+					// permalinks, the way the Platform's are.
+					$page_base = $this->bb_get_addon_release_page_base( $args->slug );
+
+					if ( '' !== $changelog && '' !== $page_base ) {
+						$release_link = $this->bb_get_release_notes_page_url( $new_version, $page_base );
+					}
 				}
 			}
 
 			/*
-			 * An add-on with a releases archive gets linked to it. The plugin's own
-			 * URI is the fallback for one that has none, and it is a weak link for
-			 * the purpose - every BuddyBoss add-on ships the same marketing site as
-			 * its PluginURI, so a link captioned "release information" would land on
-			 * a page with none.
+			 * Same rule as bb_get_addon_changelog_section(): notes in hand mean
+			 * the release page is known, so link it by version. Otherwise an
+			 * add-on with a releases archive gets linked to it. The plugin's own
+			 * URI is the fallback for one that has none, and it is a weak link
+			 * for the purpose - every BuddyBoss add-on ships the same marketing
+			 * site as its PluginURI, so a link captioned "release information"
+			 * would land on a page with none.
 			 */
-			$release_url = '' !== $term
-				? $this->bb_get_addon_release_archive_url( $term )
-				: $plugin_uri;
+			$linked_version = $this->bb_normalize_release_version( $new_version );
+
+			if ( '' !== $changelog && '' !== $release_link && '' !== $linked_version ) {
+				$release_url  = $release_link;
+				$release_text = sprintf(
+					/* translators: %s: version number. */
+					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					$linked_version
+				);
+			} else {
+				$release_url  = '' !== $term
+					? $this->bb_get_addon_release_archive_url( $term )
+					: $plugin_uri;
+				$release_text = __( 'Visit the plugin website for release information', 'buddyboss' );
+			}
 
 			$information = array(
 				'name'          => wp_strip_all_tags( $plugin_data['Name'] ),
@@ -3348,7 +3497,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'changelog'   => $this->bb_build_changelog_section(
 						$changelog,
 						$release_url,
-						__( 'Visit the plugin website for release information', 'buddyboss' ),
+						$release_text,
 						$state
 					),
 				),
@@ -3468,6 +3617,37 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$types = apply_filters( 'bb_addon_release_post_types', $types );
 
 			return isset( $types[ $slug ] ) ? (string) $types[ $slug ] : '';
+		}
+
+		/**
+		 * Release-notes page base for a product with its own releases post type.
+		 *
+		 * These products publish under a predictable path, so a version maps to
+		 * a page the way the Platform's own does; see
+		 * bb_get_release_notes_page_url(). Products in the shared bb-addons type
+		 * are not here - their permalinks are read off the lookup instead.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $slug Plugin directory slug.
+		 *
+		 * @return string Page base URL with a trailing slash, or empty string.
+		 */
+		protected function bb_get_addon_release_page_base( $slug ) {
+			$bases = array(
+				'buddyboss-platform-pro' => 'https://buddyboss.com/resources/buddyboss-platform-pro-releases/',
+			);
+
+			/**
+			 * Filters the release-notes page bases for products with their own releases post type.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $bases Plugin directory slug => page base URL.
+			 */
+			$bases = apply_filters( 'bb_addon_release_page_bases', $bases );
+
+			return isset( $bases[ $slug ] ) ? trailingslashit( (string) $bases[ $slug ] ) : '';
 		}
 
 		/**

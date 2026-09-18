@@ -976,4 +976,132 @@ class BB_Tests_Admin_Release_Notes extends BP_UnitTestCase {
 		$this->assertStringNotContainsString( 'No release notes have been published', $section );
 		$this->assertStringContainsString( 'buddyboss.com/resources/buddyboss-addons/', $section );
 	}
+
+	/* release permalink ******************************************************/
+
+	/**
+	 * Answer the buddyboss.com REST chain locally: term lookup, release search, release body.
+	 *
+	 * @param string $link Permalink the release search should report.
+	 *
+	 * @return callable pre_http_request filter.
+	 */
+	protected function mock_addon_release_remote( $link = 'https://buddyboss.com/resources/buddyboss-addons/addons-1-1-1-2/' ) {
+		return function ( $preempt, $args, $url ) use ( $link ) {
+			if ( false === strpos( $url, 'buddyboss.com/resources/wp-json/wp/v2/' ) ) {
+				return $preempt;
+			}
+
+			if ( false !== strpos( $url, '/wp/v2/addons?' ) ) {
+				$body = array( array( 'id' => 3105 ) );
+			} elseif ( false !== strpos( $url, '/wp/v2/bb-addons?' ) ) {
+				$body = array(
+					array(
+						'id'    => 129177,
+						'title' => array( 'rendered' => '1.1.1' ),
+						'link'  => $link,
+					),
+				);
+			} else {
+				$body = array(
+					'title'          => array( 'rendered' => '1.1.1' ),
+					'release_fields' => array( 'changelog' => '<ul><li>Bug: Core - Fixed minor UI issue</li></ul>' ),
+				);
+			}
+
+			return array(
+				'response' => array(
+					'code'    => 200,
+					'message' => 'OK',
+				),
+				'headers'  => array(),
+				'body'     => wp_json_encode( $body ),
+				'cookies'  => array(),
+				'filename' => null,
+			);
+		};
+	}
+
+	/**
+	 * Fail the test if anything reaches the network.
+	 *
+	 * @return callable pre_http_request filter.
+	 */
+	protected function forbid_remote_requests() {
+		return function ( $preempt, $args, $url ) {
+			$this->fail( 'Unexpected remote request to ' . $url );
+		};
+	}
+
+	public function test_addon_changelog_section_links_the_release_page_when_notes_are_found() {
+		$filter = $this->mock_addon_release_remote();
+		add_filter( 'pre_http_request', $filter, 10, 3 );
+
+		$section = $this->admin->bb_get_addon_changelog_section( '1.1.1', 'buddyboss-addons', '', 'Visit the plugin website for release information' );
+
+		remove_filter( 'pre_http_request', $filter, 10 );
+
+		$this->assertStringContainsString( 'Fixed minor UI issue', $section );
+		$this->assertStringContainsString( 'href="https://buddyboss.com/resources/buddyboss-addons/addons-1-1-1-2/"', $section );
+		$this->assertStringContainsString( 'View the full release notes for version 1.1.1 on buddyboss.com', $section );
+		$this->assertStringNotContainsString( 'resources/addons/buddyboss-addons/', $section, 'The archive is the fallback, not the link for a release that was found.' );
+		$this->assertStringNotContainsString( 'Visit the plugin website', $section );
+	}
+
+	public function test_addon_changelog_section_keeps_the_archive_when_the_permalink_is_off_site() {
+		$filter = $this->mock_addon_release_remote( 'https://example.com/not-ours/' );
+		add_filter( 'pre_http_request', $filter, 10, 3 );
+
+		$section = $this->admin->bb_get_addon_changelog_section( '1.1.1', 'buddyboss-addons', '', 'Visit the plugin website for release information' );
+
+		remove_filter( 'pre_http_request', $filter, 10 );
+
+		$this->assertStringContainsString( 'Fixed minor UI issue', $section, 'The notes are still shown; only the link is refused.' );
+		$this->assertStringNotContainsString( 'example.com', $section );
+		$this->assertStringContainsString( 'resources/addons/buddyboss-addons/', $section );
+		$this->assertStringContainsString( 'Visit the plugin website for release information', $section );
+	}
+
+	public function test_addon_release_permalink_survives_the_cache() {
+		$filter = $this->mock_addon_release_remote();
+		add_filter( 'pre_http_request', $filter, 10, 3 );
+
+		$state = '';
+		$link  = '';
+		$html  = $this->admin->bb_get_addon_release_notes_html( '1.1.1', 'buddyboss-addons', $state, $link );
+
+		remove_filter( 'pre_http_request', $filter, 10 );
+
+		$this->assertSame( 'ok', $state );
+		$this->assertSame( 'https://buddyboss.com/resources/buddyboss-addons/addons-1-1-1-2/', $link );
+
+		$forbid = $this->forbid_remote_requests();
+		add_filter( 'pre_http_request', $forbid, 10, 3 );
+
+		$cached_state = '';
+		$cached_link  = '';
+		$cached_html  = $this->admin->bb_get_addon_release_notes_html( '1.1.1', 'buddyboss-addons', $cached_state, $cached_link );
+
+		remove_filter( 'pre_http_request', $forbid, 10 );
+
+		$this->assertSame( $html, $cached_html );
+		$this->assertSame( 'ok', $cached_state );
+		$this->assertSame( $link, $cached_link, 'The permalink is cached with the notes it belongs to.' );
+	}
+
+	public function test_release_link_sanitizer_accepts_only_https_pages_on_buddyboss_com() {
+		$this->assertSame(
+			'https://buddyboss.com/resources/buddyboss-addons/addons-1-1-1-2/',
+			$this->call( 'bb_sanitize_release_link', array( 'https://buddyboss.com/resources/buddyboss-addons/addons-1-1-1-2/' ) )
+		);
+		$this->assertSame(
+			'https://www.buddyboss.com/resources/x/',
+			$this->call( 'bb_sanitize_release_link', array( 'https://www.buddyboss.com/resources/x/' ) )
+		);
+		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( 'http://buddyboss.com/resources/x/' ) ), 'Plain http is refused.' );
+		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( 'https://evilbuddyboss.com/' ) ), 'A host that merely ends in the letters is not a subdomain.' );
+		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( 'https://example.com/buddyboss.com/' ) ) );
+		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( 'javascript:alert(1)' ) ) );
+		$this->assertSame( '', $this->call( 'bb_sanitize_release_link', array( array( 'https://buddyboss.com/' ) ) ), 'Only a string is a link.' );
+	}
 }
