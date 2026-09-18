@@ -262,7 +262,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'search_term'   => $_REQUEST['search_term'],
 				// How many results should be displyed in autosuggest?
 				// @todo: give a settings field for this value.
-				'ajax_per_page' => $_REQUEST['per_page'],
+				'ajax_per_page' => isset( $_REQUEST['per_page'] ) ? absint( wp_unslash( $_REQUEST['per_page'] ) ) : 0,
 				'count_total'   => true,
 				'template_type' => 'ajax',
 			);
@@ -434,6 +434,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'template_type' => '',
 				'forum_search'  => false,
 				'number'        => 3,
+				'ajax_per_page' => 0,
 			);
 
 			$args = bp_parse_args( $args, $defaults );
