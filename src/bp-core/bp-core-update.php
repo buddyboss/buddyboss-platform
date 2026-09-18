@@ -570,6 +570,12 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
+		// Heal oversized/aggregate-oversized draft usermeta rows and
+		// start the draft retention machinery.
+		if ( $raw_db_version < 23621 ) {
+			bb_drafts_cleanup_on_upgrade();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4685,5 +4691,67 @@ function bb_install_addons_bundle_on_upgrade() {
 	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
 		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
+}
+
+/**
+ * Start the draft cleanup on upgrade.
+ *
+ * Records the epoch that timestamp-less legacy drafts age from, queues the
+ * `bb_draft_oneshot` continuation, and only THEN runs the first healing
+ * slice synchronously (bounded by its time budget) so already-affected
+ * sites - where oversized draft rows poison the per-user meta cache entry -
+ * begin recovering on the upgrade request itself, even on hosts where
+ * loopback requests and cron are unreliable. The continuation is queued
+ * first because this routine runs inside a non-resumable window: see the
+ * inline note. It is unscheduled again when the slice completes, and the
+ * `wp bb drafts cleanup` WP-CLI command can drain it manually.
+ *
+ * Idempotent: the epoch is only recorded once, disposal of an absent row
+ * is a no-op, and the `bb_drafts_cleanup_on_upgrade` option timestamps the
+ * last synchronous slice so the updater firing more than once inside an
+ * upgrade window cannot repeat it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_drafts_cleanup_on_upgrade() {
+	if ( ! get_site_option( 'bb_draft_cleanup_epoch' ) ) {
+		update_site_option( 'bb_draft_cleanup_epoch', time() );
+	}
+
+	// Guarded with an autoload-false OPTION rather than a transient, for the
+	// same reason bb_draft_oneshot_done is one: transients live in the very
+	// object cache this routine repairs, so on the installs it exists for the
+	// guard can evaporate and this 10-second synchronous slice would re-run on
+	// every admin request in the upgrade window.
+	$last_started = (int) get_site_option( 'bb_drafts_cleanup_on_upgrade', 0 );
+
+	if ( $last_started && ( time() - $last_started ) < HOUR_IN_SECONDS ) {
+		return;
+	}
+
+	update_site_option( 'bb_drafts_cleanup_on_upgrade', time() );
+
+	// Scheduled BEFORE the first slice runs, not after it. _bp_db_version is
+	// bumped by bp_version_bump() inside bp_is_update() - before this updater
+	// body executes - so bp_setup_updater() never re-enters it. A fatal or a
+	// max_execution_time timeout inside the slice below would therefore skip
+	// both the continuation AND the remaining migrations in this routine, with
+	// no retry. Scheduling first means the healing still finishes on cron even
+	// if this request dies (H1).
+	// Scheduled on the ROOT blog: the healing is network-wide but this updater
+	// runs on whichever subsite's admin loads first after the version bump, and
+	// cron events are per-blog - so a naive schedule here could strand the
+	// continuation on a low-traffic subsite's cron (L10).
+	bb_draft_oneshot_schedule( MINUTE_IN_SECONDS );
+
+	$result = bb_drafts_oneshot_batch( 10 );
+
+	// Finished inside this request after all, so the queued continuation has
+	// nothing left to do.
+	if ( ! empty( $result['complete'] ) ) {
+		bb_draft_oneshot_unschedule();
 	}
 }

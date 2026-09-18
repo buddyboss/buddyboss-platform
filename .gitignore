@@ -33,3 +33,8 @@ PHP_TESTS_NEXT_STEPS.md
 TEST_COMMANDS.md
 TEST_IMPLEMENTATION_SUMMARY.md
 docs/*
+
+# WP-generated intermediate avatar sizes. The originals are committed; the
+# resized copies are produced at runtime by media uploads during local testing
+# and have been committed by mistake more than once (see ee9e446fc4).
+src/bp-core/images/profile-avatar-buddyboss-*x*.png

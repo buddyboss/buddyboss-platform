@@ -139,6 +139,21 @@
 		}
 	}
 
+	// Draft notices belong to the OPEN composer, not the collapsed bar - same
+	// default-hidden / shown-on-focus-in pattern as the rest of the chrome.
+	.bb-draft-save-feedback,
+	.bb-draft-retention-note {
+		display: none;
+	}
+
+	&.bb-rl-focus-in {
+
+		.bb-draft-save-feedback,
+		.bb-draft-retention-note {
+			display: flex;
+		}
+	}
+
 	// Activity Post Form in modal view
 	&.bb-rl-focus-in {
 		position: relative;
@@ -955,7 +970,6 @@
 			}
 		}
 
-
 		> a {
 			font-size: 0;
 
@@ -1051,7 +1065,6 @@
 #activity-url-scrapper-img-holder + .activity-link-preview-info {
 	border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 }
-
 
 .activity-url-scrapper-container.activity-post-form-link-wp-embed .activity-link-preview-info {
 	background-color: transparent;
@@ -1197,7 +1210,6 @@
 .twitter-timeline {
 	width: 100% !important;
 }
-
 
 .whats-new-topic-selector {
 	position: relative;
@@ -1463,3 +1475,4 @@
 		}
 	}
 }
+
