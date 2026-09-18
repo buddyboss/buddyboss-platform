@@ -2651,6 +2651,20 @@ function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 		return $groups;
 	}
 
+	/*
+	 * A repeating field set shows only its clones: `BP_XProfile_Group::get()` drops
+	 * every template field from the loop with a SQL `NOT IN`. That exclusion is not
+	 * expressed through `exclude_fields`, so none of the checks above can see it, and
+	 * restoring the Bio template here would undo it — putting a second, editable Bio
+	 * block above the repeat sets, carrying whatever `user_description` holds. Bio and
+	 * repeaters are kept apart at registration now, so this only matters for sets that
+	 * already reached that state — there is no migration, so the guard is what keeps
+	 * the duplicate off those profiles permanently.
+	 */
+	if ( bb_xprofile_is_repeater_group( $bio_field->group_id ) ) {
+		return $groups;
+	}
+
 	foreach ( $groups as $group ) {
 		if ( ! isset( $group->id ) || (int) $group->id !== (int) $bio_field->group_id ) {
 			continue;

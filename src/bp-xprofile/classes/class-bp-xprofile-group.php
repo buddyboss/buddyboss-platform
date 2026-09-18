@@ -180,6 +180,12 @@ class BP_XProfile_Group {
 		 * another copy of that one value. Only the switch-on is refused — a set that
 		 * is already repeating keeps its current state, because silently switching it
 		 * off here would expose every clone field on member profiles.
+		 *
+		 * The rest of the save still goes through, so a name or description change
+		 * submitted alongside the toggle is not thrown away. The admin notice is what
+		 * stops that from reading as a success: this runs for every caller that is not
+		 * the Settings 2.0 AJAX handler (which returns its own message), and without it
+		 * the toggle would flip back with nothing said.
 		 */
 		if (
 			'on' === $repeater_enabled &&
@@ -187,6 +193,19 @@ class BP_XProfile_Group {
 			bb_xprofile_group_has_bio_field( $this->id )
 		) {
 			$repeater_enabled = 'off';
+
+			/*
+			 * `buddypress()->admin` is only built on admin requests. Without that
+			 * check `bp_core_add_admin_notice()` assigns a property on null, which
+			 * is a fatal on PHP 8 — `is_admin()` alone is not enough, because it is
+			 * also true during admin-ajax before the admin object exists.
+			 */
+			if ( is_admin() && ! wp_doing_ajax() && function_exists( 'bp_core_add_admin_notice' ) && isset( buddypress()->admin ) ) {
+				bp_core_add_admin_notice(
+					__( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set was not enabled. Remove the Bio field first.', 'buddyboss' ),
+					'error'
+				);
+			}
 		}
 
 		self::update_group_meta( $this->id, 'is_repeater_enabled', $repeater_enabled );

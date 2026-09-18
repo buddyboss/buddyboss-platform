@@ -463,14 +463,28 @@ class BP_XProfile_Field {
 		 * so a set that repeats its fields cannot hold one: each repeat would be
 		 * another copy of the same single WordPress value.
 		 *
-		 * Every save is refused, not only the one that puts it there — a field
-		 * written straight to the database is in the same invalid state as one
-		 * added through the admin, and saving it again should say so rather than
-		 * quietly accept it. Deleting it, or switching the repeater off, is the
-		 * way out.
+		 * Only the save that puts it there is refused — a new field, or an existing
+		 * one moving in from another set. A Bio field already sitting in a repeating
+		 * set is left editable so an admin can still rename or re-describe it while
+		 * cleaning the set up; refusing those saves too would freeze the field on
+		 * exactly the sites that need to fix it.
 		 */
 		if ( 'biography' === $this->type && bb_xprofile_is_repeater_group( $this->group_id ) ) {
-			return false;
+			$previous_group_id = 0;
+
+			if ( ! $is_new_field ) {
+				// Field row only — `$get_data` would pull the current user's profile
+				// data for a check that never looks at it.
+				$stored = self::get_instance( (int) $this->id, null, false );
+
+				if ( ! empty( $stored->group_id ) ) {
+					$previous_group_id = (int) $stored->group_id;
+				}
+			}
+
+			if ( $is_new_field || $previous_group_id !== (int) $this->group_id ) {
+				return false;
+			}
 		}
 
 		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type || 'biography' === $this->type ) {

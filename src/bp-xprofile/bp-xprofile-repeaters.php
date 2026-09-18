@@ -255,6 +255,10 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 
 	if ( ! empty( $main_field_data ) ) {
 		foreach ( $main_field_data as $main_field_id => $values ) {
+			if ( bb_xprofile_skip_repeater_template_mirror( $main_field_id ) ) {
+				continue;
+			}
+
 			$values_str = implode( ' ', $values );
 			xprofile_set_field_data( $main_field_id, $user_id, $values_str );
 		}
@@ -1294,6 +1298,10 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 
 			if ( ! empty( $main_field_data ) ) {
 				foreach ( $main_field_data as $main_field_id => $values ) {
+					if ( bb_xprofile_skip_repeater_template_mirror( $main_field_id ) ) {
+						continue;
+					}
+
 					$values_str = implode( ' ', $values );
 					xprofile_set_field_data( $main_field_id, $user_id, $values_str );
 				}
@@ -1361,4 +1369,35 @@ function bb_xprofile_group_has_bio_field( $field_group_id ) {
 	);
 
 	return ! empty( $exists );
+}
+
+/**
+ * Check whether a repeater template field must not receive the mirrored value.
+ *
+ * A repeating field set writes the space-joined value of every set back onto the
+ * template field, so that search has one row to match against. That mirror is
+ * harmless for a field that lives only in xProfile, but the Bio field writes
+ * through to the member's WordPress "Biographical Info" (`user_description`) —
+ * so mirroring it replaces the member's real bio with the concatenation of every
+ * repeat set, on the profile, in wp-admin, in the blog author box and in REST.
+ *
+ * Losing the mirror costs the Bio field nothing but profile search matching
+ * across repeat sets, which it should never have had: `bb_xprofile_bio_field_id()`
+ * treats the Bio field as a singleton precisely because one WordPress user field
+ * backs it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $template_field_id Template (non-clone) xprofile field ID.
+ *
+ * @return bool True when the mirror must be skipped for this field.
+ */
+function bb_xprofile_skip_repeater_template_mirror( $template_field_id ) {
+	$template_field_id = (int) $template_field_id;
+
+	if ( empty( $template_field_id ) ) {
+		return true;
+	}
+
+	return 'biography' === BP_XProfile_Field::get_type( $template_field_id );
 }
