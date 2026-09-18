@@ -3112,6 +3112,86 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Release A change #1, activity composer, end to end: a pasted base64 image
+	 * must be stripped by the SAVE HANDLER, not just by the helper.
+	 *
+	 * Every other strip test calls bb_draft_strip_data_urls() directly, so the
+	 * wire from the activity handler to it had no assertion: deleting the call
+	 * left the whole suite green. The member-visible regression that hides is
+	 * not "large drafts are stored" (the 100 KB cap still refuses them) but
+	 * "pasting a screenshot silently stops the draft saving at all", every
+	 * 20 seconds, on the composer this ticket came from. So the payload here is
+	 * deliberately over the per-draft cap: it can only be stored if the handler
+	 * stripped it first.
+	 */
+	public function test_activity_draft_save_strips_pasted_base64_images_before_the_cap() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$rejections = array();
+		$on_reject  = function ( $rejected_user_id, $data_key, $size, $reason ) use ( &$rejections ) {
+			$rejections[] = $reason;
+		};
+		add_action( 'bb_draft_cap_rejected', $on_reject, 10, 4 );
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content' => '<p>before the screenshot</p><img src="data:image/png;base64,' . str_repeat( 'A', 2 * (int) bb_draft_max_size() ) . '"><p>after the screenshot</p>',
+			)
+		);
+
+		remove_action( 'bb_draft_cap_rejected', $on_reject, 10 );
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertSame( array(), $rejections, 'A pasted image is stripped before the cap is measured, so nothing may be refused.' );
+		$this->assertIsArray( $stored, 'The draft must have been stored - the pasted image alone put the raw payload over the per-draft cap.' );
+		$this->assertStringContainsString( 'before the screenshot', $stored['data']['content'], 'The prose around the image must survive.' );
+		$this->assertStringContainsString( 'after the screenshot', $stored['data']['content'], 'The prose around the image must survive.' );
+		$this->assertStringNotContainsString( 'base64', $stored['data']['content'], 'No base64 image data may reach usermeta - that is the row that broke the object cache.' );
+		$this->assertLessThan( bb_draft_max_size(), strlen( maybe_serialize( $stored ) ), 'The stored row must be under the per-draft cap once the image is gone.' );
+	}
+
+	/**
+	 * Release A change #1, forum composer, end to end - the forum twin of the
+	 * activity handler test above. The existing forum strip test calls
+	 * bb_forums_strip_draft_data_urls() directly; this drives the save handler.
+	 */
+	public function test_forum_draft_save_strips_pasted_base64_images_before_the_cap() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$key      = 'draft_discussion_' . $forum_id;
+
+		$rejections = array();
+		$on_reject  = function ( $rejected_user_id, $data_key, $size, $reason ) use ( &$rejections ) {
+			$rejections[] = $reason;
+		};
+		add_action( 'bb_draft_cap_rejected', $on_reject, 10, 4 );
+
+		$this->drive_forum_draft_save(
+			$key,
+			array(
+				'bbp_topic_content' => '<p>before the screenshot</p><img src="data:image/png;base64,' . str_repeat( 'A', 2 * (int) bb_draft_max_size() ) . '"><p>after the screenshot</p>',
+			)
+		);
+
+		remove_action( 'bb_draft_cap_rejected', $on_reject, 10 );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame( array(), $rejections, 'A pasted image is stripped before the cap is measured, so nothing may be refused.' );
+		$this->assertIsArray( $stored, 'The draft row must have been stored.' );
+		$this->assertArrayHasKey( $key, $stored, 'The draft must have been stored - the pasted image alone put the raw payload over the per-draft cap.' );
+		$this->assertStringContainsString( 'before the screenshot', $stored[ $key ]['data']['bbp_topic_content'], 'The prose around the image must survive.' );
+		$this->assertStringContainsString( 'after the screenshot', $stored[ $key ]['data']['bbp_topic_content'], 'The prose around the image must survive.' );
+		$this->assertStringNotContainsString( 'base64', $stored[ $key ]['data']['bbp_topic_content'], 'No base64 image data may reach usermeta.' );
+		$this->assertLessThan( bb_draft_max_size(), strlen( maybe_serialize( $stored[ $key ] ) ), 'The stored entry must be under the per-draft cap once the image is gone.' );
+	}
+
+	/**
 	 * F3: saving a draft that stamps an attachment must invalidate the
 	 * orphan-stamp sweep's referenced-set cache, so the next sweep rescans and
 	 * cannot release the attachment the new draft references. (The invalidation
