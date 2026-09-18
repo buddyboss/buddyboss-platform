@@ -49,7 +49,7 @@
 				</span>
 			<div class="bb-topic-actions-wrapper">
 				<span class="bb-topic-actions">
-					<a href="#" class="bb-topic-actions_button">
+					<a href="#" class="bb-topic-actions_button" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 						<i class="bb-icon-ellipsis-h"></i>
 					</a>
 				</span>

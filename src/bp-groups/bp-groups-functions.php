@@ -1745,15 +1745,21 @@ function groups_is_user_creator( $user_id, $group_id ) {
  *
  * @since BuddyPress 1.2.0
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
+ * @since BuddyBoss 3.1.0 Added 'post_title_cleared' parameter to $args.
  *
  * @param array|string $args {
  *     Array of arguments.
- *     @type int    $content  ID of the activity to edit.
- *     @type string $content  The content of the update.
- *     @type int    $user_id  Optional. ID of the user posting the update. Default:
- *                            ID of the logged-in user.
- *     @type int    $group_id Optional. ID of the group to be affiliated with the
- *                            update. Default: ID of the current group.
+ *     @type int    $content            ID of the activity to edit.
+ *     @type string $content            The content of the update.
+ *     @type string $post_title         Optional. The activity post title. Default: empty.
+ *     @type bool   $post_title_cleared Optional. Whether the user explicitly cleared an
+ *                                      optional post title while editing. When true, an
+ *                                      empty title is saved instead of falling back to the
+ *                                      previously stored title. Default: false.
+ *     @type int    $user_id            Optional. ID of the user posting the update. Default:
+ *                                      ID of the logged-in user.
+ *     @type int    $group_id           Optional. ID of the group to be affiliated with the
+ *                                      update. Default: ID of the current group.
  * }
  * @return WP_Error|bool|int Returns the ID of the new activity item on success, or false on failure.
  */
@@ -1767,14 +1773,17 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'            => false,
-			'content'       => false,
-			'user_id'       => bp_loggedin_user_id(),
-			'group_id'      => 0,
-			'privacy'       => 'public',
-			'error_type'    => 'bool',
-			'status'        => bb_get_activity_published_status(),
-			'recorded_time' => bp_core_current_time(),
+			'id'                 => false,
+			'post_title'         => false,
+			'post_title_cleared' => false,
+			'title_required'     => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
+			'content'            => false,
+			'user_id'            => bp_loggedin_user_id(),
+			'group_id'           => 0,
+			'privacy'            => 'public',
+			'error_type'         => 'bool',
+			'status'             => bb_get_activity_published_status(),
+			'recorded_time'      => bp_core_current_time(),
 		),
 		'groups_post_update'
 	);
@@ -1819,21 +1828,33 @@ function groups_post_update( $args = '' ) {
 	 */
 	$content_filtered = apply_filters( 'groups_activity_new_update_content', $activity_content );
 
-	$activity_id = groups_record_activity(
-		array(
-			'id'            => $id,
-			'user_id'       => $user_id,
-			'action'        => $action,
-			'content'       => $content_filtered,
-			'type'          => 'activity_update',
-			'item_id'       => $group_id,
-			'privacy'       => $privacy,
-			'error_type'    => $error_type,
-			'status'        => $status,
-			'recorded_time' => $recorded_time,
+	/**
+	 * Filters the post title for the new group activity update.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param string $post_title The post title of the update.
+	 */
+	$post_title_filtered = apply_filters( 'bb_groups_activity_new_update_post_title', $post_title );
 
-		)
+	$record_args = array(
+		'id'             => $id,
+		'user_id'        => $user_id,
+		'action'         => $action,
+		'post_title'     => $post_title_filtered,
+		'title_required' => $r['title_required'],
+		'content'        => $content_filtered,
+		'type'           => 'activity_update',
+		'item_id'        => $group_id,
+		'privacy'        => $privacy,
+		'error_type'     => $error_type,
+		'status'         => $status,
+		'recorded_time'  => $recorded_time,
 	);
+	if ( ! empty( $r['post_title_cleared'] ) ) {
+		$record_args['post_title_cleared'] = true;
+	}
+	$activity_id = groups_record_activity( $record_args );
 
 	groups_update_groupmeta( $group_id, 'last_activity', bp_core_current_time() );
 
@@ -4832,7 +4853,7 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
 			?>
 			">
-				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>" aria-label="<?php esc_attr_e( 'More members', 'buddyboss' ); ?>">
 					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
@@ -4981,37 +5002,6 @@ function bb_get_all_members_for_groups( $args = array() ) {
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
 }
-add_filter( 'gettext', 'bb_group_drop_down_order_metabox_translate_order_text', 10, 3 );
-
-/**
- * Translate the order text in the Group Drop Down Order metabox.
- *
- * @since BuddyBoss 2.1.6
- *
- * @param string $translated_text   Translated text.
- * @param string $untranslated_text Untranslated text.
- * @param string $domain            Domain.
- *
- * @return mixed|string|void
- */
-function bb_group_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
-
-	if ( ! function_exists( 'get_current_screen' ) ) {
-		return $translated_text;
-	}
-	$current_screen = get_current_screen();
-
-	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_groups_get_group_type_post_type' ) || bp_groups_get_group_type_post_type() !== $current_screen->id ) {
-		return $translated_text;
-	}
-
-	if ( 'Order' === $untranslated_text ) {
-		return __( 'Number', 'buddyboss' );
-	}
-
-	return $translated_text;
-
-}
 
 /**
  * Function to check the user subscribed group or not.
@@ -5139,6 +5129,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'add_pre_post_text'    => false,
 			'href'                 => $url,
 			'data-bp-btn-action'   => $action,
+			'aria-label'           => $button_text,
 		),
 	);
 
@@ -5156,7 +5147,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 
 	if ( ! empty( $html ) ) {
 		$button = sprintf(
-			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s">%s</a>',
+			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s" aria-label="%s">%s</a>',
 			esc_url( $button['link_href'] ),
 			esc_attr( $button['id'] ),
 			esc_attr( $button['link_class'] ),
@@ -5164,6 +5155,7 @@ function bb_get_group_subscription_button( $args, $html = true ) {
 			'group',
 			esc_url( $button['link_href'] ),
 			esc_attr( $action ),
+			esc_attr( $button['aria-label'] ),
 			wp_kses_post( $button['link_text'] )
 		);
 	}

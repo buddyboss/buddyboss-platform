@@ -456,7 +456,7 @@ class BP_XProfile_Field {
 
 		$is_new_field = is_null( $this->id );
 
-		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type ) {
+		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type || 'biography' === $this->type ) {
 			$field = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} a WHERE parent_id = 0 AND type = %s", $this->type ) );
 			if ( $is_new_field && $field ) {
 				return false;
@@ -1290,6 +1290,7 @@ class BP_XProfile_Field {
 	 * @param string $message_type error or udpated
 	 */
 	public function render_admin_form( $message = '', $message_type = 'error' ) {
+		_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'Settings 2.0 ProfileFieldModal' );
 
 		// Users Admin URL
 		$users_url = bp_get_admin_url( 'admin.php' );

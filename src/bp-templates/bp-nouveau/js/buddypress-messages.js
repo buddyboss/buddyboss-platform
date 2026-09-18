@@ -141,7 +141,11 @@ window.bp = window.bp || {};
 				maxFilesize          		 : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 				dictInvalidFileType  		 : BP_Nouveau.video.dictInvalidFileType,
 				dictMaxFilesExceeded 		 : BP_Nouveau.video.video_dict_file_exceeded,
-				dictCancelUploadConfirmation : BP_Nouveau.video.dictCancelUploadConfirmation,
+				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+				chunking 					 : true,
+				chunkSize					 : 30*1024*1024,
+				retryChunks					 : true,
+				retryChunksLimit			 : 3,
 			};
 
 		},
@@ -2981,7 +2985,12 @@ window.bp = window.bp || {};
 							$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 						}
 
-						if ( response.data.id ) {
+						if ( true === file.upload.chunked ) {
+							// convert file.xhr.response string to object.
+							response = JSON.parse( file.xhr.response );
+						}
+
+						if ( response.data && response.data.id ) {
 							file.id 				 = response.data.id;
 							response.data.uuid 		 = file.upload.uuid;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
@@ -3895,7 +3904,17 @@ window.bp = window.bp || {};
 				$input.on('select2:open', function() {
 					// Add class to dropdown
 					$('.select2-dropdown').addClass('bb-select-dropdown bb-compose-input');
+					
+					// Add aria-label to search field for accessibility.
+					setTimeout( function() {
+						$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
+					}, 0 );
 				});
+				
+				// Add aria-label to search field after initialization (for initial load).
+				setTimeout( function() {
+					$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
+				}, 100 );
 				
 				// Add class to container immediately after initialization
 				$input.next('.select2-container').addClass('bb-select-container');
@@ -5439,6 +5458,14 @@ window.bp = window.bp || {};
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
+
+				// Trigger GIF autoplay check when messages are loaded
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			messages_scrolled: function( event ) {
@@ -5628,6 +5655,14 @@ window.bp = window.bp || {};
 				} else {
 					this.$el.removeClass( 'focus-in--scroll' );
 				}
+
+				// Trigger GIF autoplay check for newly added message
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			replyError: function( response ) {

@@ -725,14 +725,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				 */
 				$is_member = false;
 				$group_ids = array();
-				if ( function_exists( 'bbp_get_forum_group_ids' ) ) {
+				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				} elseif ( function_exists( 'bbp_get_forum_group_ids' ) ) {
 					$group_ids = bbp_get_forum_group_ids( $forum_id );
-					if ( ! empty( $group_ids ) ) {
-						foreach ( $group_ids as $group_id ) {
-							if ( groups_is_user_member( $topic_author, $group_id ) ) {
-								$is_member = true;
-								break;
-							}
+				}
+				if ( ! empty( $group_ids ) ) {
+					foreach ( $group_ids as $group_id ) {
+						if ( groups_is_user_member( $topic_author, $group_id ) ) {
+							$is_member = true;
+							break;
 						}
 					}
 				}
@@ -1280,14 +1282,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				 */
 				$is_member = false;
 				$group_ids = array();
-				if ( function_exists( 'bbp_get_forum_group_ids' ) ) {
+				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				} elseif ( function_exists( 'bbp_get_forum_group_ids' ) ) {
 					$group_ids = bbp_get_forum_group_ids( $forum_id );
-					if ( ! empty( $group_ids ) ) {
-						foreach ( $group_ids as $group_id ) {
-							if ( groups_is_user_member( $topic_author, $group_id ) ) {
-								$is_member = true;
-								break;
-							}
+				}
+				if ( ! empty( $group_ids ) ) {
+					foreach ( $group_ids as $group_id ) {
+						if ( groups_is_user_member( $topic_author, $group_id ) ) {
+							$is_member = true;
+							break;
 						}
 					}
 				}

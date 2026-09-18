@@ -18,8 +18,8 @@ $bp_is_group = bp_is_group();
 
 <div id="bp-video-create-album" style="display: none;">
 	<transition name="modal">
-		<div class="bb-white bbm-model-wrap">
-			<div class="modal-wrapper">
+		<div class="bb-rl-modal-mask bb-white bbm-model-wrap">
+			<div class="bb-rl-modal-wrapper">
 				<div id="boss-video-create-album-popup" class="modal-container">
 					<header class="bb-model-header">
 						<h4><?php esc_attr_e( 'Create new album', 'buddyboss' ); ?></h4>
@@ -33,7 +33,7 @@ $bp_is_group = bp_is_group();
 
 					<footer class="bb-model-footer">
 						<?php if ( ! $bp_is_group ) : ?>
-							<div class="bb-dropdown-wrap">
+							<div class="bb-dropdown-wrap bb-rl-filter">
 								<select id="bb-album-privacy">
 									<?php
 									foreach ( bp_video_get_visibility_levels() as $k => $option ) {

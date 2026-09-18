@@ -133,6 +133,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( "A group's details are updated", 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_details_updated'
 		);
@@ -170,6 +171,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is promoted in a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_promoted'
 		);
@@ -207,6 +209,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives an invite to join a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_new_invite'
 		);
@@ -244,6 +247,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A group organizer receives a request to join their group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_new_request'
 		);
@@ -282,6 +286,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is accepted into a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_request_accepted'
 		);
@@ -320,6 +325,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is rejected from joining a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_request_rejected'
 		);
@@ -357,6 +363,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{{sender.name}}} from {{{group.name}}} sent you a message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+				'group'               => 'messages',
 			),
 			'bb_groups_new_message'
 		);
@@ -373,6 +380,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 					'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+					'group'               => 'messages',
 				),
 				'bb_groups_new_message'
 			);
@@ -797,6 +805,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
 					'situation_label'     => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails of new posts in groups you are subscribed to.', 'buddyboss' ),
+					'group'               => 'groups_discussions',
 				),
 				'bb_groups_subscribed_activity'
 			);
@@ -840,6 +849,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 					'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups you are subscribed to.', 'buddyboss' ),
+					'group'               => 'groups_discussions',
 				),
 				'bb_groups_subscribed_discussion'
 			);

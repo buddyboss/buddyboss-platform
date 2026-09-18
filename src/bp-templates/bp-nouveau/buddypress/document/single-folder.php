@@ -86,7 +86,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 									?>
 									<div class="media-folder_items">
 										<div class="media-folder_actions">
-											<a href="#" class="media-folder_action__anchor">
+											<a href="#" class="media-folder_action__anchor" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 												<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 											</a>
 											<div class="media-folder_action__list bb_more_dropdown">

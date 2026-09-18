@@ -296,6 +296,7 @@ jQuery( document ).ready( function() {
 							html_serror += '</div>';
 
                 		jQuery( document ).find( signup_email ).before( html_serror );
+						jQuery( document ).find( signup_email ).parents( '.bb-signup-field.signup_email' ).removeClass( 'bp-hide' );
                 		return_val = false;
                 	}
                 	var nickname = 'field_'+response.field_id;
@@ -305,6 +306,7 @@ jQuery( document ).ready( function() {
 							html_uerror += '<p>' + response.signup_username + '</p>';
 							html_uerror += '</div>';
                 		jQuery( document ).find( '#'+nickname ).before( html_uerror );
+                		jQuery( document ).find( '#'+nickname ).parents( '.editfield' ).removeClass( 'bp-hide' );
                 		return_val = false;
                 	}
 	                return true;
@@ -338,7 +340,8 @@ jQuery( document ).ready( function() {
 
 	function bp_register_validate_email() {
 		var email1 				 = emailSelector.val().toLowerCase(),
-			email2 				 = confirmEmailSelector.val().toLowerCase(),
+			// Default to empty string when the confirm-email field is disabled/absent.
+			email2 				 = ( confirmEmailSelector && confirmEmailSelector.length ) ? confirmEmailSelector.val().toLowerCase() : '',
 		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			errorMessageSelector = jQuery( '#email-strength-result' );
 

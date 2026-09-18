@@ -108,7 +108,6 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_core_xprofile_update_profile_co
 add_action( 'bp_core_delete_existing_avatar', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When profile photo deleted from profile in Frontend.
 add_action( 'xprofile_cover_image_deleted', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When cover photo deleted from profile in Frontend.
 add_action( 'xprofile_updated_profile', 'bp_core_xprofile_update_profile_completion_user_progress', 20, 5 ); // On Profile updated from frontend.
-add_action( 'wp_ajax_xprofile_reorder_fields', 'bp_core_xprofile_update_profile_completion_user_progress' ); // When fields inside fieldset are dragged and dropped in wp-admin > buddybpss > profile.
 
 // Profile Completion Admin Actions.
 add_action( 'xprofile_fields_saved_field', 'bp_core_xprofile_clear_all_user_progress_cache' ); // On field added/updated in wp-admin > Profile
@@ -339,8 +338,8 @@ function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, 
 		$reserialize = true;
 	}
 
-	// Value might be a serialized array of options.
-	$field_value = maybe_unserialize( $field_value );
+	// Value might be a serialized array of options. Disallow object instantiation (PHP object injection guard).
+	$field_value = bb_xprofile_safe_unserialize( $field_value );
 
 	// Sanitize single field value.
 	if ( ! is_array( $field_value ) ) {
@@ -1807,3 +1806,42 @@ function bb_xprofile_repair_xprofile_visibility( $repair_list ) {
 
 	return $repair_list;
 }
+
+/**
+ * Hide the Bio field from the wp-admin Extended Profile metabox.
+ *
+ * WordPress already renders its own "Biographical Info" textarea there, and the
+ * Bio profile field is kept in sync with it. Showing both would give the same
+ * value two editable inputs on one screen, with the save order deciding which
+ * one wins. Excluding it here leaves WordPress's native field as the single
+ * editing surface in wp-admin; the Bio field still renders everywhere else.
+ *
+ * @since BuddyBoss 3.3.0
+ *
+ * Hooked to the `bp_after_..._parse_args` variant that `bp_parse_args()` builds
+ * from the `bp_xprofile_user_admin_profile_loop_args` filter key, so the defaults
+ * have already been merged in by the time this runs.
+ *
+ * @param array $args Arguments passed to `bp_has_profile()` in the user admin loop.
+ *
+ * @return array Filtered arguments.
+ */
+function bb_xprofile_exclude_bio_field_from_user_admin( $args ) {
+	$bio_field_id = bb_xprofile_bio_field_id();
+
+	if ( ! $bio_field_id ) {
+		return $args;
+	}
+
+	$exclude_fields = array();
+
+	if ( ! empty( $args['exclude_fields'] ) ) {
+		$exclude_fields = wp_parse_id_list( $args['exclude_fields'] );
+	}
+
+	$exclude_fields[]       = $bio_field_id;
+	$args['exclude_fields'] = implode( ',', array_unique( $exclude_fields ) );
+
+	return $args;
+}
+add_filter( 'bp_after_bp_xprofile_user_admin_profile_loop_args_parse_args', 'bb_xprofile_exclude_bio_field_from_user_admin' );

@@ -5,6 +5,13 @@
  *
  * @package BuddyBoss\Administration
  * @since bbPress (r2464)
+ *
+ * // @todo: Remove after 3 release. Legacy admin replaced by Settings 2.0 React UI.
+ * // @see src/bp-core/admin/bb-admin-settings-forums.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-forums-ajax.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-topics-ajax.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-replies-ajax.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php
  */
 
 // Exit if accessed directly
@@ -102,13 +109,12 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 */
 		private function includes() {
 			require $this->admin_dir . 'tools.php';
-			require $this->admin_dir . 'converter.php';
-			require $this->admin_dir . 'settings.php';
+			// converter.php retired in BuddyBoss 3.1.0 — Forum Import
+			// machinery moved to the buddyboss-tools plugin; legacy class names
+			// resolve via the class_alias autoloader in
+			// src/bp-core/deprecated/buddyboss/3.0.0.php when Tools is active.
 			require $this->admin_dir . 'functions.php';
 			require $this->admin_dir . 'metaboxes.php';
-			require $this->admin_dir . 'forums.php';
-			require $this->admin_dir . 'topics.php';
-			require $this->admin_dir . 'replies.php';
 			require $this->admin_dir . 'users.php';
 		}
 
@@ -134,19 +140,12 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			add_action( 'bbp_admin_head', array( $this, 'admin_head' ) ); // Add some general styling to the admin area
 			add_action( 'bbp_admin_notices', array( $this, 'activation_notice' ) ); // Add notice if not using a Forums theme
 			add_action( 'bbp_register_admin_style', array( $this, 'register_admin_style' ) ); // Add green admin style
-			add_action( 'bbp_register_admin_scripts',  array( $this, 'register_admin_scripts'  ) ); // Add admin scripts
+			add_action( 'bbp_register_admin_scripts', array( $this, 'register_admin_scripts' ) ); // Add admin scripts
 			add_action( 'bbp_activation', array( $this, 'new_install' ) ); // Add menu item to settings menu
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' )     ); // Add enqueued CSS
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Add enqueued CSS
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Add enqueued JS
 			add_action( 'wp_dashboard_setup', array( $this, 'dashboard_widget_right_now' ) ); // Forums 'Right now' Dashboard widget
 			add_action( 'admin_bar_menu', array( $this, 'admin_bar_about_link' ), 15 ); // Add a link to Forums about page to the admin bar
-
-			/** Ajax */
-
-			// No _nopriv_ equivalent - users must be logged in
-			add_action( 'wp_ajax_bbp_suggest_topic', array( $this, 'suggest_topic' ) );
-			add_action( 'wp_ajax_bbp_suggest_reply', array( $this, 'suggest_reply' ) );
-			add_action( 'wp_ajax_bbp_suggest_user', array( $this, 'suggest_user' ) );
 
 			/** Filters */
 
@@ -156,13 +155,9 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Map settings capabilities
 			add_filter( 'bbp_map_meta_caps', array( $this, 'map_settings_meta_caps' ), 10, 4 );
 
-			// Hide the theme compat package selection
-			add_filter( 'bbp_admin_get_settings_sections', array( $this, 'hide_theme_compat_packages' ) );
-
-			// Allow keymasters to save forums settings
-			add_filter( 'option_page_capability_bbpress', array( $this, 'option_page_capability_bbpress' ) );
-
-			// Remove "Comments" & "Discussion" metabox from bbp_get_reply_post_type() custom post type.
+			// Remove Comments/Discussion metaboxes from reply post type.
+			// The WP post editor is still accessible via direct URL even though
+			// Settings 2.0 replaces the admin UI with React modals.
 			add_action( 'admin_init', array( $this, 'bbp_remove_comments_discussion_meta_boxes' ), 9999 );
 
 			/** Network Admin */
@@ -174,11 +169,14 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			// Allow plugins to modify these actions
 			do_action_ref_array( 'bbp_admin_loaded', array( &$this ) );
-
 		}
 
 		/**
-		 * Remove "Comments" & "Discussion" metabox from bbp_get_reply_post_type() custom post type.
+		 * Remove Comments and Discussion metaboxes from the reply post type.
+		 *
+		 * Even though Settings 2.0 replaces the admin UI, the WP post editor
+		 * is still accessible via direct URL. This prevents the Comments
+		 * metabox from showing on reply edit screens.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
@@ -200,52 +198,13 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			$hooks = array();
 
-			// These are later removed in admin_head
-			if ( ! is_network_admin() && ! bp_is_network_activated() ) {
-				if ( current_user_can( 'bbp_tools_page' ) ) {
-					if ( current_user_can( 'bbp_tools_repair_page' ) ) {
-						$hooks[] = add_submenu_page(
-							'buddyboss-platform',
-							__( 'Repair Forums', 'buddyboss' ),
-							__( 'Forum Repair', 'buddyboss' ),
-							$this->minimum_capability,
-							'bbp-repair',
-							'bbp_admin_repair'
-						);
-					}
-
-					if ( current_user_can( 'bbp_tools_import_page' ) ) {
-						$hooks[] = add_submenu_page(
-							'buddyboss-platform',
-							__( 'Import Forums', 'buddyboss' ),
-							__( 'Forum Import', 'buddyboss' ),
-							$this->minimum_capability,
-							'bbp-converter',
-							'bbp_converter_settings'
-						);
-					}
-
-					if ( current_user_can( 'bbp_tools_reset_page' ) ) {
-						//				$hooks[] = add_submenu_page(
-						//					'buddyboss-platform',
-						//					__( 'Reset Forums', 'buddyboss' ),
-						//					__( 'Forum Reset', 'buddyboss' ),
-						//					$this->minimum_capability,
-						//					'bbp-reset',
-						//					'bbp_admin_reset'
-						//				);
-					}
-
-					// Fudge the highlighted subnav item when on a Forums admin page
-					foreach ( $hooks as $hook ) {
-						add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
-					}
-
-				}
-			}
+			// Forum Repair + Forum Import submenus retired in BuddyBoss 3.1.0 —
+			// ?page=bbp-repair and ?page=bbp-converter both redirect to the
+			// Settings 2.0 Tools tab via bb_redirect_bp_settings_before_permission_check().
 			// Bail if plugin is not network activated
-			if ( ! is_plugin_active_for_network( bbpress()->basename ) )
+			if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
 				return;
+			}
 
 			add_submenu_page(
 				'index.php',
@@ -475,6 +434,14 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since bbPress (r5224)
 		 */
 		public function enqueue_styles() {
+			// Skip legacy bbPress admin CSS on Settings 2.0 page — React UI has its own styles.
+			if ( function_exists( 'bb_register_feature' ) ) {
+				$screen = get_current_screen();
+				if ( ! empty( $screen->id ) && false !== strpos( $screen->id, 'bb-settings' ) ) {
+					return;
+				}
+			}
+
 			wp_enqueue_style( 'bbp-admin-css' );
 		}
 
@@ -484,37 +451,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since bbPress (r4260)
 		 */
 		public function enqueue_scripts() {
-			wp_enqueue_script( 'suggest' );
-
-			// Get the version to use for JS
-			$version = bp_get_version();
-
-			// Post type checker (only topics and replies)
-			if ( 'post' === get_current_screen()->base ) {
-				switch ( get_current_screen()->post_type ) {
-					case bbp_get_reply_post_type():
-					case bbp_get_topic_post_type():
-						// Enqueue the common JS
-						wp_enqueue_script( 'bbp-admin-common-js' );
-
-						// Topics admin
-						if ( bbp_get_topic_post_type() === get_current_screen()->post_type ) {
-							wp_enqueue_script( 'bbp-admin-topics-js' );
-
-							// Replies admin
-						} elseif ( bbp_get_reply_post_type() === get_current_screen()->post_type ) {
-							wp_enqueue_script( 'bbp-admin-replies-js' );
-							$localize_array = array(
-								'loading_text' => __( 'Loading', 'buddyboss' ),
-							);
-							wp_localize_script( 'bbp-admin-replies-js', 'replies_data', $localize_array );
-						}
-
-						break;
-				}
-			}
-
-			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery' ), $version );
+			// Scripts are registered in register_admin_scripts() and
+			// enqueued on the specific admin pages that need them.
 		}
 
 		/**
@@ -526,8 +464,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @uses remove_submenu_page() To remove menu items with alternat navigation
 		 */
 		public function admin_head() {
-			remove_submenu_page( 'admin.php', 'bbp-repair' );
-			remove_submenu_page( 'admin.php', 'bbp-converter' );
 			remove_submenu_page( 'admin.php', 'bbp-reset' );
 			remove_submenu_page( 'index.php', 'bbp-about' );
 			remove_submenu_page( 'index.php', 'bbp-credits' );
@@ -603,159 +539,10 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since 2.6.0 bbPress (r2521)
 		 */
 		public function register_admin_scripts() {
-			// Get the version to use for JS.
-			$version = bp_get_version();
-
-			// Header JS.
-			wp_register_script( 'bbp-admin-common-js', $this->js_url . 'common.js', array( 'jquery' ), $version );
-			wp_register_script( 'bbp-admin-topics-js', $this->js_url . 'topics.js', array( 'jquery' ), $version );
-			wp_register_script( 'bbp-admin-replies-js', $this->js_url . 'replies.js', array( 'jquery' ), $version );
-			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery', 'postbox', 'dashboard' ), $version );
+			// Forum Import script (`bbp-converter`) retired in BuddyBoss 3.1.0 —
+			// admin/js/converter.js was deleted alongside the legacy admin page.
 		}
 
-		/**
-		 * Hide theme compat package selection if only 1 package is registered
-		 *
-		 * @since bbPress (r4315)
-		 *
-		 * @param array $sections Forums settings sections
-		 * @return array
-		 */
-		public function hide_theme_compat_packages( $sections = array() ) {
-			if ( count( bbpress()->theme_compat->packages ) <= 1 ) {
-				unset( $sections['bbp_settings_theme_compat'] );
-			}
-
-			return $sections;
-		}
-
-		/**
-		 * Allow keymaster role to save Forums settings
-		 *
-		 * @since bbPress (r4678)
-		 *
-		 * @param string $capability
-		 * @return string Return 'keep_gate' capability
-		 */
-		public function option_page_capability_bbpress( $capability = 'manage_options' ) {
-			$capability = 'keep_gate';
-			return $capability;
-		}
-
-		/** Ajax ******************************************************************/
-
-		/**
-		 * Ajax action for facilitating the discussion auto-suggest
-		 *
-		 * @since bbPress (r4261)
-		 *
-		 * @uses get_posts()
-		 * @uses bbp_get_topic_post_type()
-		 * @uses bbp_get_topic_id()
-		 * @uses bbp_get_topic_title()
-		 */
-		public function suggest_topic() {
-
-			$html = '<option value="0">' . esc_html__( '-- Select Discussion --', 'buddyboss' ) . '</option>';
-			$posts = get_posts(
-				array(
-					's'                      => ! empty( $_REQUEST['q'] ) ? bbp_db()->esc_like( $_REQUEST['q'] ) : '',
-					'post_type'              => bbp_get_topic_post_type(),
-					'post_status'            => 'publish',
-					'post_parent'            => $_POST['post_parent'],
-					'numberposts'            => - 1,
-					'orderby'                => 'title',
-					'order'                  => 'ASC',
-					'walker'                 => '',
-					'suppress_filters'       => false,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				)
-			);
-
-			add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
-			$html .= walk_page_dropdown_tree( $posts, 0, array( 'selected' => 0 ) );
-			remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
-
-			echo $html;
-			wp_die();
-		}
-
-		/**
-		 * Ajax action for facilitating the reply auto-suggest
-		 *
-		 * @since BuddyBoss 1.0.0
-		 *
-		 * @uses get_posts()
-		 * @uses bbp_get_topic_post_type()
-		 * @uses bbp_get_topic_id()
-		 * @uses bbp_get_topic_title()
-		 */
-		public function suggest_reply() {
-
-			$html = '<option value="0">' . esc_html__( '-- Select Reply --', 'buddyboss' ) . '</option>';
-
-			$posts = get_posts(
-				array(
-					'post_type'              => bbp_get_reply_post_type(),
-					'post_status'            => 'publish',
-					'post_parent'            => $_POST['post_parent'],
-					'numberposts'            => - 1,
-					'orderby'                => 'title',
-					'order'                  => 'ASC',
-					'walker'                 => '',
-					'suppress_filters'       => false,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				)
-			);
-
-			add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
-			$html .= walk_page_dropdown_tree( $posts, 0, array( 'selected' => 0 ) );
-			remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
-
-			echo $html;
-			wp_die();
-		}
-
-		/**
-		 * Ajax action for facilitating the topic and reply author auto-suggest
-		 *
-		 * @since bbPress (r5014)
-		 */
-		public function suggest_user() {
-
-			// Bail early if no request
-			if ( empty( $_REQUEST['q'] ) ) {
-				wp_die( '0' );
-			}
-
-			// Bail if user cannot moderate - only moderators can change authorship
-			if ( ! current_user_can( 'moderate' ) ) {
-				wp_die( '0' );
-			}
-
-			// Check the ajax nonce
-			check_ajax_referer( 'bbp_suggest_user_nonce' );
-
-			// Try to get some users
-			$users_query = new WP_User_Query(
-				array(
-					'search'         => '*' . bbp_db()->esc_like( $_REQUEST['q'] ) . '*',
-					'fields'         => array( 'ID', 'user_nicename' ),
-					'search_columns' => array( 'ID', 'user_nicename', 'user_email' ),
-					'orderby'        => 'ID',
-				)
-			);
-
-			// If we found some users, loop through and display them
-			if ( ! empty( $users_query->results ) ) {
-				foreach ( (array) $users_query->results as $user ) {
-					printf( esc_html__( '%1$s - %2$s', 'buddyboss' ), bbp_get_user_id( $user->ID ), bbp_get_user_nicename( $user->ID, array( 'force' => $user->user_nicename ) ) . "\n" );
-				}
-			}
-			die();
-		}
 
 		/** Updaters **************************************************************/
 
@@ -832,25 +619,25 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 				// Taking action
 				switch ( $action ) {
-				case 'bbpress-update':
-					// Site counter
-					$n = isset( $_GET['n'] ) ? intval( $_GET['n'] ) : 0;
+					case 'bbpress-update':
+						// Site counter
+						$n = isset( $_GET['n'] ) ? intval( $_GET['n'] ) : 0;
 
-					// Get blogs 5 at a time
-					$blogs = $bbp_db->get_results( "SELECT * FROM {$bbp_db->blogs} WHERE site_id = '{$bbp_db->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
+						// Get blogs 5 at a time
+						$blogs = $bbp_db->get_results( "SELECT * FROM {$bbp_db->blogs} WHERE site_id = '{$bbp_db->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
 
-					// No blogs so all done!
-				if ( empty( $blogs ) ) :
-					?>
+						// No blogs so all done!
+						if ( empty( $blogs ) ) :
+							?>
 
 					<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
 					<a class="button" href="update-core.php?page=bbpress-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
 
-				<?php
+							<?php
 
-				// Still have sites to loop through
-				else :
-				?>
+							// Still have sites to loop through
+					else :
+						?>
 
 					<ul>
 
@@ -895,7 +682,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 							do_action( 'after_bbpress_upgrade', $response );
 							do_action( 'bbp_upgrade_site', $details['blog_id'] );
 
-						endforeach;
+							endforeach;
 						?>
 
 					</ul>
@@ -905,28 +692,28 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo ( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
 					</p>
 					<script type='text/javascript'>
-                        <!--
-                        function nextpage() {
-                            location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo ( $n + 5 ); ?>';
-                        }
-                        setTimeout( 'nextpage()', 250 );
-                        //-->
+						<!--
+						function nextpage() {
+							location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo ( $n + 5 ); ?>';
+						}
+						setTimeout( 'nextpage()', 250 );
+						//-->
 					</script>
-				<?php
+						<?php
 
-				endif;
+					endif;
 
-				break;
+						break;
 
-				case 'show':
-				default:
-				?>
+					case 'show':
+					default:
+						?>
 
 					<p><?php esc_html_e( 'You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update.', 'buddyboss' ); ?></p>
 					<p><a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update"><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></a></p>
 
-					<?php
-					break;
+						<?php
+						break;
 
 				}
 				?>
@@ -946,6 +733,9 @@ endif; // class_exists check
  */
 function bbp_admin() {
 	bbpress()->admin = new BBP_Admin();
-
-	bbpress()->admin->converter = new BBP_Converter();
+	// BBP_Converter retired from Platform in BuddyBoss 3.1.0; the moved
+	// orchestrator lives in buddyboss-tools. Any code still referencing
+	// bbpress()->admin->converter will see null — third-party callers should
+	// migrate to BB_Tools_BBP_Converter or rely on the legacy class_alias in
+	// bp-core/deprecated/buddyboss/3.0.0.php.
 }

@@ -27,9 +27,20 @@
 					<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
 				<# } #>
 			<# } #>
-		<span>
+		</span>
 	</h3>
-	<a class="bb-model-close-button" href="#">
-		<span class="bb-icon-l bb-icon-times"></span>
-	</a>
+	<span class="bb-modal-header-actions">
+		<a class="bb-model-close-button" href="#">
+			<span class="bb-icon-l bb-icon-times"></span>
+		</a>
+		
+		<?php
+		/**
+		* Fires after the activity header close button.
+		*
+		* @since BuddyBoss 2.13.0
+		*/
+		do_action( 'bb_activity_header_after' );
+		?>
+	</span>
 </script>

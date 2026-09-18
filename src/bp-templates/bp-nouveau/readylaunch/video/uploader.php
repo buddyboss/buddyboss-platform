@@ -107,7 +107,7 @@ defined( 'ABSPATH' ) || exit;
 						</a>
 
 						<?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
-							<div class="bb-dropdown-wrap">
+							<div class="bb-dropdown-wrap bb-rl-filter">
 								<select id="bb-video-privacy">
 									<?php
 									foreach ( bp_video_get_visibility_levels() as $k => $option ) {

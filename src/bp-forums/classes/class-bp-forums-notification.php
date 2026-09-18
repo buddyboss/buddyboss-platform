@@ -111,6 +111,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
 				'situation_label'     => __( 'A new reply in a discussion a member is subscribed to', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_forums_subscribed_reply'
 		);
@@ -171,6 +172,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 				'situation_label'     => __( 'A new discussion in a forum a member is subscribed to', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_forums_subscribed_discussion'
 		);

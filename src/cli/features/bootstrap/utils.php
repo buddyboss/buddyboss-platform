@@ -213,7 +213,11 @@ function esc_cmd( $cmd ) {
 	$args = func_get_args();
 
 	if ( count( $args ) < 2 ) {
-		trigger_error( 'esc_cmd() requires at least two arguments.', E_USER_WARNING );
+		if ( function_exists( 'wp_trigger_error' ) ) {
+			wp_trigger_error( 'esc_cmd', 'esc_cmd() requires at least two arguments.', E_USER_WARNING );
+		} else {
+			trigger_error( 'esc_cmd() requires at least two arguments.', E_USER_WARNING );
+		}
 	}
 
 	$cmd = array_shift( $args );

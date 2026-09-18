@@ -1,6 +1,6 @@
 {
     "name": "bb-icons",
-    "version": "1.0.8",
+    "version": "1.0.11",
     "copyright": "BuddyBoss",
     "groups": [
         {
@@ -3251,6 +3251,30 @@
             "css": "thumbtack-times",
             "code": 59923,
             "label": "Thumbtack Times",
+            "group": "interfaces"
+        },
+        {
+            "css": "brand-memberpress-app",
+            "code": 59926,
+            "label": "MemberPress App",
+            "group": "brands"
+        },
+        {
+            "css": "brand-learndash-app",
+            "code": 59927,
+            "label": "LearnDash App",
+            "group": "brands"
+        },
+        {
+            "css": "brand-whitelabel-app",
+            "code": 59928,
+            "label": "White-Label App",
+            "group": "brands"
+        },
+        {
+            "css": "live-stream",
+            "code": 59929,
+            "label": "Live Stream",
             "group": "interfaces"
         }
     ]

@@ -1,0 +1,1309 @@
+<?php
+/**
+ * BuddyBoss ReadyLaunch Onboarding
+ *
+ * @package BuddyBoss\Core\Administration
+ * @subpackage ReadyLaunchOnboarding
+ * @since   BuddyBoss 2.10.0
+ * @author  BuddyBoss
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * ReadyLaunch Onboarding Class
+ *
+ * Handles the onboarding modal for first-time BuddyBoss Platform activation.
+ * Extends the base Setup Wizard Manager to provide ReadyLaunch-specific functionality.
+ *
+ * @since BuddyBoss 2.10.0
+ */
+class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
+
+	/**
+	 * The single instance of the class.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @var   BB_ReadyLaunch_Onboarding|null
+	 */
+	private static $instance = null;
+
+	/**
+	 * Flag to prevent multiple configuration builds.
+	 *
+	 * @since BuddyBoss 2.18.0
+	 * @var   bool
+	 */
+	private $config_built = false;
+
+	/**
+	 * Ensures only one instance of BB_ReadyLaunch_Onboarding is loaded or can be loaded.
+	 *
+	 * @since  BuddyBoss 2.10.0
+	 * @static
+	 * @return BB_ReadyLaunch_Onboarding Main instance.
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	/**
+	 * Private constructor to prevent direct instantiation.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 */
+	private function __construct() {
+		// Delay configuration building until init to ensure text domain is loaded.
+		add_action( 'bp_init', array( $this, 'build_config' ), 5 );
+	}
+
+	/**
+	 * Build configuration array with ReadyLaunch-specific settings.
+	 * Called on init hook to ensure text domain is loaded.
+	 *
+	 * @since BuddyBoss 2.18.0
+	 */
+	public function build_config() {
+
+		// Prevent multiple initialization.
+		if ( $this->config_built ) {
+			return;
+		}
+		$this->config_built = true;
+
+		// Build configuration array with ReadyLaunch-specific settings.
+		$config = array(
+			'admin_page'            => 'bb-settings',
+			'option_prefix'         => 'bb_rl',
+			'completion_option'     => 'bb_rl_onboarding_completed',
+			'wizard_title'          => __( 'BuddyBoss ReadyLaunch Setup', 'buddyboss' ),
+			'wizard_description'    => __( 'Get started with BuddyBoss in minutes', 'buddyboss' ),
+			'skip_on_multisite'     => false,
+			'enable_react_frontend' => true,
+			'react_directory'       => __DIR__,
+			'react_script_handle'   => 'bb-rl-onboarding-script',
+			'react_style_handle'    => 'bb-rl-onboarding-style',
+			'react_script_name'     => 'rl-onboarding',
+			'react_style_name'      => 'onboarding',
+			'react_localize_object' => 'bbRlOnboarding',
+			'steps'                 => array(
+				0 => array(
+					'key'           => 'splash',
+					'title'         => __( 'Welcome to BuddyBoss', 'buddyboss' ),
+					'description'   => __( 'Let\'s bring your community to life by choose the look and feel that matches your vision.', 'buddyboss' ),
+					'component'     => 'SplashScreen',
+					'image'         => 'onboardingModal-splash.png',
+					'skip_progress' => true,
+				),
+				1 => array(
+					'key'         => 'community_setup',
+					'title'       => __( 'Site Name', 'buddyboss' ),
+					'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss' ),
+					'component'   => 'CommunitySetupStep',
+					'image'       => 'onboardingModal-step-1.png',
+				),
+				2 => array(
+					'key'         => 'site_appearance',
+					'title'       => __( 'Site Appearance', 'buddyboss' ),
+					'description' => __( 'Set your community appearance to light, dark, or both.', 'buddyboss' ),
+					'component'   => 'SiteAppearanceStep',
+					'image'       => 'onboardingModal-step-2.png',
+				),
+				3 => array(
+					'key'         => 'brandings',
+					'title'       => __( 'Branding', 'buddyboss' ),
+					'description' => __( 'Personalize your community with logos and theme colors.', 'buddyboss' ),
+					'component'   => 'BrandingsStep',
+					'image'       => 'onboardingModal-step-3.png',
+				),
+				4 => array(
+					'key'         => 'pages',
+					'title'       => __( 'Pages', 'buddyboss' ),
+					'description' => __( 'Select pages that should have styles from ReadyLaunch.', 'buddyboss' ),
+					'component'   => 'PagesStep',
+					'image'       => 'onboardingModal-step-4.png',
+				),
+				5 => array(
+					'key'         => 'side_menus',
+					'title'       => __( 'Side Menus', 'buddyboss' ),
+					'description' => __( 'Enable the options to appear in the left-side menu.', 'buddyboss' ),
+					'component'   => 'SideMenusStep',
+					'image'       => 'onboardingModal-step-5.png',
+				),
+				6 => array(
+					'key'         => 'widgets',
+					'title'       => __( 'Sidebar Widgets', 'buddyboss' ),
+					'description' => __( 'Enable or disable sidebar widgets on different community pages.', 'buddyboss' ),
+					'component'   => 'WidgetsStep',
+					'image'       => 'onboardingModal-step-6.png',
+				),
+				7 => array(
+					'key'         => 'finish',
+					'title'       => __( 'You\'re All Set!', 'buddyboss' ),
+					'description' => __( 'Your community is ready to connect, share, and grow together.', 'buddyboss' ),
+					'component'   => 'FinishScreen',
+					'image'       => 'onboardingModal-finish.png',
+				),
+			),
+			'step_options'          => array(
+				'community_setup' => array(
+					'blogname' => array(
+						'type'        => 'text',
+						'description' => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss' ),
+						'required'    => true,
+						'value'       => get_bloginfo( 'name' ),
+					),
+				),
+				'site_appearance' => array(
+					'bb_rl_theme_mode' => array(
+						'type'    => 'visual_radio_options',
+						'options' => array(
+							'light'  => array(
+								'label'       => __( 'Light Mode', 'buddyboss' ),
+								'description' => __( 'The site will be shown in light mode.', 'buddyboss' ),
+								'icon_class'  => 'bb-icons-rl-sun',
+							),
+							'dark'   => array(
+								'label'       => __( 'Dark Mode', 'buddyboss' ),
+								'description' => __( 'The site will be shown in dark mode.', 'buddyboss' ),
+								'icon_class'  => 'bb-icons-rl-moon',
+							),
+							'choice' => array(
+								'label'       => __( 'Both', 'buddyboss' ),
+								'description' => __( 'Users can switch between modes.', 'buddyboss' ),
+								'icon_class'  => 'bb-icons-rl-circle-half',
+							),
+						),
+						'default' => 'light',
+					),
+				),
+				'brandings'       => array(
+					'bb_rl_light_logo'        => array(
+						'type'        => 'media',
+						'label'       => __( 'Logo (Light mode)', 'buddyboss' ),
+						'customClass' => 'bb-rl-light-logo',
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'dark',
+							'operator'  => '!==', // Show when NOT dark mode.
+						),
+					),
+					'bb_rl_dark_logo'         => array(
+						'type'        => 'media',
+						'label'       => __( 'Logo (Dark mode)', 'buddyboss' ),
+						'customClass' => 'bb-rl-dark-logo',
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'light',
+							'operator'  => '!==', // Show when NOT light mode.
+						),
+					),
+					'logo_description_light'  => array(
+						'type'        => 'description',
+						'description' => __( 'Recommended to upload a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'light',
+							'operator'  => '===',
+						),
+					),
+					'logo_description_dark'   => array(
+						'type'        => 'description',
+						'description' => __( 'Recommended to upload a light-colored logo for dark mode, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'dark',
+							'operator'  => '===',
+						),
+					),
+					'logo_description_choice' => array(
+						'type'        => 'description',
+						'description' => __( 'Recommended to upload a light-colored logo for dark mode and a dark-colored logo for light mode, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'choice',
+							'operator'  => '===',
+						),
+					),
+					'logo_color_separator'    => array(
+						'type' => 'hr',
+					),
+					'bb_rl_color_light'       => array(
+						'type'        => 'color',
+						'label'       => __( 'Primary Color (Light mode)', 'buddyboss' ),
+						'default'     => '#3E34FF',
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'dark',
+							'operator'  => '!==', // Show when NOT dark mode.
+						),
+					),
+					'bb_rl_color_dark'        => array(
+						'type'        => 'color',
+						'label'       => __( 'Primary Color (Dark mode)', 'buddyboss' ),
+						'default'     => '#A347FF',
+						'conditional' => array(
+							'dependsOn' => 'bb_rl_theme_mode',
+							'value'     => 'light',
+							'operator'  => '!==', // Show when NOT light mode.
+						),
+					),
+					'color_description'       => array(
+						'type'        => 'description',
+						'description' => __( 'Primary color used for buttons, links, and interactive elements.', 'buddyboss' ),
+					),
+				),
+				'pages'           => array(
+					'bb_rl_enabled_pages' => array(
+						'type'    => 'checkbox_group',
+						'options' => $this->get_enabled_pages_options(),
+					),
+				),
+				'side_menus'      => array(
+					'bb_rl_side_menu'    => array(
+						'type'    => 'draggable',
+						'label'   => __( 'Navigation', 'buddyboss' ),
+						'options' => $this->getComponentMenuItems(),
+					),
+					'bb_rl_custom_links' => array(
+						'type'    => 'draggable_links',
+						'label'   => __( 'Link', 'buddyboss' ),
+						'options' => array(),
+					),
+				),
+				'widgets'         => array(
+					'bb_rl_activity_sidebars'       => array(
+						'type'    => 'checkbox_group',
+						'label'   => __( 'Activity Feed', 'buddyboss' ),
+						'options' => array(
+							'complete_profile'  => array(
+								'label'   => __( 'Complete Profile', 'buddyboss' ),
+								'default' => true,
+							),
+							'latest_updates'    => array(
+								'label'   => __( 'Latest Updates', 'buddyboss' ),
+								'default' => true,
+							),
+							'recent_blog_posts' => array(
+								'label'   => __( 'Recent Blog Posts', 'buddyboss' ),
+								'default' => true,
+							),
+							'active_members'    => array(
+								'label'   => __( 'Active Members', 'buddyboss' ),
+								'default' => true,
+							),
+
+						),
+					),
+					'bb_rl_member_profile_sidebars' => array(
+						'type'    => 'checkbox_group',
+						'label'   => __( 'Member Profile', 'buddyboss' ),
+						'options' => array(
+							'complete_profile' => array(
+								'label'   => __( 'Complete Profile', 'buddyboss' ),
+								'default' => true,
+							),
+							'connections'      => array(
+								'label'   => __( 'Connections', 'buddyboss' ),
+								'default' => true,
+							),
+							'my_network'       => array(
+								'label'   => __( 'Network (Follow, Followers)', 'buddyboss' ),
+								'default' => true,
+							),
+
+						),
+					),
+					'bb_rl_groups_sidebars'         => array(
+						'type'    => 'checkbox_group',
+						'label'   => __( 'Group', 'buddyboss' ),
+						'options' => array(
+							'about_group'   => array(
+								'label'   => __( 'About Group', 'buddyboss' ),
+								'default' => true,
+							),
+							'group_members' => array(
+								'label'   => __( 'Group Members', 'buddyboss' ),
+								'default' => true,
+							),
+						),
+					),
+				),
+			),
+			'react_assets'          => array(
+				'logo'                  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/bb-logo.png',
+				'assetsBaseUrl'         => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/',
+				'buddybossThemePreview' => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/buddyboss-theme-preview.svg',
+				'currentThemePreview'   => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/current-theme-preview.svg',
+			),
+			'react_dependencies'    => array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ),
+			'custom_hooks'          => array(
+				'completion'      => array(),
+				'step_completion' => array(
+					'bb_rl_step_completed',
+				),
+				'analytics'       => array(
+					'bb_rl_analytics_event',
+				),
+			),
+		);
+
+		// Initialise parent class with configuration.
+		parent::__construct( $config );
+
+		// Splash-screen "Configure/Activate BuddyBoss Theme" buttons POST a
+		// `bb_theme` flag through the standard step-progress AJAX. The parent
+		// handler at priority 10 only tracks the value for analytics — it
+		// doesn't flip `bb_rl_enabled`, so the fresh-install ReadyLaunch
+		// default stays on even when the admin has explicitly chosen the
+		// BuddyBoss WordPress theme. Hook a side-effect handler at priority 5
+		// to flip the option before the parent runs.
+		add_action(
+			'wp_ajax_' . $this->wizard_id . '_save_step_progress',
+			array( $this, 'maybe_apply_splash_theme_choice' ),
+			5
+		);
+	}
+
+	/**
+	 * Flip `bb_rl_enabled` to false when the welcome-splash "Configure" or
+	 * "Activate BuddyBoss Theme" button is clicked.
+	 *
+	 * Both buttons POST `step=0` and `form_data.bb_theme=1` (configure) or
+	 * `form_data.bb_theme=0` (activate). Either value means the admin chose
+	 * BuddyBoss Theme over ReadyLaunch on the splash screen, so the
+	 * fresh-install ReadyLaunch default (`bb_rl_enabled=true`, seeded in
+	 * `bb_appearance_set_readylaunch_default_on_install`) needs to flip off
+	 * before the admin lands on themes.php. Without this fix the admin
+	 * selects a WordPress theme but ReadyLaunch keeps overriding BuddyBoss
+	 * pages, which reads as a bug.
+	 *
+	 * Other steps (ReadyLaunch wizard steps 1–6) do not carry a `bb_theme`
+	 * key, so this handler bails for everything except the splash-screen
+	 * post.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @return void
+	 */
+	public function maybe_apply_splash_theme_choice() {
+		// Defensive duplication of parent's security gates — cap-before-nonce
+		// per project convention (CLAUDE.md). The parent handler's reversed
+		// order is grandfathered legacy. If either check fails we silently
+		// bail so the parent's handler still emits the expected JSON response
+		// without a state change.
+		if ( ! current_user_can( $this->config['capability_required'] ) ) {
+			return;
+		}
+		if (
+			! isset( $_POST['nonce'] ) ||
+			! wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_POST['nonce'] ) ),
+				$this->wizard_id . '_wizard_nonce'
+			)
+		) {
+			return;
+		}
+
+		$step = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : 0;
+		if ( 0 !== $step ) {
+			return;
+		}
+
+		// `bb_theme` is buried inside the JSON-encoded `data` POST body.
+		// Nonce already verified above; raw JSON is validated via is_string +
+		// json_decode which silently rejects malformed input.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '';
+		if ( ! is_string( $raw_data ) || '' === $raw_data ) {
+			return;
+		}
+		$decoded = json_decode( $raw_data, true );
+		if (
+			! is_array( $decoded ) ||
+			! isset( $decoded['form_data']['bb_theme'] )
+		) {
+			return;
+		}
+
+		// Accept both '0' (Activate) and '1' (Configure) — both signal the
+		// admin chose BuddyBoss Theme. Anything else (unexpected payload)
+		// is ignored.
+		$choice = (string) $decoded['form_data']['bb_theme'];
+		if ( '0' !== $choice && '1' !== $choice ) {
+			return;
+		}
+
+		$this->save_readylaunch_option( 'bb_rl_enabled', false );
+	}
+
+	/**
+	 * Initialise the ReadyLaunch onboarding wizard.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return void
+	 */
+	protected function init() {
+		$this->wizard_id      = 'rl_onboarding';
+		$this->wizard_name    = __( 'ReadyLaunch Onboarding', 'buddyboss' );
+		$this->wizard_version = '1.0.0';
+		$this->assets_dir     = __DIR__ . '/assets/';
+		$this->assets_url     = buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/';
+
+		// Initialise steps from configuration.
+		$this->steps = $this->get_config( 'steps', array() );
+
+		// Set current step.
+		$this->current_step = 0;
+
+		// Add ReadyLaunch specific hooks.
+		$this->init_readylaunch_hooks();
+	}
+
+	/**
+	 * Initialise ReadyLaunch specific hooks and filters
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return void
+	 */
+	private function init_readylaunch_hooks() {
+		// ReadyLaunch specific hooks can be added here if needed in the future.
+	}
+
+	/**
+	 * Check if onboarding should be shown.
+	 *
+	 * Uses the existing BP activation mechanism with the bb_wizard_activation URL parameter.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return bool True if onboarding should be shown, false otherwise.
+	 */
+	public function should_show() {
+		// Check if ReadyLaunch onboarding transient is set (primary method).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$activation_param = ! empty( $_GET['bb_wizard_activation'] ) ? sanitize_text_field( wp_unslash( $_GET['bb_wizard_activation'] ) ) : '';
+		$is_new_install   = isset( $_GET['is_new_install'] ) && '1' === $_GET['is_new_install']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$new_activate     = $this->get_config( 'enable_new_activation' );
+
+		$show_onboarding = (
+				! empty( $new_activate ) &&
+				$activation_param === $this->wizard_id &&
+				$is_new_install
+			) || (
+				empty( $new_activate ) &&
+				$activation_param === $this->wizard_id
+			);
+
+		// Check if onboarding was already completed.
+		$onboarding_completed = $this->is_completed();
+
+		// Show onboarding if transient is set and hasn't been completed yet.
+		return $show_onboarding && ! $onboarding_completed;
+	}
+
+	/**
+	 * Enqueue wizard-specific assets.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return void
+	 */
+	protected function enqueue_wizard_assets() {
+		// Enqueue WordPress media library for image uploads.
+		wp_enqueue_media();
+
+		$asset_file = __DIR__ . '/build/rl-onboarding.asset.php';
+		$asset_data = file_exists( $asset_file ) ? include $asset_file : array(
+			'dependencies' => $this->get_config( 'react_dependencies', array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ) ),
+			'version'      => $this->wizard_version,
+		);
+
+		$min = bp_core_get_minified_asset_suffix();
+		$rtl = is_rtl() ? '-rtl' : '';
+
+		// Enqueue the React script.
+		wp_enqueue_script(
+			$this->get_config( 'react_script_handle' ),
+			buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
+			$asset_data['dependencies'],
+			$asset_data['version'],
+			true
+		);
+
+		// Enqueue the CSS.
+		wp_enqueue_style(
+			$this->get_config( 'react_style_handle' ),
+			buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+			array(),
+			$asset_data['version']
+		);
+
+		// Enqueue the BB Icons CSS.
+		wp_enqueue_style(
+			'bb-icons-rl-css',
+			buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css",
+			array(),
+			$asset_data['version']
+		);
+	}
+
+	/**
+	 * Localise wizard data for JavaScript.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return array Localised data array.
+	 */
+	protected function localize_wizard_data() {
+		$base_data = array(
+			'shouldShow'   => $this->should_show(),
+			'completed'    => $this->is_completed(),
+			'assets'       => $this->get_wizard_assets(),
+			'steps'        => $this->steps,
+			'stepOptions'  => $this->get_config( 'step_options', array() ),
+			'progress'     => $this->get_progress(),
+			'preferences'  => $this->get_preferences(),
+			'wizardId'     => $this->wizard_id,
+			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+			'dashboardUrl' => admin_url(),
+			'nonce'        => wp_create_nonce( $this->wizard_id . '_wizard_nonce' ),
+			'translations' => array(),
+			'actions'      => array(
+				'shouldShow'      => $this->wizard_id . '_should_show',
+				'saveProgress'    => $this->wizard_id . '_save_step_progress',
+				'complete'        => $this->wizard_id . '_complete',
+				'savePreferences' => $this->wizard_id . '_save_preferences',
+				'getWizardData'   => $this->wizard_id . '_get_wizard_data',
+			),
+			'readylaunch'  => array(
+				'current_theme'             => wp_get_theme()->get( 'Name' ),
+				'theme_settings'            => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
+				'themes'                    => esc_url( bp_get_admin_url( 'themes.php' ) ),
+				'is_buddyboss_theme_active' => get_template() === 'buddyboss-theme',
+				'buddyboss_theme_installed' => wp_get_theme( 'buddyboss-theme' )->exists(),
+				'site_url'                  => home_url(),
+				'admin_url'                 => admin_url(),
+			),
+		);
+
+		/**
+		 * Filter the localised data for ReadyLaunch onboarding
+		 *
+		 * @since BuddyBoss 2.10.0
+		 *
+		 * @param array $base_data The base localised data.
+		 */
+		return apply_filters( 'bb_rl_onboarding_localize_data', $base_data );
+	}
+
+	/**
+	 * Get wizard assets.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return array
+	 */
+	protected function get_wizard_assets() {
+		return array_merge(
+			array(
+				'logo'      => buddypress()->plugin_url . 'bp-core/images/bb-icon.svg',
+				'assetsUrl' => $this->assets_url,
+			),
+			$this->get_config( 'react_assets', array() )
+		);
+	}
+
+	/**
+	 * Get the bootstrap payload used to mount the wizard on-demand
+	 * from the Settings 2.0 Appearance panel without a page reload.
+	 *
+	 * Bundles the same localised data that `enqueue_scripts()` would
+	 * inject on a full reload plus the build asset URLs so the client
+	 * can lazy-load `rl-onboarding.js` / `onboarding.css` on click.
+	 *
+	 * `shouldShow` is forced to `false` — the Welcome Banner flips it
+	 * to `true` right before it mounts the wizard.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return array Bootstrap payload: { wizardData, assets }.
+	 */
+	public function get_bootstrap_data() {
+		$wizard_data               = $this->localize_wizard_data();
+		$wizard_data['shouldShow'] = false;
+
+		$asset_file = __DIR__ . '/build/rl-onboarding.asset.php';
+		$asset_data = file_exists( $asset_file ) ? include $asset_file : array(
+			'version' => $this->wizard_version,
+		);
+
+		$rtl = is_rtl() ? '-rtl' : '';
+
+		return array(
+			'wizardData' => $wizard_data,
+			'assets'     => array(
+				'js'  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
+				'css' => buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+				'ver' => isset( $asset_data['version'] ) ? $asset_data['version'] : $this->wizard_version,
+			),
+		);
+	}
+
+	/**
+	 * AJAX handler to complete the wizard.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return void
+	 */
+	public function ajax_complete() {
+		// Verify nonce for security.
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid security token.', 'buddyboss' ),
+				)
+			);
+		}
+
+		// Check user capabilities.
+		if ( ! current_user_can( $this->get_config( 'capability_required' ) ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss' ),
+				)
+			);
+		}
+
+		// Get all onboarding configuration data.
+		$completion_data = array(
+			'completed_at' => current_time( 'mysql' ),
+			'total_steps'  => count( $this->get_config( 'steps', array() ) ),
+		);
+
+		// Mark wizard as completed.
+		$result = $this->mark_completed( $completion_data );
+
+		if ( $result ) {
+			// Save ReadyLaunch enabled option.
+			$this->save_readylaunch_option( 'bb_rl_enabled', true );
+
+			// Mark step 7 (finish) as completed in step tracking.
+			$this->save_step_tracking_for_completion( 7 );
+
+			// Mark progress as completed.
+			$this->mark_progress_as_completed();
+
+			// Send analytics events for completion.
+			$this->send_completion_analytics( $completion_data );
+
+			// Clean up ReadyLaunch specific transients.
+			delete_transient( '_bb_rl_show_onboarding' );
+
+			/**
+			 * Fires after ReadyLaunch onboarding is completed.
+			 *
+			 * @since BuddyBoss 2.10.0
+			 */
+			do_action( 'bb_rl_onboarding_completed' );
+
+			wp_send_json_success(
+				array(
+					'message' => __( 'ReadyLaunch setup completed successfully!', 'buddyboss' ),
+					'data'    => $completion_data,
+				)
+			);
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Failed to complete setup. Please try again.', 'buddyboss' ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Sanitise final settings from the onboarding form.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param array $settings Raw settings data.
+	 * @return array Sanitised settings.
+	 */
+	private function sanitize_final_settings( $settings ) {
+		if ( ! is_array( $settings ) ) {
+			return array();
+		}
+
+		$sanitized = array();
+
+		// Get step options configuration to validate field types.
+		$step_options = $this->get_config( 'step_options', array() );
+
+		// Process all step data and extract field values.
+		foreach ( $settings as $step_key => $step_data ) {
+			if ( ! is_array( $step_data ) || ! isset( $step_options[ $step_key ] ) ) {
+				continue;
+			}
+
+			foreach ( $step_data as $field_key => $field_value ) {
+				if ( ! isset( $step_options[ $step_key ][ $field_key ] ) ) {
+					continue;
+				}
+
+				$field_config = $step_options[ $step_key ][ $field_key ];
+				$field_type   = $field_config['type'] ?? 'text';
+
+				// Sanitize based on field type and save directly using field key.
+				switch ( $field_type ) {
+					case 'select':
+					case 'radio':
+					case 'visual_options':
+					case 'visual_radio_options':
+						$allowed_values          = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+						$sanitized[ $field_key ] = in_array( $field_value, $allowed_values, true ) ? $field_value : ( $field_config['default'] ?? '' );
+						break;
+
+					case 'checkbox_group':
+						if ( is_array( $field_value ) ) {
+							// Build a string-keyed boolean map: option_key => (bool) enabled.
+							// array_intersect() preserves integer keys from the JS input, which
+							// causes REST validation failures. Use string keys from config instead.
+							// sanitize_key() keeps parity with bb_appearance_sanitize_sidebar_map()
+							// and guarantees the stored keys survive the REST validator's
+							// sanitize_key() equality check on a later save.
+							$allowed_keys = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							$boolean_map  = array();
+							foreach ( $allowed_keys as $option_key ) {
+								$boolean_map[ sanitize_key( $option_key ) ] = in_array( $option_key, $field_value, true );
+							}
+							$sanitized[ $field_key ] = $boolean_map;
+						} else {
+							// If not an array, default to an empty array.
+							$sanitized[ $field_key ] = array();
+						}
+						break;
+
+					case 'checkbox':
+						$sanitized[ $field_key ] = ! empty( $field_value );
+						break;
+
+					case 'color':
+						// Delegate to shared Appearance sanitizer (appearance/admin/callbacks.php).
+						$default_color           = $field_config['default'] ?? '#e57e3a';
+						$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_color' )
+							? bb_appearance_sanitize_color( $field_value, $default_color )
+							: ( sanitize_hex_color( $field_value ) ? sanitize_hex_color( $field_value ) : $default_color );
+						break;
+
+					case 'media':
+						// Delegate object/integer handling to shared Appearance sanitizer;
+						// retain onboarding-specific `<field>_url` companion handling inline.
+						if ( function_exists( 'bb_appearance_sanitize_media' ) ) {
+							$sanitized[ $field_key ] = bb_appearance_sanitize_media( $field_value );
+							if ( is_numeric( $field_value ) && isset( $step_data[ $field_key . '_url' ] ) ) {
+								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
+							}
+						} elseif ( is_array( $field_value ) && isset( $field_value['id'] ) ) {
+							$sanitized[ $field_key ] = array(
+								'id'    => intval( $field_value['id'] ),
+								'url'   => isset( $field_value['url'] ) ? esc_url_raw( $field_value['url'] ) : '',
+								'alt'   => isset( $field_value['alt'] ) ? sanitize_text_field( $field_value['alt'] ) : '',
+								'title' => isset( $field_value['title'] ) ? sanitize_text_field( $field_value['title'] ) : '',
+							);
+						} elseif ( is_numeric( $field_value ) ) {
+							$sanitized[ $field_key ] = intval( $field_value );
+							if ( isset( $step_data[ $field_key . '_url' ] ) ) {
+								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
+							}
+						} else {
+							$sanitized[ $field_key ] = null;
+						}
+						break;
+
+					case 'draggable':
+					case 'draggable_links':
+						if ( is_array( $field_value ) ) {
+							$sanitized_items = array();
+							foreach ( $field_value as $item ) {
+								if ( is_array( $item ) ) {
+									if ( 'draggable_links' === $field_type ) {
+										// Sanitize link items.
+										$sanitized_items[] = array(
+											'id'        => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
+											'title'     => isset( $item['title'] ) ? sanitize_text_field( $item['title'] ) : '',
+											'url'       => isset( $item['url'] ) ? esc_url_raw( $item['url'] ) : '',
+											'isEditing' => false, // Always set to false for safety.
+										);
+									} else {
+										// Sanitize draggable menu items.
+										$sanitized_items[] = array(
+											'id'      => isset( $item['id'] ) ? sanitize_text_field( $item['id'] ) : '',
+											'label'   => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
+											'icon'    => isset( $item['icon'] ) ? sanitize_text_field( $item['icon'] ) : '',
+											'enabled' => isset( $item['enabled'] ) ? (bool) $item['enabled'] : true,
+											'order'   => isset( $item['order'] ) ? intval( $item['order'] ) : 0,
+										);
+									}
+								}
+							}
+							$sanitized[ $field_key ] = $sanitized_items;
+
+							// For some draggable fields, ReadyLaunch expects a specific structure.
+							// Delegate to shared Appearance sanitizers (appearance/admin/callbacks.php).
+							switch ( $field_key ) {
+								case 'bb_rl_side_menu':
+									$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_side_menu' )
+										? bb_appearance_sanitize_side_menu( $sanitized_items )
+										: $sanitized_items;
+									break;
+
+								case 'bb_rl_activity_sidebars':
+								case 'bb_rl_member_profile_sidebars':
+								case 'bb_rl_groups_sidebars':
+									$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_sidebar_map' )
+										? bb_appearance_sanitize_sidebar_map( $sanitized_items )
+										: $sanitized_items;
+									break;
+
+								default:
+									$sanitized[ $field_key ] = $sanitized_items;
+									break;
+							}
+						} else {
+							// Fall back to default if not an array.
+							$sanitized[ $field_key ] = isset( $field_config['options'] ) ? $field_config['options'] : array();
+						}
+						break;
+
+					default:
+						$sanitized[ $field_key ] = sanitize_text_field( wp_unslash( $field_value ) );
+						break;
+				}
+			}
+		}
+
+		// Sanitize pages settings — delegate to shared Appearance sanitizer.
+		if ( isset( $settings['pages'] ) ) {
+			$pages_settings = $settings['pages'];
+
+			if ( isset( $pages_settings['bb_rl_enabled_pages'] ) ) {
+				$sanitized['bb_rl_enabled_pages'] = function_exists( 'bb_appearance_sanitize_enabled_pages' )
+					? bb_appearance_sanitize_enabled_pages( $pages_settings['bb_rl_enabled_pages'] )
+					: array(
+						'registration' => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'registration', $pages_settings['bb_rl_enabled_pages'], true ),
+						'courses'      => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'courses', $pages_settings['bb_rl_enabled_pages'], true ),
+						'blog'         => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'blog', $pages_settings['bb_rl_enabled_pages'], true ),
+					);
+			}
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Override sanitize_preferences to handle step-based field structure.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param string $preferences_json JSON string of preferences.
+	 * @return array Sanitised preferences.
+	 */
+	protected function sanitize_preferences( $preferences_json ) {
+		$preferences = json_decode( $preferences_json, true );
+
+		if ( ! is_array( $preferences ) ) {
+			return array();
+		}
+
+		return $this->sanitize_final_settings( $preferences );
+	}
+
+	/**
+	 * Override save_preferences to apply settings immediately.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param array  $preferences User preferences.
+	 * @param string $pref_key    Optional preference key to save under.
+	 *
+	 * @return void
+	 */
+	public function save_preferences( $preferences, $pref_key = '' ) {
+		// Save to parent preferences system first.
+		parent::save_preferences( $preferences, $pref_key );
+
+		// Flatten & sanitise the data so it matches the structure expected by
+		// apply_readylaunch_configuration(). This ensures that when auto-save
+		// fires from an individual step (e.g. theme mode), the option is
+		// persisted immediately.
+		$sanitised = $this->sanitize_final_settings( $preferences );
+
+		// Apply the configuration immediately for real-time updates.
+		$this->apply_readylaunch_configuration( $sanitised );
+	}
+
+	/**
+	 * Apply ReadyLaunch configuration based on final settings.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param array $final_settings The final configuration settings.
+	 * @return void
+	 */
+	private function apply_readylaunch_configuration( $final_settings ) {
+		if ( empty( $final_settings ) ) {
+			return;
+		}
+
+		// Apply community setup - blogname field.
+		if ( ! empty( $final_settings['blogname'] ) ) {
+			update_option( 'blogname', $final_settings['blogname'] );
+		}
+
+		// Apply theme mode setting.
+		if ( ! empty( $final_settings['bb_rl_theme_mode'] ) ) {
+			// Save theme mode preference.
+			$this->save_readylaunch_option( 'theme_mode', $final_settings['bb_rl_theme_mode'] );
+		}
+
+		// Apply branding settings - logos.
+		if ( ! empty( $final_settings['bb_rl_light_logo'] ) ) {
+			$this->save_readylaunch_option( 'light_logo', $final_settings['bb_rl_light_logo'] );
+		}
+
+		if ( ! empty( $final_settings['bb_rl_dark_logo'] ) ) {
+			$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
+		}
+
+		// Component activation / registration force-enable / schema upgrade /
+		// the `bb_rl_configuration_applied` action all live in the shared
+		// `bb_appearance_apply_configuration()` function so Settings 2.0
+		// auto-save and the onboarding wizard run the same side-effect
+		// pipeline. The Appearance feature is always registered (required =>
+		// true, is_active_callback => __return_true), so the function is
+		// normally loaded by the time this method runs. The `function_exists`
+		// guard is defensive — if a customer somehow rolls Platform back below
+		// the version that ships the Appearance feature while the onboarding
+		// bundle is still cached in their browser, we'd rather no-op than fatal.
+		if ( function_exists( 'bb_appearance_apply_configuration' ) ) {
+			bb_appearance_apply_configuration( $final_settings );
+		}
+
+		// Apply remaining step settings dynamically — onboarding-specific path
+		// that reads dynamic step_options config to cover fields not handled
+		// above. Settings 2.0 saves those via the regular per-field option
+		// writes so this branch is onboarding-only.
+		$this->apply_remaining_step_settings( $final_settings );
+	}
+
+	/**
+	 * Create essential pages (Privacy Policy, Terms of Service, About).
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return void
+	 */
+	private function create_essential_pages() {
+		$pages_to_create = array(
+			'privacy_policy'   => array(
+				'title'   => __( 'Privacy Policy', 'buddyboss' ),
+				'content' => __( 'Your privacy policy content goes here.', 'buddyboss' ),
+			),
+			'terms_of_service' => array(
+				'title'   => __( 'Terms of Service', 'buddyboss' ),
+				'content' => __( 'Your terms of service content goes here.', 'buddyboss' ),
+			),
+			'about'            => array(
+				'title'   => __( 'About Us', 'buddyboss' ),
+				'content' => __( 'Information about your community goes here.', 'buddyboss' ),
+			),
+		);
+
+		foreach ( $pages_to_create as $page_slug => $page_data ) {
+			// Check if page already exists.
+			$existing_page = get_page_by_path( $page_slug );
+
+			if ( ! $existing_page ) {
+				$page_id = wp_insert_post(
+					array(
+						'post_title'   => $page_data['title'],
+						'post_content' => $page_data['content'],
+						'post_status'  => 'publish',
+						'post_type'    => 'page',
+						'post_name'    => $page_slug,
+					)
+				);
+
+				// Set as privacy policy page if applicable.
+				if ( 'privacy_policy' === $page_slug && $page_id ) {
+					update_option( 'wp_page_for_privacy_policy', $page_id );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Save ReadyLaunch specific option.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param string $option_name The option name.
+	 * @param mixed  $option_value The option value.
+	 * @return void
+	 */
+	private function save_readylaunch_option( $option_name, $option_value ) {
+		if ( empty( $option_name ) || ! is_string( $option_name ) ) {
+			return; // Invalid option name.
+		}
+
+		if ( strpos( $option_name, 'bb_rl_' ) === 0 ) {
+			// Ensure the option name starts with bb_rl_ prefix.
+			$option_name = substr( $option_name, 6 );
+		}
+
+		// Save as BuddyPress option with bb_rl_ prefix.
+		bp_update_option( 'bb_rl_' . $option_name, $option_value );
+	}
+
+	/**
+	 * Apply remaining step settings that weren't handled specifically.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param array $final_settings The final configuration settings.
+	 * @return void
+	 */
+	private function apply_remaining_step_settings( $final_settings ) {
+		$step_options = $this->get_config( 'step_options', array() );
+
+		// Get list of fields that were already handled above.
+		$handled_fields = array(
+			'blogname',
+		);
+
+		// Process any remaining fields.
+		foreach ( $final_settings as $field_key => $field_value ) {
+			// Skip if already handled or if it's a non-interactive field.
+			if ( in_array( $field_key, $handled_fields, true ) ) {
+				continue;
+			}
+
+			// Find the field config to determine how to save it.
+			$field_config = null;
+			foreach ( $step_options as $step_fields ) {
+				if ( isset( $step_fields[ $field_key ] ) ) {
+					$field_config = $step_fields[ $field_key ];
+					break;
+				}
+			}
+
+			// Skip non-interactive fields.
+			if ( ! $field_config || in_array( $field_config['type'] ?? '', array( 'description', 'hr' ), true ) ) {
+				continue;
+			}
+
+			// Save as ReadyLaunch option.
+			$this->save_readylaunch_option( $field_key, $field_value );
+		}
+	}
+
+	/**
+	 * Get the enabled pages options.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return array
+	 */
+	private function get_enabled_pages_options() {
+		$retval = array(
+			'registration' => array(
+				'label'   => __( 'Login & Registration', 'buddyboss' ),
+				'icon'    => 'bb-icons-rl-file-text',
+				'default' => true,
+			),
+			'blog'         => array(
+				'label'   => __( 'Blog', 'buddyboss' ),
+				'icon'    => 'bb-icons-rl-book-open',
+				'default' => true,
+			),
+		);
+
+		if ( bb_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
+			$retval['courses'] = array(
+				'label'   => __( 'Courses', 'buddyboss' ),
+				'icon'    => 'bb-icons-rl-file-text',
+				'default' => true,
+			);
+		} else {
+			$retval['courses'] = array(
+				'label'         => __( 'Courses', 'buddyboss' ),
+				'icon'          => 'bb-icons-rl-file-text',
+				'default'       => false,
+				'not_available' => true,
+				'notice'        => __( 'Requires LearnDash or MemberPress courses to activate.', 'buddyboss' ),
+			);
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Get the default component menu items.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return array
+	 */
+	private function getComponentMenuItems() {
+		$items = array(
+			array(
+				'id'      => 'activity_feed',
+				'label'   => __( 'Activity Feed', 'buddyboss' ),
+				'icon'    => 'pulse',
+				'enabled' => true,
+				'order'   => 0,
+			),
+			array(
+				'id'      => 'members',
+				'label'   => __( 'Members', 'buddyboss' ),
+				'icon'    => 'users',
+				'enabled' => true,
+				'order'   => 1,
+			),
+			array(
+				'id'      => 'groups',
+				'label'   => __( 'Groups', 'buddyboss' ),
+				'icon'    => 'users-three',
+				'enabled' => true,
+				'order'   => 2,
+			),
+		);
+
+		$current_order = 3;
+
+		if ( bb_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
+			$items[] = array(
+				'id'      => 'courses',
+				'label'   => __( 'Courses', 'buddyboss' ),
+				'icon'    => 'graduation-cap',
+				'enabled' => true,
+				'order'   => $current_order++,
+			);
+		}
+
+		$items[] = array(
+			'id'      => 'forums',
+			'label'   => __( 'Forums', 'buddyboss' ),
+			'icon'    => 'chat-text',
+			'enabled' => true,
+			'order'   => $current_order++,
+		);
+
+		$items[] = array(
+			'id'      => 'messages',
+			'label'   => __( 'Messages', 'buddyboss' ),
+			'icon'    => 'chat-teardrop-text',
+			'enabled' => true,
+			'order'   => $current_order++,
+		);
+
+		$items[] = array(
+			'id'      => 'notifications',
+			'label'   => __( 'Notifications', 'buddyboss' ),
+			'icon'    => 'bell',
+			'enabled' => true,
+			'order'   => $current_order,
+		);
+
+		return $items;
+	}
+
+	/**
+	 * Save step tracking for completion (step 7 - finish).
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param int $step Step number (7 for finish step).
+	 * @return void
+	 */
+	private function save_step_tracking_for_completion( $step ) {
+		// Use the base class method to save step progress with completion data.
+		$step_data = array(
+			'step_key'     => 'finish',
+			'status'       => 'completed',
+			'completed_at' => current_time( 'mysql' ),
+		);
+
+		$this->save_step_progress( $step, $step_data );
+	}
+
+	/**
+	 * Mark progress as completed for ReadyLaunch onboarding.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 * @return void
+	 */
+	private function mark_progress_as_completed() {
+		// Save step 7 progress which will automatically update the overall progress
+		// to completed status since it's the final step.
+		$step_data = array(
+			'step_key'     => 'finish',
+			'status'       => 'completed',
+			'completed_at' => current_time( 'mysql' ),
+		);
+
+		$this->save_step_progress( 7, $step_data );
+	}
+
+	/**
+	 * Send analytics events for ReadyLaunch onboarding completion.
+	 *
+	 * @since BuddyBoss 2.10.0
+	 *
+	 * @param array $completion_data Completion data.
+	 * @return void
+	 */
+	private function send_completion_analytics( $completion_data ) {
+		// Send completion analytics event if analytics is enabled.
+		if ( $this->config['enable_analytics'] ) {
+			// Trigger analytics by calling save_step_progress which will automatically
+			// send telemetry events through the base class infrastructure.
+			$step_data = array(
+				'step_key'     => 'finish',
+				'status'       => 'completed',
+				'completed_at' => current_time( 'mysql' ),
+				'analytics'    => true, // Flag to indicate this is for analytics.
+			);
+
+			// This will trigger the base class analytics events.
+			$this->save_step_progress( 7, $step_data );
+
+			// Send ReadyLaunch specific analytics through BB_Telemetry if available.
+			if ( class_exists( 'BB_Telemetry' ) ) {
+				$telemetry_instance = BB_Telemetry::instance();
+				if ( $telemetry_instance ) {
+					// Add ReadyLaunch completion data to telemetry.
+					add_filter(
+						'bb_telemetry_platform_options',
+						function ( $options ) {
+							$options[] = 'bb_rl_onboarding_completed';
+							$options[] = 'bb_rl_enabled';
+							return $options;
+						}
+					);
+
+					// Force immediate telemetry sending.
+					$telemetry_instance->bb_send_telemetry_report_to_analytics();
+				}
+			}
+		}
+
+		/**
+		 * Fires when ReadyLaunch onboarding analytics are sent.
+		 *
+		 * @since BuddyBoss 2.10.0
+		 *
+		 * @param string $wizard_id       The wizard ID.
+		 * @param array  $completion_data Completion data.
+		 */
+		do_action( 'bb_rl_onboarding_analytics_sent', $this->wizard_id, $completion_data );
+	}
+}

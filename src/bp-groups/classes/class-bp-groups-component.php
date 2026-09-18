@@ -500,6 +500,24 @@ class BP_Groups_Component extends BP_Component {
 			$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
 		}
 
+		// Check if the default tab is hidden by admin in Navigation Order settings.
+		if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+			$hidden_tabs = bp_nouveau_get_appearance_settings( 'group_nav_hide' );
+			if ( is_array( $hidden_tabs ) && in_array( $default_tab, $hidden_tabs, true ) ) {
+				// Fall back to the first visible tab in saved order, or 'members' as last resort.
+				$default_tab = 'members';
+				$nav_order   = bp_nouveau_get_appearance_settings( 'group_nav_order' );
+				if ( is_array( $nav_order ) ) {
+					foreach ( $nav_order as $slug ) {
+						if ( ! in_array( $slug, $hidden_tabs, true ) ) {
+							$default_tab = $slug;
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		/**
 		 * Filters the default groups extension.
 		 *

@@ -18,19 +18,35 @@ if ( 'my-friends' === $bp_current_action && bb_enable_content_counts() ) {
 			<?php
 			if ( ! $is_send_ajax_request ) {
 				$count = friends_get_total_friend_count();
-				printf(
-					wp_kses(
-						/* translators: %d is the count */
-						_n(
-							'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Request' : 'Connection' ),
-							'<span class="bb-count">%d</span> ' . ( 'requests' === $bp_current_action ? 'Requests' : 'Connections' ),
-							$count,
-							'buddyboss'
+				if ( 'requests' === $bp_current_action ) {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> Request',
+								'<span class="bb-count">%d</span> Requests',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
 						),
-						array( 'span' => array( 'class' => true ) )
-					),
-					(int) $count
-				);
+						(int) $count
+					);
+				} else {
+					printf(
+						wp_kses(
+							/* translators: %d is the count */
+							_n(
+								'<span class="bb-count">%d</span> Connection',
+								'<span class="bb-count">%d</span> Connections',
+								$count,
+								'buddyboss'
+							),
+							array( 'span' => array( 'class' => true ) )
+						),
+						(int) $count
+					);
+				}
 
 				unset( $count );
 			}

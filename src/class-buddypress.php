@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 23421;
+		$this->db_version = 23604;
 
 		/** Loading */
 
@@ -514,6 +514,9 @@ class BuddyPress {
 	private function includes() {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
+		// Initialize BuddyBoss Mothership (License & Add-ons).
+		require $this->plugin_dir . 'bp-core/admin/mothership/mothership-init.php';
+
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
 
@@ -553,13 +556,13 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-customizer-email.php';
 		require $this->plugin_dir . 'bp-core/bp-core-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-wp-emails.php';
-		require $this->plugin_dir . 'bp-core/bp-core-learndash-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-profile-search.php';
 		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
+		require $this->plugin_dir . 'bp-core/bb-core-bookmarks.php';
 		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
@@ -598,6 +601,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.3.71.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.4.90.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/2.5.10.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/3.0.0.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -707,7 +711,6 @@ class BuddyPress {
 			'BP_Core_Whos_Online_Widget'                   => 'members',
 			'BP_Registration_Theme_Compat'                 => 'members',
 			'BP_Signup'                                    => 'members',
-			'BP_BuddyBoss_Platform_Updater'                => 'core',
 			'BP_Core_Suspend'                              => 'suspend',
 			'BP_Suspend_Abstract'                          => 'suspend',
 			'BP_Suspend_Member'                            => 'suspend',
@@ -724,8 +727,9 @@ class BuddyPress {
 			'BP_Suspend_Comment'                           => 'suspend',
 			'BP_Suspend_Message'                           => 'suspend',
 			'BB_Subscriptions'                             => 'core',
+			'BB_Bookmarks'                                 => 'core',
+			'BB_Bookmark_Type'                             => 'core',
 			'BB_Background_Updater'                        => 'core',
-			'BB_Reaction'                                  => 'core',
 			'BB_BG_Process_Log'                            => 'core',
 			'BB_Telemetry'                                 => 'core',
 			'BB_Topics_Manager'                            => 'core',
@@ -794,7 +798,6 @@ class BuddyPress {
 			'BP_REST_Moderation_Endpoint'                  => 'moderation',
 			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
 			'BB_REST_Subscriptions_Endpoint'               => 'core',
-			'BB_REST_Reactions_Endpoint'                   => 'core',
 		);
 
 		$component = null;

@@ -86,12 +86,6 @@ add_action(
 				),
 			),
 			array(
-				'activity_update_pinned_post' => array(
-					'function' => 'bb_nouveau_ajax_activity_update_pinned_post',
-					'nopriv'   => true,
-				),
-			),
-			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
@@ -167,7 +161,8 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	} else {
-		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
+		$reaction = bb_load_reaction();
+		$reaction_id = $reaction ? $reaction->bb_reactions_reaction_id() : 0;
 	}
 
 	$reacted = bp_activity_add_user_favorite(
@@ -186,8 +181,8 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	$response = array(
-		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
-		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
+		'reaction_button' => function_exists( 'bb_get_activity_post_reaction_button_html' ) ? bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ) : '',
+		'reaction_count'  => function_exists( 'bb_get_activity_post_user_reactions_html' ) ? bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
@@ -251,8 +246,8 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	$response = array(
-		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
-		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
+		'reaction_button' => function_exists( 'bb_get_activity_post_reaction_button_html' ) ? bb_get_activity_post_reaction_button_html( $item_id, $item_type ) : '',
+		'reaction_count'  => function_exists( 'bb_get_activity_post_user_reactions_html' ) ? bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
@@ -598,7 +593,11 @@ function bp_nouveau_ajax_new_activity_comment() {
 	add_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
 	bp_get_template_part( 'activity/comment', null, $comment_template_args );
 	remove_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
-	$response = array( 'contents' => ob_get_contents() );
+
+	$response = array(
+		'contents'  => ob_get_contents(),
+		'parent_id' => (int) $activity->secondary_item_id, // The actual parent (may differ from requested if redirected).
+	);
 	ob_end_clean();
 
 	unset( $activities_template );
@@ -695,12 +694,12 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
+	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
 	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
 		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
 		if ( empty( $topic_id ) ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
 		}
-		$activity_id       = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
 		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
 		if (
 			empty( $existing_topic_id ) ||
@@ -737,6 +736,69 @@ function bp_nouveau_ajax_post_update() {
 				wp_send_json_error( array( 'message' => esc_html__( 'You do not have permission to post in this topic.', 'buddyboss' ) ) );
 			}
 		}
+	}
+
+	$post_feature_image = ! empty( $_POST['bb_activity_post_feature_image_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['bb_activity_post_feature_image_id'] ) ) ) : 0;
+	if (
+		! empty( $post_feature_image ) &&
+		function_exists( 'bb_pro_activity_post_feature_image_instance' )
+	) {
+		$existing_feature_image_id = bp_activity_get_meta( $activity_id, '_bb_activity_post_feature_image', true );
+		if (
+			empty( $existing_feature_image_id ) ||
+			(int) $existing_feature_image_id !== (int) $post_feature_image
+		) {
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_user_has_access_feature_image' ) ) {
+				$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+				$item_id = ! empty( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : ( function_exists( 'bp_get_current_group_id' ) ? bp_get_current_group_id() : 0 );
+
+				$can_upload_feature_image = bb_pro_activity_post_feature_image_instance()->bb_user_has_access_feature_image(
+					array(
+						'user_id'  => bp_loggedin_user_id(),
+						'group_id' => $item_id,
+						'object'   => $object,
+					)
+				);
+				if ( ! $can_upload_feature_image ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'You do not have permission to upload feature image.', 'buddyboss' ),
+						)
+					);
+				}
+			}
+
+			if ( method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_validate_attachment_by_id' ) ) {
+				if ( ! empty( $post_feature_image ) ) {
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_validate_attachment_by_id( $post_feature_image, $activity_id );
+					if ( ! empty( $validate_attachment ) && is_array( $validate_attachment ) ) {
+						wp_send_json_error( $validate_attachment );
+					}
+				}
+			}
+		}
+	}
+
+	if ( isset( $_POST['post_title'] ) ) {
+		$post_title = sanitize_text_field( wp_unslash( $_POST['post_title'] ) );
+	} elseif ( isset( $_POST['whats-new-title'] ) ) {
+		// Backward compatibility: older/cached scripts (and some third-party forms) submit the raw "whats-new-title" field instead of "post_title".
+		$post_title = sanitize_text_field( wp_unslash( $_POST['whats-new-title'] ) );
+	} else {
+		$post_title = '';
+	}
+
+	// On edit, an explicit "cleared" flag forces an empty title so it is not reinserted from the stored value.
+	if ( ! empty( $_POST['id'] ) && ! empty( $_POST['post_title_cleared'] ) ) {
+		$post_title = '';
+	}
+	$validation = bb_validate_activity_post_title( $post_title );
+	if ( ! $validation['valid'] ) {
+		wp_send_json_error(
+			array(
+				'message' => $validation['message'],
+			)
+		);
 	}
 
 	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
@@ -960,8 +1022,13 @@ function bp_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
 		}
 
+		// A cleared title is already an empty string here (see the post_title_cleared handling above), and
+		// bp_activity_post_update()/bp_activity_add() persist it verbatim with no stored-title fallback, so the
+		// non-group path needs no explicit post_title_cleared flag. If a stored-title fallback is ever added there
+		// (as groups_record_activity() has), propagate 'post_title_cleared' into $post_array like the group path below.
 		$post_array = array(
 			'id'         => $activity_id,
+			'post_title' => $post_title,
 			'content'    => $content,
 			'privacy'    => $privacy,
 			'error_type' => 'wp_error',
@@ -998,10 +1065,15 @@ function bp_nouveau_ajax_post_update() {
 			}
 
 			$post_array = array(
-				'id'       => $activity_id,
-				'content'  => $_POST['content'],
-				'group_id' => $item_id,
+				'id'         => $activity_id,
+				'post_title' => $post_title,
+				'content'    => $_POST['content'],
+				'group_id'   => $item_id,
 			);
+
+			if ( ! empty( $_POST['post_title_cleared'] ) ) {
+				$post_array['post_title_cleared'] = true;
+			}
 
 			if ( $is_scheduled ) {
 				$post_array['recorded_time'] = $schedule_date_time;
@@ -1134,6 +1206,35 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			// Set feature image draft meta key to avoid delete from cron job 'bb_activity_post_feature_image_delete_orphaned_attachments_hook'.
+			if ( isset( $draft_activity['data']['bb_activity_post_feature_image'] ) && ! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) ) {
+				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
+				if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					$validate_attachment = bb_pro_activity_post_feature_image_instance()->bb_user_can_perform_feature_image_action(
+						array(
+							'action'        => 'edit',
+							'attachment_id' => $attachment_id,
+							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
+							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
+							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
+						)
+					);
+					if (
+						! empty( $validate_attachment ) &&
+						is_array( $validate_attachment ) &&
+						! isset( $validate_attachment['can_edit'] )
+					) {
+						wp_send_json_error(
+							array(
+								'message' => $validate_attachment['message'],
+							)
+						);
+					}
+					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+				}
+			}
+
 			bp_update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
 		} else {
 			bp_delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
@@ -1170,6 +1271,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 							wp_delete_attachment( $video['id'], true );
 						}
 					}
+				}
+			}
+
+			// Delete feature image when discard the activity.
+			if (
+				! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) &&
+				isset( $draft_activity['allow_delete_post_feature_image'] ) &&
+				true === (bool) $draft_activity['allow_delete_post_feature_image']
+			) {
+				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
+				if ( 0 < (int) $attachment_id ) {
+					wp_delete_attachment( $attachment_id, true );
 				}
 			}
 
@@ -1235,6 +1348,7 @@ function bp_nouveau_ajax_spam_activity() {
 
 	// Mark as spam.
 	bp_activity_mark_as_spam( $activity );
+	$activity->title_required = false;
 	$activity->save();
 
 	/** This action is documented in bp-activity/bp-activity-actions.php */
@@ -1286,7 +1400,8 @@ function bp_nouveau_ajax_activity_update_privacy() {
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
 		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-		$activity->privacy       = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->privacy        = sanitize_text_field( wp_unslash( $_POST['privacy'] ) );
+		$activity->title_required = false;
 		$activity->save();
 
 		if ( function_exists( 'bp_activity_update_meta' ) ) {	
@@ -1309,72 +1424,6 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error();
-	}
-}
-
-/**
- * Update activity pinned post.
- *
- * @since BuddyBoss 2.4.60
- *
- * @return void
- */
-function bb_nouveau_ajax_activity_update_pinned_post() {
-	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-	);
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! is_user_logged_in() ) {
-		wp_send_json_error( $response );
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['pin_action'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! in_array( $_POST['pin_action'], array( 'pin', 'unpin' ), true ) ) {
-		wp_send_json_error( $response );
-	}
-
-	$args = array(
-		'action'      => $_POST['pin_action'],
-		'activity_id' => (int) $_POST['id'],
-		'retval'      => 'string',
-	);
-
-	$retval = bb_activity_pin_unpin_post( $args );
-
-	if ( ! empty( $retval ) ) {
-		if ( 'unpinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been removed', 'buddyboss' );
-		} elseif ( 'pinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
-		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'You are not allowed to pin or unpin this post', 'buddyboss' );
-		} elseif ( 'pin_updated' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
-		}
-
-		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );
-	}
-
-	if ( ! empty( $retval ) && in_array( $retval, array( 'unpinned', 'pinned', 'pin_updated' ), true ) ) {
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error( $response );
 	}
 }
 
@@ -1524,7 +1573,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 	$comments = BP_Activity_Activity::append_comments(
 		array( $parent_commment ),
-		'',
+		'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
 		true,
 		array(
 			'limit'                  => bb_get_activity_comment_loading(),

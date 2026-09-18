@@ -146,7 +146,7 @@
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icons-rl-dots-three"></i> </a>
+					<a href="#" class="message_action__anchor" aria-label="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>"> <i class="bb-icons-rl-dots-three"></i> </a>
 					<div class="message_action__list bb_more_dropdown" data-bp-thread-id="{{ data.id }}">
 						<ul>
 							<li class="unread">
@@ -226,7 +226,7 @@
 				}
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
+					<a href="#" class="message_action__anchor" aria-label="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
 					<div class="message_action__list bb_more_dropdown" data-bp-thread-id="{{ data.id }}">
 						<ul>
 							<li class="unread">
@@ -316,7 +316,7 @@
 			}
 			?>
 			<div class="bb-rl-messages-info">
-				<a href="#" class="message_action__info">
+				<a href="#" class="message_action__info" aria-label="<?php esc_attr_e( 'Info', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl-info"></i>
 				</a>
 			</div>

@@ -58,71 +58,8 @@ class BP_Akismet {
 		add_action( 'bp_activity_mark_as_spam', array( $this, 'mark_as_spam' ), 10, 2 );
 		add_action( 'bp_activity_mark_as_ham', array( $this, 'mark_as_ham' ), 10, 2 );
 
-		// Hook into the Activity wp-admin screen.
-		add_action( 'bp_activity_admin_comment_row_actions', array( $this, 'comment_row_action' ), 10, 2 );
-		add_action( 'bp_activity_admin_load', array( $this, 'add_history_metabox' ) );
-	}
-
-	/**
-	 * Add a history item to the hover links in an activity's row.
-	 *
-	 * This function lifted with love from the Akismet WordPress plugin's
-	 * akismet_comment_row_action() function. Thanks!
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @param array $actions  The hover links.
-	 * @param array $activity The activity for the current row being processed.
-	 * @return array The hover links.
-	 */
-	function comment_row_action( $actions, $activity ) {
-		$akismet_result = bp_activity_get_meta( $activity['id'], '_bp_akismet_result' );
-		$user_result    = bp_activity_get_meta( $activity['id'], '_bp_akismet_user_result' );
-		$desc           = '';
-
-		if ( ! $user_result || $user_result == $akismet_result ) {
-			// Show the original Akismet result if the user hasn't overridden it, or if their decision was the same.
-			if ( 'true' == $akismet_result && $activity['is_spam'] ) {
-				$desc = __( 'Flagged as spam by Akismet', 'buddyboss' );
-
-			} elseif ( 'false' == $akismet_result && ! $activity['is_spam'] ) {
-				$desc = __( 'Cleared by Akismet', 'buddyboss' );
-			}
-		} else {
-			$who = bp_activity_get_meta( $activity['id'], '_bp_akismet_user' );
-
-			if ( 'true' == $user_result ) {
-				$desc = sprintf( __( 'Flagged as spam by %s', 'buddyboss' ), $who );
-			} else {
-				$desc = sprintf( __( 'Un-spammed by %s', 'buddyboss' ), $who );
-			}
-		}
-
-		// Add a History item to the hover links, just after Edit.
-		if ( $akismet_result ) {
-			$b = array();
-			foreach ( $actions as $k => $item ) {
-				$b[ $k ] = $item;
-				if ( $k == 'edit' ) {
-					$b['history'] = '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history"> ' . __( 'History', 'buddyboss' ) . '</a>';
-				}
-			}
-
-			$actions = $b;
-		}
-
-		if ( $desc ) {
-			echo '<span class="akismet-status"><a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history">' . htmlspecialchars( $desc, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '</a></span>';
-		}
-
-		/**
-		 * Filters the list of actions for the current activity's row.
-		 *
-		 * @since BuddyPress 1.6.0
-		 *
-		 * @param array $actions Array of available actions for the current activity item's row.
-		 */
-		return apply_filters( 'bp_akismet_comment_row_action', $actions );
+		// Register history field in the Settings 2.0 Activity Edit Modal.
+		add_action( 'bb_register_activity_meta_fields', array( $this, 'bb_register_activity_edit_field_history' ) );
 	}
 
 	/**
@@ -608,45 +545,6 @@ class BP_Akismet {
 	}
 
 	/**
-	 * Adds a "History" meta box to the activity edit screen.
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @param string $screen_action The type of screen that has been requested.
-	 */
-	function add_history_metabox( $screen_action ) {
-		// Only proceed if we're on the edit screen.
-		if ( 'edit' != $screen_action ) {
-			return;
-		}
-
-		// Display meta box with a low priority (low position on screen by default).
-		add_meta_box( 'bp_activity_history', __( 'Activity History', 'buddyboss' ), array( $this, 'history_metabox' ), get_current_screen()->id, 'normal', 'low' );
-	}
-
-	/**
-	 * History meta box for the Activity admin edit screen.
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @see https://buddypress.trac.wordpress.org/ticket/3907
-	 * @todo Update activity meta to allow >1 record with the same key (iterate through $history).
-	 *
-	 * @param object $item Activity item.
-	 */
-	function history_metabox( $item ) {
-		$history = self::get_activity_history( $item->id );
-
-		if ( empty( $history ) ) {
-			return;
-		}
-
-		echo '<div class="akismet-history"><div>';
-		printf( __( '%1$s - %2$s', 'buddyboss' ), '<span>' . bp_core_time_since( $history[2] ) . '</span>', esc_html( $history[1] ) );
-		echo '</div></div>';
-	}
-
-	/**
 	 * Update an activity item's Akismet history.
 	 *
 	 * @since BuddyPress 1.6.0
@@ -677,13 +575,71 @@ class BP_Akismet {
 	 */
 	public function get_activity_history( $activity_id = 0 ) {
 		$history = bp_activity_get_meta( $activity_id, '_bp_akismet_history' );
-		if ( $history === false ) {
-			$history = array();
+
+		// Ensure history is an array.
+		if ( empty( $history ) || ! is_array( $history ) ) {
+			return array();
+		}
+
+		// This is a single event, wrap it in an array.
+		if ( isset( $history['event'] ) ) {
+			$history = array( $history );
 		}
 
 		// Sort it by the time recorded.
-		usort( $history, 'akismet_cmp_time' );
+		if ( function_exists( 'akismet_cmp_time' ) ) {
+			usort( $history, 'akismet_cmp_time' );
+		}
 
 		return $history;
+	}
+
+	/**
+	 * Register the Activity History field in the Settings 2.0 Activity Edit Modal.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+	 * @param string                       $component The component identifier.
+	 */
+	public function bb_register_activity_edit_field_history( $registry, $component = 'activity' ) {
+		$registry->register(
+			$component,
+			'activity_history',
+			array(
+				'label'      => __( 'Activity History', 'buddyboss' ),
+				'type'       => 'readonly',
+				'order'      => 200,
+				'context'    => 'after',
+				'get_value'  => function ( $activity ) {
+					$akismet = isset( buddypress()->activity->akismet ) ? buddypress()->activity->akismet : null;
+
+					if ( ! $akismet || ! method_exists( $akismet, 'get_activity_history' ) ) {
+						return null;
+					}
+
+					$history = $akismet->get_activity_history( $activity->id );
+
+					if ( ! empty( $history ) && is_array( $history ) ) {
+						$history = reset( $history );
+
+						if ( is_array( $history ) && isset( $history['time'], $history['message'] ) ) {
+							return array(
+								'time_since' => bp_core_time_since( $history['time'] ),
+								'message'    => esc_html( $history['message'] ),
+							);
+						}
+					}
+
+					return null;
+				},
+				'save_value' => null,
+				'is_visible' => function ( $activity ) {
+					$akismet = isset( buddypress()->activity->akismet ) ? buddypress()->activity->akismet : null;
+
+					return ( $akismet && method_exists( $akismet, 'get_activity_history' ) );
+				},
+			)
+		);
 	}
 }

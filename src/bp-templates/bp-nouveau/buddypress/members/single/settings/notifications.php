@@ -12,6 +12,21 @@
 if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 	bp_get_template_part( 'members/single/settings/subscriptions' );
 	return;
+} elseif ( bp_action_variables() ) {
+	/**
+	 * Fires to render a custom notifications settings sub-tab (e.g. a
+	 * plugin-registered tab such as "Blog Subscriptions") when a theme routes
+	 * the notifications action through this template (as buddyboss-theme does).
+	 * The screen handler (`bp_settings_screen_notification()`) 404s any
+	 * sub-action without a registered handler, so this only fires for
+	 * recognised sub-tabs. Handlers echo their content.
+	 *
+	 * @since BuddyBoss 3.2.0
+	 *
+	 * @param string $action_variable The sub-tab slug.
+	 */
+	do_action( 'bb_member_settings_notifications_custom_tab', bp_action_variable( 0 ) );
+	return;
 }
 
 bp_nouveau_member_hook( 'before', 'settings_template' );
@@ -43,7 +58,7 @@ if ( $is_web_enabled && $is_app_enabled ) {
 		<div class="notification_info">
 
 			<div class="notification_type email_notification">
-				<span class="notification_type_icon">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Email', 'buddyboss' ); ?>">
 					<i class="bb-icon bb-icon-mail"></i>
 				</span>
 
@@ -55,7 +70,7 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 			<?php if ( $is_web_enabled ) { ?>
 			<div class="notification_type web_notification">
-				<span class="notification_type_icon">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Web', 'buddyboss' ); ?>">
 					<i class="bb-icon bb-icon-monitor"></i>
 				</span>
 
@@ -68,7 +83,7 @@ if ( $is_web_enabled && $is_app_enabled ) {
 
 			<?php if ( $is_app_enabled ) { ?>
 			<div class="notification_type app_notification">
-				<span class="notification_type_icon">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'App', 'buddyboss' ); ?>">
 					<i class="bb-icon bb-icon-smartphone"></i>
 				</span>
 

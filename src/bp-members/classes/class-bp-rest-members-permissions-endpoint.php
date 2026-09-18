@@ -138,7 +138,7 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 			: bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
 		);
 
-		$data['can_create_poll'] = bp_current_user_can( 'administrator' );
+		$data['can_create_poll'] = function_exists( 'bb_can_user_create_poll_activity' ) ? bb_can_user_create_poll_activity( array( 'user_id' => $user_id ) ) : false;
 
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$response = rest_ensure_response( $data );

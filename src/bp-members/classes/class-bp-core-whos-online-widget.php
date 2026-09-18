@@ -189,7 +189,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			$connection_html = ob_get_clean();
 		}
 
-		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" title="reload"><i class="bb-icon-spin6"></i></a>';
+		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-spin6"></i></a>';
 
 		echo $args['before_widget'] . $args['before_title'] . $title . $refresh_online_users . $args['after_title'];
 

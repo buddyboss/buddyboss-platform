@@ -2125,7 +2125,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				bp_activity_update_meta( $activity_id, 'bp_document_ids', $created_document_ids_joined );
 
 				if ( empty( $group_id ) ) {
-					$main_activity->privacy = $document_privacy;
+					$main_activity->privacy        = $document_privacy;
+					$main_activity->title_required = false;
 					$main_activity->save();
 				}
 			}

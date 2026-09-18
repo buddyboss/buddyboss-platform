@@ -60,23 +60,43 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			false === bp_enable_group_restrict_invites()
 		)
 	) {
-		?>
 
-	<p>
-		<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
-	</p>
+		$get_selected_member_type_join   = array();
+		$get_requesting_user_member_type = '';
+		if (
+			true === bp_member_type_enable_disable() &&
+			true === bp_disable_group_type_creation()
+		) {
+			$group_type                      = bp_groups_get_group_type( $current_group_id );
+			$group_type_id                   = bp_group_get_group_type_id( $group_type );
+			$get_selected_member_type_join   = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+			$get_selected_member_type_join   = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
+			$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+		}
+		if (
+			! empty( $get_selected_member_type_join ) &&
+			is_array( $get_selected_member_type_join ) &&
+			! empty( $get_requesting_user_member_type ) &&
+			in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true )
+		) {
+			bp_nouveau_user_feedback( 'group-request-join-member-type' );
+		} else {
+			?>
+			<p>
+				<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
+			</p>
 
-	<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
-		<label for="group-request-membership-comments"><?php esc_html( 'Comments (optional)', 'buddyboss' ); ?></label>
-		<textarea name="group-request-membership-comments" id="group-request-membership-comments"></textarea>
+			<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
+				<label for="group-request-membership-comments"><?php esc_html( 'Comments (optional)', 'buddyboss' ); ?></label>
+				<textarea name="group-request-membership-comments" id="group-request-membership-comments" aria-label="<?php esc_attr_e( 'Group Request Comments', 'buddyboss' ); ?>"></textarea>
 
-		<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
+				<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
 
-		<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php esc_attr_e( 'Send Request', 'buddyboss' ); ?>" />
-
-		<?php wp_nonce_field( 'groups_request_membership' ); ?>
-	</form><!-- #request-membership-form -->
-		<?php
+				<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php esc_attr_e( 'Send Request', 'buddyboss' ); ?>" /></p>
+				<?php wp_nonce_field( 'groups_request_membership' ); ?>
+			</form><!-- #request-membership-form -->
+			<?php
+		}
 	} else {
 		$parent_group      = groups_get_group( $parent_group_id );
 		$parent_group_name = sprintf(

@@ -40,14 +40,14 @@ defined( 'ABSPATH' ) || exit;
 							<td>
 								<div class="flex">
 									<?php if ( $row->allow_retakes ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank" aria-label="<?php esc_attr_e( 'Retake', 'buddyboss' ); ?>">
 											<div class="mpcs-lesson-button">
 												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
 											</div>
 										</a>
 									<?php } ?>
 									<?php if ( ! empty( $row->feedback ) ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank" aria-label="<?php esc_attr_e( 'Feedback', 'buddyboss' ); ?>">
 											<div class="mpcs-lesson-button">
 												<span title="<?php echo esc_attr( esc_html( $row->feedback ) ); ?>">
 													<i class="bb-icons-rl-chat-teardrop-text"></i>
@@ -96,14 +96,14 @@ defined( 'ABSPATH' ) || exit;
 							<td>
 								<div class="flex">
 									<?php if ( $row->allow_retakes ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank" aria-label="<?php esc_attr_e( 'Retake', 'buddyboss' ); ?>">
 											<div class="mpcs-lesson-button">
 												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
 											</div>
 										</a>
 									<?php } ?>
 									<?php if ( ! empty( $row->feedback ) ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank" aria-label="<?php esc_attr_e( 'Feedback', 'buddyboss' ); ?>">
 											<div class="mpcs-lesson-button">
 												<span title="<?php echo esc_attr( esc_html( $row->feedback ) ); ?>">
 													<i class="bb-icons-rl-chat-teardrop-text"></i>

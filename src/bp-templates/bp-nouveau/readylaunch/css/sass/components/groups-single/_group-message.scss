@@ -377,6 +377,27 @@ div#bp-group-message-content {
 		}
 
 	}
+
+	.bb-rl-group-details {
+
+		.item-body > .bp-feedback {
+			background-color: var(--bb-rl-background-brand-secondary-color);
+			border-color: var(--bb-rl-border-brand-primary-color);
+
+			.bp-icon {
+				margin-right: var(--bb-rl-space-100);
+			}
+
+			.bp-icon:before {
+				content: "\e2ce";
+				color: var(--bb-rl-icon-brand-primary-color);
+				font-weight: 500;
+				font-family: bb-icons-rl;
+				font-size: var(--bb-rl-base-line-small);
+				font-style: normal;
+			}
+		}
+	}
 }
 
 .bb-groups-messages-right-bottom {

@@ -18,7 +18,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 				<tr>
 					<th class="icon"></th>
 					<th class="bulk-select-all">
-						<input id="select-all-notifications" class="bs-styled-checkbox" type="checkbox" />
+						<input id="select-all-notifications" class="bs-styled-checkbox" type="checkbox" aria-label="<?php esc_attr_e( 'Select all', 'buddyboss' ); ?>" />
 						<label class="bp-screen-reader-text" for="select-all-notifications"><?php esc_html_e( 'Select all', 'buddyboss' ); ?></label>
 					</th>
 					<th class="title"><?php esc_html_e( 'Notification', 'buddyboss' ); ?></th>

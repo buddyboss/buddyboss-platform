@@ -141,7 +141,14 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					// Get the forum.
 					$forum = get_post( $forum_id );
 
-					if ( $forum_post_type !== $forum->post_type || empty( $forum->ID ) ) {
+					// Skip when the post row is gone (orphaned subscription
+					// pointing at a deleted forum) OR the row exists but is
+					// an auto-draft/stub with no ID. The `! $forum` check
+					// runs FIRST to avoid fatalling on `null->post_type` on
+					// PHP 8+ — the original `empty( $forum->ID )` clause
+					// alone could never have run because PHP would already
+					// have raised a TypeError on the property access.
+					if ( ! $forum || empty( $forum->ID ) || $forum_post_type !== $forum->post_type ) {
 						continue;
 					}
 
@@ -186,7 +193,12 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 					// Get the topic.
 					$topic = get_post( $topic_id );
 
-					if ( $topic_post_type !== $topic->post_type || empty( $topic->ID ) ) {
+					// Skip when the post row is gone (orphaned subscription
+					// pointing at a deleted topic) or its ID is empty
+					// (auto-draft / stub row). See the matching guard in
+					// the forum-subscriptions loop above for the ordering
+					// rationale.
+					if ( ! $topic || empty( $topic->ID ) || $topic_post_type !== $topic->post_type ) {
 						continue;
 					}
 
@@ -432,7 +444,13 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 			// Get the forum.
 			$post = get_post( $post_id );
 
-			if ( ! in_array( $post->post_type, array( $forum_post_type, $topic_post_type ), true ) || empty( $post->ID ) ) {
+			// Skip when the post row is gone (deleted between when the
+			// subscription was recorded and this migration run) or its
+			// ID is empty. The `! $post` check has to come BEFORE any
+			// property access — the original `empty( $post->ID )` clause
+			// alone was unreachable because PHP would fatal on
+			// `null->post_type` first.
+			if ( ! $post || empty( $post->ID ) || ! in_array( $post->post_type, array( $forum_post_type, $topic_post_type ), true ) ) {
 				continue;
 			}
 

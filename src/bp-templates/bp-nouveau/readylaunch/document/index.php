@@ -77,6 +77,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			<div class="screen-content bb-rl-document-directory-content">
 				<div class="bb-rl-media-stream">
 					<?php
+					/**
+					 * Fires before the display of the document list.
+					 *
+					 * @since BuddyBoss 2.15.2
+					 */
+					bp_nouveau_document_hook( 'before_rl_directory', 'list' );
+
 					bp_get_template_part( 'document/theatre' );
 					bp_get_template_part( 'media/theatre' );
 
@@ -95,6 +102,14 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						}
 						?>
 					</div><!-- .documents -->
+					<?php
+					/**
+					 * Fires after the display of the document list.
+					 *
+					 * @since BuddyBoss 2.15.2
+					 */
+					bp_nouveau_document_hook( 'after_rl_directory', 'list' );
+					?>
 				</div>
 
 

@@ -44,4 +44,14 @@
 
 	} // close .bp-pagination
 
+	&.learndash-pager-course_info_quizzes {
+
+		.bp-pagination {
+
+			.bp-pagination-links {
+				float: none;
+			}
+		}
+	}
+
 }

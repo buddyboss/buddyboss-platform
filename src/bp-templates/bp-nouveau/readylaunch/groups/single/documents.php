@@ -36,6 +36,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 			// Home/Documents.
 			case 'documents':
+				/**
+				 * Fires before the display of the document list.
+				 *
+				 * @since BuddyBoss 2.15.2
+				 */
+				bp_nouveau_group_hook( 'before', 'rl_stream_document_content' );
 				?>
 				<div class="bb-rl-media-stream">
 					<?php
@@ -61,6 +67,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				<?php
 				bp_nouveau_group_hook( 'after', 'document_content' );
 
+				/**
+				 * Fires after the display of the document list.
+				 *
+				 * @since BuddyBoss 2.15.2
+				 */
+				bp_nouveau_group_hook( 'after', 'rl_stream_document_content' );
 				break;
 
 			// Any other.

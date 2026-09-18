@@ -795,7 +795,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				 * We need to check manually because bbpress updating that caps only on group forum page and
 				 * in API those conditional tag will not work.
 				 */
-				$group_ids = bbp_get_forum_group_ids( $forum_id );
+				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				} else {
+					$group_ids = bbp_get_forum_group_ids( $forum_id );
+				}
 				if ( ! empty( $group_ids ) ) {
 					$is_member = false;
 					foreach ( $group_ids as $group_id ) {
@@ -1399,7 +1403,11 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 				 * We need to check manually because bbpress updating that caps only on group forum page and
 				 * in API those conditional tag will not work.
 				 */
-				$group_ids = bbp_get_forum_group_ids( $forum_id );
+				if ( function_exists( 'bb_get_child_forum_group_ids' ) ) {
+					$group_ids = bb_get_child_forum_group_ids( $forum_id );
+				} else {
+					$group_ids = bbp_get_forum_group_ids( $forum_id );
+				}
 				if ( ! empty( $group_ids ) ) {
 					$is_member = false;
 					foreach ( $group_ids as $group_id ) {

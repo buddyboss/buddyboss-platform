@@ -64,7 +64,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<footer class="bb-model-footer">
 						<?php if ( ! bp_is_group() ) : ?>
-							<div class="bb-dropdown-wrap">
+							<div class="bb-dropdown-wrap bb-rl-filter">
 								<select id="bb-album-privacy">
 									<?php
 									foreach ( bp_media_get_visibility_levels() as $k => $option ) {

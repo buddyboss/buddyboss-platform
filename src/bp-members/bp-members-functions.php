@@ -1872,6 +1872,8 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	// We need to cast $user_id to pass to the filters.
 	$user_id = false;
 
+	$activation_key = '';
+
 	// Multisite installs have their own install procedure.
 	if ( is_multisite() ) {
 		wpmu_signup_user( $user_login, $user_email, $usermeta );
@@ -1913,22 +1915,6 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		);
 
 		BP_Signup::add( $args );
-
-		/**
-		 * Filters if BuddyPress should send an activation key for a new signup.
-		 *
-		 * @since BuddyPress 1.2.3
-		 *
-		 * @param bool   $value          Whether or not to send the activation key.
-		 * @param int    $user_id        User ID to send activation key to.
-		 * @param string $user_email     User email to send activation key to.
-		 * @param string $activation_key Activation key to be sent.
-		 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
-		 *                               signup data, xprofile data, etc).
-		 */
-		if ( apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta ) ) {
-			bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
-		}
 	}
 
 	$bp->signup->username = $user_login;
@@ -1946,6 +1932,25 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	 *                                       signup data, xprofile data, etc).
 	 */
 	do_action( 'bp_core_signup_user', $user_id, $user_login, $user_password, $user_email, $usermeta );
+
+	/**
+	 * Filters if BuddyPress should send an activation key for a new signup.
+	 *
+	 * @since BuddyPress 1.2.3
+	 *
+	 * @param bool   $value          Whether or not to send the activation key.
+	 * @param int    $user_id        User ID to send activation key to.
+	 * @param string $user_email     User email to send activation key to.
+	 * @param string $activation_key Activation key to be sent.
+	 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
+	 *                               signup data, xprofile data, etc).
+	 */
+	if (
+		! empty( $activation_key ) &&
+		apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta )
+	) {
+		bp_core_signup_send_validation_email( $user_id, $user_email, $activation_key, $user_login );
+	}
 
 	return $user_id;
 }
@@ -2127,14 +2132,28 @@ function bp_core_activate_signup( $key ) {
 				 * Save the visibility level.
 				 *
 				 * Use the field's default visibility if not present, and 'public' if a
-				 * default visibility is not defined.
+				 * default visibility is not defined. Fields the member may not change -
+				 * "Enforce field visibility" or a display-name-format lock (nickname
+				 * always, first name under the first-name / first-last-name formats) -
+				 * always take the default: a crafted registration POST could otherwise
+				 * persist a member-chosen level. bb_xprofile_can_change_field_visibility()
+				 * resolves the same capability the profile settings screen and the REST
+				 * endpoints use and evaluates correctly for the logged-out activation
+				 * request, so it is the single source of truth for the lock here too.
+				 *
+				 * Note: do not reuse the $key parameter for the per-field POST key - it
+				 * carries the activation key that the bp_core_activated_user hook below
+				 * receives.
 				 */
-				$key = "field_{$field_id}_visibility";
-				if ( isset( $user['meta'][ $key ] ) ) {
-					$visibility_level = $user['meta'][ $key ];
+				$visibility_meta_key = "field_{$field_id}_visibility";
+				$vfield              = xprofile_get_field( $field_id, null, false );
+				$default             = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
+				$can_change          = bb_xprofile_can_change_field_visibility( $field_id );
+
+				if ( $can_change && isset( $user['meta'][ $visibility_meta_key ] ) ) {
+					$visibility_level = $user['meta'][ $visibility_meta_key ];
 				} else {
-					$vfield           = xprofile_get_field( $field_id );
-					$visibility_level = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
+					$visibility_level = $default;
 				}
 				xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 			}
@@ -3060,7 +3079,7 @@ function bp_register_member_type_section() {
 				'show_in_menu'       => false,
 				'map_meta_cap'       => true,
 				'show_in_rest'       => true,
-				'show_ui'            => bp_current_user_can( 'bp_moderate' ),
+				'show_ui'            => false,
 				'supports'           => bp_get_member_type_post_type_supports(),
 			)
 		)
@@ -3072,29 +3091,11 @@ function bp_register_member_type_section() {
 	// action for remove profile type metabox.
 	add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox' );
 
-	// add column.
-	add_filter( 'manage_' . bp_get_member_type_post_type() . '_posts_columns', 'bp_member_type_add_column' );
-
-	// action for adding a sortable column name.
-	add_action( 'manage_' . bp_get_member_type_post_type() . '_posts_custom_column', 'bp_member_type_show_data', 10, 2 );
-
-	// sortable columns.
-	add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns', 'bp_member_type_add_sortable_columns' );
-
-	// request filter.
-	add_action( 'load-edit.php', 'bp_member_type_add_request_filter' );
-
-	// hide quick edit link on the custom post type list screen.
-	add_filter( 'post_row_actions', 'bp_member_type_hide_quickedit', 10, 2 );
-
 	// filter for adding body class where the shortcode added.
 	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
 
 	// Hook for creating a profile type shortcode.
 	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
-
-	// action for adding the js for the profile type post type.
-	add_action( 'admin_enqueue_scripts', 'bp_member_type_changing_listing_label' );
 
 }
 
@@ -3681,170 +3682,6 @@ function bp_remove_member_type_metabox_globally() {
 }
 
 /**
- * Add new columns to the post type list screen.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param type $columns
- * @return type
- */
-function bp_member_type_add_column( $columns ) {
-
-	$columns['title']         = __( 'Profile Type', 'buddyboss' );
-	$columns['member_type']   = __( 'Label', 'buddyboss' );
-	$columns['enable_filter'] = __( 'Members Filter', 'buddyboss' );
-	$columns['enable_remove'] = __( 'Members Directory', 'buddyboss' );
-	$columns['total_users']   = __( 'Users', 'buddyboss' );
-
-	unset( $columns['date'] );
-
-	return $columns;
-}
-
-/**
- * Display data by column and post id.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $column
- * @param $post_id
- */
-function bp_member_type_show_data( $column, $post_id ) {
-
-	switch ( $column ) {
-
-		case 'member_type':
-			echo '<code>' . get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ) . '</code>';
-			break;
-
-		case 'enable_filter':
-			if ( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) ) {
-				_e( 'Show', 'buddyboss' );
-			} else {
-				_e( 'Hide', 'buddyboss' );
-			}
-
-			break;
-
-		case 'enable_remove':
-			if ( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) ) {
-				_e( 'Hide', 'buddyboss' );
-			} else {
-				_e( 'Show', 'buddyboss' );
-			}
-
-			break;
-
-		case 'total_users':
-			$name    = bp_get_member_type_key( $post_id );
-			$type_id = bp_member_type_term_taxonomy_id( $name );
-
-			$member_type_url = admin_url() . 'users.php?bp-member-type=' . $name;
-			$count           = count( bp_member_type_by_type( $type_id ) );
-
-			if ( $count > 0 ) {
-				// @todo why text domain here and below?
-				printf( '<a href="%s">%s</a>', esc_url( $member_type_url ), $count );
-			} else {
-				echo '0';
-			}
-
-			break;
-
-	}
-
-}
-
-/**
- * Sets up a column on admin view on profile type post type.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $columns
- *
- * @return array
- */
-function bp_member_type_add_sortable_columns( $columns ) {
-
-	$columns['total_users']   = 'total_users';
-	$columns['enable_filter'] = 'enable_filter';
-	$columns['enable_remove'] = 'enable_remove';
-	$columns['member_type']   = 'member_type';
-
-	return $columns;
-}
-
-/**
- * Adds a filter to profile type sort items.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_member_type_add_request_filter() {
-
-	add_filter( 'request', 'bp_member_type_sort_items' );
-
-}
-
-/**
- * Sort list of profile type post types.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param type $qv
- * @return string
- */
-function bp_member_type_sort_items( $qv ) {
-
-	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_member_type_post_type() ) {
-		return $qv;
-	}
-
-	if ( ! isset( $qv['orderby'] ) ) {
-		return $qv;
-	}
-
-	switch ( $qv['orderby'] ) {
-
-		case 'member_type':
-			$qv['meta_key'] = '_bp_member_type_name';
-			$qv['orderby']  = 'meta_value';
-
-			break;
-
-		case 'enable_filter':
-			$qv['meta_key'] = '_bp_member_type_enable_filter';
-			$qv['orderby']  = 'meta_value_num';
-
-			break;
-
-	}
-
-	return $qv;
-}
-
-/**
- * Hide quick edit link.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param type $actions
- * @param type $post
- * @return type
- */
-function bp_member_type_hide_quickedit( $actions, $post ) {
-
-	if ( empty( $post ) ) {
-		global $post;
-	}
-
-	if ( bp_get_member_type_post_type() == $post->post_type ) {
-		unset( $actions['inline hide-if-no-js'] );
-	}
-
-	return $actions;
-}
-
-/**
  * Adds body class where the shortcode is added.
  *
  * @since BuddyBoss 1.0.0
@@ -3913,43 +3750,6 @@ function bp_member_type_shortcode_callback( $atts ) {
 
 	return ob_get_clean();
 
-}
-
-/**
- * Adds the JS on profile type post type.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_member_type_changing_listing_label() {
-	global $current_screen;
-
-	$url_clip_board = buddypress()->plugin_url . 'bp-core/js/vendor/';
-	$url_member     = buddypress()->plugin_url . 'bp-core/js/';
-
-	$bp_member_type_pages = array(
-		'edit-bp-member-type',
-		'bp-member-type',
-		'bp-group-type',
-		'edit-bp-group-type',
-	);
-
-	// Check to make sure we're on a profile type's admin page.
-	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
-
-		wp_enqueue_script( 'bp-clipboard', $url_clip_board . 'clipboard.js', array(), bp_get_version() );
-		wp_enqueue_script( 'bp-member-type-admin-screen', $url_member . 'bp-member-type-admin-screen.js', array( 'jquery' ), bp_get_version() );
-
-		$strings = array(
-			'warnTrash'       => __( 'You have {total_users} members with this profile type, are you sure you would like to trash it?', 'buddyboss' ),
-			'warnDelete'      => __( 'You have {total_users} members with this profile type, are you sure you would like to delete it?', 'buddyboss' ),
-			'warnBulkTrash'   => __( 'You have members with these profile types, are you sure you would like to trash it?', 'buddyboss' ),
-			'warnBulkDelete'  => __( 'You have members with these profile types, are you sure you would like to delete it?', 'buddyboss' ),
-			'copied'          => __( 'Copied', 'buddyboss' ),
-			'copytoclipboard' => __( 'Copy to clipboard', 'buddyboss' ),
-		);
-
-		wp_localize_script( 'bp-member-type-admin-screen', '_bpmtAdminL10n', $strings );
-	}
 }
 
 /**

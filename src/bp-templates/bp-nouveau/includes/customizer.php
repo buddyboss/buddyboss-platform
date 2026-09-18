@@ -38,12 +38,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 * @param array $value Array of Customizer sections.
 	 */
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
-		'bp_nouveau_user_primary_nav' => array(
-			'title'       => __( 'Profile Navigation', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 50,
-			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
-		),
+		// Profile Navigation section removed — now managed via Settings 2.0 (settings-profile-navigation.php).
 		'bp_nouveau_user_profile_header' => array(
 			'title'       => __( 'Profile Action Buttons', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
@@ -70,38 +65,13 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 *
 	 * @param array $value Array of Customizer settings.
 	 */
+	// Profile Navigation settings (user_nav_display, user_default_tab, user_nav_order, user_nav_hide)
+	// removed — now managed via Settings 2.0 (settings-profile-navigation.php).
 	$settings = apply_filters( 'bp_nouveau_customizer_settings', array(
-		'bp_nouveau_appearance[user_nav_display]' => array(
-			'index'             => 'user_nav_display',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[user_default_tab]' => array(
-			'index'             => 'user_default_tab',
-			'capability'        => 'bp_moderate',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[user_nav_order]' => array(
-			'index'             => 'user_nav_order',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[user_profile_actions_order]' => array(
 			'index'             => 'user_profile_actions_order',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[user_nav_hide]' => array(
-			'index'             => 'user_nav_hide',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'bp_nouveau_sanitize_nav_hide',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
@@ -183,64 +153,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( $id_setting, $args );
 	}
 
-	// Default options for the users default tab.
-
-	$options = array();
-	if ( bp_is_active( 'xprofile' ) ) {
-		$options['profile'] = __( 'Profile', 'buddyboss' );
-	}
-	if ( bp_is_active( 'activity' ) ) {
-		$options['activity'] = __( 'Timeline', 'buddyboss' );
-	}
-	if ( bp_is_active( 'friends' ) ) {
-		$options['friends'] = __( 'Connections', 'buddyboss' );
-	}
-	if ( bp_is_active( 'groups' ) ) {
-		$options['groups'] = __( 'Groups', 'buddyboss' );
-	}
-	if ( bp_is_active( 'forums' ) ) {
-		$options['forums'] = __( 'Forums', 'buddyboss' );
-	}
-	if ( bp_is_active( 'media' ) ) {
-		$options['media'] = __( 'Photos', 'buddyboss' );
-	}
-	if ( bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
-		$options['document'] = __( 'Documents', 'buddyboss' );
-	}
-	if ( bp_is_active( 'media' ) && bp_is_profile_video_support_enabled() ) {
-		$options['video'] = __( 'Videos', 'buddyboss' );
-	}
+	// Profile Navigation controls (user_nav_display, user_default_tab, user_nav_order, user_nav_hide)
+	// removed — now managed via Settings 2.0 (settings-profile-navigation.php).
 
 	$controls = array(
-		'user_nav_display' => array(
-			'label'    => __( 'Display the profile navigation vertically.', 'buddyboss' ),
-			'section'  => 'bp_nouveau_user_primary_nav',
-			'settings' => 'bp_nouveau_appearance[user_nav_display]',
-			'type'     => 'checkbox',
-		),
-		'user_default_tab' => array(
-			'label'       => __( 'Profile navigation order', 'buddyboss' ),
-			'description' => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss' ),
-			'section'     => 'bp_nouveau_user_primary_nav',
-			'settings'    => 'bp_nouveau_appearance[user_default_tab]',
-			'type'        => 'select',
-			'choices'     => apply_filters( 'user_default_tab_options_list', $options ),
-		),
-		'user_nav_order'   => array(
-			'class'    => 'BP_Nouveau_Nav_Customize_Control',
-			'label'    => __( 'Reorder the primary navigation for a member.', 'buddyboss' ),
-			'section'  => 'bp_nouveau_user_primary_nav',
-			'settings' => 'bp_nouveau_appearance[user_nav_order]',
-			'type'     => 'user',
-		),
-		'user_nav_hide'   => array(
-			'class'    => 'BP_Nouveau_Nav_Customize_Control',
-			'label'    => __( 'Hide the primary navigation for a member.', 'buddyboss' ),
-			'section'  => 'bp_nouveau_user_primary_nav',
-			'settings' => 'bp_nouveau_appearance[user_nav_hide]',
-			'type'     => 'user',
-		),
-
 		'user_profile_actions_display'   => array(
 			'class'    => 'BP_Nouveau_Profile_Header_Customize_Control',
 			'label'    => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss' ),

@@ -22,7 +22,7 @@ $svg_icon_download      = bp_document_svg_icon( 'download' );
 $url                    = wp_get_attachment_url( $attachment_id );
 $attached_file          = get_attached_file( $attachment_id );
 $filename               = basename( $attached_file );
-$size                   = is_file( $attached_file ) ? bp_document_size_format( filesize( $attached_file ) ) : 0;
+$size                   = is_file( $attached_file ) ? bp_document_size_format( filesize( $attached_file ) ) : apply_filters( 'bb_document_get_size', 0, $attachment_id );
 $download_url           = bp_document_download_link( $attachment_id, $document_id );
 $document_privacy       = bb_media_user_can_access( $document_id, 'document' );
 $can_download_btn       = true === (bool) $document_privacy['can_download'];

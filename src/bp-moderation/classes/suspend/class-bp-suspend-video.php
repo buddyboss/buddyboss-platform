@@ -299,7 +299,14 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$where = apply_filters( 'bp_suspend_media_get_where_conditions', $where, $this, $args );
 
 		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['video_suspend_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			$exclude_group_sql = '';
+
+			// Allow group videos from blocked/suspended users in group album.
+			if ( bp_is_active( 'groups' ) ) {
+				$exclude_group_sql = ' OR ( m.privacy = "grouponly" AND ( ' . $this->alias . '.hide_sitewide = 0 OR ' . $this->alias . '.hide_sitewide IS NULL ) AND ( ' . $this->alias . '.hide_parent = 0 OR ' . $this->alias . '.hide_parent IS NULL ) )';
+			}
+
+			$where_conditions['video_suspend_where'] = '( ( ' . implode( ' AND ', $where ) . ' ) ' . $exclude_group_sql . ' )';
 		}
 
 		return $where_conditions;
@@ -337,7 +344,7 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 			$exclude_group_sql = '';
 			// Allow group medias from blocked/suspended users.
 			if ( bp_is_active( 'groups' ) ) {
-				$exclude_group_sql = ' OR m.privacy = "grouponly" ';
+				$exclude_group_sql = ' OR ( m.privacy = "grouponly" AND ( ' . $this->alias . '.hide_sitewide = 0 OR ' . $this->alias . '.hide_sitewide IS NULL ) AND ( ' . $this->alias . '.hide_parent = 0 OR ' . $this->alias . '.hide_parent IS NULL ) )';
 			}
 			$exclude_group_sql .= ' OR ( m.privacy = "comment" OR m.privacy = "forums" ) ';
 
@@ -639,12 +646,12 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 				}
 
 				if ( bp_is_active( 'media' ) && ! empty( $media_ids ) ) {
-					$related_contents[ self::$type ] = array_unique( ( ! empty( $related_contents[ self::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $media_ids ) : $media_ids ) );
+					$related_contents[ BP_Suspend_Media::$type ] = array_unique( ( ! empty( $related_contents[ BP_Suspend_Media::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Media::$type ], $media_ids ) : $media_ids ) );
 					unset( $media_ids );
 				}
 
 				if ( bp_is_active( 'video' ) && ! empty( $video_ids ) ) {
-					$related_contents[ self::$type ] = array_unique( ( ! empty( $related_contents[ self::$type ] ) ? array_merge( $related_contents[ BP_Suspend_Document::$type ], $video_ids ) : $video_ids ) );
+					$related_contents[ self::$type ] = array_unique( ( ! empty( $related_contents[ self::$type ] ) ? array_merge( $related_contents[ self::$type ], $video_ids ) : $video_ids ) );
 					unset( $video_ids );
 				}
 

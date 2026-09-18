@@ -11,63 +11,62 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// If you have not any release note then set $show_overview as false.
+// If you have not any release note, then set $show_overview as false.
 $show_overview = false;
 
-// Get release data based on plugin version from gitHub API.
+// Get release data from a local readme.txt file.
 $cache_key         = 'bb_changelog_' . BP_PLATFORM_VERSION;
 $bb_changelog_data = wp_cache_get( $cache_key, 'bp' );
 if ( false === $bb_changelog_data ) {
-	if ( ! function_exists( 'plugins_api' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-	}
+	$readme_file = trailingslashit( dirname( dirname( dirname( __DIR__ ) ) ) ) . 'readme.txt';
 
-	$api = plugins_api(
-		'plugin_information',
-		array(
-			'slug' => wp_unslash( 'bp-loader' ),
-		)
-	);
+	if ( file_exists( $readme_file ) ) {
+		$readme_content = file_get_contents( $readme_file );
 
-	if ( is_wp_error( $api ) ) {
-		wp_die( $api );
-	}
+		// Extract a changelog section from readme.txt.
+		if ( preg_match( '/== Changelog ==(.+?)(?:== [^=]|$)/s', $readme_content, $matches ) ) {
+			$changelog_section = trim( $matches[1] );
+			$lines             = preg_split( '/[\n\r]+/', $changelog_section );
+			$versions          = array();
+			$version           = '';
+			$version_content   = '';
 
-	// Sanitize HTML.
-	$api->sections['changelog'] = wp_kses_post( $api->sections['changelog'] );
+			if ( ! empty( $lines ) ) {
+				foreach ( $lines as $line ) {
+					$line = trim( $line );
+					if ( empty( $line ) ) {
+						continue;
+					}
 
-	$section_content = ! empty( $api->sections['changelog'] ) ? $api->sections['changelog'] : array();
-	if ( ! empty( $section_content ) ) {
-		$section_content = links_add_base_url( $section_content, 'https://wordpress.org/plugins/' . $api->slug . '/' );
-		$lines           = preg_split( '/[\n\r]+/', $section_content );
-		$version         = $api->version;
-		$versions        = array();
-		$changelog       = '';
-		$version_content = '';
-		if ( ! empty( $lines ) ) {
-			foreach ( $lines as $line ) {
-				if ( empty( $line ) ) {
-					continue;
+					// Check if line is a version header (e.g., "= 2.15.3 =").
+					if ( preg_match( '/^=\s*(\d+\.\d+(?:\.\d+)?)\s*=$/', $line, $version_match ) ) {
+						$version = $version_match[1];
+						// Reset the version content when a new version is detected.
+						$version_content = '';
+
+						// Convert markdown-style list items to HTML.
+					} else if ( preg_match( '/^\*\s*(.+)$/', $line, $item_match ) ) {
+						$version_content .= '<li>' . esc_html( $item_match[1] ) . '</li>';
+					}
+
+					if ( ! empty( $version ) && ! empty( $version_content ) ) {
+						$versions[ $version ] = '<ul>' . $version_content . '</ul>';
+					}
 				}
-				if ( preg_match( '/^\d/', trim( wp_strip_all_tags( $line ) ) ) ) {
-					$version = trim( wp_strip_all_tags( $line ) );
+			}
 
-					// Reset the version content when a new version is detected.
-					$version_content = '';
-				} else {
-					$version_content .= $line;
-				}
-				$versions[ $version ] = $version_content;
+			// Get changelog for current version.
+			if ( isset( $versions[ BP_PLATFORM_VERSION ] ) ) {
+				$bb_changelog_data = $versions[ BP_PLATFORM_VERSION ];
+			} elseif ( ! empty( $versions ) ) {
+				// Fallback to the first (latest) version in changelog.
+				$bb_changelog_data = reset( $versions );
+			}
+
+			if ( ! empty( $bb_changelog_data ) ) {
+				wp_cache_set( $cache_key, $bb_changelog_data, 'bp' );
 			}
 		}
-
-		$changelog_version = $api->version;
-		// If the current version is less than the latest version, then set the changelog version to the current version.
-		if ( version_compare( BP_PLATFORM_VERSION, $api->version, '<' ) ) {
-			$changelog_version = BP_PLATFORM_VERSION;
-		}
-		$bb_changelog_data = $versions[ $changelog_version ];
-		wp_cache_set( $cache_key, $bb_changelog_data, 'bp' );
 	}
 }
 
@@ -89,11 +88,19 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 			<span class="bb-version"><?php echo esc_html__( 'BuddyBoss Platform v', 'buddyboss' ) . esc_html( BP_PLATFORM_VERSION ); ?></span>
 		</div>
 		<ul class="bb-hello-tabs">
-			<?php if ( true === $show_overview ) { ?>
-				<li><a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active" data-action="bb-release-overview"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a></li>
-				<?php if ( isset( $bb_changelog_data ) && ! empty( $bb_changelog_data ) ) { ?>
-					<li><a href="#bb-release-changelog" class="bb-hello-tabs_anchor" data-action="bb-release-changelog"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a></li>
+			<?php
+			if ( true === $show_overview ) {
+				?>
+				<li>
+					<a href="#bb-release-overview" class="bb-hello-tabs_anchor is_active" data-action="bb-release-overview"><?php esc_html_e( 'Overview', 'buddyboss' ); ?></a>
+				</li>
 				<?php
+				if ( isset( $bb_changelog_data ) && ! empty( $bb_changelog_data ) ) {
+					?>
+					<li>
+						<a href="#bb-release-changelog" class="bb-hello-tabs_anchor" data-action="bb-release-changelog"><?php esc_html_e( 'Changelog', 'buddyboss' ); ?></a>
+					</li>
+					<?php
 				}
 			}
 			?>
@@ -110,7 +117,7 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 					<p><?php esc_html_e( 'Check out the video below for a full walkthrough of all the new features and updates available to you in this release.', 'buddyboss' ); ?></p>
 					<p>
 						<?php
-						echo sprintf(
+						printf(
 							// translators: $1s% update link.
 							esc_html__( 'As this update contains a number of improvements to the theme’s colors, layouts and styling, we recommend you reconfigure your Theme Options and review any custom CSS you may have.  For more information on how to update, %1$s.', 'buddyboss' ),
 							sprintf(
@@ -143,6 +150,18 @@ $video_url = 'https://www.youtube.com/embed/ThTdHOYwNxU';
 					<?php
 					echo wp_kses_post( $bb_changelog_data );
 					?>
+				</div>
+				<?php
+			} else {
+				// Show a message if no changelog data is available.
+				?>
+				<div id="bb-release-changelog" class="bb-hello-tabs_content bb-release-changelog is_active">
+					<p><?php esc_html_e( 'Release notes are not available at this time. Please visit the BuddyBoss website for the latest information.', 'buddyboss' ); ?></p>
+					<p>
+						<a href="https://www.buddyboss.com/resources/buddyboss-platform-releases/" target="_blank">
+							<?php esc_html_e( 'View Release Notes', 'buddyboss' ); ?>
+						</a>
+					</p>
 				</div>
 				<?php
 			}

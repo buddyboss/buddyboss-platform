@@ -59,9 +59,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function __construct() {
 			$enabled = bb_is_readylaunch_enabled();
 
-			// Add ReadyLaunch settings to the platform settings API.
-			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 			add_filter( 'bb_telemetry_platform_options', array( $this, 'bb_rl_telemetry_platform_options' ), 10, 1 );
+
+			//Localise the script for admin.
+			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
 
 			if ( ! $enabled ) {
 				return;
@@ -80,7 +81,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_login_registration_integration();
+
+			/*
+			 * Only load ReadyLaunch login/registration integration when enabled in settings.
+			 * When disabled, the theme's default login/register styling and templates are used.
+			 *
+			 * @since BuddyBoss 2.21.0
+			 */
+			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				$this->load_login_registration_integration();
+			} elseif (
+				isset( $_SERVER['SCRIPT_NAME'] ) &&
+				false !== stripos( wp_login_url(), $_SERVER['SCRIPT_NAME'] ) &&
+				! $this->bb_rl_is_page_enabled_for_integration( 'registration' )
+			) {
+				// On wp-login.php with registration disabled, restore the default
+				// template stack so bp_locate_template_asset() finds Platform CSS
+				// (buddypress.css, bb-icons.css) in the standard template directory.
+				$this->bb_rl_restore_default_template_stack();
+			}
+
 			$this->load_hooks();
 
 			// Added support for Forums integration.
@@ -109,18 +129,38 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
 				BB_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
+
+			if ( $enabled_for_page && class_exists( 'WC4BP_Manager' ) ) {
+				// WC4BP (WooCommerce BuddyPress Integration) integration.
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-wc4bp-helper.php';
+				BB_Readylaunch_WC4BP_Helper::instance();
+			}
 		}
 
 		/**
 		 * Register the ReadyLaunch telemetry data.
 		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss 3.4.3 Added the onboarding wizard's completion flag
+		 *              and progress option. These previously reached telemetry only
+		 *              through transient filters registered mid-AJAX by the wizard
+		 *              itself, so the weekly cron send never carried them and the
+		 *              signal was lost on any site where that one immediate send
+		 *              failed or telemetry was disabled at the time. They are added
+		 *              unconditionally: an abandoned wizard on a site that never
+		 *              enabled ReadyLaunch is the funnel signal, so they must not
+		 *              sit behind the enabled check.
+		 *
 		 * @param array $option_array The array of telemetry options.
 		 *
 		 * @return array The modified array of telemetry options.
 		 */
 		public function bb_rl_telemetry_platform_options( $option_array ) {
-			$op_options = array( 'bb_rl_enabled' );
+			$op_options = array(
+				'bb_rl_enabled',
+				'bb_rl_onboarding_completed',
+				'bb_rl_progress_rl_onboarding',
+			);
 			if ( bb_is_readylaunch_enabled() ) {
 				$op_options[] = 'bb_rl_theme_mode';
 				$op_options[] = 'bb_rl_enabled_pages';
@@ -237,6 +277,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Restore the default BuddyBoss/BuddyPress template stack.
+		 *
+		 * Removes ReadyLaunch template locations and re-adds the standard ones so that
+		 * bp_locate_template() and bp_locate_template_asset() resolve files from the
+		 * default template directories instead of ReadyLaunch.
+		 *
+		 * @since BuddyBoss 2.21.0
+		 */
+		protected function bb_rl_restore_default_template_stack() {
+			remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+			add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+		}
+
+		/**
 		 * Load hooks for ReadyLaunch.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -247,8 +301,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Add Dynamic colours.
 			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
-
-			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 			add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -326,6 +378,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_bp_nouveau_get_submit_button' ) );
+
+			add_action( 'wp_ajax_bb_rl_document_rename_and_privacy_update', array( $this, 'bb_rl_document_rename_and_privacy_update' ) );
 		}
 
 		/**
@@ -393,9 +447,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 
-			if ( class_exists( 'SFWD_LMS' ) ) {
-				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
-			}
+			/**
+			 * Fires after ReadyLaunch has finished its own init work, so
+			 * integrations can attach their ReadyLaunch-specific overrides
+			 * (template filters, enqueues, meta-boxes, etc.) at the right
+			 * moment — i.e. AFTER bb_rl_load() but before LearnDash/theme
+			 * templates render.
+			 *
+			 * The LearnDash integration (buddyboss-learndash) used to live
+			 * at buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php'
+			 * inside Platform. It now hooks this action from inside the
+			 * addon instead.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param BB_Readylaunch $readylaunch The current ReadyLaunch instance.
+			 */
+			do_action( 'bb_integration_readylaunch_loaded', $this );
 		}
 
 		/**
@@ -616,15 +684,37 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					} elseif ( 'courses' === $key ) {
 						$item['label'] = __( 'Courses', 'buddyboss' );
 						$item['url']   = '';
-						if ( class_exists( 'SFWD_LMS' ) ) {
-							$options = bp_get_option( 'bp_ld_sync_settings', array() );
-							if (
-								! empty( $options['buddypress']['enabled'] ) ||
-								! empty( $options['learndash']['enabled'] )
-							) {
-								$is_active   = true;
-								$item['url'] = get_post_type_archive_link( learndash_get_post_type_slug( 'course' ) );
-							}
+
+						/**
+						 * Filter the courses nav resolution in ReadyLaunch's
+						 * primary nav. Integrations return a modified array
+						 * with 'is_active' => true and 'url' => <archive URL>
+						 * to claim ownership of the courses nav item.
+						 *
+						 * First subscriber whose return sets is_active=true
+						 * wins, by natural filter ordering. Subscribers that
+						 * don't apply should return $info unchanged.
+						 *
+						 * LearnDash (buddyboss-learndash) subscribes to this
+						 * filter in BBLDVERSION. Tutor LMS and MemberPress
+						 * Courses are still resolved inline below until
+						 * their own addon extractions land.
+						 *
+						 * @since BuddyBoss 3.0.0
+						 *
+						 * @param array $info { is_active: bool, url: string }.
+						 */
+						$info = apply_filters(
+							'bb_readylaunch_primary_nav_courses_info',
+							array(
+								'is_active' => false,
+								'url'       => '',
+							)
+						);
+
+						if ( ! empty( $info['is_active'] ) ) {
+							$is_active   = true;
+							$item['url'] = ! empty( $info['url'] ) ? $info['url'] : '';
 						} elseif (
 							function_exists( 'tutor_utils' ) &&
 							function_exists( 'bb_tutorlms_enable' ) &&
@@ -639,11 +729,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							$is_active   = true;
 							$item['url'] = get_post_type_archive_link( memberpress\courses\models\Course::$cpt );
 						}
-					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) ) {
+					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
 						$item['label'] = __( 'Messages', 'buddyboss' );
-					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) ) {
+					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = bp_get_notifications_permalink();
 						$item['label'] = __( 'Notifications', 'buddyboss' );
@@ -761,6 +851,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+			} elseif ( is_singular( 'post' ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/single-post' );
+			} elseif ( ( is_home() || is_author() || is_category() || is_tag() || is_date() ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/loop-post' );
 			} else {
 				the_content();
 			}
@@ -818,7 +912,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if ReadyLaunch is enabled, false otherwise.
 		 */
 		public function bb_is_readylaunch_enabled_for_page() {
-			return (
+
+			$retval = (
 				bp_is_members_directory() ||
 				bp_is_video_directory() ||
 				bp_is_media_directory() ||
@@ -848,6 +943,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->bb_rl_is_learndash_page() || // Add check for LearnDash pages.
 				$this->bb_rl_is_memberpress_courses_page() // Add check for MemberPress Courses pages.
 			);
+
+			/**
+			 * Filter to check if ReadyLaunch is enabled for the current page.
+			 */
+			return apply_filters( 'bb_is_readylaunch_enabled_for_page', $retval );
 		}
 
 		/**
@@ -946,9 +1046,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
+			// @since BuddyBoss 2.21.0 Only use ReadyLaunch register template when setting is enabled.
 			if ( bp_is_register_page() ) {
-				$this->bb_rl_required_load();
-				return bp_locate_template( 'register.php' );
+				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+					$this->bb_rl_required_load();
+					return bp_locate_template( 'register.php' );
+				}
+
+				// Login & Registration is disabled — restore default template stack
+				// so BuddyPress templates are used instead of ReadyLaunch.
+				$this->bb_rl_restore_default_template_stack();
+
+				// Use the theme's buddypress.php which provides the full page
+				// wrapper (header, logo, footer) for the register form.
+				$theme_bp_template = locate_template( 'buddypress.php' );
+				if ( $theme_bp_template ) {
+					return $theme_bp_template;
+				}
+
+				// Fallback: let WordPress handle it normally.
+				return $template;
 			}
 
 			if ( bp_is_activation_page() ) {
@@ -1082,15 +1199,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_style( 'bp-select2' );
 
 			// Enqueue Cropper.js.
-			wp_enqueue_script( 'bb-readylaunch-cropper-js' );
-			wp_enqueue_style( 'bb-readylaunch-cropper-css' );
+			wp_enqueue_script( 'bb-cropper-js' );
+			wp_enqueue_style( 'bb-cropper-css' );
 
 			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-readylaunch-style-main', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-readylaunch-style-main', 'suffix', $min );
+			}
 
 			// Register only if it's an Activity component.
 			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-activity', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-activity', 'suffix', $min );
+				}
 
 				// BB icon version.
 				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
@@ -1102,6 +1227,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register only if it's Message component.
 			if ( bp_is_active( 'messages' ) && bp_is_messages_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-message', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/message{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-message', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-message', 'suffix', $min );
+				}
 			}
 
 			// Register only if it's Groups component.
@@ -1112,6 +1241,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_user_groups()
 				) {
 					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
+					wp_style_add_data( 'bb-readylaunch-group-single', 'rtl', 'replace' );
+					if ( $min ) {
+						wp_style_add_data( 'bb-readylaunch-group-single', 'suffix', $min );
+					}
 					wp_enqueue_script( 'bb-rl-groups' );
 					wp_localize_script(
 						'bb-rl-groups',
@@ -1128,6 +1261,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
+			}
+
+			// Register only if it's a Blog page, or the member profile Blogs tab.
+			if ( ( $this->bb_rl_is_page_enabled_for_integration( 'blog' ) && ( is_home() || is_singular( 'post' ) || is_author() || is_category() || is_tag() || is_date() ) ) || ( function_exists( 'bp_is_current_component' ) && bp_is_current_component( 'blog' ) ) ) {
+				wp_enqueue_style( 'bb-readylaunch-blog', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/blog{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-blog', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
+				}
+
+				wp_enqueue_script( 'bb-readylaunch-blog', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bp_get_version(), true );
+			}
 
 			if ( bp_is_members_directory() ) {
 				wp_register_script(
@@ -1162,10 +1310,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-front',
 				'bbReadyLaunchFront',
 				array(
-					'ajax_url'   => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
-					'filter_all' => esc_html__( 'All', 'buddyboss' ),
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
 				)
 			);
 
@@ -1181,6 +1330,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
+			}
 		}
 
 		/**
@@ -1347,6 +1500,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_fetch_header_notifications() {
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
+			// The `header/unread-notifications` template calls
+			// `bp_notifications_get_unread_notification_count()` (and other
+			// notifications helpers) which are loaded by the notifications
+			// component. Mirrors the gating used by sibling handlers like
+			// `bb_mark_notification_read()` and `bb_heartbeat_unread_notifications()`.
+			if ( ! bp_is_active( 'notifications' ) ) {
+				wp_send_json_error();
+			}
+
 			$page = ! empty( $_POST['page'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['page'] ) ) ) : 1;
 
 			ob_start();
@@ -1363,23 +1525,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the sidebar is enabled for courses, false otherwise.
 		 */
 		public function bb_is_sidebar_enabled_for_courses() {
-			$is_active = false;
-			if ( class_exists( 'SFWD_LMS' ) ) {
-				$options = bp_get_option( 'bp_ld_sync_settings', array() );
+			/**
+			 * Allow integrations to claim courses-sidebar activation.
+			 *
+			 * LearnDash (buddyboss-learndash) subscribes in BBLDVERSION.
+			 * Tutor LMS and MemberPress Courses continue to be resolved
+			 * inline below until their own addon extractions land.
+			 *
+			 * Subscribers return true to claim is_active; false/null to
+			 * defer. First truthy wins by filter priority order.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param bool $is_active Current active state (default false).
+			 */
+			$is_active = (bool) apply_filters( 'bb_readylaunch_courses_sidebar_is_active', false );
+
+			if ( ! $is_active ) {
 				if (
-					! empty( $options['buddypress']['enabled'] ) ||
-					! empty( $options['learndash']['enabled'] )
+					function_exists( 'tutor_utils' ) &&
+					function_exists( 'bb_tutorlms_enable' ) &&
+					bb_tutorlms_enable()
 				) {
 					$is_active = true;
+				} elseif ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+					$is_active = true;
 				}
-			} elseif (
-				function_exists( 'tutor_utils' ) &&
-				function_exists( 'bb_tutorlms_enable' ) &&
-				bb_tutorlms_enable()
-			) {
-				$is_active = true;
-			} elseif ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
-				$is_active = true;
 			}
 
 			// Get sidebar setting.
@@ -1485,7 +1656,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 								if ( ! empty( $item['thumbnail'] ) ) {
 									?>
 												<div class="item-avatar">
-													<a href="<?php echo esc_url( $item['permalink'] ); ?>">
+													<a href="<?php echo esc_url( $item['permalink'] ); ?>" aria-label="<?php echo esc_attr( $item['title'] ); ?>">
 											<?php
 												echo wp_kses(
 													$item['thumbnail'],
@@ -2376,13 +2547,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
 
-			// Add Cropper.js to the common scripts.
-			$scripts['bb-readylaunch-cropper-js'] = array(
-				'file'         => "{$url}cropper{$min}.js",
-				'dependencies' => array( 'jquery' ),
-				'version'      => '1.6.2',
-				'footer'       => true,
-			);
+
 
 			if ( isset( $scripts['bp-avatar'] ) ) {
 				$scripts['bp-avatar']['file'] = "{$url}bb-readylaunch-avatar{$min}.js";
@@ -2412,11 +2577,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
 
-			$styles['bb-readylaunch-cropper-css'] = array(
-				'file'         => "{$url}cropper{$min}.css",
-				'dependencies' => array(),
-				'version'      => '1.6.2',
-			);
+
 
 			return $styles;
 		}
@@ -2550,7 +2711,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_login_enqueue_scripts() {
 			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
+			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 		}
 
 		/**
@@ -2816,10 +2979,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_dynamic_colors() {
 			$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 			$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
-			
+
 			// Generate color shades for light mode (500 is base).
 			$light_shades = $this->bb_rl_generate_color_shades( $color_light );
-			
+
 			// Generate color shades for dark mode (500 is base).
 			$dark_shades = $this->bb_rl_generate_color_shades( $color_dark );
 			?>
@@ -2834,7 +2997,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
-					
+
 					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
 				}
@@ -2852,7 +3015,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					--bb-rl-primary-700: <?php echo esc_attr( $dark_shades[700] ); ?>;
 					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[800] ); ?>;
 					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $dark_shades[900] ); ?>;
-					
+
 					/* Keep backward compatibility. */
 					--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
 				}
@@ -2936,10 +3099,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-header-view',
 				'bbReadyLaunchFront',
 				array(
-					'ajax_url'   => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
-					'filter_all' => esc_html__( 'All', 'buddyboss' ),
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
 				)
 			);
 
@@ -2951,226 +3115,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
-		}
-
-		/**
-		 * Add ReadyLaunch settings to the platform settings API.
-		 *
-		 * @since BuddyBoss 2.9.00
-		 *
-		 * @param array $settings Array of platform settings.
-		 *
-		 * @return array Modified array of platform settings.
-		 */
-		public function bb_rest_readylaunch_platform_settings( $settings ) {
-			// Activation Settings - Boolean.
-			$settings['bb_rl_enabled'] = (bool) bp_get_option( 'bb_rl_enabled', false );
-			$settings['blogname']      = (string) get_bloginfo( 'name' );
-
-			// Style Settings.
-			$settings['bb_rl_light_logo'] = bp_get_option( 'bb_rl_light_logo', array() );
-			$settings['bb_rl_dark_logo']  = bp_get_option( 'bb_rl_dark_logo', array() );
-
-			if ( false === bp_get_option( 'bb_rl_color_light', false ) ) {
-				bp_update_option( 'bb_rl_color_light', '#3E34FF' );
-			}
-
-			if ( false === bp_get_option( 'bb_rl_color_dark', false ) ) {
-				bp_update_option( 'bb_rl_color_dark', '#A347FF' );
-			}
-
-			if ( false === bp_get_option( 'bb_rl_theme_mode', false ) ) {
-				bp_update_option( 'bb_rl_theme_mode', 'light' );
-			}
-
-			$settings['bb_rl_color_light'] = (string) bp_get_option( 'bb_rl_color_light', '#3E34FF' );
-			$settings['bb_rl_color_dark']  = (string) bp_get_option( 'bb_rl_color_dark', '#A347FF' );
-			$settings['bb_rl_theme_mode']  = (string) bp_get_option( 'bb_rl_theme_mode', 'light' );
-
-			$enabled_pages = array();
-			if ( bp_enable_site_registration() && ! bp_allow_custom_registration() ) {
-				$enabled_pages['registration'] = true;
-			}
-			if ( $this->bb_is_sidebar_enabled_for_courses() ) {
-				$enabled_pages['courses'] = true;
-			}
-
-			if ( false === bp_get_option( 'bb_rl_enabled_pages', false ) && ! empty( $enabled_pages ) ) {
-				bp_update_option( 'bb_rl_enabled_pages', $enabled_pages );
-			}
-
-			// Pages & Sidebars Settings - Boolean values in arrays.
-			$settings['bb_rl_enabled_pages'] = array_map(
-				function ( $value ) {
-					return (bool) $value;
-				},
-				bp_get_option(
-					'bb_rl_enabled_pages',
-					$enabled_pages
-				)
-			);
-
-			$activity_sidebars = array(
-				'complete_profile'  => true,
-				'latest_updates'    => true,
-				'recent_blog_posts' => true,
-				'active_members'    => true,
-			);
-
-			if ( false === bp_get_option( 'bb_rl_activity_sidebars', false ) ) {
-				bp_update_option( 'bb_rl_activity_sidebars', $activity_sidebars );
-			}
-
-			$settings['bb_rl_activity_sidebars'] = array_map(
-				function ( $value ) {
-					return (bool) $value;
-				},
-				bp_get_option(
-					'bb_rl_activity_sidebars',
-					$activity_sidebars
-				)
-			);
-
-			$member_sidebar = array( 'complete_profile' => true );
-
-			if ( bp_is_active( 'friends' ) ) {
-				$member_sidebar['connections'] = true;
-			}
-
-			if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
-				$member_sidebar['my_network'] = true;
-			}
-
-			if ( false === bp_get_option( 'bb_rl_member_profile_sidebars', false ) ) {
-				bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
-			}
-
-			$member_sidebar = wp_parse_args(
-				bp_get_option( 'bb_rl_member_profile_sidebars', $member_sidebar ),
-				$member_sidebar
-			);
-
-			$settings['bb_rl_member_profile_sidebars'] = array_map(
-				function ( $value ) {
-					return (bool) $value;
-				},
-				$member_sidebar
-			);
-
-			$group_sidebars = array(
-				'about_group'   => true,
-				'group_members' => true,
-			);
-
-			if ( false === bp_get_option( 'bb_rl_groups_sidebars', false ) ) {
-				bp_update_option( 'bb_rl_groups_sidebars', $group_sidebars );
-			}
-
-			$settings['bb_rl_groups_sidebars'] = array_map(
-				function ( $value ) {
-					return (bool) $value;
-				},
-				bp_get_option(
-					'bb_rl_groups_sidebars',
-					$group_sidebars
-				)
-			);
-
-			// Menu Settings.
-			$settings['bb_rl_header_menu'] = (string) bp_get_option( 'bb_rl_header_menu', 'readylaunch' );
-
-			$defaults = array(
-				'activity_feed' => array(
-					'enabled' => true,
-					'order'   => 0,
-					'icon'    => 'pulse',
-				),
-				'members'       => array(
-					'enabled' => true,
-					'order'   => 1,
-					'icon'    => 'users',
-				),
-				'groups'        => array(
-					'enabled' => true,
-					'order'   => 2,
-					'icon'    => 'users-three',
-				),
-				'courses'       => array(
-					'enabled' => true,
-					'order'   => 3,
-					'icon'    => 'graduation-cap',
-				),
-				'forums'        => array(
-					'enabled' => true,
-					'order'   => 4,
-					'icon'    => 'chat-text',
-				),
-				'messages'      => array(
-					'enabled' => false,
-					'order'   => 5,
-					'icon'    => 'chat-teardrop-text',
-				),
-				'notifications' => array(
-					'enabled' => false,
-					'order'   => 6,
-					'icon'    => 'bell',
-				),
-			);
-
-			if ( ! bp_is_active( 'activity' ) ) {
-				unset( $defaults['activity_feed'] );
-			}
-			if ( ! bp_is_active( 'groups' ) ) {
-				unset( $defaults['groups'] );
-			}
-			if ( ! bp_is_active( 'forums' ) ) {
-				unset( $defaults['forums'] );
-			}
-			if ( ! bp_is_active( 'messages' ) ) {
-				unset( $defaults['messages'] );
-			}
-			if ( ! bp_is_active( 'notifications' ) ) {
-				unset( $defaults['notifications'] );
-			}
-			if ( ! $this->bb_is_sidebar_enabled_for_courses() ) {
-				unset( $defaults['courses'] );
-			}
-
-			if ( false === bp_get_option( 'bb_rl_side_menu', false ) ) {
-				bp_update_option( 'bb_rl_side_menu', $defaults );
-			}
-
-			$raw_settings = wp_parse_args(
-				bp_get_option( 'bb_rl_side_menu', $defaults ),
-				$defaults
-			);
-
-			$settings['bb_rl_side_menu'] = array_map(
-				function ( $item ) {
-					return array(
-						'enabled' => ! empty( $item['enabled'] ),
-						'order'   => isset( $item['order'] ) ? (int) $item['order'] : 0,
-						'icon'    => isset( $item['icon'] ) ? $item['icon'] : '',
-					);
-				},
-				$raw_settings
-			);
-
-			// Custom Links - Array of objects with specific types.
-			$custom_links = bp_get_option( 'bb_rl_custom_links', array() );
-
-			$settings['bb_rl_custom_links'] = array_map(
-				function ( $link ) {
-					return array(
-						'id'    => (int) $link['id'],
-						'title' => (string) $link['title'],
-						'url'   => (string) $link['url'],
-					);
-				},
-				$custom_links
-			);
-
-			return $settings;
 		}
 
 		/**
@@ -3190,6 +3134,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-lms', 'rtl', 'replace' );
 		}
 
 		/**
@@ -3209,6 +3154,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-meprlms', 'rtl', 'replace' );
 
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
@@ -3229,153 +3175,48 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Check whether the current request is a page owned by an integration.
+		 *
+		 * Integrations (LearnDash, etc.) subscribe to the
+		 * `bb_rl_is_integration_page` filter to claim pages by key. Platform
+		 * holds no integration-specific detection — all post-type, URL,
+		 * taxonomy, and shortcode knowledge lives in the integration addon.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param string $key Detection key, e.g. 'learndash',
+		 *                    'learndash_registration', 'learndash_reset_password'.
+		 * @return bool True when a subscriber claims the current page for $key.
+		 */
+		public function bb_rl_is_integration_page( $key ) {
+			/**
+			 * Filters whether the current request is an integration-owned page.
+			 *
+			 * Integration addons subscribe here with their own post-type / URL
+			 * / shortcode detection. Return true to claim the page; return
+			 * $is_page (the incoming value) to stay neutral.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param bool   $is_page Whether the current page is integration-owned.
+			 * @param string $key     Detection key.
+			 */
+			return (bool) apply_filters( 'bb_rl_is_integration_page', false, $key );
+		}
+
+		/**
 		 * Check if the current page is a LearnDash page.
+		 *
+		 * Thin wrapper over the generic `bb_rl_is_integration_page` filter.
+		 * Kept public so themes and third-party plugins can keep calling it.
+		 * Detection logic lives in the `buddyboss-learndash` addon.
 		 *
 		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the current page is a LearnDash page, false otherwise.
 		 */
 		public function bb_rl_is_learndash_page() {
-			if ( ! class_exists( 'SFWD_LMS' ) ) {
-				return false;
-			}
-
-			$courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
-			if ( ! $courses_integration ) {
-				return false;
-			}
-
-			global $post, $wp_query;
-
-			// Multiple ways to get the post type.
-			$post_type = '';
-
-			// Get post type.
-			if ( function_exists( 'get_post_type' ) ) {
-				$post_type = get_post_type();
-			}
-
-			// Check global $post.
-			if ( empty( $post_type ) && isset( $post->post_type ) ) {
-				$post_type = $post->post_type;
-			}
-
-			// Check queried object.
-			if ( empty( $post_type ) && is_object( $wp_query ) ) {
-				$queried_object = get_queried_object();
-				if ( $queried_object && isset( $queried_object->post_type ) ) {
-					$post_type = $queried_object->post_type;
-				}
-			}
-
-			// Check query vars.
-			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) ) {
-				$post_type = $wp_query->query_vars['post_type'];
-			}
-
-			// LearnDash post types.
-			$ld_post_types = array(
-				learndash_get_post_type_slug( 'course' ),
-				learndash_get_post_type_slug( 'lesson' ),
-				learndash_get_post_type_slug( 'topic' ),
-				learndash_get_post_type_slug( 'quiz' ),
-				learndash_get_post_type_slug( 'assignment' ),
-				learndash_get_post_type_slug( 'essays' ),
-				learndash_get_post_type_slug( 'group' ),
-				learndash_get_post_type_slug( 'exam' ),
-			);
-
-			// Check for course archive using multiple methods.
-			if ( is_post_type_archive( $ld_post_types ) || is_singular( $ld_post_types ) ) {
-				return true;
-			}
-
-			// Check if post type matches LearnDash types.
-			if ( ! empty( $post_type ) && in_array( $post_type, $ld_post_types, true ) ) {
-				return true;
-			}
-
-			// Check REQUEST_URI for LearnDash patterns.
-			if (
-				(
-					! bp_is_user() &&
-					! bp_is_group() &&
-					! bp_is_groups_directory() &&
-					! bp_is_group_single() &&
-					! bp_is_group_create()
-				) &&
-				isset( $_SERVER['REQUEST_URI'] )
-			) {
-				$request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-
-				// Check for any LearnDash post type in the URL.
-				foreach ( $ld_post_types as $ld_post_type ) {
-					if ( ! empty( $ld_post_type ) && strpos( $request_uri, $ld_post_type ) !== false ) {
-						return true;
-					}
-				}
-
-				// Additional patterns to check for LearnDash URLs (excluding BuddyPress patterns).
-				$ld_patterns = array(
-					'/lesson/',
-					'/lessons/',
-					'/course/',
-					'/courses/',
-					'/topic/',
-					'/topics/',
-					'/quiz/',
-					'/quizzes/',
-					'/assignment/',
-					'/assignments/',
-					'/essays/',
-					'sfwd-lessons',
-					'sfwd-courses',
-					'sfwd-topic',
-					'sfwd-quiz',
-					'sfwd-assignment',
-					'sfwd-essays',
-					'sfwd-groups', // Use specific LearnDash group slug.
-				);
-
-				foreach ( $ld_patterns as $pattern ) {
-					if ( strpos( $request_uri, $pattern ) !== false ) {
-						return true;
-					}
-				}
-
-				// Legacy check for courses.
-				if ( defined( 'LDLMS_Post_Types::COURSE' ) && strpos( $request_uri, LDLMS_Post_Types::COURSE ) !== false ) {
-					return true;
-				}
-			}
-
-			$ld_taxonomies = array(
-				'ld_course_category',
-				'ld_course_tag',
-				'ld_lesson_category',
-				'ld_lesson_tag',
-			);
-
-			foreach ( $ld_taxonomies as $tax ) {
-				if ( is_tax( $tax ) ) {
-					return true;
-				}
-			}
-
-			// Group leader pages.
-			if ( function_exists( 'learndash_is_group_leader_user' ) && learndash_is_group_leader_user() ) {
-				return true;
-			}
-
-			// Check if current page is a LearnDash registration or reset password page.
-			if (
-				$this->bb_rl_is_learndash_registration_page() ||
-				$this->bb_rl_is_learndash_reset_password_page()
-			) {
-				return true;
-			}
-
-			return false;
+			return $this->bb_rl_is_integration_page( 'learndash' );
 		}
 
 		/**
@@ -3424,82 +3265,33 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Check if current page is a LearnDash registration page
+		 * Check if current page is a LearnDash registration page.
+		 *
+		 * Thin wrapper over the generic `bb_rl_is_integration_page` filter.
+		 * Kept public for theme / third-party callers. Detection logic lives
+		 * in the `buddyboss-learndash` addon.
 		 *
 		 * @since BuddyBoss 2.9.30
 		 *
-		 * @return bool True if current page is a LearnDash registration page
+		 * @return bool True if current page is a LearnDash registration page.
 		 */
 		public function bb_rl_is_learndash_registration_page() {
-			// Check if LearnDash is active.
-			if ( ! function_exists( 'learndash_registration_page_get_id' ) ) {
-				return false;
-			}
-
-			// Check for URL parameters that indicate registration.
-			if ( isset( $_GET['ld_register_id'] ) || isset( $_GET['course_id'] ) || isset( $_GET['group_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return true;
-			}
-
-			// Check if current page has registration shortcode.
-			global $post;
-			if ( $post && has_shortcode( $post->post_content, 'ld_registration' ) ) {
-				return true;
-			}
-
-			// Get the registration page ID.
-			$registration_page_id = learndash_registration_page_get_id();
-
-			// Only check page ID if a registration page is actually set.
-			if ( ! empty( $registration_page_id ) ) {
-				// Check if current page matches the registration page.
-				$current_page_id = get_queried_object_id();
-				if ( $current_page_id && (int) $current_page_id === (int) $registration_page_id ) {
-					return true;
-				}
-			}
-
-			return false;
+			return $this->bb_rl_is_integration_page( 'learndash_registration' );
 		}
 
 		/**
 		 * Check if the current page is a LearnDash reset password page.
+		 *
+		 * Thin wrapper over the generic `bb_rl_is_integration_page` filter.
+		 * Kept public for theme / third-party callers. Detection logic lives
+		 * in the `buddyboss-learndash` addon.
 		 *
 		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return bool True if the current page is a LearnDash reset password page, false otherwise.
 		 */
 		public function bb_rl_is_learndash_reset_password_page() {
-			// Check if LearnDash is active and integration is enabled.
-			// For reset password pages, we'll bypass this check to ensure it works.
-			$integration_enabled = $this->bb_rl_is_page_enabled_for_integration( 'learndash' );
-			if ( ! $integration_enabled ) {
-				// Don't return false here - continue with detection.
-			}
-
-			// Check for URL parameters that indicate password reset.
-			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || isset( $_GET['key'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return true;
-			}
-
-			// Check if the current page template is being used for password reset.
-			global $post;
-			if ( $post && has_shortcode( $post->post_content, 'ld_reset_password' ) ) {
-				return true;
-			}
-
-			// Check if this is the LearnDash reset password page.
-			if ( function_exists( 'learndash_get_reset_password_page_id' ) ) {
-				$reset_password_page_id = learndash_get_reset_password_page_id();
-				if ( ! empty( $reset_password_page_id ) ) {
-					$current_page_id = get_queried_object_id();
-					if ( $current_page_id && (int) $current_page_id === (int) $reset_password_page_id ) {
-						return true;
-					}
-				}
-			}
-
-			return false;
+			return $this->bb_rl_is_integration_page( 'learndash_reset_password' );
 		}
 
 		/**
@@ -3683,6 +3475,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				! (
 					bp_is_active( 'forums' ) &&
 					bbp_is_single_user()
+				) &&
+				! (
+					bp_is_active( 'forums' ) &&
+					bp_is_active( 'activity' ) &&
+					bp_is_activity_component()
 				)
 			) {
 				return;
@@ -3710,6 +3507,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-forums', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-readylaunch-forums', 'suffix', $min );
+			}
 
 			// Dequeue default bbpress scripts to avoid conflict with readylaunch scripts.
 			// Should load after readylaunch scripts.
@@ -4192,6 +3993,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$localize_arg['component_pages'] = $component_pages;
 
+			// Check if ReadyLaunch onboarding is completed.
+			$localize_arg['rl_onboarding_completed'] = bp_get_option( 'bb_rl_onboarding_completed', false );
+
 			return $localize_arg;
 		}
 
@@ -4587,6 +4391,172 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
 
 			return $visibility_levels;
+		}
+
+		/**
+		 * Handle document/folder rename and privacy update in a single AJAX request.
+		 *
+		 * @since BuddyBoss 2.21.0
+		 */
+		public function bb_rl_document_rename_and_privacy_update() {
+			$response = array(
+				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+			);
+
+			// Bail if not a POST action.
+			if ( ! bp_is_post_request() ) {
+				wp_send_json_error( $response );
+			}
+
+			// Check if document component is active.
+			if ( ! bp_is_active( 'document' ) ) {
+				wp_send_json_error( $response );
+			}
+
+			if ( ! is_user_logged_in() ) {
+				$response['feedback'] = esc_html__( 'Please login to perform this action.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+
+			// Nonce check.
+			$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
+				wp_send_json_error( $response );
+			}
+
+			$document_id            = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
+			$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
+			$type                   = bb_filter_input_string( INPUT_POST, 'document_type' );
+			$name                   = bb_filter_input_string( INPUT_POST, 'name' );
+			$privacy                = bb_filter_input_string( INPUT_POST, 'privacy' );
+			$update_name            = filter_input( INPUT_POST, 'update_name', FILTER_VALIDATE_BOOLEAN );
+			$update_privacy         = filter_input( INPUT_POST, 'update_privacy', FILTER_VALIDATE_BOOLEAN );
+
+			if ( empty( $document_id ) || empty( $type ) ) {
+				wp_send_json_error( $response );
+			}
+
+			$result = array(
+				'document_id' => $document_id,
+				'type'        => $type,
+			);
+
+			// Handle document type.
+			if ( 'document' === $type ) {
+				// Check permission.
+				if ( ! bp_document_user_can_edit( $document_id ) ) {
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this document.', 'buddyboss' );
+					wp_send_json_error( $response );
+				}
+
+				// Update name if requested.
+				if ( $update_name && ! empty( $name ) ) {
+					$renamed = bp_document_rename_file( $document_id, $attachment_document_id, $name );
+					if ( isset( $renamed['document_id'] ) && $renamed['document_id'] > 0 ) {
+						$result['name']    = $name;
+						$result['renamed'] = true;
+					} else {
+						$response['feedback'] = is_string( $renamed ) && '' !== $renamed ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+				}
+
+				// Update privacy if requested.
+				if ( $update_privacy && ! empty( $privacy ) ) {
+					$document_visibilities = bp_document_get_visibility_levels();
+					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+
+					$document_object = new BP_Document( $document_id );
+					if (
+						'grouponly' !== $privacy &&
+						! empty( $document_object->id ) &&
+						0 === (int) $document_object->group_id &&
+						0 === (int) $document_object->folder_id
+					) {
+						bp_document_update_privacy( $document_id, $privacy, 'document' );
+						$result['privacy']         = $privacy;
+						$result['privacy_label']   = isset( $document_visibilities[ $privacy ] ) ? $document_visibilities[ $privacy ] : '';
+						$result['privacy_updated'] = true;
+					}
+				}
+
+				// Only generate document HTML if name was updated (needed for updated file links).
+				// When only privacy changes, skip HTML generation for better performance and return URL same as core ajax method.
+				if ( $update_name ) {
+					ob_start();
+					if (
+						bp_has_document(
+							array(
+								'include'  => $document_id,
+								'per_page' => 0,
+							)
+						)
+					) {
+						while ( bp_document() ) {
+							bp_the_document();
+							bp_get_template_part( 'document/document-entry' );
+						}
+					}
+					$result['document'] = ob_get_clean();
+				} else {
+					// For privacy only updates, return URL same as core ajax method.
+					$document_data = new BP_Document( $document_id );
+					if ( ! empty( $document_data->attachment_id ) ) {
+						$result['url'] = bp_document_download_link( $document_data->attachment_id, $document_id );
+					}
+				}
+			} else {
+				// Handle folder type.
+				// Check permission.
+				if ( ! bp_folder_user_can_edit( $document_id ) ) {
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss' );
+					wp_send_json_error( $response );
+				}
+
+				// Update name if requested.
+				if ( $update_name && ! empty( $name ) ) {
+					$renamed = bp_document_rename_folder( $document_id, $name );
+					if ( $renamed > 0 ) {
+						$result['name']    = $name;
+						$result['renamed'] = true;
+					} else {
+						$response['feedback'] = esc_html__( 'Failed to rename folder.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+				}
+
+				// Update privacy if requested.
+				if ( $update_privacy && ! empty( $privacy ) ) {
+					$document_visibilities = bp_document_get_visibility_levels();
+					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+
+					$folder_object = new BP_Document_Folder( $document_id );
+					if (
+						'grouponly' !== $privacy &&
+						! empty( $folder_object->id ) &&
+						0 === (int) $folder_object->group_id &&
+						0 === (int) $folder_object->parent
+					) {
+						bp_document_update_privacy( $document_id, $privacy, 'folder' );
+						$result['privacy']         = $privacy;
+						$result['privacy_label']   = isset( $document_visibilities[ $privacy ] ) ? $document_visibilities[ $privacy ] : '';
+						$result['privacy_updated'] = true;
+					}
+				}
+			}
+
+			wp_send_json_success(
+				array(
+					'message'  => 'success',
+					'response' => $result,
+				)
+			);
 		}
 	}
 }
