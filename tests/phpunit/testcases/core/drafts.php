@@ -309,6 +309,122 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ) );
 	}
 
+	/**
+	 * bb_draft_dispose() must write the row BEFORE it releases attachment stamps.
+	 *
+	 * The activity and forum save handlers, the forum inner-key disposer and
+	 * the healer all read what the release needs before the write and release
+	 * after it, and the activity handler states that rule outright: releasing
+	 * first would expose the attachments of a draft that still exists if
+	 * anything below failed. bb_draft_dispose() did the opposite in both of its
+	 * branches. Every removal path routes through it - the member's discard,
+	 * the per-user budget eviction inside an ordinary autosave (possibly several
+	 * times per request) and the expiry sweep - and a 50-attachment draft spends
+	 * ~150 round trips inside the release loop, so a fatal, a timeout or a
+	 * killed worker in that window left a live draft stored with its media
+	 * unprotected, and the 6-hourly orphan cron hard-deleted it. The reverse
+	 * failure, a stamp outliving its draft, is a leak the daily sweep collects.
+	 *
+	 * Asserted on all three write shapes: inner key with a surviving sibling
+	 * (row rewrite), last inner key (row delete) and whole row (row delete).
+	 */
+	public function test_dispose_releases_attachment_stamps_only_after_the_row_write() {
+		$user_id = self::factory()->user->create();
+
+		// Inner key, sibling survives: the row is REWRITTEN.
+		$first  = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		$second = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		update_post_meta( $first, 'bb_media_draft', 1 );
+		update_post_meta( $second, 'bb_media_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_topic'   => array( 'data' => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $first ) ) ) ) ),
+				'draft_reply_5' => array( 'data' => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $second ) ) ) ) ),
+			)
+		);
+
+		$order = $this->record_dispose_order( 'bb_user_topic_reply_draft', array( $user_id, 'bb_user_topic_reply_draft', 'draft_topic' ) );
+		$this->assert_release_follows_row_write( $order, 'Inner-key disposal that rewrites the row must release the stamp after the rewrite.' );
+		$this->assertSame( '', (string) get_post_meta( $first, 'bb_media_draft', true ), 'Premise: the disposed inner draft attachment must still be released.' );
+		$this->assertSame( '1', (string) get_post_meta( $second, 'bb_media_draft', true ), 'Premise: the surviving sibling attachment must keep its stamp.' );
+
+		// Last inner key: the row is DELETED.
+		$order = $this->record_dispose_order( 'bb_user_topic_reply_draft', array( $user_id, 'bb_user_topic_reply_draft', 'draft_reply_5' ) );
+		$this->assert_release_follows_row_write( $order, 'Disposing the last inner draft must release the stamp after the row delete.' );
+		$this->assertSame( '', (string) get_post_meta( $second, 'bb_media_draft', true ), 'Premise: the last inner draft attachment must be released.' );
+
+		// Whole row (activity shape): the row is DELETED.
+		$activity_attachment = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		update_post_meta( $activity_attachment, 'bb_media_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key' => 'draft_user',
+				'data'     => array( 'media' => array( array( 'id' => $activity_attachment ) ) ),
+			)
+		);
+
+		$order = $this->record_dispose_order( 'draft_user', array( $user_id, 'draft_user' ) );
+		$this->assert_release_follows_row_write( $order, 'Whole-row disposal must release the stamps after the row delete.' );
+		$this->assertSame( '', (string) get_post_meta( $activity_attachment, 'bb_media_draft', true ), 'Premise: the whole-row disposal must still release the stamp.' );
+	}
+
+	/**
+	 * Run bb_draft_dispose() while recording the order of the draft-row write
+	 * and the attachment-stamp releases.
+	 *
+	 * @param string $meta_key Draft usermeta key the disposal writes.
+	 * @param array  $args     Arguments for bb_draft_dispose().
+	 * @return string[] Sequence of 'row' and 'release' events.
+	 */
+	protected function record_dispose_order( $meta_key, $args ) {
+		$order    = array();
+		$row_key  = bp_get_user_meta_key( $meta_key );
+		$on_row   = function ( $meta_ids, $object_id, $written_key ) use ( &$order, $row_key ) {
+			if ( $written_key === $row_key ) {
+				$order[] = 'row';
+			}
+		};
+		$on_stamp = function ( $meta_ids, $object_id, $deleted_key ) use ( &$order ) {
+			if ( 'bb_media_draft' === $deleted_key ) {
+				$order[] = 'release';
+			}
+		};
+
+		add_action( 'updated_user_meta', $on_row, 10, 3 );
+		add_action( 'deleted_user_meta', $on_row, 10, 3 );
+		add_action( 'deleted_post_meta', $on_stamp, 10, 3 );
+
+		$this->assertTrue( call_user_func_array( 'bb_draft_dispose', $args ), 'Premise: the disposal must report success.' );
+
+		remove_action( 'updated_user_meta', $on_row, 10 );
+		remove_action( 'deleted_user_meta', $on_row, 10 );
+		remove_action( 'deleted_post_meta', $on_stamp, 10 );
+
+		return $order;
+	}
+
+	/**
+	 * Assert that no stamp release precedes the draft-row write.
+	 *
+	 * @param string[] $order   Recorded event sequence.
+	 * @param string   $message Failure message.
+	 * @return void
+	 */
+	protected function assert_release_follows_row_write( $order, $message ) {
+		$row_indexes     = array_keys( $order, 'row', true );
+		$release_indexes = array_keys( $order, 'release', true );
+
+		$this->assertNotEmpty( $row_indexes, 'Premise: the disposal must have written the draft row.' );
+		$this->assertNotEmpty( $release_indexes, 'Premise: the disposal must have released a stamp.' );
+		$this->assertGreaterThan( max( $row_indexes ), min( $release_indexes ), $message );
+	}
+
 	public function test_dispose_rejects_non_draft_keys() {
 		$user_id = self::factory()->user->create();
 

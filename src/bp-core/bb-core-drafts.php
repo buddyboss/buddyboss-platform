@@ -1191,16 +1191,20 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 		$retain_entries = $stored;
 		unset( $retain_entries[ $inner_key ] );
 
-		if ( ! $defer_attachment_release ) {
-			// Same-row siblings ($retain_entries) PLUS anything the user's other
-			// draft rows still reference (L7).
-			bb_draft_unstamp_attachments(
-				$stored[ $inner_key ],
-				$user_id,
-				$retain_entries,
-				bb_draft_collect_other_referenced_ids( $user_id, $meta_key, $inner_key )
-			);
-		}
+		// Everything the release needs is READ before the write and the stamps
+		// are released AFTER it - the rule the other four removal paths follow
+		// (the activity and forum save handlers, the forum inner-key disposer
+		// and the healer). Releasing first left a window, ~150 round trips wide
+		// on a 50-attachment draft, in which a fatal or a killed worker left the
+		// draft stored with its media unprotected, and the 6-hourly orphan cron
+		// then hard-deleted files a live draft still referenced. The reverse
+		// failure - a stamp outliving its draft - is a leak the daily sweep
+		// collects.
+		$disposed_entry = $stored[ $inner_key ];
+		$retain_ids     = $defer_attachment_release
+			? array()
+			: bb_draft_collect_other_referenced_ids( $user_id, $meta_key, $inner_key );
+
 		unset( $stored[ $inner_key ] );
 
 		if ( empty( $stored ) ) {
@@ -1222,8 +1226,18 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 
 		bb_draft_flush_user_meta_sizes( $user_id );
 
+		if ( ! $defer_attachment_release ) {
+			// Same-row siblings ($retain_entries) PLUS anything the user's other
+			// draft rows still reference (L7).
+			bb_draft_unstamp_attachments( $disposed_entry, $user_id, $retain_entries, $retain_ids );
+		}
+
 		return true;
 	}
+
+	// Whole row: read the cross-row retain set before the write, release after
+	// it (same ordering rule as the inner-key branch above).
+	$retain_ids = array();
 
 	if ( ! $defer_attachment_release ) {
 		// The whole row goes, so nothing in it survives to retain; the retain set
@@ -1241,7 +1255,12 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 		// and the healer does its own release - so this was latent, which is
 		// exactly why the comment above needed to stop being wrong about it.
 		$retain_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $meta_key );
+	}
 
+	bp_delete_user_meta( $user_id, $meta_key );
+	bb_draft_flush_user_meta_sizes( $user_id );
+
+	if ( ! $defer_attachment_release ) {
 		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
 			foreach ( $stored as $inner_draft ) {
 				bb_draft_unstamp_attachments( $inner_draft, $user_id, array(), $retain_ids );
@@ -1250,9 +1269,6 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 			bb_draft_unstamp_attachments( $stored, $user_id, array(), $retain_ids );
 		}
 	}
-
-	bp_delete_user_meta( $user_id, $meta_key );
-	bb_draft_flush_user_meta_sizes( $user_id );
 
 	return true;
 }
