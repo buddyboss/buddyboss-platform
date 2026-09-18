@@ -392,6 +392,80 @@ function bb_recaptcha_conflict_mode() {
 }
 
 /**
+ * Determines whether the current login submission comes from a form that
+ * BuddyBoss renders the reCAPTCHA widget into.
+ *
+ * This question must be answered from server-side request context only.
+ * Anything derived from the request body - isset( $_POST['g-recaptcha-response'] ),
+ * a hidden marker field, even a nonce - can be stripped by an attacker, which
+ * turns the check into a universal bypass rather than a scoping rule. A form
+ * that legitimately carries no widget and a request whose widget was removed
+ * produce a byte-identical body, so only the endpoint can tell them apart.
+ *
+ * @since BuddyBoss 3.4.3
+ *
+ * @return bool True when the widget was rendered for this endpoint.
+ */
+function bb_recaptcha_is_protected_login_request() {
+
+	// wp-login.php is always covered by the `login_form` action. This also
+	// covers wp_login_form() embeds, which post to wp_login_url().
+	if ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) {
+		return true;
+	}
+
+	/**
+	 * Filters whether the current front-end login endpoint renders the widget.
+	 *
+	 * Rendering integrations register here so that enforcement and rendering
+	 * stay symmetric - a form only becomes fail-closed once something actually
+	 * puts a widget on it. Return true only from server-side state such as a
+	 * stored page ID; never from a submitted field.
+	 *
+	 * @since BuddyBoss 3.4.3
+	 *
+	 * @param bool $protected Whether this endpoint renders the widget. Default false.
+	 */
+	return (bool) apply_filters( 'bb_recaptcha_is_protected_login_request', false );
+}
+
+/**
+ * Logs a login that was allowed through without reCAPTCHA verification because
+ * the submitting form is not one BuddyBoss displays the reCAPTCHA on.
+ *
+ * Third-party login forms (MemberPress, membership plugins, custom themes) are
+ * intentionally out of scope, so this is developer visibility rather than a
+ * warning: it names the endpoints reCAPTCHA does not cover. Only written when
+ * WP_DEBUG is on, and throttled to one entry per endpoint per day, so it can
+ * never add noise to a production log.
+ *
+ * @since BuddyBoss 3.4.3
+ *
+ * @return void
+ */
+function bb_recaptcha_log_uncovered_login() {
+	if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+		return;
+	}
+
+	$request_path = wp_parse_url( esc_url_raw( wp_unslash( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' ) ), PHP_URL_PATH );
+	$request_path = ! empty( $request_path ) ? $request_path : '/';
+
+	$transient_key = 'bb_recaptcha_uncovered_' . md5( $request_path );
+	if ( get_transient( $transient_key ) ) {
+		return;
+	}
+	set_transient( $transient_key, 1, DAY_IN_SECONDS );
+
+	error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional operational warning.
+		sprintf(
+			'BuddyBoss reCAPTCHA: a login on "%s" was accepted without verification - BuddyBoss does not display the reCAPTCHA on this form. This is expected for third-party login forms; use the bb_recaptcha_is_protected_login_request filter to bring one in scope.',
+			$request_path
+		)
+	);
+}
+
+/**
  * Retrieves the selected reCAPTCHA v2 theme.
  *
  * @since BuddyBoss 2.5.60
