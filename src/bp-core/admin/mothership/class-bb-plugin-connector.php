@@ -82,6 +82,17 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 
 	/**
 	 * Clear the dynamic plugin ID.
+	 *
+	 * Deliberately does NOT clear the STABLE_LICENSE_KEY_OPTION mirror. Every
+	 * caller except the explicit licence reset reaches this from a transient
+	 * failure path — a rejected activation attempt or a failed legacy
+	 * migration — where the previously activated key is still the customer's
+	 * real licence and must survive, or the failure strands the site as
+	 * unlicensed and DRM-nags a paying customer (the exact defect the mirror
+	 * exists to fix). A failed activation never persists its candidate key,
+	 * so the mirror only ever holds the last successfully activated one. The
+	 * reset path is the one place that clears user intent, and it pairs this
+	 * call with updateLicenseKey( '' ).
 	 */
 	public function clearDynamicPluginId(): void {
 		// Purge caches scoped to the OLD plugin ID before clearing.
@@ -158,13 +169,27 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * The option name (`{pluginId}_license_key`) matches the base default; the
 	 * override exists only to honor the BuddyBoss dynamic plugin ID.
 	 *
+	 * Reads the per-SKU option first, then the stable mirror. Both hold the
+	 * currently activated key. Superseded `{old_sku}_license_key` rows are
+	 * deliberately never read — reporting a stale key is worse than reporting
+	 * none, because it looks correct. The fallback lives here rather than in
+	 * {@see self::getLicenseKey()} because `Credentials::getLicenseKey()` resolves
+	 * through this method, so this is the only placement that also keeps the
+	 * GroundLevel read path working across a plugin-id change.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return string The license key.
 	 */
 	public function resolveLicenseKey(): string {
-		$pluginId = $this->getCurrentPluginId();
-		return (string) get_option( $pluginId . '_license_key', '' );
+		$pluginId    = $this->getCurrentPluginId();
+		$license_key = (string) get_option( $pluginId . '_license_key', '' );
+
+		if ( '' !== $license_key ) {
+			return $license_key;
+		}
+
+		return (string) get_option( self::STABLE_LICENSE_KEY_OPTION, '' );
 	}
 
 	/**
@@ -173,6 +198,12 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Overrides {@see AbstractPluginConnection::storeLicenseKey()} so the GroundLevel
 	 * 9.1.2 {@see Credentials} writes the dynamic-plugin-id-scoped option.
 	 *
+	 * Writes both the per-SKU option and the stable mirror so a later id change
+	 * cannot strand the key. An empty value clears both, so resets stay clean.
+	 * The return value reports the per-SKU write, because that is the option the
+	 * base contract describes and the value `Credentials::setLicenseKey()` hands
+	 * back to its callers; the mirror is a BuddyBoss-side durability copy.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $licenseKey The license key to store.
@@ -180,14 +211,40 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function storeLicenseKey( string $licenseKey ): bool {
 		$pluginId = $this->getCurrentPluginId();
-		return (bool) update_option( $pluginId . '_license_key', $licenseKey );
+		$updated  = update_option( $pluginId . '_license_key', $licenseKey );
+
+		if ( '' === $licenseKey ) {
+			delete_option( self::STABLE_LICENSE_KEY_OPTION );
+
+			return (bool) $updated;
+		}
+
+		update_option( self::STABLE_LICENSE_KEY_OPTION, $licenseKey );
+
+		return (bool) $updated;
 	}
+
+	/**
+	 * Option holding the licence key under a name that never changes.
+	 *
+	 * The per-SKU option (`{plugin_id}_license_key`) is addressed by a mutable
+	 * id, so changing or clearing that id strands the key. This mirror is the
+	 * durable copy; the per-SKU option is kept in step for backwards
+	 * compatibility with anything reading it directly.
+	 *
+	 * @since BuddyBoss 3.4.3
+	 *
+	 * @var string
+	 */
+	const STABLE_LICENSE_KEY_OPTION = 'buddyboss_license_key';
 
 	/**
 	 * Gets the license key option.
 	 *
 	 * Convenience accessor retained for BuddyBoss callers (e.g. the add-ons manager
-	 * license gate in {@see BB_Addons_Manager::render_addons_html()}).
+	 * license gate in {@see BB_Addons_Manager::render_addons_html()}). The per-SKU
+	 * option and the {@see self::STABLE_LICENSE_KEY_OPTION} mirror are both read by
+	 * {@see self::resolveLicenseKey()}, so this stays a thin delegate.
 	 *
 	 * @return string The license key.
 	 */
@@ -199,7 +256,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Updates the license key option.
 	 *
 	 * Backward-compatible alias for {@see self::storeLicenseKey()} retained for
-	 * existing BuddyBoss callers that expect a void return.
+	 * existing BuddyBoss callers that expect a void return. The mirror write (and
+	 * its removal on an empty key) happens there.
 	 *
 	 * @param string $licenseKey The license key to update.
 	 */

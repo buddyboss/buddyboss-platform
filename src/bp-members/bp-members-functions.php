@@ -2132,14 +2132,28 @@ function bp_core_activate_signup( $key ) {
 				 * Save the visibility level.
 				 *
 				 * Use the field's default visibility if not present, and 'public' if a
-				 * default visibility is not defined.
+				 * default visibility is not defined. Fields the member may not change -
+				 * "Enforce field visibility" or a display-name-format lock (nickname
+				 * always, first name under the first-name / first-last-name formats) -
+				 * always take the default: a crafted registration POST could otherwise
+				 * persist a member-chosen level. bb_xprofile_can_change_field_visibility()
+				 * resolves the same capability the profile settings screen and the REST
+				 * endpoints use and evaluates correctly for the logged-out activation
+				 * request, so it is the single source of truth for the lock here too.
+				 *
+				 * Note: do not reuse the $key parameter for the per-field POST key - it
+				 * carries the activation key that the bp_core_activated_user hook below
+				 * receives.
 				 */
-				$key = "field_{$field_id}_visibility";
-				if ( isset( $user['meta'][ $key ] ) ) {
-					$visibility_level = $user['meta'][ $key ];
+				$visibility_meta_key = "field_{$field_id}_visibility";
+				$vfield              = xprofile_get_field( $field_id, null, false );
+				$default             = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
+				$can_change          = bb_xprofile_can_change_field_visibility( $field_id );
+
+				if ( $can_change && isset( $user['meta'][ $visibility_meta_key ] ) ) {
+					$visibility_level = $user['meta'][ $visibility_meta_key ];
 				} else {
-					$vfield           = xprofile_get_field( $field_id );
-					$visibility_level = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
+					$visibility_level = $default;
 				}
 				xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 			}
@@ -5580,36 +5594,3 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
 }
-
-/**
- * Block direct URL access to hidden profile navigation items.
- *
- * When an admin hides a profile nav tab via Settings 2.0 Navigation Order,
- * this redirects any direct URL access to the member's profile home.
- * Only applies when viewing another user's profile (or your own).
- *
- * Mirrors the group equivalent in bp-groups/actions/access.php.
- *
- * @since BuddyBoss 3.0.0
- */
-function bb_members_block_hidden_nav_access() {
-	if ( ! bp_is_user() ) {
-		return;
-	}
-
-	if ( ! function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-		return;
-	}
-
-	$current_component = bp_current_component();
-	if ( empty( $current_component ) ) {
-		return;
-	}
-
-	$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
-
-	if ( is_array( $hidden_tabs ) && in_array( $current_component, $hidden_tabs, true ) ) {
-		bp_core_redirect( bp_displayed_user_domain() );
-	}
-}
-add_action( 'bp_actions', 'bb_members_block_hidden_nav_access' );

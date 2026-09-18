@@ -47,9 +47,10 @@ function bb_members_register_profile_name_panel_fields() {
 				esc_url(
 					add_query_arg(
 						array(
-							'page' => 'bp-repair-community',
-							'tab'  => 'bp-repair-community',
-							'tool' => 'bp-wordpress-update-display-name',
+							'page'  => 'bb-settings',
+							'tab'   => 'tools',
+							'panel' => 'repair_platform',
+							'tool'  => 'bp-wordpress-update-display-name',
 						),
 						admin_url( 'admin.php' )
 					)

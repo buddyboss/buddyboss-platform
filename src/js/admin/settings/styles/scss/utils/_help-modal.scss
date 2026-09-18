@@ -230,36 +230,12 @@ body.buddyboss_page_bb-settings:has(.bb-admin-feature-settings > .bb-rl-help-mod
 		line-height: 1;
 	}
 
-	.bb-rl-help-modal-toc {
-		margin-bottom: 20px;
-		padding: 15px;
-		background: #f8f9fa;
-		border-radius: 0;
-		border-left: 4px solid #007cba;
+	.bb-rl-help-modal-content .bb-rl-help-modal-toc {
+		display: none;
+	}
 
-		h3 {
-			margin: 0 0 10px 0;
-			font-size: 16px;
-		}
-
-		ol {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-		}
-
-		li {
-			margin-bottom: 8px;
-		}
-
-		a {
-			color: #007cba;
-			text-decoration: none;
-			padding: 6px 8px;
-			border-radius: 4px;
-			display: block;
-			font-weight: 500;
-		}
+	.help-content p.has-text-align-center {
+		text-align: center;
 	}
 
 	.bb-rl-help-modal-main-content h2 {

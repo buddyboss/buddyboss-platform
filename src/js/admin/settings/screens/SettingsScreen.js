@@ -28,7 +28,7 @@ export function SettingsScreen({ onNavigate }) {
 	const [placeholderFeatures, setPlaceholderFeatures] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'inactive'
-	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
+	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations', 'tools'
 	const [searchQuery, setSearchQuery] = useState('');
 	const [toast, setToast] = useState(null);
 	const [upgradeModal, setUpgradeModal] = useState(null); // { feature } or null
@@ -141,7 +141,7 @@ export function SettingsScreen({ onNavigate }) {
 	}, [ features, placeholderFeatures, activeFilter, selectedCategory, searchQuery ] );
 
 	// Group features by category with defined display order.
-	const categoryOrder = [ 'community', 'add-ons', 'integrations' ];
+	const categoryOrder = [ 'community', 'add-ons', 'integrations', 'tools' ];
 	const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
 		const category = feature.category || 'community';
 		if (!acc[category]) {
@@ -513,6 +513,8 @@ export function SettingsScreen({ onNavigate }) {
 										? __('Community', 'buddyboss')
 										: 'add-ons' === category
 										? __('Add-ons', 'buddyboss')
+										: 'tools' === category
+										? __('Tools', 'buddyboss')
 										: __('Integrations', 'buddyboss') }
 								</option>
 							))}
@@ -531,6 +533,10 @@ export function SettingsScreen({ onNavigate }) {
 										? __('BUDDYBOSS COMMUNITY SETTINGS', 'buddyboss')
 										: 'add-ons' === category
 										? __('BUDDYBOSS ADD-ONS', 'buddyboss')
+										: 'integrations' === category
+										? __('BUDDYBOSS INTEGRATIONS', 'buddyboss')
+										: 'tools' === category
+										? __('TOOLS', 'buddyboss')
 										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss') }
 								</h2>
 							</div>
@@ -551,8 +557,10 @@ export function SettingsScreen({ onNavigate }) {
 											>
 												<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
 												{'plus' === feature.upgrade_tier
-													? __('UPGRADE PLUS', 'buddyboss')
-													: __('UPGRADE PRO', 'buddyboss')}
+													? __('UPGRADE SCALE', 'buddyboss')
+													: 'start' === feature.upgrade_tier
+														? __('UPGRADE START', 'buddyboss')
+														: __('UPGRADE LAUNCH', 'buddyboss')}
 											</button>
 										)}
 										{/* Card Body */}
@@ -615,18 +623,23 @@ export function SettingsScreen({ onNavigate }) {
 										<div className="bb-admin-settings__feature-bottom">
 											<div className="bb-admin-settings__feature-left">
 												{ feature.is_placeholder && 'not_installed' === feature.plugin_status && feature.plugin_slug ? (
+													/* requires_unmet: parent plugin inactive — render the button
+													   disabled (no extra UI, matching the Add-ons page); core's
+													   dependency check would refuse the activation anyway. */
 													<Button
 														variant="secondary"
-														className="bb-admin-settings__feature-settings-btn"
-														onClick={() => handleAddonAction(feature, 'install')}
+														className={`bb-admin-settings__feature-settings-btn${feature.requires_unmet ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}`}
+														disabled={!!feature.requires_unmet}
+														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'install')}
 													>
 														{__('Install & Activate', 'buddyboss')}
 													</Button>
 												) : feature.is_placeholder && 'installed_inactive' === feature.plugin_status && feature.plugin_slug ? (
 													<Button
 														variant="secondary"
-														className="bb-admin-settings__feature-settings-btn"
-														onClick={() => handleAddonAction(feature, 'activate')}
+														className={`bb-admin-settings__feature-settings-btn${feature.requires_unmet ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}`}
+														disabled={!!feature.requires_unmet}
+														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'activate')}
 													>
 														{__('Activate', 'buddyboss')}
 													</Button>

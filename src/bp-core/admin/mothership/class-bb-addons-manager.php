@@ -143,6 +143,79 @@ class BB_Addons_Manager extends AddonsManager {
 	}
 
 	/**
+	 * Whether the last add-ons API lookup could not be trusted.
+	 *
+	 * Lets callers tell "this product is not in your plan" apart from "we could not
+	 * reach the add-ons API", which look identical through {@see self::checkProductBySlug()}.
+	 *
+	 * GroundLevel 9.1.2 narrowed what this can report. {@see AddonsManager::getAddons()}
+	 * returns a plain array, not an API response, and the vendor caches its own failures
+	 * (`ERROR_TTL_MINUTES`) and serves the last successful list through an outage — so
+	 * there is no error object left to inspect, and the 2.2.1-era products error transient
+	 * this used to read no longer exists. What stays observable is an exhausted rate-limit
+	 * quota recorded from the licensing API's `Retry-After` / `X-RateLimit-Reset` headers,
+	 * which is the outage shape these guards were added for. An ordinary transport failure
+	 * on a cold cache now reads as an empty plan rather than an error, because the vendor
+	 * absorbs it; callers that must fail closed already do so on an empty result.
+	 *
+	 * @since BuddyBoss 3.3.0
+	 *
+	 * @return bool True when the add-ons list could not be retrieved.
+	 */
+	public static function productsApiErrored(): bool { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		if ( ! self::plugin_connection()->getLicenseActivationStatus() ) {
+			// Without an active license there is no API call to fail.
+			return false;
+		}
+
+		return self::rate_limit_seconds_remaining() > 0;
+	}
+
+	/**
+	 * Seconds until the recorded licensing API rate-limit window resets.
+	 *
+	 * Reads the `bb_license_rate_limit` transient written by
+	 * {@see BB_License_Manager::capture_api_headers()}. Only an exhausted quota
+	 * (`remaining` of zero with a future reset) counts as blocking; rate-limit
+	 * headers on healthy responses do not pause anything.
+	 *
+	 * @since BuddyBoss 3.3.0
+	 *
+	 * @return int Seconds remaining in the block, or 0 when not rate limited.
+	 */
+	protected static function rate_limit_seconds_remaining(): int {
+		$data = get_transient( 'bb_license_rate_limit' );
+
+		if ( ( empty( $data ) || ! is_array( $data ) ) && is_multisite() ) {
+			$data = get_site_transient( 'bb_license_rate_limit' );
+		}
+
+		if ( empty( $data ) || ! is_array( $data ) ) {
+			return 0;
+		}
+
+		$reset     = isset( $data['reset'] ) ? (int) $data['reset'] : 0;
+		$remaining = isset( $data['remaining'] ) ? $data['remaining'] : null;
+
+		if ( null === $remaining || (int) $remaining > 0 ) {
+			return 0;
+		}
+
+		$seconds = $reset - time();
+
+		/*
+		 * A reset more than a day out is corrupt data (e.g. a millisecond epoch in
+		 * X-RateLimit-Reset). Ignore it rather than let a bogus timestamp report an
+		 * outage forever.
+		 */
+		if ( $seconds > DAY_IN_SECONDS ) {
+			return 0;
+		}
+
+		return max( 0, $seconds );
+	}
+
+	/**
 	 * Clear the add-ons cache.
 	 *
 	 * Invalidates the vendor add-ons cache (`{pluginId}-mosh-addons`) so the live add-ons list

@@ -92,9 +92,10 @@ function bb_members_register_profile_types_panel_fields() {
 				esc_url(
 					add_query_arg(
 						array(
-							'page' => 'bp-tools',
-							'tab'  => 'bp-tools',
-							'tool' => 'bp-assign-member-type',
+							'page'  => 'bb-settings',
+							'tab'   => 'tools',
+							'panel' => 'repair_platform',
+							'tool'  => 'bp-assign-member-type',
 						),
 						admin_url( 'admin.php' )
 					)

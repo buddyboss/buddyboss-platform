@@ -274,20 +274,22 @@ class BP_Activity_Template {
 
 		}
 
-		$pinned_id = 0;
-		if ( 'group' === $pin_type ) {
-			if (
-				! empty( $filter['primary_id'] ) &&
-				! empty( $filter['object'] ) &&
-				'groups' === $filter['object']
-			) {
-				$group_id           = $filter['primary_id'];
-				$pinned_id          = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
-				$this->pinned_scope = 'group';
-			}
-		} elseif ( 'activity' === $pin_type ) {
-			$pinned_id          = bp_get_option( 'bb_pinned_post', 0 );
-			$this->pinned_scope = 'activity';
+		/**
+		 * Filter documented in BP_Activity_Activity::get(). The Pinned Posts
+		 * add-on supplies the pinned id for this feed; without a provider the
+		 * default 0 means no pinned post (and no `.bb-pinned` entry class).
+		 */
+		$pinned_id = (int) apply_filters(
+			'bb_activity_get_pinned_id',
+			0,
+			array(
+				'pin_type' => $pin_type,
+				'filter'   => $filter,
+			)
+		);
+
+		if ( ! empty( $pinned_id ) ) {
+			$this->pinned_scope = ( 'group' === $pin_type ) ? 'group' : 'activity';
 		}
 		$this->pinned_id = $pinned_id;
 
