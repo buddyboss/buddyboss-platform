@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
-
 /**
  * This class registers and renders an admin page that displays a form for activating/deactivating the license.
  */
-class BB_License_Page implements StaticContainerAwareness {
-
-	use HasStaticContainer;
+class BB_License_Page {
 
 	/**
 	 * The capability required to view the page.
@@ -57,7 +52,6 @@ class BB_License_Page implements StaticContainerAwareness {
 	 */
 	public static function render(): void {
 		wp_enqueue_style( 'bb-mothership-admin', buddypress()->plugin_url . 'bp-core/admin/css/mothership.css', array(), buddypress()->version );
-
 
 		include_once __DIR__ . '/views/admin.php';
 	}
