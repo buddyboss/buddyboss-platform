@@ -1280,7 +1280,7 @@ add_filter( 'the_author', 'bb_core_filter_the_author' );
 /**
  * Apply member name visibility to the author archive's document title.
  *
- * wp_get_document_title() reads get_queried_object()->display_name directly, with no filter of its
+ * WordPress' wp_get_document_title() reads get_queried_object()->display_name directly, with no filter of its
  * own, so the raw column reaches both `<title>` on the author archive and `<title>` in that
  * author's feed (get_wp_title_rss() calls wp_get_document_title()).
  *

@@ -4941,6 +4941,7 @@ function bp_get_group_member_avatar( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'full',
 			'email'   => $members_template->member->user_email,
+			/* translators: %s: Member display name. */
 			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 		)
 	);
@@ -4983,6 +4984,7 @@ function bp_get_group_member_avatar_thumb( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
+			/* translators: %s: Member display name. */
 			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 		)
 	);
@@ -5027,6 +5029,7 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
+			/* translators: %s: Member display name. */
 			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 			'width'   => absint( $width ),
 			'height'  => absint( $height ),

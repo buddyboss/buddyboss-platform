@@ -2995,6 +2995,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 			// User is viewing someone else's profile (so use their display name)
 		} else {
+			/* translators: %s: User display name. */
 			$new_title['text'] = sprintf( esc_attr_x( "%s's", 'User viewing another users profile', 'buddyboss' ), bp_core_get_user_displayname( bbp_get_user_id() ) );
 		}
 

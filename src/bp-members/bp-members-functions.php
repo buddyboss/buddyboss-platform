@@ -734,7 +734,7 @@ add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
 /**
  * Whether a member display-name resolution is currently reading the stored `display_name` column.
  *
- * bp_core_get_user_displayname() takes the stored column as its INPUT and strips the name parts the
+ * The resolver bp_core_get_user_displayname() takes the stored column as its INPUT and strips the name parts the
  * viewer may not see out of it. It reads that column with get_the_author_meta(), which is also the
  * hook BuddyBoss uses to apply the same redaction to WordPress core's author output
  * (bb_core_filter_the_author_display_name()). Left unmarked the two chase each other: the

@@ -1719,6 +1719,7 @@ function bbp_get_author_link( $args = '' ) {
 
 		// Generate title with the display name of the author
 		if ( empty( $r['link_title'] ) ) {
+			/* translators: %s: User display name. */
 			$r['link_title'] = sprintf( ! bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), $author_display_name );
 		}
 

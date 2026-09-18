@@ -1303,6 +1303,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			}
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: Member display name. */
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_activity_get_item_user_displayname( $activities_template->activity ) );
 			}
 
