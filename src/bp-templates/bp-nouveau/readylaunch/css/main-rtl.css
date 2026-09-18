@@ -15070,17 +15070,12 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 }
 
 .bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-reply,
-.bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-edit,
-.bb-rl-activity-list li.activity-item.bb-closed-comments .edit-activity {
+.bb-rl-activity-list li.activity-item.bb-closed-comments .acomment-edit {
   display: none !important;
 }
 
 .bb-rl-activity-list li.activity-item.bb-closed-comments > .activity-comments > .ac-form {
   display: none !important;
-}
-
-.bb-rl-activity-list li.activity-item.bb-closed-comments .generic-button:has(.edit-activity) {
-  display: none;
 }
 
 .bb-rl-activity-list li.activity-item.bb-closed-comments .bb-rl-activity-closed-comments-notice {

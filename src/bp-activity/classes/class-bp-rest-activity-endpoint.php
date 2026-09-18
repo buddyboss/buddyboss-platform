@@ -1248,18 +1248,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
-				bb_is_close_activity_comments_enabled() &&
-				bb_is_activity_comments_closed( $activity->id )
-			) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this activity. The comments are closed for the activity.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
-			} elseif (
 				function_exists( 'bp_is_activity_edit_enabled' )
 				&& ! bp_is_activity_edit_enabled()
 				&& function_exists( 'bp_activity_user_can_edit' )

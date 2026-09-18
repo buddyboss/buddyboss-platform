@@ -896,7 +896,7 @@ window.bp = window.bp || {};
 							// Waiting to load dummy image.
 							self.reportPopUp();
 							self.reportedPopup();
-							$( '.activity-item.bb-closed-comments' ).find( '.edit-activity, .acomment-edit' ).parents( '.generic-button' ).hide();
+							$( '.activity-item.bb-closed-comments' ).find( '.acomment-edit' ).parents( '.generic-button' ).hide();
 						},
 						1000
 					);

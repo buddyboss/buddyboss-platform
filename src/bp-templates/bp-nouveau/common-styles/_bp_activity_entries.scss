@@ -26,17 +26,12 @@
 		&.bb-closed-comments {
 
 			.acomment-reply,
-			.acomment-edit,
-			.edit-activity {
+			.acomment-edit {
 				display: none !important;
 			}
 
 			> .activity-comments > .ac-form {
 				display: none !important;
-			}
-
-			.generic-button:has(.edit-activity) {
-				display: none;
 			}
 
 			.bb-activity-closed-comments-notice {
