@@ -402,7 +402,12 @@ export function GroupsListScreen( { onNavigate } ) {
 
 		if ( 'delete' === action ) {
 			setDeleteTargetIds( selectedIds.slice() );
-			setDeleteTargetName( '' );
+
+			var singleGroup = 1 === selectedIds.length
+				? groups.find( function ( group ) { return group.id === selectedIds[ 0 ]; } )
+				: null;
+			setDeleteTargetName( singleGroup ? singleGroup.name : '' );
+
 			setDeleteConfirmChecked( false );
 			setDeleteModalOpen( true );
 			return;
