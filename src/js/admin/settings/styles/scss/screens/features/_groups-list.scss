@@ -81,7 +81,10 @@
 	&__table th.bb-groups-list__th--name {
 		font-size: 14px;
 		color: $bb-text-color;
-		width: 30%;
+		// No fixed width - with table-layout:fixed and every other column
+		// pinned to a px width below, this one absorbs whatever space is
+		// left, so long names get the most room instead of being clipped
+		// to an arbitrary 30%.
 	}
 
 	&__th--checkbox {
@@ -130,9 +133,12 @@
 		font-weight: 400;
 		color: $bb-link-color;
 		line-height: 20px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		// Wrap instead of clipping with ellipsis - the full name should be
+		// readable directly in the list, not just via the title tooltip.
+		flex: 1;
+		min-width: 0;
+		white-space: normal;
+		word-break: break-word;
 		text-decoration: none;
 
 		&:hover {
