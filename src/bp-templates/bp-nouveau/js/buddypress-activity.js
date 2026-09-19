@@ -1822,9 +1822,9 @@ window.bp = window.bp || {};
 							}
 							form.find( '#ac-input-' + form_activity_id ).html( '' );
 
-							var was_acomment_edit = form.hasClass( 'acomment-edit' );
+							var wasCommentEdit = form.hasClass( 'acomment-edit' );
 
-							if ( was_acomment_edit ) {
+							if ( wasCommentEdit ) {
 								var form_item_id = form.attr( 'data-item-id' );
 								form.closest( '.activity-comments' ).append( form );
 								if ( isInsideModal ) {
@@ -1880,7 +1880,7 @@ window.bp = window.bp || {};
 							// Trigger GIF autoplay check for newly added content
 							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
-							if ( ! was_acomment_edit ) {
+							if ( ! wasCommentEdit ) {
 								// Set the new count.
 								comment_count_span = activity_state.find( 'span.comments-count' );
 								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;

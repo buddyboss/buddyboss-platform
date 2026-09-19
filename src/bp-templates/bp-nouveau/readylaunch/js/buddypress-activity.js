@@ -3635,9 +3635,9 @@ window.bp = window.bp || {};
 						}
 						form.find( '#ac-input-' + form_activity_id ).html( '' );
 
-						var was_acomment_edit = form.hasClass( 'acomment-edit' );
+						var wasCommentEdit = form.hasClass( 'acomment-edit' );
 
-						if ( was_acomment_edit ) {
+						if ( wasCommentEdit ) {
 							var form_item_id = form.attr( 'data-item-id' );
 							form.closest( '.bb-rl-activity-comments' ).append( form );
 							var $commentContainer = isInsideModal ? $( '#bb-rl-activity-modal' ).find( 'li#bb-rl-acomment-' + form_item_id ) : $( 'li#bb-rl-acomment-' + form_item_id );
@@ -3680,7 +3680,7 @@ window.bp = window.bp || {};
 						// Trigger GIF autoplay check for newly added content
 						bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
-						if ( ! was_acomment_edit ) {
+						if ( ! wasCommentEdit ) {
 							// Set the new count.
 							var comment_count_span = activityState.find( 'span.comments-count' );
 							var comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
