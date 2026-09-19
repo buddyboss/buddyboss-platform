@@ -839,7 +839,18 @@ class BB_Admin_Settings_Ajax {
 			}
 			if ( 'toggle_list' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
 				if ( ! empty( $field['extension_data'] ) ) {
-					$field_value = $this->bb_extract_extension_toggle_values( $field_value );
+					// Source from extension_data, not the raw stored option in
+					// $field_value. bb_media_get_extension_data() (which builds
+					// extension_data) already resolves to the real saved values
+					// when the option exists and to the hard-coded defaults when
+					// it doesn't (see bb_media_get_saved_extensions()) — the raw
+					// option's registered default is an empty array, which would
+					// render every toggle unchecked on a site that has never
+					// saved this field, even though the real defaults (e.g. every
+					// video extension) are active.
+					//
+					// @since BuddyBoss [BBVERSION]
+					$field_value = $this->bb_extract_extension_toggle_values( $field['extension_data'] );
 				} else {
 					$field_value = array_map( 'absint', $field_value );
 				}
