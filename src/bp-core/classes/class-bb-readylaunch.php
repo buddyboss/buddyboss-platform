@@ -2309,7 +2309,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$email
 			);
 
-			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
+			// Composed in the inviter's own session but delivered to a plain email address with no
+			// member behind it, so the request viewer is the wrong audience - it is the inviter, who
+			// is never denied their own name. Pin it to the public, logged-out view. Matches the
+			// non-ReadyLaunch handler in bp-invites/actions/invites.php.
+			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id, bb_core_guest_viewer_id() );
 			$email_encode = rawurlencode( $email );
 			$inviter_url  = bp_loggedin_user_domain();
 

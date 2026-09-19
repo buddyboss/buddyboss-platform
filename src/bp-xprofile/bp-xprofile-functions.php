@@ -728,24 +728,27 @@ function xprofile_update_field_position( $field_id, $position, $field_group_id )
 }
 
 /**
- * Replace the displayed and logged-in users fullnames with the xprofile name, if required.
+ * Replace the displayed and logged-in users fullnames with the xprofile name.
  *
- * The Members component uses the logged-in user's display_name to set the
- * value of buddypress()->loggedin_user->fullname. However, in cases where
- * profile sync is disabled, display_name may diverge from the xprofile
- * fullname field value, and the xprofile field should take precedence.
+ * The Members component uses the raw WP display_name to set the value of
+ * buddypress()->loggedin_user->fullname and buddypress()->displayed_user->fullname.
+ * That stored value always holds the member's full name, while what a given viewer
+ * may see depends on xprofile field visibility (e.g. a last name hidden from
+ * logged-out visitors). Resolving through bp_core_get_user_displayname() applies
+ * the current viewer's visibility, so template tags such as
+ * bp_get_displayed_user_fullname() (RSS <link> titles, feed titles, avatar alt text,
+ * theme-compat post title, oEmbed header) never expose a hidden last name.
+ * It also keeps the names correct when profile sync is disabled and display_name
+ * diverges from the xprofile fields.
  *
  * Runs at bp_setup_globals:100 to ensure that all components have loaded their
  * globals before attempting any overrides.
  *
  * @since BuddyPress 2.0.0
+ * @since BuddyBoss [BBVERSION] Always runs; no longer skipped when profile sync is enabled,
+ *                              so the resolved names respect the current viewer's field visibility.
  */
 function xprofile_override_user_fullnames() {
-	// If sync is enabled, the two names will match. No need to continue.
-	if ( ! bp_disable_profile_sync() ) {
-		return;
-	}
-
 	if ( bp_loggedin_user_id() ) {
 		buddypress()->loggedin_user->fullname = bp_core_get_user_displayname( bp_loggedin_user_id() );
 	}
@@ -827,7 +830,13 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 
-	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table );
+	// The cached SQL embeds a viewer-dependent ID list (matches are filtered by profile-field
+	// visibility below), so the viewer is part of the key - and so is the Display Name Format, which
+	// bb_xprofile_filter_field_search_matches() consults to decide which name fields the format
+	// hides site-wide. Both bp_core_display_name_format() and the `pre_option_bp-display-name-format`
+	// option filter are filterable, so one request can legitimately see more than one format; a key
+	// that omits it serves whichever context asked second the first one's answer.
+	$cache_key = 'bb_xprofile_user_query_search_sql_' . sanitize_title( $search_terms_clean . '_' . $query->uid_name . '_' . $query->uid_table . '_' . bb_core_get_viewer_user_id() . '_' . bp_core_display_name_format() );
 
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
@@ -846,43 +855,46 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	// Combine the core search (against wp_users) into a single OR clause.
 	// with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-			$search_terms_nospace,
-			$search_terms_space
-		)
+	$match_subquery = $wpdb->prepare(
+		"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+		$search_terms_nospace,
+		$search_terms_space
 	);
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $match_subquery is the return of $wpdb->prepare() directly above; search visibility must read current values.
+	$matched_user_ids = $wpdb->get_col( $match_subquery );
+
+	// Kept so the clause below can name the match set by the query that produced it rather than by
+	// its ids. The rows still have to come back: the visibility filter runs over them.
+	$unfiltered_user_ids = $matched_user_ids;
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
 		$matched_user_data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+				"SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
 				$search_terms_nospace,
 				$search_terms_space
 			)
 		);
 
-		foreach ( $matched_user_data as $key => $user ) {
-			$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-			if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
-				}
-			}
-			if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
-					unset( $matched_user_ids[ $key ] );
-				}
-			}
-		}
+		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
 	if ( ! empty( $matched_user_ids ) ) {
-		$search_core            = $sql['where']['search'];
-		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
-		$sql['where']['search'] = $search_combined;
+		$search_core = $sql['where']['search'];
+
+		// Built from whichever of "who survived" and "who was removed" is smaller - this leg and
+		// the display_name leg it is OR'd with were each spelling out the whole match set, which is
+		// what made one member search a single 824 KB statement.
+		$search_profile = bb_core_get_search_match_clause(
+			"u.{$query->uid_name}",
+			$unfiltered_user_ids,
+			$matched_user_ids,
+			$match_subquery
+		);
+
+		$sql['where']['search'] = " ( {$search_profile} OR {$search_core} )";
 	}
 
 	$cache[ $cache_key ] = $sql;
@@ -1351,7 +1363,9 @@ function bp_xprofile_get_visibility_levels() {
  *   or if you have added your own custom levels.
  *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
- * @param int $current_user_id   The id of the user viewing the profile.
+ * @param int $current_user_id   The id of the user viewing the profile. 0 resolves the viewer from
+ *                               the current request; bb_core_guest_viewer_id() forces the public,
+ *                               logged-out view.
  * @return array An array of field ids that should be excluded from the profile query
  */
 function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
@@ -1378,7 +1392,11 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
-	 * @param int   $current_user_id   ID of the current user.
+	 * @param int   $current_user_id   ID of the current user. Can be bb_core_guest_viewer_id() (-1),
+	 *                                 an explicit "anonymous visitor" viewer used when the audience
+	 *                                 is provably not a member. Test for a logged-out viewer with
+	 *                                 that helper as well as with `empty()`, or a guest resolution
+	 *                                 will take the logged-in branch of a listener.
 	 */
 	return apply_filters( 'bp_xprofile_get_hidden_fields_for_user', $hidden_fields, $displayed_user_id, $current_user_id );
 }
@@ -1397,17 +1415,35 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
  * @see bp_xprofile_get_hidden_fields_for_user()
  *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
- * @param int $current_user_id   The id of the user viewing the profile.
+ * @param int $current_user_id   The id of the user viewing the profile. 0 resolves the viewer from
+ *                               the current request; bb_core_guest_viewer_id() forces the public,
+ *                               logged-out view.
  * @return array An array of visibility levels hidden to the current user.
  */
 function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
 
-	// Current user is logged in.
-	if ( ! empty( $current_user_id ) ) {
+	// An explicit anonymous viewer - see bb_core_guest_viewer_id(). Checked before the
+	// "logged in" branch because the sentinel is a non-empty ID and would otherwise be treated
+	// as a member, and before bp_user_can() because it is not a real user row.
+	if ( bb_core_guest_viewer_id() === (int) $current_user_id ) {
+		$hidden_levels = array( 'friends', 'loggedin', 'adminsonly' );
+
+		// Current user is logged in.
+	} elseif ( ! empty( $current_user_id ) ) {
+
+		// The moderator override must be evaluated for the VIEWER ($current_user_id) - the same
+		// identity the friendship branch below uses - not the global actor. They are the same on
+		// every normal request, but a WP personal-data export runs as an administrator while asking
+		// for a specific data subject's view: using the actor there would treat the admin as able to
+		// see everyone's hidden fields and defeat the redaction. Keep bp_current_user_can() (with its
+		// BP-specific filters) for the common viewer==actor path so nothing else changes.
+		$viewer_can_moderate = ( bp_loggedin_user_id() === (int) $current_user_id )
+			? bp_current_user_can( 'bp_moderate' )
+			: bp_user_can( (int) $current_user_id, 'bp_moderate' );
 
 		// Nothing's private when viewing your own profile, or when the
 		// current user is an admin.
-		if ( $displayed_user_id == $current_user_id || bp_current_user_can( 'bp_moderate' ) ) {
+		if ( (int) $displayed_user_id === (int) $current_user_id || $viewer_can_moderate ) {
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.
@@ -1431,7 +1467,11 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
-	 * @param int   $current_user_id   ID of the current user.
+	 * @param int   $current_user_id   ID of the current user. Can be bb_core_guest_viewer_id() (-1),
+	 *                                 an explicit "anonymous visitor" viewer used when the audience
+	 *                                 is provably not a member. Test for a logged-out viewer with
+	 *                                 that helper as well as with `empty()`, or a guest resolution
+	 *                                 will take the logged-in branch of a listener.
 	 */
 	return apply_filters( 'bp_xprofile_get_hidden_field_types_for_user', $hidden_levels, $displayed_user_id, $current_user_id );
 }
@@ -1526,6 +1566,321 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	return $field_ids;
+}
+
+/**
+ * Narrow a matched set to the members who could have a profile field hidden from a viewer.
+ *
+ * The search-visibility filters have to decide, per matched member, whether the field their hit
+ * came from is one this viewer may see. Resolving that is the expensive part, and it is only ever
+ * interesting for a member who has actually restricted something: where nothing on the profile
+ * carries a level this viewer is denied, bp_xprofile_get_hidden_fields_for_user() returns an empty
+ * list and the member is kept. Spending the candidate budget on the rest - and DROPPING whatever
+ * sorted past it - discarded search results that no privacy rule applied to.
+ *
+ * "Could be hidden" follows bp_xprofile_get_fields_by_visibility_levels() exactly, because that is
+ * what the keep-test will ask. It has two branches and they treat a field's own default visibility
+ * very differently:
+ *
+ * - A member with ANY row in the visibility table is resolved from those rows. A field they never
+ *   set is simply NOT hidden - the default does not reach them.
+ * - A member with no rows at all is resolved from the `bp_xprofile_visibility_levels` user meta,
+ *   and there a field with no entry DOES fall back to the field's default.
+ * - `allow_custom_visibility = 'disabled'` overrides both: the admin default replaces every
+ *   member's own setting, so the field is restricted for the whole community.
+ *
+ * Over-inclusion is safe and under-inclusion is not, so every uncertain case is kept as a
+ * candidate: a member returned here is still decided properly by the caller's keep-test, whereas a
+ * member wrongly left out would be kept without being checked.
+ *
+ * Cost is proportional to the RESTRICTED population, not to the set handed in. Two queries answer
+ * "who restricted something" and "who has any row at all" for the whole batch; the only per-member
+ * read left is the user-meta fallback, and that is reached solely by members with no visibility row
+ * - the pre-migration shape, not the populated one. An earlier revision primed a visibility memo
+ * and a user-meta row for every id instead, which cost ~230 MB for 50,000 ids and so had to be
+ * abandoned above a ceiling; the ceiling then propagated into the callers as a result cull, because
+ * "cannot narrow" is indistinguishable from "narrowing does not apply" once it reaches them.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids Member IDs to narrow.
+ * @param array $levels   Visibility levels hidden from this viewer. Defaults to every non-public
+ *                        level unioned with whatever the site filters in, which is the widest
+ *                        (safest) reading.
+ * @return array|false|null Three distinct answers, and the callers must tell them apart:
+ *                          - array, the subset that could have something hidden. Empty means
+ *                            nobody can be, which is an authoritative "withhold nothing".
+ *                          - null, the narrowing does not APPLY: a field's default is forced on the
+ *                            whole community through 'disabled' custom visibility, so no candidate
+ *                            set is smaller than the set handed in. The caller keeps all of it.
+ *                          - false, the narrowing could not be RESOLVED: a read failed. The caller
+ *                            must fail closed, and must not read this as a narrowing or as a reason
+ *                            to serve a truncated set.
+ */
+function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() ) {
+	global $wpdb;
+
+	$user_ids = array_values( array_unique( array_filter( array_map( 'intval', (array) $user_ids ) ) ) );
+
+	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) || ! class_exists( 'BB_XProfile_Visibility' ) ) {
+		return null;
+	}
+
+	$levels = array_values( array_filter( array_map( 'strval', (array) $levels ) ) );
+
+	if ( empty( $levels ) ) {
+		// Union, never replace: `bp_xprofile_get_hidden_field_types_for_user` is the released,
+		// filterable answer to this question, and a site that adds a level there has its name
+		// fields redacted by that level - so a member holding it has to stay a candidate. Unioned
+		// rather than substituted so a listener that REMOVES a level cannot narrow this set and
+		// widen the leak. Resolved for the logged-out viewer, the widest audience and the one this
+		// default stands in for.
+		$levels = array_values(
+			array_filter(
+				array_unique(
+					array_merge(
+						array( 'friends', 'loggedin', 'adminsonly' ),
+						array_map( 'strval', (array) bp_xprofile_get_hidden_field_types_for_user( 0, bb_core_guest_viewer_id() ) )
+					)
+				)
+			)
+		);
+	}
+
+	$table = BB_XProfile_Visibility::get_visibility_table_name();
+
+	if ( empty( $table ) ) {
+		return false;
+	}
+
+	// Does any field fall back to a level this viewer is denied? Read live -
+	// fetch_default_visibility_levels() is object-cached and dropped when a field is saved, so a
+	// changed default is picked up without a second memo to invalidate.
+	$default_reaches_unset_fields = false;
+
+	foreach ( (array) BP_XProfile_Group::fetch_default_visibility_levels() as $defaults ) {
+		if ( ! isset( $defaults['default'] ) || ! in_array( $defaults['default'], $levels, true ) ) {
+			continue;
+		}
+
+		// The admin default replaces every member's own setting on BOTH branches, so the field is
+		// restricted community-wide and no candidate set is smaller than the whole match set.
+		if ( isset( $defaults['allow_custom'] ) && 'disabled' === $defaults['allow_custom'] ) {
+			return null;
+		}
+
+		$default_reaches_unset_fields = true;
+	}
+
+	$quoted_levels = implode(
+		',',
+		array_map(
+			function ( $level ) use ( $wpdb ) {
+				return $wpdb->prepare( '%s', $level );
+			},
+			$levels
+		)
+	);
+
+	$candidates = array();
+
+	// Members with no visibility row at all: the user-meta branch, where an unset field falls back
+	// to the field default. Accumulated chunk by chunk below rather than derived at the end from a
+	// materialised "who has a row" set - see the chunk loop for why that set must never be built.
+	$no_rows = array();
+
+	// A missing visibility table is not an error and must not be answered like one: it is the
+	// pre-migration shape of this install, where NO member has a row and every member's visibility
+	// resolves from the `bp_xprofile_visibility_levels` user meta - exactly what
+	// BB_XProfile_Visibility::user_data_exists() reports for such a site. Skipping the two reads
+	// below leaves every id in the no-row branch, which is the correct and complete answer there.
+	//
+	// A probe that FAILED is the opposite case and reports null: the table may be there and full of
+	// restricting rows, so carrying on as if it were absent would narrow this set with rows that
+	// were never read. Fail closed instead, the same way a failed read of the table itself does.
+	$visibility_table_exists = BB_XProfile_Visibility::visibility_table_exists();
+
+	if ( is_null( $visibility_table_exists ) ) {
+		return false;
+	}
+
+	if ( $visibility_table_exists ) {
+		// Chunked, and the "who has a row" answer consumed inside the chunk rather than collected.
+		//
+		// Both reads are bounded by the set handed in, and that set is the CALLER'S WHOLE MATCH SET
+		// - bb_xprofile_filter_field_search_matches() passes every member a profile-field search
+		// matched, before pagination, on a request an anonymous visitor can issue. Unchunked, a
+		// 70,000-member match sent these two statements at 410 KB each.
+		//
+		// Chunking alone would not have been enough. The second read returns one row per member who
+		// has a row, and on a migrated community that is EVERY member - 70,470 of 70,452 here - so
+		// collecting it across chunks rebuilds the same 70,000-entry PHP array the chunking was
+		// meant to avoid, just in 71 instalments. The rows exist only to work out which ids have no
+		// row, and that is a question about the chunk, so it is answered and discarded per chunk.
+		// What survives the loop is $candidates (bounded by the restricted population - 19 members
+		// of 70,452 here) and $no_rows (bounded by the unmigrated remainder, which the per-member
+		// meta read below walks anyway).
+		foreach ( array_chunk( $user_ids, 1000 ) as $id_chunk ) {
+			$ids_sql = implode( ',', $id_chunk );
+
+			// One read answers both questions this loop asks. A returned row means the member HAS a
+			// visibility row, which is what decides the branch
+			// bp_xprofile_get_fields_by_visibility_levels() will take for them; the aggregate says
+			// whether any of their rows sits at a level hidden from this viewer, which is what makes
+			// them a candidate. Asked together rather than as two statements because they are two
+			// questions about the same rows: it halves the round trips on a large match set, and it
+			// removes the window in which a concurrent visibility write could land between a
+			// "restricted" read and a separate "has a row" read and have the two disagree about the
+			// same member.
+			//
+			// Not through the per-member memo: the memo answers the same question, but filling it
+			// for the batch also stores an entry per id and pulled a user-meta cache fill alongside
+			// it, and that pair - not the query - is what forced the abandoned ceiling.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- levels are prepared above, ids are ints.
+			$rows = $wpdb->get_results(
+				"SELECT user_id, MAX( CASE WHEN value IN ( {$quoted_levels} ) THEN 1 ELSE 0 END ) AS bb_restricted FROM {$table} WHERE user_id IN ( {$ids_sql} ) GROUP BY user_id"
+			);
+
+			// A failed query must be reported as "could not resolve", never read as "nobody
+			// restricted anything". It cannot be detected from $rows: wpdb::get_results()
+			// initialises its return and an error and an empty result set are indistinguishable in
+			// it. Ask $wpdb directly - wpdb::query() clears last_error through flush() before every
+			// query, so this reports on the query just issued. Getting this wrong is not a degraded
+			// search, it is the leak: both callers treat an array as an authoritative narrowing, and
+			// the field-search one returns the whole matched set unfiltered when it comes back
+			// empty.
+			//
+			// Checked per chunk, so a failure on chunk 40 of 71 fails closed rather than returning
+			// the 39 chunks that happened to succeed as if they were the whole answer.
+			if ( ! empty( $wpdb->last_error ) ) {
+				return false;
+			}
+
+			$with_rows = array();
+
+			foreach ( (array) $rows as $row ) {
+				$row_user_id               = (int) $row->user_id;
+				$with_rows[ $row_user_id ] = true;
+
+				if ( ! empty( $row->bb_restricted ) ) {
+					$candidates[ $row_user_id ] = true;
+				}
+			}
+
+			foreach ( $id_chunk as $user_id ) {
+				if ( isset( $with_rows[ $user_id ] ) ) {
+					continue;
+				}
+
+				$no_rows[] = $user_id;
+			}
+
+			unset( $rows, $with_rows );
+		}
+	} else {
+		// No table means no member has a row, so every id takes the user-meta branch - the same
+		// answer the per-id loop above produces when both reads come back empty.
+		$no_rows = $user_ids;
+	}
+
+	if ( ! empty( $no_rows ) ) {
+		if ( $default_reaches_unset_fields ) {
+			// The default alone makes every one of them a candidate, so no read is needed at all.
+			foreach ( $no_rows as $user_id ) {
+				$candidates[ $user_id ] = true;
+			}
+		} else {
+			// Chunked because update_meta_cache() builds an IN () list and a cache fill
+			// proportional to the batch handed to it.
+			foreach ( array_chunk( $no_rows, 1000 ) as $prime_chunk ) {
+				update_meta_cache( 'user', $prime_chunk );
+
+				foreach ( $prime_chunk as $user_id ) {
+					$stored = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+
+					if ( is_array( $stored ) && array_intersect( $levels, array_map( 'strval', array_values( $stored ) ) ) ) {
+						$candidates[ $user_id ] = true;
+					}
+				}
+			}
+		}
+	}
+
+	return array_map( 'intval', array_keys( $candidates ) );
+}
+
+/**
+ * Prime the caches bp_xprofile_get_hidden_fields_for_user() reads, for a batch of users.
+ *
+ * Resolving one member's hidden fields costs up to three uncached reads: the
+ * BB_XProfile_Visibility::user_data_exists() probe, the field-ids lookup for the viewer's hidden
+ * level set, and - for members with no visibility row - the `bp_xprofile_visibility_levels` user
+ * meta. Anything that resolves visibility once per row (a member loop, an activity stream, a
+ * member search re-testing its matches) therefore pays that per member. This fills all three for
+ * the whole batch in a handful of queries.
+ *
+ * Purely a query-count optimisation: every cache filled here is one the single-user path already
+ * consults, so nothing about the answer changes. Where a key cannot be predicted - a site that
+ * filters the hidden level set to something other than what this computes - the per-user call
+ * simply misses the memo and behaves exactly as it does today.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids  User IDs whose hidden fields are about to be resolved.
+ * @param int   $viewer_id Optional. Viewer the visibility will be evaluated for. Defaults to the
+ *                         current viewer, which is what the per-user calls will use.
+ */
+function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) {
+	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+
+	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) || ! class_exists( 'BB_XProfile_Visibility' ) ) {
+		return;
+	}
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = bb_core_get_viewer_user_id();
+	}
+
+	// Chunked, because both reads below build an `IN ( … )` list and an object-cache fill in
+	// proportion to the batch handed to them, and the batch here is the caller's whole match set -
+	// not a budgeted candidate set. Unchunked, a 70,000-member match produced a single 823 KB
+	// statement. The sibling primer in bb_xprofile_filter_possible_hidden_users() already chunks at
+	// the same size; this one was missed.
+	foreach ( array_chunk( $user_ids, 1000 ) as $prime_chunk ) {
+		// (a) The "does this member have any visibility row at all" probe, which decides which of
+		// the two branches below bp_xprofile_get_fields_by_visibility_levels() takes.
+		BB_XProfile_Visibility::prime_user_data_exists_cache( $prime_chunk );
+
+		// (b) The user-meta branch, taken by every member who has no visibility row - on a
+		// community that has never used custom visibility that is ALL of them. update_meta_cache()
+		// queries only the ids the object cache does not already hold.
+		update_meta_cache( 'user', $prime_chunk );
+	}
+
+	// (c) The field-ids memo, primed per distinct hidden-level set. The level set is read from
+	// bp_xprofile_get_hidden_field_types_for_user() per user rather than re-derived here, so a
+	// site that filters those levels still gets keys that match what the loop will ask for.
+	$by_levels = array();
+	foreach ( $user_ids as $user_id ) {
+		$levels = (array) bp_xprofile_get_hidden_field_types_for_user( $user_id, $viewer_id );
+
+		if ( empty( $levels ) ) {
+			// Self or a moderator: the getter returns before it queries.
+			continue;
+		}
+
+		sort( $levels );
+		$by_levels[ implode( ',', $levels ) ][] = $user_id;
+	}
+
+	foreach ( $by_levels as $levels => $grouped_ids ) {
+		// Chunked for the same reason as the two reads above: on a community that has never used
+		// custom visibility every member shares one level set, so $grouped_ids is the whole match
+		// set and this built the single largest statement of the three.
+		foreach ( array_chunk( $grouped_ids, 1000 ) as $level_chunk ) {
+			BB_XProfile_Visibility::prime_field_ids_cache( $level_chunk, explode( ',', $levels ) );
+		}
+	}
 }
 
 /**
@@ -1941,7 +2296,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( empty( $display_name ) ) {
 					$display_name = get_user_meta( $user_id, 'nickname', true );
 				}
-				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+				}
 			}
 
 			// Get Nick Name Field Id.
@@ -1958,7 +2315,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( ! $nickname || $invalid ) {
 					$nickname = ( isset( $user->user_nicename ) ) ? $user->user_nicename : '';
 				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				}
 			}
 
 			break;
@@ -1975,12 +2334,16 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( empty( $result_first_name ) ) {
 					$result_first_name = get_user_meta( $user_id, 'nickname', true );
 				}
-				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+				}
 			}
 
 			if ( '' === $result_last_name ) {
 				$result_last_name = get_user_meta( $user_id, 'last_name', true );
-				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+				}
 			}
 
 			$display_name = implode(
@@ -2007,7 +2370,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( ! $nickname || $invalid ) {
 					$nickname = $user->user_nicename;
 				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				}
 			}
 
 			break;
@@ -2026,7 +2391,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( ! $nickname || $invalid ) {
 					$nickname = $user->user_nicename;
 				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				}
 				$display_name = $nickname;
 
 			}
@@ -2035,9 +2402,51 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	$name = apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 
-	$cache[ $cache_key ] = $name;
+	// While the self-heal is suspended this resolution is a READ of someone else's name performed
+	// for a third party (a search re-test), not a visit to that member. Caching it would let the
+	// suspended answer stand in for the next legitimate call in the same request and silently skip
+	// the repair that call would have performed. The value itself is identical either way - only
+	// the persistence differs - so not caching costs one resolution, never correctness.
+	if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+		$cache[ $cache_key ] = $name;
+	}
 
 	return $name;
+}
+
+/**
+ * Whether bp_xprofile_get_member_display_name() must resolve without repairing stored fields.
+ *
+ * It is a self-healing resolver: when a name field has no
+ * stored value it back-fills it from the WordPress user meta, and an empty back-fill value makes
+ * xprofile_set_field_data() DELETE the row. That is correct on a profile view - the member is
+ * present and the repair is a side effect of showing them their own data - but the same resolver
+ * is reached from member search, which re-tests other members' names to decide whether a match is
+ * visible. A search is a read: one GET would otherwise issue one destructive write per re-tested
+ * candidate, against members who are not even in the results.
+ *
+ * Suspension changes nothing about the value returned; it only stops the repair being persisted,
+ * so the next request that legitimately resolves that member still performs it.
+ *
+ * Nested like bb_core_is_resolving_user_displayname(): callers raise it with `true`, lower it with
+ * `false` in a `finally`, and read it with no argument.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool|null $suspend Optional. True to suspend the self-heal, false to release one
+ *                           suspension, null (default) to only read the current state.
+ * @return bool Whether the self-heal is currently suspended.
+ */
+function bb_xprofile_is_display_name_self_heal_suspended( $suspend = null ) {
+	static $depth = 0;
+
+	if ( true === $suspend ) {
+		++$depth;
+	} elseif ( false === $suspend ) {
+		$depth = max( 0, $depth - 1 );
+	}
+
+	return $depth > 0;
 }
 
 /**
@@ -3578,6 +3987,13 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 		}
 	}
 
+	// This batch wrote visibility rows directly (bypassing BB_XProfile_Visibility's own
+	// invalidation), so clear the per-request field-ids memo in case a read for a migrated user
+	// runs later in the same request.
+	if ( class_exists( 'BB_XProfile_Visibility' ) ) {
+		BB_XProfile_Visibility::flush_field_ids_cache();
+	}
+
 	// If running in the background, schedule the next batch.
 	if ( $background ) {
 		$bb_background_updater->data(
@@ -3723,4 +4139,1075 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
 	}
 
 	return (bool) $can_change;
+}
+
+/**
+ * Default ceiling on how many matches ONE PASS of a search may re-resolve in PHP.
+ *
+ * Two independent budgets apply the same contract - the per-member visibility pass and the
+ * profile-field pass - and both fire on a single search. Holding the number in one place keeps them
+ * from drifting apart, which would make the ceiling a site hits depend on which leg it hit first.
+ * The filter is what sites tune; this is only the default it is handed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Default candidate limit.
+ */
+function bb_xprofile_default_search_candidate_limit() {
+	return 500;
+}
+
+/**
+ * Whether every name part is readable by this viewer, so no name search of theirs can be filtered.
+ *
+ * A moderator reads every field, so no match can be hidden from them - and that has to be answered
+ * once, for BOTH halves of the name-search rule. The per-member half and the site-wide Display Name
+ * Format half are resolved in different places; when only the first one asked, a moderator searching
+ * under a format hide had their own match dropped by the half that never checked.
+ *
+ * The guest sentinel is not a real user row, so it never reaches bp_user_can().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $viewer_id Viewer the visibility is evaluated for.
+ * @return bool True when no name part can be hidden from this viewer.
+ */
+function bb_xprofile_search_viewer_sees_every_name( $viewer_id ) {
+	$viewer_id = (int) $viewer_id;
+
+	if ( empty( $viewer_id ) ) {
+		return false;
+	}
+
+	if ( bb_core_guest_viewer_id() === $viewer_id ) {
+		return false;
+	}
+
+	return (bool) bp_user_can( $viewer_id, 'bp_moderate' );
+}
+
+/**
+ * Users whose name-search match lies only in a name part hidden from the viewer.
+ *
+ * BP_User_Query resolves `search_terms` with `SELECT ID FROM wp_users WHERE display_name LIKE ...`.
+ * The `display_name` column always stores the member's full name, so under the "First Name & Last
+ * Name" format it contains the surname even when that field's visibility hides it. The row itself
+ * is never rendered — bp_core_get_user_displayname() redacts the name before output — but the
+ * *match* is the disclosure: searching a guessed surname and getting exactly one member back
+ * confirms it. A directory that hides a surname must not answer questions about it either.
+ *
+ * The candidate set is deliberately narrow. Two sources feed it: members with an explicit
+ * non-public visibility row on a name field, and members whose stored value for a name field with a
+ * non-public `default_visibility` matches the term. Under the "First Name & Last Name" format on a
+ * community where nobody restricts a name field, neither produces anything and this costs one
+ * indexed query. (The third source - a name field the Display Name Format hides site-wide - is a
+ * property of the match set rather than of a member, and lives in
+ * bb_xprofile_filter_user_search_matches() where the match set is.)
+ *
+ * Both sources re-test in PHP, because the field they turn on can be restricted for
+ * an individual member and only a per-viewer resolution can answer that. That work is bounded by
+ * `bb_xprofile_user_search_visibility_candidate_limit` - and bounded on the CANDIDATE set, which is
+ * the restricted population intersected with the matches, never on the match set itself. Past the
+ * bound the candidates that could not be re-tested are withheld, and nothing else is: they are the
+ * members who CAN have a name part hidden from this viewer, so withholding them is fail-closed,
+ * while every other match is served untouched. Only a read this cannot resolve withholds the
+ * caller's whole leg, because there the candidate set itself is unknown.
+ *
+ * The re-test is also read-only. It runs with bb_xprofile_is_display_name_self_heal_suspended()
+ * raised, so a search never persists the name-field repair bp_xprofile_get_member_display_name()
+ * performs for a member who is actually being viewed.
+ *
+ * Removal is decided by re-running the *same* LIKE pattern against the name this viewer would
+ * actually see. A member whose visible name still matches (searching "Peter" for "Peter
+ * Zebrastripe" with the surname hidden) is kept; only a match that exists solely in the hidden part
+ * is dropped.
+ *
+ * This is the per-member half of that rule, and it is deliberately answered WITHOUT a match set.
+ * Both producers that need it - BP_User_Query and the site-wide search engine - previously handed
+ * their matches in so the sets could be intersected, which made the cost of resolving a handful of
+ * restricted members proportional to how many people the term matched: reading 70,000 matched IDs
+ * into PHP to discover that 13 members on the whole install have restricted a name field costs
+ * 36 MB, and the mechanisms added to bound THAT went on to discard matches nothing was hidden from.
+ * Asked this way the cost is proportional to the restricted population instead, and a caller
+ * intersects (or, for the search engine, `NOT IN`s) the small answer afterwards.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $like_patterns The LIKE patterns the display_name comparison was made with.
+ * @param int   $viewer_id     Optional. Viewer to evaluate visibility for. Defaults to the current
+ *                             viewer.
+ * @return array|false User IDs whose display_name match lies only in a name part hidden from this
+ *                     viewer - empty when nothing is hidden, which is the usual case and means
+ *                     "exclude nobody". Past the re-test budget the whole candidate set is returned
+ *                     instead, un-re-tested: those members are withheld, the rest of the caller's
+ *                     match set is not. false ONLY when a read failed and the candidate set itself
+ *                     could not be established: the caller must then withhold its display_name leg
+ *                     entirely rather than serve part of it.
+ */
+function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id = null ) {
+	global $wpdb;
+
+	$like_patterns = array_filter( (array) $like_patterns );
+
+	if ( empty( $like_patterns ) || ! bp_is_active( 'xprofile' ) ) {
+		return array();
+	}
+
+	if ( is_null( $viewer_id ) ) {
+		$viewer_id = bb_core_get_viewer_user_id();
+	}
+	$viewer_id = (int) $viewer_id;
+
+	if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+		return array();
+	}
+
+	$name_field_ids = array_unique(
+		array_filter(
+			array(
+				(int) bp_xprofile_firstname_field_id(),
+				(int) bp_xprofile_lastname_field_id(),
+				(int) bp_xprofile_nickname_field_id(),
+			)
+		)
+	);
+
+	if ( empty( $name_field_ids ) ) {
+		return array();
+	}
+
+	// Levels that can be hidden from this viewer, before the per-target friendship test. 'loggedin'
+	// is only ever hidden from a logged-out visitor; 'friends' depends on the pair and is narrowed
+	// below by the per-user resolution.
+	//
+	// bb_core_guest_viewer_id() (-1) is an explicit "resolve this as an anonymous visitor" marker,
+	// and it is a non-empty id - a bare truthy test reads it as a logged-in member and drops
+	// 'loggedin' from the hidden set, under-protecting a "Logged-in Users only" name field for an
+	// audience that is provably not logged in. Checked the same way, and for the same reason, as
+	// bp_xprofile_get_hidden_field_types_for_user().
+	$is_guest_viewer = ( bb_core_guest_viewer_id() === $viewer_id );
+
+	$hidden_levels = ( $viewer_id && ! $is_guest_viewer )
+		? array( 'friends', 'adminsonly' )
+		: array( 'loggedin', 'friends', 'adminsonly' );
+
+	// Union, never replace, with the released `bp_xprofile_get_hidden_field_types_for_user` answer
+	// for this viewer. That filter is what bp_core_get_user_displayname() resolves the redaction
+	// through, so a site adding a level there redacts a name this function would otherwise never
+	// select as a candidate - leaving the search confirmation this exists to close wide open.
+	// Unioned rather than substituted so a listener that REMOVES a level cannot widen the leak.
+	$hidden_levels = array_values(
+		array_filter(
+			array_unique(
+				array_merge(
+					$hidden_levels,
+					array_map( 'strval', (array) bp_xprofile_get_hidden_field_types_for_user( 0, $viewer_id ) )
+				)
+			)
+		)
+	);
+
+	$bp            = buddypress();
+	$candidate_ids = array();
+	$field_ids_sql = implode( ',', $name_field_ids );
+
+	// Every producer that consumes this compares `display_name` against these same patterns, so a
+	// member whose display_name does not match is in nobody's match set and can never be dropped.
+	// Excluding them here is what makes the candidate set exactly "restricted AND matched" - the
+	// ideal set - while still never reading a match set: it is a correlated subquery bounded by the
+	// term, not an IN () list of whoever the term happened to match.
+	// Aliased, and every column inside it qualified. Both of the tables this subquery is nested in
+	// carry an `id` column of their own, so an unqualified `ID` here is correct only by MySQL's
+	// innermost-scope-first rule - the same rule that silently mis-bound the format predicate's
+	// correlated EXISTS. Spelling the alias out removes the question instead of relying on it.
+	$name_match_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), 'bb_name_u.display_name LIKE %s' ) );
+	$level_placeholders      = implode( ',', array_fill( 0, count( $hidden_levels ), '%s' ) );
+
+	// (1) Members who explicitly restricted one of the name fields.
+	//
+	// Asked of the RESTRICTED POPULATION, with no match set involved at all. The population that
+	// can possibly be hidden is the members carrying a non-public row on a name field - on this
+	// install 13 of 70,440 - while the match set on a short term is most of the member table.
+	// Bounding by the match set meant sending a 70,000-element IN () list to resolve a set of 13,
+	// and every mechanism built on top of that bound went on to drop matches nothing was hidden
+	// from.
+	//
+	// A missing table is not an error here either: it is the pre-migration shape, where no member
+	// has a row and this source is genuinely empty. Source (2) and the narrowing read the user meta
+	// that such a site resolves visibility from, so nothing is missed by skipping this.
+	//
+	// A probe that could not answer reports null, and that is NOT the same case: the table may hold
+	// every restricting row on the install. Treating it as absent skips source (1) altogether and
+	// serves the members it exists to suppress, so withhold this leg instead.
+	$visibility_table_exists = BB_XProfile_Visibility::visibility_table_exists();
+
+	if ( is_null( $visibility_table_exists ) ) {
+		return false;
+	}
+
+	if ( $visibility_table_exists ) {
+		$table_name_visibility = BB_XProfile_Visibility::get_visibility_table_name();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+		$restricted = $wpdb->get_col(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table names and the placeholder lists are trusted, field ids are ints, every user value is bound below.
+				"SELECT DISTINCT user_id FROM {$table_name_visibility} WHERE field_id IN ( {$field_ids_sql} ) AND value IN ( {$level_placeholders} ) AND user_id IN ( SELECT bb_name_u.ID FROM {$wpdb->users} bb_name_u WHERE {$name_match_placeholders} )",
+				array_merge( array_values( $hidden_levels ), array_values( $like_patterns ) )
+			)
+		);
+
+		// A failed query returns the same empty array as "nobody restricted anything" -
+		// wpdb::get_col() initialises its return to array() and never hands back null - and an empty
+		// candidate set means nobody is re-tested, which serves exactly the matches this function
+		// exists to suppress. Fail closed by telling the caller to withhold this leg's results
+		// entirely: it ORs the display_name comparison with user_login, user_nicename, user_email,
+		// user meta and the profile fields, so a search still answers, and a transient read failure
+		// produces no result at all from the one comparison that cannot be verified. It must NOT be
+		// answered by serving part of the match set, which is neither private nor complete.
+		if ( ! empty( $wpdb->last_error ) ) {
+			return false;
+		}
+
+		if ( ! empty( $restricted ) ) {
+			$candidate_ids = array_map( 'intval', $restricted );
+		}
+	}
+
+	// (2) Name fields whose site-wide default visibility is itself hidden from this viewer. Those
+	// members have no per-user row, so step (1) cannot see them; bound the set by the members whose
+	// stored value for that field is what the term matched.
+	foreach ( $name_field_ids as $field_id ) {
+		$default_visibility = bp_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
+
+		if ( empty( $default_visibility ) || ! in_array( $default_visibility, $hidden_levels, true ) ) {
+			continue;
+		}
+
+		// One %s placeholder per pattern, all bound through a single prepare() call.
+		$value_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), 'value LIKE %s' ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+		$by_value = $wpdb->get_col(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table names and placeholder lists are built from trusted values, every user value is bound below.
+				"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE field_id = %d AND ( {$value_placeholders} ) AND user_id IN ( SELECT bb_name_u.ID FROM {$wpdb->users} bb_name_u WHERE {$name_match_placeholders} )",
+				array_merge( array( $field_id ), array_values( $like_patterns ), array_values( $like_patterns ) )
+			)
+		);
+
+		// Same fail-closed test source (1) makes, and for the same reason: wpdb::get_col()
+		// initialises its return to array() and never hands back null, so a failed read and "nobody
+		// stored a matching value" are the same value. Read as the latter it produces an empty
+		// candidate set, nobody is re-tested, and the matches this function exists to suppress are
+		// served - the one direction this file calls the leak. Ask $wpdb directly; wpdb::query()
+		// clears last_error through flush() before every statement, so this reports on the query
+		// just issued.
+		if ( ! empty( $wpdb->last_error ) ) {
+			return false;
+		}
+
+		if ( ! empty( $by_value ) ) {
+			$candidate_ids = array_merge( $candidate_ids, array_map( 'intval', $by_value ) );
+		}
+	}
+
+	$display_name_format = bp_core_display_name_format();
+
+	/**
+	 * Filters how many matches ONE PASS of a search may re-resolve in PHP before it stops.
+	 *
+	 * Re-testing a candidate resolves a full display name for them. That is cheap per member and
+	 * ruinous in bulk: on a community where a name field's default visibility is restricted, every
+	 * matched member carries a row, and this filter runs before pagination on a request an
+	 * anonymous visitor can issue. Raise it only on an install whose member table can afford it.
+	 *
+	 * This bounds WORK. A candidate is a member who COULD have a name part hidden, not one who has:
+	 * on this install 13 members of 70,440 carry a non-public visibility row. Past the budget the
+	 * candidate set is withheld un-re-tested and NOTHING ELSE is - not the first N of it (an
+	 * unordered set has no meaningful first N) and not the producer's whole display_name
+	 * comparison, which would take the feature down for every member the term matches.
+	 *
+	 * The site-wide format hide is not bounded by this: it is decided in SQL and resolves no names.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $limit               Maximum number of matches ONE PASS may re-resolve, not one
+	 *                                    search: this filter is dispatched by the per-member
+	 *                                    visibility pass and by the profile-field pass, which both
+	 *                                    run for a single search, so a site tuning this is setting
+	 *                                    a per-pass ceiling and the worst case is twice the value.
+	 *                                    0 removes the bound entirely. Default 500.
+	 * @param string $display_name_format Active Display Name Format.
+	 * @param int    $viewer_id           Viewer the visibility is evaluated for.
+	 */
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bb_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
+
+	$candidate_ids = array_unique( $candidate_ids );
+
+	// A member is never hidden from themselves.
+	$candidate_ids = array_diff( $candidate_ids, array( $viewer_id ) );
+
+	// Source (2) turns on a field's DEFAULT visibility and is bounded only by whose stored value
+	// the term matched - but that default does not reach a member who has their own row for the
+	// field, because bp_xprofile_get_fields_by_visibility_levels() resolves such a member from the
+	// table and leaves a field they never set un-hidden. Those members are fully permitted, yet
+	// they were consuming the budget below and whatever sorted past it was dropped: on a community
+	// whose Last Name default is restricted, 599 permitted members returned 499 to a logged-out
+	// visitor.
+	//
+	// Applied before the filter that follows, so a site adding its own candidates back is not
+	// narrowed away. null means the narrowing does not apply - the default is forced community-wide
+	// through 'disabled' custom visibility - and the whole candidate set stays in play. false means
+	// a read failed, which is the one answer that cannot be worked around: withhold this leg.
+	$possible_hidden = bb_xprofile_filter_possible_hidden_users( $candidate_ids, $hidden_levels );
+
+	if ( false === $possible_hidden ) {
+		return false;
+	}
+
+	if ( is_array( $possible_hidden ) ) {
+		$candidate_ids = array_intersect( $candidate_ids, $possible_hidden );
+	}
+
+	/**
+	 * Filters the users whose search match has to be re-tested against their viewer-visible name.
+	 *
+	 * A site that hides name fields through the `bp_xprofile_get_hidden_fields_for_user` filter
+	 * rather than through stored visibility levels has no row for this function to find; adding the
+	 * affected user IDs here restores the protection for those members.
+	 *
+	 * The second argument is the LIKE patterns rather than the matched user IDs: this is resolved
+	 * once for the term, independently of any one producer's match set, so that a search does not
+	 * pay for reading its matches into PHP to find a handful of restricted members.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $candidate_ids User IDs to re-test.
+	 * @param array $like_patterns LIKE patterns the display_name comparison was made with.
+	 * @param int   $viewer_id     Viewer the visibility is evaluated for.
+	 */
+	$candidate_ids = array_filter( array_map( 'intval', (array) apply_filters( 'bb_xprofile_user_search_visibility_candidates', $candidate_ids, $like_patterns, $viewer_id ) ) );
+
+	// Re-applied after the filter: a listener must not be able to make a member invisible to
+	// themselves.
+	$candidate_ids = array_values( array_diff( $candidate_ids, array( $viewer_id ) ) );
+
+	$remove_ids = array();
+
+	// Sources (1) and (2) are bounded by stored rows rather than by the term, but "bounded" is not
+	// "small": on a community whose name field default is restricted with custom visibility forced,
+	// the narrowing above stands down and every matched member carries that default.
+	//
+	// Past the budget the CANDIDATES are withheld - never the caller's whole leg. Three answers were
+	// possible here and the other two are both wrong:
+	//
+	// Truncating - re-test the first N candidates and drop the tail - decides membership of the
+	// results by a member's POSITION in an unordered set, and the tail it dropped was
+	// overwhelmingly members with nothing hidden at all.
+	//
+	// Withholding the leg - return false, so the producer drops its whole display_name comparison -
+	// bounds RESULTS, not work: every member whose name matches only in the display_name column
+	// vanishes from search for every viewer, including the members nothing is hidden from, and
+	// including the drifted-column population this function exists to serve. The released code
+	// narrowed that comparison by nothing at all, so this took a working feature down.
+	//
+	// Withholding the candidate set is neither. It is position-independent (no candidate is
+	// re-tested, so none is kept or dropped for where it sorted), it is fail-closed (a candidate is
+	// by construction a member who CAN have a name part hidden from this viewer - the narrowing
+	// above has already dropped the members a restricted default cannot reach), and it leaves every
+	// other match alone. The residual cost is a member whose term matches BOTH a hidden and a
+	// visible part of their name: they are dropped where a re-test would have kept them. That is a
+	// cull of a narrow subset of an already-narrow set, against a whole comparison going dark.
+	//
+	// No new PHP cost: $candidate_ids is fully materialised above, before this test.
+	if ( $candidate_limit > 0 && count( $candidate_ids ) > $candidate_limit ) {
+		return array_values( array_unique( array_map( 'intval', $candidate_ids ) ) );
+	}
+
+	if ( ! empty( $candidate_ids ) ) {
+		// Resolving a name is several cached reads; prime them for the whole candidate set at once.
+		if ( function_exists( 'bb_core_prime_user_displayname_caches' ) ) {
+			bb_core_prime_user_displayname_caches( $candidate_ids, $viewer_id );
+		}
+
+		// A search is a read. bp_core_get_user_displayname() reaches
+		// bp_xprofile_get_member_display_name(), which back-fills missing name fields and DELETEs
+		// the row when the back-filled value is empty - one destructive write per re-tested
+		// candidate, against members who are not even in the results. Suspend that repair for the
+		// duration of the loop; the resolved value is unchanged, only the persistence is skipped.
+		// try/finally because leaving the suspension raised would silence the repair for the rest
+		// of the request.
+		bb_xprofile_is_display_name_self_heal_suspended( true );
+
+		try {
+			foreach ( $candidate_ids as $candidate_id ) {
+				$visible_name = bp_core_get_user_displayname( $candidate_id, $viewer_id );
+
+				if ( ! is_string( $visible_name ) ) {
+					$visible_name = '';
+				}
+
+				$still_matches = false;
+				foreach ( $like_patterns as $pattern ) {
+					// The search term was normalised with wp_kses_normalize_entities() before it became a
+					// LIKE pattern, while the resolved name is plain text. Test both forms so a name
+					// containing an entity-encodable character is not dropped by that asymmetry alone.
+					if (
+						bb_core_sql_like_match( $pattern, $visible_name )
+						|| bb_core_sql_like_match( $pattern, wp_kses_normalize_entities( $visible_name ) )
+					) {
+						$still_matches = true;
+						break;
+					}
+				}
+
+				if ( ! $still_matches ) {
+					$remove_ids[] = (int) $candidate_id;
+				}
+			}
+		} finally {
+			bb_xprofile_is_display_name_self_heal_suspended( false );
+		}
+	}
+
+	return array_values( array_unique( array_map( 'intval', $remove_ids ) ) );
+}
+
+/**
+ * Remove users from a name search whose only match is a name part hidden from the viewer.
+ *
+ * The rule, and why a directory that hides a surname must not answer questions about it either, is
+ * documented on bb_xprofile_get_hidden_name_search_user_ids(), which resolves the per-member half
+ * of it. This applies that answer to one producer's match set and adds the one source that is a
+ * property of the match set rather than of a member: the site-wide Display Name Format hide.
+ *
+ * (3) The Display Name Format can leave a name field out of the visible name for EVERY member at
+ * once, independently of any visibility level: under "First Name" the surname is not part of the
+ * name at all, and under "Nickname" neither the surname nor the first name is.
+ * bp_core_get_user_displayname() already honours that hide - it appends the Last Name field to the
+ * hidden-field list - so the rendered name is redacted while the match, without this, still answers
+ * the question.
+ *
+ * Unlike the per-member sources this one is not bounded by a stored restriction: the hide applies
+ * to the whole community, and the value that leaks lives in the `display_name` COLUMN, which drifts
+ * away from the fields (an import, the wp-admin "Display name publicly as" dropdown, a third-party
+ * write). Resolving a name for every matched member - before pagination, on an anonymous request -
+ * is an unbounded amount of work; on this install a one-word term matching 70,000 members exhausted
+ * 512 MB. So it is answered in SQL, and completely: since the visible name is ASSEMBLED from the
+ * fields rather than subtracted out of the drifted column (bb_core_build_visible_display_name()),
+ * every value the resolver can return under these formats lives in a column
+ * bb_xprofile_get_format_visible_name_matches() compares. A match in none of them cannot be in the
+ * name this viewer is shown.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $matched_user_ids User IDs matched by the display_name comparison.
+ * @param array $like_patterns    The LIKE patterns used to produce $matched_user_ids.
+ * @param int   $viewer_id        Optional. Viewer to evaluate visibility for. Defaults to the
+ *                                current viewer.
+ * @return array $matched_user_ids without the users whose match is not visible to the viewer. Empty
+ *               when the visibility answer could not be resolved - see the false return on
+ *               bb_xprofile_get_hidden_name_search_user_ids() - because the only alternatives there
+ *               are serving unverified matches or serving an arbitrary part of them.
+ */
+function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patterns, $viewer_id = null ) {
+	$matched_user_ids = array_filter( array_map( 'intval', (array) $matched_user_ids ) );
+	$like_patterns    = array_filter( (array) $like_patterns );
+
+	if ( empty( $matched_user_ids ) || empty( $like_patterns ) || ! bp_is_active( 'xprofile' ) ) {
+		return array_values( $matched_user_ids );
+	}
+
+	if ( is_null( $viewer_id ) ) {
+		$viewer_id = bb_core_get_viewer_user_id();
+	}
+	$viewer_id = (int) $viewer_id;
+
+	// Asked here as well as inside the per-member resolver: the format source below is a second,
+	// independent half of the same rule, and a moderator must be exempt from both.
+	if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+		return array_values( $matched_user_ids );
+	}
+
+	$hidden_ids = bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id );
+
+	if ( false === $hidden_ids ) {
+		return array();
+	}
+
+	// Resolved for the term rather than for this match set, so intersect it here. An empty answer
+	// means nothing is hidden from this viewer, never that the answer was cut short.
+	$remove_ids = array_intersect( $hidden_ids, $matched_user_ids );
+
+	$display_name_format = bp_core_display_name_format();
+
+	if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
+		$explained_ids = bb_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns );
+
+		// A failed read is not "nothing is visible". Treated as an empty set it would drop every
+		// match, which reads as a complete, private answer and is neither. Withhold the leg the same
+		// way an unresolvable per-member answer does.
+		if ( false === $explained_ids ) {
+			return array();
+		}
+
+		// A member is never hidden from themselves, so the viewer is never a drop candidate.
+		$remove_ids = array_merge( $remove_ids, array_diff( $matched_user_ids, $explained_ids, array( $viewer_id ) ) );
+	}
+
+	if ( empty( $remove_ids ) ) {
+		return array_values( $matched_user_ids );
+	}
+
+	return array_values( array_diff( $matched_user_ids, $remove_ids ) );
+}
+
+/**
+ * User IDs whose search match lies in a name source the Display Name Format still shows.
+ *
+ * Answers, in SQL, the question bb_xprofile_filter_user_search_matches() would otherwise answer by
+ * resolving a display name for every matched member.
+ *
+ * The answer is COMPLETE, which is what lets the caller drop everything this does not return.
+ * bb_core_build_visible_display_name() assembles the visible name out of stored values rather than
+ * subtracting a hidden part from the derived `display_name` column, so under these two formats the
+ * resolved name is always one of exactly five stored things: the profile field the format shows and
+ * the WordPress user meta that field falls back to, the Nickname profile field and the `nickname`
+ * user meta it falls back to, and user_nicename, the last resort. Each is a column, so each is
+ * compared - by bb_xprofile_get_format_visible_name_sql(), whose subquery this simply reads the
+ * IDs out of, so that the site-wide search engine (which applies the same subquery as an IN ()
+ * inside its own SQL rather than materialising this list) cannot drift from this answer. A match
+ * in none of those columns is provably not in the name this viewer is shown.
+ *
+ * Complete, but not indiscriminate: the five are a FALLBACK CHAIN, and a later link is only the
+ * visible name for a member whose every earlier link is empty. The subquery gates them that way
+ * (see bb_xprofile_get_format_visible_name_sources()), because admitting a later link
+ * unconditionally is how a `user_nicename` of `john-smith` came to prove that a member shown only
+ * `John` matched a search for `Smith`.
+ *
+ * (Before the name was rebuilt this could not be complete: the resolver returned the drifted column
+ * minus the surname, a residue that exists in no column at all, and every such member had to be
+ * re-resolved in PHP - an unbounded amount of work on an anonymous request.)
+ *
+ * Deliberately NOT a source: `user_login`. It is never returned as a display name - the fallback
+ * chain ends at user_nicename - so treating a login match as proof would keep a member whose
+ * visible name does not match, which is the leak. (The site-wide search engine compares user_login
+ * on a separate leg of its own query, which this exclusion list is never applied to.)
+ *
+ * Nor does this decide per-viewer visibility: the shown field can itself be restricted for an
+ * individual member. Those members are reached by sources (1) and (2) in the caller, which are
+ * unioned in independently and re-tested.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name_format Active Display Name Format. Only 'first_name' and 'nickname'
+ *                                    hide a name part site-wide.
+ * @param array  $like_patterns       LIKE patterns the match was produced with.
+ * @return array|false User IDs matched by a visible name source. false when the read failed, which
+ *                     is NOT an empty answer: the caller drops everything this does not return, so
+ *                     it must withhold its leg rather than read a failure as "nothing is visible".
+ */
+function bb_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns ) {
+	global $wpdb;
+
+	$like_patterns = array_values( array_filter( (array) $like_patterns ) );
+
+	if ( empty( $like_patterns ) ) {
+		return array();
+	}
+
+	// One query, two applications: the site-wide search engine applies this same subquery as
+	// `ID IN ( ... )` inside its own SQL. Sharing the query rather than only the source list is
+	// what keeps the member directory and the search engine from answering the same question
+	// differently, which is the whole failure mode this area exists to prevent.
+	$subquery = bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_patterns );
+
+	if ( '' === $subquery['sql'] ) {
+		return array();
+	}
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+	$explained_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the subquery is built from trusted table names and placeholder lists; every user value is bound here.
+			"SELECT DISTINCT user_id FROM ( {$subquery['sql']} ) AS bb_visible_name_sources",
+			$subquery['values']
+		)
+	);
+
+	// The caller drops everything this does not return, so an answer that is empty because the read
+	// failed culls 100% of its display_name leg while reading as "complete" - the one property this
+	// docblock promises. wpdb::get_col() initialises its return to array() and never hands back
+	// null, so the failure is invisible in $explained_ids; ask $wpdb, which wpdb::query() flushes
+	// before every statement. false says "not resolved" in the shape the caller already handles for
+	// bb_xprofile_get_hidden_name_search_user_ids().
+	if ( ! empty( $wpdb->last_error ) ) {
+		return false;
+	}
+
+	return array_values( array_unique( array_map( 'intval', (array) $explained_ids ) ) );
+}
+
+/**
+ * The stored sources a Display Name Format still shows.
+ *
+ * One definition of "which columns can hold the name this viewer is shown", consumed both by
+ * bb_xprofile_get_format_visible_name_matches(), which turns it into a set of user IDs, and by
+ * bb_xprofile_get_format_visible_name_sql(), which turns it into a WHERE predicate for a producer
+ * that must not read its match set into PHP. The two shapes exist because the callers differ; the
+ * rule must not, or the member directory and the site-wide search would answer the same question
+ * differently - which is the defect this whole area exists to close.
+ *
+ * Returned as an ORDERED FALLBACK CHAIN, not a flat list, because that is what the resolver is. A
+ * later group is only ever the visible name for a member whose every earlier group is empty:
+ * bb_core_build_visible_display_name() returns the shown name part when it has a value and reaches
+ * bb_core_get_name_fallback_label() only when it does not, and that label tries the Nickname field,
+ * then the `nickname` user meta, then `user_nicename`, stopping at the first non-empty one.
+ *
+ * Treating a later group as an unconditional source is the leak this shape exists to close. Under
+ * "First Name", WordPress derives `user_nicename` from sanitize_title( display_name ) at
+ * registration - so `John Smith` becomes `john-smith` by default, and switching the format never
+ * rewrites it (bb_members_handle_display_name_format_change() touches field meta only). Admitted
+ * unconditionally, a `user_nicename` match said "the term is in the name this viewer is shown" for
+ * a member shown only `John`, which let an anonymous visitor confirm a withheld surname by
+ * searching it. The same held for the Nickname field and the `nickname` meta, which under "First
+ * Name" are not the visible name for anybody who has a first name.
+ *
+ * This is the rule the exclusion of `user_login` already states: a source that is not the name this
+ * viewer is shown must not be treated as proof that the name matches. The three groups below simply
+ * apply it per member instead of per site.
+ *
+ * Deliberately NOT a source at all: `user_login`. It is never returned as a display name - the
+ * chain ends at user_nicename - so treating a login match as proof would keep a member whose
+ * visible name does not match.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name_format Active Display Name Format.
+ * @return array List of source groups in resolver order. Each group is:
+ *               array {
+ *                   @type array $field_ids xprofile field IDs whose stored value can be the name.
+ *                   @type array $meta_keys WordPress user meta keys those fields fall back to.
+ *                   @type array $columns   wp_users columns that can be the name.
+ *               }
+ *               A group is a source only for members whose every preceding group is empty.
+ */
+function bb_xprofile_get_format_visible_name_sources( $display_name_format ) {
+	$chain = array();
+
+	// The name part the format shows outright. Under "Nickname" there is none - neither name field
+	// is part of the visible name - so the chain starts at the nickname.
+	if ( 'nickname' !== $display_name_format ) {
+		$chain[] = array(
+			'field_ids' => array_values( array_filter( array( (int) bp_xprofile_firstname_field_id() ) ) ),
+			'meta_keys' => array( 'first_name' ),
+			'columns'   => array(),
+		);
+	}
+
+	// bb_core_get_name_fallback_label() step one: the Nickname FIELD, then the `nickname` user meta
+	// it falls back to. One group, because bb_core_get_name_field_value() reads them in that order
+	// and returns the first non-empty of the pair.
+	$chain[] = array(
+		'field_ids' => array_values( array_filter( array( (int) bp_xprofile_nickname_field_id() ) ) ),
+		'meta_keys' => array( 'nickname' ),
+		'columns'   => array(),
+	);
+
+	// The last resort. WordPress guarantees a non-empty user_nicename for every real user, so
+	// nothing follows it and no group ever has to test it for emptiness.
+	$chain[] = array(
+		'field_ids' => array(),
+		'meta_keys' => array(),
+		'columns'   => array( 'user_nicename' ),
+	);
+
+	return $chain;
+}
+
+/**
+ * The same answer as bb_xprofile_get_format_visible_name_matches(), as a SQL subquery.
+ *
+ * A producer that assembles its own SQL against wp_users - the site-wide search engine - cannot use
+ * the ID list: under a format hide the explained set is as large as the match set, so materialising
+ * it would put a 70,000-element IN () list into the query, which is the cost the ID-list shape
+ * exists to avoid everywhere else. This returns the same rule as a subquery yielding `user_id`,
+ * built from the same sources (bb_xprofile_get_format_visible_name_sources()), with nothing read
+ * into PHP. bb_xprofile_get_format_visible_name_matches() is itself implemented on top of it, so
+ * the two shapes cannot drift: there is one query, applied two ways.
+ *
+ * Deliberately UNCORRELATED, and deliberately without an "outer id column" parameter. An earlier
+ * revision took one and spliced it into `EXISTS ( SELECT 1 FROM wp_bp_xprofile_data d WHERE
+ * d.user_id = <column> ... )`. That table has its own `id` column, so the natural argument - the
+ * bare `ID` of the enclosing `SELECT ID FROM wp_users` - bound to `d.id` instead of to the outer
+ * row: MySQL reported the subquery as SUBQUERY rather than DEPENDENT SUBQUERY, evaluated it once,
+ * and applied the result to every member. Both outcomes are silent and both are severe - constant
+ * TRUE serves members whose visible name does not match (the disclosure this whole area exists to
+ * close), constant FALSE removes the entire display_name comparison. Measured on this install:
+ * a term of "john" admitted 14 members where 1 was correct, and a term of "Alex" admitted 0 where
+ * 1 was correct.
+ *
+ * Nothing here references the enclosing query, so no argument can be mis-bound: the caller applies
+ * the result as `<its own id column> IN ( ... )`, where that column is resolved in the caller's own
+ * scope and a wrong one is a loud "Unknown column" rather than a quiet wrong answer.
+ *
+ * Returned unprepared, as a fragment plus its bound values, because the caller assembles one
+ * statement and prepares it once: handing back an already-prepared string would put literal `%`
+ * characters from the LIKE patterns into that outer prepare(), where they read as placeholders.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name_format Active Display Name Format.
+ * @param array  $like_patterns       LIKE patterns the match was produced with.
+ * @return array {
+ *     @type string $sql    A self-contained subquery selecting a `user_id` column, with %s/%d
+ *                          placeholders. '' when the format hides nothing.
+ *     @type array  $values Values to bind, in placeholder order.
+ * }
+ */
+function bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_patterns ) {
+	global $wpdb;
+
+	$empty = array(
+		'sql'    => '',
+		'values' => array(),
+	);
+
+	$like_patterns = array_values( array_filter( (array) $like_patterns ) );
+
+	if ( empty( $like_patterns ) || ! bp_is_active( 'xprofile' ) ) {
+		return $empty;
+	}
+
+	$bp    = buddypress();
+	$chain = bb_xprofile_get_format_visible_name_sources( $display_name_format );
+
+	$selects = array();
+	$values  = array();
+
+	// "Has a value in any group before this one", carried forward group by group as a list of
+	// NOT EXISTS tests. A later group is the visible name only for a member where every one of
+	// these holds, so each of that group's legs carries them.
+	//
+	// NOT EXISTS correlated on the leg's own row, not NOT IN ( big UNION ) and not a gate on a
+	// derived table wrapping the legs. Both alternatives were measured on this install, on the
+	// one-character term that produces the largest candidate sets:
+	//
+	// Flat and ungated, the shape that leaked, cost ~30 ms. Gating it with NOT IN ( has-value
+	// UNION ) cost ~800 ms: it materialises 140,000 rows to answer a question about a handful.
+	// Gating a derived table that wraps the legs cost ~460 ms: MySQL merges that derived table
+	// away, so the gate is evaluated over the whole user_nicename index scan rather than over the
+	// rows the LIKE kept. Gating the leg itself, which is what this does, costs ~35 ms: the LIKE
+	// filters first and the gate runs on what survives, over each table's (user_id) index.
+	//
+	// This is a correlated subquery, which is the shape that once bound a bare `ID` to
+	// wp_bp_xprofile_data's own `id` column and collapsed the predicate to a constant. It is safe
+	// here because the outer reference is always a fully qualified column of the leg's own uniquely
+	// aliased table (`bb_srcN_d.user_id`, `bb_srcN_m.user_id`, `bb_srcN_u.ID`), and those aliases
+	// exist nowhere inside the subquery - so a wrong one is an "Unknown column" error rather than a
+	// quiet wrong answer - and because every inner column is qualified too.
+	//
+	// TRIM() and <> '' stand in for the resolver's empty test, which also trims Unicode spaces: a
+	// value this reads as present can be empty to PHP, which withholds a member rather than serving
+	// one - the safe direction.
+	$earlier_has_value_tests  = array();
+	$earlier_has_value_values = array();
+
+	foreach ( $chain as $index => $group ) {
+		// Each entry is the leg's SQL with %%OUTER_ID%% standing in for its own user id column,
+		// plus the values it binds. The gate is appended below, once per leg, so its values land in
+		// placeholder order.
+		$group_legs = array();
+
+		if ( ! empty( $group['field_ids'] ) ) {
+			$value_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), "bb_src{$index}_d.value LIKE %s" ) );
+			$field_placeholders = implode( ',', array_fill( 0, count( $group['field_ids'] ), '%d' ) );
+
+			$group_legs[] = array(
+				'sql'    => "SELECT bb_src{$index}_d.user_id FROM {$bp->profile->table_name_data} bb_src{$index}_d WHERE bb_src{$index}_d.field_id IN ( {$field_placeholders} ) AND ( {$value_placeholders} )",
+				'id'     => "bb_src{$index}_d.user_id",
+				'values' => array_merge( $group['field_ids'], $like_patterns ),
+			);
+		}
+
+		if ( ! empty( $group['meta_keys'] ) ) {
+			$meta_placeholders     = implode( ' OR ', array_fill( 0, count( $like_patterns ), "bb_src{$index}_m.meta_value LIKE %s" ) );
+			$meta_key_placeholders = implode( ',', array_fill( 0, count( $group['meta_keys'] ), '%s' ) );
+
+			$group_legs[] = array(
+				'sql'    => "SELECT bb_src{$index}_m.user_id FROM {$wpdb->usermeta} bb_src{$index}_m WHERE bb_src{$index}_m.meta_key IN ( {$meta_key_placeholders} ) AND ( {$meta_placeholders} )",
+				'id'     => "bb_src{$index}_m.user_id",
+				'values' => array_merge( $group['meta_keys'], $like_patterns ),
+			);
+		}
+
+		// user_nicename is a column on wp_users rather than a field/meta pair. Aliased to user_id so
+		// every branch of the union presents the same column.
+		if ( in_array( 'user_nicename', (array) $group['columns'], true ) ) {
+			$nicename_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), "bb_src{$index}_u.user_nicename LIKE %s" ) );
+
+			$group_legs[] = array(
+				'sql'    => "SELECT bb_src{$index}_u.ID AS user_id FROM {$wpdb->users} bb_src{$index}_u WHERE ( {$nicename_placeholders} )",
+				'id'     => "bb_src{$index}_u.ID",
+				'values' => $like_patterns,
+			);
+		}
+
+		foreach ( $group_legs as $leg ) {
+			if ( empty( $earlier_has_value_tests ) ) {
+				// The first group is shown outright, so nothing gates it.
+				$selects[] = $leg['sql'];
+				$values    = array_merge( $values, $leg['values'] );
+
+				continue;
+			}
+
+			$gate      = str_replace( '%%OUTER_ID%%', $leg['id'], implode( ' AND ', $earlier_has_value_tests ) );
+			$selects[] = $leg['sql'] . ' AND ' . $gate;
+			$values    = array_merge( $values, $leg['values'], $earlier_has_value_values );
+		}
+
+		// Extend the "an earlier group has a value" test with this group, for the groups after it.
+		// %%OUTER_ID%% is the user id column of whichever leg the test ends up gating, substituted
+		// above - the tests are built once per group and reused by every later leg.
+		if ( ! empty( $group['field_ids'] ) ) {
+			$field_placeholders = implode( ',', array_fill( 0, count( $group['field_ids'] ), '%d' ) );
+
+			$earlier_has_value_tests[] = "NOT EXISTS ( SELECT 1 FROM {$bp->profile->table_name_data} bb_has{$index}_d WHERE bb_has{$index}_d.user_id = %%OUTER_ID%% AND bb_has{$index}_d.field_id IN ( {$field_placeholders} ) AND TRIM( bb_has{$index}_d.value ) <> '' )";
+			$earlier_has_value_values  = array_merge( $earlier_has_value_values, $group['field_ids'] );
+		}
+
+		if ( ! empty( $group['meta_keys'] ) ) {
+			$meta_key_placeholders = implode( ',', array_fill( 0, count( $group['meta_keys'] ), '%s' ) );
+
+			$earlier_has_value_tests[] = "NOT EXISTS ( SELECT 1 FROM {$wpdb->usermeta} bb_has{$index}_m WHERE bb_has{$index}_m.user_id = %%OUTER_ID%% AND bb_has{$index}_m.meta_key IN ( {$meta_key_placeholders} ) AND TRIM( bb_has{$index}_m.meta_value ) <> '' )";
+			$earlier_has_value_values  = array_merge( $earlier_has_value_values, $group['meta_keys'] );
+		}
+	}
+
+	if ( empty( $selects ) ) {
+		return $empty;
+	}
+
+	// UNION ALL, not UNION: the consumers are IN () and a DISTINCT, so de-duplicating here would
+	// only buy a sort.
+	return array(
+		'sql'    => implode( ' UNION ALL ', $selects ),
+		'values' => array_values( $values ),
+	);
+}
+
+
+/**
+ * Drop users from a profile-field search whose every matching field is hidden from the viewer.
+ *
+ * A search over `xprofile_data.value` matches restricted fields as readily as public ones, so
+ * without this a visitor can confirm the contents of a field they are not allowed to read by
+ * observing whether the member comes back in the results.
+ *
+ * Two things this corrects over the per-row checks it replaces:
+ *
+ * - the visibility test is `bp_xprofile_get_hidden_fields_for_user()`, the same predicate the
+ *   profile screens and the REST endpoints use, so the `loggedin` level is honoured (a logged-out
+ *   visitor could previously search a "Members only" field) and so is any site filter on that hook.
+ *   The previous code only recognised `adminsonly` and `friends`, and gated them on the
+ *   `administrator` role rather than the `bp_moderate` capability.
+ * - a member is only removed when *every* field they matched on is hidden. Matching a public field
+ *   and a restricted one is a legitimate, visible hit, and used to be discarded.
+ *
+ * The set to decide is as large as the match count: this producer matches on xprofile VALUES, so a
+ * one-word term on a large community can be the whole member table, and this runs before
+ * pagination on a request an anonymous visitor can issue. Two things keep that bounded. The
+ * per-member visibility reads are primed for the whole set in a handful of queries
+ * (bb_xprofile_prime_hidden_fields_for_users()), and the set that still has to be decided after the
+ * narrowing is capped by `bb_xprofile_user_search_visibility_candidate_limit` - the same budget the
+ * display-name producer uses, with the same answer past it: the members who could not be decided
+ * are withheld, and only those. Serving an arbitrary part of them would decide the results by
+ * position; withholding the whole leg would drop the matches the narrowing has already proved
+ * nothing is hidden from.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $matched_user_ids  User IDs matched by the value comparison.
+ * @param array $matched_user_data Rows of the same comparison, each with `user_id` and `field_id`.
+ * @param int   $viewer_id         Optional. Viewer to evaluate visibility for. Defaults to the
+ *                                 current viewer.
+ * @return array Filtered $matched_user_ids.
+ */
+function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data, $viewer_id = null ) {
+	$matched_user_ids = array_filter( array_map( 'intval', (array) $matched_user_ids ) );
+
+	if ( empty( $matched_user_ids ) || empty( $matched_user_data ) ) {
+		return $matched_user_ids;
+	}
+
+	if ( is_null( $viewer_id ) ) {
+		$viewer_id = bb_core_get_viewer_user_id();
+	}
+	$viewer_id = (int) $viewer_id;
+
+	// A moderator sees every field, so nothing can be hidden from them. Asked through the shared
+	// helper rather than transcribed, because the two filters answer the same question about the
+	// same viewer and must not disagree about who a guest is - and a rule written out twice is a
+	// rule that can drift. The helper also keeps the guest sentinel away from bp_user_can(), which
+	// has no user row to read for it.
+	if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+		return $matched_user_ids;
+	}
+
+	// The site-wide Display Name Format can leave a name field out of the visible name for EVERY
+	// member at once, independently of any visibility level, and that hide never enters
+	// bp_xprofile_get_hidden_fields_for_user() - bp_core_get_user_displayname() appends it
+	// separately. Without it a member matched only on a format-hidden name field is kept here, and
+	// the hit confirms the very name part the format suppresses. This mirrors the same source in
+	// bb_xprofile_filter_user_search_matches(): one rule, two filters, and they must agree.
+	$format_hidden_field_ids = array();
+	$display_name_format     = bp_core_display_name_format();
+
+	// Gated on bp_core_hide_display_name_field(), which is the predicate that decides whether the
+	// FIELD is withheld rather than whether the name part is in the display name. They are not the
+	// same question and this filter answers the first one: it runs over xprofile VALUES, and the
+	// format can leave the surname out of the display name while the Last Name field stays on the
+	// public profile - that is the default ("bp-hide-last-name = 1" means SHOW, see
+	// bp_xprofile_exclude_display_name_profile_fields()). Without the gate a member whose only
+	// match is a publicly rendered surname is dropped from the results, while the producer that
+	// fed those rows deliberately searched that same field (bp-core-functions.php, the
+	// $enabled_fields['lastname'] branch). Members who additionally restricted the field for this
+	// viewer are still caught by the visibility list merged in below.
+	if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
+		$format_last_name_field_id = (int) bp_xprofile_lastname_field_id();
+		if ( $format_last_name_field_id > 0 && bp_core_hide_display_name_field( $format_last_name_field_id ) ) {
+			$format_hidden_field_ids[] = $format_last_name_field_id;
+		}
+
+		// Under "Nickname" the visible name is the nickname alone, so the first name is out too.
+		if ( 'nickname' === $display_name_format ) {
+			$format_first_name_field_id = (int) bp_xprofile_firstname_field_id();
+			if ( $format_first_name_field_id > 0 && bp_core_hide_display_name_field( $format_first_name_field_id ) ) {
+				$format_hidden_field_ids[] = $format_first_name_field_id;
+			}
+		}
+	}
+
+	// Group the matched field ids per user, so a user is judged on all of their matches at once.
+	// Restricted to the matched rows here rather than inside the loop: only a matched row can be
+	// removed, and the per-row in_array() this replaces scanned the whole matched list once per
+	// matched user - quadratic on a term that matches a large part of the member table.
+	$is_matched     = array_flip( $matched_user_ids );
+	$fields_by_user = array();
+	foreach ( (array) $matched_user_data as $row ) {
+		if ( empty( $row->user_id ) || empty( $row->field_id ) || ! isset( $is_matched[ (int) $row->user_id ] ) ) {
+			continue;
+		}
+		$fields_by_user[ (int) $row->user_id ][] = (int) $row->field_id;
+	}
+
+	if ( empty( $fields_by_user ) ) {
+		return array_values( $matched_user_ids );
+	}
+
+	/** This filter is documented in bp-xprofile/bp-xprofile-functions.php */
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', bb_xprofile_default_search_candidate_limit(), $display_name_format, $viewer_id );
+
+	$remove_ids = array();
+
+	// Only a member who has actually restricted something can be redacted here, so only those need
+	// deciding - and only those should consume the budget below. Every other matched member
+	// provably resolves to an empty hidden-field list, which is exactly what the keep-test in the
+	// loop concludes, so they are kept without a visibility read. Applying the budget to the whole
+	// match set instead dropped ordinary, fully-public members for no reason beyond their position
+	// in an unordered match set: 600 members with a public first name returned 500 to a logged-out
+	// visitor.
+	//
+	// null means the narrowing does not apply - a field's default is forced on the whole community
+	// through 'disabled' custom visibility - and then the whole matched set stays in play and the
+	// bound below does the work. false means a read failed and the narrowing could not be resolved
+	// at all; that one cannot be worked around, so withhold this leg. The caller ORs it with the
+	// wp_users comparison, so a search still answers - it just returns nothing from the profile-field
+	// comparison it was unable to verify. Culling to the budget instead, which is what an
+	// undifferentiated null did, turned one transient read failure into a 90% result cull:
+	// 5,000 matches in, 500 out, and 4,500 of the dropped members had nothing hidden.
+	$possible_hidden = bb_xprofile_filter_possible_hidden_users( array_keys( $fields_by_user ) );
+
+	if ( false === $possible_hidden ) {
+		return array();
+	}
+
+	// The site-wide format hide reaches members who have restricted nothing, so it has to be
+	// unioned into the candidate set rather than replace the narrowing with "everybody": a member
+	// who matched no format-hidden field and restricted nothing provably keeps every one of their
+	// matches, and letting them consume the budget dropped ordinary, fully-public members purely
+	// on their position in an unordered match set - 600 members matched on a public Nickname
+	// returned 500 to a logged-out visitor. Union, so nobody who COULD be redacted is narrowed
+	// away; null still means no narrowing at all.
+	if ( ! empty( $format_hidden_field_ids ) && is_array( $possible_hidden ) ) {
+		$format_hidden_lookup = array_flip( $format_hidden_field_ids );
+		$format_candidates    = array();
+
+		foreach ( $fields_by_user as $matched_user_id => $matched_field_ids ) {
+			foreach ( $matched_field_ids as $matched_field_id ) {
+				if ( isset( $format_hidden_lookup[ $matched_field_id ] ) ) {
+					$format_candidates[] = (int) $matched_user_id;
+					break;
+				}
+			}
+		}
+
+		$possible_hidden = array_values( array_unique( array_merge( $possible_hidden, $format_candidates ) ) );
+	}
+
+	if ( is_array( $possible_hidden ) ) {
+		$fields_by_user = array_intersect_key( $fields_by_user, array_flip( $possible_hidden ) );
+
+		// Nobody in this match set has restricted anything, so there is nothing to withhold.
+		if ( empty( $fields_by_user ) ) {
+			return array_values( $matched_user_ids );
+		}
+	}
+
+	// Deciding one member costs a visibility resolution, and this producer matches on xprofile
+	// VALUES, so the set it has to decide can still be as large as the match count once the
+	// narrowing above does not apply - a one-word term on a large community can be the whole member
+	// table, before pagination, on a request an anonymous visitor can issue. Bound it with the same
+	// budget its sibling uses, and give the same answer past the bound: withhold the CANDIDATES.
+	//
+	// Not the first N of them - that decides membership of the results by a member's POSITION in an
+	// unordered set, and the members it dropped had, measurably, nothing hidden at all. And not the
+	// whole leg either, which is what an earlier revision did: returning array() here removes every
+	// matched member from the profile-field comparison, including the ones the narrowing has just
+	// proved can be redacted by nothing. Withholding exactly the members who COULD be redacted is
+	// fail-closed and leaves the rest of the match set served.
+	if ( $candidate_limit > 0 && count( $fields_by_user ) > $candidate_limit ) {
+		return array_values( array_diff( $matched_user_ids, array_keys( $fields_by_user ) ) );
+	}
+
+	// Resolving a member's hidden fields is up to three uncached reads; fill them for the whole
+	// set at once so the loop below is array lookups rather than queries per matched row.
+	bb_xprofile_prime_hidden_fields_for_users( array_keys( $fields_by_user ), $viewer_id );
+
+	foreach ( $fields_by_user as $user_id => $field_ids ) {
+		$hidden_fields = array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) );
+
+		if ( ! empty( $format_hidden_field_ids ) ) {
+			$hidden_fields = array_unique( array_merge( $hidden_fields, $format_hidden_field_ids ) );
+		}
+
+		if ( empty( $hidden_fields ) ) {
+			continue;
+		}
+
+		// Keep the user when at least one field they matched on is visible to this viewer.
+		if ( array_diff( array_unique( $field_ids ), $hidden_fields ) ) {
+			continue;
+		}
+
+		$remove_ids[] = (int) $user_id;
+	}
+
+	if ( empty( $remove_ids ) ) {
+		return array_values( $matched_user_ids );
+	}
+
+	return array_values( array_diff( $matched_user_ids, $remove_ids ) );
 }

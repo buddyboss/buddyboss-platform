@@ -1095,6 +1095,8 @@ function bbp_get_reply_author( $reply_id = 0 ) {
 	$reply_id = bbp_get_reply_id( $reply_id );
 
 	if ( ! bbp_is_reply_anonymous( $reply_id ) ) {
+		// Resolved for the current viewer: the raw display_name ignores the Last Name
+		// field's visibility level.
 		$author = get_the_author_meta( 'display_name', bbp_get_reply_author_id( $reply_id ) );
 	} else {
 		$author = get_post_meta( $reply_id, '_bbp_anonymous_name', true );
@@ -1156,7 +1158,16 @@ function bbp_reply_author_display_name( $reply_id = 0 ) {
  * @since BuddyBoss 2.5.90 Added the `$viewer_user_id` parameter.
  *
  * @param int $reply_id Optional. Reply id
- * @param int $viewer_user_id Optional. Reply viewer user id
+ * @param int $viewer_user_id Optional. ID of the user the name is being rendered for. Defaults to
+ *                            0, the current request's viewer. Pass it explicitly when the audience
+ *                            is someone other than the current user - an email fan-out resolves one
+ *                            author's name for many different recipients, and profile-field
+ *                            visibility is evaluated per recipient.
+ *                            The RSS <dc:creator> element resolves through WordPress' own
+ *                            the_author() instead, as it always has: a feed's audience IS the
+ *                            requester, so the `the_author` filter already answers for that viewer,
+ *                            it stays the hook third parties can reach there, and it keeps an
+ *                            anonymous post unnamed in a machine-readable feed.
  *
  * @return string Reply's author's display name
  * @uses                           bbp_is_reply_anonymous() To check if the reply is by an
