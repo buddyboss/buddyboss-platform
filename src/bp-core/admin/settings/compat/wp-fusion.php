@@ -380,7 +380,7 @@ add_action( 'wp_ajax_bb_legacy_wpf_create_tag', 'bb_legacy_wpf_create_tag' );
  * Settings" section from ever appearing if the reject logic's behaviour
  * changes in the future.
  *
- * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string[] $skip Metabox ids the auto-bridge should ignore.
  * @return string[] Updated list.
@@ -402,7 +402,7 @@ add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_wpf_skip_group_a
  *
  * Mirrors the default-merge in `WPF_BuddyPress::meta_box_callback_groups()`.
  *
- * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int $group_id Group ID.
  * @return array Map with 'apply_tags', 'tag_link', 'organizer_tag' keys, each a flat array of tag ids.
@@ -440,7 +440,7 @@ function bb_legacy_wpf_group_settings( $group_id ) {
  * the same save request — read-modify-write per call is safe because
  * `save_fields_data()` iterates fields synchronously within one request).
  *
- * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int    $group_id Group ID.
  * @param string $key      One of 'apply_tags', 'tag_link', 'organizer_tag'.
@@ -486,7 +486,7 @@ function bb_legacy_wpf_save_group_setting( $group_id, $key, $value ) {
  * with a newer pick rather than being blocked from picking at all once one
  * tag is chosen.
  *
- * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param mixed    $raw Raw value from `registered_field_*` POST.
  * @param int|null $max Optional cap on the number of ids kept.
@@ -527,7 +527,7 @@ function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
  * (see `legacy-meta-bridge-utils.php`), so `AjaxMultiSelectField` behaves the
  * same way on both surfaces.
  *
- * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string[] $saved Currently saved tag ids for this field.
  * @param int|null $max   Optional cap on how many tags the field accepts (see
@@ -581,7 +581,7 @@ function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
  * `bp-auto-group-join`'s 6000-6030 block, so if both plugins are active their
  * sections appear in a stable, predictable sequence.
  *
- * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
