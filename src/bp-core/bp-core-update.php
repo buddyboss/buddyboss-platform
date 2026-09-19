@@ -3257,17 +3257,29 @@ function bb_update_to_2_4_10() {
 
 	if ( bp_is_active( 'document' ) ) {
 		$saved_extensions = bp_get_option( 'bp_document_extensions_support', array() );
-		$default          = bp_media_allowed_document_type();
 
-		foreach ( $default as $key => $value ) {
-			if ( isset( $saved_extensions[ $key ] ) ) {
-				$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
-				$new_icon                         = bp_document_svg_icon( $document_file_extension );
-				$saved_extensions[ $key ]['icon'] = $new_icon;
+		// Only touch the option when something was actually saved. Writing
+		// array() back here when nothing existed used to permanently poison
+		// the option: get_option() would then keep returning that stored
+		// empty value forever, indistinguishable from an admin's later
+		// deliberate "delete all extensions" save (see
+		// bb_media_get_saved_extensions() in
+		// bp-core/admin/settings/media/callbacks.php).
+		//
+		// @since BuddyBoss [BBVERSION]
+		if ( ! empty( $saved_extensions ) ) {
+			$default = bp_media_allowed_document_type();
+
+			foreach ( $default as $key => $value ) {
+				if ( isset( $saved_extensions[ $key ] ) ) {
+					$document_file_extension          = substr( strrchr( $value['extension'], '.' ), 1 );
+					$new_icon                         = bp_document_svg_icon( $document_file_extension );
+					$saved_extensions[ $key ]['icon'] = $new_icon;
+				}
 			}
-		}
 
-		bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+			bp_update_option( 'bp_document_extensions_support', $saved_extensions );
+		}
 	}
 
 	if ( ! bp_is_active( 'groups' ) ) {

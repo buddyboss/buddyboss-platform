@@ -171,6 +171,35 @@ function bb_media_get_default_extensions( $option_name ) {
 }
 
 /**
+ * Get a stored extensions option, falling back to defaults only when unset.
+ *
+ * `bp_get_option( $option_name, $default )` already substitutes `$default`
+ * when the option row is missing entirely, but it returns the *stored*
+ * value — including an empty array — when the row exists. That distinction
+ * matters here: an admin can deliberately clear every extension via the
+ * React modal (see the "delete all" short-circuit in
+ * bb_media_sanitize_extensions()), which persists an empty array on
+ * purpose. Naively treating "empty" the same as "missing" would silently
+ * resurrect the defaults on the next page load and make that deletion
+ * impossible to keep. A private sentinel default lets us tell "never
+ * saved" (get back the sentinel) apart from "saved empty" (get back the
+ * real empty array) with a strict comparison.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option_name The DB option name.
+ * @param array  $default_extensions Hard-coded defaults to use when the option was never saved.
+ *
+ * @return array The stored extensions, or the defaults when the option row doesn't exist yet.
+ */
+function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
+	$unset    = "\0bb_media_extensions_unset\0";
+	$existing = bp_get_option( $option_name, $unset );
+
+	return $unset === $existing ? $default_extensions : $existing;
+}
+
+/**
  * Sanitize file extensions array (video/document).
  *
  * Handles two input formats from the React admin UI:
@@ -226,19 +255,14 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 		}
 
 		// Merge toggle states into existing stored data, falling back to the
-		// hard-coded defaults when the option has never been saved yet — or
-		// was previously saved as an empty array by a legacy upgrade routine
-		// (see bb_update_to_2_4_10()) — so a toggle flip doesn't wipe out the
-		// default extensions to an empty array before any of them have been
-		// persisted.
+		// hard-coded defaults only when the option has never been saved yet.
+		// See bb_media_get_saved_extensions() — an admin-emptied option must
+		// stay empty here too, or a toggle flip on a freshly-cleared list
+		// would resurrect every default extension.
 		//
-		// @since BuddyBoss [BBVERSION].
+		// @since BuddyBoss [BBVERSION]
 		$default_extensions = bb_media_get_default_extensions( $option_name );
-		$existing           = bp_get_option( $option_name, $default_extensions );
-
-		if ( empty( $existing ) ) {
-			$existing = $default_extensions;
-		}
+		$existing           = bb_media_get_saved_extensions( $option_name, $default_extensions );
 
 		foreach ( $value as $key => $is_active ) {
 			$sanitized_key = sanitize_key( $key );
@@ -809,17 +833,7 @@ function bb_media_create_test_upload() {
  */
 function bb_media_get_extension_options( $option_name, $include_default = false ) {
 	$default_extensions = bb_media_get_default_extensions( $option_name );
-	$extensions         = bp_get_option( $option_name, $default_extensions );
-
-	// The option may exist but have been saved as an empty array by a
-	// legacy upgrade routine (see bb_update_to_2_4_10()) rather than never
-	// saved at all — get_option() only substitutes the default for a
-	// missing row, so an empty-but-present option needs its own fallback.
-	//
-	// @since BuddyBoss [BBVERSION].
-	if ( empty( $extensions ) ) {
-		$extensions = $default_extensions;
-	}
+	$extensions         = bb_media_get_saved_extensions( $option_name, $default_extensions );
 
 	$options = array();
 
@@ -856,15 +870,7 @@ function bb_media_get_extension_options( $option_name, $include_default = false 
  */
 function bb_media_get_extension_data( $option_name ) {
 	$default_extensions = bb_media_get_default_extensions( $option_name );
-	$extensions         = bp_get_option( $option_name, $default_extensions );
-
-	// See bb_media_get_extension_options() above — an empty-but-present
-	// option needs the same fallback as a missing one.
-	//
-	// @since BuddyBoss [BBVERSION].
-	if ( empty( $extensions ) ) {
-		$extensions = $default_extensions;
-	}
+	$extensions         = bb_media_get_saved_extensions( $option_name, $default_extensions );
 
 	$data = array();
 
