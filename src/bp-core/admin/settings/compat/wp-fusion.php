@@ -595,7 +595,7 @@ function bb_legacy_wpf_register_group_fields( $registry, $component ) {
 		return;
 	}
 
-	$group_label = 'WP Fusion - Group Settings';
+	$group_label = __( 'WP Fusion - Group Settings', 'buddyboss' );
 
 	// Anchor to the modal's `details` tab — same default the groups auto-bridge
 	// uses (`bb_legacy_meta_field_tab`), and the tab GroupEditModal always
