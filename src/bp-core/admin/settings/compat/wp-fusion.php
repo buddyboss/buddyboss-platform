@@ -422,8 +422,12 @@ function bb_legacy_wpf_group_settings( $group_id ) {
 	$stored   = groups_get_groupmeta( $group_id, 'wpf-settings-buddypress' );
 	$settings = is_array( $stored ) ? array_merge( $defaults, $stored ) : $defaults;
 
-	foreach ( $settings as $key => $value ) {
-		$settings[ $key ] = array_values( (array) $value );
+	// Only coerce the three keys this bridge owns — `$settings` can carry extra
+	// keys WP Fusion itself stores under `wpf-settings-buddypress`, and
+	// `bb_legacy_wpf_save_group_setting()` writes this whole array back, so
+	// forcing an unrelated key to array() here would corrupt it on next save.
+	foreach ( array_keys( $defaults ) as $key ) {
+		$settings[ $key ] = array_values( (array) $settings[ $key ] );
 	}
 
 	return $settings;
