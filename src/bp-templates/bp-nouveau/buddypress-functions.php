@@ -652,10 +652,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function localize_scripts() {
 
-		// The activity editor's WYSIWYG toolbar tooltips (bold, ordered list, quote, etc.). Translatable via
-		// standard gettext/Loco Translate (domain 'buddyboss') and, additionally, registered with WPML String
-		// Translation so sites managing strings through WPML (rather than per-locale .mo files) can translate
-		// them the same way BuddyPress Multilingual registers other dynamic BuddyBoss strings.
+		// The activity editor's WYSIWYG toolbar tooltips (bold, ordered list, quote, etc.).
+		// Translatable via standard gettext/Loco Translate (domain 'buddyboss') — WPML String
+		// Translation picks these up on its own from the gettext calls below, the same way it
+		// does for every other 'buddyboss' string, so no separate wpml_register_single_string()
+		// registration is needed here.
 		$activity_editor_button_labels = array(
 			'bold'          => __( 'Bold', 'buddyboss' ),
 			'italic'        => __( 'Italic', 'buddyboss' ),
@@ -667,16 +668,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'h3'            => __( 'Heading 3', 'buddyboss' ),
 			'h4'            => __( 'Heading 4', 'buddyboss' ),
 		);
-
-		if ( has_action( 'wpml_register_single_string' ) ) {
-			foreach ( $activity_editor_button_labels as $button_name => $button_label ) {
-				$string_name = 'activity editor button - ' . $button_name;
-
-				do_action( 'wpml_register_single_string', 'buddyboss', $string_name, $button_label );
-
-				$activity_editor_button_labels[ $button_name ] = apply_filters( 'wpml_translate_single_string', $button_label, 'buddyboss', $string_name );
-			}
-		}
 
 		$params = array(
 			'ajaxurl'                    => bp_core_ajax_url(),
