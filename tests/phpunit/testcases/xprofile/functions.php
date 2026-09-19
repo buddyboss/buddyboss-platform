@@ -302,15 +302,12 @@ Bar!';
 		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
 		bp_xprofile_update_meta( $g, 'group', 'foo2', 'bar' );
 
-		$expected = array(
-			'foo' => array(
-				'bar',
-			),
-			'foo2' => array(
-				'bar',
-			),
-		);
-		$this->assertSame( $expected, bp_xprofile_get_meta( $g, 'group' ) );
+		$meta = bp_xprofile_get_meta( $g, 'group' );
+
+		// Group creation stores its own meta (is_repeater_enabled), so assert on the keys
+		// this test sets rather than on the whole meta bag.
+		$this->assertSame( array( 'bar' ), $meta['foo'] );
+		$this->assertSame( array( 'bar' ), $meta['foo2'] );
 	}
 
 	/**
@@ -343,8 +340,11 @@ Bar!';
 	public function test_bp_xprofile_get_meta_no_meta_key_no_results() {
 		$g = self::factory()->xprofile_group->create();
 
-		$expected = array();
-		$this->assertSame( $expected, bp_xprofile_get_meta( $g, 'group' ) );
+		// A freshly created group is not meta-free (group creation stores
+		// is_repeater_enabled), so assert that no user meta key was invented for it.
+		$meta = bp_xprofile_get_meta( $g, 'group' );
+		$this->assertArrayNotHasKey( 'foo', $meta );
+		$this->assertArrayNotHasKey( 'foo2', $meta );
 	}
 
 	/**
@@ -588,6 +588,13 @@ Bar!';
 	public function test_xprofile_sync_bp_profile_new_user() {
 		$post_vars = $_POST;
 
+		// add_user()/edit_user() are wp-admin operations performed by a logged-in
+		// administrator. Without a current user, bp_xprofile_validate_nickname_value()
+		// takes its registration-page branch (! is_user_logged_in()), which has no notion
+		// of "the user being edited" and rejects the member's own unchanged nickname.
+		$old_user = get_current_user_id();
+		$this->set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
 		$_POST = array(
 			'user_login' => 'foobar',
 			'pass1'      => 'password',
@@ -599,6 +606,7 @@ Bar!';
 		);
 
 		$id = add_user();
+		$this->assertNotWPError( $id, 'The fixture user could not be created.' );
 
 		$_POST = array(
 			'display_name' => 'Bar Foo',
@@ -607,9 +615,11 @@ Bar!';
 		);
 
 		$id = edit_user( $id );
+		$this->assertNotWPError( $id, 'Re-saving a user with an unchanged nickname must not be rejected.' );
 
 		// clean up post vars
 		$_POST = $post_vars;
+		$this->set_current_user( $old_user );
 
 		$this->assertEquals( 'foobar', xprofile_get_field_data( bp_xprofile_nickname_field_id(), $id ) );
 	}
@@ -949,16 +959,21 @@ Bar!';
 		$profile_template = new stdClass;
 		// Avoid the 'alt' class being added
 		$profile_template->current_field = 2;
+		// bp_get_field_css_class() reads field_order off the looped field, so the stub must
+		// carry it as a real BP_XProfile_Field would; without it the tag emits an undefined
+		// property notice and the expected class list is incomplete.
 		$profile_template->field = new stdClass;
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public'
 			);
 
@@ -986,12 +1001,14 @@ Bar!';
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public',
 			'rhubarb',
 			'apple'
@@ -1021,12 +1038,14 @@ Bar!';
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public',
 			'blueberry',
 			'gooseberry'
@@ -1074,4 +1093,280 @@ Bar!';
 	// 	$this->assertRegExp( $regex, $output );
 	// 	unset( $GLOBALS['field'] );
 	// }
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_enforced_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'disabled', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_allowed_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertTrue( bb_xprofile_can_change_field_visibility( $f ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_nickname_locked_by_display_name_format() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		bp_update_option( 'bp-xprofile-nickname-field-id', $f );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+
+		bp_delete_option( 'bp-xprofile-nickname-field-id' );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_does_not_leak_globals() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+		unset( $GLOBALS['profile_template'], $GLOBALS['field'] );
+
+		bb_xprofile_can_change_field_visibility( $f );
+
+		$this->assertFalse( isset( $GLOBALS['profile_template'] ) );
+		$this->assertFalse( isset( $GLOBALS['field'] ) );
+	}
+
+	/**
+	 * The restore path must hand the caller back the exact globals it had, including a
+	 * NULL-valued $GLOBALS['field'] — which is why the helper uses array_key_exists()
+	 * rather than isset(). The sibling test covers the "globals were absent" branch.
+	 *
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_restores_pre_existing_globals() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$template          = new stdClass();
+		$template->sentinel = 'caller';
+		$field             = new stdClass();
+		$field->sentinel   = 'caller';
+
+		$GLOBALS['profile_template'] = $template;
+		$GLOBALS['field']            = $field;
+
+		bb_xprofile_can_change_field_visibility( $f );
+
+		// Same object handles, not merely equal copies.
+		$this->assertSame( $template, $GLOBALS['profile_template'] );
+		$this->assertSame( $field, $GLOBALS['field'] );
+
+		// A NULL-valued global is a set global, so it must come back as NULL rather than
+		// being unset — the array_key_exists()/isset() distinction the helper relies on.
+		$GLOBALS['field'] = null;
+
+		bb_xprofile_can_change_field_visibility( $f );
+
+		$this->assertTrue( array_key_exists( 'field', $GLOBALS ) );
+		$this->assertNull( $GLOBALS['field'] );
+
+		unset( $GLOBALS['profile_template'], $GLOBALS['field'] );
+	}
+
+	/**
+	 * bp_xprofile_action_settings() skips locked fields entirely. Before the gate every
+	 * posted field id fell through to the 'public' fallback, so a locked field's stored
+	 * level was silently overwritten on any Profile Visibility save.
+	 *
+	 * @group bp_xprofile_action_settings
+	 */
+	public function test_bp_xprofile_action_settings_skips_locked_field_and_saves_the_rest() {
+		$u      = self::factory()->user->create();
+		$locked = $this->create_visibility_field( 'disabled', 'adminsonly' );
+		$open   = $this->create_visibility_field( 'allowed', 'public' );
+
+		$this->set_current_user( $u );
+
+		$bp                     = buddypress();
+		$displayed_user_backup  = $bp->displayed_user->id;
+		$component_backup       = $bp->current_component;
+		$action_backup          = $bp->current_action;
+		$action_vars_backup     = $bp->action_variables;
+		$request_method_backup  = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : null;
+
+		$bp->displayed_user->id = $u;
+		$bp->current_component  = 'settings';
+		$bp->current_action     = 'profile';
+		$bp->action_variables   = array();
+
+		try {
+			$_SERVER['REQUEST_METHOD']         = 'POST';
+			$_POST['xprofile-settings-submit'] = '1';
+			$_REQUEST['_wpnonce']              = wp_create_nonce( 'bp_xprofile_settings' );
+			$_POST['field_ids']                = $locked . ',' . $open;
+			// The locked field renders no control, so the browser posts no value for it -
+			// exactly the case that used to fall through to the 'public' default.
+			$_POST[ 'field_' . $open . '_visibility' ] = 'adminsonly';
+
+			bp_xprofile_action_settings();
+		} finally {
+			// Restore in a finally block: a failed nonce check raises WPDieException in the
+			// test suite, and leaking $_SERVER/$_POST or the BP globals would corrupt every
+			// test that runs after this one.
+			unset(
+				$_POST['xprofile-settings-submit'],
+				$_POST['field_ids'],
+				$_POST[ 'field_' . $open . '_visibility' ],
+				$_REQUEST['_wpnonce']
+			);
+			if ( null === $request_method_backup ) {
+				unset( $_SERVER['REQUEST_METHOD'] );
+			} else {
+				$_SERVER['REQUEST_METHOD'] = $request_method_backup;
+			}
+			$bp->displayed_user->id = $displayed_user_backup;
+			$bp->current_component  = $component_backup;
+			$bp->current_action     = $action_backup;
+			$bp->action_variables   = $action_vars_backup;
+		}
+
+		// The locked field was skipped: nothing member-chosen reached storage.
+		$levels = bp_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
+		$this->assertTrue( empty( $levels[ $locked ] ), 'A locked field must not be written by the settings screen.' );
+
+		// Positive control: the unlocked field in the same POST still saved, proving the
+		// `continue` skips only the locked field rather than aborting the loop.
+		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $open, $u ) );
+	}
+
+	/**
+	 * @group bb_xprofile_save_fields
+	 */
+	public function test_bb_xprofile_save_fields_skips_visibility_write_for_enforced_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'disabled', 'loggedin' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$_POST[ 'field_' . $f ]                 = 'hello';
+		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
+		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
+
+		$this->assertSame( 'hello', xprofile_get_field_data( $f, $u ) );
+		$levels = bp_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
+		$this->assertTrue( empty( $levels[ $f ] ) );
+	}
+
+	/**
+	 * @group bb_xprofile_save_fields
+	 */
+	public function test_bb_xprofile_save_fields_writes_visibility_for_allowed_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$_POST[ 'field_' . $f ]                 = 'hello';
+		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
+		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
+
+		$this->assertSame( 'friends', xprofile_get_field_visibility_level( $f, $u ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_signup_activation_ignores_submitted_visibility_for_enforced_field() {
+		$f = $this->create_visibility_field( 'disabled', 'adminsonly' );
+
+		$signup_id = BP_Signup::add(
+			array(
+				'user_login'     => 'lockedsignupuser',
+				'user_email'     => 'lockedsignup@example.test',
+				'activation_key' => 'lockedsignupkey',
+				'meta'           => array(
+					'password'              => 'password',
+					'profile_field_ids'     => (string) $f,
+					"field_{$f}"            => 'Locked value',
+					"field_{$f}_visibility" => 'public',
+				),
+			)
+		);
+		$this->assertNotEmpty( $signup_id );
+
+		$user_id = bp_core_activate_signup( 'lockedsignupkey' );
+		$this->assertNotWPError( $user_id );
+
+		// Assert the RAW stored meta, not the accessor: for enforced fields the
+		// accessor always returns the admin default regardless of storage, so it
+		// cannot distinguish a blocked write from a stored crafted level. The
+		// guard stores the default, so the crafted 'public' must not be present.
+		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$this->assertIsArray( $levels, 'Activation must store the visibility levels it resolved.' );
+		$this->assertArrayHasKey( $f, $levels, 'Activation writes the resolved level for every field; a missing key would hide a skipped write.' );
+		$this->assertSame( 'adminsonly', $levels[ $f ], 'Stored level must be the admin default, never the crafted value.' );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_signup_activation_honors_submitted_visibility_for_allowed_field() {
+		$f = $this->create_visibility_field( 'allowed', 'adminsonly' );
+
+		$signup_id = BP_Signup::add(
+			array(
+				'user_login'     => 'allowedsignupuser',
+				'user_email'     => 'allowedsignup@example.test',
+				'activation_key' => 'allowedsignupkey',
+				'meta'           => array(
+					'password'              => 'password',
+					'profile_field_ids'     => (string) $f,
+					"field_{$f}"            => 'Allowed value',
+					"field_{$f}_visibility" => 'loggedin',
+				),
+			)
+		);
+		$this->assertNotEmpty( $signup_id );
+
+		$user_id = bp_core_activate_signup( 'allowedsignupkey' );
+		$this->assertNotWPError( $user_id );
+
+		// Control: activation still honors the submitted level for fields the
+		// member may change — proves the path processes the signup meta at all.
+		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $f, $user_id ) );
+	}
+
+	/**
+	 * Create an xprofile field with the given visibility settings.
+	 *
+	 * @param string $allow_custom_visibility 'allowed' or 'disabled'.
+	 * @param string $default_visibility      Admin-set default visibility level.
+	 *
+	 * @return int Field ID.
+	 */
+	protected function create_visibility_field( $allow_custom_visibility, $default_visibility ) {
+		$g = self::factory()->xprofile_group->create();
+		$f = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
+
+		bp_xprofile_update_field_meta( $f, 'default_visibility', $default_visibility );
+		bp_xprofile_update_field_meta( $f, 'allow_custom_visibility', $allow_custom_visibility );
+
+		return $f;
+	}
 }
