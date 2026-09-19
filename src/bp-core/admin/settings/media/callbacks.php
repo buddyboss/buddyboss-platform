@@ -190,13 +190,42 @@ function bb_media_get_default_extensions( $option_name ) {
  * @param string $option_name The DB option name.
  * @param array  $default_extensions Hard-coded defaults to use when the option was never saved.
  *
- * @return array The stored extensions, or the defaults when the option row doesn't exist yet.
+ * @return array The stored extensions, reconciled with the defaults (see below),
+ *               or the defaults outright when the option row doesn't exist yet.
  */
 function bb_media_get_saved_extensions( $option_name, $default_extensions ) {
 	$unset    = "\0bb_media_extensions_unset\0";
 	$existing = bp_get_option( $option_name, $unset );
 
-	return $unset === $existing ? $default_extensions : $existing;
+	if ( $unset === $existing || ! is_array( $existing ) ) {
+		return $default_extensions;
+	}
+
+	// A deliberate "delete all" save (the short-circuit in
+	// bb_media_sanitize_extensions()) always persists a genuinely empty
+	// array — respect that as-is rather than backfilling it back to the
+	// defaults.
+	if ( empty( $existing ) ) {
+		return $existing;
+	}
+
+	// Backfill any default extension key missing from a *non-empty* saved
+	// value. The only way a default key can be structurally absent here
+	// (as opposed to merely toggled off) is stale data from a bug in an
+	// earlier "Add/Remove Extension" save that persisted a partial key set
+	// — never from the current sanitizer, which only ever drops a key by
+	// clearing all of them (see the "delete all" case above) or keeps
+	// every key it started with. Restore the missing defaults so they stay
+	// visible/toggleable instead of disappearing from the admin UI for
+	// good; every key the admin actually saved, including one explicitly
+	// toggled off, is left untouched.
+	foreach ( $default_extensions as $key => $ext ) {
+		if ( ! isset( $existing[ $key ] ) ) {
+			$existing[ $key ] = $ext;
+		}
+	}
+
+	return $existing;
 }
 
 /**
