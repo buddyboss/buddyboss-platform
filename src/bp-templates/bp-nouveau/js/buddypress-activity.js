@@ -3215,13 +3215,23 @@ window.bp = window.bp || {};
 								// above, by reference) once the capture finishes, instead of reading the
 								// <img> immediately and losing the preview.
 								if ( ! response.data.js_preview ) {
+									var thumbnailCheckAttempts = 0;
+									// getVideoThumb() normally settles within ~1s (its own 500ms timer plus a
+									// couple of attempts); polling every 200ms for up to 10s covers that with
+									// margin. If neither terminal class ever appears (e.g. the file.dataURL XHR
+									// errors with no handler, previewElement is missing, or the file is removed
+									// mid-capture), stop polling instead of running for the life of the page.
 									var thumbnailCheck = setInterval(
 										function () {
+											thumbnailCheckAttempts++;
 											if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
 												response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 												clearInterval( thumbnailCheck );
+											} else if ( thumbnailCheckAttempts >= 50 ) {
+												clearInterval( thumbnailCheck );
 											}
-										}
+										},
+										200
 									);
 								}
 
