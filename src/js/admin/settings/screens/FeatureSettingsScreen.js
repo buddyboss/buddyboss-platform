@@ -57,6 +57,58 @@ const EmailTemplatesListScreen = lazy(() => import('./EmailTemplatesListScreen')
 const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
 
 /**
+ * Normalize a save-response value back to the flat toggle map shape.
+ *
+ * Extension-list fields (e.g. `bp_video_extensions_support`) are edited by
+ * `ExtensionListField` as a flat `{ key: 0|1 }` map, but their PHP
+ * sanitize callback (`bb_media_sanitize_extensions()`) always returns and
+ * persists the full nested extension objects (`{ key: { extension,
+ * is_active, ... } }`) — that's the option's real stored shape. The AJAX
+ * save handler echoes that same nested shape back in `response.data.saved`.
+ *
+ * If that nested value were merged straight into `settings[fieldName]`,
+ * the field's `value` prop would stop matching the flat shape
+ * `ExtensionListField` expects: `!! listValue[key]` is always true for a
+ * non-empty object regardless of its `is_active`, and the *next* toggle
+ * click would build its payload from this mixed shape — one key a plain
+ * int (whichever the admin just clicked), the rest still nested objects —
+ * which the sanitizer's format sniffing (`is_array(reset($value))`)
+ * misreads as a full-data save, silently dropping any other
+ * already-plain-int key and resurrecting untouched extensions to their
+ * default `is_active`. Converting a nested extension map back to a flat
+ * toggle map here keeps `settings[fieldName]` in the one shape the field
+ * ever produces or consumes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {*} value A value from `response.data.saved`.
+ * @return {*} The flat toggle map when `value` looks like a saved
+ *             extension-data map, otherwise `value` unchanged.
+ */
+function toFlatToggleMapIfExtensionData( value ) {
+	if ( ! value || typeof value !== 'object' || Array.isArray( value ) ) {
+		return value;
+	}
+
+	var keys = Object.keys( value );
+	var looksLikeExtensionMap = keys.length > 0 && keys.every( function ( key ) {
+		var entry = value[ key ];
+		return entry && typeof entry === 'object' && ! Array.isArray( entry )
+			&& Object.prototype.hasOwnProperty.call( entry, 'is_active' );
+	} );
+
+	if ( ! looksLikeExtensionMap ) {
+		return value;
+	}
+
+	var flat = {};
+	keys.forEach( function ( key ) {
+		flat[ key ] = value[ key ].is_active ? 1 : 0;
+	} );
+	return flat;
+}
+
+/**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
  */
 const CUSTOM_PANEL_SCREENS = {
@@ -606,7 +658,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						} else {
 							// Use actual saved values from server response (may differ from
 							// submitted values due to server-side validation/revert).
-							var actualSaved = ( response.data && response.data.saved ) ? response.data.saved : fieldsToSave;
+							var rawActualSaved = ( response.data && response.data.saved ) ? response.data.saved : fieldsToSave;
+							var actualSaved = {};
+							Object.keys( rawActualSaved ).forEach( function ( key ) {
+								actualSaved[ key ] = toFlatToggleMapIfExtensionData( rawActualSaved[ key ] );
+							} );
 							setSettings((prev) => ({ ...prev, ...actualSaved }));
 							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 							const cachedData = getCachedFeatureData(featureId);

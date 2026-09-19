@@ -294,6 +294,17 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 		$existing           = bb_media_get_saved_extensions( $option_name, $default_extensions );
 
 		foreach ( $value as $key => $is_active ) {
+			// Defense in depth: a toggle-only payload's values must be
+			// scalar (0/1). absint() on an array returns 1 for any
+			// non-empty array, which would silently force an untouched
+			// extension back to active on a malformed/mixed-shape payload
+			// instead of leaving it as already stored.
+			//
+			// @since BuddyBoss [BBVERSION]
+			if ( is_array( $is_active ) ) {
+				continue;
+			}
+
 			$sanitized_key = sanitize_key( $key );
 
 			if ( isset( $existing[ $sanitized_key ] ) ) {
