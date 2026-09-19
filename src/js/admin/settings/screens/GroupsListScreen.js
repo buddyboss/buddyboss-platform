@@ -870,12 +870,8 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ deleteModalOpen && (
 				<Modal
 					title={
-						1 === deleteTargetIds.length && deleteTargetName
-							? sprintf(
-									/* translators: %s: group name. */
-									__( 'Delete "%s" group?', 'buddyboss' ),
-									decodeEntities( deleteTargetName )
-							  )
+						1 === deleteTargetIds.length
+							? __( 'Delete Group?', 'buddyboss' )
 							: __( 'Delete Groups?', 'buddyboss' )
 					}
 					onRequestClose={ function () {
@@ -897,7 +893,13 @@ export function GroupsListScreen( { onNavigate } ) {
 							</div>
 						</div>
 						<p className="bb-group-delete-modal__description">
-							{ __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
+							{ 1 === deleteTargetIds.length && deleteTargetName
+								? sprintf(
+										/* translators: %s: group name. */
+										__( 'Deleting "%s" will remove it from the community and the WordPress backend listings. It will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ),
+										decodeEntities( deleteTargetName )
+								  )
+								: __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
 						</p>
 						<CheckboxControl
 							label={ __( 'I understand this will permanently delete the group.', 'buddyboss' ) }
