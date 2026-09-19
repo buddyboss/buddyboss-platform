@@ -583,19 +583,11 @@ function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
  * @param string                       $component Component identifier.
  */
 function bb_legacy_wpf_register_group_fields( $registry, $component ) {
-	if ( 'groups' !== $component ) {
-		return;
-	}
-
-	if ( ! function_exists( 'groups_get_groupmeta' ) ) {
-		return;
-	}
-
 	// `groups_get_groupmeta()` only confirms BuddyPress groups are active, not
 	// that WP Fusion's own BuddyPress module is loaded — `WPF_BuddyPress`
 	// (includes/integrations/class-buddypress.php) is the class that owns
 	// `wpf-settings-buddypress` and is what these fields bridge against.
-	if ( ! class_exists( 'WPF_BuddyPress' ) ) {
+	if ( 'groups' !== $component || ! function_exists( 'groups_get_groupmeta' ) || ! class_exists( 'WPF_BuddyPress' ) ) {
 		return;
 	}
 
