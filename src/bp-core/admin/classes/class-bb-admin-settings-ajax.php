@@ -849,7 +849,7 @@ class BB_Admin_Settings_Ajax {
 					// saved this field, even though the real defaults (e.g. every
 					// video extension) are active.
 					//
-					// @since BuddyBoss [BBVERSION]
+					// @since BuddyBoss [BBVERSION].
 					$field_value = $this->bb_extract_extension_toggle_values( $field['extension_data'] );
 				} else {
 					$field_value = array_map( 'absint', $field_value );

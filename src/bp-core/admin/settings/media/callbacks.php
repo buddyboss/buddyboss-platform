@@ -289,7 +289,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 		// stay empty here too, or a toggle flip on a freshly-cleared list
 		// would resurrect every default extension.
 		//
-		// @since BuddyBoss [BBVERSION]
+		// @since BuddyBoss [BBVERSION].
 		$default_extensions = bb_media_get_default_extensions( $option_name );
 		$existing           = bb_media_get_saved_extensions( $option_name, $default_extensions );
 
@@ -300,7 +300,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 			// extension back to active on a malformed/mixed-shape payload
 			// instead of leaving it as already stored.
 			//
-			// @since BuddyBoss [BBVERSION]
+			// @since BuddyBoss [BBVERSION].
 			if ( is_array( $is_active ) ) {
 				continue;
 			}

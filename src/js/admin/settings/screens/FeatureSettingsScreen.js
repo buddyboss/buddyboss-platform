@@ -86,14 +86,14 @@ const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
  *             extension-data map, otherwise `value` unchanged.
  */
 function toFlatToggleMapIfExtensionData( value ) {
-	if ( ! value || typeof value !== 'object' || Array.isArray( value ) ) {
+	if ( ! value || 'object' !== typeof value || Array.isArray( value ) ) {
 		return value;
 	}
 
 	var keys = Object.keys( value );
 	var looksLikeExtensionMap = keys.length > 0 && keys.every( function ( key ) {
 		var entry = value[ key ];
-		return entry && typeof entry === 'object' && ! Array.isArray( entry )
+		return entry && 'object' === typeof entry && ! Array.isArray( entry )
 			&& Object.prototype.hasOwnProperty.call( entry, 'is_active' );
 	} );
 

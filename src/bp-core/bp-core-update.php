@@ -3266,7 +3266,7 @@ function bb_update_to_2_4_10() {
 		// bb_media_get_saved_extensions() in
 		// bp-core/admin/settings/media/callbacks.php).
 		//
-		// @since BuddyBoss [BBVERSION]
+		// @since BuddyBoss [BBVERSION].
 		if ( ! empty( $saved_extensions ) ) {
 			$default = bp_media_allowed_document_type();
 
