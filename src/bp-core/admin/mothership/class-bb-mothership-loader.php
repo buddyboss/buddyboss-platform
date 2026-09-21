@@ -205,22 +205,22 @@ class BB_Mothership_Loader {
 			// Boot registers the vendor WordPress hooks.
 			$this->container->boot();
 
-			// Register the Platform for NATIVE WordPress plugin updates.
+			// Register the Platform's fixed slug against the dynamic Mothership product id.
 			//
 			// The vendor UpdateService self-registers `plugin( $pluginId, '' )` on `init`, which
-			// hooks `update_plugins_{$pluginId}`. That filter never fires: WordPress derives the
-			// suffix from the HOST of the plugin's `Update URI` header (a single fixed value),
-			// while $pluginId is the *dynamic* Mothership product id (e.g. `bb-web-plus`). We
-			// bridge the two by registering a FIXED slug — `buddyboss-platform`, matching the
-			// `Update URI: https://buddyboss-platform` header in bp-loader.php — against the
-			// dynamic product id as the Mothership productId. WordPress then fires
-			// `update_plugins_buddyboss-platform`, the vendor looks up the correct product, and
-			// both the native update and the `plugins_api` "View details" popup work without any
-			// site_transient_update_plugins injection.
+			// hooks `update_plugins_{$pluginId}` — a filter WordPress never fires, because it
+			// derives that suffix from the HOST of a plugin's `Update URI` header, while
+			// $pluginId is the dynamic product id (e.g. `bb-web-plus`). Registering the fixed
+			// `buddyboss-platform` slug keeps the mapping correct for anything keyed by slug.
+			//
+			// BuddyBoss Platform deliberately ships WITHOUT an `Update URI` header, so the
+			// `update_plugins_{host}` filter this registers is inert and updates are served by
+			// {@see self::inject_platform_update()} instead. The call is kept because it also
+			// registers the vendor's `plugins_api` handler, which is header-independent.
 			$this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\UpdateService::class )->plugin( 'buddyboss-platform', $plugin_id );
 
-			// Record that the native path is genuinely wired. The fallback injector keys off
-			// this fact, not off the presence of the Update URI header — see
+			// Record that the native registration itself succeeded. The injector additionally
+			// requires an `Update URI` header before standing down — see
 			// {@see self::inject_platform_update()}.
 			$this->native_update_registered = true;
 		} catch ( \Throwable $e ) {
@@ -252,11 +252,11 @@ class BB_Mothership_Loader {
 			add_action( 'wp_ajax_bb_reset_license_settings', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_reset_license_settings' ) );
 		}
 
-		// Header-independent fallback for plugin updates. The primary path is native: the
-		// `Update URI` header in bp-loader.php drives `update_plugins_buddyboss-platform`
-		// (registered in {@see self::register_services()}). This injector is the safety net for
-		// the case where that header is absent (stripped by a build/merge/packaging step) — its
-		// own guard returns early when the header is present, so the two paths never double-fire.
+		// Plugin updates. BuddyBoss Platform ships without an `Update URI` header, so WordPress
+		// never fires `update_plugins_{host}` for it and this injector is the ACTIVE update
+		// path. It stands down automatically if a header is ever added AND the native filter
+		// registered successfully, so the two can never double-fire — see
+		// {@see self::inject_platform_update()}.
 		add_filter( 'site_transient_update_plugins', array( $this, 'inject_platform_update' ) );
 
 		// Invalidate the Platform update-check cache whenever WordPress writes a fresh
@@ -359,18 +359,22 @@ class BB_Mothership_Loader {
 	}
 
 	/**
-	 * Fallback: inject the Platform's own plugin update into the update_plugins transient.
+	 * Injects the Platform's own plugin update into the update_plugins transient.
 	 *
-	 * The PRIMARY update path is native — the `Update URI: https://buddyboss-platform` header
-	 * in bp-loader.php makes WordPress fire `update_plugins_buddyboss-platform`, which the vendor
-	 * UpdateService serves (registered in {@see self::register_services()}). That path also gives
-	 * the native `plugins_api` "View details" popup. This injector exists ONLY as a safety net
-	 * for the case where the header is absent (e.g. stripped by a build, merge, or packaging
-	 * step): when the header is present it returns early (see the UpdateURI guard below), so the
-	 * native path owns the update and the two never double-fire. It uses the same data source as
-	 * the vendor ({@see Products::getVersionCheck()}), runs only when licensed — leaving
-	 * wordpress.org updates intact for unlicensed installs — and keys the entry by plugin file so
-	 * the vendor's native auto-update / dev-block policy applies.
+	 * This is the ACTIVE update path. BuddyBoss Platform ships without an `Update URI` header,
+	 * so WordPress never fires `update_plugins_{host}` for it and the vendor UpdateService's
+	 * native filter, although registered, is inert. Dropping the header is safe here because
+	 * `buddyboss-platform` is not a wordpress.org slug, so no w.org listing can claim the
+	 * plugin; the header's usual job of fencing w.org off has nothing to fence.
+	 *
+	 * It stands down only if BOTH the native filter registered successfully AND the plugin
+	 * declares an `Update URI` — so adding the header later hands ownership back to the native
+	 * path without the two ever double-firing, and losing either one keeps this injector live
+	 * rather than leaving the site with no update path at all.
+	 *
+	 * It uses the same data source as the vendor ({@see Products::getVersionCheck()}), runs only
+	 * when licensed — leaving wordpress.org updates intact for unlicensed installs — and keys
+	 * the entry by plugin file so the vendor's auto-update / dev-block policy applies.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -403,10 +407,19 @@ class BB_Mothership_Loader {
 			// header is static, but the native filter is registered by the LAST statement of
 			// register_services()'s try{} block. Any throw before it (DI drift, an @inject
 			// regression, a fatal in a service constructor) is swallowed by that catch, so
-			// keying off the header would disable this fallback at exactly the moment it is
-			// the only remaining update path — leaving the site with no updates at all and
-			// nothing but a debug.log line.
-			if ( $this->native_update_registered ) {
+			// keying off the header alone would disable this fallback at exactly the moment
+			// it is the only remaining update path — leaving the site with no updates at all
+			// and nothing but a debug.log line.
+			//
+			// Both conditions have to hold for the native path to actually serve an update:
+			// WordPress only fires `update_plugins_{host}` for a plugin that declares an
+			// `Update URI`, and the filter behind it only exists if UpdateService::plugin()
+			// registered without throwing. Standing down on either one alone leaves a gap —
+			// drop the header and this injector would go quiet while no native filter ever
+			// fires, leaving only the vendor's @deprecated LegacyUpdateService.
+			$has_update_uri = ! empty( $plugins[ $plugin_file ]['UpdateURI'] );
+
+			if ( $this->native_update_registered && $has_update_uri ) {
 				return $transient;
 			}
 

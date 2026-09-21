@@ -740,6 +740,29 @@ class BB_License_Manager {
 			return true;
 		}
 
+		// Skip when this site has no activation yet — the usual case for the very request
+		// that is about to create one.
+		//
+		// This pre-check authenticates with the licence key plus the activation domain
+		// ({@see \BuddyBossPlatform\GroundLevel\Mothership\Api\Request} builds the
+		// Basic-auth header from that pair), and the server only recognises the pair once an
+		// activation exists. Before the first activation it therefore answers 401 every
+		// time, the failure is deliberately non-blocking, and the response is discarded —
+		// a guaranteed wasted round-trip that also spends the rate-limit quota the rest of
+		// this method goes out of its way to preserve. It is still worth running when an
+		// activation already exists (re-activation, edition change), where the call can
+		// actually succeed and catch a product mismatch.
+		try {
+			$connection = self::container()->get( AbstractPluginConnection::class );
+
+			if ( ! $connection->getLicenseActivationStatus() ) {
+				return true;
+			}
+		} catch ( \Throwable $e ) {
+			// No container means nothing to validate against; let the activate call decide.
+			return true;
+		}
+
 		// Skip validation if we have any recent failed attempts (likely rate limited).
 		// This preserves API calls for the actual activation attempt.
 		$failed_attempts = self::get_rate_limit_transient( 'failed_attempts' );
@@ -1316,6 +1339,13 @@ class BB_License_Manager {
 	 * @return array|WP_Error    Array of license + activation data, or WP_Error on failure.
 	 */
 	protected function bb_get_license_details( $license_key, $force_refresh = false ) {
+		// Without a key both requests below are guaranteed to fail (the key is half of the
+		// Basic-auth pair), so bail before spending them. Reached whenever the licence screen
+		// renders on a site that has never activated.
+		if ( '' === (string) $license_key ) {
+			return new \WP_Error( 'missing_license_key', esc_html__( 'No license key is stored.', 'buddyboss' ) );
+		}
+
 		$plugin_id = self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 
 		// Create cache key based on plugin ID only (not license key for security).
@@ -1349,6 +1379,22 @@ class BB_License_Manager {
 
 		if ( is_wp_error( $response ) ) {
 			return $response; // Return error.
+		}
+
+		// A non-200 (401 from a domain/key mismatch, 404, 5xx) can still carry a JSON body,
+		// so check the status before parsing — otherwise the second request is spent chasing
+		// a link that will not be there.
+		$status = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( 200 !== $status ) {
+			return new \WP_Error(
+				'license_http_error',
+				sprintf(
+					/* translators: %d: HTTP status code returned by the licensing API. */
+					esc_html__( 'The licensing server returned HTTP %d for the license lookup.', 'buddyboss' ),
+					$status
+				)
+			);
 		}
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );

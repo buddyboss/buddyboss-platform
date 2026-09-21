@@ -28,8 +28,10 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		$this->productId = $this->pluginId;
 
 		// Plugin basename for GroundLevel update integration (per the package README's
-		// connection setup). The `Update URI: https://buddyboss-platform` header in
-		// bp-loader.php opts BuddyBoss Platform into Mothership-driven plugin updates.
+		// connection setup). BuddyBoss Platform ships without an `Update URI` header, so the
+		// update entry is injected into the update_plugins transient by
+		// {@see BB_Mothership_Loader::inject_platform_update()}; this basename is the key it
+		// is filed under.
 		if ( function_exists( 'buddypress' ) && isset( buddypress()->basename ) ) {
 			$this->pluginFile = buddypress()->basename;
 		}
