@@ -477,7 +477,7 @@ function bb_admin_settings_register_email_digest_placeholder() {
 	);
 
 	if ( $locked ) {
-		$section_args['description'] = __( 'Combine notification emails into a single daily or weekly digest for members who choose it. Reliable inbox delivery requires DKIM-aligned sending from your domain — see the documentation.', 'buddyboss' );
+		$section_args['description'] = __( 'Group several notification emails into one daily or weekly email instead of sending each one separately. You choose which notifications can be grouped. Each member chooses daily, weekly, or no digest in their own notification settings.', 'buddyboss' );
 		$section_args['pro_notice']  = array(
 			'show'       => true,
 			'badge_text' => __( 'UPGRADE START', 'buddyboss' ),
@@ -875,7 +875,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'label'       => __( 'Email Digest', 'buddyboss' ),
 			'type'        => 'toggle',
 			'description' => __( 'Enable Email Digest', 'buddyboss' ),
-			'help_text'   => __( 'Combine notification emails into a single daily or weekly digest for members who choose it. When disabled, all notification emails send immediately.', 'buddyboss' ),
+			'help_text'   => __( 'Group several notification emails into one daily or weekly email instead of sending each one separately. You choose which notifications can be grouped. Each member chooses daily, weekly, or no digest in their own notification settings.', 'buddyboss' ),
 			'default'     => 0,
 			'order'       => 10,
 			'pro_notice'  => array(
@@ -895,7 +895,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'name'      => '_bb_email_digest_placeholder_frequency',
 			'label'     => __( 'Default Frequency', 'buddyboss' ),
 			'type'      => 'select',
-			'help_text' => __( 'New members inherit this cadence. Existing members keep immediate delivery until they choose a digest.', 'buddyboss' ),
+			'help_text' => __( 'New members start on this schedule. Existing members keep getting instant emails until they choose daily or weekly. Members can change their choice any time in their notification settings.', 'buddyboss' ),
 			'default'   => 'daily',
 			'options'   => array(
 				array(
@@ -936,7 +936,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'name'      => '_bb_email_digest_placeholder_send_day',
 			'label'     => __( 'Send Schedule', 'buddyboss' ),
 			'type'      => 'select',
-			'help_text' => __( 'Weekly digests send on this day. Ignored for daily digests.', 'buddyboss' ),
+			'help_text' => __( 'The day weekly digests go out. Daily digests are not affected.', 'buddyboss' ),
 			'default'   => '1',
 			'options'   => $day_options,
 			'order'     => 30,
@@ -960,7 +960,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'name'      => '_bb_email_digest_placeholder_send_time',
 			'label'     => __( 'Send Schedule', 'buddyboss' ),
 			'type'      => 'select',
-			'help_text' => __( 'Digests begin sending at this time (site timezone). Delivery is staggered — most members receive theirs shortly after.', 'buddyboss' ),
+			'help_text' => __( 'The time digests start going out, in your site\'s timezone. They are sent in batches, so on a large site some members get theirs a little later.', 'buddyboss' ),
 			'default'   => '09:00',
 			'options'   => $time_options,
 			'order'     => 40,
@@ -975,7 +975,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'label'       => __( 'Group Updates', 'buddyboss' ),
 			'type'        => 'toggle',
 			'description' => __( 'Include group updates in the digest', 'buddyboss' ),
-			'help_text'   => __( 'Unchecked types always send immediately.', 'buddyboss' ),
+			'help_text'   => __( 'New posts in groups the member is subscribed to, and changes to group details. Turn this off to send these emails immediately instead.', 'buddyboss' ),
 			'default'     => 0,
 			'order'       => 50,
 		)
@@ -987,7 +987,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'label'       => __( 'Social', 'buddyboss' ),
 			'type'        => 'toggle',
 			'description' => __( 'Include social notifications in the digest', 'buddyboss' ),
-			'help_text'   => __( 'Social notifications include mentions, replies, and follows.', 'buddyboss' ),
+			'help_text'   => __( 'Mentions, comments and replies on posts, new posts from people the member follows, and new followers. Turn this off to send these emails immediately instead.', 'buddyboss' ),
 			'default'     => 0,
 			'order'       => 60,
 		)
@@ -999,7 +999,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'label'       => __( 'Private Messages', 'buddyboss' ),
 			'type'        => 'toggle',
 			'description' => __( 'Include private messages in the digest', 'buddyboss' ),
-			'help_text'   => __( 'Members must also opt in to message digests in their own notification preferences.', 'buddyboss' ),
+			'help_text'   => __( 'Unread private messages and group messages. Members will not hear about a new message until their next digest. Turn this off to send these emails immediately instead.', 'buddyboss' ),
 			'default'     => 0,
 			'order'       => 70,
 		)
@@ -1011,8 +1011,8 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'name'        => '_bb_email_digest_placeholder_intro',
 			'label'       => __( 'Digest Heading', 'buddyboss' ),
 			'type'        => 'textarea',
-			'placeholder' => __( 'Type digest heading & introduction text', 'buddyboss' ),
-			'help_text'   => __( 'Shown at the top of every digest email — use it like a short newsletter intro.', 'buddyboss' ),
+			'placeholder' => __( 'Add a heading and a short intro for your digest emails', 'buddyboss' ),
+			'help_text'   => __( 'A short welcome message shown at the top of every digest, above the list of notifications. Leave it empty to show no introduction.', 'buddyboss' ),
 			'default'     => '',
 			'order'       => 80,
 			'group'       => array( 'key' => 'digest_heading' ),
@@ -1038,7 +1038,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 			'name'         => '_bb_email_digest_placeholder_test',
 			'label'        => __( 'Test Digest', 'buddyboss' ),
 			'type'         => 'manage_link',
-			'description'  => __( 'Sends a sample digest to your own email using your pending notifications. Does not affect member digests.', 'buddyboss' ),
+			'description'  => __( 'Sends a preview digest to your own email address, built from the notifications you have waiting. This does not affect members and does not clear your waiting notifications.', 'buddyboss' ),
 			'manage_url'   => '',
 			'manage_label' => __( 'Send Test Digest', 'buddyboss' ),
 			'manage_icon'  => 'bb-icons-rl bb-icons-rl-paper-plane-tilt',
