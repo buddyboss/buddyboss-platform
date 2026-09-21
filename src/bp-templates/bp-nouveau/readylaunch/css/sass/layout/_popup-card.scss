@@ -518,7 +518,8 @@
 			display: block;
 		}
 
-		[class*=" bb-icon-"] {
+		[class*=" bb-icon-"],
+		[class*="bb-icons-rl-"] {
 			height: 24px;
 			width: 24px;
 			font-size: 16px;
