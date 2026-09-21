@@ -272,10 +272,18 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * host of the home URL. WordPress installs that live in a subdirectory (e.g.
 	 * `example.com/community`) would otherwise share an activation identifier with a
 	 * second install on the root domain, so activating both against the same license
-	 * conflicts (PROD-9984). Appending the path gives each install its own identifier —
-	 * the same format Caseproof's own products send, and the licensing server accepts
-	 * the encoded slash. Root-domain installs are unaffected: the value stays the bare
-	 * host, so existing activations keep matching.
+	 * conflicts (PROD-9984). Appending the path gives each install its own identifier.
+	 *
+	 * The domain is the activation's identity on the licensing server: it is sent as the
+	 * Basic-auth username and as a path segment of `licenses/{key}/activations/{domain}`,
+	 * so `example.com` and `example.com/community` are two different activation records.
+	 * Changing the format for a site that is ALREADY activated would orphan its record —
+	 * the twice-daily status cron would 404 and GroundLevel would revoke the license. So
+	 * the resolution order is:
+	 *
+	 * 1. The domain stored at activation time, when present — always authoritative.
+	 * 2. The bare host, for a license activated before that option existed (legacy).
+	 * 3. `host/path`, for a fresh activation only.
 	 *
 	 * When BuddyBoss Platform is network-activated, the network home URL is used so
 	 * every site in the network resolves the same domain for the shared license.
@@ -288,6 +296,12 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return string The activation domain (`host` or `host/path`).
 	 */
 	public function resolveDomain(): string {
+		$stored = $this->getStoredActivationDomain();
+
+		if ( '' !== $stored ) {
+			return $stored;
+		}
+
 		$home_url = $this->is_network_activated() ? network_home_url() : get_home_url();
 		$host     = (string) wp_parse_url( $home_url, PHP_URL_HOST );
 
@@ -295,7 +309,67 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 			return '';
 		}
 
+		// An already-active license predates the stored-domain option and was activated
+		// against the bare host. Keep sending the bare host or the server will not
+		// recognise the activation and will revoke it on the next status check.
+		if ( $this->getLicenseActivationStatus() ) {
+			return $host;
+		}
+
 		return $host . untrailingslashit( (string) wp_parse_url( $home_url, PHP_URL_PATH ) );
+	}
+
+	/**
+	 * Option holding the domain a license was actually activated against.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const ACTIVATION_DOMAIN_OPTION = 'buddyboss_license_activation_domain';
+
+	/**
+	 * Gets the domain stored at activation time.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string The stored domain, or an empty string when none is stored.
+	 */
+	public function getStoredActivationDomain(): string {
+		$stored = get_option( self::ACTIVATION_DOMAIN_OPTION, '' );
+
+		return is_string( $stored ) ? $stored : '';
+	}
+
+	/**
+	 * Stores the domain a license was activated against.
+	 *
+	 * Called on a successful activation so the identifier stays stable for the life of
+	 * that activation, whatever the site URL does afterwards.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $domain The domain the activation was performed with.
+	 */
+	public function storeActivationDomain( string $domain ): void {
+		if ( '' === $domain ) {
+			delete_option( self::ACTIVATION_DOMAIN_OPTION );
+
+			return;
+		}
+
+		update_option( self::ACTIVATION_DOMAIN_OPTION, $domain );
+	}
+
+	/**
+	 * Clears the stored activation domain.
+	 *
+	 * Called on deactivation/reset so the next activation resolves a fresh identifier.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function clearActivationDomain(): void {
+		delete_option( self::ACTIVATION_DOMAIN_OPTION );
 	}
 
 	/**

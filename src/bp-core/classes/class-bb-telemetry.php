@@ -735,7 +735,17 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$platform_key = '';
 			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
 				try {
-					$platform_key = (string) \BuddyBossPlatform\GroundLevel\Mothership\Credentials::getLicenseKey();
+					/*
+					 * getLicenseKey() was static in GroundLevel 2.2.1 but is an instance
+					 * method as of 9.1.2, so it has to be resolved from the container.
+					 * Calling it statically throws an Error that the catch below swallows,
+					 * which silently defeats the constant/environment lookup this block
+					 * exists for.
+					 */
+					$platform_key = (string) \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()
+						->get_container()
+						->get( \BuddyBossPlatform\GroundLevel\Mothership\Credentials::class )
+						->getLicenseKey();
 				} catch ( \Throwable $e ) {
 					$platform_key = '';
 				}

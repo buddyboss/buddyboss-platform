@@ -451,6 +451,14 @@ class BB_License_Manager {
 		$credentials->setLicenseKey( '' );
 		$plugin_connector->clearDynamicPluginId();
 
+		// Drop the activation identifier so the next activation resolves a fresh one, and
+		// discard the vendor's cached activation so its overwrite guard has nothing stale
+		// to compare against.
+		if ( method_exists( $plugin_connector, 'clearActivationDomain' ) ) {
+			$plugin_connector->clearActivationDomain();
+		}
+		self::clear_activation_transient();
+
 		bb_error_log( 'BuddyBoss: License deactivated', true );
 	}
 
@@ -654,8 +662,19 @@ class BB_License_Manager {
 	private static function process_successful_activation( string $license_key, $plugin_connector, string $domain ): void {
 		try {
 			self::container()->get( Credentials::class )->setLicenseKey( $license_key );
+
+			// Pin the identifier this activation was created with, before the status flips —
+			// resolveDomain() must keep returning it for the life of the activation.
+			if ( method_exists( $plugin_connector, 'storeActivationDomain' ) ) {
+				$plugin_connector->storeActivationDomain( $domain );
+			}
+
 			// updateLicenseActivationStatus() clears the add-ons cache via the plugin connector.
 			$plugin_connector->updateLicenseActivationStatus( true );
+
+			// The cached activation still holds the previous key; leaving it would make
+			// GroundLevel's onLicenseKeyOverwritten() guard deactivate this new license.
+			self::clear_activation_transient();
 
 			$plugin_id = $plugin_connector->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
@@ -673,6 +692,36 @@ class BB_License_Manager {
 			self::disable_header_capture();
 			bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
 			throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss' ) );
+		}
+	}
+
+	/**
+	 * Discards GroundLevel's cached activation transient.
+	 *
+	 * GroundLevel 9.1.2 added {@see \BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager::onLicenseKeyOverwritten()},
+	 * hooked on `admin_init` at priority 10. It compares the live credential against the
+	 * `{pluginId}_activation` transient and, on a mismatch, deactivates the license, clears
+	 * the add-ons cache and flashes "Your license key was overwritten by an environment
+	 * variable or constant."
+	 *
+	 * Only the vendor's twice-daily cron writes that transient, so after BuddyBoss changes
+	 * the key itself (activation, deactivation, reset) the transient still holds the OLD
+	 * key and the guard fires against a perfectly valid license. BuddyBoss's own controller
+	 * runs at priority 20 — after the guard — so it cannot repair the state either.
+	 *
+	 * Deleting the transient is enough: onLicenseKeyOverwritten() returns early when the
+	 * cached key is empty, and the vendor cron re-syncs it with the correct key later.
+	 * Deleting is preferred over calling syncActivationTransient(), which would add an API
+	 * round-trip to every activation and silently no-op when that request fails.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private static function clear_activation_transient(): void {
+		try {
+			// Registered as a FACTORY, so this resolves a fresh instance.
+			self::container()->get( ActivationTransient::class )->delete();
+		} catch ( \Throwable $e ) {
+			bb_error_log( sprintf( 'BuddyBoss: could not clear activation transient: %s', $e->getMessage() ), true );
 		}
 	}
 
@@ -1478,6 +1527,13 @@ class BB_License_Manager {
 
 			// Clear license activation status.
 			$plugin_connector->updateLicenseActivationStatus( false );
+
+			// Clear the pinned activation identifier and GroundLevel's cached activation,
+			// so a reset really does return the site to a pre-activation state.
+			if ( method_exists( $plugin_connector, 'clearActivationDomain' ) ) {
+				$plugin_connector->clearActivationDomain();
+			}
+			self::clear_activation_transient();
 
 			// Clear migration flag.
 			delete_option( 'bb_mothership_licenses_migrated' );
