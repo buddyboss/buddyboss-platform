@@ -1,0 +1,265 @@
+/**
+ * Tools panel — Settings 2.0. Figma spec: two-column layout per section
+ * (heading 248px left, checkboxes 632px right, gap 56px, border-bottom 0.5px).
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-tools-repair-platform {
+	max-width: 984px;
+	padding: 14px 0 0;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	&__site-selector {
+		max-width: 360px;
+	}
+
+	&__select-all {
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+
+		.components-checkbox-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			color: $bb-text-color;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+	}
+
+	&__section {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 56px;
+		padding-bottom: 24px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__section-heading {
+		flex: 0 0 248px;
+	}
+
+	&__section-title {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		color: $bb-text-color;
+	}
+
+	&__section-items {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		.components-checkbox-control {
+			margin: 0;
+		}
+
+		.components-checkbox-control__label {
+			font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+	}
+
+	&__actions {
+		padding-top: 16px;
+
+		.components-button.is-primary {
+			@include bb-button-primary;
+		}
+	}
+
+	@media ( max-width: 960px ) {
+		&__section {
+			flex-direction: column;
+			gap: 16px;
+		}
+
+		&__section-heading {
+			flex: 0 0 auto;
+		}
+	}
+}
+
+#section-repair_platform_section {
+
+	> .bb-admin-feature-settings__section-body .bb-admin-feature-settings__section-description {
+		margin: 0;
+		padding-bottom: 0;
+		border: 0;
+	}
+}
+
+.bb-tools-repair-modal {
+	.bb-tools-repair-modal__body {
+		text-align: center;
+		padding: 30px 0;
+	}
+
+	&__icon {
+		font-size: 48px;
+		color: $bb-icon-secondary-color;
+		display: block;
+		margin-bottom: 10px;
+	}
+
+	&.is-progress .bb-tools-repair-modal__body p {
+		font-size: 14px;
+		color: $bb-text-secondary-color;
+		margin: 0;
+	}
+
+	&__status {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+
+		.components-spinner {
+			margin: 0;
+		}
+	}
+
+	&.is-complete {
+
+		.bb-tools-repair-modal__body {
+			padding: 30px 24px;
+		}
+
+		.bb-tools-repair-modal__checkmark {
+			color: $bb-icon-positive-primary-color;
+			font-size: 48px;
+			margin-bottom: 14px;
+
+			[class*="bb-icons"] {
+				font-weight: 500;
+			}
+		}
+
+		h3 {
+			color: $bb-text-secondary-color;
+			font-size: 16px;
+			font-weight: 500;
+			padding-bottom: 18px;
+			margin: 0 0 30px;
+			border-bottom: 1px solid $bb-border-secondary-color;
+		}
+
+		.bb-tools-repair-modal__results {
+			list-style: none;
+			margin: 16px 0;
+			padding: 0;
+			text-align: left;
+
+			li {
+				margin-bottom: 8px;
+				display: flex;
+				gap: 8px;
+				align-items: center;
+				font-size: 14px;
+				line-height: 20px;
+
+				&:before {
+					display: none;
+				}
+
+				[class*="bb-icons"] {
+					color: $bb-icon-positive-primary-color;
+					font-size: 20px;
+					font-weight: 500;
+				}
+
+				&.bb-admin-notice--warning [class*="bb-icons"] {
+					color: $bb-icon-warning-primary-color;
+				}
+
+				&.bb-admin-notice--error [class*="bb-icons"] {
+					color: $bb-icon-danger-secondary-color;
+				}
+			}
+		}
+	}
+
+	&__actions {
+		text-align: right;
+		padding-top: 16px;
+		border-top: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__result-text {
+		color: $bb-text-color;
+		font-size: 13px;
+		font-weight: 400;
+		flex: 1;
+	}
+}
+
+#section-migration_tools_section,
+#section-sample_data_section {
+
+	&:has(.bb-admin-settings-form__field .bb-tools-activation-cta) {
+		background-color: transparent;
+		border: 0;
+		box-shadow: none;
+		
+		.bb-admin-feature-settings__section-description,
+		.bb-admin-feature-settings__section-header {
+			display: none;
+		}
+	}
+}
+
+.bb-tools-activation-cta {
+	text-align: center;
+	padding: 24px 36px;
+	width: 100%;
+	box-sizing: border-box;
+
+	&__icon {
+		font-size: 24px;
+		color: $bb-icon-tertiary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		display: inline-block;
+		padding: 8px;
+		margin-bottom: 16px;
+	}
+
+	&__title {
+		font-size: 16px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0 0 8px;
+	}
+
+	&__description {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin: 0 auto 20px;
+	}
+
+	.components-button.is-primary {
+		@include bb-button-primary;
+	}
+
+	.bb-admin-notice {
+		max-width: 450px;
+		margin: 0 auto 20px !important;
+	}
+
+	&.is-loading {
+		padding: 48px 0;
+	}
+}

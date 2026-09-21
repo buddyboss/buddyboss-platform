@@ -252,15 +252,21 @@ export function savePlatformSetting( optionName, optionValue ) {
 }
 
 /**
- * Get all group types
+ * Get a page of group types.
+ *
+ * Server-side pagination — pass `page` (1-based) and `per_page` (clamped
+ * server-side via PER_PAGE_CAP). Pass `include_meta: 0` on subsequent
+ * paginated requests to skip the heavy `member_types` payload that only the
+ * first load needs.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} options Optional fetch options (e.g. { signal }).
- * @return {Promise} Promise resolving to group types array
+ * @param {Object} params  Optional. { page, per_page, include_meta }.
+ * @param {Object} options Optional. Pass-through fetch options (e.g. signal).
+ * @return {Promise} Promise resolving to { group_types, total, ... }.
  */
-export function getGroupTypes( options ) {
-	return ajaxFetch( 'bb_admin_get_group_types', {}, options );
+export function getGroupTypes( params, options ) {
+	return ajaxFetch( 'bb_admin_get_group_types', params || {}, options );
 }
 
 /**
@@ -293,11 +299,12 @@ export function updateGroupType( typeId, data ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {number} typeId - Group type post ID
+ * @param {number} typeId  - Group type post ID
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
  * @return {Promise} Promise resolving to response
  */
-export function deleteGroupType( typeId ) {
-	return ajaxFetch( 'bb_admin_delete_group_type', { type_id: typeId } );
+export function deleteGroupType( typeId, options ) {
+	return ajaxFetch( 'bb_admin_delete_group_type', { type_id: typeId }, options );
 }
 
 /**
@@ -402,14 +409,21 @@ export function updateGroupMember( data ) {
 }
 
 /**
- * Get all member/profile types.
+ * Get a page of member/profile types.
+ *
+ * Server-side pagination — pass `page` (1-based) and `per_page` (clamped
+ * server-side to 100). Pass `include_meta: 0` on subsequent paginated
+ * requests to skip the heavy auxiliary payload (group_types, wp_roles,
+ * published_pages, member_types_summary) that only the first load needs.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return {Promise} Promise resolving to member types array.
+ * @param {Object} params  Optional. { page, per_page, include_meta }.
+ * @param {Object} options Optional. Pass-through fetch options (e.g. signal).
+ * @return {Promise} Promise resolving to { member_types, total, ... }.
  */
-export function getMemberTypes( options ) {
-	return ajaxFetch( 'bb_admin_get_member_types', {}, options );
+export function getMemberTypes( params, options ) {
+	return ajaxFetch( 'bb_admin_get_member_types', params || {}, options );
 }
 
 /**
@@ -1031,40 +1045,6 @@ export function emailTemplateBulkAction( emailIds, action ) {
 	return ajaxFetch( 'bb_admin_email_template_bulk_action', {
 		email_ids: emailIds.join( ',' ),
 		do_action: action,
-	} );
-}
-
-/**
- * Upload a forum featured image.
- *
- * Sends the file to a dedicated AJAX endpoint that creates a WordPress
- * attachment and returns the attachment ID and URL.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {File}        file   The image file to upload.
- * @param {AbortSignal} signal Optional AbortController signal.
- * @return {Promise} Promise resolving to response JSON.
- */
-export function uploadForumImage( file, signal ) {
-	var ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || '/wp-admin/admin-ajax.php';
-	var nonce = ( window.bbAdminData && window.bbAdminData.ajaxNonce ) || '';
-
-	var formData = new FormData();
-	formData.append( 'file', file );
-	formData.append( 'action', 'bb_admin_upload_forum_image' );
-	formData.append( 'nonce', nonce );
-
-	return fetch( ajaxUrl, {
-		method: 'POST',
-		credentials: 'same-origin',
-		body: formData,
-		signal: signal,
-	} ).then( function ( response ) {
-		if ( ! response.ok ) {
-			throw new Error( 'HTTP ' + response.status );
-		}
-		return response.json();
 	} );
 }
 

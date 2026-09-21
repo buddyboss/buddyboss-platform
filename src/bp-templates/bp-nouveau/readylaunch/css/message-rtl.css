@@ -1136,6 +1136,23 @@ body.messages .bb-rl-content-wrapper {
   display: flex;
 }
 
+#bp-message-thread-list > li .bp-single-message-wrap:has(.bb-messages-group-notices) {
+  width: 100%;
+}
+
+#bp-message-thread-list > li .bp-single-message-wrap .bb-messages-group-notices {
+  font-size: var(--bb-rl-font-size-sm);
+  color: var(--bb-rl-text-tertiary-color);
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+#bp-message-thread-list > li .bp-single-message-wrap .bb-messages-group-notices strong {
+  display: inline-block;
+  font-weight: 500;
+}
+
 #bp-message-thread-list > li .bp-avatar-wrap {
   margin-left: var(--bb-rl-space-100);
   width: 40px;
@@ -1184,6 +1201,26 @@ body.messages .bb-rl-content-wrapper {
   margin-bottom: 0;
 }
 
+#bp-message-thread-list > li .bp-message-content-wrap p.deleted-message {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 400;
+  padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+  color: var(--bb-rl-text-secondary-color);
+  border-radius: 4px;
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap p.deleted-message:before {
+  content: "\e3de";
+  font-family: bb-icons-rl;
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: var(--bb-rl-space-50);
+  vertical-align: middle;
+}
+
 #bp-message-thread-list > li .bp-message-content-wrap img.emoji,
 #bp-message-thread-list > li .bp-message-content-wrap img.emojioneemoji {
   margin: 1px 3px;
@@ -1217,6 +1254,12 @@ body.messages .bb-rl-content-wrapper {
   padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
   margin-bottom: var(--bb-rl-space-200);
   border-radius: var(--bb-rl-radius-md);
+}
+
+#bp-message-thread-list > li .bp-message-content-wrap iframe {
+  max-width: 460px;
+  border-radius: var(--bb-rl-radius-lg);
+  width: 100%;
 }
 
 #bp-message-thread-list > li .bb-activity-media-wrap {
@@ -1956,12 +1999,15 @@ body.messages .bb-rl-content-wrapper {
   width: 40px;
   height: 40px;
   border-radius: var(--bb-rl-radius-full);
-  margin: var(--bb-rl-space-100);
 }
 
 .user-item-wrp .user-avatar > a {
   position: absolute;
   inset: 0;
+}
+
+.user-item-wrp .user-avatar > a img {
+  margin: var(--bb-rl-space-100);
 }
 
 .user-item-wrp .user-name {

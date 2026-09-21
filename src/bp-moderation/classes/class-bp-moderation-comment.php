@@ -24,6 +24,35 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	public static $moderation_type = 'comment';
 
 	/**
+	 * Process-local override that lets a caller skip the
+	 * `add_report_button` decoration for one `comment_text` filter pass
+	 * without unhooking the filter (the moderation component instance is
+	 * not stored anywhere reachable, so `remove_filter` cannot be called
+	 * without re-discovering the object via $wp_filter).
+	 *
+	 * @see BP_Moderation_Comment::bb_set_skip_report_button()
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @var bool
+	 */
+	protected static $bb_skip_report_button = false;
+
+	/**
+	 * Toggle the per-call skip flag for `add_report_button`. Always pair
+	 * a `true` call with a matching `false` call around the filter run.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @param bool $skip Whether the next `comment_text` filter run should
+	 *                   bypass the report-button decoration.
+	 *
+	 * @return void
+	 */
+	public static function bb_set_skip_report_button( $skip ) {
+		self::$bb_skip_report_button = (bool) $skip;
+	}
+
+	/**
 	 * BP_Moderation_Comment constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -318,6 +347,33 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		// Check if comment ID exists.
 		if ( empty( $comment->comment_ID ) ) {
+			return $comment_text;
+		}
+
+		// Skip in non-display contexts so the raw comment HTML stays clean.
+		//
+		// PROD-9232 (BuddyBoss 2.18.0) switched the report-button markup from
+		// the `comment_reply_link` filter (display-only) to `comment_text`
+		// (every render path, including non-display ones). The new hook also
+		// fires from:
+		//
+		//   - WP_REST_Comments_Controller (wp/v2/comments) — leaks the dropdown
+		//     markup into `content.rendered`. REST clients have dedicated
+		//     `can_report` / `report_button_text` fields on the moderation
+		//     endpoint for rendering their own affordances.
+		//   - The RSS2 / Atom comment feeds — leaks visible "Options" /
+		//     "Report Comment" strings into the XML payload, which feed readers
+		//     either render as a foreign dropdown or strip into plain text
+		//     appended to every comment.
+		//   - Mention notification emails (bp-core-actions.php) — fires the
+		//     filter to build the email body. The caller flips the static skip
+		//     flag below for its single filter pass so we don't pollute the
+		//     `usermessage` / `mentioned.content` tokens.
+		if (
+			self::$bb_skip_report_button ||
+			( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+			is_feed()
+		) {
 			return $comment_text;
 		}
 

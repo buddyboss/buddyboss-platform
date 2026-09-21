@@ -11,6 +11,8 @@ import { Button } from '@wordpress/components';
 import { getCachedFeatures } from './utils/ajax';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
+import { HelpScreen } from './screens/HelpScreen';
+import { SupportAccessScreen } from './screens/SupportAccessScreen';
 
 // Lazy load feature-specific screens (code splitting)
 const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
@@ -217,6 +219,20 @@ export function Router({ currentRoute, onNavigate }) {
 			// Hierarchy: Feature (tab) → Side Panel (sidepanel) → Sections → Fields
 			const featureId = routeParts[1];
 			const sidePanelId = routeParts[2];
+
+			// Help is not a registered feature — it's a standalone Settings 2.0
+			// page that replaces the legacy `?page=bp-help` admin screen.
+			// Intercept before the feature lookup so it doesn't fall through to
+			// FeatureSettingsScreen (which would request bb_admin_get_feature_settings
+			// for an unknown feature ID).
+			if ( 'help' === featureId ) {
+				// Sub-route: /settings/help/support-access opens the dedicated
+				// Support Access management page from the Open Access card.
+				if ( 'support-access' === sidePanelId ) {
+					return <SupportAccessScreen onNavigate={onNavigate} />;
+				}
+				return <HelpScreen onNavigate={onNavigate} />;
+			}
 
 			if (featureId) {
 				// Check if feature is enabled (wait for features to load)

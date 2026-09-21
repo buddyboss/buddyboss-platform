@@ -150,7 +150,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$COLUMNS .= ' COUNT( DISTINCT u.id ) ';
 			} else {
 				$COLUMNS             .= " DISTINCT u.id, 'members' as type, u.display_name LIKE %s AS relevance, a.date_recorded as entry_date ";
-				$query_placeholder[] = '%' . $search_term . '%';
+				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			}
 
 			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id AND a.component = 'members' AND a.type = 'last_activity'";
@@ -187,10 +187,42 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( 'user_meta' === $user_field ) {
 						// Search in user meta table for terms
 						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s AND meta_key NOT IN( 'first_name', 'last_name', 'nickname' ) ) ";
-						$query_placeholder[]        = '%' . $search_term . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $search_term ) . '%';
+					} elseif ( 'display_name' === $user_field ) {
+						// The display_name column always holds the member's full name, so this
+						// comparison matches on name parts the searcher may not be shown. The row
+						// is redacted at render time, but the match itself is the disclosure -
+						// searching a guessed surname and getting one hit confirms it. The member
+						// directory closes this in BP_User_Query; this engine builds its own SQL
+						// and never goes through BP_User_Query, so it has to apply the same rule
+						// here or the two answer the same question differently.
+						$exclusions = $this->bb_get_display_name_visibility_exclusions( $search_term );
+
+						if ( $exclusions['suppress_leg'] ) {
+							// The visibility answer could not be resolved, so this comparison
+							// cannot be made safely. Withhold it entirely rather than serve it
+							// unverified - user_login, user_nicename, user_email, user meta and the
+							// profile fields are separate legs of the same OR and still answer.
+							$conditions_wp_user_table[] = ' ( 1 = 0 ) ';
+						} else {
+							$display_name_clause = ' display_name LIKE %s ';
+							$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+							if ( ! empty( $exclusions['hidden_ids'] ) ) {
+								$display_name_clause .= ' AND ID NOT IN ( ' . implode( ', ', array_fill( 0, count( $exclusions['hidden_ids'] ), '%d' ) ) . ' ) ';
+								$query_placeholder    = array_merge( $query_placeholder, $exclusions['hidden_ids'] );
+							}
+
+							if ( '' !== $exclusions['visible_name_sql'] ) {
+								$display_name_clause .= ' AND ' . $exclusions['visible_name_sql'] . ' ';
+								$query_placeholder    = array_merge( $query_placeholder, $exclusions['values'] );
+							}
+
+							$conditions_wp_user_table[] = ' ( ' . $display_name_clause . ' ) ';
+						}
 					} else {
 						$conditions_wp_user_table[] = $user_field . ' LIKE %s ';
-						$query_placeholder[]        = '%' . $search_term . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $search_term ) . '%';
 					}
 				}
 
@@ -296,10 +328,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
 							// Build the main search query with character and word search.
+							// Bind the LIKE term (esc_like, so % and _ are literal) and the REGEXP
+							// term (preg_quote, so the term matches literally and cannot inject
+							// regex metacharacters or a catastrophic-backtracking pattern) via %s
+							// placeholders; field id lists are int-cast.
 							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
-							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-							$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
-							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
+							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['char_search'] ) );
+							$data_clause_xprofile_table .= ') ) OR ( value REGEXP %s AND field_id IN ( ';
+							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['word_search'] ) );
 							$data_clause_xprofile_table .= ') ) ';
 
 							// Add date search if date fields exist and search term is a date.
@@ -317,13 +353,13 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape.
 							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
 
 							// check visiblity for field id with current user.
 							if ( ! empty( $sql_xprofile_result ) ) {
 								foreach ( $sql_xprofile_result as $field_data ) {
-									$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
+									$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bb_core_get_viewer_user_id() );
 
 									if (
 										( ! empty( $hidden_fields )
@@ -347,8 +383,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						// Added user when visibility matched.
 						if ( ! empty( $user_ids ) ) {
-							$user_ids       = array_unique( $user_ids );
-							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )" . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
+							$user_ids       = array_unique( array_map( 'intval', $user_ids ) );
+							$where_fields[] = 'u.id IN ( ' . implode( ',', $user_ids ) . ' )' . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						} else {
 							$where_fields[] = "u.id = 0". ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						}
@@ -372,10 +408,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( $k == 0 ) {
 						$clause_search_string_table .= ' meta_value LIKE %s ';
-						$query_placeholder[]        = '%' . $sterm . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $sterm ) . '%';
 					} else {
 						$clause_search_string_table .= ' OR meta_value LIKE %s ';
-						$query_placeholder[]        = '%' . $sterm . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $sterm ) . '%';
 					}
 				}
 
@@ -422,6 +458,136 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					'only_totalrow_count' => $only_totalrow_count,
 				)
 			);
+		}
+
+		/**
+		 * Visibility exclusions for the display_name comparison.
+		 *
+		 * The member directory drops matches whose only match lies in a hidden name part inside
+		 * BP_User_Query, through bb_xprofile_filter_user_search_matches(). This engine assembles its
+		 * own SQL against wp_users and never runs BP_User_Query, so the same rule has to be applied
+		 * here - otherwise the site-wide search answers a question the member directory refuses.
+		 *
+		 * The rule has two halves and they are excluded in two different shapes, because they are
+		 * bounded by two different things:
+		 *
+		 * - The per-member half - a member who restricted a name field, or who inherits a restricted
+		 *   default - is bounded by the RESTRICTED POPULATION: the members carrying a non-public
+		 *   visibility row on a name field, which on this install is 13 of 70,440. That resolves to
+		 *   a short ID list, so it is excluded with `NOT IN`.
+		 * - The site-wide half - a Display Name Format that leaves a name part out of the visible
+		 *   name for everyone - is bounded by the TERM, and under a one-word term the members it
+		 *   explains are most of the table. So it is not materialised at all: it is applied as the
+		 *   SQL predicate bb_xprofile_get_format_visible_name_sql() builds from the same sources its
+		 *   ID-returning sibling compares.
+		 *
+		 * Neither half is bounded by the match set, and that is the point. An earlier revision read
+		 * the matched IDs into PHP, budgeted that read, and fenced everything past the budget off
+		 * with an ID ceiling. The ceiling bounded RESULTS where only WORK ever needed bounding: on
+		 * this install a search for a term matching 70,000 members admitted 500 of them and fenced
+		 * off 69,500, while the set that actually needed hiding was empty. A bound whose cost is
+		 * proportional to how many people a term matches cannot be made safe by tuning it, because
+		 * the population it is protecting does not grow with the match count.
+		 *
+		 * Only the display_name comparison is narrowed. user_login, user_nicename, user_email, user
+		 * meta and the xprofile fields are compared on their own legs of the same query: they carry
+		 * no hidden name part, so a member matching on one of those is still a legitimate hit.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term Raw search term, as passed to sql().
+		 * @return array {
+		 *     Exclusions for the display_name comparison.
+		 *
+		 *     @type bool   $suppress_leg     True when a READ FAILED, so the candidate set itself is
+		 *                                    unknown and the comparison must be withheld entirely.
+		 *                                    Never a partial result: a truncated match set is
+		 *                                    neither private nor complete.
+		 *     @type array  $hidden_ids       User IDs to exclude. Empty means EXCLUDE NOBODY, which
+		 *                                    is the usual case - never "the rest were truncated".
+		 *                                    Past the re-test budget this is the whole candidate
+		 *                                    set, un-re-tested: those members are excluded and the
+		 *                                    rest of the comparison still runs.
+		 *     @type string $visible_name_sql SQL predicate keeping only matches that lie in a name
+		 *                                    source the Display Name Format still shows, with
+		 *                                    %s/%d placeholders. '' when the format hides nothing.
+		 *     @type array  $values           Values to bind for $visible_name_sql, in order.
+		 * }
+		 */
+		protected function bb_get_display_name_visibility_exclusions( $search_term ) {
+			global $wpdb;
+
+			// sql() is called twice per search - once for the row count, once for the rows - and
+			// both calls have to resolve the identical set.
+			static $cache = array();
+
+			$exclusions = array(
+				'suppress_leg'     => false,
+				'hidden_ids'       => array(),
+				'visible_name_sql' => '',
+				'values'           => array(),
+			);
+
+			$viewer_id           = bb_core_get_viewer_user_id();
+			$display_name_format = bp_core_display_name_format();
+
+			// The format is part of the key, not just the viewer: the memoised value carries
+			// $visible_name_sql, which bb_xprofile_get_format_visible_name_sql() builds FROM the
+			// format. bp_core_display_name_format() ends in apply_filters() and the underlying
+			// option is filterable through `pre_option_bp-display-name-format`, so one request can
+			// see more than one format - and a key without it hands whichever context asks second
+			// the first one's predicate, dropping the format hide. The direction of that miss is a
+			// leak, so it is keyed the same way bp-members-filters.php keys its own memo.
+			$cache_key = md5( (string) $search_term ) . '_' . $viewer_id . '_' . $display_name_format;
+
+			if ( isset( $cache[ $cache_key ] ) ) {
+				return $cache[ $cache_key ];
+			}
+
+			// A moderator reads every name part, so neither half of the rule applies to them - the
+			// per-member half answers that itself, the format predicate below would not.
+			if ( bb_xprofile_search_viewer_sees_every_name( $viewer_id ) ) {
+				$cache[ $cache_key ] = $exclusions;
+
+				return $cache[ $cache_key ];
+			}
+
+			$like_pattern = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+			$hidden_ids = bb_xprofile_get_hidden_name_search_user_ids( array( $like_pattern ), $viewer_id );
+
+			if ( false === $hidden_ids ) {
+				$exclusions['suppress_leg'] = true;
+				$cache[ $cache_key ]        = $exclusions;
+
+				return $cache[ $cache_key ];
+			}
+
+			$exclusions['hidden_ids'] = array_values( array_filter( array_map( 'intval', (array) $hidden_ids ) ) );
+
+			if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
+				$format = bb_xprofile_get_format_visible_name_sql( $display_name_format, array( $like_pattern ) );
+
+				if ( '' !== $format['sql'] ) {
+					// `ID` is the outer SELECT's own column and the subquery references nothing of
+					// the enclosing query, so this cannot bind anywhere but wp_users. Correlating
+					// instead - EXISTS ( ... WHERE d.user_id = ID ) - silently bound `ID` to the
+					// xprofile_data table's own `id` column and turned the test into a constant.
+					$exclusions['visible_name_sql'] = '( ID IN ( ' . $format['sql'] . ' ) )';
+					$exclusions['values']           = $format['values'];
+
+					// A member is never hidden from themselves, so the viewer is never excluded by
+					// the format predicate.
+					if ( $viewer_id > 0 ) {
+						$exclusions['visible_name_sql'] = '( ID = %d OR ID IN ( ' . $format['sql'] . ' ) )';
+						$exclusions['values']           = array_merge( array( $viewer_id ), $format['values'] );
+					}
+				}
+			}
+
+			$cache[ $cache_key ] = $exclusions;
+
+			return $cache[ $cache_key ];
 		}
 
 		protected function generate_html( $template_type = '' ) {
