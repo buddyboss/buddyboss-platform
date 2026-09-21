@@ -57,6 +57,27 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 3.5.0 =
+* New Feature! Notification - Turn a flood of notification emails into a single daily or weekly Email Digest, with each member choosing their own frequency
+* Bug: Core - Fixed an issue that could cause the app to crash when the BuddyBoss Addons plugin was not activated
+* Bug: Core - Fixed an issue where clicking "View details" on the BuddyBoss products not showing update details
+* Bug: Core - Fixed inconsistencies where member hover cards were not appearing correctly in some areas like groups, forums, and activity feeds
+* Bug: Core - Updated the BuddyBoss products compatibility version with the latest WordPress version as unknown
+* Bug: Forums - Fixed an issue where changing a forum discussion's visibility to private was silently reverted back to public after saving
+* Bug: Group - Fixed an issue where group album edit options were incorrectly visible to non-members and logged-out users
+* Bug: Groups - Fixed an issue where the group type shortcode did not display groups when added to a WordPress page
+* Bug: Media - Fixed an issue where the "no photos or videos found" message disappeared after renaming an empty album
+* Bug: Profiles - Fixed a privacy issue where a member's full name could still appear in page source code and social sharing previews even when only their first name was set to display
+* Bug: Profiles - Fixed a security issue where new users could be granted incorrect account permissions during self-registration
+* Bug: Profiles - Fixed an issue where using a Biography field inside a repeater field set could duplicate the field and overwrite a member's WordPress biography
+* Bug: Profiles - Fixed an issue where visibility and requirement options,were missing for the Last Name profile field
+* Bug: ReadyLaunch - Fixed a display issue with reaction icons on activity comments in ReadyLaunch
+* Bug: ReadyLaunch - Fixed a styling issue with the "Sent from [Group]" label shown in group message threads in ReadyLaunch
+* Bug: ReadyLaunch - Fixed a styling issue with the guest information fields shown when starting a discussion anonymously in ReadyLaunch
+* Bug: ReadyLaunch - Fixed an issue where the Courses link did not work correctly when a custom course URL slug was set
+* Bug: ReadyLaunch - Fixed an issue where the Forum menu icon was missing from the group admin sidebar when a custom forum URL was used
+* Bug: Translations - Fixed an issue where interface text could appear in the wrong language on multilingual sites
+
 = 3.4.4 =
 * Enhancement: Members - Added Member Directory settings to the REST API, allowing apps to access configured directory elements, profile actions, and primary actions
 * Bug: Core - Fixed an issue where the Profile Visibility API ignored enforced visibility settings, allowing users to select and save visibility options restricted by administrators
