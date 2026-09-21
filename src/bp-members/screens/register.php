@@ -185,10 +185,13 @@ function bp_core_screen_signup() {
 					 * bp_assign_default_member_type_to_activate_user() remains as a backstop
 					 * for any path that bypasses this validation.
 					 */
-					// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Registration is a public form processed without a nonce by design; matches the surrounding field handling.
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Registration is a public form processed without a nonce by design; the value is rejected outright when it is an array and otherwise passed through absint() below.
 					$bb_submitted_member_type = isset( $_POST[ 'field_' . $field_id ] ) ? wp_unslash( $_POST[ 'field_' . $field_id ] ) : '';
 					if (
-						(int) bp_get_xprofile_member_type_field_id() === (int) $field_id
+						// Guard against the memoized 0 this helper returns when no membertypes
+						// field exists, which would otherwise match a posted field id of "0".
+						bp_get_xprofile_member_type_field_id() > 0
+						&& (int) bp_get_xprofile_member_type_field_id() === (int) $field_id
 						&& ! empty( $bb_submitted_member_type )
 						&& ! bp_current_user_can( 'bp_moderate' )
 						&& (

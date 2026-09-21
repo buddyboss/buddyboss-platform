@@ -4107,8 +4107,12 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 		 * (its "_bp_member_type_enable_profile_field" is off) and have it — and
 		 * its mapped WP role — assigned at activation. Ignore it, falling back
 		 * to the admin-configured default type, whenever it is not actually
-		 * offered at registration. Admin-driven paths (send-invite type,
-		 * default registration type) are unaffected.
+		 * offered at registration.
+		 *
+		 * The admin-configured default registration type is unaffected. The
+		 * send-invite type is NOT admin-only — any member who can send invites
+		 * chooses it — so it is gated separately, at its own input, by
+		 * bb_is_member_type_allowed_on_invite() in bp_member_invite_submit().
 		 */
 		if (
 			'' !== $get_selected_member_type_on_register
@@ -5633,4 +5637,58 @@ function bb_is_member_type_allowed_on_registration( $member_type_id ) {
 	$enabled = get_post_meta( $member_type_id, '_bp_member_type_enable_profile_field', true );
 
 	return ( '' === $enabled || '1' === $enabled );
+}
+
+/**
+ * Check whether a profile type may be selected for an invitee on the Send Invites form.
+ *
+ * Mirrors the set the send-invites Profile Type dropdown itself offers (see
+ * bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php): the
+ * inviter's own type must be permitted to choose invitee types, and the submitted
+ * type must be in that inviter's `_bp_member_type_allowed_member_type_invite`
+ * allowlist, or — when no allowlist is configured — an active member type.
+ *
+ * Used to reject a profile type that was posted to the invite form but is not
+ * actually offered there. `_bp_invitee_member_type` is read back at activation by
+ * bp_assign_default_member_type_to_activate_user(), which applies the type's
+ * `_bp_member_type_wp_roles` mapping, so an ungated value is a privilege-escalation
+ * path for any member who can send invites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $member_type_key Profile type key submitted on the invite form.
+ *
+ * @return bool True when the type is offered to this inviter.
+ */
+function bb_is_member_type_allowed_on_invite( $member_type_key ) {
+	$member_type_key = is_string( $member_type_key ) ? trim( $member_type_key ) : '';
+
+	if ( '' === $member_type_key ) {
+		return false;
+	}
+
+	// The invitee type selector is only rendered when this gate passes.
+	if ( ! bp_check_member_send_invites_tab_member_type_allowed() ) {
+		return false;
+	}
+
+	$inviter_member_type = bp_get_member_type( bp_loggedin_user_id() );
+	$inviter_type_id     = ! empty( $inviter_member_type ) ? bp_member_type_post_by_type( $inviter_member_type ) : 0;
+
+	// Same source, and same fallback, the dropdown iterates.
+	$offered_types = ! empty( $inviter_type_id )
+		? get_post_meta( $inviter_type_id, '_bp_member_type_allowed_member_type_invite', true )
+		: '';
+
+	if ( empty( $offered_types ) ) {
+		$offered_types = bp_get_active_member_types();
+	}
+
+	foreach ( (array) $offered_types as $offered_type_id ) {
+		if ( bp_get_member_type_key( $offered_type_id ) === $member_type_key ) {
+			return true;
+		}
+	}
+
+	return false;
 }

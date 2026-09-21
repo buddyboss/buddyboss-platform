@@ -231,7 +231,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 * stays context-free and does not break profile edits that keep a member's
 	 * currently-assigned type.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.1.3
 	 * @since BuddyBoss [BBVERSION] Restrict to member-type posts only.
 	 *
 	 * @param int $values post id.
