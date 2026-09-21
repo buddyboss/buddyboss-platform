@@ -41,7 +41,13 @@ class BB_Notifications {
 		$container = $loader->get_container();
 
 		/** @var \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store $store */
-		$store = $container->get( Store::class )->fetch();
+		try {
+			$store = $container->get( Store::class )->fetch();
+		} catch ( \Throwable $e ) {
+			// The IPN services are absent when Mothership did not boot (stale vendor tree or
+			// a failed provider boot). A notification is not worth fataling over.
+			return;
+		}
 
 		// Format buttons as HTML.
 		$btns = array();
@@ -97,7 +103,13 @@ class BB_Notifications {
 		 *
 		 * @var \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store $store
 		 */
-		$store   = $container->get( Store::class )->fetch();
+		try {
+			$store = $container->get( Store::class )->fetch();
+		} catch ( \Throwable $e ) {
+			// See add(): nothing to dismiss when the IPN services never registered.
+			return;
+		}
+
 		$persist = false;
 
 		foreach ( $store->notifications( false ) as $notification ) {

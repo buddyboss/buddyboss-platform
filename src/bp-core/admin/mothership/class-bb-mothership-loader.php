@@ -76,6 +76,19 @@ class BB_Mothership_Loader {
 	private $pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
 
 	/**
+	 * Whether the native vendor update filter was actually registered.
+	 *
+	 * Set only after `UpdateService::plugin()` returns without throwing. The fallback
+	 * injector in {@see self::inject_platform_update()} stands down only when this is
+	 * true, so a boot failure leaves the fallback active rather than disabling both paths.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool
+	 */
+	private $native_update_registered = false;
+
+	/**
 	 * Get singleton instance.
 	 *
 	 * @return BB_Mothership_Loader
@@ -98,21 +111,50 @@ class BB_Mothership_Loader {
 	 * Initialize the mothership functionality.
 	 */
 	private function init(): void {
-		// Create the container.
-		$this->container = new Container();
-
-		// Create the plugin connector.
-		$this->pluginConnector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
-		// Register the BuddyBoss plugin connection so that every GroundLevel service
-		// (Credentials, View, AdminNotices, LicenseManager, ...) can resolve it.
-		$plugin_connector = $this->pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$this->container->singleton(
-			AbstractPluginConnection::class,
-			static function () use ( $plugin_connector ) {
-				return $plugin_connector;
+		// The vendor tree is gitignored and is NOT refreshed by a branch switch, so a
+		// checkout without `composer install` leaves GroundLevel 2.2.1 (or older) on disk
+		// while this code targets 9.1.2. Everything below — Container::singleton(),
+		// Container::parameters(), the ServiceProvider classes — is 9.x-only, and this file
+		// is required unconditionally from BuddyPress::includes(), so a mismatch fatals on
+		// the FRONT END with no wp-admin recovery path. Degrade to "licensing unavailable"
+		// instead.
+		if ( ! class_exists( MothershipServiceProvider::class ) || ! method_exists( Container::class, 'singleton' ) ) {
+			$message = 'BuddyBoss: the GroundLevel vendor tree is out of date (run `composer install`) — Mothership licensing is disabled for this request.';
+			if ( function_exists( 'bb_error_log' ) ) {
+				bb_error_log( $message, true );
+			} else {
+				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
-		);
+
+			return;
+		}
+
+		try {
+			// Create the container.
+			$this->container = new Container();
+
+			// Create the plugin connector.
+			$this->pluginConnector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+			// Register the BuddyBoss plugin connection so that every GroundLevel service
+			// (Credentials, View, AdminNotices, LicenseManager, ...) can resolve it.
+			$plugin_connector = $this->pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$this->container->singleton(
+				AbstractPluginConnection::class,
+				static function () use ( $plugin_connector ) {
+					return $plugin_connector;
+				}
+			);
+		} catch ( \Throwable $e ) {
+			$message = 'BuddyBoss Mothership container setup failed: ' . $e->getMessage();
+			if ( function_exists( 'bb_error_log' ) ) {
+				bb_error_log( $message, true );
+			} else {
+				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
+
+			return;
+		}
 
 		// Register and boot the Mothership + In-Product Notifications service providers.
 		$this->register_services();
@@ -176,6 +218,11 @@ class BB_Mothership_Loader {
 			// both the native update and the `plugins_api` "View details" popup work without any
 			// site_transient_update_plugins injection.
 			$this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\UpdateService::class )->plugin( 'buddyboss-platform', $plugin_id );
+
+			// Record that the native path is genuinely wired. The fallback injector keys off
+			// this fact, not off the presence of the Update URI header — see
+			// {@see self::inject_platform_update()}.
+			$this->native_update_registered = true;
 		} catch ( \Throwable $e ) {
 			// A resolution/boot failure must never white-screen wp-admin. Log and degrade
 			// gracefully — license activation falls back to BuddyBoss's own controller.
@@ -350,9 +397,16 @@ class BB_Mothership_Loader {
 			}
 			$plugins = get_plugins();
 
-			// If the main file declares an Update URI header, the native vendor UpdateService
-			// owns the update — defer to it so the two paths never double-fire.
-			if ( ! empty( $plugins[ $plugin_file ]['UpdateURI'] ) ) {
+			// Defer to the native vendor UpdateService only when it actually registered.
+			//
+			// Testing the Update URI header instead would conflate two different facts: the
+			// header is static, but the native filter is registered by the LAST statement of
+			// register_services()'s try{} block. Any throw before it (DI drift, an @inject
+			// regression, a fatal in a service constructor) is swallowed by that catch, so
+			// keying off the header would disable this fallback at exactly the moment it is
+			// the only remaining update path — leaving the site with no updates at all and
+			// nothing but a debug.log line.
+			if ( $this->native_update_registered ) {
 				return $transient;
 			}
 
@@ -496,6 +550,15 @@ class BB_Mothership_Loader {
 	 * @return Container The container instance.
 	 */
 	public function get_container(): Container {
+		// init() bails before building the container when the GroundLevel vendor tree is
+		// stale, so this can be reached with nothing set. The declared return type forbids
+		// null, and several callers resolve the container without a try/catch, so hand back
+		// an empty container instead of raising a TypeError: an unresolved service throws a
+		// catchable container exception, which is a far better failure than a fatal.
+		if ( ! $this->container instanceof Container ) {
+			$this->container = new Container();
+		}
+
 		return $this->container;
 	}
 
