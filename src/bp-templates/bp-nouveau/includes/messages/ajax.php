@@ -894,6 +894,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'is_deleted'                      => $is_deleted_group,
 			'is_group'                        => ! empty( $group_id ) ? true : false,
 			'is_group_thread'                 => $is_group_thread,
+			'group_id'                        => (int) $group_id,
 			'group_link'                      => $group_link,
 			'group_message_users'             => $group_message_users,
 			'group_message_type'              => $group_message_type,
