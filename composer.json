@@ -66,6 +66,10 @@
 	},
 	"config": {
 		"platform-check": false,
+		"preferred-install": {
+			"caseproof/*": "source",
+			"*": "dist"
+		},
 		"allow-plugins": {
 			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true

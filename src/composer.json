@@ -50,6 +50,10 @@
 		]
     },
     "config": {
+        "preferred-install": {
+            "caseproof/*": "source",
+            "*": "dist"
+        },
         "allow-plugins": {
             "composer/installers": true
         }
