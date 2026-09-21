@@ -2751,10 +2751,21 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 		// 'emotions' setting on every request where the provider had not booted
 		// yet (and, on addon-only sites, permanently), which made the Reactions
 		// mode appear un-saveable.
+		//
+		// The third branch is gated on bp_register_reaction() — a marker defined
+		// only by a legacy Pro build that still ships the emotion layer itself.
+		// A licensed Pro post-PROD-10191 no longer provides reactions (that moved
+		// to the add-on), so bbp_pro_is_license_valid() alone must not be treated
+		// as proof of a provider; without this gate a new-Pro + no-add-on +
+		// licensed site would report emotions "available" with nothing behind it.
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
 			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
-			|| ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() );
+			|| (
+				function_exists( 'bp_register_reaction' )
+				&& function_exists( 'bbp_pro_is_license_valid' )
+				&& bbp_pro_is_license_valid()
+			);
 
 		if ( ! $emotion_layer_available ) {
 			$mode = 'likes';
