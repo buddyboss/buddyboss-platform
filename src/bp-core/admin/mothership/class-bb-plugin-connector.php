@@ -61,6 +61,15 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_License_Manager' ) ) {
 			\BuddyBoss\Core\Admin\Mothership\BB_License_Manager::clearLicenseDetailsCache();
 		}
+
+		// The DRM "is this add-on licensed" decision is cached per request and is resolved
+		// as early as `bp_loaded`, long before a licence is activated on `admin_init` 20.
+		// Without this reset the DRM sweep at `admin_init` 25 re-reads the pre-activation
+		// answer and skips cleanup, leaving the wp_bb_drm_events rows and their notices in
+		// place until the next page load.
+		if ( class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Addon' ) ) {
+			\BuddyBoss\Core\Admin\DRM\BB_DRM_Addon::reset_licensed_cache();
+		}
 	}
 
 	/**
