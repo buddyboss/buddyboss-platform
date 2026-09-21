@@ -313,6 +313,28 @@ function bp_helper_plugins_loaded_callback() {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
 	}
 
+	/**
+	 * SEO plugin compatibility.
+	 *
+	 * They build the document title, the Open Graph tags and the JSON-LD graph themselves, and
+	 * resolve a member's name by reading the WP_User `display_name` property rather than through
+	 * get_the_author_meta() - a read no filter can reach. Without this the full name goes into the
+	 * page source for anonymous visitors and social scrapers on a community that hides it.
+	 *
+	 * Deliberately NOT gated on detecting one of the three plugins it ships support for. The class
+	 * only registers filters, and registering a hook nobody fires costs nothing - which is the same
+	 * argument its own hook list makes for not gating that. Gating the class instead put its two
+	 * documented extension points, `bb_seo_schema_graph_filters` and `bb_seo_author_name_filters`,
+	 * out of reach of exactly the plugins they exist for: a community on SEOPress, Slim SEO, The
+	 * SEO Framework or Squirrly never loaded the class, so its listener was never called and it had
+	 * no supported way to close the leak. Returning an empty array from either filter unregisters
+	 * everything, which is the off switch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	require buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+	BB_SEO_Helpers::instance();
+
 	if ( class_exists( 'LifterLMS' ) ) {
 		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
 	}
