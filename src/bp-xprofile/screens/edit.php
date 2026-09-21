@@ -100,7 +100,15 @@ function xprofile_screen_edit_profile() {
 				if ( ! $is_keeping_current_type ) {
 					$enabled = get_post_meta( $submitted_profile_type_post_id, '_bp_member_type_enable_profile_field', true );
 
-					if ( '' === $enabled || '0' === $enabled ) {
+					/*
+					 * An absent meta row ('') counts as OFFERED, matching the registration
+					 * dropdown and bb_is_member_type_allowed_on_registration(). This screen
+					 * used to reject '', which contradicted both and left any member whose
+					 * type had no row unable to save their profile at all. A row is absent
+					 * whenever the type was not saved through the Settings 2.0 panel that
+					 * submits this field (WP-CLI, importers, wp_insert_post(), partial saves).
+					 */
+					if ( '' !== $enabled && '1' !== $enabled ) {
 						$errors        = true;
 						$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss' );
 						continue;
