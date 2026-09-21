@@ -8028,3 +8028,35 @@ function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $ac
 
 	return $result;
 }
+
+/**
+ * Get the display name of an activity item's author as the current viewer may see it.
+ *
+ * Activity and comment objects carry two names: `display_name` (the raw WP users
+ * column, always the full name) and `user_fullname` (resolved per viewer by
+ * bp_core_get_user_displayname(), honouring xprofile field visibility such as a
+ * hidden last name). Public output must never use the raw column — this helper
+ * prefers `user_fullname` and falls back to a per-viewer resolution.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $activity_item Activity or activity comment object.
+ * @return string Display name as permitted for the current viewer, or an empty string.
+ */
+function bb_activity_get_item_user_displayname( $activity_item ) {
+	if ( empty( $activity_item ) || ! is_object( $activity_item ) ) {
+		return '';
+	}
+
+	if ( ! empty( $activity_item->user_fullname ) ) {
+		return $activity_item->user_fullname;
+	}
+
+	if ( empty( $activity_item->user_id ) ) {
+		return '';
+	}
+
+	$name = bp_core_get_user_displayname( $activity_item->user_id );
+
+	return is_string( $name ) ? $name : '';
+}
