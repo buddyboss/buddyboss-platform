@@ -5327,6 +5327,90 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 }
 
 /**
+ * Build a search leg's WHERE clause without inlining a match set the size of the member table.
+ *
+ * Every search leg in this codebase resolves its matches in PHP - it has to, because the
+ * visibility filters run over them - and then spells the survivors out as `IN ( … )`. On a term
+ * that matches most of the community that is a statement measured in hundreds of kilobytes: the
+ * member directory sent 140,698 ids across two OR'd lists in one 824 KB statement to exclude a
+ * grand total of ONE member.
+ *
+ * The survivors and the removals describe the same set, so the clause is built from whichever of
+ * the two is smaller. Where the removals win, the match set is named by the subquery that produced
+ * it rather than by its ids, and only the removals are spelled out. The visibility filters are what
+ * make this worth doing: they are built to remove the few members who restricted something, so the
+ * removals are normally a handful and the survivors are nearly everybody.
+ *
+ * Never worse than the inclusive list, by construction - when the removals are NOT the smaller
+ * half, or no subquery is available to stand in for the match set, the inclusive list is what comes
+ * back. The clause is parenthesised because callers OR these legs together, and `A AND B OR C AND D`
+ * is only correct by SQL's precedence rules; spelling it out removes the question.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $column           Qualified column the clause tests, e.g. `u.ID`.
+ * @param array  $matched_user_ids Ids the producer matched, BEFORE visibility filtering.
+ * @param array  $kept_user_ids    Ids that survived visibility filtering.
+ * @param string $match_subquery   Optional. A prepared SELECT returning the same ids as
+ *                                 $matched_user_ids. Without it the inclusive list is used.
+ * @return string WHERE clause. `IN (NULL)` - which matches nothing - when nothing survived.
+ */
+function bb_core_get_search_match_clause( $column, $matched_user_ids, $kept_user_ids, $match_subquery = '' ) {
+	$kept = array_values( array_unique( array_filter( array_map( 'intval', (array) $kept_user_ids ) ) ) );
+
+	// Nothing survived the visibility filter: the leg must match nobody. This is the shape the
+	// released code used for an empty match set and callers already OR it with their other legs.
+	if ( empty( $kept ) ) {
+		return $column . ' IN (NULL)';
+	}
+
+	$matched = array_values( array_unique( array_filter( array_map( 'intval', (array) $matched_user_ids ) ) ) );
+
+	// array_flip + isset rather than array_diff(): this runs on sets the size of the member table
+	// and array_diff() sorts and string-casts both operands. The lookup is O(n) and the whole point
+	// of the exercise is to stop paying member-table-sized costs on an anonymous request.
+	$keep_lookup = array_flip( $kept );
+	$removed     = array();
+
+	foreach ( $matched as $matched_user_id ) {
+		if ( ! isset( $keep_lookup[ $matched_user_id ] ) ) {
+			$removed[] = $matched_user_id;
+		}
+	}
+
+	// Below the threshold the inclusive list is already small enough to be a non-issue, and it is
+	// what every released version of these legs emitted. Leaving it alone there keeps the rewritten
+	// shape - and the planner's subquery - off the overwhelming majority of searches, which match a
+	// handful of members; the rewrite then applies only where the list was the actual problem.
+	/**
+	 * Filters how many surviving ids a search leg may spell out before the clause is inverted.
+	 *
+	 * At or below this many ids the clause stays the inclusive `IN ( … )` list every released
+	 * version emitted. Above it, the match set is named by the subquery that produced it and only
+	 * the removals are listed - which is a large win exactly when the list is large, and pointless
+	 * churn when it is not.
+	 *
+	 * Raising this is how a site opts back out of the rewrite; 0 applies it to every leg.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $inline_limit Maximum surviving ids to inline. Default 1000.
+	 * @param string $column       Qualified column the clause tests, e.g. `u.ID`.
+	 */
+	$inline_limit = (int) apply_filters( 'bb_core_search_match_clause_inline_limit', 1000, $column );
+
+	if ( '' === $match_subquery || count( $kept ) <= $inline_limit || count( $removed ) >= count( $kept ) ) {
+		return $column . ' IN (' . implode( ',', $kept ) . ')';
+	}
+
+	if ( empty( $removed ) ) {
+		return '( ' . $column . ' IN ( ' . $match_subquery . ' ) )';
+	}
+
+	return '( ' . $column . ' IN ( ' . $match_subquery . ' ) AND ' . $column . ' NOT IN ( ' . implode( ',', $removed ) . ' ) )';
+}
+
+/**
  * When search_terms are passed to BP_User_Query, search against xprofile fields.
  *
  * @since BuddyBoss 1.6.3
@@ -5386,39 +5470,63 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
 	}
 
+	// Bound, never interpolated. bp_esc_like() escapes the LIKE wildcards `%` and `_`; it does NOT
+	// escape quotes, so spelling the term into the statement let a single quote in a member's search
+	// close the string literal early - an at-mention autocomplete is reachable by any logged-in
+	// member, and bp_core_get_suggestions() is where this leg is registered. The placeholders carry
+	// the same three values per enabled field, in the same order, so the clause is unchanged.
 	$where_condition = array();
+	$where_values    = array();
 	if ( ! empty( $enabled_fields ) ) {
 		foreach ( $enabled_fields as $field_name => $field_id ) {
-			$where_condition[] = ' ( ( field_id = ' . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+			$where_condition[] = ' ( ( field_id = %d ) AND ( value LIKE %s OR value LIKE %s ) )';
+			$where_values[]    = (int) $field_id;
+			$where_values[]    = $search_terms_nospace;
+			$where_values[]    = $search_terms_space;
 		}
 	}
+
+	// No enabled name field means no clause to build; returning here avoids emitting a statement
+	// that ends in a bare `WHERE`.
+	if ( empty( $where_condition ) ) {
+		return $sql;
+	}
+
+	$where_sql = implode( ' OR ', $where_condition );
+
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- search must read current values.
+	$matched_user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the clause is built from the literal placeholder strings above; the table name is trusted and every user value is bound via $where_values.
+			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . $where_sql,
+			$where_values
+		)
+	);
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- search must read current values.
+		$matched_user_data = $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the clause is built from the literal placeholder strings above; the table name is trusted and every user value is bound via $where_values.
+				"SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . $where_sql,
+				$where_values
+			)
+		);
 
-		if ( ! empty( $matched_user_data ) ) {
-			foreach ( $matched_user_data as $k => $user ) {
-				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-			}
-		}
+		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
+	// Not rewritten the way the two member-directory legs are. That rewrite names the match set by
+	// the subquery that produced it, and this leg's clause is a prepared statement, so reusing it
+	// would mean threading its bound values through a second prepare(). The inversion is a
+	// performance change rather than a correctness one, so it is left to a separate pass.
 	if ( ! empty( $matched_user_ids ) ) {
+		// Cast before inlining: these are ids read back from the database, and the list is spliced
+		// into the clause rather than bound.
+		$matched_user_ids = array_map( 'intval', (array) $matched_user_ids );
+
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
@@ -10980,6 +11088,545 @@ function bb_has_paid_product() {
 	 * @param bool $detected Whether a paid product was detected.
 	 */
 	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
+
+/**
+ * Resolve the ID of the user on whose behalf the current request is being rendered.
+ *
+ * `bp_loggedin_user_id()` reads `buddypress()->loggedin_user->id`, which is populated by
+ * `bp_setup_current_user()` on WordPress' `set_current_user` action. On a normal page load that
+ * always tracks `get_current_user_id()`. In a REST request it can lag behind: the authentication
+ * handler may resolve the user before BuddyPress has registered that action, leaving the BP global
+ * at 0 while WordPress already knows who is calling. Anything that derives a *viewer* from
+ * `bp_loggedin_user_id()` then behaves as though the request were anonymous — for
+ * `bp_core_get_user_displayname()` that means an authenticated member is served the guest-level
+ * redaction of another member's name.
+ *
+ * Prefer the BuddyPress global, because code that deliberately re-points the viewer does so by
+ * assigning to it (see `bp_messages_*` and the personal-data exporters), and fall back to the
+ * WordPress current user only when BP has no value at all. That makes this a no-op on every path
+ * where the two already agree.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int User ID of the current viewer, or 0 when the request is anonymous.
+ */
+function bb_core_get_viewer_user_id() {
+	$viewer_id = function_exists( 'bp_loggedin_user_id' ) ? (int) bp_loggedin_user_id() : 0;
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = (int) get_current_user_id();
+	}
+
+	/**
+	 * Filters the resolved viewer user ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $viewer_id User ID of the current viewer, 0 when anonymous.
+	 */
+	return (int) apply_filters( 'bb_core_get_viewer_user_id', $viewer_id );
+}
+
+/**
+ * Viewer ID that means "an anonymous visitor", explicitly.
+ *
+ * Throughout the profile-visibility API a viewer ID of `0` does NOT mean "logged out" - it means
+ * "resolve the viewer from the current request". `bp_core_get_user_displayname()` replaces it with
+ * `bb_core_get_viewer_user_id()`, and `bp_xprofile_get_hidden_fields_for_user()` replaces it with
+ * `bp_loggedin_user_id()`. There is therefore no way to say "render this name for someone who is
+ * not a member of this site" while a member happens to be logged in.
+ *
+ * That case is real: a member invitation is composed in the inviter's own session but is delivered
+ * to a plain email address with no member behind it. Resolved with the request's viewer, the
+ * inviter sees their own profile, so the email carries name parts the site hides from everyone
+ * else. Passing this ID pins the resolution to the public, logged-out view.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Sentinel viewer ID representing an anonymous visitor.
+ */
+function bb_core_guest_viewer_id() {
+	return -1;
+}
+
+/**
+ * Evaluate a MySQL `LIKE` pattern against a string in PHP.
+ *
+ * Used where a row set produced by a `LIKE` comparison in SQL has to be re-tested against a value
+ * that only exists in PHP — for example a display name that has been redacted for the current
+ * viewer, which no column holds. Re-implementing the comparison by hand invites subtle drift from
+ * the SQL that produced the candidate rows, so this mirrors it directly: the caller passes the very
+ * pattern it gave to `$wpdb`.
+ *
+ * Supports the two wildcards WordPress' `$wpdb->esc_like()` / `bp_esc_like()` protect (`%` and `_`)
+ * and their backslash escaping, so a literal `%` typed by a member stays literal. Matching is
+ * case-insensitive and multibyte-aware, matching MySQL's default `utf8mb4_*_ci` collation.
+ *
+ * That collation is also ACCENT-insensitive and PCRE is not, so a second pass folds both sides with
+ * remove_accents() when the first finds nothing. remove_accents() is WordPress' ASCII-folding
+ * APPROXIMATION of the collation rather than an equivalent, and it is LOCALE-DEPENDENT: under a
+ * German locale it expands a character to more than one ASCII character ('ß' to 'ss', 'ä' to 'ae'),
+ * which a `_` single-character wildcard can see, while under every other locale the same 'ß' folds
+ * to a single 's'. So it is used only to ADD a match the collation would have made, never to
+ * withdraw one the first pass found.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $pattern LIKE pattern, exactly as passed to the SQL comparison.
+ * @param string $subject String to test.
+ * @return bool Whether $subject satisfies $pattern.
+ */
+function bb_core_sql_like_match( $pattern, $subject ) {
+	$pattern = (string) $pattern;
+	$subject = (string) $subject;
+
+	$regex  = '';
+	$length = strlen( $pattern );
+
+	for ( $i = 0; $i < $length; $i++ ) {
+		$char = $pattern[ $i ];
+
+		if ( '\\' === $char && $i + 1 < $length ) {
+			// An escaped wildcard is a literal character; consume both bytes.
+			++$i;
+			$regex .= preg_quote( $pattern[ $i ], '/' );
+			continue;
+		}
+
+		if ( '%' === $char ) {
+			$regex .= '.*';
+			continue;
+		}
+
+		if ( '_' === $char ) {
+			$regex .= '.';
+			continue;
+		}
+
+		$regex .= preg_quote( $char, '/' );
+	}
+
+	$matched = preg_match( '/^' . $regex . '$/iu', $subject );
+
+	// preg_match() returns false only on a malformed pattern or invalid UTF-8. Retry without the
+	// unicode modifier so a byte-wise comparison still answers, rather than silently reporting "no
+	// match" — for the privacy filter that calls this, "no match" is the destructive answer.
+	if ( false === $matched ) {
+		$matched = preg_match( '/^' . $regex . '$/i', $subject );
+	}
+
+	if ( 1 === $matched ) {
+		return true;
+	}
+
+	// The rows this re-tests were selected by MySQL under an accent-insensitive collation, which
+	// answers 1 for `'Jose' LIKE '%José%'` where PCRE answers no. Without this fold a member who
+	// restricted one name part vanished from a search for the unaccented spelling of a part they
+	// publish — over-redaction with no privacy benefit, since the member is permitted to appear.
+	$folded_pattern = remove_accents( $pattern );
+	$folded_subject = remove_accents( $subject );
+
+	if ( $folded_pattern === $pattern && $folded_subject === $subject ) {
+		return false;
+	}
+
+	// One level only: the folded strings fold to themselves, so this returns above.
+	return bb_core_sql_like_match( $folded_pattern, $folded_subject );
+}
+
+/**
+ * Character class matching the scripts that are written without word separators.
+ *
+ * Japanese, Chinese, Korean, Thai and their neighbours do not put a space between words, so a
+ * character of one of these scripts standing beside a name ENDS that name. Every other script does
+ * separate words, and a letter beside a name there really does continue it - "Ann" inside
+ * "Annapolis" is one word, not a member's name followed by something else.
+ *
+ * WordPress answers the same question with wp_get_word_count_type(), but that is a single answer for
+ * the whole installation, read from the site's locale. A community is one site running many
+ * languages at once: a Latin name sits inside Japanese content on an English site, and a Japanese
+ * member posts on a German one. The question has to be asked of the neighbouring character, not of
+ * the installation - so the site locale cannot answer it here.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Regex character-class body, without the enclosing brackets.
+ */
+function bb_core_get_continuous_script_class() {
+	$class = '\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Thai}\p{Lao}\p{Khmer}\p{Myanmar}\p{Tibetan}\p{Yi}';
+
+	/**
+	 * Filters the scripts treated as written without word separators.
+	 *
+	 * Extending this class makes name redaction MORE aggressive for the scripts added, never less:
+	 * a script listed here gives up the boundary that would have protected an ordinary word.
+	 *
+	 * The return is interpolated into a character class and must be a valid class body. A value
+	 * that does not compile is discarded in favour of the default, because the alternative is a
+	 * pattern that matches nothing: preg_replace() would then return null, the name would be left
+	 * standing in full, and the filter would have made the redaction LESS aggressive - the one
+	 * outcome this docblock rules out.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $class Regex character-class body, without the enclosing brackets.
+	 */
+	$filtered = apply_filters( 'bb_core_continuous_script_class', $class );
+
+	// A listener that returns an array, an object or null is not offering a class body. Casting it
+	// would emit "Array to string conversion" on a public extension point and splice the word
+	// "Array" into the class; refusing it keeps the default, which is the safe direction.
+	if ( ! is_string( $filtered ) || $class === $filtered ) {
+		return $class;
+	}
+
+	// Union, never replace. The docblock above promises a listener can only make the redaction more
+	// aggressive, and only a union delivers that: a listener that RETURNS a narrower body - or one
+	// that simply does not repeat the defaults - would otherwise take a script out of the class,
+	// restore the boundary it had given up, and leave that script's names standing. The defaults
+	// are therefore always present, and the filter adds to them.
+	$addition = str_replace( $class, '', $filtered );
+
+	// An unescaped `]` would close the class early wherever it is interpolated, turning the rest of
+	// the body into literal pattern text. It compiles, so it cannot be caught by a compile test.
+	//
+	// Every escape sequence is removed before the check rather than looking behind one character:
+	// a one-character lookbehind cannot tell an escaped `]` (`\]`, safe) from one that merely
+	// follows an escaped backslash (`\\]`, which closes the class). Any `]` still standing after
+	// the escapes are gone is unescaped. A failed preg_replace() returns null and is refused too,
+	// because the alternative is accepting a body this check never actually inspected.
+	$unescaped = preg_replace( '/\\\\./s', '', $addition );
+
+	if ( '' === $addition || null === $unescaped || false !== strpos( $unescaped, ']' ) ) {
+		return $class;
+	}
+
+	$combined = $class . $addition;
+
+	return bb_core_is_valid_character_class( $combined ) ? $combined : $class;
+}
+
+/**
+ * Whether a string is usable as the body of a regex character class.
+ *
+ * Compiled against a throwaway subject with the same `u` modifier the matcher uses, because a class
+ * body can be well-formed for a byte pattern and invalid for a Unicode one. preg_match() emits a
+ * warning and returns false on a bad pattern, so the warning is suppressed and the return value is
+ * what is trusted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $class_body Regex character-class body, without the enclosing brackets.
+ * @return bool True when `[$class_body]` compiles.
+ */
+function bb_core_is_valid_character_class( $class_body ) {
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- an invalid pattern is the thing being detected; preg_match() reports it by returning false.
+	return false !== @preg_match( '/[' . $class_body . ']/u', '' );
+}
+
+/**
+ * Build the assertion that stops one edge of a name from matching inside a longer word.
+ *
+ * `\b` cannot be used: it is defined against ASCII word characters and fires in the middle of a
+ * non-ASCII name. A plain `(?![\p{L}\p{N}_])` is no better, because in "山田太郎さんが投稿しました"
+ * nothing but a letter ever follows the name, so the assertion can never hold and the name is left
+ * standing in full - the disclosure this exists to prevent. The same assertion fails a LATIN name on
+ * a Japanese site ("Alex Quillfeatherさんの記事"), because the kana that follows is still `\p{L}`.
+ *
+ * So a character from a script written without separators counts as a boundary, and everything else
+ * word-forming does not.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string      $char       First or last character of the name being matched.
+ * @param bool        $trailing   Optional. Whether this is the name's trailing edge. Default false.
+ * @param string|null $continuous Optional. Continuous-script class body, resolved once by a caller
+ *                                that builds several assertions. Null resolves it here. Default null.
+ * @return string A lookaround assertion, or an empty string where no boundary can be asserted.
+ */
+function bb_core_get_name_boundary_assertion( $char, $trailing = false, $continuous = null ) {
+	$char = (string) $char;
+
+	// A non-word edge character already stands at a boundary, and asserting one after it would
+	// invert the test: after "Ann<emoji>" a word-boundary assertion demands that a letter FOLLOWS.
+	if ( '' === $char || 1 !== preg_match( '/[\p{L}\p{N}_]/u', $char ) ) {
+		return '';
+	}
+
+	// Resolved by the caller where one call builds several assertions, so the filter behind it is
+	// dispatched once for the whole pattern instead of twice per name. Passing null keeps the
+	// single-argument behaviour every other caller relies on.
+	if ( null === $continuous ) {
+		$continuous = bb_core_get_continuous_script_class();
+	} else {
+		$continuous = (string) $continuous;
+	}
+
+	// The name's own edge is written without separators, so no boundary is expressible on this side.
+	// Assert nothing rather than an assertion that can never hold: an assertion that never holds
+	// withholds nothing, and a name that was supposed to be withheld and silently was not is the leak.
+	if ( 1 === preg_match( '/[' . $continuous . ']/u', $char ) ) {
+		return '';
+	}
+
+	// A combining mark continues the grapheme it follows, so it is word-forming on BOTH edges. The
+	// leading edge used to omit it on the argument that a mark belongs to whatever stands before
+	// it - true, and beside the point: that is exactly why a name must not start matching straight
+	// after one. Omitting it let "oe" match inside a decomposed "Z<combining diaeresis>oe".
+	$word = '\p{L}\p{N}\p{M}_';
+
+	return $trailing
+		? '(?:(?=[' . $continuous . '])|(?![' . $word . ']))'
+		: '(?:(?<=[' . $continuous . '])|(?<![' . $word . ']))';
+}
+
+/**
+ * Replace member names inside a string, matching whole words only.
+ *
+ * `str_replace()` and `strtr()` match anywhere, so a member whose name is a prefix of an ordinary
+ * word rewrote the middle of it: a member called "Ann" turned "Ann joined the Annapolis Anniversary
+ * group" into "A. joined the A.apolis A.iversary group". Short names, and names that are prefixes of
+ * longer words, are common at community scale and the corruption is silent.
+ *
+ * Each edge of each name is guarded by bb_core_get_name_boundary_assertion(), which decides from the
+ * script of that edge whether a boundary can be asserted there at all.
+ *
+ * The number of replacements is deliberately NOT limited: a name that genuinely appears twice is
+ * replaced twice. Leaving the later occurrence standing would leave a name part this viewer may not
+ * see in the string, and that is the direction that discloses.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $text Text that may embed the members' stored names.
+ * @param array  $map  Map of stored name => the name this viewer may see.
+ * @return string The text with each mapped name replaced where it stands as a whole word.
+ */
+function bb_core_replace_names( $text, $map ) {
+	$text = (string) $text;
+
+	if ( '' === $text || empty( $map ) || ! is_array( $map ) ) {
+		return $text;
+	}
+
+	$replacements = array();
+
+	foreach ( $map as $search => $replace ) {
+		$search = (string) $search;
+
+		if ( '' === $search ) {
+			continue;
+		}
+
+		$replacements[ $search ] = (string) $replace;
+
+		// The entity-encoded spelling as well as the raw one. Callers hand over the raw
+		// `wp_users.display_name` column, but the text being searched is not always raw: Yoast
+		// escapes the document title before passing it on (front-end-integration.php), so the later
+		// filters - including this one - see `O&#039;Brien` where the column holds `O'Brien`.
+		// Matching only the column found nothing there, and the redaction failed OPEN and silently.
+		// esc_html() is idempotent on its own output, so for a name with no special character the
+		// two spellings are the same string and this adds nothing.
+		$escaped_search = esc_html( $search );
+
+		if ( $escaped_search !== $search && ! isset( $replacements[ $escaped_search ] ) ) {
+			$replacements[ $escaped_search ] = esc_html( (string) $replace );
+		}
+	}
+
+	if ( empty( $replacements ) ) {
+		return $text;
+	}
+
+	// Longest needle first. PCRE alternation is leftmost-first, so without this a member called
+	// "Ann" would claim the opening of a member called "Ann Lee" - which is also how strtr(), the
+	// call this replaces, resolved the same ambiguity.
+	$needles = array_map( 'strval', array_keys( $replacements ) );
+	$lengths = array_map( 'strlen', $needles );
+
+	array_multisort( $lengths, SORT_DESC, SORT_NUMERIC, $needles );
+
+	// Resolved once for the whole pattern. Each needle contributes two boundary assertions and each
+	// of those would otherwise dispatch the `bb_core_continuous_script_class` filter again.
+	$continuous_class = bb_core_get_continuous_script_class();
+
+	$branches = array();
+
+	foreach ( $needles as $needle ) {
+		$first = ( 1 === preg_match( '/\A./us', $needle, $edge ) ) ? $edge[0] : '';
+		$last  = ( 1 === preg_match( '/.\z/us', $needle, $edge ) ) ? $edge[0] : '';
+
+		$branches[] = bb_core_get_name_boundary_assertion( $first, false, $continuous_class ) .
+			'(?:' . preg_quote( $needle, '/' ) . ')' .
+			bb_core_get_name_boundary_assertion( $last, true, $continuous_class );
+	}
+
+	$replaced = preg_replace_callback(
+		'/(?:' . implode( '|', $branches ) . ')/u',
+		static function ( $matches ) use ( $replacements ) {
+			return isset( $replacements[ $matches[0] ] ) ? $replacements[ $matches[0] ] : $matches[0];
+		},
+		$text
+	);
+
+	// preg_replace_callback() returns null on invalid UTF-8 or a PCRE limit. Fall back to the
+	// unbounded replacement rather than returning the text untouched: a cosmetic over-replacement is
+	// recoverable, a name that was supposed to be withheld and silently was not is the leak.
+	return ( null === $replaced ) ? strtr( $text, $replacements ) : $replaced;
+}
+
+/**
+ * Build the name a viewer may see from the member's own profile fields.
+ *
+ * `wp_users.display_name` is a DERIVED column: BuddyBoss writes it from the profile fields when a
+ * member saves, and nothing keeps it in step afterwards. An import, the wp-admin "Display name
+ * publicly as" dropdown or any third-party write can leave it spelling something a long way from
+ * "First Last" - glued ("AlexQuillfeather"), punctuation-joined, reordered, suffixed, or holding a
+ * name the member no longer has. Members cannot set it themselves.
+ *
+ * So when a name part has to be withheld from this viewer, the visible name is NOT that column
+ * minus the hidden part. Subtracting one string from another is undecidable on drifted data: a
+ * surname sits inside unrelated names as often as it is the name being hidden ("Ng" inside
+ * "Armstrong", "Ann" inside "Cann"), and a suffix or a de-duplication digit welded to the hidden
+ * part ("AnnJr", "Zebrastripe2") is indistinguishable by shape from somebody else's name. Every
+ * heuristic that separates those cases is load-bearing for one shape and wrong for another.
+ *
+ * The name is therefore assembled from the fields this viewer may see, in the order the site-wide
+ * Display Name Format asks for - which is how the logged-in path has always built it
+ * (bp_xprofile_get_member_display_name()), so the guest view and the member view agree by
+ * construction rather than by two implementations happening to match.
+ *
+ * The stored column is still returned untouched when nothing is hidden, so a deliberately
+ * customised display name only gives way to the rebuild when something has to be withheld.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id          ID of the member whose name is being resolved.
+ * @param array $hidden_field_ids XProfile field IDs this viewer may not see, as returned by
+ *                                bp_xprofile_get_hidden_fields_for_user(). The site-wide format
+ *                                hide never appears in that list and is applied here instead.
+ * @return string The visible name; the nickname, then the user_nicename, when no permitted name
+ *                part has a value. '' only for an unusable user ID.
+ */
+function bb_core_build_visible_display_name( $user_id, $hidden_field_ids = array() ) {
+	$user_id = (int) $user_id;
+
+	if ( $user_id <= 0 ) {
+		return '';
+	}
+
+	$format = bp_core_display_name_format();
+
+	// Under the Nickname format the visible name is the nickname and nothing else - neither name
+	// field is part of it - so there is nothing to assemble and nothing a visibility level could
+	// remove. The Nickname field itself is never excludable (bp_xprofile_get_fields_by_visibility_levels()).
+	if ( 'nickname' === $format ) {
+		// From the xprofile Nickname FIELD, because that is what the canonical resolver reads for this
+		// format (bp_xprofile_get_member_display_name()'s `case 'nickname'`). Resolving it from the
+		// `nickname` user meta instead made the guest view disagree with the member view wherever the
+		// two have drifted - which is whenever bp_disable_profile_sync() is on, since
+		// xprofile_sync_wp_profile() then bails outright, and the product ships a repair tool for
+		// exactly that drift. No meta key is passed: the fallback below reads the meta anyway, in the
+		// same order, so passing one here would only duplicate it.
+		$nickname_field_id = (int) bp_xprofile_nickname_field_id();
+		$nickname          = ( $nickname_field_id > 0 ) ? bb_core_get_name_field_value( $nickname_field_id, $user_id, '' ) : '';
+
+		return ( '' !== $nickname ) ? $nickname : bb_core_get_name_fallback_label( $user_id );
+	}
+
+	$hidden_field_ids    = array_map( 'intval', (array) $hidden_field_ids );
+	$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+	$last_name_field_id  = (int) bp_xprofile_lastname_field_id();
+
+	$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $hidden_field_ids, true ) );
+
+	// The "First Name" format leaves the surname out of the visible name for EVERY viewer, whether
+	// or not the Last Name field is enabled as a profile field, and that hide never enters the
+	// per-viewer list. Gating on bp_core_hide_display_name_field() instead would be too narrow: it
+	// only reports the field being DISABLED, missing the common enabled-field case.
+	$last_name_hidden = (
+		'first_name' === $format
+		|| ( $last_name_field_id > 0 && in_array( $last_name_field_id, $hidden_field_ids, true ) )
+	);
+
+	$parts = array();
+
+	if ( ! $first_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $first_name_field_id, $user_id, 'first_name' );
+	}
+
+	if ( ! $last_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $last_name_field_id, $user_id, 'last_name' );
+	}
+
+	$name = trim( implode( ' ', array_filter( $parts, 'strlen' ) ) );
+
+	return ( '' !== $name ) ? $name : bb_core_get_name_fallback_label( $user_id );
+}
+
+/**
+ * Read one name profile field for bb_core_build_visible_display_name().
+ *
+ * Unicode-aware trim, because a value padded with a non-ASCII space - U+00A0 pasted from a word
+ * processor, which PHP's trim() leaves in place - would otherwise reach the assembled name.
+ * preg_replace() returns null only on a subject that is not valid UTF-8, which normalises to '' so
+ * the caller applies its fallback rather than concatenating a null.
+ *
+ * The WordPress user meta is read when the profile field has no stored row. That is not a
+ * convenience: bp_xprofile_get_member_display_name() back-fills a missing name field from exactly
+ * this meta, and on an imported member the xprofile row genuinely does not exist yet, so reading
+ * only the field would drop a name this viewer is entitled to see.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
+ * @param int    $user_id  ID of the member the field belongs to.
+ * @param string $meta_key WordPress user meta key holding the same name part.
+ * @return string The stored value, or '' when there is none.
+ */
+function bb_core_get_name_field_value( $field_id, $user_id, $meta_key ) {
+	$field_id = (int) $field_id;
+	$value    = '';
+
+	if ( $field_id > 0 ) {
+		$stored = xprofile_get_field_data( $field_id, $user_id );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+	}
+
+	if ( '' === $value && '' !== (string) $meta_key ) {
+		$stored = get_user_meta( $user_id, $meta_key, true );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+	}
+
+	return $value;
+}
+
+/**
+ * The label to show for a member whose permitted name parts hold nothing.
+ *
+ * Never a blank: the nickname first - it carries no hidden name part - then the public
+ * user_nicename, which WordPress guarantees for every real user.
+ *
+ * The `nickname` USER META is what is read, not the xprofile Nickname field, because that is the
+ * chain bp_xprofile_get_member_display_name() itself falls back through when a name field is empty
+ * under the "First Name" and "First Name & Last Name" formats: an empty first-name field is
+ * back-filled from `first_name` and then from `nickname`, both user meta. The Nickname FORMAT is the
+ * one case that resolves from the field instead, and bb_core_build_visible_display_name() reads the
+ * field itself for that branch before falling through to here.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the member.
+ * @return string The nickname, else the user_nicename, else ''.
+ */
+function bb_core_get_name_fallback_label( $user_id ) {
+	$nickname = trim( (string) get_the_author_meta( 'nickname', $user_id ) );
+
+	if ( '' !== $nickname ) {
+		return $nickname;
+	}
+
+	return trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
 }
 
 /**
