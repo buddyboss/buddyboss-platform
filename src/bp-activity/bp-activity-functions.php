@@ -8038,7 +8038,7 @@ function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $ac
  * hidden last name). Public output must never use the raw column — this helper
  * prefers `user_fullname` and falls back to a per-viewer resolution.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param object $activity_item Activity or activity comment object.
  * @return string Display name as permitted for the current viewer, or an empty string.

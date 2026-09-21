@@ -64,7 +64,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	 * "Call to a member function bb_get_poll() on null". The public method that reaches
 	 * this line is BP_Activity_Notification::bb_render_activity_following_post_notification().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
@@ -119,7 +119,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	 * report emotions "available" with no real provider. This test pins the
 	 * saved 'emotions' mode getting downgraded to 'likes' in exactly that case.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
@@ -143,7 +143,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	 * `bp_register_reaction()` dormancy marker, and is licensed, must still
 	 * report emotions as available (existing behaviour must be preserved).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
@@ -196,7 +196,7 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	 * an add-on-only site (no bbp_pro_is_license_valid at all) still gets its
 	 * configured settings applied.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled

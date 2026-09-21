@@ -745,7 +745,7 @@ function xprofile_update_field_position( $field_id, $position, $field_group_id )
  * globals before attempting any overrides.
  *
  * @since BuddyPress 2.0.0
- * @since BuddyBoss [BBVERSION] Always runs; no longer skipped when profile sync is enabled,
+ * @since BuddyBoss 3.5.0 Always runs; no longer skipped when profile sync is enabled,
  *                              so the resolved names respect the current viewer's field visibility.
  */
 function xprofile_override_user_fullnames() {
@@ -1601,7 +1601,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
  * abandoned above a ceiling; the ceiling then propagated into the callers as a result cull, because
  * "cannot narrow" is indistinguishable from "narrowing does not apply" once it reaches them.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array $user_ids Member IDs to narrow.
  * @param array $levels   Visibility levels hidden from this viewer. Defaults to every non-public
@@ -1824,7 +1824,7 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
  * filters the hidden level set to something other than what this computes - the per-user call
  * simply misses the memo and behaves exactly as it does today.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array $user_ids  User IDs whose hidden fields are about to be resolved.
  * @param int   $viewer_id Optional. Viewer the visibility will be evaluated for. Defaults to the
@@ -2431,7 +2431,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
  * Nested like bb_core_is_resolving_user_displayname(): callers raise it with `true`, lower it with
  * `false` in a `finally`, and read it with no argument.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param bool|null $suspend Optional. True to suspend the self-heal, false to release one
  *                           suspension, null (default) to only read the current state.
@@ -4149,7 +4149,7 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
  * from drifting apart, which would make the ceiling a site hits depend on which leg it hit first.
  * The filter is what sites tune; this is only the default it is handed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return int Default candidate limit.
  */
@@ -4167,7 +4167,7 @@ function bb_xprofile_default_search_candidate_limit() {
  *
  * The guest sentinel is not a real user row, so it never reaches bp_user_can().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $viewer_id Viewer the visibility is evaluated for.
  * @return bool True when no name part can be hidden from this viewer.
@@ -4231,7 +4231,7 @@ function bb_xprofile_search_viewer_sees_every_name( $viewer_id ) {
  * Asked this way the cost is proportional to the restricted population instead, and a caller
  * intersects (or, for the search engine, `NOT IN`s) the small answer afterwards.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array $like_patterns The LIKE patterns the display_name comparison was made with.
  * @param int   $viewer_id     Optional. Viewer to evaluate visibility for. Defaults to the current
@@ -4430,7 +4430,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	 *
 	 * The site-wide format hide is not bounded by this: it is decided in SQL and resolves no names.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int    $limit               Maximum number of matches ONE PASS may re-resolve, not one
 	 *                                    search: this filter is dispatched by the per-member
@@ -4481,7 +4481,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
 	 * once for the term, independently of any one producer's match set, so that a search does not
 	 * pay for reading its matches into PHP to find a handful of restricted members.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $candidate_ids User IDs to re-test.
 	 * @param array $like_patterns LIKE patterns the display_name comparison was made with.
@@ -4600,7 +4600,7 @@ function bb_xprofile_get_hidden_name_search_user_ids( $like_patterns, $viewer_id
  * bb_xprofile_get_format_visible_name_matches() compares. A match in none of them cannot be in the
  * name this viewer is shown.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array $matched_user_ids User IDs matched by the display_name comparison.
  * @param array $like_patterns    The LIKE patterns used to produce $matched_user_ids.
@@ -4699,7 +4699,7 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
  * individual member. Those members are reached by sources (1) and (2) in the caller, which are
  * unioned in independently and re-tested.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $display_name_format Active Display Name Format. Only 'first_name' and 'nickname'
  *                                    hide a name part site-wide.
@@ -4782,7 +4782,7 @@ function bb_xprofile_get_format_visible_name_matches( $display_name_format, $lik
  * chain ends at user_nicename - so treating a login match as proof would keep a member whose
  * visible name does not match.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $display_name_format Active Display Name Format.
  * @return array List of source groups in resolver order. Each group is:
@@ -4856,7 +4856,7 @@ function bb_xprofile_get_format_visible_name_sources( $display_name_format ) {
  * statement and prepares it once: handing back an already-prepared string would put literal `%`
  * characters from the LIKE patterns into that outer prepare(), where they read as placeholders.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $display_name_format Active Display Name Format.
  * @param array  $like_patterns       LIKE patterns the match was produced with.
@@ -5027,7 +5027,7 @@ function bb_xprofile_get_format_visible_name_sql( $display_name_format, $like_pa
  * position; withholding the whole leg would drop the matches the narrowing has already proved
  * nothing is hidden from.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array $matched_user_ids  User IDs matched by the value comparison.
  * @param array $matched_user_data Rows of the same comparison, each with `user_id` and `field_id`.

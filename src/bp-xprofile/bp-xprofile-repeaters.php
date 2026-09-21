@@ -1318,7 +1318,7 @@ add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field
 /**
  * Check whether a profile field set repeats its fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $field_group_id Xprofile group ID.
  *
@@ -1341,7 +1341,7 @@ function bb_xprofile_is_repeater_group( $field_group_id ) {
  * with the member's WordPress "Biographical Info", so a set that repeats its
  * fields cannot hold one.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $field_group_id Xprofile group ID.
  *
@@ -1386,7 +1386,7 @@ function bb_xprofile_group_has_bio_field( $field_group_id ) {
  * treats the Bio field as a singleton precisely because one WordPress user field
  * backs it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $template_field_id Template (non-clone) xprofile field ID.
  *

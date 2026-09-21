@@ -490,7 +490,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *
 	 * @since BuddyPress 1.0.2
 	 * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
-	 * @since BuddyBoss [BBVERSION] Reloads the catalog when the locale has changed since the last
+	 * @since BuddyBoss 3.5.0 Reloads the catalog when the locale has changed since the last
 	 *                              load, so late locale resolution (WPML/Polylang) and mid-request
 	 *                              switch_to_locale() calls translate correctly.
 	 *

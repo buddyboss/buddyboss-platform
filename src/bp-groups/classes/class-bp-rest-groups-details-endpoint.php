@@ -512,7 +512,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * group is listed in the directory with its name, description and member
 	 * count, and only its *content* is restricted.
 	 *
-	 * @since [BBVERSION]
+	 * @since 3.5.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -559,7 +559,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	/**
 	 * Whether the current user may read a private or hidden group's details.
 	 *
-	 * @since [BBVERSION]
+	 * @since 3.5.0
 	 *
 	 * @param BP_Groups_Group $group Group object.
 	 *
@@ -929,7 +929,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * Fetch group members.
 	 *
 	 * @since 2.8.20
-	 * @since [BBVERSION] The default value of the $limit parameter changed from 3 to 9,
+	 * @since 3.5.0 The default value of the $limit parameter changed from 3 to 9,
 	 *                    and the member query type changed from 'active' to 'last_joined'
 	 *                    so never-active members still appear in the avatar strip.
 	 *
@@ -951,7 +951,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		 * ellipsis linking to the group's members page). Exposed as a filter so third
 		 * parties can adjust the count without a core edit.
 		 *
-		 * @since [BBVERSION]
+		 * @since 3.5.0
 		 *
 		 * @param int $limit    Number of avatars. Default 9. Values below 1 are clamped to 1.
 		 * @param int $group_id The group ID.
@@ -1034,7 +1034,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * /default/{user_id}/. Testing the already-fetched URL avoids the extra
 	 * bp_core_fetch_avatar() call the canonical helper issues per member.
 	 *
-	 * @since [BBVERSION]
+	 * @since 3.5.0
 	 *
 	 * @param string $avatar_url Avatar URL from a bp_core_fetch_avatar( html=false ) call.
 	 * @param int    $user_id    Member ID the URL was fetched for.

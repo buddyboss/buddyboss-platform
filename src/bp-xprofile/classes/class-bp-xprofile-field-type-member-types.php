@@ -232,7 +232,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 * currently-assigned type.
 	 *
 	 * @since BuddyBoss 1.1.3
-	 * @since BuddyBoss [BBVERSION] Restrict to member-type posts only.
+	 * @since BuddyBoss 3.5.0 Restrict to member-type posts only.
 	 *
 	 * @param int $values post id.
 	 *

@@ -1020,7 +1020,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * themselves, i.e. exactly the leak. That case is handed to
 	 * get_public_inviter_name_fallback() instead, which resolves the name without a viewer at all.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int $user_id ID of the inviter.
 	 * @return string|bool Display name for a non-member audience, false when the user is unknown.
@@ -1063,7 +1063,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * for a viewer that does not exist here, and a listener that REMOVES a level would re-open the
 	 * leak. Skipping them can only over-redact.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int $user_id ID of the inviter.
 	 * @return string|bool Display name for a non-member audience, false when the user is unknown.
@@ -1157,7 +1157,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 * why none of them survives both the bp-rest.php load guard and the Grunt sync into Platform.
 	 * Keep the three in step and change them together.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
 	 * @param int    $user_id  ID of the member the field belongs to.

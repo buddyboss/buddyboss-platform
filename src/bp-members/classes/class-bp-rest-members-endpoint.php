@@ -30,7 +30,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * member is re-prepared unchanged, so the client is handed back exactly the string it sent and
 	 * cannot tell a save from a no-op.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @var bool
 	 */
@@ -170,7 +170,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * the `X-BP-Ignored-Fields` header below is sent and then dropped by the user agent, so the one
 	 * client that has to react to a dropped `name` write cannot see that it happened.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param string[] $expose_headers The list of response headers to expose.
 	 * @return string[] The list with this endpoint's own headers added.
@@ -1047,7 +1047,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					 * means to set this value (an administrator repairing a drifted display_name on a
 					 * "First Name" site, say) can return false here to let the write through.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 3.5.0
 					 *
 					 * @param bool    $suppress Whether to drop the submitted value. Default true.
 					 * @param WP_User $user     The member being updated.
@@ -1747,7 +1747,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * While nothing is withheld the `name` field stays anchored to the stored display name, which
 	 * is what keeps it round-trippable against WP_REST_Users_Controller.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param WP_User $user      User object.
 	 * @param int     $viewer_id ID of the user viewing the data (0 for a guest).
@@ -1902,7 +1902,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * below only ever run on an unpaired install and only ever have to stay in step with each
 	 * other. Keep them byte-identical, signature included, and change all three together.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
 	 * @param int    $user_id  ID of the member the field belongs to.
@@ -1948,7 +1948,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * Platform - carried the nicename, so an app rendered a blank member card. Neither value can
 	 * carry a hidden name part, so continuing the chain costs no privacy.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param WP_User $user The member being rendered.
 	 * @return string The nickname, else the user_nicename, else an empty string.
