@@ -296,6 +296,12 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			// check if it has enough recipients to use batch emails.
 			$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
 
+			// Resolved once: the inviter is the same person for every address in this request, and
+			// resolving reads profile fields and visibility rows. Doing it inside the loop - twice
+			// per invitee, as this did - multiplies that by the size of the invite batch for an
+			// answer that cannot change between iterations.
+			$inviter_public_name = $this->get_public_inviter_name( bp_loggedin_user_id() );
+
 			foreach ( $invite_correct_array as $key => $value ) {
 
 				$_POST = array();
@@ -304,7 +310,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 				$member_type    = $value['member_type'];
 				$query_string[] = $email;
-				$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
+				$inviter_name   = $inviter_public_name;
 
 				if ( true === bp_disable_invite_member_email_subject() ) {
 					$subject = $request->get_param( 'email_subject' );
@@ -334,7 +340,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 ' . bp_get_member_invites_wildcard_replace( stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ), $email );
 
-				$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+				$inviter_name = $inviter_public_name;
 				$site_name    = get_bloginfo( 'name' );
 				$inviter_url  = bp_loggedin_user_domain();
 
@@ -996,5 +1002,194 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 		// Return the formatted datetime.
 		return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
+	}
+
+	/**
+	 * Inviter name as the invitation's audience may see it.
+	 *
+	 * The invitation is composed in the inviter's own session but is delivered to a plain email
+	 * address with no member behind it, and the same value is stored in the `_bp_inviter_name` post
+	 * meta the invite list renders from. Resolved against the request's viewer the inviter sees
+	 * their own profile in full, so the email would carry name parts the site hides from everyone
+	 * else (PROD-9896). bb_core_guest_viewer_id() pins the resolution to the public, logged-out
+	 * view.
+	 *
+	 * The guard is for a mixed-version install - this plugin can run against a Platform that
+	 * predates the helper. `0` cannot stand in for it: throughout this API an empty viewer id means
+	 * "resolve the viewer from the current request", which during invite creation is the inviter
+	 * themselves, i.e. exactly the leak. That case is handed to
+	 * get_public_inviter_name_fallback() instead, which resolves the name without a viewer at all.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id ID of the inviter.
+	 * @return string|bool Display name for a non-member audience, false when the user is unknown.
+	 */
+	protected function get_public_inviter_name( $user_id ) {
+		if ( function_exists( 'bb_core_guest_viewer_id' ) ) {
+			// Decoded: the resolver's chain ends in esc_html(), which belongs to HTML output and
+			// not to a JSON field or an email token. ENT_QUOTES, since ENT_NOQUOTES leaves `'`.
+			return wp_specialchars_decode( (string) bp_core_get_user_displayname( $user_id, bb_core_guest_viewer_id() ), ENT_QUOTES );
+		}
+
+		return $this->get_public_inviter_name_fallback( $user_id );
+	}
+
+	/**
+	 * Resolve the inviter's public name without Platform's guest-viewer sentinel.
+	 *
+	 * Reached only on a Platform that predates bb_core_guest_viewer_id(). Every viewer-aware entry
+	 * point is unusable here - bp_core_get_user_displayname() and
+	 * bp_xprofile_get_hidden_fields_for_user() both replace an empty viewer with the current user,
+	 * and passing the sentinel by hand does not help either, because the Platform that lacks the
+	 * helper also lacks the branch in bp_xprofile_get_hidden_field_types_for_user() that recognises
+	 * it: -1 is non-empty, so it takes the "logged in" branch and, for an inviter who can moderate,
+	 * hides nothing at all.
+	 *
+	 * So the audience is not expressed as a viewer id at all. The set of fields withheld from a
+	 * logged-out visitor is read straight from the visibility levels
+	 * (bp_xprofile_get_fields_by_visibility_levels(), which takes the levels explicitly and has
+	 * been in BuddyPress since 1.6), and:
+	 *
+	 * - nothing in the name withheld -> the inviter's own resolution IS the public one, so the name
+	 *   is unchanged from the pre-fix behaviour for this - by far the most common - case;
+	 * - something withheld -> the name is rebuilt from the name fields a visitor may see, and never
+	 *   from the stored display_name, which may have drifted to a full name;
+	 * - nothing left to build from -> the nickname, which
+	 *   bp_xprofile_get_fields_by_visibility_levels() never lets a member hide, then the
+	 *   user_nicename. This is the same fallback order Platform's own guest path uses.
+	 *
+	 * Third-party filters on the hidden-level lists are deliberately not applied: they are resolved
+	 * for a viewer that does not exist here, and a listener that REMOVES a level would re-open the
+	 * leak. Skipping them can only over-redact.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id ID of the inviter.
+	 * @return string|bool Display name for a non-member audience, false when the user is unknown.
+	 */
+	protected function get_public_inviter_name_fallback( $user_id ) {
+		$user_id = (int) $user_id;
+
+		if ( $user_id <= 0 ) {
+			// Same answer the viewer-aware path gives for an unknown user.
+			// ENT_QUOTES, matching the sibling resolver in this file - the resolver's own priority-16
+			// decode is ENT_NOQUOTES and leaves `&#039;` standing.
+			return wp_specialchars_decode( (string) bp_core_get_user_displayname( $user_id ), ENT_QUOTES );
+		}
+
+		$nickname = trim( (string) get_the_author_meta( 'nickname', $user_id ) );
+
+		if ( '' === $nickname ) {
+			$nickname = trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
+		}
+
+		$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+		// Under the Nickname format the visible name is the nickname field - the last name is not
+		// part of it at all - so read it directly rather than trusting a display_name that may have
+		// drifted to a full name. Mirrors bp_core_get_user_displayname() in Platform.
+		if ( 'nickname' === $format ) {
+			return $nickname;
+		}
+
+		$guest_hidden = array();
+		if (
+			function_exists( 'bp_is_active' )
+			&& bp_is_active( 'xprofile' )
+			&& function_exists( 'bp_xprofile_get_fields_by_visibility_levels' )
+		) {
+			// The exact level set bp_xprofile_get_hidden_field_types_for_user() withholds from a
+			// viewer who is not logged in.
+			$guest_hidden = array_map(
+				'intval',
+				(array) bp_xprofile_get_fields_by_visibility_levels( $user_id, array( 'friends', 'loggedin', 'adminsonly' ) )
+			);
+		}
+
+		$first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? (int) bp_xprofile_firstname_field_id() : 0;
+		$last_name_field_id  = function_exists( 'bp_xprofile_lastname_field_id' ) ? (int) bp_xprofile_lastname_field_id() : 0;
+
+		$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $guest_hidden, true ) );
+
+		// The "First Name" format drops the surname for every viewer, independently of any
+		// visibility level, and that hide never enters the visibility lists.
+		$last_name_hidden = ( 'first_name' === $format )
+			|| ( $last_name_field_id > 0 && in_array( $last_name_field_id, $guest_hidden, true ) );
+
+		if ( ! $first_name_hidden && ! $last_name_hidden ) {
+			// ENT_QUOTES, matching the sibling resolver in this file - the resolver's own priority-16
+			// decode is ENT_NOQUOTES and leaves `&#039;` standing.
+			return wp_specialchars_decode( (string) bp_core_get_user_displayname( $user_id ), ENT_QUOTES );
+		}
+
+		$parts = array();
+		if ( ! $first_name_hidden ) {
+			$parts[] = $this->get_visible_name_field_value( $first_name_field_id, $user_id, 'first_name' );
+		}
+		if ( ! $last_name_hidden ) {
+			$parts[] = $this->get_visible_name_field_value( $last_name_field_id, $user_id, 'last_name' );
+		}
+
+		$name = trim( implode( ' ', array_filter( $parts, 'strlen' ) ) );
+
+		return ( '' !== $name ) ? $name : $nickname;
+	}
+
+	/**
+	 * Read a name profile field for get_public_inviter_name_fallback().
+	 *
+	 * Unicode-aware trim so a value padded with a non-ASCII space (U+00A0 pasted from a word
+	 * processor, which PHP's trim() leaves in place) does not reach the assembled name, and a
+	 * non-string no-value normalises to '' rather than to something that cannot be concatenated.
+	 *
+	 * The WordPress user meta is read when the profile field has no stored row, because that is
+	 * what bp_xprofile_get_member_display_name() itself back-fills from: on an imported member the
+	 * xprofile row does not exist yet, and reading only the field would drop a name the viewer is
+	 * entitled to see - so an invite email would show the nickname where the members endpoint shows
+	 * the real name. Delegates to Platform's bb_core_get_name_field_value() so every endpoint
+	 * resolves a name part the same way, and keeps a self-contained fallback for a Platform that
+	 * predates it.
+	 *
+	 * This body is byte-identical to BP_REST_Members_Endpoint::get_visible_name_field_value() and
+	 * to the invites endpoint's copy, deliberately: see the members endpoint's docblock for the
+	 * shared homes that were checked (includes/functions.php, a trait, a synced bp-core class) and
+	 * why none of them survives both the bp-rest.php load guard and the Grunt sync into Platform.
+	 * Keep the three in step and change them together.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
+	 * @param int    $user_id  ID of the member the field belongs to.
+	 * @param string $meta_key WordPress user meta key holding the same name part.
+	 * @return string The stored value, or '' when there is none.
+	 */
+	protected function get_visible_name_field_value( $field_id, $user_id, $meta_key = '' ) {
+		$field_id = (int) $field_id;
+		$user_id  = (int) $user_id;
+		$meta_key = (string) $meta_key;
+
+		// Platform owns the rule. Delegating means a later change to it - a different empty-value
+		// test, another Unicode class - reaches every endpoint at once instead of leaving the
+		// copies below to drift into publishing a name part a sibling endpoint withholds.
+		if ( function_exists( 'bb_core_get_name_field_value' ) ) {
+			return (string) bb_core_get_name_field_value( $field_id, $user_id, $meta_key );
+		}
+
+		// Self-contained fallback for a Platform that predates that helper, since this plugin is
+		// upgraded independently of it.
+		$value = '';
+
+		if ( $field_id > 0 && function_exists( 'xprofile_get_field_data' ) ) {
+			$stored = xprofile_get_field_data( $field_id, $user_id );
+			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+		}
+
+		if ( '' === $value && '' !== $meta_key ) {
+			$stored = get_user_meta( $user_id, $meta_key, true );
+			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+		}
+
+		return $value;
 	}
 }
