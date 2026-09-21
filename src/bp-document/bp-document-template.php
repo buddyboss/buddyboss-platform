@@ -2542,3 +2542,94 @@ function bp_get_document_link( $document_id ) {
 	 */
 	return apply_filters( 'bp_get_document_link', $url, $document_id );
 }
+
+/**
+ * Determine if the current user can add content to a destination folder.
+ *
+ * Placing an item inside a folder is a "contribute" action - the same act as
+ * uploading directly into that folder - and is deliberately not treated as an
+ * edit of the folder itself.
+ *
+ * Anyone who may already edit the destination folder may place content in it:
+ * the folder owner, a site moderator, and - subject to the group's document
+ * setting - a group organizer or moderator. In addition, when the destination
+ * is a group folder and the group's document setting permits it, any member of
+ * that group may contribute into it. That additional allowance is what lets a
+ * member move a document into a folder another member created.
+ *
+ * The allowance is additive for any folder that exists: it never denies a real
+ * folder that bp_folder_user_can_edit() already permits. The one deliberate
+ * difference is that a missing or invalid folder is refused here, where
+ * bp_folder_user_can_edit() would still grant a site moderator - this errs on
+ * the safe side. Personal (profile) folders gain no extra allowance and stay
+ * restricted to their owner and site moderators.
+ *
+ * Despite the name, this also gates placing a NEW document into a folder on the
+ * REST create path, which is the same "contribute into this container" decision.
+ *
+ * Folder structure operations - rename, privacy, delete, creating a subfolder
+ * inside another member's folder, and moving a folder into another member's
+ * folder - intentionally continue to use bp_folder_user_can_edit() /
+ * bp_folder_user_can_delete() and are unaffected.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the destination folder.
+ * @return bool True if the user can add content to the folder, false otherwise.
+ */
+function bb_document_user_can_add_to_folder( $folder = false ) {
+
+	// Assume the user cannot add content to the folder.
+	$can_add = false;
+
+	if ( empty( $folder ) ) {
+		return $can_add;
+	}
+
+	if ( ! is_object( $folder ) ) {
+		$folder = new BP_Document_Folder( $folder );
+	}
+
+	// BP_Document_Folder sets id to 0 when the row does not exist.
+	if ( empty( $folder->id ) ) {
+		return $can_add;
+	}
+
+	if ( bp_folder_user_can_edit( $folder ) ) {
+		/*
+		 * Everyone who could already edit the folder keeps access - the owner, a
+		 * site moderator, and group organizers/moderators per the group setting.
+		 * Checked first so this helper can only ever widen access, never narrow it.
+		 */
+		$can_add = true;
+	} elseif ( bp_is_active( 'groups' ) && ! empty( $folder->group_id ) ) {
+		/*
+		 * The added allowance: a plain group member may contribute into a group
+		 * folder someone else created.
+		 *
+		 * This is NOT a repeat of the group check inside bp_folder_user_can_edit().
+		 * That function does call groups_can_user_manage_document(), but only as a
+		 * gate - inside `if ( $manage )` it then requires the folder owner, a group
+		 * moderator or a group organizer. A plain member satisfies $manage and
+		 * matches none of those branches, so the permissive result is discarded and
+		 * the function returns false. That discarded case is exactly the bug in
+		 * PROD-9526, and exactly what this branch restores.
+		 *
+		 * groups_can_user_manage_document() is called directly rather than through
+		 * bb_document_user_can_upload(), because that wrapper falls through to the
+		 * profile document rule when group document support is disabled, which
+		 * would grant access to non-members and ignore the group entirely.
+		 */
+		$can_add = groups_can_user_manage_document( bp_loggedin_user_id(), (int) $folder->group_id );
+	}
+
+	/**
+	 * Filters whether the current user can add content to a folder.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $can_add Whether the user can add content to the folder.
+	 * @param object $folder   Destination folder object.
+	 */
+	return (bool) apply_filters( 'bb_document_user_can_add_to_folder', $can_add, $folder );
+}

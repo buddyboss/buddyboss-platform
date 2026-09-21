@@ -2359,7 +2359,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 	}
 
 	if ( (int) $folder_id > 0 ) {
-		$has_access = bp_folder_user_can_edit( $folder_id );
+		// Moving into a folder is a contribute action, not an edit of the folder.
+		$has_access = bb_document_user_can_add_to_folder( $folder_id );
 		if ( ! $has_access ) {
 			return false;
 		}
