@@ -515,6 +515,13 @@ function bp_core_get_user_displaynames( $user_ids ) {
 	// Warm the WP users cache with a targeted bulk update.
 	cache_users( $user_ids );
 
+	// Warm the xprofile caches this loop is about to read. bp_core_get_user_displayname() resolves
+	// a name from the first/last/nickname field values and the per-user visibility rows; left cold
+	// each of those is an individual query per user, so a 50-member loop pays ~13 queries per row
+	// before a single name is rendered. Priming turns the whole batch into a handful of queries and
+	// changes no behaviour — the per-user calls below read the very caches filled here.
+	bb_core_prime_user_displayname_caches( $user_ids );
+
 	$retval = array();
 	foreach ( $user_ids as $user_id ) {
 		$retval[ $user_id ] = bp_core_get_user_displayname( $user_id );
@@ -524,13 +531,84 @@ function bp_core_get_user_displaynames( $user_ids ) {
 }
 
 /**
+ * Prime the caches that bp_core_get_user_displayname() reads, for a batch of users.
+ *
+ * Fills three caches, all of which the single-user resolution already consults, so this is purely a
+ * query-count optimisation with no effect on the value returned:
+ *
+ * - the WordPress user rows and their meta, via cache_users(): the name assembly falls back to the
+ *   `first_name` / `last_name` / `nickname` user meta for a member whose profile field has no
+ *   stored row, and ends its chain at user_nicename.
+ *
+ * - `bp_xprofile_data` for the First Name, Last Name and Nickname fields, via
+ *   BP_XProfile_ProfileData::get_value_byid(), which is the same primer xprofile_get_field_data()
+ *   goes through — one query per field for the whole batch instead of one per user per field.
+ * - the visibility reads bp_xprofile_get_hidden_fields_for_user() performs, through
+ *   bb_xprofile_prime_hidden_fields_for_users(): the user_data_exists() probe, the field-ids memo
+ *   per distinct hidden-level set, and the user-meta fallback. Where a key cannot be predicted -
+ *   a site filtering the hidden level set - the per-user call falls back to its own query and
+ *   behaviour is unchanged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids  User IDs whose display names are about to be resolved.
+ * @param int   $viewer_id Optional. Viewer the names will be resolved for. Defaults to the current
+ *                         viewer, which is what bp_core_get_user_displayname() will use.
+ */
+function bb_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
+	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+
+	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) ) {
+		return;
+	}
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = bb_core_get_viewer_user_id();
+	}
+
+	// Prime the WordPress user rows and their meta. bb_core_build_visible_display_name() reads the
+	// `first_name` / `last_name` / `nickname` user meta whenever the matching profile field has no
+	// stored row - the imported member whose name never reached the profile tables - and ends its
+	// chain at user_nicename. bp_core_get_user_displaynames() warms those itself before calling
+	// this, but the member-search re-test does not, and that one resolves up to
+	// `bb_xprofile_user_search_visibility_candidate_limit` names on an anonymous request. Core's
+	// own primer answers the whole batch in two queries and skips anything already cached.
+	cache_users( $user_ids );
+
+	// Prime the name field values for the whole batch.
+	if ( class_exists( 'BP_XProfile_ProfileData' ) ) {
+		$name_field_ids = array_filter(
+			array(
+				(int) bp_xprofile_firstname_field_id(),
+				(int) bp_xprofile_lastname_field_id(),
+				(int) bp_xprofile_nickname_field_id(),
+			)
+		);
+
+		foreach ( array_unique( $name_field_ids ) as $field_id ) {
+			BP_XProfile_ProfileData::get_value_byid( $field_id, $user_ids );
+		}
+	}
+
+	// Prime the visibility reads. Shared with the member-search producers, which resolve the same
+	// caches once per matched row - keeping one primer means the two cannot drift into priming
+	// different subsets of what the resolution actually reads.
+	bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id );
+}
+
+/**
  * Fetch the display name for a user.
  *
  * @since BuddyPress 1.0.1
  * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
- * @param int $current_user_id                 Optional. ID of the user viewing the profile.
+ * @param int             $current_user_id   Optional. ID of the user viewing the profile. Default
+ *                                             0, which resolves the viewer from the current request.
+ *                                             Pass bb_core_guest_viewer_id() to force the public,
+ *                                             logged-out view - required when the audience is
+ *                                             provably not a member (an invitation email sent to a
+ *                                             plain email address).
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */
@@ -550,26 +628,88 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	}
 
 	if ( empty( $current_user_id ) ) {
-		$current_user_id = bp_loggedin_user_id();
+		// Not bp_loggedin_user_id() directly: in a REST request BuddyPress' logged-in global can
+		// still be 0 while WordPress has already resolved the user, which would serve an
+		// authenticated caller the guest-level redaction of someone else's name. See
+		// bb_core_get_viewer_user_id().
+		$current_user_id = bb_core_get_viewer_user_id();
 	}
 
 	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
-	if ( empty( $list_fields ) ) {
-		$full_name = get_the_author_meta( 'display_name', $user_id );
-		if ( empty( $full_name ) ) {
-			$full_name = get_the_author_meta( 'nickname', $user_id );
-		}
+
+	// The site-wide Display Name Format can drop a name part for EVERYONE - the "First Name" and
+	// "Nickname" formats leave the surname out of the visible name entirely, whether or not the
+	// Last Name field is enabled - independently of any per-field visibility level. That
+	// format-level hide never enters bp_xprofile_get_hidden_fields_for_user(), so it has to be
+	// asked about separately: the format -> display_name resync is a manual repair tool rather than
+	// something that runs on every save, so a stored display_name that has drifted to the full name
+	// would otherwise hand a guest the very name part the format exists to suppress.
+	$active_display_format  = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+	$format_hides_last_name = in_array( $active_display_format, array( 'first_name', 'nickname' ), true );
+
+	// Only a hidden NAME field can change the visible name. bp_xprofile_get_hidden_fields_for_user()
+	// reports EVERY restricted field on the profile - a Phone, an Address, any custom field - so
+	// testing that list for emptiness stood the stored display_name down for members whose name
+	// parts are entirely public. Where the column had drifted away from "First Last" that did not
+	// merely rebuild it, it DISCLOSED a name part the column withheld: a member with a public
+	// surname but a display_name of just "bb3" was rendered to guests as "bb3 Smith1" because one
+	// unrelated field was set to friends-only. And because a field's own default_visibility applies
+	// to every member with no per-user row, a single restricted field definition turned the rebuild
+	// on for the whole member table at once.
+	//
+	// The two sibling producers written for this same fix already scope it this way -
+	// BP_REST_Members_Endpoint::get_visible_display_name() and
+	// BuddyBoss\Sharing\Helpers\Member_Name::redacted_display_name() both test the two name field
+	// ids rather than the whole hidden list - so this keeps the three in agreement.
+	$name_field_ids = array_filter(
+		array(
+			(int) bp_xprofile_firstname_field_id(),
+			(int) bp_xprofile_lastname_field_id(),
+		)
+	);
+
+	$hidden_name_fields = array_intersect( array_map( 'intval', (array) $list_fields ), $name_field_ids );
+
+	if ( ! empty( $hidden_name_fields ) || $format_hides_last_name ) {
+		// Something has to be withheld from this viewer, so the answer cannot come from the stored
+		// display_name column at all - it is a derived value that drifts, and removing a name part
+		// from a drifted string is not decidable. Assemble the name from the fields this viewer may
+		// see instead; see bb_core_build_visible_display_name(). That is also what the logged-in
+		// path resolves (xprofile_filter_get_user_display_name()), so guest and member agree.
+		$full_name = bb_core_build_visible_display_name( $user_id, $list_fields );
 	} else {
-		$last_name_field_id = bp_xprofile_lastname_field_id();
-		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
-			$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-			$full_name = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
-		} else {
+		// Nothing is hidden from this viewer, so the stored column IS the public name and is
+		// returned untouched - which is what keeps a deliberately customised display name intact.
+		//
+		// That read fires `get_the_author_display_name`, which is where
+		// bb_core_filter_the_author_display_name() applies this same redaction to WordPress core's
+		// own author output. Without the marker the two chase each other: the column would come
+		// back already redacted, for the current REQUEST's viewer rather than the
+		// $current_user_id this call was asked about. try/finally so a throw cannot leave the
+		// marker raised for the rest of the request, which would stand those filters down and fail
+		// OPEN on the surfaces they protect.
+		bb_core_is_resolving_user_displayname( true );
+
+		try {
 			$full_name = get_the_author_meta( 'display_name', $user_id );
+
+			if ( empty( $full_name ) ) {
+				$full_name = get_the_author_meta( 'nickname', $user_id );
+			}
+		} finally {
+			bb_core_is_resolving_user_displayname( false );
 		}
 	}
 
 	$user_data = get_userdata( $user_id );
+
+	// Redacting every part of a name can leave nothing behind - a member whose only stored name was
+	// the hidden one, with no nickname to fall back to. Never return a blank label: user_nicename is
+	// public and cannot carry a hidden name part.
+	if ( '' === trim( (string) $full_name ) && ! empty( $user_data ) ) {
+		$full_name = $user_data->user_nicename;
+	}
+
 	if ( empty( $full_name ) && empty( $user_data ) ) {
 		$full_name = __( 'Deleted User', 'buddyboss' );
 	}
@@ -590,6 +730,39 @@ add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
 add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
+
+/**
+ * Whether a member display-name resolution is currently reading the stored `display_name` column.
+ *
+ * The resolver bp_core_get_user_displayname() takes the stored column as its INPUT and strips the name parts the
+ * viewer may not see out of it. It reads that column with get_the_author_meta(), which is also the
+ * hook BuddyBoss uses to apply the same redaction to WordPress core's author output
+ * (bb_core_filter_the_author_display_name()). Left unmarked the two chase each other: the
+ * resolution asks core for the column, core hands back a name already redacted for the current
+ * request's viewer - not for the `$current_user_id` the resolution was asked about - and every
+ * resolution costs two.
+ *
+ * While this reports true, the WordPress-core author filters stand down and leave the stored value
+ * alone. It is a re-entrancy marker, not a switch: nothing outside those filters should consult it,
+ * and nothing should leave it raised.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool|null $resolving Optional. True to mark a resolution as started, false to mark it as
+ *                             finished, null (default) to only read the current state.
+ * @return bool Whether a resolution is in progress.
+ */
+function bb_core_is_resolving_user_displayname( $resolving = null ) {
+	static $depth = 0;
+
+	if ( true === $resolving ) {
+		++$depth;
+	} elseif ( false === $resolving ) {
+		$depth = max( 0, $depth - 1 );
+	}
+
+	return $depth > 0;
+}
 
 /**
  * Return the user link for the user based on user email address.
@@ -4113,6 +4286,28 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 			$get_selected_member_type_on_register = '';
 		}
 
+		/*
+		 * Harden the self-submitted Profile Type before it is trusted below.
+		 *
+		 * The registration form fully controls this value, so a visitor can post
+		 * the ID of a Profile Type that is not offered on the registration form
+		 * (its "_bp_member_type_enable_profile_field" is off) and have it — and
+		 * its mapped WP role — assigned at activation. Ignore it, falling back
+		 * to the admin-configured default type, whenever it is not actually
+		 * offered at registration.
+		 *
+		 * The admin-configured default registration type is unaffected. The
+		 * send-invite type is NOT admin-only — any member who can send invites
+		 * chooses it — so it is gated separately, at its own input, by
+		 * bb_is_member_type_allowed_on_invite() in bp_member_invite_submit().
+		 */
+		if (
+			'' !== $get_selected_member_type_on_register
+			&& ! bb_is_member_type_allowed_on_registration( $get_selected_member_type_on_register )
+		) {
+			$get_selected_member_type_on_register = '';
+		}
+
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
@@ -5593,4 +5788,127 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	while ( $wpdb->rows_affected > 0 ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
+}
+
+/**
+ * Build the hover-card profile attribute for a member avatar/name link.
+ *
+ * Returns an empty string for empty ids, suspended members, blocked members,
+ * and members who have blocked the viewer,
+ * so member-facing surfaces never offer a hover card the viewer should not see.
+ * The returned fragment is fully escaped.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id Member ID.
+ *
+ * @return string ` data-bb-hp-profile="{id}"` attribute fragment, or empty string.
+ */
+function bb_get_hover_card_profile_attr( $user_id ) {
+	$user_id = (int) $user_id;
+
+	if ( empty( $user_id ) ) {
+		return '';
+	}
+
+	// One statically-cached merged list (suspended + viewer-hidden + blocked-by)
+	// instead of three per-member checks — widgets emit this attribute per row
+	// (including on the logged-out heartbeat), and the per-member variants each
+	// cost a query on a cold cache. The merged list runs three small queries once
+	// per request and answers every subsequent member with an array lookup.
+	if ( function_exists( 'bb_moderation_moderated_user_ids' ) && bb_moderation_moderated_user_ids( $user_id ) ) {
+		return '';
+	}
+
+	return ' data-bb-hp-profile="' . esc_attr( $user_id ) . '"';
+}
+
+/**
+ * Check whether a profile type may be self-selected on the registration form.
+ *
+ * Mirrors the gate the registration Profile Type dropdown itself uses
+ * (see BP_XProfile_Field_Type_Member_Types::edit_field_options_html()): the
+ * type must be an active member-type post whose "_bp_member_type_enable_profile_field"
+ * meta is unset or '1'. Used to reject a Profile Type that was submitted at
+ * signup but is not actually offered on the registration form, closing the
+ * mass-assignment path where a hidden, role-mapped Profile Type could be
+ * self-assigned during registration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $member_type_id Member type post ID submitted at registration.
+ *
+ * @return bool True when the type is offered on the registration form.
+ */
+function bb_is_member_type_allowed_on_registration( $member_type_id ) {
+	$member_type_id = absint( $member_type_id );
+
+	if ( empty( $member_type_id ) ) {
+		return false;
+	}
+
+	// Must be one of the active member-type posts (same source the dropdown iterates).
+	$active_member_types = array_map( 'absint', (array) bp_get_active_member_types() );
+	if ( ! in_array( $member_type_id, $active_member_types, true ) ) {
+		return false;
+	}
+
+	// Must be enabled for the registration profile field (same gate as the dropdown).
+	$enabled = get_post_meta( $member_type_id, '_bp_member_type_enable_profile_field', true );
+
+	return ( '' === $enabled || '1' === $enabled );
+}
+
+/**
+ * Check whether a profile type may be selected for an invitee on the Send Invites form.
+ *
+ * Mirrors the set the send-invites Profile Type dropdown itself offers (see
+ * bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php): the
+ * inviter's own type must be permitted to choose invitee types, and the submitted
+ * type must be in that inviter's `_bp_member_type_allowed_member_type_invite`
+ * allowlist, or — when no allowlist is configured — an active member type.
+ *
+ * Used to reject a profile type that was posted to the invite form but is not
+ * actually offered there. `_bp_invitee_member_type` is read back at activation by
+ * bp_assign_default_member_type_to_activate_user(), which applies the type's
+ * `_bp_member_type_wp_roles` mapping, so an ungated value is a privilege-escalation
+ * path for any member who can send invites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $member_type_key Profile type key submitted on the invite form.
+ *
+ * @return bool True when the type is offered to this inviter.
+ */
+function bb_is_member_type_allowed_on_invite( $member_type_key ) {
+	$member_type_key = is_string( $member_type_key ) ? trim( $member_type_key ) : '';
+
+	if ( '' === $member_type_key ) {
+		return false;
+	}
+
+	// The invitee type selector is only rendered when this gate passes.
+	if ( ! bp_check_member_send_invites_tab_member_type_allowed() ) {
+		return false;
+	}
+
+	$inviter_member_type = bp_get_member_type( bp_loggedin_user_id() );
+	$inviter_type_id     = ! empty( $inviter_member_type ) ? bp_member_type_post_by_type( $inviter_member_type ) : 0;
+
+	// Same source, and same fallback, the dropdown iterates.
+	$offered_types = ! empty( $inviter_type_id )
+		? get_post_meta( $inviter_type_id, '_bp_member_type_allowed_member_type_invite', true )
+		: '';
+
+	if ( empty( $offered_types ) ) {
+		$offered_types = bp_get_active_member_types();
+	}
+
+	foreach ( (array) $offered_types as $offered_type_id ) {
+		if ( bp_get_member_type_key( $offered_type_id ) === $member_type_key ) {
+			return true;
+		}
+	}
+
+	return false;
 }
