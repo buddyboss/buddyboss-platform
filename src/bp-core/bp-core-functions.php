@@ -5346,7 +5346,7 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
  * back. The clause is parenthesised because callers OR these legs together, and `A AND B OR C AND D`
  * is only correct by SQL's precedence rules; spelling it out removes the question.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $column           Qualified column the clause tests, e.g. `u.ID`.
  * @param array  $matched_user_ids Ids the producer matched, BEFORE visibility filtering.
@@ -5392,7 +5392,7 @@ function bb_core_get_search_match_clause( $column, $matched_user_ids, $kept_user
 	 *
 	 * Raising this is how a site opts back out of the rewrite; 0 applies it to every leg.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int    $inline_limit Maximum surviving ids to inline. Default 1000.
 	 * @param string $column       Qualified column the clause tests, e.g. `u.ID`.
@@ -11091,38 +11091,6 @@ function bb_has_paid_product() {
 }
 
 /**
- * Whether a feature extracted to the BuddyBoss Addons plugin is provided by a REAL provider.
- *
- * A moved feature (polls, reactions, social login, pinned posts) is "provided" when either a
- * legacy Platform/Pro build still ships it, or the licensed BuddyBoss Addons module for it is
- * loaded. It is NOT provided when only a deprecation shim is present — Platform/Pro keep the old
- * function names alive so un-updated callers degrade instead of fatalling, but the shims do no
- * real work (e.g. `bb_load_polls()` returns null). Detection keys on symbols the shims never
- * define: the moved classes (BB_Polls / BB_SSO / BB_Reactions), and for pinned posts the non-stub
- * function (the stub advertises itself via `bb_activity_pin_unpin_post_is_stub()`).
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $feature One of: 'polls', 'reactions', 'sso', 'pinned_posts'.
- * @return bool True when a real provider is present.
- */
-function bb_is_feature_provided( $feature ) {
-	switch ( $feature ) {
-		case 'polls':
-			return class_exists( 'BB_Polls' ) || function_exists( 'bb_register_poll' );
-		case 'reactions':
-			return class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' );
-		case 'sso':
-			return class_exists( 'BB_SSO' ) || function_exists( 'bb_register_sso' );
-		case 'pinned_posts':
-			return function_exists( 'bb_activity_pin_unpin_post' )
-				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' );
-		default:
-			return false;
-	}
-}
-
-/**
  * Resolve the ID of the user on whose behalf the current request is being rendered.
  *
  * `bp_loggedin_user_id()` reads `buddypress()->loggedin_user->id`, which is populated by
@@ -11139,7 +11107,7 @@ function bb_is_feature_provided( $feature ) {
  * WordPress current user only when BP has no value at all. That makes this a no-op on every path
  * where the two already agree.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return int User ID of the current viewer, or 0 when the request is anonymous.
  */
@@ -11153,7 +11121,7 @@ function bb_core_get_viewer_user_id() {
 	/**
 	 * Filters the resolved viewer user ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int $viewer_id User ID of the current viewer, 0 when anonymous.
 	 */
@@ -11174,7 +11142,7 @@ function bb_core_get_viewer_user_id() {
  * inviter sees their own profile, so the email carries name parts the site hides from everyone
  * else. Passing this ID pins the resolution to the public, logged-out view.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return int Sentinel viewer ID representing an anonymous visitor.
  */
@@ -11203,7 +11171,7 @@ function bb_core_guest_viewer_id() {
  * to a single 's'. So it is used only to ADD a match the collation would have made, never to
  * withdraw one the first pass found.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $pattern LIKE pattern, exactly as passed to the SQL comparison.
  * @param string $subject String to test.
@@ -11281,7 +11249,7 @@ function bb_core_sql_like_match( $pattern, $subject ) {
  * member posts on a German one. The question has to be asked of the neighbouring character, not of
  * the installation - so the site locale cannot answer it here.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return string Regex character-class body, without the enclosing brackets.
  */
@@ -11300,7 +11268,7 @@ function bb_core_get_continuous_script_class() {
 	 * standing in full, and the filter would have made the redaction LESS aggressive - the one
 	 * outcome this docblock rules out.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param string $class Regex character-class body, without the enclosing brackets.
 	 */
@@ -11347,7 +11315,7 @@ function bb_core_get_continuous_script_class() {
  * warning and returns false on a bad pattern, so the warning is suppressed and the return value is
  * what is trusted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $class_body Regex character-class body, without the enclosing brackets.
  * @return bool True when `[$class_body]` compiles.
@@ -11369,7 +11337,7 @@ function bb_core_is_valid_character_class( $class_body ) {
  * So a character from a script written without separators counts as a boundary, and everything else
  * word-forming does not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string      $char       First or last character of the name being matched.
  * @param bool        $trailing   Optional. Whether this is the name's trailing edge. Default false.
@@ -11428,7 +11396,7 @@ function bb_core_get_name_boundary_assertion( $char, $trailing = false, $continu
  * replaced twice. Leaving the later occurrence standing would leave a name part this viewer may not
  * see in the string, and that is the direction that discloses.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $text Text that may embed the members' stored names.
  * @param array  $map  Map of stored name => the name this viewer may see.
@@ -11531,7 +11499,7 @@ function bb_core_replace_names( $text, $map ) {
  * The stored column is still returned untouched when nothing is hidden, so a deliberately
  * customised display name only gives way to the rebuild when something has to be withheld.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int   $user_id          ID of the member whose name is being resolved.
  * @param array $hidden_field_ids XProfile field IDs this viewer may not see, as returned by
@@ -11609,7 +11577,7 @@ function bb_core_build_visible_display_name( $user_id, $hidden_field_ids = array
  * this meta, and on an imported member the xprofile row genuinely does not exist yet, so reading
  * only the field would drop a name this viewer is entitled to see.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
  * @param int    $user_id  ID of the member the field belongs to.
@@ -11646,7 +11614,7 @@ function bb_core_get_name_field_value( $field_id, $user_id, $meta_key ) {
  * one case that resolves from the field instead, and bb_core_build_visible_display_name() reads the
  * field itself for that branch before falling through to here.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $user_id ID of the member.
  * @return string The nickname, else the user_nicename, else ''.
@@ -11659,4 +11627,36 @@ function bb_core_get_name_fallback_label( $user_id ) {
 	}
 
 	return trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
+}
+
+/**
+ * Whether a feature extracted to the BuddyBoss Addons plugin is provided by a REAL provider.
+ *
+ * A moved feature (polls, reactions, social login, pinned posts) is "provided" when either a
+ * legacy Platform/Pro build still ships it, or the licensed BuddyBoss Addons module for it is
+ * loaded. It is NOT provided when only a deprecation shim is present — Platform/Pro keep the old
+ * function names alive so un-updated callers degrade instead of fatalling, but the shims do no
+ * real work (e.g. `bb_load_polls()` returns null). Detection keys on symbols the shims never
+ * define: the moved classes (BB_Polls / BB_SSO / BB_Reactions), and for pinned posts the non-stub
+ * function (the stub advertises itself via `bb_activity_pin_unpin_post_is_stub()`).
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string $feature One of: 'polls', 'reactions', 'sso', 'pinned_posts'.
+ * @return bool True when a real provider is present.
+ */
+function bb_is_feature_provided( $feature ) {
+	switch ( $feature ) {
+		case 'polls':
+			return class_exists( 'BB_Polls' ) || function_exists( 'bb_register_poll' );
+		case 'reactions':
+			return class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' );
+		case 'sso':
+			return class_exists( 'BB_SSO' ) || function_exists( 'bb_register_sso' );
+		case 'pinned_posts':
+			return function_exists( 'bb_activity_pin_unpin_post' )
+				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' );
+		default:
+			return false;
+	}
 }

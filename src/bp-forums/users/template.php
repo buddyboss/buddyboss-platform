@@ -136,7 +136,7 @@ function bbp_displayed_user_field( $field = '', $filter = 'display' ) {
 	 * @see sanitize_user_field() for more on how the value is sanitized
 	 * @uses apply_filters() Calls 'bbp_get_displayed_user_field' with the value
 	 *
-	 * @since BuddyBoss [BBVERSION] `display_name` is resolved for the current viewer, so a
+	 * @since BuddyBoss 3.5.0 `display_name` is resolved for the current viewer, so a
 	 *                              last name hidden by profile-field visibility is not returned.
 	 *
 	 * @return string|bool Value of the field if it exists, else false

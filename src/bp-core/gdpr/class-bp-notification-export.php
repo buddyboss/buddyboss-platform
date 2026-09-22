@@ -33,7 +33,7 @@ final class BP_Notification_Export extends BP_Export {
 	/**
 	 * The member this export is being produced for, while a batch is being rendered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @var int
 	 */
@@ -47,7 +47,7 @@ final class BP_Notification_Export extends BP_Export {
 	 * notification the subject received reads with the names the subject is allowed to see, not the
 	 * names the administrator running the export can see.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int $viewer_id The viewer BuddyBoss resolved for this request.
 	 * @return int The data subject while a batch is rendering, otherwise the value unchanged.
@@ -102,7 +102,7 @@ final class BP_Notification_Export extends BP_Export {
 	 * Split out of process_data() so the viewer scoping around it cannot be bypassed by an early
 	 * return added inside the loop later.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $data_items The batch returned by get_data().
 	 * @return array Export items for this batch.

@@ -5053,7 +5053,7 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
  * The group members loop does not populate a viewer-scoped `fullname`, so resolution goes through
  * bp_core_get_user_displayname() (which honours last-name visibility for the current viewer).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @global BP_Groups_Group_Members_Template $members_template
  *
@@ -6536,8 +6536,12 @@ function bp_current_group_directory_type_message() {
 	 */
 function bp_get_current_group_directory_type_message() {
 	$type_object = bp_groups_get_group_type_object( bp_get_current_group_directory_type() );
+	$message     = '';
 
-	$message = sprintf( __( 'Viewing all groups that are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
+	// Unknown type (e.g. a mistyped shortcode attribute): avoid a broken sentence and PHP warnings.
+	if ( ! empty( $type_object ) && ! empty( $type_object->labels['name'] ) ) {
+		$message = sprintf( __( 'Viewing all groups that are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
+	}
 
 	/**
 	 * Filters the current group type message.

@@ -549,7 +549,7 @@ function bp_core_get_user_displaynames( $user_ids ) {
  *   a site filtering the hidden level set - the per-user call falls back to its own query and
  *   behaviour is unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array $user_ids  User IDs whose display names are about to be resolved.
  * @param int   $viewer_id Optional. Viewer the names will be resolved for. Defaults to the current
@@ -746,7 +746,7 @@ add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
  * alone. It is a re-entrancy marker, not a switch: nothing outside those filters should consult it,
  * and nothing should leave it raised.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param bool|null $resolving Optional. True to mark a resolution as started, false to mark it as
  *                             finished, null (default) to only read the current state.
@@ -5798,7 +5798,7 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
  * so member-facing surfaces never offer a hover card the viewer should not see.
  * The returned fragment is fully escaped.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $user_id Member ID.
  *
@@ -5834,7 +5834,7 @@ function bb_get_hover_card_profile_attr( $user_id ) {
  * mass-assignment path where a hidden, role-mapped Profile Type could be
  * self-assigned during registration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $member_type_id Member type post ID submitted at registration.
  *
@@ -5874,7 +5874,7 @@ function bb_is_member_type_allowed_on_registration( $member_type_id ) {
  * `_bp_member_type_wp_roles` mapping, so an ungated value is a privilege-escalation
  * path for any member who can send invites.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $member_type_key Profile type key submitted on the invite form.
  *
