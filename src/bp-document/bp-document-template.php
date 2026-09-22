@@ -2572,6 +2572,15 @@ function bp_get_document_link( $document_id ) {
  * folder - intentionally continue to use bp_folder_user_can_edit() /
  * bp_folder_user_can_delete() and are unaffected.
  *
+ * Note for integrators: the destination gate used to call
+ * bp_folder_user_can_edit() directly, so a `false` from its filter (fired under
+ * the name 'bp_folder_user_can_delete') vetoed the move. That filter still runs,
+ * but its veto no longer decides placement into a group folder - the group
+ * allowance re-grants anyone the group's document setting admits, moderators
+ * included. Customisations that relied on it to lock placement must migrate to
+ * the 'bb_document_user_can_add_to_folder' filter, which is applied last and can
+ * veto every branch.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the destination folder.

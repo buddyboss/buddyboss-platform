@@ -404,6 +404,54 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 	}
 
 	/**
+	 * With the groups component inactive the group allowance must not run at all.
+	 * groups_can_user_manage_document() is not even loaded then, so the
+	 * bp_is_active( 'groups' ) conjunct is what stands between a legacy group-folder
+	 * row and a fatal. The owner still gets in through bp_folder_user_can_edit().
+	 *
+	 * setUp() pins groups active for every other test, so this one has to
+	 * out-prioritise that pin. Without it, deleting the conjunct is invisible to the
+	 * suite.
+	 *
+	 * @group bb_document_user_can_add_to_folder
+	 */
+	public function test_group_allowance_is_skipped_when_groups_component_is_inactive() {
+		$owner  = self::factory()->user->create();
+		$member = self::factory()->user->create();
+		$group  = self::factory()->group->create( array( 'creator_id' => $owner ) );
+
+		self::add_user_to_group( $member, $group );
+		$folder = $this->create_group_folder( $owner, $group, 'members' );
+
+		// The fixtures above needed groups active; the predicate under test must see it inactive.
+		add_filter( 'bp_is_active', array( $this, 'force_groups_inactive' ), 20, 2 );
+
+		self::set_current_user( $member );
+		$this->assertFalse( bp_is_active( 'groups' ), 'Precondition: the groups component must read as inactive.' );
+		$this->assertFalse( bb_document_user_can_add_to_folder( $folder ), 'A peer must be denied when the groups component is inactive.' );
+
+		self::set_current_user( $owner );
+		$this->assertTrue( bb_document_user_can_add_to_folder( $folder ), 'The folder owner keeps access through bp_folder_user_can_edit().' );
+
+		remove_filter( 'bp_is_active', array( $this, 'force_groups_inactive' ), 20 );
+	}
+
+	/**
+	 * Out-prioritises force_components_active() for the groups component only.
+	 *
+	 * @param bool   $is_active Whether the component is active.
+	 * @param string $component Component ID.
+	 * @return bool
+	 */
+	public function force_groups_inactive( $is_active, $component ) {
+		if ( 'groups' === $component ) {
+			return false;
+		}
+
+		return $is_active;
+	}
+
+	/**
 	 * The predicate being correct proves nothing if a call site does not use it.
 	 * This drives bp_document_move_document_to_folder() end to end, so reverting
 	 * that destination gate to bp_folder_user_can_edit() turns this red.
