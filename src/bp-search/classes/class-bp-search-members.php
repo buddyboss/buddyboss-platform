@@ -493,7 +493,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * meta and the xprofile fields are compared on their own legs of the same query: they carry
 		 * no hidden name part, so a member matching on one of those is still a legitimate hit.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $search_term Raw search term, as passed to sql().
 		 * @return array {

@@ -2056,7 +2056,7 @@ class BP_Activity_Activity {
 	 *   cache is invalidated only when a comment is added, edited or deleted, never when a name
 	 *   or its visibility changes, which is also why this re-resolution belongs on every read.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $comments Nested comment tree as returned by get_activity_comments().
 	 * @return array The same tree with its name values resolved for the current viewer.
@@ -2119,7 +2119,7 @@ class BP_Activity_Activity {
 	/**
 	 * Collect every comment object of a nested comment tree into a flat list.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $comments Nested comment tree (objects with a `children` array).
 	 * @param array $nodes    Accumulator, passed by reference.

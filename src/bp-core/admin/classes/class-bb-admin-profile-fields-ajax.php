@@ -836,7 +836,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * members can still change Last name's visibility, so the admin controls must
 	 * stay available. See PROD-10439.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int $field_id Field ID.
 	 * @return bool True when the field's settings sections are locked in the editor.
@@ -859,7 +859,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * field itself. Every other field — including Last name — may be restricted
 	 * to specific profile types, matching the legacy editor. See PROD-10439.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param BP_XProfile_Field $field Field object.
 	 * @return bool True when the Profile Types selector should not be offered.
