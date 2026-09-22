@@ -330,7 +330,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * no supported way to close the leak. Returning an empty array from either filter unregisters
 	 * everything, which is the off switch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 */
 	require buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
 	BB_SEO_Helpers::instance();

@@ -71,7 +71,7 @@ class BB_XProfile_Visibility {
 	 * otherwise re-run its uncached query several times per request. Keyed by
 	 * "{user_id}:{sha1 of the sorted levels}". Invalidated per user on every write below.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @var array $field_ids_cache
 	 */
@@ -85,7 +85,7 @@ class BB_XProfile_Visibility {
 	 * bp_xprofile_get_fields_by_visibility_levels(), which member search reaches once per matched
 	 * row, and its query is uncached.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @var array $user_data_exists_cache
 	 */
@@ -94,7 +94,7 @@ class BB_XProfile_Visibility {
 	/**
 	 * Per-request memo of the visibility table's existence.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @var bool|null $table_exists_cache Null until resolved.
 	 */
@@ -246,7 +246,7 @@ class BB_XProfile_Visibility {
 	 * Falls back to the prefixed name when the xprofile globals have not been set up yet (a fresh
 	 * install, before bp_setup_globals).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @return string
 	 */
@@ -274,7 +274,7 @@ class BB_XProfile_Visibility {
 	 * the same shape prime_user_data_exists_cache() and prime_user_field_ids_cache() already use
 	 * when their own reads fail.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @return bool|null True when the table exists, false when it is genuinely absent, null when
 	 *                   the probe failed and the question is unanswered.
@@ -309,7 +309,7 @@ class BB_XProfile_Visibility {
 	 * Users with no row are memoized as false on purpose: without that they would miss the memo
 	 * and fall through to an individual query each, which is the cost this exists to remove.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $user_ids User IDs to prime.
 	 */
@@ -740,7 +740,7 @@ class BB_XProfile_Visibility {
 	 * miss the memo and fall through to an individual query each, which is the cost this exists to
 	 * remove.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $user_ids User IDs to prime.
 	 * @param array $levels   Visibility levels to prime for. Must be the same set the subsequent
@@ -828,7 +828,7 @@ class BB_XProfile_Visibility {
 	 * prime_user_data_exists_cache() now fills it for whole batches, so a stale entry is far more
 	 * likely to be present than when it was populated one lazy read at a time.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int $user_id Optional. Clear only this user's entries; 0 clears the whole memo (used
 	 *                     when a write affects rows across all users).

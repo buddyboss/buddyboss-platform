@@ -1119,7 +1119,7 @@ function bb_core_signup_send_activation_email( $user_id, $user_login, $user_pass
  * equals the stored column - the normal case, and always the case for a moderator - it returns null
  * and the caller leaves core's own output untouched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int $user_id ID of the member whose name is about to be emitted.
  * @return string|null The name to show instead, or null to leave the value alone.
@@ -1180,7 +1180,7 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 	 * Return false to leave WordPress core emitting the raw `display_name` column on those
 	 * surfaces.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param bool $redact  Whether to apply the redaction. Default true.
 	 * @param int  $user_id ID of the member whose name is being emitted.
@@ -1285,7 +1285,7 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
  * Reaches WordPress core's author feed autodiscovery link, comment author output and every theme
  * or plugin that asks core for an author's display name.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $display_name The stored display name.
  * @param int    $user_id      ID of the author.
@@ -1305,7 +1305,7 @@ add_filter( 'get_the_author_display_name', 'bb_core_filter_the_author_display_na
  * get_the_author_meta() and needs its own callback. Feeds the archive title prefix
  * (get_the_archive_title()) and `the_author()` in themes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string|null $display_name The stored display name, or null when there is no author.
  * @return string|null The name this viewer may see.
@@ -1331,7 +1331,7 @@ add_filter( 'the_author', 'bb_core_filter_the_author' );
  * Only the author archive is touched, and only the author's own raw name inside it, so a title a
  * theme or SEO plugin has already rewritten keeps whatever else it contains.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array $title_parts Parts of the document title.
  * @return array The same parts with the author's hidden name part removed.
@@ -1375,7 +1375,7 @@ add_filter( 'document_title_parts', 'bb_core_filter_author_document_title_parts'
  * else it contains. When no plugin answers, `$title` is '' and this returns '' unchanged, leaving
  * core to build the parts and the `document_title_parts` filter to do the work as before.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $title The title an earlier filter produced, or '' when none has.
  * @return string The same title with the author's hidden name part removed.
@@ -1408,7 +1408,7 @@ add_filter( 'pre_get_document_title', 'bb_core_filter_author_pre_document_title'
  * readable by anonymous callers for any user who has published content, so without this the
  * community's own members endpoint redacts a name that WordPress' endpoint hands out in full.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param WP_REST_Response $response The response object.
  * @param WP_User          $user     The user object used to create the response.
@@ -1484,7 +1484,7 @@ add_filter( 'rest_prepare_user', 'bb_core_filter_rest_prepare_user', 10, 2 );
  * may not read are excluded - a member matching on a public name part is a legitimate hit and is
  * still returned.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array           $prepared_args WP_User_Query arguments.
  * @param WP_REST_Request $request       The REST request.
@@ -1569,7 +1569,7 @@ add_filter( 'rest_user_query', 'bb_core_filter_rest_user_query_name_matches', 99
  * This runs on the fail-closed path, which an anonymous REST search reaches on a transient read
  * error, so it is precisely the moment the site can least afford the extra work.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $like LIKE pattern, already escaped.
  * @return int[] User ids whose display_name matches and whose public identifier does not.
@@ -1598,7 +1598,7 @@ function bb_core_get_name_only_search_match_ids( $like ) {
  * `user_login` and `user_nicename` are public - they appear in the member's permalink - so a match
  * on either is not a disclosure and the member must remain findable by it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param int[]  $user_ids Ids about to be excluded.
  * @param string $like     LIKE pattern, already escaped.
@@ -1654,7 +1654,7 @@ function bb_core_remove_public_identifier_matches( $user_ids, $like ) {
  * and when `bb_core_redact_core_author_name` is filtered false; the payload is left untouched in all
  * three, so no other oEmbed consumer changes behaviour.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array   $data The response data.
  * @param WP_Post $post The post object.
