@@ -1039,7 +1039,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * slug. Dropping 'no_update' would therefore lose that link in the
 		 * common, already-up-to-date case.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $value Value of the 'update_plugins' site transient.
 		 *
@@ -1144,7 +1144,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * does not spare it: every request that got here would pay the scan
 		 * again.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $plugin_file Plugin basename, e.g. 'buddyboss-sharing/buddyboss-sharing.php'.
 		 *
@@ -1194,7 +1194,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * costs an add-on its changelog in bb_get_addon_release_term(), and the
 		 * filter below is the way back for a site that has done it.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $slug Plugin directory name.
 		 *
@@ -1213,7 +1213,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * it does not make it an add-on. Use it for a BuddyBoss add-on that
 			 * has been installed into a renamed directory.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param bool   $possible Whether the directory could belong to a BuddyBoss add-on.
 			 * @param string $slug     Plugin directory name.
@@ -1233,7 +1233,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * WordPress.org directory — those satisfy neither test, resolve through
 		 * WordPress.org perfectly well, and must never be claimed here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $plugin_file Plugin basename.
 		 * @param array  $plugin_data Plugin headers as returned by get_plugins().
@@ -1266,7 +1266,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Get the platform's plugin basename, e.g. 'buddyboss-platform/bp-loader.php'.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return string Plugin basename.
 		 */
@@ -1314,7 +1314,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * bb_fix_plugin_details_link() about the same transient, which is what
 		 * stops the pair from disagreeing over whether an entry exists.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $plugin_file Plugin basename, e.g. 'buddyboss-platform/bp-loader.php'.
 		 *
@@ -1356,7 +1356,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string      $plugin_file Plugin basename, e.g. 'buddyboss-platform/bp-loader.php'.
 		 * @param object|null $update      Optional. Update transient entry for the plugin.
@@ -1432,7 +1432,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $package Package URL from the update transient, if any.
 		 *
@@ -1505,7 +1505,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * than the read - core writes this transient once per dependency slug it
 		 * newly resolves, not once per page load.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $value Value of the 'wp_plugin_dependencies_plugin_data' site transient.
 		 *
@@ -1543,7 +1543,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Get the platform's plugin directory slug, e.g. 'buddyboss-platform'.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return string Plugin directory slug.
 		 */
@@ -1599,7 +1599,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * buddyboss.com release notes API when available and always links to
 		 * the full release notes page.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param false|object|array $result The result object or array. Default false.
 		 * @param string             $action The type of information being requested from the Plugin Installation API.
@@ -1729,7 +1729,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * short allowlist, which still passes links, images and class attributes
 			 * straight to the page. Markup returned here is markup in wp-admin.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array  $information Plugin information served to the plugin-information modal.
 			 * @param string $new_version Version number the information describes.
@@ -1779,7 +1779,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param object $args Plugin API arguments.
 		 *
@@ -1838,7 +1838,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * tell the two apart, so the default has to be the one whose failure is
 		 * loud.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $notes     Sanitized release notes HTML; empty when none
 		 *                          could be fetched.
@@ -1940,7 +1940,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $version Version number from the update feed.
 		 *
@@ -2013,7 +2013,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * one for what is printed and compared, the normalizer for URLs and
 		 * lookups. See data_contract_methods() in the release-notes test case.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $version Version number from a plugin header or update feed.
 		 *
@@ -2058,7 +2058,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $version   Optional. Version number to link directly to;
 		 *                          empty for the release notes archive.
@@ -2100,7 +2100,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $version   Version number, e.g. '3.4.4'.
 		 * @param string $rest_base Optional. Releases post type REST base on
@@ -2221,7 +2221,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * tells someone their notes failed to load when the release simply has
 		 * none. So the reason is cached with the markup.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $cache_key Site transient key.
 		 * @param string $html      Sanitized release notes HTML, or empty string.
@@ -2251,7 +2251,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * rather than discarded: a bare string carries no reason, and the only
 		 * reason it can safely be given is the one that claims least.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed  $cached Cached value, already known not to be false.
 		 * @param string $state  Set to the cached reason. Passed by reference.
@@ -2303,7 +2303,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * document: it fails json_decode(), so an oversized response resolves to
 		 * the same "no notes" answer as an unreachable one.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return array Arguments for wp_remote_get().
 		 */
@@ -2324,7 +2324,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * the markup costs enough to notice, so the only documents it turns away
 		 * are ones no release ever produces.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return int Maximum payload size in bytes.
 		 */
@@ -2365,7 +2365,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * negative cache entry before doing any work - so callers that arrive
 		 * afterwards are answered from the cache and never reach this at all.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $cache_key Cache key the fetch will populate.
 		 *
@@ -2402,7 +2402,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *   every href and src against buddyboss.com here defuses it: core's helper
 		 *   leaves an already-absolute URL alone.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $html     Raw release notes HTML.
 		 * @param string $base_url Optional. URL that relative links in the notes are
@@ -2532,7 +2532,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * Runs before wp_kses_post(), so everything produced here is sanitized
 		 * along with the rest rather than being trusted on its way out.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $html Repaired release notes HTML.
 		 *
@@ -2601,7 +2601,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * immediately afterwards, and the worst outcome of a mismatch is a row that
 		 * reads oddly rather than anything unsafe.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $html Release notes HTML.
 		 *
@@ -2709,7 +2709,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * A word boundary keeps the names exact: "<th" must not count "<thead",
 		 * and "<tr" must not count "<track".
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $html Release notes HTML.
 		 *
@@ -2763,7 +2763,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * emphasis, and cells are joined with a visible separator so adjacent values
 		 * cannot read as one word.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param array $matches Match from the row pattern; [1] is the row's cells.
 		 *
@@ -2799,7 +2799,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Pull the release notes HTML out of a releases REST item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param array $item One item from a releases REST collection.
 		 *
@@ -2858,7 +2858,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $version   Version number, e.g. '2.1.2'.
 		 * @param string $term_slug Term slug of the add-on in the releases taxonomy.
@@ -2980,7 +2980,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $term_slug Term slug of the add-on in the releases taxonomy.
 		 *
@@ -3047,7 +3047,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * contract; keep it in step. It is a record, not a gate - that suite
 		 * does not currently run on this branch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string      $version   Version number the notes should describe.
 		 * @param string      $term_slug Term slug of the add-on in the releases taxonomy.
@@ -3152,7 +3152,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * '128964'), so nothing held locally can rebuild the page URL for a
 		 * version. The archive is the fallback for callers that never get here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param int    $term_id Releases taxonomy term ID for the add-on.
 		 * @param string $version Normalized version number, e.g. '2.1.2'.
@@ -3223,7 +3223,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * Thin wrapper over bb_find_addon_release() for callers that want the ID
 		 * alone; see there for how the lookup works.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param int    $term_id Releases taxonomy term ID for the add-on.
 		 * @param string $version Normalized version number, e.g. '2.1.2'.
@@ -3246,7 +3246,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * destination, so a compromised or misconfigured remote cannot point the
 		 * "full release notes" link anywhere else.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $link Raw 'link' value from the REST response.
 		 *
@@ -3280,7 +3280,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * field the notes are read from does not change - only the number of
 		 * releases whose body travels over the wire.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param int  $release_id Release post ID.
 		 * @param bool $failed     Set to true when the request did not complete, as
@@ -3327,7 +3327,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * caller has already written its own hour-long 'failed' entry over the
 		 * whole fetch before this could be reached again.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $term_slug Term slug in the releases taxonomy.
 		 * @param bool   $failed    Set to true when the request did not complete, as
@@ -3400,7 +3400,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * add-on's plugin headers and the update transient, which is all that can
 		 * be read from the outside.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param false|object|array $result The result object or array. Default false.
 		 * @param string             $action The type of information being requested from the Plugin Installation API.
@@ -3535,7 +3535,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * short allowlist, which still passes links, images and class attributes
 			 * straight to the page. Markup returned here is markup in wp-admin.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array  $information Plugin information served to the plugin-information modal.
 			 * @param string $new_version Version number the information describes.
@@ -3562,7 +3562,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * and the bb_addon_release_terms filter below is the way back for a site
 		 * that has renamed one.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $slug Plugin directory slug.
 		 *
@@ -3597,7 +3597,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			/**
 			 * Filters the plugin slug to releases-taxonomy term map.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array $terms Map of plugin directory slug to releases term slug.
 			 */
@@ -3617,7 +3617,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * rename has there: the changelog degrades to a bare link, and the
 		 * bb_addon_release_post_types filter below is the way back.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $slug Plugin directory slug.
 		 *
@@ -3632,7 +3632,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			/**
 			 * Filters the plugin slug to releases post type map.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array $types Map of plugin directory slug to releases post type REST base.
 			 */
@@ -3649,7 +3649,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * bb_get_release_notes_page_url(). Products in the shared bb-addons type
 		 * are not here - their permalinks are read off the lookup instead.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $slug Plugin directory slug.
 		 *
@@ -3664,7 +3664,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			/**
 			 * Filters the release-notes page bases for products with their own releases post type.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array $bases Plugin directory slug => page base URL.
 			 */
@@ -3681,7 +3681,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * buddyboss.com/resources; 'page_base' is the human release notes archive
 		 * the fallback link points at when no notes can be fetched.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return array Map of stylesheet to theme release metadata.
 		 */
@@ -3697,7 +3697,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			/**
 			 * Filters the BuddyBoss themes given a details modal.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array $themes Map of stylesheet to release metadata.
 			 */
@@ -3711,7 +3711,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * /wp-admin/, so the network spelling would be a 404 on every multisite
 		 * Themes screen. The absolute /wp-admin/ URL is reachable from both.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $stylesheet Theme directory.
 		 * @param string $version    Version being offered.
@@ -3738,7 +3738,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * markup themselves. Filling it is enough for both; no markup rewriting
 		 * and no JavaScript are involved.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $value The update_themes site transient.
 		 *
@@ -3794,7 +3794,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * check below does not already allow, so there is no state for CSRF to
 		 * act on.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return void
 		 */
@@ -3917,7 +3917,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * bb_get_addon_release_post_type(), it would spend blocking HTTP requests
 		 * and the notes transform on an answer App discards.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return array Plugin directory slugs.
 		 */
@@ -3927,7 +3927,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			/**
 			 * Filters the BuddyBoss add-on slugs recognized without a "Requires Plugins" header.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array $slugs Plugin directory slugs.
 			 */
@@ -3954,7 +3954,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * register costs nothing either way, because the caller never reaches
 		 * here once someone has answered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param string $slug Plugin directory slug.
 		 *

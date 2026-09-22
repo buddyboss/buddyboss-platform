@@ -52,7 +52,7 @@
  * NOTHING HERE IS WRITABLE. The card is the panel's only field, it is display-only, and it
  * sanitises to an empty string, so this panel can never write to state the add-on owns.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.5.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -61,7 +61,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin file (relative to the plugins directory) of the add-on that ships the digest.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return string Plugin basename.
  */
@@ -76,7 +76,7 @@ function bb_email_digest_addon_plugin_file() {
  * to match the catalog entry rather than the folder on disk — they are the same string
  * today, and a repackaged build is free to change the folder without changing the slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return string Plugin slug.
  */
@@ -92,7 +92,7 @@ function bb_email_digest_addon_plugin_slug() {
  * is not installed at all, so it cannot ask the add-on. Matched as PREFIXES, which is what
  * makes the list tolerant of per-site-count variants of the same plan.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return array List of lowercase plan SKU prefixes.
  */
@@ -138,7 +138,7 @@ function bb_email_digest_required_plans() {
 	/**
 	 * Filters the plan SKU prefixes that include the Email Digest.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $plans Lowercase plan SKU prefixes.
 	 */
@@ -153,7 +153,7 @@ function bb_email_digest_required_plans() {
  * matching licence, and reaching the unlicensed screen never means deactivating a real
  * one. Fails closed: an unreadable licence layer counts as not activated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return bool True when a licence is activated.
  */
@@ -172,7 +172,7 @@ function bb_email_digest_is_license_active() {
 	/**
 	 * Filters whether the licence counts as activated for the Email Digest panel.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param bool $active Whether a licence is activated.
 	 */
@@ -182,7 +182,7 @@ function bb_email_digest_is_license_active() {
 /**
  * The plan SKU the activated licence carries.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return string Lowercase SKU, or an empty string when it cannot be determined.
  */
@@ -201,7 +201,7 @@ function bb_email_digest_licensed_plan_sku() {
 	/**
 	 * Filters the plan SKU used to decide Email Digest entitlement.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param string $sku Lowercase plan SKU.
 	 */
@@ -216,7 +216,7 @@ function bb_email_digest_licensed_plan_sku() {
  * cost of being wrong in that direction is an upgrade prompt shown to someone who does not
  * need one; the other direction promises a feature that will not appear.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return string One of 'needs_license', 'not_in_plan', 'addon_inactive',
  *                'addon_not_installed', 'addon_outdated'.
@@ -276,7 +276,7 @@ function bb_email_digest_get_placeholder_state() {
 /**
  * Version of the add-on currently on disk.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return string Version string, or an empty string when it cannot be read.
  */
@@ -308,7 +308,7 @@ function bb_email_digest_addon_installed_version() {
  * The version lives at `_embedded.version-latest.number`; the product record carries no
  * top-level version field, and reaching for `->version` silently yields null.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return array {
  *     @type string $version Release number, empty when unresolved.
@@ -351,7 +351,7 @@ function bb_email_digest_addon_latest_release() {
  * Fails closed: an unreadable installed version or an unresolved release means "no",
  * because the alternative is offering an Update button that cannot change anything.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return bool True when an update is available.
  */
@@ -370,7 +370,7 @@ function bb_email_digest_addon_update_available() {
 	 * to be reachable on a site whose installed build already matches the catalog, and
 	 * publishing a release is not a reasonable prerequisite for testing a settings panel.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param bool   $available Whether a newer build is available.
 	 * @param string $installed Installed version, empty when unreadable.
@@ -387,7 +387,7 @@ function bb_email_digest_addon_update_available() {
  * means deactivating a real licence, which is not something to ask of anyone testing a
  * settings panel.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return string Resolved placeholder state.
  */
@@ -395,7 +395,7 @@ function bb_email_digest_placeholder_state() {
 	/**
 	 * Filters the resolved Email Digest placeholder state.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param string $state One of 'needs_license', 'not_in_plan', 'addon_inactive',
 	 *                      'addon_not_installed', 'addon_outdated'.
@@ -410,7 +410,7 @@ function bb_email_digest_placeholder_state() {
  * catalog's `upgrade_*` names. A catalog entry for this panel supersedes the whole payload,
  * which is what lets marketing retarget copy, art and URL without a release.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return array Modal payload.
  */
@@ -434,7 +434,7 @@ function bb_email_digest_upgrade_modal_payload() {
  * Runs at priority 35, behind every real registration (the add-on registers at 30), so the
  * stand-down check below sees a settled registry.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return void
  */
@@ -509,7 +509,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_email_digest_pla
  * over a locked card on the Email Digest panel tells an admin nothing they do not already
  * know, while "Upgrade Required" tells them why the panel is empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param string $state Resolved placeholder state.
  * @return void
@@ -625,7 +625,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
  * to them. Registered here only when nothing else has — the add-on registers its own from
  * teardown.php on any site where it is installed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return void
  */
@@ -668,7 +668,7 @@ add_action( 'bb_notifications_after_register_settings_fields', 'bb_admin_setting
  * anyway would produce a click that visibly fails, so the card drops to a plain link to
  * the add-ons screen and says what is actually true.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @param array  $field_data Formatted field data bound for React.
  * @param array  $field      Registered field args.
@@ -723,7 +723,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_email_digest_soften_stale
  * place is what WordPress itself does when a zip is uploaded over an installed plugin;
  * the basename does not change, so the plugin stays active across it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return void
  */
@@ -829,7 +829,7 @@ add_action( 'wp_ajax_bb_email_digest_update_addon', 'bb_email_digest_ajax_update
  * this panel and deliberately do NOT match the add-on's option keys, so this screen cannot
  * write to anything the digest reads.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @return void
  */
@@ -839,7 +839,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	/**
 	 * Register one inert field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $args Field registration args.
 	 * @return void

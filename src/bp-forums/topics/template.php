@@ -1479,7 +1479,7 @@ function bbp_topic_author_display_name( $topic_id = 0 ) {
  *
  * @since                          bbPress (r2485)
  *
- * @since                          BuddyBoss [BBVERSION] Added the `$viewer_user_id` parameter.
+ * @since                          BuddyBoss 3.5.0 Added the `$viewer_user_id` parameter.
  *
  * @param int $topic_id       Optional. Topic id.
  * @param int $viewer_user_id Optional. ID of the user the name is being rendered for. Defaults to

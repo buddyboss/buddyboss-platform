@@ -3079,7 +3079,7 @@ class BP_Email_Tokens {
 	 * direction: the public view withholds a name part from a recipient permitted to see it, which
 	 * is recoverable, where the sender's view publishes one nobody else may see.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param array $tokens Email tokens.
 	 *

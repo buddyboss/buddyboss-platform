@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  */
 
 // Exit if accessed directly.
@@ -61,14 +61,14 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 	 * member is therefore taken from the plugin's own context object first and from the queried
 	 * object only as a fallback, so the same redaction applies on both.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 */
 	class BB_SEO_Helpers {
 
 		/**
 		 * The single instance of the class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @var self
 		 */
@@ -92,7 +92,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * wp_set_current_user(), a REST batch, and the `bb_core_get_viewer_user_id` and
 		 * `bp_core_display_name_format` filters all change them mid-request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @var array
 		 */
@@ -101,7 +101,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		/**
 		 * BB_SEO_Helpers constructor.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 */
 		public function __construct() {
 			$this->compatibility_init();
@@ -110,7 +110,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		/**
 		 * Get the instance of this class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return BB_SEO_Helpers
 		 */
@@ -127,7 +127,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		/**
 		 * Register the compatibility hooks for whichever SEO plugin is present.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 */
 		public function compatibility_init() {
 
@@ -174,7 +174,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 *   change_publisher_logo swaps a logo ImageObject (class-web-stories.php:58). Raise this
 		 *   priority above 99 if either of those stops being true.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return array Map of filter name to priority.
 		 */
@@ -187,7 +187,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 			 * array, or an object - and returns it with the names this viewer may not see replaced.
 			 * Add an entry to cover an SEO plugin BuddyBoss does not ship support for.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array $filters Map of `filter name => priority`.
 			 */
@@ -237,7 +237,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * (app/Common/Views/main/meta.php:38), which the member name filters already redact, and
 		 * Rank Math emits no author meta tag - so neither needs an entry.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @return array Map of filter name to priority.
 		 */
@@ -250,7 +250,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 			 * viewer may see. Add an entry to cover an SEO plugin BuddyBoss does not ship support
 			 * for.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.5.0
 			 *
 			 * @param array $filters Map of `filter name => priority`.
 			 */
@@ -266,7 +266,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		/**
 		 * Replace a lone member name an SEO plugin is about to print.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $name   The name the plugin resolved, normally a string.
 		 * @param mixed $source Optional. The plugin's context/presentation object for this entity.
@@ -290,7 +290,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		/**
 		 * Replace the member names this viewer may not see inside an SEO plugin's graph.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $graph  The graph the plugin is about to output.
 		 * @param mixed $source Optional. The plugin's context object for the entity being rendered.
@@ -322,7 +322,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * unbounded substitution rewrote the middle of unrelated ones: a member called "Ann" turned
 		 * "Annapolis Anniversary" into "A.apolis A.iversary". See bb_core_replace_names().
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $value The value to walk.
 		 * @param array $map   Raw name => viewer-visible name.
@@ -385,7 +385,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * Only the member the page is about is considered. Resolving every user mentioned anywhere
 		 * in a graph would mean resolving names for members the page is not about.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $source Optional. The context object the SEO plugin passed, when it passed one.
 		 * @return int[] User ids, possibly empty.
@@ -442,7 +442,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * whatever the hook happened to pass, the plugin may not be the one whose class we would
 		 * name, and a wrong guess here must degrade to the queried object rather than fatal.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param mixed $source The second argument the filter passed.
 		 * @return int[] User ids, empty when the object carries none.
@@ -497,7 +497,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * Name & Last Name" format, nobody restricting a name field - this map is empty and every
 		 * registered filter returns its input untouched.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param int[] $user_ids The members to resolve.
 		 * @return array Raw display name => the name this viewer may see.
@@ -526,7 +526,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		/**
 		 * The raw => viewer-visible entry for one member.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.0
 		 *
 		 * @param int $user_id The member to resolve.
 		 * @return array Single-entry map, or an empty array when nothing is hidden from this viewer.

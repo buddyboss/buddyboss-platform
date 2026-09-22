@@ -1423,7 +1423,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * /detail route intentionally keeps serving those members (the app renders
 	 * their blocked/suspended profile screens); the hover card must not.
 	 *
-	 * @since [BBVERSION]
+	 * @since 3.5.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1650,7 +1650,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * /default/{user_id}/. Testing the already-fetched URL avoids the extra
 	 * bp_core_fetch_avatar() call the canonical helper issues per member.
 	 *
-	 * @since [BBVERSION]
+	 * @since 3.5.0
 	 *
 	 * @param string $avatar_url Avatar URL from a bp_core_fetch_avatar( html=false ) call.
 	 * @param int    $user_id    Member ID the URL was fetched for.

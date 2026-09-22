@@ -5053,7 +5053,7 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
  * The group members loop does not populate a viewer-scoped `fullname`, so resolution goes through
  * bp_core_get_user_displayname() (which honours last-name visibility for the current viewer).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.0
  *
  * @global BP_Groups_Group_Members_Template $members_template
  *

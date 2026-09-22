@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     3.4.4
+ * Version:     3.5.0
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -26,7 +26,7 @@ if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) .
 }
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '3.4.4' );
+	define( 'BP_PLATFORM_VERSION', '3.5.0' );
 }
 
 if ( ! defined( 'BP_PLATFORM_API' ) ) {
@@ -490,7 +490,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *
 	 * @since BuddyPress 1.0.2
 	 * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
-	 * @since BuddyBoss [BBVERSION] Reloads the catalog when the locale has changed since the last
+	 * @since BuddyBoss 3.5.0 Reloads the catalog when the locale has changed since the last
 	 *                              load, so late locale resolution (WPML/Polylang) and mid-request
 	 *                              switch_to_locale() calls translate correctly.
 	 *

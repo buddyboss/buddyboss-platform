@@ -421,7 +421,7 @@ class BP_XProfile_Field {
 	 * Save a profile field.
 	 *
 	 * @since BuddyPress 1.1.0
-	 * @since BuddyBoss [BBVERSION] Returns false when a Bio field would enter a
+	 * @since BuddyBoss 3.5.0 Returns false when a Bio field would enter a
 	 *                              repeater field set.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.

@@ -1251,7 +1251,7 @@ function bb_clear_group_thread_cache( $thread_id ) {
  *
  * @since BuddyBoss 2.7.00
  *
- * @since BuddyBoss [BBVERSION] An empty, anonymous or unresolvable viewer no longer clears the
+ * @since BuddyBoss 3.5.0 An empty, anonymous or unresolvable viewer no longer clears the
  *        hidden levels.
  *
  * @param array $hidden_levels     Hidden levels.

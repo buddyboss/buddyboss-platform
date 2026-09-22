@@ -2127,7 +2127,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * duplicated work, never a disclosure. Replace this with a real feature flag if Platform ever
 	 * grows one.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param WP_User|object $user      Group member object carrying at least ID and display_name.
 	 * @param int            $viewer_id ID of the user viewing the data (0 for a guest).
@@ -2169,7 +2169,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * `display_name`, which may have drifted to a full name. Nothing left to build from falls back
 	 * to the nickname and then user_nicename, the same order Platform's own guest path uses.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param WP_User|object $user      Group member object.
 	 * @param int            $viewer_id ID of the user viewing the data (0 for a guest).
@@ -2253,7 +2253,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * why none of them survives both the bp-rest.php load guard and the Grunt sync into Platform.
 	 * Keep the three in step and change them together.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.0
 	 *
 	 * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
 	 * @param int    $user_id  ID of the member the field belongs to.
