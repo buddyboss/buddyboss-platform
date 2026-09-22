@@ -1364,30 +1364,6 @@
   left: 0;
 }
 
-.bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-forum-form-anonymous {
-  margin: var(--bb-rl-space-200) 0 0;
-}
-
-.bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-forum-form-anonymous legend {
-  font-size: 15px;
-}
-
-.bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-forum-form-anonymous br {
-  display: none;
-}
-
-.bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-forum-form-anonymous label {
-  display: block;
-  font-size: var(--bb-rl-font-size-sm);
-  font-weight: 500;
-  margin-bottom: var(--bb-rl-space-100);
-  line-height: 1.2;
-}
-
-.bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-forum-form-anonymous p {
-  margin-bottom: var(--bb-rl-space-200);
-}
-
 .bb-rl-forum-modal.bb-rl-forum-modal--static .bb-rl-forum-id-selection {
   border-top: 1px solid var(--bb-rl-border-secondary-color);
   padding-top: var(--bb-rl-space-200);
@@ -1518,7 +1494,7 @@
   background-color: transparent;
   padding: var(--bb-rl-space-50);
   cursor: pointer;
-  margin-left: var(--bb-rl-space-300);
+  margin-left: auto;
 }
 
 .bb-rl-forum-modal .bb-rl-forum-modal-header .bb-rl-forum-modal-close:focus {
@@ -1532,6 +1508,10 @@
 .bb-rl-forum-modal .bb-rl-forum-modal-header .bb-rl-forum-modal-close .bb-icons-rl-x {
   color: var(--bb-rl-icon-color);
   font-size: 24px;
+}
+
+.bb-rl-forum-modal .bb-rl-forum-modal-header .bb-rl-forum-modal-type + .bb-rl-forum-modal-close {
+  margin-left: var(--bb-rl-space-300);
 }
 
 .bb-rl-forum-modal .bb-rl-forum-modal-content {
@@ -1976,15 +1956,28 @@
   padding-bottom: var(--bb-rl-space-200);
 }
 
+.bb-rl-forum-form .bb-rl-forum-anonymous-form legend {
+  font-size: 15px;
+}
+
+.bb-rl-forum-form .bb-rl-forum-anonymous-form br {
+  display: none;
+}
+
 .bb-rl-forum-form .bb-rl-forum-anonymous-form p {
-  margin-bottom: var(--bb-rl-space-100);
+  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bb-rl-forum-form .bb-rl-forum-anonymous-form p label {
-  font-size: 14px;
+  display: block;
+  font-size: var(--bb-rl-font-size-sm);
   font-weight: 500;
   margin-bottom: var(--bb-rl-space-100);
   line-height: 1.2;
+}
+
+.bb-rl-forum-form .bb-rl-forum-anonymous-form p input {
+  width: 100%;
 }
 
 .bb-rl-forum-form .bbp-form #bbp_reply_submit,
