@@ -159,6 +159,14 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			}
 
 			$where['moderation_where'] .= '( a.user_id NOT IN ( ' . bb_moderation_get_blocked_by_sql() . ' ) )';
+
+			// Exclude activities authored by members blocked by the current user.
+			// Blocking no longer materializes suspend entries for the blocked member's
+			// existing content, so the author based condition is required to hide it.
+			$blocked_members_query = $this->blocked_author_query( 'a.user_id' );
+			if ( ! empty( $blocked_members_query ) ) {
+				$where['moderation_where'] .= ' AND ' . $blocked_members_query;
+			}
 		}
 
 		if ( ! empty( $exclude_group_sql ) ) {
