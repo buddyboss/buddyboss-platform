@@ -13,18 +13,39 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager;
-use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
+use BuddyBossPlatform\GroundLevel\Container\Container;
 use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations;
+use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Licenses;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
+use BuddyBossPlatform\GroundLevel\Mothership\Transients\ActivationTransient;
 
 /**
- * BuddyBoss License Manager extends the base LicenseManager
- * to add dynamic plugin ID functionality.
+ * BuddyBoss License Manager.
+ *
+ * Standalone license controller layered over the GroundLevel 9.1.2 services. The vendor
+ * {@see \BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager} became an
+ * instance-based service resolved from the container (no static container, no static
+ * helpers), so this class no longer extends it — it resolves the vendor API objects
+ * (Credentials, LicenseActivations, Licenses) from the BuddyBoss container instead, and
+ * adds dynamic plugin ID handling plus rate limiting with exponential backoff.
  */
-class BB_License_Manager extends LicenseManager {
+class BB_License_Manager {
+
+	/**
+	 * Get the BuddyBoss Mothership container.
+	 *
+	 * Replaces the removed GroundLevel `HasStaticContainer::getContainer()` static
+	 * accessor — the BuddyBoss container is owned by {@see BB_Mothership_Loader}.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return Container
+	 */
+	private static function container(): Container {
+		return BB_Mothership_Loader::instance()->get_container();
+	}
 
 	/**
 	 * Flag to control when the HTTP filter is active.
@@ -99,17 +120,6 @@ class BB_License_Manager extends LicenseManager {
 		$filtered_url = apply_filters( 'buddyboss_mothership_api_base_url', $default_url, $plugin_id );
 
 		return $filtered_url;
-	}
-
-	/**
-	 * Initialize hooks to capture API response headers.
-	 * Should be called early in the WordPress lifecycle.
-	 *
-	 * @return void
-	 */
-	public static function init(): void {
-		// Hook is now registered dynamically during license operations only.
-		// This init method kept for backward compatibility but doesn't register global hooks.
 	}
 
 	/**
@@ -293,24 +303,18 @@ class BB_License_Manager extends LicenseManager {
 	}
 
 	/**
-	 * The controller for handling the license activation/deactivation post requests.
-	 * Overrides the parent controller to add dynamic plugin ID support.
+	 * Handles the license activation/deactivation POST requests.
+	 *
+	 * The dynamic plugin ID embedded in a `KEY:PLUGIN_ID` license string is parsed inside
+	 * {@see self::activateLicense()} — AFTER its nonce + capability check — so this controller
+	 * performs NO state change (no setDynamicPluginId(), no cache clear) before authorization.
+	 * The raw posted key is passed straight through; activateLicense() cleans and parses it.
 	 *
 	 * @return void
 	 */
 	public static function controller(): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce is verified in activateLicense() and deactivateLicense() methods
 		if ( isset( $_POST['buddyboss_platform_license_button'] ) ) {
-			$plugin_connector = self::getContainer()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-
-			// Setup dynamic plugin ID if present in license key.
-			if ( isset( $_POST['license_key'] ) ) {
-				$license_key          = sanitize_text_field( wp_unslash( $_POST['license_key'] ) );
-				$_POST['license_key'] = self::setup_dynamic_plugin_id( $license_key, $plugin_connector );
-			}
-
-			$plugin_id = $plugin_connector->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
 			if ( 'activate' === $_POST['buddyboss_platform_license_button'] ) {
 				try {
 					$license_key       = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
@@ -359,7 +363,7 @@ class BB_License_Manager extends LicenseManager {
 		self::validate_activation_permissions();
 		self::validate_activation_inputs( $license_key, $domain );
 
-		$plugin_connector = self::getContainer()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		$plugin_connector = self::container()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		$license_key      = self::setup_dynamic_plugin_id( $license_key, $plugin_connector );
 
 		$validation_error = self::validate_product_before_activation( $license_key, $plugin_connector->pluginId ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
@@ -380,6 +384,82 @@ class BB_License_Manager extends LicenseManager {
 		}
 
 		self::disable_header_capture();
+	}
+
+	/**
+	 * Deactivate a license.
+	 *
+	 * Replaces the deactivation flow that was inherited from the vendor LicenseManager
+	 * (removed when this class stopped extending it). Calls the GroundLevel
+	 * {@see LicenseActivations::deactivate()} instance API resolved from the container,
+	 * then clears the stored license key, activation status, and add-on caches.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $license_key The license key.
+	 * @param string $domain      The domain to deactivate.
+	 *
+	 * @throws \Exception If the deactivation fails.
+	 * @return void
+	 */
+	public static function deactivateLicense( string $license_key, string $domain ): void { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		if ( ! current_user_can( 'manage_options' ) ) {
+			throw new \Exception( esc_html__( 'You do not have permission to deactivate a license', 'buddyboss' ) );
+		}
+
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'mothership_deactivate_license' ) ) {
+			throw new \Exception( esc_html__( 'Invalid nonce', 'buddyboss' ) );
+		}
+
+		$plugin_connector = self::container()->get( AbstractPluginConnection::class );
+
+		// Fall back to stored credentials if the form did not pass them.
+		$credentials = self::container()->get( Credentials::class );
+		if ( empty( $license_key ) ) {
+			$license_key = $credentials->getLicenseKey();
+		}
+		if ( empty( $domain ) ) {
+			$domain = $credentials->getDomain();
+		}
+
+		self::enable_header_capture();
+
+		try {
+			$response = self::container()->get( LicenseActivations::class )->deactivate( $license_key, $domain );
+		} catch ( \Exception $e ) {
+			self::disable_header_capture();
+			bb_error_log( sprintf( 'License deactivation API exception: %s', $e->getMessage() ), true );
+			throw new \Exception( esc_html__( 'License deactivation failed. Please try again.', 'buddyboss' ) );
+		}
+
+		self::disable_header_capture();
+
+		// A 404 means the activation no longer exists server-side — treat as already deactivated.
+		if ( $response instanceof Response && $response->isError() && ! $response->isNotFound() ) {
+			throw new \Exception(
+				sprintf(
+					/* translators: %s is the error message from API */
+					esc_html__( 'License deactivation failed: %s', 'buddyboss' ),
+					esc_html( $response->getErrorMessage() )
+				)
+			);
+		}
+
+		// Clear local license state. updateLicenseActivationStatus() and clearDynamicPluginId()
+		// both purge the add-ons cache via the plugin connector.
+		$plugin_connector->updateLicenseActivationStatus( false );
+		$credentials->setLicenseKey( '' );
+		$plugin_connector->clearDynamicPluginId();
+
+		// Drop the activation identifier so the next activation resolves a fresh one, and
+		// discard the vendor's cached activation so its overwrite guard has nothing stale
+		// to compare against.
+		if ( method_exists( $plugin_connector, 'clearActivationDomain' ) ) {
+			$plugin_connector->clearActivationDomain();
+		}
+		self::clear_activation_transient();
+
+		bb_error_log( 'BuddyBoss: License deactivated', true );
 	}
 
 	/**
@@ -446,7 +526,7 @@ class BB_License_Manager extends LicenseManager {
 				true
 			);
 
-			return LicenseActivations::activate( $product, $license_key, $domain );
+			return self::container()->get( LicenseActivations::class )->activate( $product, $license_key, $domain );
 		} catch ( \Exception $e ) {
 			self::disable_header_capture();
 			bb_error_log( sprintf( 'License activation API exception: %s', $e->getMessage() ), true );
@@ -468,9 +548,9 @@ class BB_License_Manager extends LicenseManager {
 	private static function handle_activation_error( Response $response, $plugin_connector ): void {
 		self::disable_header_capture();
 
-		$error_code    = $response->__get( 'errorCode' );
-		$error_message = $response->__get( 'error' );
-		$errors        = $response->__get( 'errors' );
+		$error_code    = $response->statusCode; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$error_message = $response->getErrorMessage();
+		$errors        = $response->getErrors();
 
 		self::track_failed_activation();
 
@@ -581,12 +661,22 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	private static function process_successful_activation( string $license_key, $plugin_connector, string $domain ): void {
 		try {
-			Credentials::storeLicenseKey( $license_key );
+			self::container()->get( Credentials::class )->setLicenseKey( $license_key );
+
+			// Pin the identifier this activation was created with, before the status flips —
+			// resolveDomain() must keep returning it for the life of the activation.
+			if ( method_exists( $plugin_connector, 'storeActivationDomain' ) ) {
+				$plugin_connector->storeActivationDomain( $domain );
+			}
+
+			// updateLicenseActivationStatus() clears the add-ons cache via the plugin connector.
 			$plugin_connector->updateLicenseActivationStatus( true );
 
+			// The cached activation still holds the previous key; leaving it would make
+			// GroundLevel's onLicenseKeyOverwritten() guard deactivate this new license.
+			self::clear_activation_transient();
+
 			$plugin_id = $plugin_connector->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			delete_transient( $plugin_id . '-mosh-products' );
-			delete_transient( $plugin_id . '-mosh-addons-update-check' );
 
 			self::reset_failed_attempts();
 
@@ -606,6 +696,36 @@ class BB_License_Manager extends LicenseManager {
 	}
 
 	/**
+	 * Discards GroundLevel's cached activation transient.
+	 *
+	 * GroundLevel 9.1.2 added {@see \BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager::onLicenseKeyOverwritten()},
+	 * hooked on `admin_init` at priority 10. It compares the live credential against the
+	 * `{pluginId}_activation` transient and, on a mismatch, deactivates the license, clears
+	 * the add-ons cache and flashes "Your license key was overwritten by an environment
+	 * variable or constant."
+	 *
+	 * Only the vendor's twice-daily cron writes that transient, so after BuddyBoss changes
+	 * the key itself (activation, deactivation, reset) the transient still holds the OLD
+	 * key and the guard fires against a perfectly valid license. BuddyBoss's own controller
+	 * runs at priority 20 — after the guard — so it cannot repair the state either.
+	 *
+	 * Deleting the transient is enough: onLicenseKeyOverwritten() returns early when the
+	 * cached key is empty, and the vendor cron re-syncs it with the correct key later.
+	 * Deleting is preferred over calling syncActivationTransient(), which would add an API
+	 * round-trip to every activation and silently no-op when that request fails.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private static function clear_activation_transient(): void {
+		try {
+			// Registered as a FACTORY, so this resolves a fresh instance.
+			self::container()->get( ActivationTransient::class )->delete();
+		} catch ( \Throwable $e ) {
+			bb_error_log( sprintf( 'BuddyBoss: could not clear activation transient: %s', $e->getMessage() ), true );
+		}
+	}
+
+	/**
 	 * Validate that the product ID matches the license before activation.
 	 * Prevents activation failures due to product mismatch.
 	 *
@@ -617,6 +737,29 @@ class BB_License_Manager extends LicenseManager {
 	private static function validate_product_before_activation( string $license_key, string $product_id ) {
 		// Skip validation if license key is empty (will be caught by input validation).
 		if ( empty( $license_key ) ) {
+			return true;
+		}
+
+		// Skip when this site has no activation yet — the usual case for the very request
+		// that is about to create one.
+		//
+		// This pre-check authenticates with the licence key plus the activation domain
+		// ({@see \BuddyBossPlatform\GroundLevel\Mothership\Api\Request} builds the
+		// Basic-auth header from that pair), and the server only recognises the pair once an
+		// activation exists. Before the first activation it therefore answers 401 every
+		// time, the failure is deliberately non-blocking, and the response is discarded —
+		// a guaranteed wasted round-trip that also spends the rate-limit quota the rest of
+		// this method goes out of its way to preserve. It is still worth running when an
+		// activation already exists (re-activation, edition change), where the call can
+		// actually succeed and catch a product mismatch.
+		try {
+			$connection = self::container()->get( AbstractPluginConnection::class );
+
+			if ( ! $connection->getLicenseActivationStatus() ) {
+				return true;
+			}
+		} catch ( \Throwable $e ) {
+			// No container means nothing to validate against; let the activate call decide.
 			return true;
 		}
 
@@ -670,10 +813,10 @@ class BB_License_Manager extends LicenseManager {
 		// Pre-validation started.
 		try {
 			// Fetch license details from API.
-			$response = \BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Licenses::get( $license_key );
+			$response = self::container()->get( Licenses::class )->get( $license_key );
 
 			if ( $response instanceof Response && $response->isError() ) {
-				$error_code = $response->__get( 'errorCode' );
+				$error_code = $response->statusCode; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 				// If validation gets a 429, we're rate limited - store this info and block activation.
 				if ( 429 === $error_code ) {
@@ -720,8 +863,12 @@ class BB_License_Manager extends LicenseManager {
 					);
 
 					// Store/update rate limit data (don't overwrite if we have actual API data).
+					// Use the prefixed, multisite-aware helper so this write lands under the same
+					// `bb_license_rate_limit` key that check_rate_limit() reads — a raw
+					// set_transient( 'rate_limit', ... ) would be written under a different key and
+					// never honored (and could collide with other plugins).
 					if ( ! $rate_limit_data || ! isset( $rate_limit_data['reset'] ) ) {
-						set_transient(
+						self::set_rate_limit_transient(
 							'rate_limit',
 							array(
 								'remaining' => 0,
@@ -746,18 +893,17 @@ class BB_License_Manager extends LicenseManager {
 				bb_error_log(
 					sprintf(
 						'BuddyBoss: Pre-activation validation failed to fetch license (non-blocking): %s',
-						$response->__get( 'error' )
+						$response->getErrorMessage()
 					)
 				);
 				return true;
 			}
 
 			if ( $response instanceof Response && ! $response->isError() ) {
-				$license_data = $response->toArray();
+				$actual_product = $response->getData( 'product' );
 
 				// Check if product field exists.
-				if ( isset( $license_data['product'] ) ) {
-					$actual_product = $license_data['product'];
+				if ( null !== $actual_product && '' !== $actual_product ) {
 
 					bb_error_log(
 						sprintf(
@@ -777,7 +923,7 @@ class BB_License_Manager extends LicenseManager {
 						);
 
 						// Get plugin connector to clear the orphaned ID.
-						$plugin_connector = self::getContainer()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+						$plugin_connector = self::container()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 						$plugin_connector->clearDynamicPluginId();
 
 						return new \WP_Error(
@@ -869,14 +1015,36 @@ class BB_License_Manager extends LicenseManager {
 	}
 
 	/**
+	 * Generates the license form HTML, choosing activation vs. disconnect by status.
+	 *
+	 * Restores the wrapper that was previously inherited from the GroundLevel
+	 * LicenseManager (removed in 7.4.0 / when this class stopped extending it). The
+	 * license admin view (views/admin.php) calls this single entry point: it renders the
+	 * disconnect form when a license is active, otherwise the activation form.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string The license form HTML.
+	 */
+	public function generateLicenseActivationForm(): string { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		$plugin_connector = self::container()->get( AbstractPluginConnection::class );
+
+		if ( $plugin_connector->getLicenseActivationStatus() ) {
+			return $this->generateDisconnectForm();
+		}
+
+		return $this->generateActivationForm();
+	}
+
+	/**
 	 * Generates the HTML for the activation form.
-	 * Overrides parent to use BuddyBoss specific button naming.
+	 * Uses BuddyBoss-specific button naming (this class no longer extends the vendor LicenseManager).
 	 *
 	 * @return string The HTML for the activation form.
 	 */
 	public function generateActivationForm(): string {
 		ob_start();
-		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		$plugin_id = self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		?>
 		<h2><?php esc_html_e( 'License Activation', 'buddyboss' ); ?></h2>
 		<form method="post" action="" name="<?php echo esc_attr( $plugin_id ); ?>_activate_license_form">
@@ -887,8 +1055,8 @@ class BB_License_Manager extends LicenseManager {
 							<label for="license_key"><?php esc_html_e( 'License Key', 'buddyboss' ); ?></label>
 						</th>
 						<td>
-							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( Credentials::getLicenseKey() ); ?>" >
-							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" >
+							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( self::container()->get( Credentials::class )->getLicenseKey() ); ?>" >
+							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( self::container()->get( Credentials::class )->getDomain() ); ?>" >
 							<p class="description">
 								<?php
 									printf(
@@ -1102,14 +1270,14 @@ class BB_License_Manager extends LicenseManager {
 
 	/**
 	 * Generates the HTML for the disconnect/deactivate form.
-	 * Overrides parent to use BuddyBoss specific button naming.
+	 * Uses BuddyBoss-specific button naming (this class no longer extends the vendor LicenseManager).
 	 *
 	 * @return string The HTML for the disconnect form.
 	 */
 	public function generateDisconnectForm(): string {
 		ob_start();
-		$plugin_id    = self::getContainer()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-		$license_key  = Credentials::getLicenseKey();
+		$plugin_id    = self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		$license_key  = self::container()->get( Credentials::class )->getLicenseKey();
 		$license_info = $this->bb_get_license_details( $license_key );
 		?>
 		<h2><?php esc_html_e( 'Active License Information', 'buddyboss' ); ?></h2>
@@ -1137,7 +1305,7 @@ class BB_License_Manager extends LicenseManager {
 					<tr>
 						<td colspan="2" scope="row">
 							<input type="hidden" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( $license_key ); ?>" readonly />
-							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" />
+							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( self::container()->get( Credentials::class )->getDomain() ); ?>" />
 							<?php wp_nonce_field( 'mothership_deactivate_license', '_wpnonce' ); ?>
 							<input type="hidden" name="buddyboss_platform_license_button" value="deactivate">
 							<input type="submit" value="<?php esc_html_e( 'Deactivate License', 'buddyboss' ); ?>" class="button button-secondary <?php echo esc_attr( $plugin_id ); ?>-button-deactivate" >
@@ -1157,7 +1325,7 @@ class BB_License_Manager extends LicenseManager {
 	 * @return void
 	 */
 	public static function clearLicenseDetailsCache(): void {
-		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		$plugin_id = self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		$cache_key = $plugin_id . '_license_details';
 		delete_transient( $cache_key );
 	}
@@ -1171,7 +1339,14 @@ class BB_License_Manager extends LicenseManager {
 	 * @return array|WP_Error    Array of license + activation data, or WP_Error on failure.
 	 */
 	protected function bb_get_license_details( $license_key, $force_refresh = false ) {
-		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		// Without a key both requests below are guaranteed to fail (the key is half of the
+		// Basic-auth pair), so bail before spending them. Reached whenever the licence screen
+		// renders on a site that has never activated.
+		if ( '' === (string) $license_key ) {
+			return new \WP_Error( 'missing_license_key', esc_html__( 'No license key is stored.', 'buddyboss' ) );
+		}
+
+		$plugin_id = self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 
 		// Create cache key based on plugin ID only (not license key for security).
 		$cache_key = $plugin_id . '_license_details';
@@ -1186,14 +1361,16 @@ class BB_License_Manager extends LicenseManager {
 
 		$root_api_url = self::get_api_base_url( $plugin_id );
 
-		$api_url     = $root_api_url . 'licenses/' . $license_key;
-		$domain      = Credentials::getActivationDomain();
-		$credentials = base64_encode( $domain . ':' . $license_key );
+		$api_url = $root_api_url . 'licenses/' . $license_key;
+		// Must match the domain the license was activated with (host, or host/path for
+		// subdirectory installs) or the license server rejects the Basic-auth credentials.
+		$domain      = self::container()->get( Credentials::class )->getDomain();
+		$credentials = base64_encode( rawurlencode( $domain ) . ':' . $license_key );
 		$args        = array(
 			'headers' => array(
 				'Authorization' => "Basic $credentials",
-				'Content-Type'  => 'application / json',
-				'Accept'        => 'application / json',
+				'Content-Type'  => 'application/json',
+				'Accept'        => 'application/json',
 			),
 		);
 
@@ -1202,6 +1379,22 @@ class BB_License_Manager extends LicenseManager {
 
 		if ( is_wp_error( $response ) ) {
 			return $response; // Return error.
+		}
+
+		// A non-200 (401 from a domain/key mismatch, 404, 5xx) can still carry a JSON body,
+		// so check the status before parsing — otherwise the second request is spent chasing
+		// a link that will not be there.
+		$status = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( 200 !== $status ) {
+			return new \WP_Error(
+				'license_http_error',
+				sprintf(
+					/* translators: %d: HTTP status code returned by the licensing API. */
+					esc_html__( 'The licensing server returned HTTP %d for the license lookup.', 'buddyboss' ),
+					$status
+				)
+			);
 		}
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -1233,7 +1426,7 @@ class BB_License_Manager extends LicenseManager {
 
 		// Prepare combined data.
 		$license_data = array(
-			'license_key'        => '********-****-****-****-' . esc_html( substr( $license_key, - 12 ) ),
+			'license_key'        => '********-****-****-****-' . substr( $license_key, - 12 ),
 			'product'            => $product,
 			'status'             => $body['status'] ?? '',
 			'total_prod_allowed' => $body2['prod']['allowed'] ?? 0,
@@ -1244,7 +1437,7 @@ class BB_License_Manager extends LicenseManager {
 			'total_test_free'    => $body2['test']['free'] ?? 0,
 		);
 
-		// License details don't change frequently, so 1 Day is reasonable.
+		// License details don't change frequently, so a 12-hour cache is reasonable.
 		set_transient( $cache_key, $license_data, 12 * HOUR_IN_SECONDS );
 
 		return $license_data;
@@ -1364,7 +1557,7 @@ class BB_License_Manager extends LicenseManager {
 		}
 
 		try {
-			$plugin_connector = self::getContainer()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+			$plugin_connector = self::container()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 
 			// Get current plugin ID before clearing.
 			$current_plugin_id = $plugin_connector->getCurrentPluginId();
@@ -1380,6 +1573,13 @@ class BB_License_Manager extends LicenseManager {
 
 			// Clear license activation status.
 			$plugin_connector->updateLicenseActivationStatus( false );
+
+			// Clear the pinned activation identifier and GroundLevel's cached activation,
+			// so a reset really does return the site to a pre-activation state.
+			if ( method_exists( $plugin_connector, 'clearActivationDomain' ) ) {
+				$plugin_connector->clearActivationDomain();
+			}
+			self::clear_activation_transient();
 
 			// Clear migration flag.
 			delete_option( 'bb_mothership_licenses_migrated' );
@@ -1407,12 +1607,12 @@ class BB_License_Manager extends LicenseManager {
 				delete_option( $plugin_id . '_license_key' );
 				delete_option( $plugin_id . '_license_activation_status' );
 
-				// Clear transients (both regular and site-wide for multisite).
-				delete_transient( $plugin_id . '-mosh-products' );
-				delete_transient( $plugin_id . '-mosh-addons-update-check' );
+				// Clear transients (both regular and site-wide for multisite). The add-ons
+				// response is cached under `-mosh-addons` in GroundLevel 9.1.2 (the legacy
+				// `-mosh-products` / `-mosh-addons-update-check` keys no longer exist).
+				delete_transient( $plugin_id . '-mosh-addons' );
 				delete_transient( $plugin_id . '_license_details' );
-				delete_site_transient( $plugin_id . '-mosh-products' );
-				delete_site_transient( $plugin_id . '-mosh-addons-update-check' );
+				delete_site_transient( $plugin_id . '-mosh-addons' );
 				delete_site_transient( $plugin_id . '_license_details' );
 			}
 

@@ -20,6 +20,34 @@ defined( 'ABSPATH' ) || exit;
 class BB_DRM_Addon extends BB_Base_DRM {
 
 	/**
+	 * Per-request cache of the licensed decision, keyed by product slug.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
+	 */
+	private static $licensed_cache = array();
+
+	/**
+	 * Forgets the cached licensed decision for every add-on.
+	 *
+	 * The decision is resolved as early as `bp_loaded` (buddyboss-addons calls
+	 * should_lock_addon_features() there), but a licence is activated later in the same
+	 * request, on `admin_init` at priority 20. Without this reset the DRM check that runs
+	 * at `admin_init` 25 re-reads the pre-activation `false` and skips
+	 * BB_DRM_Registry::cleanup_addon_drm(), so the `wp_bb_drm_events` rows and their
+	 * notices survive until the NEXT page load.
+	 *
+	 * Called from the plugin connector whenever licence caches are purged.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public static function reset_licensed_cache(): void {
+		self::$licensed_cache = array();
+	}
+
+
+	/**
 	 * The product slug for this add-on (e.g., 'buddyboss-platform-pro').
 	 *
 	 * @var string
@@ -112,8 +140,10 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 * @return bool True if licensed, false otherwise.
 	 */
 	public function is_addon_licensed() {
-		// Cache result per request to avoid repeated IPN calls.
-		static $cache = array();
+		// Cache result per request to avoid repeated IPN calls. Class-level rather than a
+		// function static so it can be invalidated when the licence changes mid-request —
+		// see self::reset_licensed_cache().
+		$cache = &self::$licensed_cache;
 
 		if ( isset( $cache[ $this->product_slug ] ) ) {
 			return $cache[ $this->product_slug ];
