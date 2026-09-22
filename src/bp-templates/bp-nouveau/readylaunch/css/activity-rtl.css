@@ -2931,7 +2931,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   flex-flow: column;
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
-  border-radius: var(--bb-rl-radius-md);
+  border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-300);
   gap: var(--bb-rl-space-200);
   margin-top: var(--bb-rl-space-100);
@@ -6285,6 +6285,17 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   display: block;
   height: 20px;
   width: 20px;
+  margin: 0;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item i {
+  display: flex;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 1;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item i:before {
   margin: 0;
 }
 

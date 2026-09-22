@@ -363,13 +363,28 @@
 	}
 
 	&__grid {
-		display: grid;
-		grid-template-columns: repeat( auto-fill, minmax( 320px, 1fr ) );
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 		gap: 24px;
 		width: 100%;
 
-		@media screen and (max-width: 768px) {
-			grid-template-columns: repeat( auto-fill, minmax( 265px, 1fr ) );
+		.bb-admin-help-resource-card {
+			flex: 0 0 calc( ( 100% - 48px ) / 3 );
+		}
+
+		@media screen and (max-width: 1250px) {
+
+			.bb-admin-help-resource-card {
+				flex-basis: calc( ( 100% - 24px ) / 2 );
+			}
+		}
+
+		@media screen and (max-width: 960px) {
+
+			.bb-admin-help-resource-card {
+				flex-basis: 100%;
+			}
 		}
 	}
 

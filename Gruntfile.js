@@ -57,6 +57,7 @@ module.exports = function (grunt) {
 		BP_SCSS_CSS_FILES = [
 			// '!bp-templates/bp-legacy/css/twenty*.css',
 			'!bp-templates/bp-nouveau/css/buddypress.css',
+			'!bp-templates/bp-nouveau/buddypress/css/member-blog.css',
 			'!bp-core/admin/css/hello.css',
 			'!bp-core/css/medium-editor-beagle.css',
 			'!bp-core/css/medium-editor.css',
@@ -143,6 +144,15 @@ module.exports = function (grunt) {
 					flatten: true,
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
+				},
+				member_blog: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/sass/member-blog.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/buddypress/css/'
 				},
 				ready_launch: {
 					cwd: SOURCE_DIR,
@@ -589,9 +599,14 @@ module.exports = function (grunt) {
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
-				// WP-CLI makepot with header fixing
+				// WP-CLI makepot with header fixing.
+				// Exclude the compiled React bundles under bb-settings/*/build/* — they
+				// are minified single-line files that blow up WP-CLI's peast JS parser
+				// (memory exhaustion) and contribute no strings to the POT (JS admin i18n
+				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
+				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
 					cwd: '.',
 					stdout: true
 				},
@@ -713,6 +728,25 @@ module.exports = function (grunt) {
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('webpack', ['exec:build_blocks', 'exec:build_admin']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'webpack', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin:minify', 'cssmin:rtl', 'makepot']);
+	// Re-imports the REST controllers from the buddyboss-platform-api repo, which is
+	// their source of truth: `copy:bp_rest_*` runs API `includes/` -> Platform `src/`,
+	// so anything hand-edited in a generated file here is overwritten on the next run.
+	//
+	// RELEASE PAIRING - read before tagging. This task is deliberately NOT part of
+	// `release`, `build` or `default` (see `release` below for why), so a REST fix that
+	// lives only in the API repo is absent from the Platform artefact customers install
+	// until someone runs this. When a change spans both repos, the two must be tagged
+	// together and this task must be run on the Platform branch first:
+	//
+	//   1. Merge and tag buddyboss-platform-api.
+	//   2. On the Platform release branch: `grunt bp_rest`.
+	//   3. Commit the regenerated `src/**` copies with the release.
+	//   4. Only then bump the Platform version and tag.
+	//
+	// Skipping step 2 ships Platform's previous copies. Nothing fails: the generated
+	// classes are valid, the routes register, and the standalone API plugin (which most
+	// test sites run) masks the difference entirely, so the gap only shows on sites
+	// running Platform without it.
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'copy:bp_rest_reactions', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
@@ -737,6 +771,17 @@ module.exports = function (grunt) {
 	//   9. clean:all                       — final tidy
 	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
 
+	// `bp_rest` is intentionally absent from this chain, and from `build` and `default`.
+	// It is not an oversight, and adding it would make releases less reproducible, not
+	// more: `exec:rest_api` does a bare `git clone` of a PRIVATE repo, so it (a) needs an
+	// SSH key or GH_TOKEN on whatever machine cuts the release and turns a credential
+	// problem into a failed release, and (b) clones that repo's DEFAULT BRANCH at the
+	// moment the task runs - not a tag - so the same Platform commit would produce a
+	// different artefact depending on when it was built, and could sweep in unreleased
+	// API work. It also rewrites tracked files under `src/` mid-build, which would leave
+	// the shipped zip differing from the tagged tree.
+	// Run `grunt bp_rest` as a reviewable commit on the branch instead - see its
+	// RELEASE PAIRING note above.
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.
