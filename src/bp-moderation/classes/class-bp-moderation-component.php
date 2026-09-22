@@ -159,7 +159,7 @@ class BP_Moderation_Component extends BP_Component {
 	}
 
 	/**
-	 * Set up taxonomies.
+	 * Register reporting categories taxonomy for moderation.
 	 *
 	 * @since BuddyBoss 1.5.6
 	 */
@@ -196,48 +196,38 @@ class BP_Moderation_Component extends BP_Component {
 			)
 		);
 
-		$is_moderation_terms = get_option( 'moderation_default_category_added', false );
-		if ( false === $is_moderation_terms ) {
+		$is_moderation_terms_added = get_option( 'moderation_default_category_added', false );
 
-			$moderation_terms = array(
-				'offensive'      => array(
-					'name'        => __( 'Offensive', 'buddyboss' ),
-					'description' => __( 'Contains abusive or derogatory content', 'buddyboss' ),
-				),
-				'inappropriate'  => array(
-					'name'        => __( 'Inappropriate', 'buddyboss' ),
-					'description' => __( 'Contains mature or sensitive content', 'buddyboss' ),
-				),
-				'misinformation' => array(
-					'name'        => __( 'Misinformation', 'buddyboss' ),
-					'description' => __( 'Contains misleading or false information', 'buddyboss' ),
-				),
-				'suspicious'     => array(
-					'name'        => __( 'Suspicious', 'buddyboss' ),
-					'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss' ),
-				),
-				'harassment'     => array(
-					'name'        => __( 'Harassment', 'buddyboss' ),
-					'description' => __( 'Harassment or bullying behavior', 'buddyboss' ),
-				),
-			);
+		if ( false === $is_moderation_terms_added ) {
+			$default_terms = bp_moderation_get_default_report_categories();
 
-			foreach ( $moderation_terms as $moderation_term ) {
-				$term = term_exists( $moderation_term['name'], 'bpm_category' );
-				if ( empty( $term ) ) {
-					$term = wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
-					if ( isset( $term['term_id'] ) && ! empty( $term['term_id'] ) ) {
-						update_term_meta(
-							$term['term_id'],
-							'bb_category_show_when_reporting',
-							'content_members'
-						);
-					}
+			foreach ( $default_terms as $key => $term ) {
+				$existing = term_exists( $term['name'], 'bpm_category' );
+
+				if ( empty( $existing ) ) {
+					$existing = wp_insert_term(
+						$term['name'],
+						'bpm_category',
+						array(
+							'description' => $term['description'],
+							'slug'        => $key,
+						)
+					);
+				}
+
+				if ( ! is_wp_error( $existing ) && ! empty( $existing['term_id'] ) ) {
+					// Add a marker for re-translatable name/description at render time.
+					add_term_meta(
+						(int) $existing['term_id'],
+						'_bp_moderation_default_key',
+						$key,
+						true
+					);
 				}
 			}
-
-			update_option( 'moderation_default_category_added', true, false );
 		}
+
+		update_option( 'moderation_default_category_added', true, false );
 	}
 
 	/**
