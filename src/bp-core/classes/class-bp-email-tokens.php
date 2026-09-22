@@ -464,7 +464,7 @@ class BP_Email_Tokens {
 											);
 
 											if ( ! empty( $avatar ) ) {
-												$output .= sprintf( "<img src='%s' alt='%s' />", esc_url( $avatar ), esc_attr( bp_core_get_user_displayname( $user_id ) ) );
+												$output .= sprintf( "<img src='%s' alt='%s' />", esc_url( $avatar ), esc_attr( bp_core_get_user_displayname( $user_id, $this->bb_get_receiver_user_id( $tokens ) ) ) );
 											}
 										}
 										$output .= '</span>';
@@ -538,7 +538,7 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 
 		$activity    = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
-		$author_name = isset( $tokens['poster.name'] ) ?  $tokens['poster.name'] : bp_core_get_user_displayname( $activity->user_id );
+		$author_name = isset( $tokens['poster.name'] ) ?  $tokens['poster.name'] : bp_core_get_user_displayname( $activity->user_id, $this->bb_get_receiver_user_id( $tokens ) );
 
 		if ( empty( $activity ) ) {
 			return $output;
@@ -665,7 +665,7 @@ class BP_Email_Tokens {
 		}
 
 		$user_id     = $activity->user_id ?? $author_id;
-		$author_name = $tokens['poster.name'] ?? bp_core_get_user_displayname( $user_id );
+		$author_name = $tokens['poster.name'] ?? bp_core_get_user_displayname( $user_id, $this->bb_get_receiver_user_id( $tokens ) );
 
 		ob_start();
 
@@ -862,7 +862,7 @@ class BP_Email_Tokens {
 			return $output;
 		}
 		
-		$commenter_name       = isset( $tokens['poster.name'] ) ? $tokens['poster.name'] : bp_core_get_user_displayname( $activity_comment->user_id );
+		$commenter_name       = isset( $tokens['poster.name'] ) ? $tokens['poster.name'] : bp_core_get_user_displayname( $activity_comment->user_id, $this->bb_get_receiver_user_id( $tokens ) );
 		$activity_original_id = ! empty( $activity_comment->item_id ) ? $activity_comment->item_id : $activity_comment->secondary_item_id;
 		$activity_original    = new BP_Activity_Activity( $activity_original_id );
 		if ( empty( $activity_original ) ) {
@@ -1091,7 +1091,7 @@ class BP_Email_Tokens {
 		}
 
 		if ( $this->_message_sender_id ) {
-			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $this->_message_sender_id );
+			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $this->_message_sender_id, $this->bb_get_receiver_user_id( $tokens ) );
 			$sender_link   = bp_core_get_user_domain( $this->_message_sender_id );
 			$sender_avatar = bp_core_fetch_avatar(
 				array(
@@ -1551,7 +1551,7 @@ class BP_Email_Tokens {
 	 */
 	public function token__reply_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output           = '';
-		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? $tokens['receiver-user.id'] : 0;
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
 
 		// `bbp_*` reply/topic helpers are loaded by the forums component.
 		// A queued forums-reply notification email can dispatch after
@@ -1671,6 +1671,12 @@ class BP_Email_Tokens {
 			return $this->token__group_discussion_content( $bp_email, $formatted_tokens, $tokens );
 		}
 
+		// One email body is rendered per recipient, so the author's name must be resolved for the
+		// recipient - not for whoever's request triggered the send. Without this the header line of
+		// the email is redacted while the discussion card below it still carries the full name.
+		// token__reply_content() already does exactly this.
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
+
 		$settings = bp_email_get_appearance_settings();
 
 		ob_start();
@@ -1699,7 +1705,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'] ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'], $receiver_user_id ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -2004,7 +2010,7 @@ class BP_Email_Tokens {
 			)
 		);
 
-		$sender_name = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id );
+		$sender_name = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id, $this->bb_get_receiver_user_id( $tokens ) );
 		if ( ! empty( $sender_id ) ) {
 			$output = '<a href="' . esc_url( bp_core_get_user_domain( $sender_id ) ) . '" target="_blank" rel="nofollow" style="color: ' . esc_attr( $settings['highlight_color'] ) . '!important; font-weight: 500; text-decoration: none;">' . esc_html( $sender_name ) . '</a>';
 		}
@@ -2157,7 +2163,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id, $this->bb_get_receiver_user_id( $tokens ) ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -2330,6 +2336,9 @@ class BP_Email_Tokens {
 			return $output;
 		}
 
+		// Per-recipient, for the same reason as token__discussion_content().
+		$receiver_user_id = $this->bb_get_receiver_user_id( $tokens );
+
 		$settings = bp_email_get_appearance_settings();
 
 		ob_start();
@@ -2372,7 +2381,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo wp_kses_post( bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'] ) ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo wp_kses_post( bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'], $receiver_user_id ) ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -2478,7 +2487,7 @@ class BP_Email_Tokens {
 									</a>
 								</td>
 								<td width="88%" style="vertical-align: middle;">
-									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id, $this->bb_get_receiver_user_id( $tokens ) ); ?></div>
 								</td>
 							</tr>
 						</tbody>
@@ -2643,7 +2652,7 @@ class BP_Email_Tokens {
 		if ( ! empty( $tokens['commenter.name'] ) ) {
 			$commenter_name = $tokens['commenter.name'];
 		} elseif ( ! empty( $user_id ) ) {
-			$commenter_name = bp_core_get_user_displayname( $user_id );
+			$commenter_name = bp_core_get_user_displayname( $user_id, $this->bb_get_receiver_user_id( $tokens ) );
 		}
 
 		return $commenter_name;
@@ -3052,6 +3061,34 @@ class BP_Email_Tokens {
 
 		// Get the output buffer contents.
 		return ob_get_clean();
+	}
+
+	/**
+	 * The recipient this email body is being rendered for.
+	 *
+	 * Every token callback here runs once per recipient, but the request around it belongs to
+	 * whoever triggered the send - usually the author, who is never denied any part of their own
+	 * name. Resolving a member's display name without a viewer therefore renders the AUTHOR'S view
+	 * of it into every recipient's inbox, past the profile-field visibility the site enforces on
+	 * screen. `receiver-user.id` is set by every fan-out that sends these emails.
+	 *
+	 * When it is absent the fallback is the GUEST viewer, not 0. Throughout this API 0 does not mean
+	 * "logged out", it means "resolve the viewer from the current request" - which is the sender's
+	 * session, the one viewer this must never be. bp_send_email() does not inject the token, so a
+	 * caller that composes an email of its own reaches this, and the fallback has to be the safe
+	 * direction: the public view withholds a name part from a recipient permitted to see it, which
+	 * is recoverable, where the sender's view publishes one nobody else may see.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param array $tokens Email tokens.
+	 *
+	 * @return int Recipient user ID, or the guest viewer ID when the email carries no recipient token.
+	 */
+	protected function bb_get_receiver_user_id( $tokens ) {
+		$receiver_id = isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 0;
+
+		return ( $receiver_id > 0 ) ? $receiver_id : bb_core_guest_viewer_id();
 	}
 
 }
