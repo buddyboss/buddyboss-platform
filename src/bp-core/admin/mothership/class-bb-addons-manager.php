@@ -133,6 +133,9 @@ class BB_Addons_Manager extends AddonsManager {
 		// Refresh the add-ons if the button is clicked (nonce verified above).
 		if ( $refresh_requested ) {
 			$addons_manager->clearCache();
+
+			// The vendor drops its own transient; the memo has to go with it.
+			self::reset_addons_memo();
 		}
 
 		// getAddons() returns the cached add-on list; on an API error the vendor keeps the
@@ -264,6 +267,27 @@ class BB_Addons_Manager extends AddonsManager {
 	const PRODUCTS_ERROR_TRANSIENT = 'bb_products_api_error';
 
 	/**
+	 * Per-request memo of the add-ons list, or null when not yet resolved.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array|null
+	 */
+	private static $addons_memo = null;
+
+	/**
+	 * Forgets the memoised add-ons list.
+	 *
+	 * Must be called by anything that invalidates the underlying add-ons cache, otherwise
+	 * a clear performed mid-request would be invisible to later reads in the same request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public static function reset_addons_memo(): void {
+		self::$addons_memo = null;
+	}
+
+	/**
 	 * Fetches the add-ons list, recording an outage when the fetch fails on a cold cache.
 	 *
 	 * {@see AddonsManager::getAddons()} swallows transport failures: it caches an EMPTY
@@ -281,10 +305,20 @@ class BB_Addons_Manager extends AddonsManager {
 	 * @return array The add-ons list (possibly empty).
 	 */
 	protected static function get_addons_tracked(): array {
+		// Memoised per request. checkProductBySlug() is called once per add-on by the DRM
+		// sweep and again per slug by the placeholder-card loop, and each call otherwise
+		// re-read the add-ons transient twice (once for the cold-cache probe below, once
+		// inside the vendor's getAddons()). Measured at 12 transient reads for 6 slugs.
+		// Invalidated by self::reset_addons_memo(), which every cache-clearing path calls.
+		if ( null !== self::$addons_memo ) {
+			return self::$addons_memo;
+		}
+
 		$connection = self::plugin_connection();
 		$manager    = self::addons_manager();
 
 		if ( null === $connection || null === $manager ) {
+			// Not memoised: the container may still come up later in the request.
 			return array();
 		}
 
@@ -303,6 +337,8 @@ class BB_Addons_Manager extends AddonsManager {
 			// Match the vendor's own error TTL so the two expire together.
 			set_transient( self::PRODUCTS_ERROR_TRANSIENT, 1, 5 * MINUTE_IN_SECONDS );
 		}
+
+		self::$addons_memo = $addons;
 
 		return $addons;
 	}
@@ -364,6 +400,8 @@ class BB_Addons_Manager extends AddonsManager {
 	 * @since BuddyBoss 2.14.0
 	 */
 	public static function clearProductAddOnsCache(): void {
+		self::reset_addons_memo();
+
 		$connection = self::plugin_connection();
 
 		if ( null === $connection ) {
