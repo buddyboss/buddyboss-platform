@@ -95,18 +95,18 @@ final class BP_Group_Membership_Export extends BP_Export {
 			);
 
 			if ( 'pending_received_invitation' === $membership_type ) {
-				$get_user = get_userdata( $item->inviter_id );
-				$data[]   = array(
+				$data[] = array(
 					'name'  => __( 'Sent by', 'buddyboss' ),
-					'value' => $get_user->display_name,
+					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
+					'value' => bp_core_get_user_displayname( $item->inviter_id, $user->ID ),
 				);
 			}
 
 			if ( 'pending_sent_invitation' === $membership_type ) {
-				$get_user = get_userdata( $item->user_id );
-				$data[]   = array(
+				$data[] = array(
 					'name'  => __( 'Sent to', 'buddyboss' ),
-					'value' => $get_user->display_name,
+					// Resolve for the data subject ($user) so a hidden last name is not exported raw.
+					'value' => bp_core_get_user_displayname( $item->user_id, $user->ID ),
 				);
 			}
 

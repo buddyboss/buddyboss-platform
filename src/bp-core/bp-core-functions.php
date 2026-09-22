@@ -2524,20 +2524,12 @@ function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'members'  => array(
 			'title'       => __( 'Member Profiles', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-xprofile',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members' ),
 			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( 'admin.php?page=bp-profile-setup' ),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss' ),
 			'default'     => true,
 		),
@@ -2598,43 +2590,19 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'media'         => array(
 			'title'       => __( 'Media Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media' ),
 			'description' => __( 'Allow members to upload photos, documents, videos, emojis and animated GIFs, and to organize photos and videos into albums and documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'document'      => array(
 			'title'       => __( 'Document Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media', 'documents' ),
 			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'video'         => array(
 			'title'       => __( 'Video Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media', 'videos' ),
 			'description' => __( 'Allow members to upload videos, and to organize videos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),
@@ -2645,15 +2613,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'friends'       => array(
 			'title'       => __( 'Member Connections', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-friends',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=member_connection' ),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
 			'default'     => false,
 		),
@@ -2674,15 +2634,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'moderation'    => array(
 			'title'                => __( 'Moderation', 'buddyboss' ),
 			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
-			'settings'             => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-moderation',
-					),
-					'admin.php'
-				)
-			),
+			'settings'             => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=member_moderation' ),
 			'default'              => false,
 			'deactivation_confirm' => true,
 			'deactivation_message' => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss' ) . '</p>' .
@@ -2813,6 +2765,20 @@ function bp_nav_menu_get_loggedin_pages() {
 	// Try to catch the cached version first.
 	if ( ! empty( buddypress()->wp_nav_menu_items->loggedin ) ) {
 		return buddypress()->wp_nav_menu_items->loggedin;
+	}
+
+	// `->members->nav` is populated by `BP_Members_Component::setup_nav()`,
+	// which only runs when the members component is active. Although the
+	// `members` key is in the always-on autoload list (src/class-buddypress.php),
+	// the per-component `nav` property is unset when the component is
+	// deactivated via Settings 2.0 — and `null->get_primary()` would fatal
+	// on PHP 8+. Bail when the primary nav is not built.
+	if (
+		! bp_is_active( 'members' ) ||
+		! isset( buddypress()->members->nav ) ||
+		! is_object( buddypress()->members->nav )
+	) {
+		return false;
 	}
 
 	// Pull up a list of items registered in BP's primary nav for the member.
@@ -2999,7 +2965,29 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
+					/**
+					 * Resolve the label used for the "my-courses" nav sub-item.
+					 *
+					 * Integrations that own the courses nav (e.g. the
+					 * buddyboss-learndash addon, Tutor LMS, MemberPress Courses)
+					 * filter this to return their LMS-specific "Course(s)"
+					 * label. Pre-BuddyBoss 3.0.0, Platform called
+					 * `LearnDash_Custom_Label::get_label( 'courses' )` inline —
+					 * that inline call moved into the addon subscriber.
+					 *
+					 * Subscribers should return an already-singular string
+					 * (e.g. "Course"); this call site wraps the result with
+					 * the "My %s" translation itself.
+					 *
+					 * @since BuddyBoss 3.0.0
+					 *
+					 * @param string $course_label Current label. Defaults to "Course".
+					 */
+					$course_label = apply_filters(
+						'bb_nav_sub_item_course_label',
+						__( 'Course', 'buddyboss' )
+					);
+
 					/* translators: My Course, e.g. "My Course". */
 					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
 				}
@@ -3089,12 +3077,19 @@ function bp_nav_menu_get_loggedout_pages() {
 	$bp_directory_page_ids = bp_core_get_directory_page_ids();
 
 	if ( ! empty( $bp_directory_page_ids['register'] ) ) {
-		$register_page   = get_post( $bp_directory_page_ids['register'] );
-		$bp_menu_items[] = array(
-			'name' => $register_page->post_title,
-			'slug' => 'register',
-			'link' => get_permalink( $register_page->ID ),
-		);
+		$register_page = get_post( $bp_directory_page_ids['register'] );
+
+		// `get_post()` returns null when the stored page ID is stale
+		// (page trashed or deleted from the DB while still referenced
+		// in the `bp-pages` option). Skip the menu item rather than
+		// fatal on `null->post_title`.
+		if ( $register_page instanceof WP_Post ) {
+			$bp_menu_items[] = array(
+				'name' => $register_page->post_title,
+				'slug' => 'register',
+				'link' => get_permalink( $register_page->ID ),
+			);
+		}
 	}
 
 	// If there's nothing to show, we're done.
@@ -3199,11 +3194,24 @@ function bp_core_get_suggestions( $args ) {
 		return new WP_Error( 'missing_parameter' );
 	}
 
-	// Remove action for remove search against xprofile fields.
-	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+	// The xprofile hook swap is only meaningful when the xprofile
+	// component is active — both the default xprofile search callback
+	// AND our first/last/nickname override live in
+	// bp-xprofile-functions.php, which is not loaded when xprofile is
+	// deactivated via Settings 2.0. Calling `add_action()` with a
+	// missing handler name is itself safe, but the moment the hook
+	// fires inside `$suggestions->get_suggestions()` the override
+	// would call `bp_xprofile_firstname_field_id()` and friends — and
+	// those would fatal. Skip the swap entirely when xprofile is off.
+	$xprofile_active = bp_is_active( 'xprofile' );
 
-	// Add action only for xprofile fields First, last and nickname.
-	add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	if ( $xprofile_active ) {
+		// Remove action for remove search against xprofile fields.
+		remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+
+		// Add action only for xprofile fields First, last and nickname.
+		add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	}
 
 	$suggestions = new $class( $args );
 	$validation  = $suggestions->validate();
@@ -3214,11 +3222,13 @@ function bp_core_get_suggestions( $args ) {
 		$retval = $suggestions->get_suggestions();
 	}
 
-	// Add action again for search against xprofile fields.
-	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+	if ( $xprofile_active ) {
+		// Add action again for search against xprofile fields.
+		add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
-	// Removed action only for xprofile fields First, last and nickname.
-	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+		// Removed action only for xprofile fields First, last and nickname.
+		remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	}
 
 	/**
 	 * Filters the available type of at-mentions.
@@ -3983,11 +3993,13 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$core_user_registration = array(
 		'description' => esc_html__( 'Activate a new account', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$core_user_registration_with_blog = array(
 		'description' => esc_html__( 'Activate a new account and site', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$activity_at_message = array(
@@ -3996,6 +4008,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_activity_new_mention',
 			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
+		'group'       => 'activity',
 	);
 
 	$groups_at_message = array(
@@ -4004,26 +4017,31 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_activity_new_mention',
 			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
+		'group'       => 'groups_discussions',
 	);
 
 	$settings_verify_email_change = array(
 		'description' => esc_html__( 'A member\'s email is changed', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$invites_member_invite = array(
 		'description' => esc_html__( 'Recepient is invited to the site by a member', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$content_moderation_email = array(
 		'description' => esc_html__( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$user_moderation_email = array(
 		'description' => esc_html__( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$types = array(
@@ -4046,7 +4064,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	 */
 	$types = apply_filters( 'bp_email_get_type_schema', $types );
 
-	if ( $field !== 'all' ) {
+	if ( 'all' !== $field ) {
 		return wp_list_pluck( $types, $field );
 	} else {
 		return $types;
@@ -4645,8 +4663,20 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex value through prepare's %s
+			// placeholder so SQL-level quoting is enforced even though the
+			// upstream extractor at bp_find_mentions_by_at_sign() restricts
+			// $mentionname to [A-Za-z0-9-_.@]+ (no quotes possible today).
+			// The literal `-` is intentionally expanded to `[ \-]` so users
+			// stored with spaces match against hyphen-encoded mentions; only
+			// `-` is replaced, the rest stays literal.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
@@ -5297,6 +5327,90 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 }
 
 /**
+ * Build a search leg's WHERE clause without inlining a match set the size of the member table.
+ *
+ * Every search leg in this codebase resolves its matches in PHP - it has to, because the
+ * visibility filters run over them - and then spells the survivors out as `IN ( … )`. On a term
+ * that matches most of the community that is a statement measured in hundreds of kilobytes: the
+ * member directory sent 140,698 ids across two OR'd lists in one 824 KB statement to exclude a
+ * grand total of ONE member.
+ *
+ * The survivors and the removals describe the same set, so the clause is built from whichever of
+ * the two is smaller. Where the removals win, the match set is named by the subquery that produced
+ * it rather than by its ids, and only the removals are spelled out. The visibility filters are what
+ * make this worth doing: they are built to remove the few members who restricted something, so the
+ * removals are normally a handful and the survivors are nearly everybody.
+ *
+ * Never worse than the inclusive list, by construction - when the removals are NOT the smaller
+ * half, or no subquery is available to stand in for the match set, the inclusive list is what comes
+ * back. The clause is parenthesised because callers OR these legs together, and `A AND B OR C AND D`
+ * is only correct by SQL's precedence rules; spelling it out removes the question.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string $column           Qualified column the clause tests, e.g. `u.ID`.
+ * @param array  $matched_user_ids Ids the producer matched, BEFORE visibility filtering.
+ * @param array  $kept_user_ids    Ids that survived visibility filtering.
+ * @param string $match_subquery   Optional. A prepared SELECT returning the same ids as
+ *                                 $matched_user_ids. Without it the inclusive list is used.
+ * @return string WHERE clause. `IN (NULL)` - which matches nothing - when nothing survived.
+ */
+function bb_core_get_search_match_clause( $column, $matched_user_ids, $kept_user_ids, $match_subquery = '' ) {
+	$kept = array_values( array_unique( array_filter( array_map( 'intval', (array) $kept_user_ids ) ) ) );
+
+	// Nothing survived the visibility filter: the leg must match nobody. This is the shape the
+	// released code used for an empty match set and callers already OR it with their other legs.
+	if ( empty( $kept ) ) {
+		return $column . ' IN (NULL)';
+	}
+
+	$matched = array_values( array_unique( array_filter( array_map( 'intval', (array) $matched_user_ids ) ) ) );
+
+	// array_flip + isset rather than array_diff(): this runs on sets the size of the member table
+	// and array_diff() sorts and string-casts both operands. The lookup is O(n) and the whole point
+	// of the exercise is to stop paying member-table-sized costs on an anonymous request.
+	$keep_lookup = array_flip( $kept );
+	$removed     = array();
+
+	foreach ( $matched as $matched_user_id ) {
+		if ( ! isset( $keep_lookup[ $matched_user_id ] ) ) {
+			$removed[] = $matched_user_id;
+		}
+	}
+
+	// Below the threshold the inclusive list is already small enough to be a non-issue, and it is
+	// what every released version of these legs emitted. Leaving it alone there keeps the rewritten
+	// shape - and the planner's subquery - off the overwhelming majority of searches, which match a
+	// handful of members; the rewrite then applies only where the list was the actual problem.
+	/**
+	 * Filters how many surviving ids a search leg may spell out before the clause is inverted.
+	 *
+	 * At or below this many ids the clause stays the inclusive `IN ( … )` list every released
+	 * version emitted. Above it, the match set is named by the subquery that produced it and only
+	 * the removals are listed - which is a large win exactly when the list is large, and pointless
+	 * churn when it is not.
+	 *
+	 * Raising this is how a site opts back out of the rewrite; 0 applies it to every leg.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param int    $inline_limit Maximum surviving ids to inline. Default 1000.
+	 * @param string $column       Qualified column the clause tests, e.g. `u.ID`.
+	 */
+	$inline_limit = (int) apply_filters( 'bb_core_search_match_clause_inline_limit', 1000, $column );
+
+	if ( '' === $match_subquery || count( $kept ) <= $inline_limit || count( $removed ) >= count( $kept ) ) {
+		return $column . ' IN (' . implode( ',', $kept ) . ')';
+	}
+
+	if ( empty( $removed ) ) {
+		return '( ' . $column . ' IN ( ' . $match_subquery . ' ) )';
+	}
+
+	return '( ' . $column . ' IN ( ' . $match_subquery . ' ) AND ' . $column . ' NOT IN ( ' . implode( ',', $removed ) . ' ) )';
+}
+
+/**
  * When search_terms are passed to BP_User_Query, search against xprofile fields.
  *
  * @since BuddyBoss 1.6.3
@@ -5356,39 +5470,63 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		$enabled_fields['nickname']   = bp_xprofile_nickname_field_id();
 	}
 
+	// Bound, never interpolated. bp_esc_like() escapes the LIKE wildcards `%` and `_`; it does NOT
+	// escape quotes, so spelling the term into the statement let a single quote in a member's search
+	// close the string literal early - an at-mention autocomplete is reachable by any logged-in
+	// member, and bp_core_get_suggestions() is where this leg is registered. The placeholders carry
+	// the same three values per enabled field, in the same order, so the clause is unchanged.
 	$where_condition = array();
+	$where_values    = array();
 	if ( ! empty( $enabled_fields ) ) {
 		foreach ( $enabled_fields as $field_name => $field_id ) {
-			$where_condition[] = ' ( ( field_id = ' . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+			$where_condition[] = ' ( ( field_id = %d ) AND ( value LIKE %s OR value LIKE %s ) )';
+			$where_values[]    = (int) $field_id;
+			$where_values[]    = $search_terms_nospace;
+			$where_values[]    = $search_terms_space;
 		}
 	}
+
+	// No enabled name field means no clause to build; returning here avoids emitting a statement
+	// that ends in a bare `WHERE`.
+	if ( empty( $where_condition ) ) {
+		return $sql;
+	}
+
+	$where_sql = implode( ' OR ', $where_condition );
+
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- search must read current values.
+	$matched_user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the clause is built from the literal placeholder strings above; the table name is trusted and every user value is bound via $where_values.
+			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . $where_sql,
+			$where_values
+		)
+	);
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- search must read current values.
+		$matched_user_data = $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the clause is built from the literal placeholder strings above; the table name is trusted and every user value is bound via $where_values.
+				"SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . $where_sql,
+				$where_values
+			)
+		);
 
-		if ( ! empty( $matched_user_data ) ) {
-			foreach ( $matched_user_data as $k => $user ) {
-				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-			}
-		}
+		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
+	// Not rewritten the way the two member-directory legs are. That rewrite names the match set by
+	// the subquery that produced it, and this leg's clause is a prepared statement, so reusing it
+	// would mean threading its bound values through a second prepare(). The inversion is a
+	// performance change rather than a correctness one, so it is left to a separate pass.
 	if ( ! empty( $matched_user_ids ) ) {
+		// Cast before inlining: these are ids read back from the database, and the list is spliced
+		// into the clause rather than bound.
+		$matched_user_ids = array_map( 'intval', (array) $matched_user_ids );
+
 		$search_core            = $sql['where']['search'];
 		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
@@ -6914,14 +7052,17 @@ function bb_register_notifications( $component = '' ) {
  * @param string $component component name.
  */
 function bb_register_notification_preferences( $component = '' ) {
+	static $cache = null;
 
-	$notifications = apply_filters( 'bb_register_notification_preferences', array() );
-
-	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
-		return $notifications[ $component ];
+	if ( null === $cache ) {
+		$cache = apply_filters( 'bb_register_notification_preferences', array() );
 	}
 
-	return $notifications;
+	if ( ! empty( $component ) && isset( $cache[ $component ] ) ) {
+		return $cache[ $component ];
+	}
+
+	return $cache;
 }
 
 /**
@@ -7016,7 +7157,11 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
  */
 function bb_register_notification_email_templates( $notification_type = '' ) {
 
-	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	static $notification_emails = null;
+
+	if ( null === $notification_emails ) {
+		$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	}
 
 	if ( ! empty( $notification_emails ) && ! empty( $notification_type ) ) {
 		return ( isset( $notification_emails[ $notification_type ] ) ? $notification_emails[ $notification_type ] : array() );
@@ -7772,20 +7917,16 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-link';
 			break;
 		case 'bp_member_avatar_settings':
-		case 'bp_groups_avatar_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-image';
 			break;
 		case 'bp_profile_headers_settings':
-		case 'bp_groups_headers_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-maximize';
 			break;
 		case 'bp_profile_list_settings':
-		case 'bp_group_list_settings':
 		case 'bbp_settings_root_slugs':
 			$meta_icon = $bb_icon_bf . ' bb-icon-grid-small';
 			break;
 		case 'bp_member_type_settings':
-		case 'bp_groups_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-tags';
 			break;
 		case 'bp_profile_search_settings':
@@ -7795,12 +7936,8 @@ function bb_admin_icons( $id ) {
 		case 'bp_search_settings_post_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-search';
 			break;
-		case 'bp_groups':
 		case 'bbp_settings_buddypress':
 			$meta_icon = $bb_icon_bf . ' bb-icon-users';
-			break;
-		case 'bp_groups_hierarchies':
-			$meta_icon = $bb_icon_bf . ' bb-icon-layers';
 			break;
 		case 'bbp_settings_users':
 		case 'bbp_settings_features':
@@ -7860,12 +7997,6 @@ function bb_admin_icons( $id ) {
 		case 'bp_invites':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
-		case 'bp_moderation_settings_blocking':
-			$meta_icon = $bb_icon_bf . ' bb-icon-user-slash';
-			break;
-		case 'bp_moderation_settings_reporting':
-			$meta_icon = $bb_icon_bf . ' bb-icon-flag';
-			break;
 		case 'bp_search_settings_general':
 			$meta_icon = $bb_icon_bf . ' bb-icon-caret-down';
 			break;
@@ -7893,7 +8024,6 @@ function bb_admin_icons( $id ) {
 		case 'bbpress_converter_main':
 			$meta_icon = $bb_icon_bf . ' bb-icon-upload';
 			break;
-		case 'group_access_control_block':
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
 		case 'media_access_control_block';
@@ -7904,14 +8034,10 @@ function bb_admin_icons( $id ) {
 		case 'bp_zoom_gutenberg_section';
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
 			break;
-		case 'bp_labs_settings_notifications';
-			$meta_icon = $bb_icon_bf . ' bb-icon-flask';
-			break;
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
 		case 'bb_registration_restrictions':
-		case 'bp_messaging_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
 		case 'bp_web_push_notification_settings':
@@ -9056,12 +9182,13 @@ function bb_is_allowed_register_email_address( $email = '' ) {
  *
  * @since BuddyBoss 2.4.30
  *
- * @return null|BB_Reaction|void
+ * @return BB_Reaction|null
  */
 function bb_load_reaction() {
 	if ( class_exists( 'BB_Reaction' ) ) {
 		return BB_Reaction::instance();
 	}
+	return null;
 }
 
 /**
@@ -9216,122 +9343,6 @@ function bb_get_directory_layout_preference( $action ) {
 	}
 
 	return ! empty( $existing_layouts ) && ! empty( $existing_layouts[ $action ] ) ? $existing_layouts[ $action ] : $default_value;
-}
-
-/**
- * Get the Reactions settings sections.
- *
- * @since BuddyBoss 2.5.20
- *
- * @return array
- */
-function bb_reactions_get_settings_sections() {
-
-	$settings = array(
-		'bp_reaction_settings_section' => array(
-			'page'              => 'reaction',
-			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
-			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
-		),
-	);
-
-	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
-}
-
-/**
- * Link to Reaction tutorial.
- *
- * @since BuddyBoss 2.5.20
- */
-function bp_admin_reaction_setting_tutorial() {
-	?>
-	<p>
-		<a class="button" target="_blank" href="
-		<?php
-		echo esc_url(
-			bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 127197,
-					),
-					'admin.php'
-				)
-			)
-		);
-		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p>
-	<?php
-}
-
-/**
- * Get reaction settings fields by section.
- *
- * @since BuddyBoss 2.5.20
- *
- * @param string $section_id Section ID.
- *
- * @return mixed False if section is invalid, array of fields otherwise.
- */
-function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
-
-	// Bail if section is empty.
-	if ( empty( $section_id ) ) {
-		return false;
-	}
-
-	$fields = bb_reactions_get_settings_fields();
-	$retval = $fields[ $section_id ] ?? false;
-
-	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
-}
-
-/**
- * Get all of the reactions settings fields.
- *
- * @since BuddyBoss 2.5.20
- *
- * @return array
- */
-function bb_reactions_get_settings_fields() {
-
-	$fields    = array();
-	$pro_class = bb_get_pro_fields_class( 'reaction' );
-
-	$reaction_btn_class = 'bb_reaction_button_row ' . $pro_class;
-	if ( function_exists( 'bb_get_reaction_mode' ) && 'emotions' !== bb_get_reaction_mode() ) {
-		$reaction_btn_class .= ' bp-hide';
-	}
-
-	$fields['bp_reaction_settings_section'] = array(
-		'bb_all_reactions' => array(
-			'title'    => esc_html__( 'Enable Reactions', 'buddyboss' ),
-			'callback' => 'bb_reactions_settings_callback_all_reactions',
-			'args'     => array(),
-		),
-
-		'bb_reaction_mode' => array(
-			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
-			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
-			'sanitize_callback' => 'sanitize_text_field',
-			'args'              => array(
-				'class' => $pro_class
-			),
-		),
-
-		'bb_reaction_emotions' => array(),
-
-		'bb_reactions_button' => array(
-			'title'    => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
-			'callback' => 'bb_reactions_settings_callback_reactions_button',
-			'args'     => array(
-				'class' => $reaction_btn_class
-			),
-		),
-	);
-
-	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
 
 /**
@@ -9645,7 +9656,7 @@ function bb_generate_default_avatar( $args ) {
 		$property->setAccessible( true );
 		$image = $property->getValue( $image_editor );
 
-		if ( strpos( $chose_editor, 'WP_Image_Editor_GD' ) !== false ) {
+		if ( false !== strpos( $chose_editor, 'WP_Image_Editor_GD' ) || ! class_exists( 'Imagick' ) ) {
 			// Define the background color.
 			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
 			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
@@ -10103,4 +10114,1549 @@ function bb_is_readylaunch_enabled() {
  */
 function bb_pro_post_feature_image_version() {
 	return '2.9.0';
+}
+
+/**
+ * Function to return the minimum Pro version required for the blog Bookmarking
+ * and Subscriptions features.
+ *
+ * These two features are provided by BuddyBoss Platform Pro's blog module, which
+ * ships in Pro 3.1.0. When an older Pro is active the Post Settings toggles stay
+ * locked; the blogging settings screen compares against this version to show an
+ * "update Pro" notice.
+ *
+ * @since BuddyBoss 3.2.0
+ *
+ * @return string
+ */
+function bb_pro_blog_version() {
+	return '3.1.0';
+}
+
+/**
+ * Get the Feature Loader instance.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return BB_Feature_Loader
+ */
+function bb_feature_loader() {
+	return BB_Feature_Loader::instance();
+}
+
+/**
+ * Get the Feature Registry instance.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return BB_Feature_Registry
+ */
+function bb_feature_registry() {
+	return BB_Feature_Registry::instance();
+}
+
+/**
+ * Register a feature.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Feature arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
+}
+
+/**
+ * Get the admin URL for a feature's settings page.
+ *
+ * Returns URL in format: admin.php?page=bb-settings&tab={feature_id}&panel={panel_id}
+ *
+ * Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id Feature ID (e.g., 'reactions', 'activity').
+ * @param string $panel_id   Optional side panel ID.
+ * @return string Admin URL for the feature settings.
+ */
+function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
+	$url = bp_get_admin_url( 'admin.php?page=bb-settings' );
+
+	if ( ! empty( $feature_id ) ) {
+		$url = add_query_arg( 'tab', sanitize_key( $feature_id ), $url );
+	}
+
+	if ( ! empty( $panel_id ) ) {
+		$url = add_query_arg( 'panel', sanitize_key( $panel_id ), $url );
+	}
+
+	return $url;
+}
+
+/**
+ * Whether the Settings 2.0 framework supports custom field types via wp.hooks.
+ *
+ * External plugins check this function to decide between embedding custom
+ * field components inside Settings 2.0 panels (when available) or falling
+ * back to a standalone admin page.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return bool Always true when this function exists.
+ */
+function bb_settings_supports_custom_field_types() {
+	return true;
+}
+
+/**
+ * Get the admin URL for the main settings page (Features grid).
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return string Admin URL for the main settings page.
+ */
+function bb_get_settings_url() {
+	return bp_get_admin_url( 'admin.php?page=bb-settings' );
+}
+
+/**
+ * Get structured PRO notice data for the React admin settings UI.
+ *
+ * Returns an array with badge and video link data that the React UI renders
+ * as a visual PRO pill badge + play icon button. This is the Settings 2.0
+ * equivalent of `bb_get_pro_label_notice()` which returns HTML strings.
+ *
+ * Lives in bp-core-functions.php (loaded early in core boot) rather than in
+ * bp-core-admin-functions.php so Settings 2.0 panel-registration code, which
+ * runs at `bp_loaded` priority 5, can call it before the admin layer (which
+ * boots `bp_admin()` at `bp_loaded` priority 10) has loaded the admin
+ * functions file.
+ *
+ * Two visual contexts:
+ *
+ *   - 'field'   — badge sits next to a per-field label (e.g. "Reactions Mode",
+ *                 "Create Groups"). Default text "PRO". link_url is per-feature
+ *                 (tutorial doc URL or empty), so the play icon takes admins to
+ *                 feature-specific reading material.
+ *
+ *   - 'section' — badge sits in the section header (e.g. "Group Headers",
+ *                 "Member Access Controls", "Group Topics"). Default text
+ *                 "UPGRADE LAUNCH". link_url defaults to the BuddyBoss pricing
+ *                 page since the section-level CTA is a straightforward upsell.
+ *
+ * Both contexts share the same "is Pro locked?" computation — Pro missing,
+ * Pro too old for this feature, or Pro license invalid/expired all result in
+ * `show: true`. Only the badge text + default link change between contexts.
+ *
+ * Args are passed as a single associative array so future additions
+ * (per-feature link override, badge variant, custom check callback, etc.)
+ * land without breaking existing callers' positional expectations.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param array $args {
+ *     Optional. Configuration array.
+ *
+ *     @type string $type    Feature type (e.g. 'reaction', 'schedule_posts',
+ *                           'polls', 'sso', 'group_activity_topics',
+ *                           'post_feature_image', or arbitrary section keys
+ *                           like 'group_headers'). Per-feature minimum-version
+ *                           gating only fires for the keys it knows about; any
+ *                           other key falls through to the generic
+ *                           Pro-installed + license-valid check.
+ *                           Default 'default'.
+ *     @type string $context Either 'field' or 'section'. The AJAX-time field
+ *                           auto-compute in class-bb-admin-settings-ajax.php
+ *                           omits this and gets the 'field' default.
+ *                           Default 'field'.
+ * }
+ *
+ * @return array {
+ *     PRO notice data for React rendering.
+ *
+ *     @type bool   $show       Whether the notice should be shown.
+ *     @type string $badge_text Badge label text ("PRO" for field, "UPGRADE LAUNCH" for section).
+ *     @type string $badge_icon BuddyBoss icon CSS class for the badge.
+ *     @type string $link_url   URL for the play/video button (per-feature for field, pricing for section).
+ *     @type string $link_icon  BuddyBoss icon CSS class for the play button.
+ * }
+ */
+function bb_admin_settings_get_pro_notice( $args = array() ) {
+	static $retval = array();
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'type'    => 'default',
+			'context' => 'field',
+		)
+	);
+
+	$type       = $args['type'];
+	$context    = $args['context'];
+	$is_section = ( 'section' === $context );
+
+	// Cache key incorporates type + context so 'field' vs 'section' for the
+	// same $type don't collide and serve each other's stale defaults. If
+	// future args influence the output, fold them into this key too.
+	$cache_key = $type . '|' . $context;
+	if ( isset( $retval[ $cache_key ] ) ) {
+		return $retval[ $cache_key ];
+	}
+
+	$data = array(
+		'show'       => false,
+		'badge_text' => $is_section
+			? __( 'UPGRADE LAUNCH', 'buddyboss' )
+			: __( 'LAUNCH', 'buddyboss' ),
+		'badge_icon' => 'bb-icons-rl-crown-simple',
+		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
+		'link_icon'  => 'bb-icons-rl-play',
+	);
+
+	$is_pro_locked = false;
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
+		$is_pro_locked = true;
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		! empty( $type ) &&
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				function_exists( 'bb_pro_schedule_posts_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				function_exists( 'bb_pro_poll_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				function_exists( 'bb_pro_sso_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				function_exists( 'bb_pro_group_activity_topics_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				function_exists( 'bb_pro_post_feature_image_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+			)
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
+		// Reactions, Polls and Social Login moved to the BuddyBoss Addons plugin.
+		// Pro being installed and licensed is no longer proof the feature exists,
+		// so these types must lock unless a PROVIDER is actually present: the
+		// add-on's licensed module (its class/function only loads when licensed),
+		// or a legacy Pro build that still ships the feature (dormancy marker).
+		// Checked before the Pro-licence branch below so a licensed Pro without
+		// the add-on does not silently unlock features it no longer contains.
+		in_array( $type, array( 'reaction', 'reactions', 'polls', 'sso' ), true ) &&
+		! (
+			( ( 'reaction' === $type || 'reactions' === $type ) && bb_is_feature_provided( 'reactions' ) ) ||
+			( 'polls' === $type && bb_is_feature_provided( 'polls' ) ) ||
+			( 'sso' === $type && bb_is_feature_provided( 'sso' ) )
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
+		! function_exists( 'bb_platform_pro' ) ||
+		(
+			function_exists( 'bb_pro_should_lock_features' )
+				? bb_pro_should_lock_features()
+				: ( function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid() )
+		)
+	) {
+		$is_pro_locked = true;
+	}
+
+	if ( $is_pro_locked ) {
+		$data['show'] = true;
+
+		// Field-level badges link to per-feature docs/tutorials. Section-level
+		// badges keep the pricing-page default already set above — the section
+		// CTA is a top-level upsell, not a feature-specific tutorial.
+		if ( ! $is_section ) {
+			$feature_urls = array(
+				'reaction'              => 'https://www.buddyboss.com/resources/docs/components/reactions/',
+				'schedule_posts'        => '',
+				'polls'                 => '',
+				'sso'                   => '',
+				'group_activity_topics' => '',
+				'post_feature_image'    => '',
+			);
+
+			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : 'https://www.buddyboss.com/platform/';
+		}
+	}
+
+	/**
+	 * Filters the PRO notice data for the React admin settings UI.
+	 *
+	 * Receives the resolved $args array (post wp_parse_args) so future args
+	 * additions are automatically visible to filter consumers without needing
+	 * a signature change here.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array $data PRO notice data.
+	 * @param array $args Resolved args: 'type', 'context', plus any future keys.
+	 */
+	$data = apply_filters( 'bb_admin_settings_pro_notice_data', $data, $args );
+
+	$retval[ $cache_key ] = $data;
+
+	return $data;
+}
+
+/**
+ * Get the denylist of WordPress core options that must never be written
+ * through BuddyBoss admin AJAX handlers.
+ *
+ * Use this to strip dangerous option names from any filterable allowlist
+ * before reading or saving. Prevents a compromised or careless extension
+ * from adding options like `siteurl`, `admin_email`, or `active_plugins`
+ * to an AJAX-writable allowlist.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return array Flat array of option names that must be denied.
+ */
+function bb_get_options_denylist() {
+	$denylist = array(
+		// Site identity.
+		'siteurl',
+		'home',
+		'blogname',
+		'blogdescription',
+		'admin_email',
+
+		// User registration / roles.
+		'users_can_register',
+		'default_role',
+
+		// Active plugins and theme.
+		'active_plugins',
+		'template',
+		'stylesheet',
+
+		// Database / core internals.
+		'db_version',
+		'initial_db_version',
+		'wp_user_roles',
+
+		// Filesystem / uploads.
+		'upload_path',
+		'upload_url_path',
+
+		// Cron.
+		'cron',
+	);
+
+	/**
+	 * Filters the list of WordPress core options that BuddyBoss admin AJAX
+	 * handlers must never write.
+	 *
+	 * Extensions can add entries but must never remove existing ones.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array $denylist Option names to deny.
+	 */
+	return apply_filters( 'bb_admin_options_denylist', $denylist );
+}
+
+/**
+ * Remove denylisted options from an allowlist array.
+ *
+ * Pass an associative array of `option_name => sanitize_callback` and this
+ * function returns it with any denylisted keys stripped out.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param array $options Associative array of option_name => sanitize_callback.
+ * @return array Filtered array with denylisted keys removed.
+ */
+function bb_filter_allowed_options( $options ) {
+	return array_diff_key( $options, array_flip( bb_get_options_denylist() ) );
+}
+
+/**
+ * Compare two registry items by their 'order' key (ascending).
+ *
+ * Shared sort callback used by BB_Feature_Registry and BB_Admin_Settings_Ajax
+ * to avoid duplicating the same anonymous function.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param array $a First item.
+ * @param array $b Second item.
+ * @return int Comparison result.
+ */
+function bb_sort_by_order( $a, $b ) {
+	$a_order = isset( $a['order'] ) ? (int) $a['order'] : 100;
+	$b_order = isset( $b['order'] ) ? (int) $b['order'] : 100;
+
+	return $a_order - $b_order;
+}
+
+/**
+ * Register a side panel for a feature.
+ *
+ * Side panels appear in the left sidebar navigation when viewing feature settings.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param array  $args          Side panel arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_side_panel( $feature_id, $side_panel_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_side_panel( $feature_id, $side_panel_id, $args );
+}
+
+/**
+ * Register a feature section.
+ *
+ * Sections are the white boxes/cards that contain fields.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args          Section arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_section( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a feature field.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args {
+ *     Field arguments.
+ *
+ *     @type string $name              Field name (option key).
+ *     @type string $label             Field label.
+ *     @type string $type              Field type (toggle, select, image_radio, etc.).
+ *     @type string $description       Field description.
+ *     @type mixed  $default           Default value.
+ *     @type callable $sanitize_callback Sanitize callback.
+ *     @type array  $options           Options for select/radio fields.
+ *     @type array  $conditional       Conditional display config.
+ *     @type int    $order             Display order.
+ *     @type bool   $invert_value      Whether to invert toggle value for display.
+ *     @type array  $upload_config {
+ *         Optional. Upload configuration for image_radio fields with custom upload support.
+ *
+ *         @since BuddyBoss 3.0.0
+ *
+ *         @type string $type        Upload type: 'avatar' or 'cover'.
+ *         @type string $object      Object type for BP handlers (e.g., 'group').
+ *         @type int    $item_id     Item ID (0 for defaults).
+ *         @type string $item_type   Item type identifier.
+ *         @type string $url_getter  PHP function name to resolve current uploaded URL.
+ *         @type string $label       Label shown above the upload area (e.g., 'Upload Custom Avatar').
+ *         @type string $help_text   Help text shown below the upload area.
+ *         @type array  $conditional Conditional display config with 'value' key.
+ *     }
+ * }
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_field( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a meta field for admin edit modals (Activity, Groups, Forums, etc.).
+ *
+ * Fields registered via this API are fetched, rendered, and saved by the modal automatically.
+ * Same pattern as register_post_meta + show_in_rest.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $component Component identifier (e.g. 'activity', 'groups', 'forums').
+ * @param string $field_id  Unique field ID within the component.
+ * @param array  $args      Field arguments: label, type (text|number|url|select|richtext|readonly),
+ *                          order, context (normal|after), layout (default|half),
+ *                          save_phase (before|after), get_value, get_options (for select),
+ *                          save_value, sanitize_callback, is_visible.
+ * @return bool True on success.
+ */
+function bb_register_admin_meta_field( $component, $field_id, $args = array() ) {
+	return BB_Admin_Meta_Field_Registry::instance()->register( $component, $field_id, $args );
+}
+
+/**
+ * Get the Admin Meta Field Registry instance.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return BB_Admin_Meta_Field_Registry
+ */
+function bb_admin_meta_field_registry() {
+	return BB_Admin_Meta_Field_Registry::instance();
+}
+
+/**
+ * Register a feature navigation item.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Navigation item arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_nav_item( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_nav_item( $feature_id, $args );
+}
+
+/**
+ * Register an integration feature.
+ *
+ * Helper function to register a feature as an integration.
+ * Automatically sets the category to 'integrations' and
+ * integration_id if not provided.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id Feature ID (integration slug).
+ * @param array  $args       Feature arguments (same as bb_register_feature).
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_integration( $feature_id, $args = array() ) {
+	// Force category to 'integrations'.
+	$args['category'] = 'integrations';
+
+	// Set integration_id if not already set.
+	if ( empty( $args['integration_id'] ) ) {
+		$args['integration_id'] = $feature_id;
+	}
+
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
+}
+
+/**
+ * Add action only if feature is active.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Action hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if action added, false if feature inactive.
+ */
+function bb_add_action_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_action( $tag, $function, $priority, $accepted_args );
+}
+
+/**
+ * Add filter only if feature is active.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Filter hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if filter added, false if feature inactive.
+ */
+function bb_add_filter_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_filter( $tag, $function, $priority, $accepted_args );
+}
+
+/**
+ * Get the Icon Registry instance.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return BB_Icon_Registry
+ */
+function bb_icon_registry() {
+	return BB_Icon_Registry::instance();
+}
+
+/**
+ * Register an icon.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $icon_id Icon ID.
+ * @param array  $args    Icon arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_icon( $icon_id, $args = array() ) {
+	return bb_icon_registry()->bb_register_icon( $icon_id, $args );
+}
+
+/**
+ * Get the available email type group definitions with labels.
+ *
+ * Groups are used to visually categorize email situations in the
+ * Settings 2.0 email template modal.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return array Associative array of group_key => translated label.
+ */
+function bb_email_get_type_groups() {
+	$groups = array(
+		'activity'           => __( 'Activity', 'buddyboss' ),
+		'groups_discussions' => __( 'Groups & Discussions', 'buddyboss' ),
+		'messages'           => __( 'Messages', 'buddyboss' ),
+		'connections'        => __( 'Connections', 'buddyboss' ),
+		'account'            => __( 'Account', 'buddyboss' ),
+		'other'              => __( 'Other', 'buddyboss' ),
+	);
+
+	/**
+	 * Filters the email type group definitions.
+	 *
+	 * Third-party plugins can add custom groups so their email types
+	 * are grouped under a meaningful label instead of "Other".
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array $groups Group key => translated label map.
+	 */
+	return apply_filters( 'bb_email_get_type_groups', $groups );
+}
+
+/**
+ * Get the group key for a given email type slug.
+ *
+ * Resolution order:
+ * 1. Schema 'group' key (from bp_email_get_type_schema — active components).
+ * 2. Term meta 'bb_email_group' (persisted — works when component is disabled).
+ * 3. Falls back to 'other'.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $type_slug The email type taxonomy term slug.
+ *
+ * @return string The group key (e.g., 'activity', 'account', 'other').
+ */
+function bb_email_get_type_group( $type_slug ) {
+	$schema = bp_email_get_type_schema( 'all' );
+	$group  = '';
+
+	// 1. Check schema 'group' key (set via register_email_type email_group or core schema).
+	if ( isset( $schema[ $type_slug ]['group'] ) ) {
+		$group = $schema[ $type_slug ]['group'];
+	}
+
+	// 2. Fallback to term meta (persisted when component was last active).
+	if ( empty( $group ) ) {
+		$term = get_term_by( 'slug', $type_slug, bp_get_email_tax_type() );
+		if ( $term && ! is_wp_error( $term ) ) {
+			$group = get_term_meta( $term->term_id, 'bb_email_group', true );
+		}
+	}
+
+	// 3. Default fallback.
+	if ( empty( $group ) ) {
+		$group = 'other';
+	}
+
+	/**
+	 * Filters the resolved group for an email type slug.
+	 *
+	 * Third-party plugins can override the group for their email types
+	 * without needing to hook into `bp_email_get_type_schema`.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $group     The resolved group key.
+	 * @param string $type_slug The email type taxonomy term slug.
+	 */
+	return apply_filters( 'bb_email_type_group', $group, $type_slug );
+}
+
+/**
+ * Probe function exposed for the buddyboss-tools addon to detect that the
+ * current Platform release supports the Settings 2.0 Tools panel slots.
+ *
+ * This function is intentionally a no-op — its mere existence is the signal
+ * Tools checks via `function_exists()` in its requirements probe. Platforms
+ * older than the Settings 2.0 Tools release do not define it, and Tools
+ * stays silent on those installs.
+ *
+ * Do not call this function directly; it is a marker for compatibility.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @param string $panel_slot_id Reserved for future use; ignored.
+ * @return void
+ */
+function bb_tools_register_panel_slot( $panel_slot_id = '' ) {
+	// Intentionally empty — this function is a presence-detection marker
+	// for the buddyboss-tools addon. The `$panel_slot_id` parameter exists
+	// so future revisions can extend the contract without breaking callers.
+	unset( $panel_slot_id );
+}
+
+/**
+ * Returns whether the buddyboss-tools addon is loaded and active.
+ *
+ * Resolves the `bb_tools_addon_active` filter (the addon subscribes with
+ * `__return_true`) and falls back to checking `is_plugin_active()` as a
+ * backstop for code paths that run before the addon has had a chance to
+ * register its filter.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @return bool True if Tools is active and its panel React components are
+ *              expected to be registered; false otherwise.
+ */
+function bb_tools_addon_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	/**
+	 * Filter whether the buddyboss-tools addon is active.
+	 *
+	 * The addon subscribes to this filter with `__return_true`. Platform
+	 * code reading this value falls through to `is_plugin_active()` as a
+	 * backstop if the filter has not been hooked yet (e.g. during very
+	 * early `plugins_loaded`).
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @param bool $active Default false.
+	 */
+	$filtered = (bool) apply_filters( 'bb_tools_addon_active', false );
+	if ( $filtered ) {
+		return true;
+	}
+
+	return is_plugin_active( 'buddyboss-tools/buddyboss-tools.php' );
+}
+
+/**
+ * Map of Tools usage areas to their (root-blog) storage option names.
+ *
+ * Each area gets its own option so the data stays isolated per area. To add a
+ * new area later, add one entry here — the recorder, reader, and seed all key
+ * off this map.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @return array Map of area key => option name.
+ */
+function bb_tool_usage_areas() {
+	return array(
+		'repair'      => 'bb_repair_platform_usage',
+		'migration'   => 'bb_tools_migration_usage',
+		'sample_data' => 'bb_sample_data_usage',
+	);
+}
+
+/**
+ * Increment the usage counter for one Tools action and stamp last_run.
+ *
+ * Cumulative per-action usage counts (+ last_run) for the Tools areas
+ * (Repair, Sample Data, Migration). Each area is stored in its own root-blog
+ * option (see bb_tool_usage_areas()) as a flat `action => { count, last_run }`
+ * map. Read-modify-write; safe because the Tools panels dispatch their AJAX
+ * sequentially (one in-flight write per click).
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @param string $area   Area key: 'repair' | 'sample_data' | 'migration'.
+ * @param string $action Action key (repair slug / importer key / platform).
+ *                       Normalized by sanitize_key() (lowercased).
+ * @param string $label  Optional human label for the action, captured so the
+ *                       report can display third-party / mixed-case names
+ *                       (e.g. 'phpBB', or a third-party repair tool's title)
+ *                       that can't be reconstructed from the slug. Stored once
+ *                       and refreshed whenever a non-empty label is supplied.
+ *
+ * @return bool True on write, false on no-op (empty/unknown args).
+ */
+function bb_record_tool_usage( $area, $action, $label = '' ) {
+	$area   = sanitize_key( $area );
+	$action = sanitize_key( $action );
+	if ( '' === $area || '' === $action ) {
+		return false;
+	}
+
+	$areas = bb_tool_usage_areas();
+	if ( ! isset( $areas[ $area ] ) ) {
+		return false;
+	}
+	$option = $areas[ $area ];
+
+	$usage = bp_get_option( $option, null );
+
+	// First write: create the option with autoload OFF (read only by the
+	// telemetry cron). bp_* wrappers cannot pass the autoload flag, so seed it
+	// explicitly; later bp_update_option() calls preserve autoload = 'no'.
+	if ( ! is_array( $usage ) ) {
+		$usage = array();
+		bb_tools_usage_seed_autoload_off( $option );
+	}
+
+	$entry             = ( isset( $usage[ $action ] ) && is_array( $usage[ $action ] ) ) ? $usage[ $action ] : array();
+	$entry['count']    = ( isset( $entry['count'] ) ? (int) $entry['count'] : 0 ) + 1;
+	$entry['last_run'] = gmdate( 'Y-m-d H:i:s' );
+
+	// Capture the human label (incl. third-party tools whose label the report
+	// can't otherwise know). Decode any pre-escaped source label (e.g. an
+	// esc_html'd repair title with &quot;) to raw text so the report — which
+	// escapes on output — doesn't double-encode it. Only overwrite when a
+	// non-empty label is supplied.
+	$label = sanitize_text_field( wp_specialchars_decode( (string) $label, ENT_QUOTES ) );
+	if ( '' !== $label ) {
+		$entry['label'] = $label;
+	}
+
+	$usage[ $action ] = $entry;
+
+	return bp_update_option( $option, $usage );
+}
+
+/**
+ * One-time seed: create a Tools usage option with autoload 'no' on the
+ * BuddyPress root blog.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @param string $option Option name to seed.
+ *
+ * @return void
+ */
+function bb_tools_usage_seed_autoload_off( $option ) {
+	$option = sanitize_key( $option );
+	if ( '' === $option ) {
+		return;
+	}
+
+	$root     = bp_get_root_blog_id();
+	$switched = false;
+	if ( is_multisite() && get_current_blog_id() !== $root ) {
+		switch_to_blog( $root );
+		$switched = true;
+	}
+	if ( false === get_option( $option, false ) ) {
+		add_option( $option, array(), '', 'no' );
+	}
+	if ( $switched ) {
+		restore_current_blog();
+	}
+}
+
+/**
+ * Get the full Tools usage map (also the telemetry source), assembled from the
+ * per-area options into a single nested map. Root-blog scope.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @return array Map of area => action => { count, last_run }.
+ */
+function bb_get_tool_usage() {
+	$out = array();
+	foreach ( bb_tool_usage_areas() as $area => $option ) {
+		$data = bp_get_option( $option, array() );
+		if ( is_array( $data ) && ! empty( $data ) ) {
+			$out[ $area ] = $data;
+		}
+	}
+	return $out;
+}
+
+/**
+ * Check whether this site has any paid BuddyBoss product.
+ *
+ * Deliberately broader than `function_exists( 'bb_platform_pro' )`: a Plus
+ * customer, or a site running a licensed add-on without the Pro plugin, is
+ * still a paid site. Used to decide whether telemetry is forced to "complete"
+ * and whether the Telemetry settings panel is shown.
+ *
+ * Detection is DRM-based, with one deliberate exception for the theme. Plugin
+ * activation state is not inspected: an add-on only reaches
+ * `BB_DRM_Registry::register_addon()` when it is active, so the registry
+ * already carries that meaning.
+ *
+ * 1. The BuddyBoss Theme is active, or is the parent of the active child theme.
+ *    The exception, because DRM cannot see it: the theme never calls
+ *    `register_addon()`, and its licence key lives under its own connector
+ *    (`buddyboss_theme_dynamic_id`) which `BB_DRM_Helper::has_key()` does not
+ *    read. Without this check a theme-only Plus customer is invisible.
+ * 2. A paid add-on registered with the DRM registry. Every paid BuddyBoss
+ *    product registers at `plugins_loaded` priority 9, so the registry is
+ *    populated before this runs — in every context, including WP-Cron.
+ * 3. A Mothership licence key is stored for the Platform SKU.
+ * 4. The pre-Mothership licence option is still present, for sites that never
+ *    completed the licence migration.
+ *
+ * Intentionally does NOT call `BB_DRM_Addon::is_addon_licensed()`, which can
+ * reach the Mothership API, or `BB_DRM_Helper::is_valid()`, which returns true
+ * on development environments by design. This function runs on every request.
+ *
+ * @since BuddyBoss 3.4.3
+ *
+ * @return bool True if a paid BuddyBoss product was detected.
+ */
+function bb_has_paid_product() {
+	static $memo = null;
+
+	if ( null === $memo ) {
+		// The BuddyBoss Theme, including when it is the parent of a child theme.
+		$detected = ( 'buddyboss-theme' === get_template() );
+
+		// A paid add-on registered itself for DRM.
+		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
+			$registered_addons = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
+			$detected          = ! empty( $registered_addons );
+		}
+
+		// A Mothership licence key for the Platform SKU.
+		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
+			try {
+				$detected = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::has_key();
+			} catch ( \Throwable $e ) {
+				// Mothership container unavailable — treat as no key.
+				$detected = false;
+			}
+		}
+
+		// Licence data from before the Mothership migration. Multisite stored
+		// this network-wide, so mirror the migration loader's site-option
+		// fallback or licensed pre-Mothership networks read as unpaid.
+		if ( ! $detected ) {
+			$detected = ! empty( get_option( 'bboss_updater_saved_licenses', array() ) );
+		}
+		if ( ! $detected && is_multisite() ) {
+			$detected = ! empty( get_site_option( 'bboss_updater_saved_licenses', array() ) );
+		}
+
+		/*
+		 * Only memoize once add-ons have had the chance to register (they do so
+		 * at `plugins_loaded` priority 9). did_action() alone is not enough: it
+		 * already returns 1 while `plugins_loaded` callbacks are still running,
+		 * so an early-priority callback could freeze a false negative for the
+		 * remainder of the request — hence the doing_action() exclusion.
+		 */
+		if ( did_action( 'plugins_loaded' ) && ! doing_action( 'plugins_loaded' ) ) {
+			$memo = $detected;
+		}
+	} else {
+		$detected = $memo;
+	}
+
+	/**
+	 * Filters whether the site has a paid BuddyBoss product.
+	 *
+	 * Applied on every call rather than memoized alongside the detection
+	 * result, so a callback added after the first call is still honoured.
+	 *
+	 * @since BuddyBoss 3.4.3
+	 *
+	 * @param bool $detected Whether a paid product was detected.
+	 */
+	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
+
+/**
+ * Resolve the ID of the user on whose behalf the current request is being rendered.
+ *
+ * `bp_loggedin_user_id()` reads `buddypress()->loggedin_user->id`, which is populated by
+ * `bp_setup_current_user()` on WordPress' `set_current_user` action. On a normal page load that
+ * always tracks `get_current_user_id()`. In a REST request it can lag behind: the authentication
+ * handler may resolve the user before BuddyPress has registered that action, leaving the BP global
+ * at 0 while WordPress already knows who is calling. Anything that derives a *viewer* from
+ * `bp_loggedin_user_id()` then behaves as though the request were anonymous — for
+ * `bp_core_get_user_displayname()` that means an authenticated member is served the guest-level
+ * redaction of another member's name.
+ *
+ * Prefer the BuddyPress global, because code that deliberately re-points the viewer does so by
+ * assigning to it (see `bp_messages_*` and the personal-data exporters), and fall back to the
+ * WordPress current user only when BP has no value at all. That makes this a no-op on every path
+ * where the two already agree.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @return int User ID of the current viewer, or 0 when the request is anonymous.
+ */
+function bb_core_get_viewer_user_id() {
+	$viewer_id = function_exists( 'bp_loggedin_user_id' ) ? (int) bp_loggedin_user_id() : 0;
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = (int) get_current_user_id();
+	}
+
+	/**
+	 * Filters the resolved viewer user ID.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param int $viewer_id User ID of the current viewer, 0 when anonymous.
+	 */
+	return (int) apply_filters( 'bb_core_get_viewer_user_id', $viewer_id );
+}
+
+/**
+ * Viewer ID that means "an anonymous visitor", explicitly.
+ *
+ * Throughout the profile-visibility API a viewer ID of `0` does NOT mean "logged out" - it means
+ * "resolve the viewer from the current request". `bp_core_get_user_displayname()` replaces it with
+ * `bb_core_get_viewer_user_id()`, and `bp_xprofile_get_hidden_fields_for_user()` replaces it with
+ * `bp_loggedin_user_id()`. There is therefore no way to say "render this name for someone who is
+ * not a member of this site" while a member happens to be logged in.
+ *
+ * That case is real: a member invitation is composed in the inviter's own session but is delivered
+ * to a plain email address with no member behind it. Resolved with the request's viewer, the
+ * inviter sees their own profile, so the email carries name parts the site hides from everyone
+ * else. Passing this ID pins the resolution to the public, logged-out view.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @return int Sentinel viewer ID representing an anonymous visitor.
+ */
+function bb_core_guest_viewer_id() {
+	return -1;
+}
+
+/**
+ * Evaluate a MySQL `LIKE` pattern against a string in PHP.
+ *
+ * Used where a row set produced by a `LIKE` comparison in SQL has to be re-tested against a value
+ * that only exists in PHP — for example a display name that has been redacted for the current
+ * viewer, which no column holds. Re-implementing the comparison by hand invites subtle drift from
+ * the SQL that produced the candidate rows, so this mirrors it directly: the caller passes the very
+ * pattern it gave to `$wpdb`.
+ *
+ * Supports the two wildcards WordPress' `$wpdb->esc_like()` / `bp_esc_like()` protect (`%` and `_`)
+ * and their backslash escaping, so a literal `%` typed by a member stays literal. Matching is
+ * case-insensitive and multibyte-aware, matching MySQL's default `utf8mb4_*_ci` collation.
+ *
+ * That collation is also ACCENT-insensitive and PCRE is not, so a second pass folds both sides with
+ * remove_accents() when the first finds nothing. remove_accents() is WordPress' ASCII-folding
+ * APPROXIMATION of the collation rather than an equivalent, and it is LOCALE-DEPENDENT: under a
+ * German locale it expands a character to more than one ASCII character ('ß' to 'ss', 'ä' to 'ae'),
+ * which a `_` single-character wildcard can see, while under every other locale the same 'ß' folds
+ * to a single 's'. So it is used only to ADD a match the collation would have made, never to
+ * withdraw one the first pass found.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string $pattern LIKE pattern, exactly as passed to the SQL comparison.
+ * @param string $subject String to test.
+ * @return bool Whether $subject satisfies $pattern.
+ */
+function bb_core_sql_like_match( $pattern, $subject ) {
+	$pattern = (string) $pattern;
+	$subject = (string) $subject;
+
+	$regex  = '';
+	$length = strlen( $pattern );
+
+	for ( $i = 0; $i < $length; $i++ ) {
+		$char = $pattern[ $i ];
+
+		if ( '\\' === $char && $i + 1 < $length ) {
+			// An escaped wildcard is a literal character; consume both bytes.
+			++$i;
+			$regex .= preg_quote( $pattern[ $i ], '/' );
+			continue;
+		}
+
+		if ( '%' === $char ) {
+			$regex .= '.*';
+			continue;
+		}
+
+		if ( '_' === $char ) {
+			$regex .= '.';
+			continue;
+		}
+
+		$regex .= preg_quote( $char, '/' );
+	}
+
+	$matched = preg_match( '/^' . $regex . '$/iu', $subject );
+
+	// preg_match() returns false only on a malformed pattern or invalid UTF-8. Retry without the
+	// unicode modifier so a byte-wise comparison still answers, rather than silently reporting "no
+	// match" — for the privacy filter that calls this, "no match" is the destructive answer.
+	if ( false === $matched ) {
+		$matched = preg_match( '/^' . $regex . '$/i', $subject );
+	}
+
+	if ( 1 === $matched ) {
+		return true;
+	}
+
+	// The rows this re-tests were selected by MySQL under an accent-insensitive collation, which
+	// answers 1 for `'Jose' LIKE '%José%'` where PCRE answers no. Without this fold a member who
+	// restricted one name part vanished from a search for the unaccented spelling of a part they
+	// publish — over-redaction with no privacy benefit, since the member is permitted to appear.
+	$folded_pattern = remove_accents( $pattern );
+	$folded_subject = remove_accents( $subject );
+
+	if ( $folded_pattern === $pattern && $folded_subject === $subject ) {
+		return false;
+	}
+
+	// One level only: the folded strings fold to themselves, so this returns above.
+	return bb_core_sql_like_match( $folded_pattern, $folded_subject );
+}
+
+/**
+ * Character class matching the scripts that are written without word separators.
+ *
+ * Japanese, Chinese, Korean, Thai and their neighbours do not put a space between words, so a
+ * character of one of these scripts standing beside a name ENDS that name. Every other script does
+ * separate words, and a letter beside a name there really does continue it - "Ann" inside
+ * "Annapolis" is one word, not a member's name followed by something else.
+ *
+ * WordPress answers the same question with wp_get_word_count_type(), but that is a single answer for
+ * the whole installation, read from the site's locale. A community is one site running many
+ * languages at once: a Latin name sits inside Japanese content on an English site, and a Japanese
+ * member posts on a German one. The question has to be asked of the neighbouring character, not of
+ * the installation - so the site locale cannot answer it here.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @return string Regex character-class body, without the enclosing brackets.
+ */
+function bb_core_get_continuous_script_class() {
+	$class = '\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}\p{Thai}\p{Lao}\p{Khmer}\p{Myanmar}\p{Tibetan}\p{Yi}';
+
+	/**
+	 * Filters the scripts treated as written without word separators.
+	 *
+	 * Extending this class makes name redaction MORE aggressive for the scripts added, never less:
+	 * a script listed here gives up the boundary that would have protected an ordinary word.
+	 *
+	 * The return is interpolated into a character class and must be a valid class body. A value
+	 * that does not compile is discarded in favour of the default, because the alternative is a
+	 * pattern that matches nothing: preg_replace() would then return null, the name would be left
+	 * standing in full, and the filter would have made the redaction LESS aggressive - the one
+	 * outcome this docblock rules out.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param string $class Regex character-class body, without the enclosing brackets.
+	 */
+	$filtered = apply_filters( 'bb_core_continuous_script_class', $class );
+
+	// A listener that returns an array, an object or null is not offering a class body. Casting it
+	// would emit "Array to string conversion" on a public extension point and splice the word
+	// "Array" into the class; refusing it keeps the default, which is the safe direction.
+	if ( ! is_string( $filtered ) || $class === $filtered ) {
+		return $class;
+	}
+
+	// Union, never replace. The docblock above promises a listener can only make the redaction more
+	// aggressive, and only a union delivers that: a listener that RETURNS a narrower body - or one
+	// that simply does not repeat the defaults - would otherwise take a script out of the class,
+	// restore the boundary it had given up, and leave that script's names standing. The defaults
+	// are therefore always present, and the filter adds to them.
+	$addition = str_replace( $class, '', $filtered );
+
+	// An unescaped `]` would close the class early wherever it is interpolated, turning the rest of
+	// the body into literal pattern text. It compiles, so it cannot be caught by a compile test.
+	//
+	// Every escape sequence is removed before the check rather than looking behind one character:
+	// a one-character lookbehind cannot tell an escaped `]` (`\]`, safe) from one that merely
+	// follows an escaped backslash (`\\]`, which closes the class). Any `]` still standing after
+	// the escapes are gone is unescaped. A failed preg_replace() returns null and is refused too,
+	// because the alternative is accepting a body this check never actually inspected.
+	$unescaped = preg_replace( '/\\\\./s', '', $addition );
+
+	if ( '' === $addition || null === $unescaped || false !== strpos( $unescaped, ']' ) ) {
+		return $class;
+	}
+
+	$combined = $class . $addition;
+
+	return bb_core_is_valid_character_class( $combined ) ? $combined : $class;
+}
+
+/**
+ * Whether a string is usable as the body of a regex character class.
+ *
+ * Compiled against a throwaway subject with the same `u` modifier the matcher uses, because a class
+ * body can be well-formed for a byte pattern and invalid for a Unicode one. preg_match() emits a
+ * warning and returns false on a bad pattern, so the warning is suppressed and the return value is
+ * what is trusted.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string $class_body Regex character-class body, without the enclosing brackets.
+ * @return bool True when `[$class_body]` compiles.
+ */
+function bb_core_is_valid_character_class( $class_body ) {
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- an invalid pattern is the thing being detected; preg_match() reports it by returning false.
+	return false !== @preg_match( '/[' . $class_body . ']/u', '' );
+}
+
+/**
+ * Build the assertion that stops one edge of a name from matching inside a longer word.
+ *
+ * `\b` cannot be used: it is defined against ASCII word characters and fires in the middle of a
+ * non-ASCII name. A plain `(?![\p{L}\p{N}_])` is no better, because in "山田太郎さんが投稿しました"
+ * nothing but a letter ever follows the name, so the assertion can never hold and the name is left
+ * standing in full - the disclosure this exists to prevent. The same assertion fails a LATIN name on
+ * a Japanese site ("Alex Quillfeatherさんの記事"), because the kana that follows is still `\p{L}`.
+ *
+ * So a character from a script written without separators counts as a boundary, and everything else
+ * word-forming does not.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string      $char       First or last character of the name being matched.
+ * @param bool        $trailing   Optional. Whether this is the name's trailing edge. Default false.
+ * @param string|null $continuous Optional. Continuous-script class body, resolved once by a caller
+ *                                that builds several assertions. Null resolves it here. Default null.
+ * @return string A lookaround assertion, or an empty string where no boundary can be asserted.
+ */
+function bb_core_get_name_boundary_assertion( $char, $trailing = false, $continuous = null ) {
+	$char = (string) $char;
+
+	// A non-word edge character already stands at a boundary, and asserting one after it would
+	// invert the test: after "Ann<emoji>" a word-boundary assertion demands that a letter FOLLOWS.
+	if ( '' === $char || 1 !== preg_match( '/[\p{L}\p{N}_]/u', $char ) ) {
+		return '';
+	}
+
+	// Resolved by the caller where one call builds several assertions, so the filter behind it is
+	// dispatched once for the whole pattern instead of twice per name. Passing null keeps the
+	// single-argument behaviour every other caller relies on.
+	if ( null === $continuous ) {
+		$continuous = bb_core_get_continuous_script_class();
+	} else {
+		$continuous = (string) $continuous;
+	}
+
+	// The name's own edge is written without separators, so no boundary is expressible on this side.
+	// Assert nothing rather than an assertion that can never hold: an assertion that never holds
+	// withholds nothing, and a name that was supposed to be withheld and silently was not is the leak.
+	if ( 1 === preg_match( '/[' . $continuous . ']/u', $char ) ) {
+		return '';
+	}
+
+	// A combining mark continues the grapheme it follows, so it is word-forming on BOTH edges. The
+	// leading edge used to omit it on the argument that a mark belongs to whatever stands before
+	// it - true, and beside the point: that is exactly why a name must not start matching straight
+	// after one. Omitting it let "oe" match inside a decomposed "Z<combining diaeresis>oe".
+	$word = '\p{L}\p{N}\p{M}_';
+
+	return $trailing
+		? '(?:(?=[' . $continuous . '])|(?![' . $word . ']))'
+		: '(?:(?<=[' . $continuous . '])|(?<![' . $word . ']))';
+}
+
+/**
+ * Replace member names inside a string, matching whole words only.
+ *
+ * `str_replace()` and `strtr()` match anywhere, so a member whose name is a prefix of an ordinary
+ * word rewrote the middle of it: a member called "Ann" turned "Ann joined the Annapolis Anniversary
+ * group" into "A. joined the A.apolis A.iversary group". Short names, and names that are prefixes of
+ * longer words, are common at community scale and the corruption is silent.
+ *
+ * Each edge of each name is guarded by bb_core_get_name_boundary_assertion(), which decides from the
+ * script of that edge whether a boundary can be asserted there at all.
+ *
+ * The number of replacements is deliberately NOT limited: a name that genuinely appears twice is
+ * replaced twice. Leaving the later occurrence standing would leave a name part this viewer may not
+ * see in the string, and that is the direction that discloses.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string $text Text that may embed the members' stored names.
+ * @param array  $map  Map of stored name => the name this viewer may see.
+ * @return string The text with each mapped name replaced where it stands as a whole word.
+ */
+function bb_core_replace_names( $text, $map ) {
+	$text = (string) $text;
+
+	if ( '' === $text || empty( $map ) || ! is_array( $map ) ) {
+		return $text;
+	}
+
+	$replacements = array();
+
+	foreach ( $map as $search => $replace ) {
+		$search = (string) $search;
+
+		if ( '' === $search ) {
+			continue;
+		}
+
+		$replacements[ $search ] = (string) $replace;
+
+		// The entity-encoded spelling as well as the raw one. Callers hand over the raw
+		// `wp_users.display_name` column, but the text being searched is not always raw: Yoast
+		// escapes the document title before passing it on (front-end-integration.php), so the later
+		// filters - including this one - see `O&#039;Brien` where the column holds `O'Brien`.
+		// Matching only the column found nothing there, and the redaction failed OPEN and silently.
+		// esc_html() is idempotent on its own output, so for a name with no special character the
+		// two spellings are the same string and this adds nothing.
+		$escaped_search = esc_html( $search );
+
+		if ( $escaped_search !== $search && ! isset( $replacements[ $escaped_search ] ) ) {
+			$replacements[ $escaped_search ] = esc_html( (string) $replace );
+		}
+	}
+
+	if ( empty( $replacements ) ) {
+		return $text;
+	}
+
+	// Longest needle first. PCRE alternation is leftmost-first, so without this a member called
+	// "Ann" would claim the opening of a member called "Ann Lee" - which is also how strtr(), the
+	// call this replaces, resolved the same ambiguity.
+	$needles = array_map( 'strval', array_keys( $replacements ) );
+	$lengths = array_map( 'strlen', $needles );
+
+	array_multisort( $lengths, SORT_DESC, SORT_NUMERIC, $needles );
+
+	// Resolved once for the whole pattern. Each needle contributes two boundary assertions and each
+	// of those would otherwise dispatch the `bb_core_continuous_script_class` filter again.
+	$continuous_class = bb_core_get_continuous_script_class();
+
+	$branches = array();
+
+	foreach ( $needles as $needle ) {
+		$first = ( 1 === preg_match( '/\A./us', $needle, $edge ) ) ? $edge[0] : '';
+		$last  = ( 1 === preg_match( '/.\z/us', $needle, $edge ) ) ? $edge[0] : '';
+
+		$branches[] = bb_core_get_name_boundary_assertion( $first, false, $continuous_class ) .
+			'(?:' . preg_quote( $needle, '/' ) . ')' .
+			bb_core_get_name_boundary_assertion( $last, true, $continuous_class );
+	}
+
+	$replaced = preg_replace_callback(
+		'/(?:' . implode( '|', $branches ) . ')/u',
+		static function ( $matches ) use ( $replacements ) {
+			return isset( $replacements[ $matches[0] ] ) ? $replacements[ $matches[0] ] : $matches[0];
+		},
+		$text
+	);
+
+	// preg_replace_callback() returns null on invalid UTF-8 or a PCRE limit. Fall back to the
+	// unbounded replacement rather than returning the text untouched: a cosmetic over-replacement is
+	// recoverable, a name that was supposed to be withheld and silently was not is the leak.
+	return ( null === $replaced ) ? strtr( $text, $replacements ) : $replaced;
+}
+
+/**
+ * Build the name a viewer may see from the member's own profile fields.
+ *
+ * `wp_users.display_name` is a DERIVED column: BuddyBoss writes it from the profile fields when a
+ * member saves, and nothing keeps it in step afterwards. An import, the wp-admin "Display name
+ * publicly as" dropdown or any third-party write can leave it spelling something a long way from
+ * "First Last" - glued ("AlexQuillfeather"), punctuation-joined, reordered, suffixed, or holding a
+ * name the member no longer has. Members cannot set it themselves.
+ *
+ * So when a name part has to be withheld from this viewer, the visible name is NOT that column
+ * minus the hidden part. Subtracting one string from another is undecidable on drifted data: a
+ * surname sits inside unrelated names as often as it is the name being hidden ("Ng" inside
+ * "Armstrong", "Ann" inside "Cann"), and a suffix or a de-duplication digit welded to the hidden
+ * part ("AnnJr", "Zebrastripe2") is indistinguishable by shape from somebody else's name. Every
+ * heuristic that separates those cases is load-bearing for one shape and wrong for another.
+ *
+ * The name is therefore assembled from the fields this viewer may see, in the order the site-wide
+ * Display Name Format asks for - which is how the logged-in path has always built it
+ * (bp_xprofile_get_member_display_name()), so the guest view and the member view agree by
+ * construction rather than by two implementations happening to match.
+ *
+ * The stored column is still returned untouched when nothing is hidden, so a deliberately
+ * customised display name only gives way to the rebuild when something has to be withheld.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param int   $user_id          ID of the member whose name is being resolved.
+ * @param array $hidden_field_ids XProfile field IDs this viewer may not see, as returned by
+ *                                bp_xprofile_get_hidden_fields_for_user(). The site-wide format
+ *                                hide never appears in that list and is applied here instead.
+ * @return string The visible name; the nickname, then the user_nicename, when no permitted name
+ *                part has a value. '' only for an unusable user ID.
+ */
+function bb_core_build_visible_display_name( $user_id, $hidden_field_ids = array() ) {
+	$user_id = (int) $user_id;
+
+	if ( $user_id <= 0 ) {
+		return '';
+	}
+
+	$format = bp_core_display_name_format();
+
+	// Under the Nickname format the visible name is the nickname and nothing else - neither name
+	// field is part of it - so there is nothing to assemble and nothing a visibility level could
+	// remove. The Nickname field itself is never excludable (bp_xprofile_get_fields_by_visibility_levels()).
+	if ( 'nickname' === $format ) {
+		// From the xprofile Nickname FIELD, because that is what the canonical resolver reads for this
+		// format (bp_xprofile_get_member_display_name()'s `case 'nickname'`). Resolving it from the
+		// `nickname` user meta instead made the guest view disagree with the member view wherever the
+		// two have drifted - which is whenever bp_disable_profile_sync() is on, since
+		// xprofile_sync_wp_profile() then bails outright, and the product ships a repair tool for
+		// exactly that drift. No meta key is passed: the fallback below reads the meta anyway, in the
+		// same order, so passing one here would only duplicate it.
+		$nickname_field_id = (int) bp_xprofile_nickname_field_id();
+		$nickname          = ( $nickname_field_id > 0 ) ? bb_core_get_name_field_value( $nickname_field_id, $user_id, '' ) : '';
+
+		return ( '' !== $nickname ) ? $nickname : bb_core_get_name_fallback_label( $user_id );
+	}
+
+	$hidden_field_ids    = array_map( 'intval', (array) $hidden_field_ids );
+	$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+	$last_name_field_id  = (int) bp_xprofile_lastname_field_id();
+
+	$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $hidden_field_ids, true ) );
+
+	// The "First Name" format leaves the surname out of the visible name for EVERY viewer, whether
+	// or not the Last Name field is enabled as a profile field, and that hide never enters the
+	// per-viewer list. Gating on bp_core_hide_display_name_field() instead would be too narrow: it
+	// only reports the field being DISABLED, missing the common enabled-field case.
+	$last_name_hidden = (
+		'first_name' === $format
+		|| ( $last_name_field_id > 0 && in_array( $last_name_field_id, $hidden_field_ids, true ) )
+	);
+
+	$parts = array();
+
+	if ( ! $first_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $first_name_field_id, $user_id, 'first_name' );
+	}
+
+	if ( ! $last_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $last_name_field_id, $user_id, 'last_name' );
+	}
+
+	$name = trim( implode( ' ', array_filter( $parts, 'strlen' ) ) );
+
+	return ( '' !== $name ) ? $name : bb_core_get_name_fallback_label( $user_id );
+}
+
+/**
+ * Read one name profile field for bb_core_build_visible_display_name().
+ *
+ * Unicode-aware trim, because a value padded with a non-ASCII space - U+00A0 pasted from a word
+ * processor, which PHP's trim() leaves in place - would otherwise reach the assembled name.
+ * preg_replace() returns null only on a subject that is not valid UTF-8, which normalises to '' so
+ * the caller applies its fallback rather than concatenating a null.
+ *
+ * The WordPress user meta is read when the profile field has no stored row. That is not a
+ * convenience: bp_xprofile_get_member_display_name() back-fills a missing name field from exactly
+ * this meta, and on an imported member the xprofile row genuinely does not exist yet, so reading
+ * only the field would drop a name this viewer is entitled to see.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
+ * @param int    $user_id  ID of the member the field belongs to.
+ * @param string $meta_key WordPress user meta key holding the same name part.
+ * @return string The stored value, or '' when there is none.
+ */
+function bb_core_get_name_field_value( $field_id, $user_id, $meta_key ) {
+	$field_id = (int) $field_id;
+	$value    = '';
+
+	if ( $field_id > 0 ) {
+		$stored = xprofile_get_field_data( $field_id, $user_id );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+	}
+
+	if ( '' === $value && '' !== (string) $meta_key ) {
+		$stored = get_user_meta( $user_id, $meta_key, true );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+	}
+
+	return $value;
+}
+
+/**
+ * The label to show for a member whose permitted name parts hold nothing.
+ *
+ * Never a blank: the nickname first - it carries no hidden name part - then the public
+ * user_nicename, which WordPress guarantees for every real user.
+ *
+ * The `nickname` USER META is what is read, not the xprofile Nickname field, because that is the
+ * chain bp_xprofile_get_member_display_name() itself falls back through when a name field is empty
+ * under the "First Name" and "First Name & Last Name" formats: an empty first-name field is
+ * back-filled from `first_name` and then from `nickname`, both user meta. The Nickname FORMAT is the
+ * one case that resolves from the field instead, and bb_core_build_visible_display_name() reads the
+ * field itself for that branch before falling through to here.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param int $user_id ID of the member.
+ * @return string The nickname, else the user_nicename, else ''.
+ */
+function bb_core_get_name_fallback_label( $user_id ) {
+	$nickname = trim( (string) get_the_author_meta( 'nickname', $user_id ) );
+
+	if ( '' !== $nickname ) {
+		return $nickname;
+	}
+
+	return trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
+}
+
+/**
+ * Whether a feature extracted to the BuddyBoss Addons plugin is provided by a REAL provider.
+ *
+ * A moved feature (polls, reactions, social login, pinned posts) is "provided" when either a
+ * legacy Platform/Pro build still ships it, or the licensed BuddyBoss Addons module for it is
+ * loaded. It is NOT provided when only a deprecation shim is present — Platform/Pro keep the old
+ * function names alive so un-updated callers degrade instead of fatalling, but the shims do no
+ * real work (e.g. `bb_load_polls()` returns null). Detection keys on symbols the shims never
+ * define: the moved classes (BB_Polls / BB_SSO / BB_Reactions), and for pinned posts the non-stub
+ * function (the stub advertises itself via `bb_activity_pin_unpin_post_is_stub()`).
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string $feature One of: 'polls', 'reactions', 'sso', 'pinned_posts'.
+ * @return bool True when a real provider is present.
+ */
+function bb_is_feature_provided( $feature ) {
+	switch ( $feature ) {
+		case 'polls':
+			return class_exists( 'BB_Polls' ) || function_exists( 'bb_register_poll' );
+		case 'reactions':
+			return class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' );
+		case 'sso':
+			return class_exists( 'BB_SSO' ) || function_exists( 'bb_register_sso' );
+		case 'pinned_posts':
+			return function_exists( 'bb_activity_pin_unpin_post' )
+				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' );
+		default:
+			return false;
+	}
 }

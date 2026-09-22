@@ -22,7 +22,12 @@
 		</div>
 
 		<?php
-		$video_extensions = bp_video_get_allowed_extension();
+		// `bp_video_get_allowed_extension()` and
+		// `bp_document_get_allowed_extension()` are loaded by their own
+		// (separate) components. Media can be on while video/document is
+		// off — gate each toolbar button on its specific component
+		// rather than assuming "media on => video/document on".
+		$video_extensions = ( bp_is_active( 'video' ) && function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : array();
 		if ( ! empty( $video_extensions ) ) :
 			?>
 			<div class="post-elements-buttons-item bb-rl-post-video post-media-video-support">
@@ -33,7 +38,7 @@
 		<?php endif; ?>
 
 		<?php
-		$extensions = bp_document_get_allowed_extension();
+		$extensions = ( bp_is_active( 'document' ) && function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : array();
 		if ( ! empty( $extensions ) ) :
 			?>
 			<div class="post-elements-buttons-item bb-rl-post-media post-media-document-support">

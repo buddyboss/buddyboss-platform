@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/buddypress/readylaunch/notifications/on-screen.php.
  *
- * @since   BuddyBoss 2.21.1
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core
  * @version 1.0.0
  */

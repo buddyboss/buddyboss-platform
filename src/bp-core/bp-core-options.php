@@ -2500,6 +2500,48 @@ function bb_feed_excluded_post_types() {
  */
 function bb_is_active_activity_pinned_posts( $default = false ) {
 
+	$enabled = (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default );
+
+	if ( $enabled ) {
+		/*
+		 * Pinned Posts moved out of the free Platform into the BuddyBoss Addons
+		 * plugin. The stored `_bb_enable_activity_pinned_posts` option can remain
+		 * enabled from before that move, so the feature is only truly ACTIVE when
+		 * the add-on is present AND licensed — otherwise the pin controls, the
+		 * REST support and the add-on's own pin logic must all treat it as off.
+		 *
+		 * Two independent signals so the gate is load-order safe:
+		 *   - the add-on's licensed-provider check (grace-period aware — the same
+		 *     signal the add-on's own module loaders use), or
+		 *   - the add-on's pin mutation function actually being loaded, EXCLUDING
+		 *     Platform's own no-op shim. Platform defines a deprecation shim under
+		 *     that same name from `bp_init:1` (so un-updated external callers
+		 *     degrade instead of fatalling), which means a bare `function_exists()`
+		 *     would report a provider on a site that has none. The shim advertises
+		 *     itself via `bb_activity_pin_unpin_post_is_stub()`, so testing for its
+		 *     absence keeps this term honest.
+		 *
+		 * LIMITATION: the licence check proves the add-on plugin is active and
+		 * entitled, NOT that the Pinned Posts MODULE finished loading (it has its
+		 * own guards — activity component active, dormancy marker, module present).
+		 * If the module is dormant on a licensed site, this reports the feature
+		 * active while no real pin implementation exists; the REST route then
+		 * answers a structured 501 (never a fatal) and no pin UI renders.
+		 * The licence term is only needed for the early `bb_register_features`
+		 * call, before the module loads at bp_include:20.
+		 */
+		$provider_available =
+			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| (
+				function_exists( 'bb_activity_pin_unpin_post' )
+				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' )
+			);
+
+		if ( ! $provider_available ) {
+			$enabled = false;
+		}
+	}
+
 	/**
 	 * Filters whether activity pinned posts are enabled.
 	 *
@@ -2507,7 +2549,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 	 *
 	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', $enabled );
 }
 
 /**
@@ -2656,6 +2698,11 @@ function bb_all_enabled_reactions( $key = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
 }
 
@@ -2669,6 +2716,11 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
  * @return bool True if reaction for activity comments is enabled, otherwise false.
  */
 function bb_is_reaction_activity_comments_enabled( $default = true ) {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
 }
 
@@ -2685,10 +2737,39 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if (
-		! class_exists( 'BB_Reactions' )
-	) {
-		$mode = 'likes';
+
+	if ( 'emotions' === $mode ) {
+		// "Emotions" requires the Pro emotion layer, provided by either BuddyBoss
+		// Platform Pro (legacy) or the BuddyBoss Addons plugin. Detect provider
+		// availability in a load-order-independent way: the BB_Reactions class is
+		// loaded late (bb_after_register_features), so a bare class_exists() check
+		// run during earlier hooks (e.g. bb_register_features) would spuriously
+		// report the layer missing.
+		//
+		// IMPORTANT: only fall back for DISPLAY — never persist the downgrade.
+		// Writing 'likes' back from this getter silently corrupted a valid saved
+		// 'emotions' setting on every request where the provider had not booted
+		// yet (and, on addon-only sites, permanently), which made the Reactions
+		// mode appear un-saveable.
+		//
+		// The third branch is gated on bp_register_reaction() — a marker defined
+		// only by a legacy Pro build that still ships the emotion layer itself.
+		// A licensed Pro post-PROD-10191 no longer provides reactions (that moved
+		// to the add-on), so bbp_pro_is_license_valid() alone must not be treated
+		// as proof of a provider; without this gate a new-Pro + no-add-on +
+		// licensed site would report emotions "available" with nothing behind it.
+		$emotion_layer_available =
+			class_exists( 'BB_Reactions' )
+			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| (
+				function_exists( 'bp_register_reaction' )
+				&& function_exists( 'bbp_pro_is_license_valid' )
+				&& bbp_pro_is_license_valid()
+			);
+
+		if ( ! $emotion_layer_available ) {
+			$mode = 'likes';
+		}
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );
@@ -2702,6 +2783,11 @@ function bb_get_reaction_mode( $default = 'likes' ) {
  * @return bool
  */
 function bb_is_reaction_emotions_enabled() {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
 }
 
@@ -2731,10 +2817,15 @@ function bb_reaction_button_options( $key = '' ) {
  * @return array
  */
 function bb_active_reactions() {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return array();
+	}
+
 	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+		$all_emotions = $reaction->bb_get_reactions( 'emotions' );
 	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
+		$all_emotions = $reaction->bb_get_reactions();
 	}
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
@@ -3142,3 +3233,60 @@ function bb_is_activity_search_enabled( $default = true ) {
 	 */
 	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
 }
+
+/**
+ * Check whether the Reactions feature is enabled via Settings 2.0 feature toggle.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $reset Optional. Pass true to clear the static cache. Default false.
+ *
+ * @return bool True if reactions feature is enabled, false otherwise.
+ */
+function bb_is_reactions_feature_enabled( $reset = false ) {
+	static $is_enabled = null;
+
+	if ( $reset ) {
+		$is_enabled = null;
+	}
+
+	if ( null !== $is_enabled ) {
+		return $is_enabled;
+	}
+
+	// Check if the feature registry exists (Settings 2.0).
+	if ( ! function_exists( 'bb_feature_registry' ) ) {
+		// Fallback: if no feature registry, assume enabled for backward compatibility.
+		$is_enabled = true;
+		return $is_enabled;
+	}
+
+	// Check the bb-active-features option directly for reactions.
+	$active_features = bp_get_option( 'bb-active-features', array() );
+
+	// Backward compatibility: if 'reactions' key not set (e.g. site not yet saved from Settings 2.0),
+	// treat as enabled so existing sites keep reactions. Must match is_active_callback in
+	// bb-features/community/reactions/bb-feature-config.php so feature card and functionality stay in sync.
+	if ( ! array_key_exists( 'reactions', $active_features ) ) {
+		$is_enabled = true;
+		return $is_enabled;
+	}
+
+	$is_enabled = ! empty( $active_features['reactions'] );
+	return $is_enabled;
+}
+
+/**
+ * Reset static cache when a feature is toggled on/off.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id The feature ID that was toggled.
+ */
+function bb_reset_reactions_feature_cache( $feature_id ) {
+	if ( 'reactions' === $feature_id ) {
+		bb_is_reactions_feature_enabled( true );
+	}
+}
+add_action( 'bb_feature_activated', 'bb_reset_reactions_feature_cache' );
+add_action( 'bb_feature_deactivated', 'bb_reset_reactions_feature_cache' );

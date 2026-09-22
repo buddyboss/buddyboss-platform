@@ -95,6 +95,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "Your password was changed on [{{{site.name}}}] \n\n If you didn't make this change, please reset your password: {{{reset.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member\'s password is changed', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when your password is changed.', 'buddyboss' ),
+				'group'               => 'account',
 			),
 			'bb_account_password'
 		);
