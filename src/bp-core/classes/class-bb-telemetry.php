@@ -825,13 +825,26 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * next send after an admin visit warms the add-ons cache.
 			 */
 			try {
-				$cached = get_transient( $plugin_id . '_add_ons' );
+				/*
+				 * GroundLevel 9.1.2 caches the add-ons under `{pluginId}-mosh-addons` as a
+				 * plain ARRAY of product objects. The `{pluginId}_add_ons` key read here
+				 * previously, and the `->products` shape it carried, both belong to 2.2.1:
+				 * the writer was removed with the API migration, so this lookup had no
+				 * writer left and could only return false once the stale row expired —
+				 * silently reporting the theme as not covered by the Platform licence.
+				 */
+				$cached = get_transient( $plugin_id . '-mosh-addons' );
 
-				if ( empty( $cached ) || empty( $cached->products ) || ! is_iterable( $cached->products ) ) {
+				if ( empty( $cached ) || ! is_iterable( $cached ) ) {
 					return false;
 				}
 
-				foreach ( $cached->products as $product ) {
+				foreach ( $cached as $product ) {
+					// `upgrade-addon` entries are upsell placeholders, not entitlements.
+					if ( ! is_object( $product ) || 'upgrade-addon' === ( $product->type ?? '' ) ) {
+						continue;
+					}
+
 					if (
 						! empty( $product->slug ) &&
 						false !== strpos( $product->slug, 'buddyboss-theme' ) &&

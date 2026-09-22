@@ -279,22 +279,22 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Resolves the license activation domain.
 	 *
-	 * Overrides {@see AbstractPluginConnection::resolveDomain()}, which returns only the
-	 * host of the home URL. WordPress installs that live in a subdirectory (e.g.
-	 * `example.com/community`) would otherwise share an activation identifier with a
-	 * second install on the root domain, so activating both against the same license
-	 * conflicts (PROD-9984). Appending the path gives each install its own identifier.
+	 * Overrides {@see AbstractPluginConnection::resolveDomain()} only to pin the identifier
+	 * an activation was created with; the format itself now matches the vendor's bare host.
 	 *
-	 * The domain is the activation's identity on the licensing server: it is sent as the
-	 * Basic-auth username and as a path segment of `licenses/{key}/activations/{domain}`,
-	 * so `example.com` and `example.com/community` are two different activation records.
-	 * Changing the format for a site that is ALREADY activated would orphan its record —
-	 * the twice-daily status cron would 404 and GroundLevel would revoke the license. So
-	 * the resolution order is:
+	 * An earlier revision appended the URL path so that two installs under one host got
+	 * distinct identifiers (`example.com/community`). The licensing server does not support
+	 * that: the domain is sent as the Basic-auth username (percent-encoded), and while
+	 * `activate` accepts a path-bearing value, the authenticated
+	 * `licenses/{key}/activations/meta` lookup rejects it — so the licence screen could never
+	 * load its details and the twice-daily status check had nothing to match. The vendor's own
+	 * base class returns `parse_url( get_home_url(), PHP_URL_HOST )`, and so does this now.
 	 *
-	 * 1. The domain stored at activation time, when present — always authoritative.
-	 * 2. The bare host, for a license activated before that option existed (legacy).
-	 * 3. `host/path`, for a fresh activation only.
+	 * The stored-domain pin is kept, because it is what protects an existing activation: the
+	 * value recorded at activation time stays authoritative even if the site URL changes
+	 * later, so the record cannot be orphaned and revoked. A site activated under the old
+	 * path-bearing format keeps that value until it is deactivated, at which point the next
+	 * activation records a bare host.
 	 *
 	 * When BuddyBoss Platform is network-activated, the network home URL is used so
 	 * every site in the network resolves the same domain for the shared license.
@@ -304,7 +304,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return string The activation domain (`host` or `host/path`).
+	 * @return string The activation domain.
 	 */
 	public function resolveDomain(): string {
 		$stored = $this->getStoredActivationDomain();
@@ -314,20 +314,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		}
 
 		$home_url = $this->is_network_activated() ? network_home_url() : get_home_url();
-		$host     = (string) wp_parse_url( $home_url, PHP_URL_HOST );
 
-		if ( '' === $host ) {
-			return '';
-		}
-
-		// An already-active license predates the stored-domain option and was activated
-		// against the bare host. Keep sending the bare host or the server will not
-		// recognise the activation and will revoke it on the next status check.
-		if ( $this->getLicenseActivationStatus() ) {
-			return $host;
-		}
-
-		return $host . untrailingslashit( (string) wp_parse_url( $home_url, PHP_URL_PATH ) );
+		return (string) wp_parse_url( $home_url, PHP_URL_HOST );
 	}
 
 	/**
