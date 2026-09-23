@@ -654,6 +654,11 @@ function bb_recaptcha_display( $action = '' ) {
 			'selected_version' => $enabled_for,
 			'site_key'         => bb_recaptcha_site_key(),
 			'action'           => $action,
+			// Front-end notices shown when a v3 token cannot be obtained at submit time.
+			'i18n'             => array(
+				'script_failed' => __( 'The security check could not be loaded. Please reload the page and try again.', 'buddyboss' ),
+				'token_failed'  => __( 'The security check could not be completed. Please try again.', 'buddyboss' ),
+			),
 		);
 		if ( 'recaptcha_v2' === $enabled_for ) {
 			$localize_data['v2_option']         = bb_recaptcha_recaptcha_v2_option();
