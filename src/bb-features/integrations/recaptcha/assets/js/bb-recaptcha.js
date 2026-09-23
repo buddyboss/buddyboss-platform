@@ -112,10 +112,12 @@
 		 * @param {string|boolean} container Known form id for this action, or false.
 		 */
 		setupV3: function ( action, container ) {
-			var self     = this;
-			var field    = $( '#bb_recaptcha_response_id' );
-			var form     = field.length ? field.closest( 'form' ) : $();
-			var mintedAt = 0;
+			var self         = this;
+			var field        = $( '#bb_recaptcha_response_id' );
+			var form         = field.length ? field.closest( 'form' ) : $();
+			var mintedAt     = 0;
+			var resubmitting = false;
+			var inFlight     = false;
 
 			if ( ! form.length && container ) {
 				form = $( '#' + container );
@@ -143,12 +145,11 @@
 				return;
 			}
 
-			var resubmitting = false;
-			var inFlight     = false;
-
 			form.on(
 				'submit',
 				function ( e ) {
+					var submitter;
+
 					// Second pass: the token was refreshed a moment ago, let it through.
 					if ( resubmitting ) {
 						return;
@@ -175,7 +176,7 @@
 					inFlight = true;
 					self.v3RemoveNotice( form );
 
-					var submitter = e.originalEvent && e.originalEvent.submitter ? $( e.originalEvent.submitter ) : $();
+					submitter = e.originalEvent && e.originalEvent.submitter ? $( e.originalEvent.submitter ) : $();
 					if ( ! submitter.length ) {
 						submitter = form.find( 'input[type="submit"], button[type="submit"], button:not([type])' ).first();
 					}
@@ -351,7 +352,10 @@
 				notice.find( 'p' ).text( message );
 				form.before( notice );
 			} else {
-				notice = $( '<div class="bp-messages bp-feedback error bb-recaptcha-notice" role="alert"><span class="bp-icon" aria-hidden="true"></span><p></p></div>' );
+				notice = $(
+					'<div class="bp-messages bp-feedback error bb-recaptcha-notice" role="alert">' +
+					'<span class="bp-icon" aria-hidden="true"></span><p></p></div>'
+				);
 				notice.find( 'p' ).text( message );
 				if ( field.length ) {
 					field.before( notice );
