@@ -3123,6 +3123,40 @@ function bp_activity_new_comment( $args = '' ) {
 		}
 	}
 
+	/**
+	 * Filters whether group membership is enforced when posting an activity comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool                 $validate_group_membership Whether to enforce group membership.
+	 * @param array                $r                         Parsed arguments for the new comment.
+	 * @param BP_Activity_Activity $activity                  Parent (root) activity object.
+	 */
+	$validate_group_membership = apply_filters( 'bb_activity_new_comment_validate_group_membership', true, $r, $activity );
+
+	// Bail if the user is not a member of the group the activity belongs to.
+	if (
+		$validate_group_membership &&
+		bp_is_active( 'groups' ) &&
+		buddypress()->groups->id === $activity->component &&
+		! bp_user_can( (int) $r['user_id'], 'bp_moderate' ) &&
+		(
+			! groups_is_user_member( (int) $r['user_id'], $activity->item_id ) ||
+			groups_is_user_banned( (int) $r['user_id'], $activity->item_id )
+		)
+	) {
+		$error = new WP_Error( 'bb_activity_group_comment_restricted', __( 'You need to be a member of this group to comment.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
 	// update comment privacy with parent one.
 	if ( ! empty( $activity->privacy ) ) {
 		$privacy = $activity->privacy;
