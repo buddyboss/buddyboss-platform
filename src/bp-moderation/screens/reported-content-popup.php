@@ -14,7 +14,13 @@
 			<div class="modal-container">
 				<header class="bb-model-header">
 					<h4>
-						<?php printf( '%s <span class="bp-reported-type"></span>', esc_html__( 'Report', 'buddyboss' ) ); ?>
+						<?php
+						printf(
+							/* translators: %s: reported content type. */
+							esc_html__( 'Report %s', 'buddyboss' ),
+							'<span class="bp-reported-type"></span>'
+						);
+						?>
 					</h4>
 					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
 						<span class="bb-icon-l bb-icon-times"></span>
@@ -24,6 +30,7 @@
 				<div class="bb-report-type-wrp">
 					<?php
 					printf(
+						/* translators: %s: reported content type (e.g. Post, Comment, Member). */
 						esc_html__( 'You have already reported this %s.', 'buddyboss' ),
 						'<span class="bp-reported-type"></span>'
 					);
