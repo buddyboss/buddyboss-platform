@@ -224,9 +224,15 @@ function bp_invites_member_invite_register_screen_message() {
 		}
 		$inviters = array_unique( $inviters );
 
+		// This message is rendered on the public registration page, so its audience is by
+		// definition not a member yet. Resolved against the request viewer an admin previewing the
+		// page - or the inviter loading their own invitation link - would put name parts the site
+		// hides from everyone else into a page served to a stranger. Pin the resolution to the
+		// public, logged-out view, as bp_get_member_invites_wildcard_replace() does for the
+		// invitation email.
 		$inviters_names = array();
 		foreach ( $inviters as $inviter ) {
-			$inviters_names[] = bp_core_get_user_displayname( $inviter );
+			$inviters_names[] = bp_core_get_user_displayname( $inviter, bb_core_guest_viewer_id() );
 		}
 
 		if ( ! empty( $inviters_names ) ) {
@@ -415,7 +421,11 @@ function bp_get_invites_member_invite_url() {
 function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	global $bp;
 
-	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+	// The invitation is composed in the inviter's own session but is delivered to a plain email
+	// address - there is no member behind it. Resolved against the request viewer the inviter sees
+	// their own profile in full, so the email would carry name parts the site hides from everyone
+	// else. Pin the resolution to the public, logged-out view.
+	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 	$site_name    = get_bloginfo( 'name' );
 	$inviter_url  = bp_loggedin_user_domain();
 

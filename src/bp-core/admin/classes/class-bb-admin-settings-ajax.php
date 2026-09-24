@@ -135,6 +135,41 @@ class BB_Admin_Settings_Ajax {
 
 		bp_update_option( $option_name, $option_value );
 
+		// Force the autoloaded-options cache to match the DB after the write.
+		//
+		// These options are autoloaded, so get_option() reads them from the
+		// persistent 'alloptions' cache bucket (Redis / Object Cache Pro here).
+		// If that bucket is ever out of sync with the DB, core's update_option()
+		// cannot heal it: when the row already holds the submitted value,
+		// $wpdb->update() reports 0 changed rows, update_option() returns early
+		// ('if ( ! $result ) return false;') and never refreshes the cache. The
+		// next get_option()/refresh then keeps serving the stale value, so a
+		// toggle can read back OFF while the DB says ON. Dropping the bucket
+		// forces a fresh rebuild from the DB on the next read. Cheap: settings
+		// saves are infrequent admin actions and the rebuild is a single query.
+		//
+		// bp_update_option() stores on the community's root blog
+		// (update_blog_option( bp_get_root_blog_id(), … )) and restores the
+		// current blog before returning, so on multisite the option — and the
+		// stale 'alloptions' bucket ('alloptions' is a blog-scoped, non-global
+		// group) — live on the root blog, which may differ from the blog this
+		// AJAX request is executing on. Switch there before the delete, mirroring
+		// the sibling endpoints in this class (search / directory-page).
+		$switched = false;
+		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
+			$root_blog_id = bp_get_root_blog_id();
+			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
+				switch_to_blog( $root_blog_id );
+				$switched = true;
+			}
+		}
+
+		wp_cache_delete( 'alloptions', 'options' );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
 		// Component-specific cache invalidation. Only fires when the relevant
 		// component is active so the handler stays usable when, say, Groups
 		// is deactivated but a Members option is being saved.
@@ -967,6 +1002,11 @@ class BB_Admin_Settings_Ajax {
 				// runtime state can pick the marketing URL for its upsell states while
 				// keeping its own URLs (license screen, add-ons screen) for the others.
 				'upgrade_catalog_url'       => null,
+				// Resolved below alongside `upgrade_catalog_url`: the catalog entry in
+				// UpgradeModal's shape ({ tier, label, title, description, media, url }).
+				// When present, an empty-state upgrade button opens the modal in-page
+				// rather than navigating away.
+				'upgrade_modal'             => null,
 				// Empty state fields (centered card with icon + title + description + button).
 				'empty_state_title'         => $field['empty_state_title'] ?? null,
 				'empty_state_description'   => $field['empty_state_description'] ?? null,
@@ -976,6 +1016,14 @@ class BB_Admin_Settings_Ajax {
 				// the plugin folder slug (e.g. "buddyboss-member-blogging").
 				'addon_action'              => ! empty( $field['addon_action'] ) ? sanitize_key( $field['addon_action'] ) : null,
 				'addon_slug'                => ! empty( $field['addon_slug'] ) ? sanitize_key( $field['addon_slug'] ) : null,
+				// Which `window.bbAdminData` nonce the handler named above expects.
+				// Left null for the Mothership handlers (mosh_addon_*), whose nonce
+				// (`addonNonce`) is AddonActivateButton's default; Platform-owned
+				// handlers set it to 'ajaxNonce'.
+				'addon_nonce_key'           => ! empty( $field['addon_nonce_key'] ) ? sanitize_text_field( $field['addon_nonce_key'] ) : null,
+				// Label while the request is in flight. Without it the button reads
+				// "Activating…" during an install, which is the wrong verb.
+				'addon_busy_label'          => ! empty( $field['addon_busy_label'] ) ? sanitize_text_field( $field['addon_busy_label'] ) : null,
 				'related_fields'            => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				// Per-option descriptions for select fields (description swaps on value change).
 				// map_deep handles nested structures safely; each leaf string is kses-filtered.
@@ -1246,6 +1294,13 @@ class BB_Admin_Settings_Ajax {
 			 * `bb_admin_settings_format_field_data` callback that swaps the button per
 			 * runtime state (Member Blogs does) can use the marketing URL for its
 			 * upsell states while keeping its own URLs for the others.
+			 *
+			 * `upgrade_modal` carries the same catalog entry in the shape UpgradeModal
+			 * consumes, so an empty-state button can open the modal in-page instead of
+			 * navigating straight to pricing — the behavior field-level pro badges have
+			 * had since 3.0. It is built whenever the catalog resolves an entry, even
+			 * one without an `upgrade_url`: the modal supplies its own pricing fallback,
+			 * so an entry that is only hero art plus copy still renders.
 			 */
 			if (
 				! empty( $field['upgrade_from_catalog'] ) &&
@@ -1259,6 +1314,62 @@ class BB_Admin_Settings_Ajax {
 					// The registered `button_url` is the fallback for when the catalog has
 					// no entry, so the catalog wins whenever it does.
 					$field_data['button_url'] = $field_data['upgrade_catalog_url'];
+				}
+
+				if ( ! empty( $upsell_entry ) && function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {
+					// Prefer the empty state's own heading as the modal title fallback:
+					// on an upsell panel the empty-state title names the feature
+					// ("Email Digest") while `label` is typically blank.
+					$field_data['upgrade_modal'] = bb_field_upgrade_to_modal_payload(
+						$upsell_entry,
+						$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
+					);
+
+					// Provenance, read by SettingsForm.js to decide whether the modal may
+					// take over the empty-state button. A catalog payload is content the
+					// marketing feed imposed on this panel, so it may only ever replace
+					// the marketing link the catalog itself supplied — never a
+					// destination a `bb_admin_settings_format_field_data` consumer chose.
+					// Testing `upgrade_catalog_url` for that was not equivalent: the
+					// branch above sets it ONLY when the entry carries an `upgrade_url`,
+					// while the modal is built for an entry that is hero art plus copy
+					// alone, and such an entry left the flag unset and the modal
+					// indistinguishable from a registered one.
+					if ( ! empty( $field_data['upgrade_modal'] ) ) {
+						$field_data['upgrade_modal']['source'] = 'catalog';
+					}
+				}
+			}
+
+			/*
+			 * Registered fallback. A panel may ship its own modal content so its upsell
+			 * works before — or without — a catalog entry, which matters for a feature
+			 * that launches ahead of the marketing push: with neither, the button
+			 * silently degrades to a plain pricing link and the designed modal never
+			 * appears. The catalog still wins whenever it holds an entry, so marketing
+			 * keeps the ability to retarget copy, art and URL without a plugin release.
+			 *
+			 * Passed through the same builder as the catalog path so both shapes are
+			 * sanitized identically and React has one contract; registration therefore
+			 * uses the catalog's key names (`upgrade_title`, `upgrade_description`,
+			 * `upgrade_tier`, `upgrade_url`, `upgrade_image_url`/`upgrade_video_url`).
+			 */
+			if (
+				empty( $field_data['upgrade_modal'] ) &&
+				! empty( $field['upgrade_modal'] ) &&
+				is_array( $field['upgrade_modal'] ) &&
+				function_exists( 'bb_field_upgrade_to_modal_payload' )
+			) {
+				$field_data['upgrade_modal'] = bb_field_upgrade_to_modal_payload(
+					$field['upgrade_modal'],
+					$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
+				);
+
+				// Provenance — see the catalog branch above. A payload the panel
+				// registered for itself is an explicit request for the modal, so it may
+				// take the button whatever the button currently points at.
+				if ( ! empty( $field_data['upgrade_modal'] ) ) {
+					$field_data['upgrade_modal']['source'] = 'registered';
 				}
 			}
 
