@@ -48,6 +48,49 @@ function bp_media_upload() {
 		return $attachment;
 	}
 
+	// Refresh attachment object to get updated file info after HEIC conversion.
+	$attachment = get_post( $attachment->ID );
+
+	// Get the actual file path after any conversions (e.g., HEIC to JPG).
+	$actual_file = get_attached_file( $attachment->ID );
+
+	// Check if WordPress converted HEIC to JPG.
+	if ( $actual_file && file_exists( $actual_file ) ) {
+		$actual_ext   = strtolower( pathinfo( $actual_file, PATHINFO_EXTENSION ) );
+		$original_ext = strtolower( pathinfo( $attachment->guid, PATHINFO_EXTENSION ) );
+
+		// If the original was HEIC but the actual is JPG, update the attachment data.
+		if (
+			in_array( $original_ext, array( 'heic', 'heif' ), true ) &&
+			in_array( $actual_ext, array( 'jpg', 'jpeg' ), true )
+		) {
+			// Get the new URL for the converted file.
+			$upload_dir = wp_upload_dir();
+			$actual_url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $actual_file );
+
+			// Update post mime type and GUID if needed.
+			wp_update_post(
+				array(
+					'ID'             => $attachment->ID,
+					'post_mime_type' => 'image/jpeg',
+					'guid'           => $actual_url,
+				)
+			);
+
+			// Update attachment metadata to reflect the converted file.
+			update_post_meta( $attachment->ID, '_wp_attached_file', str_replace( $upload_dir['basedir'] . '/', '', $actual_file ) );
+
+			// Refresh attachment object.
+			$attachment = get_post( $attachment->ID );
+
+			// Force refresh of attachment metadata to ensure conversion is complete.
+			$attachment_metadata = wp_get_attachment_metadata( $attachment->ID );
+			if ( ! $attachment_metadata && $actual_file && file_exists( $actual_file ) ) {
+				bp_media_regenerate_attachment_thumbnails( $attachment->ID );
+			}
+		}
+	}
+
 	/**
 	 * Hook Media upload.
 	 *
@@ -142,6 +185,14 @@ function bp_media_allowed_mimes( $mime_types ) {
 		'png'          => 'image/png',
 		'bmp'          => 'image/bmp',
 	);
+
+	if (
+		extension_loaded( 'imagick' ) &&
+		count( \Imagick::queryFormats( 'HEIC' ) ) > 0
+	) {
+		$mime_types['heic'] = 'image/heic';
+		$mime_types['heif'] = 'image/heif';
+	}
 
 	return $mime_types;
 }

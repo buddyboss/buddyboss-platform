@@ -119,6 +119,11 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'bp-exif'                       => array( 'file' => "{$url}vendor/exif.js" ),
+		'bb-heic2any'                   => array(
+			'file'         => "{$url}vendor/heic2any{$min}.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
 		'bp-media-dropzone'             => array(
 			'file'         => "{$url}vendor/dropzone{$min}.js",
 			'dependencies' => array(),
