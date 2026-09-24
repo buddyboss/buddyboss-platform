@@ -36,6 +36,7 @@ function bb_sanitize_topic_list_noop( $value ) {
  * Handles the toggle + select combo for activity edit and comment edit fields.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Delegates to bb_activity_normalize_edit_time().
  *
  * @param mixed $value The value to sanitize.
  *

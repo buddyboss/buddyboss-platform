@@ -1744,6 +1744,7 @@ function bp_activity_user_can_delete( $activity = false ) {
  * @global object                    $activities_template {@link BP_Activity_Template}
  *
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss [BBVERSION] Returns false while activity editing is disabled, unless `$privacy_edit`.
  */
 function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 	global $activities_template;
@@ -4469,6 +4470,7 @@ function bp_get_activity_entry_css_class() {
  * Determine if the current user can edit an activity comment item.
  *
  * @since BuddyBoss 2.4.40
+ * @since BuddyBoss [BBVERSION] Returns false while comment editing is disabled, unless `$privacy_edit`.
  *
  * @param false|BP_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
  * @param bool                       $privacy_edit     Optional. True if editing privacy.

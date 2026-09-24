@@ -1124,12 +1124,8 @@ function bp_activity_edit_times( $time = null ) {
  * @return array Allowed integer values.
  */
 function bb_activity_get_allowed_edit_times() {
-	static $allowed = null;
-
-	if ( null !== $allowed ) {
-		return $allowed;
-	}
-
+	// Deliberately not memoised: bp_activity_edit_times() is filterable and the first read can
+	// happen before every filter is registered (field registration runs on bb_register_features).
 	$allowed = array( -1 );
 	foreach ( bp_activity_edit_times() as $time ) {
 		$allowed[] = intval( $time['value'] );
@@ -1155,16 +1151,24 @@ function bb_activity_get_allowed_edit_times() {
  * @since BuddyBoss [BBVERSION]
  *
  * @param mixed $value   Stored value.
- * @param int   $default Value to fall back to. Default 600 (10 minutes).
+ * @param mixed $default Value to fall back to. Must itself be an allowed duration, otherwise 600
+ *                       (10 minutes) is used. Default 600.
  *
  * @return int A duration from bb_activity_get_allowed_edit_times().
  */
 function bb_activity_normalize_edit_time( $value, $default = 600 ) {
-	if ( is_numeric( $value ) && in_array( intval( $value ), bb_activity_get_allowed_edit_times(), true ) ) {
+	$allowed = bb_activity_get_allowed_edit_times();
+
+	if ( is_numeric( $value ) && in_array( intval( $value ), $allowed, true ) ) {
 		return intval( $value );
 	}
 
-	return $default;
+	// The fallback has to be representable too, or the return contract above is broken.
+	if ( is_numeric( $default ) && in_array( intval( $default ), $allowed, true ) ) {
+		return intval( $default );
+	}
+
+	return 600;
 }
 
 /**
