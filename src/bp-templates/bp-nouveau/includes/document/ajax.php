@@ -675,12 +675,25 @@ function bp_nouveau_ajax_document_document_save() {
 	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 
 	if ( isset( $documents ) && ! empty( $documents ) && $folder_id > 0 ) {
-		if ( ! empty( $documents ) && is_array( $documents ) ) {
-			// set folder id for document.
+
+		$destination_folder = new BP_Document_Folder( $folder_id );
+
+		/*
+		 * A destination folder was supplied. The uploader must be allowed to contribute into
+		 * it, and the stored group is taken from the folder rather than trusted from the
+		 * request - otherwise a client can send group_id=0 to skip the group check above while
+		 * still routing the document into a folder of a group they do not belong to.
+		 */
+		if ( empty( $destination_folder->id ) || ! bb_document_user_can_add_to_folder( $destination_folder ) ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to upload into this folder.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
+		if ( is_array( $documents ) ) {
+			// Route every uploaded document into the destination folder and its group.
 			foreach ( $documents as $key => $document ) {
-				if ( 0 === (int) $document['folder_id'] ) {
-					$documents[ $key ]['folder_id'] = $folder_id;
-				}
+				$documents[ $key ]['folder_id'] = $folder_id;
+				$documents[ $key ]['group_id']  = ! empty( $destination_folder->group_id ) ? (int) $destination_folder->group_id : 0;
 			}
 		}
 	}
@@ -987,7 +1000,8 @@ function bp_nouveau_ajax_document_move() {
 	}
 
 	if ( (int) $folder_id > 0 ) {
-		$has_access = bp_folder_user_can_edit( $folder_id );
+		// Moving into a folder is a contribute action, not an edit of the folder.
+		$has_access = bb_document_user_can_add_to_folder( $folder_id );
 		if ( ! $has_access ) {
 			$response['feedback'] = esc_html__( 'You don\'t have permission to move this document.', 'buddyboss' );
 			wp_send_json_error( $response );
