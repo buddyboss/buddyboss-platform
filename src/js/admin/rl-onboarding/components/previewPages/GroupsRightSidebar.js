@@ -1,15 +1,16 @@
+import { bbRlSidebarIncludes } from '../../utils/normalizeSidebar';
+
 export const GroupsRightSidebar = ({ formData = {} }) => {
     const { bb_rl_groups_sidebars } = formData;
-    
-    // Helper function to check if a widget should be shown
+
+    // See FeedRightSidebar.js — shared helper handles both the onboarding
+    // draggable-list shape and the persisted map shape.
     const shouldShowWidget = (widgetId) => {
-        // If no configuration exists, show all widgets by default
         if ( typeof bb_rl_groups_sidebars === 'undefined' ) {
             return true;
         }
-        
-        // Show widget if it's in the array
-        return bb_rl_groups_sidebars.includes(widgetId);
+
+        return bbRlSidebarIncludes( bb_rl_groups_sidebars, widgetId );
     };
 
     // Define all widgets

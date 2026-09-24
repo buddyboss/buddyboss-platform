@@ -52,8 +52,6 @@ add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_
 add_filter( 'bp_messages_message_validated_content', 'bp_media_message_validated_content', 20, 3 );
 add_filter( 'bp_messages_message_validated_content', 'bp_media_gif_message_validated_content', 20, 3 );
 
-// Core tools.
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
 add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
 add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
 add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
@@ -1268,25 +1266,6 @@ function bp_media_activity_save_gif_data( $activity ) {
 	}
 }
 
-function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page' => 'bp-media-import',
-					'tab'  => 'bp-media-import',
-				),
-				'admin.php'
-			)
-		),
-		'name' => __( 'Import Media', 'buddyboss' ),
-		'slug' => 'bp-media-import',
-	);
-
-	return $tabs;
-}
-
 /**
  * Add Import Media admin menu in tools
  *
@@ -1350,14 +1329,6 @@ function bp_media_import_submenu_page() {
 	}
 
 	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
 	<div class="wrap">
 		<div class="bp-admin-card section-bp-member-type-import">
 			<div class="boss-import-area">
@@ -2794,3 +2765,137 @@ function bb_messages_media_save( $attachment ) {
 }
 
 add_action( 'bb_media_upload', 'bb_messages_media_save' );
+
+// =============================================================================
+// Master section-toggle enforcement (Settings 2.0).
+//
+// Each Media side panel (Photos / Videos / Documents / Emoji / GIFs) has a
+// section-level toggle stored as a single option (`bb_media_*_support`). When
+// that master toggle is OFF, every per-component getter
+// (e.g. `bp_is_messages_emoji_support_enabled()`) must return false regardless
+// of the per-component option value, otherwise the frontend keeps rendering
+// the feature even though the admin has switched it off.
+//
+// The filters below were originally registered in
+// src/bp-core/admin/settings/media/callbacks.php, but that file is required
+// only when `is_admin() || wp_doing_ajax()` is true (see
+// bb-admin-settings-init.php), so on frontend page loads the filters never
+// fired and the master toggles had no effect on, for example, activity
+// streams, forum replies, or message threads. Hosting the filters here —
+// inside the Media component's normal filters file — guarantees they load on
+// every request where the Media component is active.
+//
+// @since BuddyBoss 3.0.0
+// =============================================================================
+
+/**
+ * Force photo-related support functions to return false when the Photos
+ * section toggle (bb_media_photos_support) is disabled.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if photos section is off, otherwise the original value.
+ */
+function bb_media_photos_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_photos_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profile_media_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_profile_albums_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_group_media_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_group_albums_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_messages_media_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable' );
+
+/**
+ * Force video-related support functions to return false when the Videos
+ * section toggle (bb_media_videos_support) is disabled.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if videos section is off, otherwise the original value.
+ */
+function bb_media_videos_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_videos_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profile_video_support_enabled', 'bb_media_videos_force_disable' );
+add_filter( 'bp_is_group_video_support_enabled', 'bb_media_videos_force_disable' );
+add_filter( 'bp_is_messages_video_support_enabled', 'bb_media_videos_force_disable' );
+add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable' );
+
+/**
+ * Force document-related support functions to return false when the Documents
+ * section toggle (bb_media_documents_support) is disabled.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if documents section is off, otherwise the original value.
+ */
+function bb_media_documents_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_documents_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profile_document_support_enabled', 'bb_media_documents_force_disable' );
+add_filter( 'bp_is_group_document_support_enabled', 'bb_media_documents_force_disable' );
+add_filter( 'bp_is_messages_document_support_enabled', 'bb_media_documents_force_disable' );
+add_filter( 'bp_is_forums_document_support_enabled', 'bb_media_documents_force_disable' );
+
+/**
+ * Force emoji-related support functions to return false when the Emoji
+ * section toggle (bb_media_emoji_support) is disabled.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if emoji section is off, otherwise the original value.
+ */
+function bb_media_emoji_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_emoji_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profiles_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+add_filter( 'bp_is_groups_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+add_filter( 'bp_is_messages_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+
+/**
+ * Force GIF-related support functions to return false when the Animated GIFs
+ * section toggle (bb_media_gif_support) is disabled.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if GIFs section is off, otherwise the original value.
+ */
+function bb_media_gifs_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_gif_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profiles_gif_support_enabled', 'bb_media_gifs_force_disable' );
+add_filter( 'bp_is_groups_gif_support_enabled', 'bb_media_gifs_force_disable' );
+add_filter( 'bp_is_messages_gif_support_enabled', 'bb_media_gifs_force_disable' );
+add_filter( 'bp_is_forums_gif_support_enabled', 'bb_media_gifs_force_disable' );

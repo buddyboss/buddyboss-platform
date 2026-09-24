@@ -104,10 +104,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$min = bp_core_get_minified_asset_suffix();
 
-			if (
-				'buddyboss_page_bp-settings' === $screen_id ||
-				'bp-member-type' === $screen_id
-			) {
+			if ( 'buddyboss_page_bp-settings' === $screen_id ) {
 				wp_enqueue_script( 'bp-select2' );
 				wp_enqueue_style( 'bp-select2' );
 			}
@@ -119,16 +116,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				buddypress()->version,
 				true
 			);
-
-			if ( 'buddyboss_page_bb-upgrade' === $screen_id ) {
-				wp_enqueue_script(
-					'bb-upgrade',
-					buddypress()->plugin_url . 'bp-core/admin/js/bb-upgrade'. $min . '.js',
-					array( 'jquery', 'underscore' ),
-					buddypress()->version,
-					true
-				);
-			}
 
 			$email_template = '';
 
@@ -219,8 +206,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 									bp_get_admin_url(
 										add_query_arg(
 											array(
-												'page'     => 'bp-repair-community',
-												'tab'      => 'bp-repair-community',
+												'page'     => 'bb-settings',
+												'tab'      => 'tools',
+												'panel'    => 'repair_platform',
 												'tool'     => 'bp-reinstall-emails',
 												'scrollto' => 'bpreinstallemails',
 											),
@@ -238,8 +226,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 									bp_get_admin_url(
 										add_query_arg(
 											array(
-												'page'     => 'bp-repair-community',
-												'tab'      => 'bp-repair-community',
+												'page'     => 'bb-settings',
+												'tab'      => 'tools',
+												'panel'    => 'repair_platform',
 												'tool'     => 'bp-missing-emails',
 												'scrollto' => 'bpmissingemails',
 											),
@@ -265,12 +254,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$localize_arg = array(
 				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
-				'select_document'              => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
 				'tools'                        => array(
-					'default_data'  => array(
-						'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
-						'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
-					),
 					'repair_forums' => array(
 						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
 					),
@@ -337,32 +321,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss' ),
 					),
 				),
-				'group'                        => array(
-					'restrict_invites_confirm_message' => esc_html__( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss' ),
-				),
+				'group'                        => array(),
 				'forum_validation'             => array(
 					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
 					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
 				),
 				'components'                   => array_map( 'intval', bp_get_option( 'bp-active-components' ) ),
 			);
-
-			// Localize only post_type is member type and group type.
-			if (
-				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
-				0 === strpos( get_current_screen()->id, 'bp-member-type' )
-			) {
-				$localize_arg['post_type'] = get_current_screen()->id;
-				if ( function_exists( 'buddyboss_theme_get_option' ) ) {
-					$localize_arg['background_color'] = buddyboss_theme_get_option( 'label_background_color' );
-					$localize_arg['color']            = buddyboss_theme_get_option( 'label_text_color' );
-				}
-			}
-
-			if ( function_exists( 'bb_is_enabled_activity_topics' ) && bb_is_enabled_activity_topics() ) {
-				$localize_arg['delete_topic_confirm'] = esc_html__( 'Are you sure you want to delete this topic?', 'buddyboss' );
-				$localize_arg['topics_limit']         = bb_topics_manager_instance()->bb_topics_limit();
-			}
 
 			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
 				$readylaunch                          = new BB_Readylaunch();
@@ -382,16 +347,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$localize_arg
 			);
 
-			$active_tab = bp_core_get_admin_active_tab();
-
-			if ( 'bp-xprofile' === $active_tab || 'bp-groups' === $active_tab ) {
-
-				wp_enqueue_style( 'thickbox' );
-				wp_enqueue_script( 'media-upload' );
-
-				// Get Avatar Uploader.
-				bp_attachments_enqueue_scripts( 'BP_Attachment_Avatar' );
-			}
 		}
 
 		/**
@@ -558,35 +513,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			 */
 			do_action( 'bp_admin_tab_form_html', $this->tab_name, $this );
 
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
-				?>
-			<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<a class="button" target="_blank" href="
-				<?php
-				echo esc_url(
-					bp_get_admin_url(
-						add_query_arg(
-							array(
-								'page'    => 'bp-help',
-								'article' => 87474,
-							),
-							'admin.php'
-						)
-					)
-				);
-				?>
-				"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-			</p>
-				<?php
-			} else {
-				printf(
-					'<p class="submit">
+			printf(
+				'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-					esc_attr__( 'Save Settings', 'buddyboss' )
-				);
-			}
+				esc_attr__( 'Save Settings', 'buddyboss' )
+			);
 		}
 
 		/**

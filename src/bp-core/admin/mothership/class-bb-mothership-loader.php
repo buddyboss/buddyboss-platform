@@ -129,8 +129,11 @@ class BB_Mothership_Loader {
 		$this->container->addParameter(
 			IPNService::THEME,
 			array(
-				'primaryColor'       => '#2271b1',
+				'primaryColor'       => '#2f2f2f',
 				'primaryColorDarker' => '#0a4b78',
+				'inboxBtnIcon'       => 'bell',
+				'inboxBtnVariant'    => 'icon',
+				'inboxBtnSize'       => '1.8rem',
 			)
 		);
 

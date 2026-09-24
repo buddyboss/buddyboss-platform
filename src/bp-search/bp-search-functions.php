@@ -520,10 +520,6 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 
 	$default = array(
 		'product'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/product.svg' : 'bb-icon-shopping-cart',
-		'sfwd-courses'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course.svg' : 'bb-icon-course',
-		'sfwd-lessons'        => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-book',
-		'sfwd-topic'          => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
-		'sfwd-quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-f bb-icon-quiz',
 		'post'                => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg' : 'bb-icon-article',
 		'forum'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comments-square',
 		'topic'               => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/forum.svg' : 'bb-icon-comment-square-dots',
@@ -535,14 +531,26 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 		'wp-parser-hook'      => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
 		'wp-parser-method'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
 		'command'             => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/code.svg' : 'bb-icon-code',
-		'course'              => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course.svg' : 'bb-icon-course',
 		'llms_membership'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/membership.svg' : 'bb-icon-user',
-		'lesson'              => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-book',
 		'llms_assignment'     => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-file-bookmark',
 		'llms_certificate'    => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
 		'llms_my_certificate' => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/course-content.svg' : 'bb-icon-certificate',
 		'llms_quiz'           => ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/quiz.svg' : 'bb-icon-quiz',
 	);
+
+	/**
+	 * Filter the default search thumbnail map. Integrations add their own
+	 * post-type rows here. LearnDash (buddyboss-learndash) used to add its
+	 * sfwd-courses, sfwd-lessons, sfwd-topic, sfwd-quiz, course, and lesson
+	 * rows inline in Platform; those now live in the addon and are
+	 * registered via this filter.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array  $default   Map of post_type => asset URL or icon class.
+	 * @param string $icon_type 'svg' or 'icon'.
+	 */
+	$default = apply_filters( 'bb_search_post_thumbnail_defaults', $default, $icon_type );
 
 	if ( isset( $default[ $post_type ] ) ) {
 		return $default[ $post_type ];
@@ -550,41 +558,6 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 
 	return ( 'svg' === $icon_type ) ? buddypress()->plugin_url . 'bp-core/images/search/default.svg' : 'bb-icon-f bb-icon-file-doc';
 
-}
-
-/**
- * Returns total number of LearnDash lessons
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_search_get_total_lessons_count( $course_id ) {
-	$lesson_ids = learndash_course_get_children_of_step( $course_id, $course_id, 'sfwd-lessons' );
-
-	return count( $lesson_ids );
-}
-
-/**
- * Returns total number of LearnDash topics
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_search_get_total_topics_count( $lesson_id ) {
-	$course_id = learndash_get_course_id( $lesson_id );
-	$topic_ids = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-topic' );
-
-	return count( $topic_ids );
-}
-
-/**
- * Returns total number of LearnDash quizzes
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_search_get_total_quizzes_count( $lesson_id ) {
-	$course_id = learndash_get_course_id( $lesson_id );
-	$quiz_ids  = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-quiz' );
-
-	return count( $quiz_ids );
 }
 
 /**

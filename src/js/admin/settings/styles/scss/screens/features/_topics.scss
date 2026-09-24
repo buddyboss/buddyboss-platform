@@ -1,0 +1,274 @@
+/* ----------------------------------------------------------------
+   Topic List Field
+   ---------------------------------------------------------------- */
+
+   .bb-topic-list {
+    width: 100%;
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-xl;
+        overflow: hidden;
+        padding: 16px;
+        margin-top: 8px;
+
+        &:empty {
+            display: none;
+        }
+
+        > div:last-child .bb-topic-list__item {
+            margin-bottom: 0;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+        background: $bb-background-primary-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        margin-bottom: 16px;
+
+        &--dragging {
+            opacity: 0.5;
+        }
+
+        &--drag-over {
+            border-color: $bb-background-brand-primary-color;
+        }
+    }
+
+    &__drag-handle {
+        display: flex;
+        align-items: center;
+        cursor: grab;
+        color: $bb-icon-tertiary-color;
+        font-size: 16px;
+        line-height: 1;
+        flex-shrink: 0;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    &__name {
+        flex: 1;
+        font-size: 12px;
+        font-weight: 500;
+        color: $bb-text-secondary-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+    }
+
+    &__permission {
+        font-size: 11px;
+        font-weight: 400;
+        color: $bb-text-tertiary-color;
+        flex-shrink: 0;
+    }
+
+    &__actions {
+        flex-shrink: 0;
+        display: flex;
+
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+
+    &__add-btn.is-secondary {
+        @include bb-button-primary-outline;
+        align-self: flex-start;
+
+        [class*="bb-icon"] {
+            font-size: 16px;
+            line-height: 1;
+            font-weight: 400;
+            margin-right: 4px;
+        }
+    }
+
+    &__description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 12px 0 0 0;
+    }
+
+    &__delete-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.1);
+        z-index: 100000;
+    }
+}
+
+/* Topic Modal Styles */
+
+.bb-topic-modal {
+
+    .components-modal__content {
+        padding: 0;
+    }
+
+    &__body {
+        padding: 16px 24px;
+        min-height: 205px;
+    }
+
+    &__error {
+        color: #cc1818;
+        font-size: 13px;
+        margin: 4px 0 0 0;
+    }
+
+    &__permission {
+        margin-top: 16px;
+    }
+
+    &__permission-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        margin-bottom: 8px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 16px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
+    .bb-topic-modal__permission-label,
+    .components-base-control__label {
+        @include bb-input-label;
+    }
+
+    .components-radio-control__group-wrapper {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+}
+
+/* Topic Delete Modal */
+
+.bb-topic-delete-modal {
+
+    .components-modal__content {
+        padding: 0;
+    }
+
+    &__body {
+        padding: 24px;
+
+        .components-v-stack {
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+        .bb-topic-delete-modal__migrate-select {
+
+            .components-input-control__label {
+                color: $bb-text-secondary-color;
+                text-transform: none;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .components-select-control__input {
+                @include bb-admin-settings-select;
+            }
+
+            .components-input-control-suffix-wrapper,
+            .components-input-control__backdrop {
+                display: none;
+            }
+        }
+    }
+
+    &__warning {
+        font-size: 14px;
+        color: $bb-text-color;
+        margin: 0 0 16px 0;
+    }
+
+    &__migrate-select {
+        margin-top: 12px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 16px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+
+        .components-button {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            padding: 6px 16px;
+            border-radius: $bb-border-radius-lg;
+            box-shadow: none;
+
+            &.is-secondary {
+                @include bb-button-secondary;
+            }
+
+            &.is-primary {
+                @include bb-button-primary;
+            }
+        }
+    }
+
+    .components-radio-control__group-wrapper {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+}

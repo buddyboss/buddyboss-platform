@@ -1,0 +1,233 @@
+/* ----------------------------------------------------------------
+   Reporting Categories Screen
+   ---------------------------------------------------------------- */
+
+.bb-admin-reporting-categories {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	max-width: 985px;
+	margin: 0 auto;
+	width: 100%;
+	padding: 32px;
+	box-sizing: border-box;
+
+	/* Section header override — match Figma 64px total height (border-box). */
+	.bb-admin-feature-settings__section-header {
+		box-sizing: border-box;
+		padding: 16px 0;
+		min-height: 64px;
+	}
+
+	/* Title line-height override — Figma uses 26px for xl heading. */
+	.bb-admin-feature-settings__section-title {
+		line-height: 26px;
+	}
+
+	/* Section body override — reduced bottom padding for list. */
+	&__list-body {
+		padding: 32px 24px 8px;
+	}
+
+	&__header-actions {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&__add-btn {
+		@include bb-button-primary;
+		display: inline-flex;
+		align-items: center;
+		font-size: 14px;
+		line-height: 20px;
+		padding: 6px 16px;
+		gap: 4px;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 0;
+		}
+	}
+
+	/* Categories list */
+	&__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	&__list-item {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+		margin-bottom: 0;
+		min-height: 48px;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	/* Inner wrapper for 3 content columns — matches Figma "items" (flex:1). */
+	&__list-item-content {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		flex: 1 0 0;
+		min-width: 0;
+	}
+
+	/* Column layout */
+	&__list-item-name-col {
+		min-width: 24%;
+		flex-shrink: 0;
+	}
+
+	&__list-item-desc-col {
+		min-width: 48%;
+		flex-shrink: 0;
+	}
+
+	&__list-item-show-when-col {
+		min-width: 15%;
+		flex-shrink: 0;
+	}
+
+	&__list-item-actions-col {
+		flex-shrink: 0;
+	}
+
+	&__list-item-name {
+		font-size: 14px;
+		font-weight: 500;
+		color: $bb-text-color;
+		line-height: 20px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: block;
+	}
+
+	&__list-item-desc {
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-secondary-color;
+		line-height: 18px;
+	}
+
+	&__list-item-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: 400;
+		color: $bb-text-color;
+		background: $bb-background-secondary-color;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		line-height: 16px;
+		white-space: nowrap;
+	}
+
+	/* 3-dot menu — reuse group-types pattern */
+	&__menu-wrapper {
+		position: relative;
+	}
+
+	&__menu-trigger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: none;
+		border: none;
+		border-radius: $bb-border-radius-md;
+		cursor: pointer;
+		color: $bb-icon-secondary-color;
+		font-size: 24px;
+
+		&:hover {
+			background: $bb-background-primary-color;
+		}
+	}
+
+	&__menu-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		min-width: 120px;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+		z-index: 100;
+		padding: 4px 0;
+		width: 180px;
+	}
+
+	&__menu-item {
+		display: block;
+		width: 100%;
+		padding: 8px 16px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-tertiary-color;
+		background: none;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+
+		&:hover {
+			background: $bb-background-primary-hover-color;
+		}
+
+		[class*="bb-icons-"] {
+			color: $bb-icon-tertiary-color;
+			font-size: 20px !important;
+			line-height: 1;
+			font-weight: 400;
+			margin-right: 8px;
+			vertical-align: middle;
+		}
+	}
+
+	/* Empty state */
+	&__empty {
+		padding: 24px 0;
+		text-align: center;
+
+		p {
+			font-size: 13px;
+			color: $bb-text-tertiary-color;
+			margin: 0;
+		}
+	}
+
+	@media screen and (max-width: 960px) {
+		
+		&__list {
+			min-width: 800px;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Reporting Category Modal
+   ---------------------------------------------------------------- */
+
+.bb-admin-reporting-category-modal {
+
+	&.components-modal__frame {
+		max-width: 680px;
+	}
+
+}

@@ -1,17 +1,16 @@
+import { bbRlSidebarIncludes } from '../../utils/normalizeSidebar';
+
 export const MembersRightSidebar = ({ formData = {} }) => {
     const { bb_rl_member_profile_sidebars } = formData;
-    
-    // Helper function to check if a widget should be shown
+
+    // See FeedRightSidebar.js — shared helper handles both the onboarding
+    // draggable-list shape and the persisted map shape.
     const shouldShowWidget = (widgetId) => {
-        
-        // If no configuration exists, show all widgets by default
         if ( typeof bb_rl_member_profile_sidebars === 'undefined' ) {
             return true;
         }
-        
-        // Show widget if it's in the array
-        const result = bb_rl_member_profile_sidebars.includes(widgetId);
-        return result;
+
+        return bbRlSidebarIncludes( bb_rl_member_profile_sidebars, widgetId );
     };
 
     // Define all widgets

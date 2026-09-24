@@ -826,7 +826,11 @@ function bp_core_no_access_wp_login_error( $errors ) {
 	 * @param string $value Error message to display.
 	 * @param string $value URL to redirect user to after successful login.
 	 */
-	$message = apply_filters( 'bp_wp_login_error', $bp_error_message, $_REQUEST['redirect_to'] );
+	// `redirect_to` may be absent on direct hits to wp-login.php — read
+	// defensively to avoid an "Undefined index" notice that masks the
+	// real login-error message on PHP 8+.
+	$redirect_to = isset( $_REQUEST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_REQUEST['redirect_to'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$message     = apply_filters( 'bp_wp_login_error', $bp_error_message, $redirect_to );
 
 	$errors->add( 'bp_no_access', $message );
 

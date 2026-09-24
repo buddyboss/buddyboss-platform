@@ -286,17 +286,18 @@ function bp_nouveau_activity_state() {
 	$activity_id    = bp_get_activity_id();
 	$comment_count  = bp_activity_get_comment_count();
 	$reactions      = bb_active_reactions();
-	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
+	$reaction       = bb_load_reaction();
+	$reaction_count = $reaction ? $reaction->bb_get_user_reactions_count(
 		array(
 			'item_id'     => $activity_id,
 			'item_type'   => 'activity',
-			'reaction_id' => array_keys( $reactions )
+			'reaction_id' => array_keys( $reactions ),
 		)
-	);
+	) : 0;
 	?>
 	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
-		if ( bb_is_reaction_activity_posts_enabled() ) {
+		if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
 			echo bb_get_activity_post_user_reactions_html( $activity_id );
 		}
 
@@ -459,7 +460,9 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Added emotion list.
-	$output .= bb_get_activity_post_emotions_popup();
+	if ( function_exists( 'bb_get_activity_post_emotions_popup' ) ) {
+		$output .= bb_get_activity_post_emotions_popup();
+	}
 
 	if ( ! $has_content ) {
 		return;
@@ -519,7 +522,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		$button_element = $args['button_element'];
 	}
 
-	if ( bp_activity_can_favorite() && bp_is_activity_like_active() ) {
+	if ( bp_activity_can_favorite() && bp_is_activity_like_active() && function_exists( 'bb_get_reaction_button_settings' ) ) {
 
 		// If button element set attr needs to be data-* else 'href'.
 		if ( 'button' === $button_element ) {
@@ -907,7 +910,9 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Added emotion list.
-	$output .= bb_get_activity_post_comment_emotions_popup();
+	if ( function_exists( 'bb_get_activity_post_comment_emotions_popup' ) ) {
+		$output .= bb_get_activity_post_comment_emotions_popup();
+	}
 
 	if ( ! $has_content ) {
 		return;
@@ -993,16 +998,16 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		);
 
 		if ( ! bb_get_activity_comment_is_favorite() ) {
-			$button_settings       = bb_get_reaction_button_settings();
+			$button_settings       = function_exists( 'bb_get_reaction_button_settings' ) ? bb_get_reaction_button_settings() : array();
 			$fav_args['link_text'] = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span class="like-count">%1$s</span>',
 				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss' ),
 			);
-		} else {
+		} elseif ( function_exists( 'bb_activity_get_user_reaction_by_item' ) ) {
 			// Get user reacted reaction data and prepare the link.
 			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
-			if ( ! empty( $reaction_data ) ) {
+			if ( ! empty( $reaction_data ) && function_exists( 'bb_activity_get_reaction_button' ) ) {
 				$link_classes  = empty( $reaction_data['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
 				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
 
@@ -1983,82 +1988,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	global $activities_template;
-
-	// Pin post action only for allowed posts based on user role.
-	if (
-		'activity_comment' !== $activity_type &&
-		! in_array( $activities_template->activity->privacy, array( 'media', 'document', 'video' ), true ) &&
-		(
-			(
-				bp_is_group_activity() &&
-				(
-					bp_current_user_can( 'administrator' ) ||
-					(
-						bb_is_active_activity_pinned_posts() &&
-						(
-							groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
-							groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
-						)
-					)
-				)
-			) ||
-			(
-				(
-					bp_is_activity_directory() ||
-					bp_is_user_activity()
-				) &&
-				(
-					bp_current_user_can( 'administrator' ) ||
-					(
-						'groups' === bp_get_activity_object_name() &&
-						bb_is_active_activity_pinned_posts() &&
-						(
-							groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
-							groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
-						)
-					)
-				)
-			)
-		)
-	) {
-
-		// Remove for activities related to group for main activity screen.
-		$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : ( 'groups' === bp_get_activity_object_name() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' ) );
-		$pinned_action_class = 'pin-activity';
-		$pinned_id           = ! empty( $GLOBALS['activities_template']->pinned_id ) ? $GLOBALS['activities_template']->pinned_id : bp_get_option( 'bb_pinned_post', 0 );
-
-		if ( 'groups' === bp_get_activity_object_name() && bp_is_active( 'groups' ) ) {
-			$group_id  = bp_get_activity_item_id();
-			$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
-		}
-
-		if ( ! empty( $pinned_id ) && (int) $activity_id === (int) $pinned_id ) {
-			$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : ( 'groups' === bp_get_activity_object_name() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : esc_html__( 'Unpin from Feed', 'buddyboss' ) );
-			$pinned_action_class = 'unpin-activity';
-		}
-
-		$buttons['activity_pin'] = array(
-			'id'                => 'activity_pin',
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'id'            => '',
-				'href'          => '',
-				'class'         => 'button item-button bp-secondary-action ' . $pinned_action_class,
-				'data-bp-nonce' => '',
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-				$pinned_action_label,
-				$pinned_action_label
-			),
-		);
-	}
-
 	// Download link for the medias and documents.
 	$media_id = bp_is_active( 'media' ) ? BP_Media::get_activity_media_id( $activity_id ) : 0;
 	if ( ! empty( $media_id ) ) {
@@ -2197,11 +2126,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
 	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 3.4.0 Added the `$context` parameter.
 	 *
 	 * @param array $buttons     The list of buttons.
 	 * @param int   $activity_id The current activity ID.
+	 * @param array $context     Button layout context: activity_type,
+	 *                           parent_element, parent_attr, button_element.
 	 */
-	$buttons_group = apply_filters( 'bb_nouveau_get_activity_entry_bubble_buttons', $buttons, $activity_id );
+	$buttons_group = apply_filters( 'bb_nouveau_get_activity_entry_bubble_buttons', $buttons, $activity_id, compact( 'activity_type', 'parent_element', 'parent_attr', 'button_element' ) );
 
 	if ( ! $buttons_group ) {
 		return $buttons;

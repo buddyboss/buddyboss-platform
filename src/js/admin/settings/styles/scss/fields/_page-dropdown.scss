@@ -1,0 +1,52 @@
+/**
+ * Page-dropdown field (Appearance → Pages).
+ *
+ * Layout = dropdown on the left, compact View/Create secondary button pinned
+ * immediately to the right with a small gap. Mirrors the legacy
+ * `admin.php?page=bp-pages` row where the `<select>` and the secondary
+ * button sit inline.
+ *
+ * The wrapper is applied by `SettingsForm.js`'s async_select page-dropdown
+ * variant; without these styles the button falls to a new line below the
+ * dropdown at full width because the `components-button` utility class
+ * stretches inside flex children by default.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-admin-settings-form__page-dropdown {
+	display: flex;
+	// Center on the cross-axis so a ±1–2px residual drift between the
+	// async-select control and the action button never manifests as the
+	// button overhanging the dropdown vertically. The dropdown input is
+	// locked to 32px by the `bb-input-text` mixin (`_mixings.scss`), the
+	// button matches that height exactly below, and `center` is the
+	// forgiving default for any future component swap.
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 8px;
+
+	// The async-select itself must keep its natural flex-grow so that the
+	// action button can never squeeze it below a legible width. Mirrors the
+	// legacy <select>'s sizing behaviour.
+	> .bb-async-select {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	// Compact secondary action button — same visual weight as legacy's
+	// `.button-secondary`. Disable the `components-button` flex-stretch so
+	// the button sizes to its label, not the column. Height is matched to
+	// the async-select input's `bb-input-text` mixin (32px) — the previous
+	// 40px was an unverified value that left the button visibly overhanging
+	// the dropdown, most noticeably in the empty ("— Select a page —")
+	// state where no selected-value pill masks the drift.
+	.bb-admin-settings-form__page-dropdown-view,
+	.bb-admin-settings-form__page-dropdown-create {
+		@include bb-button-primary-outline;
+
+		> [class*="bb-icon"] {
+			margin: 0 0 0 6px;
+		}
+	}
+}
