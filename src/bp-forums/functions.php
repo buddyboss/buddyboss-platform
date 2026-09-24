@@ -857,7 +857,7 @@ function bbp_forum_recursive_group_id( $forum_id ) {
 			$group_id          = $forum_group_ids[0];
 		} else {
 			$current_post = get_post( $forum_id );
-			if ( $current_post->post_parent ) {
+			if ( $current_post && $current_post->post_parent ) {
 				// $post->post_parent will be the ID of the parent, not an object.
 				$forum_id = $current_post->post_parent;
 			} else {
