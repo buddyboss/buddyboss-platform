@@ -1032,42 +1032,67 @@ function bb_legacy_read_multiselect_meta( $post_id, $name ) {
  * Normalize a React field value into the shape the bridged legacy input
  * expects before it is written into $_POST.
  *
- * The only transform needed today: a `toggle_list` field's object value
- * (`{ value: 0|1 }`) bridged onto an append-array input (`name="…[]"`) must
- * become a flat indexed array of the CHECKED option values (`['a','c']`) —
- * exactly what a browser submits for a `<select multiple>`. All other types
- * pass through unchanged.
+ * A `<select multiple>` (`name="…[]"`) is submitted by a browser as a flat
+ * indexed array of the SELECTED option values (`['a','c']`). The two React
+ * fields that bridge onto such an input each send a different shape:
+ *
+ *   - `toggle_list` (checkbox group) sends a checked MAP keyed by option
+ *     value: `{ a: 1, b: 0, c: 1 }` → normalized to `['a','c']`.
+ *   - `ajax_multiselect` (resolver-backed chip picker) already sends the
+ *     flat LIST of selected ids: `['a','c']` → passed through as a list.
+ *
+ * The shape is decided by the registered field type, never by inspecting the
+ * array keys. `json_decode( …, true )` casts numeric string keys to integers,
+ * so a checked map whose option values are post IDs (`{ "12": 1, "15": 1 }`)
+ * arrives as `[ 12 => 1, 15 => 1 ]` and is indistinguishable from a flat list
+ * by key type alone. A per-key `is_int()` heuristic therefore pushed the
+ * checked flag (`1`) instead of the membership ID, and every consumer with
+ * numeric option values (BuddyBoss Membership's Access Protection metabox on
+ * forums, topics, replies and other CPTs) saved `[1]` — see PROD-10441.
+ *
+ * All other types pass through unchanged.
  *
  * @since BuddyBoss 3.1.0
+ * @since BuddyBoss [BBVERSION] Accepts `ajax_multiselect`; `toggle_list` is
+ *                              always treated as a checked map (PROD-10441).
  *
- * @param string $type   Field type (from bb_legacy_detect_input_type()).
+ * @param string $type   Registered field type: `toggle_list`, `ajax_multiselect`,
+ *                       or any other type (passed through).
  * @param array  $parsed Parsed name (bb_legacy_parse_array_name()).
  * @param mixed  $value  Raw value from the registry save payload.
  * @return mixed Normalized value.
  */
 function bb_legacy_normalize_save_value( $type, $parsed, $value ) {
+	if ( ! is_array( $value ) ) {
+		return $value;
+	}
+
+	// Flat list of selected ids — drop empties and re-index so the consumer
+	// receives exactly what a browser would have submitted.
+	if ( 'ajax_multiselect' === $type ) {
+		$selected = array();
+		foreach ( $value as $on ) {
+			if ( is_scalar( $on ) && '' !== (string) $on ) {
+				$selected[] = (string) $on;
+			}
+		}
+		return $selected;
+	}
+
 	if ( 'toggle_list' !== $type ) {
 		return $value;
 	}
-	// Object/assoc value → flat array of checked keys.
-	if ( is_array( $value ) ) {
-		$checked = array();
-		foreach ( $value as $key => $on ) {
-			// Skip the indexed-array case (already flat) — those have integer
-			// keys and scalar values that are the selected values themselves.
-			if ( is_int( $key ) ) {
-				if ( '' !== (string) $on ) {
-					$checked[] = $on;
-				}
-				continue;
-			}
-			if ( $on && '0' !== (string) $on ) {
-				$checked[] = $key;
-			}
+
+	// Checked map → flat list of the keys whose flag is truthy. Keys are cast
+	// back to strings so integer-cast option values round-trip as the string
+	// the browser would have sent.
+	$checked = array();
+	foreach ( $value as $key => $on ) {
+		if ( $on && '0' !== (string) $on ) {
+			$checked[] = (string) $key;
 		}
-		return $checked;
 	}
-	return $value;
+	return $checked;
 }
 
 /**
@@ -2445,7 +2470,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				}
 				return bb_legacy_extract_input_value( $html, $input['name'], $input['type'] );
 			},
-			'save_value'        => function ( $post, $value ) use ( $input, $canonical_keys ) {
+			'save_value'        => function ( $post, $value ) use ( $input, $canonical_keys, $is_ajax_multi ) {
 				if ( ! is_string( $input['name'] ) || '' === $input['name'] ) {
 					return;
 				}
@@ -2468,7 +2493,11 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				// a flat indexed array of the CHECKED values (`['tag_a']`).
 				// Without this conversion WP Fusion's sanitizer receives
 				// `['tag_a' => 1]`, array_filters the 1/0, and stores garbage.
-				$value = bb_legacy_normalize_save_value( $input['type'], $parsed, $value );
+				// Pass the REGISTERED field type, not the captured input type:
+				// an AJAX picker is still `toggle_list` in $input['type'] but
+				// React sends it as a flat list, and the normalizer must not
+				// guess the shape from the array keys (PROD-10441).
+				$value = bb_legacy_normalize_save_value( $is_ajax_multi ? 'ajax_multiselect' : $input['type'], $parsed, $value );
 				// Scalar keys: keep the original don't-clobber contract — if
 				// React already populated this exact key, leave it alone.
 				// Grouped keys (settings[...]) merge into the nested structure
