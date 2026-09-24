@@ -1502,7 +1502,7 @@ function bp_avatar_ajax_set() {
 
 		} else {
 			$return = array(
-				'avatar'        => esc_url(
+				'avatar'        => esc_url_raw(
 					bp_core_fetch_avatar(
 						array(
 							'object'  => $avatar_data['object'],
@@ -1574,7 +1574,7 @@ function bp_avatar_ajax_set() {
 	// Handle crop.
 	if ( bp_core_avatar_handle_crop( $r ) ) {
 		$return = array(
-			'avatar'        => esc_url(
+			'avatar'        => esc_url_raw(
 				bp_core_fetch_avatar(
 					array(
 						'object'    => $avatar_data['object'],
