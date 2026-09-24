@@ -1228,6 +1228,39 @@ function bb_telemetry_load() {
 add_action( 'bp_init', 'bb_telemetry_load' );
 
 /**
+ * Force telemetry into "complete" mode on sites with a paid BuddyBoss product.
+ *
+ * Telemetry defaults to "disable" and is opt-in, which leaves most paid sites
+ * unreported. Paid products are expected to report, so the mode is raised for
+ * any site holding a licence key or running a paid add-on — not only for sites
+ * with the Pro plugin installed.
+ *
+ * Platform Pro registers `bb_pro_force_telemetry_complete()` on this same
+ * filter. Both return 'complete', so the two are idempotent; Pro's copy is kept
+ * for now so an older Platform paired with a newer Pro does not lose forced
+ * reporting. It can be dropped once this version is the supported floor.
+ *
+ * @since BuddyBoss 3.4.3
+ *
+ * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
+ *
+ * @return string Telemetry mode.
+ */
+function bb_force_telemetry_for_licensed_sites( $mode ) {
+	if ( 'complete' === $mode ) {
+		return $mode;
+	}
+
+	if ( bb_has_paid_product() ) {
+		return 'complete';
+	}
+
+	return $mode;
+}
+
+add_filter( 'bb_advanced_telemetry_reporting_value', 'bb_force_telemetry_for_licensed_sites' );
+
+/**
  * Initialize the Topics Manager.
  * This ensures we only load the manager when needed.
  *

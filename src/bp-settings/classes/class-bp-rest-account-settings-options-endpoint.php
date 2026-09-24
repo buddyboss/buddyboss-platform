@@ -380,6 +380,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			'name'        => ( isset( $field['name'] ) && ! empty( $field['name'] ) ? $field['name'] : '' ),
 			'label'       => ( isset( $field['label'] ) && ! empty( $field['label'] ) ? wp_specialchars_decode( $field['label'], ENT_QUOTES ) : '' ),
 			'type'        => ( isset( $field['field'] ) && ! empty( $field['field'] ) ? $field['field'] : '' ),
+			'read_only'   => ( isset( $field['read_only'] ) ? (bool) $field['read_only'] : false ),
 			'value'       => ( isset( $field['value'] ) && ! empty( $field['value'] ) ? $field['value'] : '' ),
 			'placeholder' => ( isset( $field['placeholder'] ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : '' ),
 			'options'     => ( isset( $field['options'] ) && ! empty( $field['options'] ) ? $field['options'] : array() ),
@@ -453,6 +454,12 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					'description' => esc_html__( 'The type the field.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
+				),
+				'read_only' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => esc_html__( 'Whether the field visibility level is locked by the site admin.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'boolean',
 				),
 				'value'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -1029,11 +1036,18 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @return array|mixed|void
 	 */
 	public function get_profile_fields() {
-		$fields       = array();
+		$fields = array();
+
+		// BuddyPress memoizes the logged-in user at init, which is before REST header
+		// auth (application passwords, tokens) resolves — bp_loggedin_user_id() is then 0
+		// while WordPress already knows the user. Fall back so values and per-field
+		// options resolve for the authenticated member under every auth mode.
+		$user_id = bp_loggedin_user_id() ? bp_loggedin_user_id() : get_current_user_id();
+
 		$field_groups = bp_xprofile_get_groups(
 			array(
 				'fetch_fields'           => true,
-				'user_id'                => bp_loggedin_user_id(),
+				'user_id'                => $user_id,
 				'fetch_field_data'       => true,
 				'fetch_visibility_level' => true,
 			)
@@ -1058,12 +1072,17 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 							continue;
 						}
 
+						$field_visibility = BP_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_state( $field );
+						$is_allowed       = 'allowed' === $field_visibility;
+						$current_level    = xprofile_get_field_visibility_level( $field->id, $user_id );
+
 						$fields[] = array(
 							'name'        => 'field_' . $field->id,
 							'label'       => $field->name,
-							'field'       => ( ! empty( $this->bp_rest_get_xprofile_field_visibility( $field ) ) && 'allowed' === $this->bp_rest_get_xprofile_field_visibility( $field ) ) ? 'select' : '',
-							'value'       => xprofile_get_field_visibility_level( $field->id, bp_loggedin_user_id() ),
-							'options'     => array_column( bp_xprofile_get_visibility_levels(), 'label', 'id' ),
+							'field'       => $is_allowed ? 'select' : '',
+							'read_only'   => ! $is_allowed,
+							'value'       => $current_level,
+							'options'     => BP_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_options( $field, $user_id, $field_visibility, $current_level ),
 							'group_label' => '',
 						);
 					}
@@ -1519,19 +1538,50 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 */
 	public function update_profile_fields( $request ) {
 		$post_fields = $request->get_param( 'fields' );
+		$feedback    = array();
+		$to_save     = array();
 
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		if ( ! empty( $post_fields ) ) {
-			// Save the visibility settings.
+			$user_id = bp_displayed_user_id();
+
 			foreach ( $post_fields as $field => $value ) {
 
 				$field_id = (int) str_replace( 'field_', '', $field );
 
-				if ( ! empty( $field_id ) && is_int( $field_id ) && ! empty( $value ) ) {
-					$visibility_level = $value;
-					xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+				if ( empty( $field_id ) || empty( $value ) ) {
+					continue;
 				}
+
+				$field_object = xprofile_get_field( $field_id, null, false );
+
+				// Skip an unknown/deleted field id rather than aborting the whole
+				// payload on it. Per-field semantics, matching the web settings screen
+				// and the sibling /xprofile/update endpoint.
+				if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+					continue;
+				}
+
+				$validation = BP_REST_XProfile_Fields_Endpoint::bb_rest_validate_field_visibility_level(
+					$field_object,
+					$user_id,
+					$value
+				);
+
+				if ( is_wp_error( $validation ) ) {
+					$feedback[ 'field_' . $field_id ] = $validation->get_error_message();
+				} elseif ( true === $validation ) {
+					$to_save[ $field_id ] = (string) $value;
+				}
+			}
+
+			// Apply every valid change even when a sibling field was rejected; the
+			// rejected fields are reported back in $feedback. The web settings screen
+			// skips a locked field and saves the rest, and /xprofile/update saves each
+			// field's value while reporting its visibility error - this matches both.
+			foreach ( $to_save as $field_id => $visibility_level ) {
+				xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 			}
 		}
 
@@ -1545,7 +1595,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		return array(
-			'error'  => false,
+			'error'  => empty( $feedback ) ? false : $feedback,
 			'notice' => false,
 		);
 	}
@@ -1719,29 +1769,9 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param BP_XProfile_Field $field_object Field Object.
 	 *
-	 * @return string
+	 * @return string 'allowed' or 'disabled'.
 	 */
 	public function bp_rest_get_xprofile_field_visibility( $field_object ) {
-		global $field;
-
-		// Get the field id into for user check.
-		$GLOBALS['profile_template']              = new stdClass();
-		$GLOBALS['profile_template']->in_the_loop = true;
-
-		// Setup current user id into global.
-		$field = $field_object;
-
-		return (
-		! bp_current_user_can( 'bp_xprofile_change_field_visibility' )
-			? 'disabled'
-			: (
-		(
-			! empty( $field->__get( 'allow_custom_visibility' ) )
-			&& 'allowed' === $field->__get( 'allow_custom_visibility' )
-			)
-			? $field->__get( 'allow_custom_visibility' )
-			: 'disabled'
-		)
-		);
+		return BP_REST_XProfile_Fields_Endpoint::bb_rest_get_field_visibility_state( $field_object );
 	}
 }

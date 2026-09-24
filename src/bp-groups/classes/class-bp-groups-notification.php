@@ -1220,6 +1220,15 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
+				// The author's name was resolved once, before this fan-out, with whoever triggered the
+				// activity as the viewer - normally the author themselves, who is never denied their
+				// own name. Delivered as-is it would put a name part into every subscriber's inbox
+				// that the site withholds from them on screen. Re-resolve it for THIS recipient, the
+				// way the friends, blogs and messages fan-outs already do.
+				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
+					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+				}
+
 				// Send notification email.
 				bp_send_email( $email_notification_type, (int) $user_id, $email_tokens );
 			}
