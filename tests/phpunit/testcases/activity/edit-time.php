@@ -94,6 +94,17 @@ class BP_Tests_Activity_Edit_Time extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Comment threading depth follows the same read/write rule: 1-4 pass through, anything else is 3.
+	 */
+	public function test_normalize_comment_threading_depth() {
+		foreach ( array( '' => 3, 'abc' => 3, '0' => 3, '5' => 3, '99' => 3, '1' => 1, '2' => 2, '3' => 3, '4' => 4 ) as $stored => $expected ) {
+			$this->assertSame( $expected, bb_activity_normalize_comment_threading_depth( $stored ), "stored '{$stored}'" );
+		}
+		$this->assertSame( 3, bb_activity_normalize_comment_threading_depth( null ) );
+		$this->assertSame( 2, bb_activity_normalize_comment_threading_depth( 2 ) );
+	}
+
+	/**
 	 * The allowed list follows the filterable option set on every call (no per-request memo).
 	 */
 	public function test_allowed_list_follows_filter() {

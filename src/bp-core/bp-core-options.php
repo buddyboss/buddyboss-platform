@@ -1172,6 +1172,32 @@ function bb_activity_normalize_edit_time( $value, $default = 600 ) {
 }
 
 /**
+ * Resolve an activity comment threading depth to a level the settings control can represent.
+ *
+ * The depth <select> offers 1-4. As with the edit duration, a stored value outside that range
+ * does not read as unset — it renders as whichever <option> comes first — so the same rule has
+ * to apply on read as on write, or the screen reports a depth the front end does not use.
+ *
+ * Lives here rather than in the admin settings callbacks because the depth is read on the front
+ * end, where the admin files are not loaded.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value Stored value.
+ *
+ * @return int A depth between 1 and 4. Anything else resolves to 3.
+ */
+function bb_activity_normalize_comment_threading_depth( $value ) {
+	$value = absint( $value );
+
+	if ( $value < 1 || $value > 4 ) {
+		return 3;
+	}
+
+	return $value;
+}
+
+/**
  * Get BuddyBoss Activity Time option.
  *
  * The stored value is normalised with bb_activity_normalize_edit_time(): anything outside

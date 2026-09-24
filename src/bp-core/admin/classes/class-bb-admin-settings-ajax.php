@@ -900,7 +900,16 @@ class BB_Admin_Settings_Ajax {
 
 						// A stored value the control cannot represent would otherwise render as
 						// whichever <option> comes first. Resolve it the same way a save would.
-						if ( ! empty( $control['sanitize_callback'] ) && is_callable( $control['sanitize_callback'] ) ) {
+						//
+						// Only for controls that opt in with 'resolve_invalid'. A sanitizer that
+						// merely coerces (absint, a clamp) is not a resolver: running it here would
+						// show a value the matching getter does not enforce, which is the same
+						// screen-disagrees-with-behaviour defect this resolution exists to remove.
+						if (
+							! empty( $control['resolve_invalid'] ) &&
+							! empty( $control['sanitize_callback'] ) &&
+							is_callable( $control['sanitize_callback'] )
+						) {
 							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
 						}
 
@@ -1702,6 +1711,7 @@ class BB_Admin_Settings_Ajax {
 						$saved[ $control_name ] = $control_value;
 					} elseif (
 						array_key_exists( $name, $settings ) &&
+						! empty( $control['resolve_invalid'] ) &&
 						! empty( $control['sanitize_callback'] ) &&
 						is_callable( $control['sanitize_callback'] )
 					) {
@@ -1712,13 +1722,22 @@ class BB_Admin_Settings_Ajax {
 						// left alone: the read path already resolves it to the registered
 						// default, and a filtered default may legitimately sit outside what
 						// the sanitizer accepts.
+						//
+						// Restricted to controls that opt in with 'resolve_invalid'. Applied to
+						// every sanitizer it would rewrite settings the admin never opened —
+						// bb_activity_load_type, for one, stores values supplied through the
+						// public bb_performance_activity_autoload filter, and its sanitizer
+						// returns 'infinite' for anything that filter is not currently offering.
 						$stored = bp_get_option( $control_name, $absent );
 
 						if ( $absent !== $stored && is_scalar( $stored ) ) {
 							$sanitized = call_user_func( $control['sanitize_callback'], $stored );
 
-							if ( (string) $stored !== (string) $sanitized ) {
-								bp_update_option( $control_name, $sanitized );
+							// Echo the repaired value back only once it has actually reached the
+							// database. The UI merges $saved into its state, so reporting a value
+							// that failed to write would show the admin a setting the site is not
+							// using — the very failure this repair exists to prevent.
+							if ( (string) $stored !== (string) $sanitized && bp_update_option( $control_name, $sanitized ) ) {
 								$saved[ $control_name ] = $sanitized;
 							}
 						}

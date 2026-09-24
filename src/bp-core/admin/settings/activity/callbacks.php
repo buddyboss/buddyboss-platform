@@ -118,19 +118,15 @@ function bb_activity_sanitize_comment_visibility( $value ) {
  * Accepts values 1-4 for thread depth levels.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Delegates to bb_activity_normalize_comment_threading_depth().
  *
  * @param mixed $value The value to sanitize.
  *
  * @return int Sanitized integer value (1-4).
  */
 function bb_activity_sanitize_comment_threading_depth( $value ) {
-	$value = absint( $value );
-
-	if ( $value < 1 || $value > 4 ) {
-		return 3;
-	}
-
-	return $value;
+	// Shared with the read path so both sides resolve an out-of-range depth identically.
+	return bb_activity_normalize_comment_threading_depth( $value );
 }
 
 /**
