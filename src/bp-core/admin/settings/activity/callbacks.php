@@ -11,38 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Get allowed edit time values (cached per request).
- *
- * Returns an array of allowed integer values for activity/comment edit time,
- * including -1 (Forever). Falls back to hardcoded defaults when
- * bp_activity_edit_times() is unavailable.
- *
- * @since BuddyBoss 3.0.0
- *
- * @return array Allowed integer values.
- */
-function bb_activity_get_allowed_edit_times() {
-	static $allowed = null;
-
-	if ( null !== $allowed ) {
-		return $allowed;
-	}
-
-	$allowed = array( -1 );
-	if ( function_exists( 'bp_activity_edit_times' ) ) {
-		foreach ( bp_activity_edit_times() as $time ) {
-			$allowed[] = intval( $time['value'] );
-		}
-	}
-
-	// Fallback: ensure common defaults are always valid when BP function is unavailable.
-	if ( 1 === count( $allowed ) ) {
-		$allowed = array_merge( $allowed, array( 120, 300, 600, 1800, 3600, 43200, 86400 ) );
-	}
-
-	return $allowed;
-}
 
 /**
  * No-op sanitize callback for topic_list fields.
@@ -74,13 +42,8 @@ function bb_sanitize_topic_list_noop( $value ) {
  * @return int Sanitized integer value.
  */
 function bb_activity_sanitize_edit_time( $value ) {
-	$value = intval( $value );
-
-	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
-		return 600; // Fallback: invalid value, return 10 minutes.
-	}
-
-	return $value;
+	// Shared with the read path so both sides resolve an out-of-range duration identically.
+	return bb_activity_normalize_edit_time( $value );
 }
 
 /**

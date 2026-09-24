@@ -895,8 +895,16 @@ class BB_Admin_Settings_Ajax {
 						continue;
 					}
 					if ( ! empty( $control['name'] ) ) {
-						$control_default                                = $control['default'] ?? '';
-						$field['description_controls'][ $idx ]['value'] = bp_get_option( $control['name'], $control_default );
+						$control_default = $control['default'] ?? '';
+						$control_value   = bp_get_option( $control['name'], $control_default );
+
+						// A stored value the control cannot represent would otherwise render as
+						// whichever <option> comes first. Resolve it the same way a save would.
+						if ( ! empty( $control['sanitize_callback'] ) && is_callable( $control['sanitize_callback'] ) ) {
+							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
+						}
+
+						$field['description_controls'][ $idx ]['value'] = $control_value;
 					}
 				}
 			}
@@ -1689,6 +1697,24 @@ class BB_Admin_Settings_Ajax {
 						}
 						bp_update_option( $control_name, $control_value );
 						$saved[ $control_name ] = $control_value;
+					} elseif (
+						array_key_exists( $name, $settings ) &&
+						! empty( $control['sanitize_callback'] ) &&
+						is_callable( $control['sanitize_callback'] )
+					) {
+						// The parent field was submitted without its inline control, e.g. only
+						// the toggle was changed. Re-validate what is stored so the pair cannot
+						// be left as "enabled with a duration the dropdown cannot show", which
+						// reads back as the feature being off. An absent row resolves to the
+						// control's registered default, exactly as the read path does, so
+						// nothing is written for it.
+						$stored    = bp_get_option( $control_name, $control['default'] ?? '' );
+						$sanitized = call_user_func( $control['sanitize_callback'], $stored );
+
+						if ( (string) $stored !== (string) $sanitized ) {
+							bp_update_option( $control_name, $sanitized );
+							$saved[ $control_name ] = $sanitized;
+						}
 					}
 				}
 			}

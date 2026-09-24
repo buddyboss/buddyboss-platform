@@ -1112,16 +1112,78 @@ function bp_activity_edit_times( $time = null ) {
 }
 
 /**
+ * Durations the activity/comment edit settings accept.
+ *
+ * `-1` means "forever"; the rest come from bp_activity_edit_times(). This lives here rather
+ * than in the admin settings callbacks because the edit duration is read on the front end,
+ * where the admin files are not loaded.
+ *
+ * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Moved here from the admin settings callbacks so the front end can read it.
+ *
+ * @return array Allowed integer values.
+ */
+function bb_activity_get_allowed_edit_times() {
+	static $allowed = null;
+
+	if ( null !== $allowed ) {
+		return $allowed;
+	}
+
+	$allowed = array( -1 );
+	foreach ( bp_activity_edit_times() as $time ) {
+		$allowed[] = intval( $time['value'] );
+	}
+
+	return $allowed;
+}
+
+/**
+ * Resolve an edit duration to one the settings control can actually represent.
+ *
+ * The duration is chosen from a <select> offering a fixed set of values, and HTML has no
+ * "no match" state: given a value matching no <option>, the browser silently selects the
+ * first one. So a stored value outside the allowed set does not read as unset, it reads as
+ * whichever option happens to be first — and `(int) ''` is 0, which
+ * bp_activity_user_can_edit() treats as a zero-second window, i.e. editing switched off.
+ *
+ * The write path already coerces out-of-range values to the default via
+ * bb_activity_sanitize_edit_time(); this applies the same rule on read, so installs whose
+ * stored value is already invalid (migrations, partial saves, direct database edits) behave
+ * as documented instead of silently disabling the feature.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value   Stored value.
+ * @param int   $default Value to fall back to. Default 600 (10 minutes).
+ *
+ * @return int A duration from bb_activity_get_allowed_edit_times().
+ */
+function bb_activity_normalize_edit_time( $value, $default = 600 ) {
+	if ( is_numeric( $value ) && in_array( intval( $value ), bb_activity_get_allowed_edit_times(), true ) ) {
+		return intval( $value );
+	}
+
+	return $default;
+}
+
+/**
  * Get BuddyBoss Activity Time option.
  *
- * @param bool $default when option not found, function will return $default value.
- *
- * @return mixed|void
+ * The stored value is normalised with bb_activity_normalize_edit_time(): anything outside
+ * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
  *
  * @since BuddyBoss 1.5.0
+ * @since BuddyBoss [BBVERSION] The return value is normalised to an allowed duration.
+ *
+ * @param mixed $default Value used when the option row is absent. Honoured only if it is an allowed duration.
+ *
+ * @return int Edit duration in seconds, or -1 for no limit.
  */
 function bp_get_activity_edit_time( $default = false ) {
-	return apply_filters( 'bp_get_activity_edit_time', bp_get_option( '_bp_activity_edit_time', $default ) );
+	$edit_time = bb_activity_normalize_edit_time( bp_get_option( '_bp_activity_edit_time', $default ) );
+
+	return apply_filters( 'bp_get_activity_edit_time', $edit_time );
 }
 
 /**
@@ -2461,14 +2523,20 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
 /**
  * Get BuddyBoss activity comment Time option.
  *
+ * The stored value is normalised with bb_activity_normalize_edit_time(): anything outside
+ * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
+ *
  * @since BuddyBoss 2.4.40
+ * @since BuddyBoss [BBVERSION] The return value is normalised to an allowed duration.
  *
- * @param bool $default when option not found, function will return $default value.
+ * @param mixed $default Value used when the option row is absent. Honoured only if it is an allowed duration.
  *
- * @return mixed|void
+ * @return int Edit duration in seconds, or -1 for no limit.
  */
 function bb_get_activity_comment_edit_time( $default = false ) {
-	return apply_filters( 'bb_get_activity_comment_edit_time', bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+	$edit_time = bb_activity_normalize_edit_time( bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+
+	return apply_filters( 'bb_get_activity_comment_edit_time', $edit_time );
 }
 
 /**
