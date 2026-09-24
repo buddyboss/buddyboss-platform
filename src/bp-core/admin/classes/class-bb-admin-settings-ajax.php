@@ -895,8 +895,25 @@ class BB_Admin_Settings_Ajax {
 						continue;
 					}
 					if ( ! empty( $control['name'] ) ) {
-						$control_default                                = $control['default'] ?? '';
-						$field['description_controls'][ $idx ]['value'] = bp_get_option( $control['name'], $control_default );
+						$control_default = $control['default'] ?? '';
+						$control_value   = bp_get_option( $control['name'], $control_default );
+
+						// A stored value the control cannot represent would otherwise render as
+						// whichever <option> comes first. Resolve it the same way a save would.
+						//
+						// Only for controls that opt in with 'resolve_invalid'. A sanitizer that
+						// merely coerces (absint, a clamp) is not a resolver: running it here would
+						// show a value the matching getter does not enforce, which is the same
+						// screen-disagrees-with-behaviour defect this resolution exists to remove.
+						if (
+							! empty( $control['resolve_invalid'] ) &&
+							! empty( $control['sanitize_callback'] ) &&
+							is_callable( $control['sanitize_callback'] )
+						) {
+							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
+						}
+
+						$field['description_controls'][ $idx ]['value'] = $control_value;
 					}
 				}
 			}
@@ -1552,6 +1569,9 @@ class BB_Admin_Settings_Ajax {
 
 		$saved = array();
 
+		// Sentinel for "this option row does not exist"; compared by identity in the repair branch below.
+		$absent = new stdClass();
+
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
 
@@ -1689,6 +1709,38 @@ class BB_Admin_Settings_Ajax {
 						}
 						bp_update_option( $control_name, $control_value );
 						$saved[ $control_name ] = $control_value;
+					} elseif (
+						array_key_exists( $name, $settings ) &&
+						! empty( $control['resolve_invalid'] ) &&
+						! empty( $control['sanitize_callback'] ) &&
+						is_callable( $control['sanitize_callback'] )
+					) {
+						// The parent field was submitted without its inline control, e.g. only
+						// the toggle was changed. Re-validate what is stored so the pair cannot
+						// be left as "enabled with a duration the dropdown cannot show", which
+						// reads back as the feature being off. A row that does not exist is
+						// left alone: the read path already resolves it to the registered
+						// default, and a filtered default may legitimately sit outside what
+						// the sanitizer accepts.
+						//
+						// Restricted to controls that opt in with 'resolve_invalid'. Applied to
+						// every sanitizer it would rewrite settings the admin never opened —
+						// bb_activity_load_type, for one, stores values supplied through the
+						// public bb_performance_activity_autoload filter, and its sanitizer
+						// returns 'infinite' for anything that filter is not currently offering.
+						$stored = bp_get_option( $control_name, $absent );
+
+						if ( $absent !== $stored && is_scalar( $stored ) ) {
+							$sanitized = call_user_func( $control['sanitize_callback'], $stored );
+
+							// Echo the repaired value back only once it has actually reached the
+							// database. The UI merges $saved into its state, so reporting a value
+							// that failed to write would show the admin a setting the site is not
+							// using — the very failure this repair exists to prevent.
+							if ( (string) $stored !== (string) $sanitized && bp_update_option( $control_name, $sanitized ) ) {
+								$saved[ $control_name ] = $sanitized;
+							}
+						}
 					}
 				}
 			}
