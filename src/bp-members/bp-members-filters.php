@@ -595,7 +595,7 @@ function bb_core_prime_mentions_results() {
 
 	foreach ( $members_query->results as $user ) {
 		$result        = new stdClass();
-		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
+		$result->ID    = bb_activity_format_mentionname( $user );
 		$result->image = bp_core_fetch_avatar(
 			array(
 				'html'    => false,
@@ -633,7 +633,7 @@ function bb_core_prime_mentions_results() {
 
 		foreach ( $friends_query->results as $user ) {
 			$result        = new stdClass();
-			$result->ID    = bp_activity_get_user_mentionname( $user->ID );
+			$result->ID    = bb_activity_format_mentionname( $user );
 			$result->image = bp_core_fetch_avatar(
 				array(
 					'html'    => false,
