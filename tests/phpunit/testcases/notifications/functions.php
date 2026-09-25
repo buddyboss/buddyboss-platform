@@ -35,7 +35,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$this->assertFalse( wp_cache_get( $u, 'bp_notifications_unread_count' ) );
+		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
+		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
 	}
 
 	/**
@@ -62,7 +63,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		BP_Notifications_Notification::delete( array( 'id' => $n1, ) );
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$this->assertFalse( wp_cache_get( $u, 'bp_notifications_unread_count' ) );
+		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
+		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
 	}
 
 	/**
@@ -93,7 +95,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		);
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$this->assertFalse( wp_cache_get( $u, 'bp_notifications_unread_count' ) );
+		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
+		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
 	}
 
 	/**
@@ -124,7 +127,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		);
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$this->assertFalse( wp_cache_get( $u, 'bp_notifications_unread_count' ) );
+		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
+		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
 	}
 
 	/**
