@@ -76,12 +76,24 @@ class BP_Core_Cron {
 			return false;
 		}
 
-		$this->crons[] = array(
+		$cron = array(
 			'hook'       => 'bb_' . $hook . '_hook',
 			'recurrence' => $recurrence,
 		);
 
+		$this->crons[] = $cron;
+
 		add_action( 'bb_' . $hook . '_hook', $callback );
+
+		/*
+		 * schedule() only runs on the bp_init hook. If bp_init has already
+		 * fired for this request (e.g. this is being added from an AJAX/REST
+		 * save handler that runs after boot), schedule() will not run again
+		 * and this cron would otherwise never actually get scheduled.
+		 */
+		if ( did_action( 'bp_init' ) ) {
+			$this->schedule_single( $cron );
+		}
 
 		return true;
 	}
@@ -93,10 +105,24 @@ class BP_Core_Cron {
 	 */
 	public function schedule() {
 		foreach ( $this->crons as $cron ) {
-			// Schedule if not scheduled already.
-			if ( ! wp_next_scheduled( $cron['hook'] ) && apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true ) ) {
-				wp_schedule_event( time(), $cron['recurrence'], $cron['hook'] );
-			}
+			$this->schedule_single( $cron );
+		}
+	}
+
+	/**
+	 * Schedule a single cron event if it isn't already scheduled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $cron Cron array with 'hook' and 'recurrence' keys.
+	 */
+	protected function schedule_single( $cron ) {
+		// Schedule if not scheduled already.
+		if (
+			! wp_next_scheduled( $cron['hook'] )
+			&& apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true )
+		) {
+			wp_schedule_event( time(), $cron['recurrence'], $cron['hook'] );
 		}
 	}
 }
