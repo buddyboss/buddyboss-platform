@@ -38,7 +38,7 @@ $lg: 1024px;
 // Base Overlay and Modal
 // ==========================================================================
 
-.bb-rl-button {
+.bb-rl-onboarding-modal .bb-rl-button {
     background: $background-brand-primary-color;
     color: $white;
     display: inline-block;
@@ -46,6 +46,7 @@ $lg: 1024px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
+    line-height: 1;
     cursor: pointer;
     text-decoration: none;
     border: 0;
@@ -856,7 +857,7 @@ body.bb-rl-fullscreen-mode {
     border-bottom-right-radius: 8px
 }
 
-.color-picker-popover-footer {
+.buddyboss_page_bb-settings .color-picker-popover-footer {
     padding: 0 8px 8px;
     display: flex;
     align-items: center;
@@ -1074,10 +1075,13 @@ body.bb-rl-fullscreen-mode {
     }
 
     .components-form-toggle.is-checked .components-form-toggle__thumb {
-        background-color: $primary-color;
-        transform: translateX(16px);
-        left: unset;
-        right: 20px;
+
+        .buddyboss_page_bb-settings & {
+            background-color: $primary-color;
+            transform: translateX(16px);
+            left: unset;
+            right: 20px;
+        }
     }
 
     .components-form-toggle input.components-form-toggle__input[type=checkbox]{
