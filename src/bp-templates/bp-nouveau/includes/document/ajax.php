@@ -773,12 +773,49 @@ function bp_nouveau_ajax_document_folder_save() {
 	$parent    = filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT );
 	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 
+	// Group folders: the actor must be allowed to manage documents in the posted group.
+	if (
+		! empty( $group_id ) &&
+		(
+			! bp_is_active( 'groups' ) ||
+			! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $group_id )
+		)
+	) {
+		$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	if ( $parent > 0 ) {
 		$id = false;
 	}
 
 	if ( ! $id && ! $parent ) {
 		$parent = $folder_id;
+	}
+
+	// Editing an existing folder: the actor must be allowed to edit it, and to manage documents in the group it lives in.
+	if ( $id > 0 ) {
+		$existing_folder = new BP_Document_Folder( $id );
+
+		if ( empty( $existing_folder->id ) ) {
+			wp_send_json_error( $response );
+		}
+
+		if ( ! bp_folder_user_can_edit( $existing_folder ) ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
+		if (
+			! empty( $existing_folder->group_id ) &&
+			(
+				! bp_is_active( 'groups' ) ||
+				! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $existing_folder->group_id )
+			)
+		) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
 	}
 
 	if ( $parent > 0 ) {
@@ -884,6 +921,18 @@ function bp_nouveau_ajax_document_child_folder_save() {
 	$title     = wp_strip_all_tags( $title );
 	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 	$privacy   = '';
+
+	// Group folders: the actor must be allowed to manage documents in the posted group.
+	if (
+		! empty( $group_id ) &&
+		(
+			! bp_is_active( 'groups' ) ||
+			! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $group_id )
+		)
+	) {
+		$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
 
 	if ( $folder_id > 0 ) {
 		$parent_folder = BP_Document_Folder::get_folder_data( array( $folder_id ) );
