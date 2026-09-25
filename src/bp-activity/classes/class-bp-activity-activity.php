@@ -950,6 +950,8 @@ class BP_Activity_Activity {
 	 * Convert activity IDs to activity objects, as expected in template loop.
 	 *
 	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss [BBVERSION] Skips IDs whose rows no longer exist instead of
+	 *                              returning `false` entries.
 	 *
 	 * @param array $activity_ids Array of activity IDs.
 	 * @return array
@@ -986,24 +988,35 @@ class BP_Activity_Activity {
 
 		// Now fetch data from the cache.
 		foreach ( $activity_ids as $activity_id ) {
-			// Integer casting.
 			$activity = wp_cache_get( $activity_id, 'bp_activity' );
-			if ( ! empty( $activity ) ) {
-				$activity->id                = (int) $activity->id;
-				$activity->user_id           = (int) $activity->user_id;
-				$activity->item_id           = (int) $activity->item_id;
-				$activity->secondary_item_id = (int) $activity->secondary_item_id;
-				$activity->hide_sitewide     = (int) $activity->hide_sitewide;
-				$activity->mptt_left         = (int) $activity->mptt_left;
-				$activity->mptt_right        = (int) $activity->mptt_right;
-				$activity->is_spam           = (int) $activity->is_spam;
 
-				if ( empty( $activity->action ) ) {
-					$activity->action = bp_activity_generate_action_string( $activity );
-				}
+			// A cached ID list can still reference rows that were deleted after it
+			// was cached. Skip those instead of adding `false` to the results, which
+			// downstream code would try to read as an activity object.
+			if ( ! is_object( $activity ) ) {
+				continue;
+			}
+
+			// Integer casting.
+			$activity->id                = (int) $activity->id;
+			$activity->user_id           = (int) $activity->user_id;
+			$activity->item_id           = (int) $activity->item_id;
+			$activity->secondary_item_id = (int) $activity->secondary_item_id;
+			$activity->hide_sitewide     = (int) $activity->hide_sitewide;
+			$activity->mptt_left         = (int) $activity->mptt_left;
+			$activity->mptt_right        = (int) $activity->mptt_right;
+			$activity->is_spam           = (int) $activity->is_spam;
+
+			if ( empty( $activity->action ) ) {
+				$activity->action = bp_activity_generate_action_string( $activity );
 			}
 
 			$activities[] = $activity;
+		}
+
+		// Nothing survived; skip the user lookup.
+		if ( empty( $activities ) ) {
+			return $activities;
 		}
 
 		$user_ids  = wp_list_pluck( $activities, 'user_id' );

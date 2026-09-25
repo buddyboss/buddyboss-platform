@@ -782,6 +782,39 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 		$this->assertSame( 0, $a_obj->id );
 	}
 
+	/**
+	 * @group get
+	 * @ticket PROD-9861
+	 */
+	public function test_get_should_skip_ids_whose_rows_were_deleted_after_id_list_was_cached() {
+		global $wpdb;
+
+		$u  = self::factory()->user->create();
+		$a1 = self::factory()->activity->create( array( 'user_id' => $u, 'type' => 'activity_update' ) );
+		$a2 = self::factory()->activity->create( array( 'user_id' => $u, 'type' => 'activity_update' ) );
+
+		$args = array(
+			'filter'           => array( 'user_id' => $u ),
+			'display_comments' => false,
+		);
+
+		// Primes the incremented cache with the ID list.
+		$first = BP_Activity_Activity::get( $args );
+		$this->assertEqualSets( array( $a1, $a2 ), wp_list_pluck( $first['activities'], 'id' ) );
+
+		// Delete the row without going through bp_activity_delete(), so the cached
+		// ID list stays stale, and drop the per-object cache like a real delete would.
+		$wpdb->delete( buddypress()->activity->table_name, array( 'id' => $a2 ), array( '%d' ) );
+		wp_cache_delete( $a2, 'bp_activity' );
+
+		$second = BP_Activity_Activity::get( $args );
+
+		$this->assertSame( array( $a1 ), wp_list_pluck( $second['activities'], 'id' ) );
+		foreach ( $second['activities'] as $activity ) {
+			$this->assertTrue( is_object( $activity ), 'Deleted activity must not surface as a false entry.' );
+		}
+	}
+
 	public function action_cb( $activity ) {
 		return 'Woo Hoo!';
 	}
