@@ -312,7 +312,7 @@ class BB_Activity_Readylaunch {
 				'offset'                 => $offset,
 				'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['last_comment_timestamp'] ) ) : '',
 				'last_comment_id'        => $last_comment_id,
-				'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
+				'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'DESC' ),
 			)
 		);
 
