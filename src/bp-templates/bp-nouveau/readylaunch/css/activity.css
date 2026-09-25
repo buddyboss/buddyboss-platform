@@ -1545,10 +1545,25 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   padding: 0;
   border: 0;
 }
+@media (max-width: 420px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji {
+    position: static !important;
+  }
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .bb-rl-post-emoji .emojionearea.emojionearea-standalone {
+    position: static !important;
+  }
+}
 
 .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
   top: inherit;
   bottom: 40px;
+}
+@media (max-width: 420px) {
+  .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-picker.emojionearea-picker-position-top {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
 }
 
 .bb-rl-activity-form #bb-rl-whats-new-toolbar .emojionearea-button {
@@ -2170,6 +2185,8 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   }
   .whats-new-topic-selector .bb-rl-topic-selector-list {
     z-index: 9;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .whats-new-topic-selector .bb-rl-topic-selector-button {
     max-width: 100%;

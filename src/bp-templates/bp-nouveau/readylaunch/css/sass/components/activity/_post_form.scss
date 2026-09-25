@@ -786,11 +786,29 @@
 		.bb-rl-post-emoji {
 			padding: 0;
 			border: 0;
+
+			@media (max-width: 420px) {
+				// Stop this icon wrapper (and the emojionearea wrapper inside it)
+				// from being the picker's containing block - both collapse to
+				// button-width, which threw off horizontal centering. Falls back
+				// to #bb-rl-whats-new-toolbar, which is wide and stable.
+				position: static !important;
+
+				.emojionearea.emojionearea-standalone {
+					position: static !important;
+				}
+			}
 		}
 
 		.emojionearea-picker.emojionearea-picker-position-top {
 			top: inherit;
 			bottom: 40px;
+
+			@media (max-width: 420px) {
+				left: 50% !important;
+				right: auto !important;
+				transform: translateX(-50%) !important;
+			}
 		}
 
 		.emojionearea-button {
@@ -1451,6 +1469,8 @@
 
 		.bb-rl-topic-selector-list {
 			z-index: 9;
+			left: 50%;
+			transform: translateX(-50%);
 		}
 
 		.bb-rl-topic-selector-button {
