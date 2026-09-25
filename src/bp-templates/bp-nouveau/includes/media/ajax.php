@@ -587,9 +587,7 @@ function bp_nouveau_ajax_media_delete() {
 
 	$group_media_html_content = '';
 	if ( bp_is_group_media() ) {
-		// Update the count of photos in groups in navigation menu.
-		wp_cache_flush();
-
+		// Group media count caches are invalidated on delete via `bp_media_before_delete`.
 		$media_group_count = bp_media_get_total_group_media_count();
 
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
@@ -621,12 +619,6 @@ function bp_nouveau_ajax_media_delete() {
 		}
 
 		$group_media_html_content = ob_get_clean();
-	}
-
-	if ( bp_is_group_albums() ) {
-
-		// Update the count of photos in groups in navigation menu when you are in single albums page.
-		wp_cache_flush();
 	}
 
 	// Get album counts after deletion if we were in an album.
@@ -737,9 +729,6 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 		$media_ids[] = $media_id;
 	}
-
-	// Flush the cache.
-	wp_cache_flush();
 
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
@@ -1002,9 +991,6 @@ function bp_nouveau_ajax_media_album_delete() {
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
 		$redirect_url = trailingslashit( $group_link . '/albums/' );
-
-		// Flush the cache so update the count.
-		wp_cache_flush();
 	} else {
 		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' );
 	}
@@ -1738,9 +1724,6 @@ function bp_nouveau_ajax_media_move() {
 	}
 
 	$media    = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
-
-	// Flush the cache.
-	wp_cache_flush();
 
 	$response = bp_media_get_activity_media( $activity_id );
 
