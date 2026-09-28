@@ -910,6 +910,7 @@ function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = fa
  * Email message recipients to alert them of a new unread private message.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyBoss [BBVERSION] Passes the `sender.id` token so the email identifies its sender itself.
  *
  * @param array|BP_Messages_Message $raw_args      {
  *                                                 Array of arguments. Also accepts a BP_Messages_Message object.
@@ -997,6 +998,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 					'tokens' => array(
 						'message_id'       => $id,
 						'usermessage'      => stripslashes( $message ),
+						'sender.id'        => $sender_id,
 						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
 						'sender.name'      => $sender_name,
 						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
@@ -1014,6 +1016,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 					'tokens' => array(
 						'message_id'       => $id,
 						'usermessage'      => stripslashes( $message ),
+						'sender.id'        => $sender_id,
 						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
 						'sender.name'      => $sender_name,
 						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
