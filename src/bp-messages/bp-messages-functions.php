@@ -1127,6 +1127,9 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 								'usermessage' => stripslashes( $message ),
 								'message'     => stripslashes( $message ),
 								'sender.id'   => $sender_id,
+								// Placeholder only: bb_render_messages_recipients() replaces this
+								// with a value resolved for each recipient when it sends. Resolved
+								// here it would be the sender's own view of their name.
 								'sender.name' => $sender_name,
 								'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
 								'group.name'  => $group_name,
@@ -1195,7 +1198,10 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 						'message'          => stripslashes( $message ),
 						'message.url'      => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
 						'sender.id'        => $sender_id,
-						'sender.name'      => $sender_name,
+						// Resolve the sender name per recipient so profile-field
+						// visibility is evaluated against the person receiving
+						// the email, not the request context.
+						'sender.name'      => bp_core_get_user_displayname( $sender_id, $recipient->user_id ),
 						'usersubject'      => sanitize_text_field( stripslashes( $subject ) ),
 						'receiver-user.id' => $recipient->user_id,
 						'group.name'       => $group_name,
@@ -1690,6 +1696,17 @@ function bb_render_messages_recipients( $recipients, $email_type, $message_slug,
 		$tokens['message.url']      = esc_url( bp_core_get_user_domain( $recipient->user_id ) . $message_slug . '/view/' . $thread_id . '/' );
 		$tokens['receiver-user.id'] = $recipient->user_id;
 		$tokens['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
+
+		// Re-resolve the sender's name for THIS recipient. The tokens were built once, in the
+		// sender's own request, before the batch was queued - so a name that profile-field
+		// visibility hides would have been resolved against the sender, who always sees their own
+		// name in full, and then delivered unredacted to every recipient. The unqueued branch in
+		// group_messages_notification_new_message() resolves per recipient for the same reason;
+		// which of the two runs depends only on bb_is_email_queue() and the recipient count, so
+		// they must agree.
+		if ( isset( $tokens['sender.name'] ) && ! empty( $sender_id ) ) {
+			$tokens['sender.name'] = bp_core_get_user_displayname( $sender_id, $recipient->user_id );
+		}
 
 		bp_send_email(
 			$email_type,

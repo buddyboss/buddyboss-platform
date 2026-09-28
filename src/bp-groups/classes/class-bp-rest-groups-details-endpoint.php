@@ -85,7 +85,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_group_information' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'get_group_information_permissions_check' ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -455,7 +455,28 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! is_user_logged_in() && ( 'private' === bp_get_group_status( $group ) || 'hidden' === bp_get_group_status( $group ) ) ) {
+		$bb_group_status = ! empty( $group->id ) ? bp_get_group_status( $group ) : '';
+
+		if ( true === $retval && ! is_user_logged_in() && ( 'private' === $bb_group_status || 'hidden' === $bb_group_status ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to view group tabs.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		// A hidden group must not confirm its own existence to a non-member: without
+		// this the route answers 200 (with an empty tab list, which BP's nav access
+		// control has already emptied) for any id a caller cares to walk, while a
+		// non-existent id answers 404.
+		//
+		// Scoped to 'hidden' deliberately. A PRIVATE group is directory-visible by
+		// design, and its only non-member tab is "Request Access" — the tab through
+		// which a user joins. Refusing that would break the join flow rather than
+		// protect anything, since BP already strips every other tab.
+		if ( true === $retval && 'hidden' === $bb_group_status && ! $this->bb_can_view_restricted_group( $group ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to view group tabs.', 'buddyboss' ),
@@ -474,6 +495,95 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_details_get_items_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Check access for the group hover-card information endpoint.
+	 *
+	 * Runs the standard group permission check, then requires actual membership
+	 * before releasing a private or hidden group's payload. Membership, not merely
+	 * being logged in, is what grants access: gating on is_user_logged_in() alone
+	 * let any authenticated non-member enumerate a hidden group's name,
+	 * description and member roster by walking group IDs.
+	 *
+	 * This lives on the /info route rather than in get_item_permissions_check()
+	 * because the shared check also guards the released /detail route, where
+	 * private groups must stay readable to logged-in non-members — a private
+	 * group is listed in the directory with its name, description and member
+	 * count, and only its *content* is restricted.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function get_group_information_permissions_check( $request ) {
+		// Pin the target group to the route's own capture before any check runs.
+		//
+		// get_group_object() prefers a `group_id` request param over `id`, but this
+		// route declares only `id` and get_group_information() reads `id` directly.
+		// WP does not strip unregistered query params, so without this a caller could
+		// aim every permission check at a public decoy
+		// (`/groups/<hidden>/info?group_id=<public>`) and still be served the hidden
+		// group named in the URL. Both must resolve to the same group.
+		$request->set_param( 'group_id', (int) $request->get_param( 'id' ) );
+
+		$retval = $this->get_item_permissions_check( $request );
+
+		if ( is_wp_error( $retval ) || true !== $retval ) {
+			return $retval;
+		}
+
+		$group = $this->groups_endpoint->get_group_object( $request );
+
+		if ( empty( $group->id ) ) {
+			return $retval;
+		}
+
+		$status = bp_get_group_status( $group );
+
+		if ( ( 'private' === $status || 'hidden' === $status ) && ! $this->bb_can_view_restricted_group( $group ) ) {
+			return new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to view group tabs.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Whether the current user may read a private or hidden group's details.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param BP_Groups_Group $group Group object.
+	 *
+	 * @return bool
+	 */
+	protected function bb_can_view_restricted_group( $group ) {
+		if ( ! is_user_logged_in() || empty( $group->id ) ) {
+			return false;
+		}
+
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			return true;
+		}
+
+		$user_id = bp_loggedin_user_id();
+
+		return (
+			groups_is_user_member( $user_id, $group->id )
+			|| groups_is_user_mod( $user_id, $group->id )
+			|| groups_is_user_admin( $user_id, $group->id )
+			// An outstanding invitation must stay actionable, otherwise the invitee
+			// cannot open the hidden group they were invited to.
+			|| ( function_exists( 'groups_is_user_invited' ) && groups_is_user_invited( $user_id, $group->id ) )
+		);
 	}
 
 	/**
@@ -819,26 +929,64 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * Fetch group members.
 	 *
 	 * @since 2.8.20
+	 * @since 3.5.0 The default value of the $limit parameter changed from 3 to 9,
+	 *                    and the member query type changed from 'active' to 'last_joined'
+	 *                    so never-active members still appear in the avatar strip.
 	 *
 	 * @param int $group_id The ID of the group.
-	 * @param int $limit    The maximum number of items to be returned in the result set. Default is 3.
+	 * @param int $limit    The maximum number of items to be returned in the result set. Default is 9.
 	 *
 	 * @return array|null An array of group member data, or null if no members are found.
 	 */
-	protected function prepare_group_members( $group_id, $limit = 3 ) {
+	protected function prepare_group_members( $group_id, $limit = 9 ) {
 
 		if ( empty( $group_id ) ) {
 			return null;
 		}
 
-		$members = groups_get_group_members(
-			array(
-				'group_id' => $group_id,
-				'per_page' => $limit,
-				'page'     => 1,
-				'type'     => 'active',
-			)
-		);
+		/**
+		 * Filters the number of recent member avatars shown on the group hover card.
+		 *
+		 * The acceptance criteria for the hover card cap this at 9 (the 10th slot is an
+		 * ellipsis linking to the group's members page). Exposed as a filter so third
+		 * parties can adjust the count without a core edit.
+		 *
+		 * @since 3.5.0
+		 *
+		 * @param int $limit    Number of avatars. Default 9. Values below 1 are clamped to 1.
+		 * @param int $group_id The group ID.
+		 */
+		$limit = max( 1, (int) apply_filters( 'bb_group_card_members_limit', $limit, $group_id ) );
+
+		// Cap the candidate id list before BP_User_Query builds its IN()/FIELD()
+		// clauses — without this both clauses span every member of the group
+		// (BP_Group_Member_Query fetches all ids first and per_page only limits
+		// the final user query). The ids arrive last-joined-first, so the strip's
+		// candidates are the head of the list; the 3x buffer leaves room for
+		// members that BP_User_Query's moderation filtering removes.
+		$bb_cap_member_ids = function ( $group_member_ids ) use ( $limit ) {
+			return array_slice( (array) $group_member_ids, 0, max( 30, $limit * 3 ) );
+		};
+		add_filter( 'bp_group_member_query_group_member_ids', $bb_cap_member_ids, 999 );
+
+		try {
+			// 'last_joined' (not 'active') — the 'active' type drops members with no
+			// last_activity record, which can empty the strip on communities with
+			// imported or not-yet-logged-in members. Organizers/moderators are included
+			// to match the group directory's member stack (bb_groups_loop_members()).
+			$members = groups_get_group_members(
+				array(
+					'group_id'            => $group_id,
+					'per_page'            => $limit,
+					'page'                => 1,
+					'type'                => 'last_joined',
+					'exclude_admins_mods' => false,
+				)
+			);
+		} finally {
+			// The cap must never leak into later group-member queries in the request.
+			remove_filter( 'bp_group_member_query_group_member_ids', $bb_cap_member_ids, 999 );
+		}
 
 		if ( empty( $members['members'] ) ) {
 			return null;
@@ -847,18 +995,22 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		$member_data = array();
 
 		foreach ( $members['members'] as $member ) {
+			$avatar_full = bp_core_fetch_avatar(
+				array(
+					'item_id' => $member->user_id,
+					'html'    => false,
+					'type'    => 'full',
+				)
+			);
+
 			$member_data[] = array(
 				'id'          => $member->user_id,
 				'link'        => bp_core_get_user_domain( $member->user_id ),
-				'name'        => bp_core_get_user_displayname( $member->user_id ),
+				// ENT_QUOTES, as the groups and members endpoints do: the resolver escapes at priority
+				// 10 and decodes at 16 with the default ENT_NOQUOTES, which leaves `&#039;` standing.
+				'name'        => wp_specialchars_decode( (string) bp_core_get_user_displayname( $member->user_id ), ENT_QUOTES ),
 				'avatar_urls' => array(
-					'full'       => bp_core_fetch_avatar(
-						array(
-							'item_id' => $member->user_id,
-							'html'    => false,
-							'type'    => 'full',
-						)
-					),
+					'full'       => $avatar_full,
 					'thumb'      => bp_core_fetch_avatar(
 						array(
 							'item_id' => $member->user_id,
@@ -866,12 +1018,34 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 							'type'    => 'thumb',
 						)
 					),
-					'is_default' => ! bp_get_user_has_avatar( $member->user_id ),
+					'is_default' => $this->bb_is_default_avatar_url( $avatar_full, $member->user_id ),
 				),
 			);
 		}
 
 		return $member_data;
+	}
+
+	/**
+	 * Whether an avatar URL is the member's default (i.e. not an uploaded avatar).
+	 *
+	 * URL-based port of bp_get_user_has_avatar()'s path tests: uploaded avatars are
+	 * served from /avatars/{user_id}/ while auto-generated defaults live under
+	 * /default/{user_id}/. Testing the already-fetched URL avoids the extra
+	 * bp_core_fetch_avatar() call the canonical helper issues per member.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $avatar_url Avatar URL from a bp_core_fetch_avatar( html=false ) call.
+	 * @param int    $user_id    Member ID the URL was fetched for.
+	 *
+	 * @return bool True when the URL is not the member's own uploaded avatar.
+	 */
+	protected function bb_is_default_avatar_url( $avatar_url, $user_id ) {
+		$has_uploaded = ( false !== strpos( $avatar_url, '/' . $user_id . '/' ) )
+			&& ( false === strpos( $avatar_url, '/default/' . $user_id . '/' ) );
+
+		return ! $has_uploaded;
 	}
 
 }
