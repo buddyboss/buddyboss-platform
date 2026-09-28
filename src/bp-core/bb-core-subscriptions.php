@@ -1075,6 +1075,9 @@ function bb_is_enabled_subscription( $type, $notification_type = '' ) {
  * Trigger subscription notifications.
  *
  * @since BuddyBoss 2.2.6
+ * @since BuddyBoss [BBVERSION] Reads one bounded page of subscription ids to decide
+ *                              between in-request delivery and the background fan-out,
+ *                              and resolves user ids from that page in a second query.
  *
  * @param array $args {
  *     An array of arguments.
@@ -1152,15 +1155,22 @@ function bb_send_notifications_to_subscribers( $args ) {
 	// no COUNT (both of which cost O(n) database time on a large group). A page
 	// that overflows the threshold means "large list" — it is discarded and the
 	// background worker paginates instead; otherwise the page IS the complete
-	// list and is used as-is below.
+	// list and its user ids are resolved below.
+	//
+	// The page is read as subscription ids, not user ids, because the size
+	// decision must count rows as stored: resolving users runs each row through
+	// the bb_subscriptions_pre_validate filter, and a listener rejecting even one
+	// row would shrink an over-threshold page to "complete" and silently skip
+	// every subscriber past it. Same two-step shape as the background worker.
 	$fanout_page_size = max( 1, $fanout_min_count ) + 1;
 
-	$subscriptions = bb_get_subscription_users(
+	$id_page = bb_get_subscription_users(
 		array(
 			'type'     => $type,
 			'item_id'  => $item_id,
 			'blog_id'  => $blog_id,
 			'status'   => true,
+			'fields'   => 'id',
 			'per_page' => $fanout_page_size,
 			'page'     => 1,
 			'order_by' => 'id',
@@ -1169,9 +1179,11 @@ function bb_send_notifications_to_subscribers( $args ) {
 		)
 	);
 
-	if ( empty( $subscriptions['subscriptions'] ) ) {
+	if ( empty( $id_page['subscriptions'] ) ) {
 		return;
 	}
+
+	$subscription_ids = $id_page['subscriptions'];
 
 	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 
@@ -1202,7 +1214,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	// trusts per_page surviving the bb_get_subscription_users and
 	// bb_subscriptions_subscription_get parse-args filters — a third-party
 	// clamp below the probe size would read a truncated page as complete.
-	$total_subscribers = count( $subscriptions['subscriptions'] );
+	$total_subscribers = count( $subscription_ids );
 
 	global $bb_background_updater;
 
@@ -1246,7 +1258,29 @@ function bb_send_notifications_to_subscribers( $args ) {
 		return;
 	}
 
-	// Small list: the page fetched above already holds every subscriber.
+	// Small list: the id page fetched above holds every subscriber. Resolve the
+	// user ids from it in a second bounded query; this is the step that applies
+	// bb_subscriptions_pre_validate, so a listener can still drop rows from
+	// delivery without affecting the size decision made above.
+	$user_page = bb_get_subscription_users(
+		array(
+			'type'     => $type,
+			'item_id'  => $item_id,
+			'blog_id'  => $blog_id,
+			'status'   => true,
+			'include'  => $subscription_ids,
+			'order_by' => 'id',
+			'order'    => 'ASC',
+			'count'    => false,
+		)
+	);
+
+	$subscriber_user_ids = ! empty( $user_page['subscriptions'] ) ? $user_page['subscriptions'] : array();
+
+	if ( empty( $subscriber_user_ids ) ) {
+		return;
+	}
+
 	$background_process = ( 1 < $total_subscribers );
 
 	if ( true === $background_process ) {
@@ -1255,7 +1289,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		// direct-call path below keeps the object (no serialization involved).
 		$parse_args['data'] = bb_subscriptions_compact_notification_data( $parse_args['data'] );
 
-		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
+		$chunk_user_ids = array_chunk( $subscriber_user_ids, $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $user_ids ) {
 				$parse_args['user_ids'] = $user_ids;
@@ -1277,7 +1311,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 		$bb_background_updater->dispatch();
 	} else {
-		$parse_args['user_ids'] = $subscriptions['subscriptions'];
+		$parse_args['user_ids'] = $subscriber_user_ids;
 		call_user_func(
 			$send_callback,
 			$parse_args

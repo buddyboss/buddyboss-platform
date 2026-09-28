@@ -40,12 +40,20 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	protected static $next_item_id = 100000;
 
 	/**
+	 * User id the bb_subscriptions_pre_validate helper rejects; 0 rejects nobody.
+	 *
+	 * @var int
+	 */
+	protected static $rejected_user_id = 0;
+
+	/**
 	 * Set up: register the test type, block outbound HTTP, empty the queue.
 	 */
 	public function setUp(): void {
 		parent::setUp();
 
-		self::$sent = array();
+		self::$sent             = array();
+		self::$rejected_user_id = 0;
 
 		add_filter( 'bb_register_subscriptions_types', array( $this, 'register_test_type' ) );
 
@@ -595,6 +603,73 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A pre_validate listener rejecting a row must not make a large list look complete.
+	 *
+	 * The size decision is made on the raw subscription-id page; a listener that
+	 * drops rows from the resolved user list would otherwise shrink an
+	 * over-threshold page below the threshold and silently skip every
+	 * subscriber past it.
+	 */
+	public function test_dispatcher_large_list_routes_to_batch_when_pre_validate_rejects_a_row() {
+		add_filter( 'bb_subscription_background_fanout_min_count', array( $this, 'filter_five' ) );
+
+		$item_id  = $this->next_item_id();
+		$user_ids = $this->create_subscribers( 7, $item_id );
+
+		self::$rejected_user_id = $user_ids[0];
+		add_filter( 'bb_subscriptions_pre_validate', array( $this, 'reject_flagged_subscriber' ), 10, 2 );
+
+		bb_send_notifications_to_subscribers(
+			array(
+				'type'              => self::$type,
+				'item_id'           => $item_id,
+				'notification_from' => 'bb_test_fanout_note',
+				'data'              => array(),
+			)
+		);
+
+		$rows = $this->get_queue_rows();
+		$this->assertSame( array(), self::$sent, 'A large list must never be sent directly.' );
+		$this->assertCount( 1, $rows, 'A list over the threshold must queue exactly one fan-out row even when a listener rejects a row.' );
+		$this->assertSame( 'bb_send_notifications_to_subscribers_batch', $rows[0]['callback'] );
+		$this->assertArrayNotHasKey( 'user_ids', $rows[0]['args'], 'No chunk row may be queued in place of the fan-out row.' );
+	}
+
+	/**
+	 * On the small path a pre_validate rejection still excludes that subscriber.
+	 *
+	 * Negative control for the test above: deciding on the id page must not
+	 * stop the listener from filtering the delivered user list.
+	 */
+	public function test_dispatcher_small_list_still_honors_pre_validate_rejection() {
+		add_filter( 'bb_subscription_background_fanout_min_count', array( $this, 'filter_five' ) );
+		add_filter( 'bb_subscription_queue_min_count', array( $this, 'filter_two' ) );
+
+		$item_id  = $this->next_item_id();
+		$user_ids = $this->create_subscribers( 3, $item_id );
+
+		self::$rejected_user_id = $user_ids[0];
+		add_filter( 'bb_subscriptions_pre_validate', array( $this, 'reject_flagged_subscriber' ), 10, 2 );
+
+		bb_send_notifications_to_subscribers(
+			array(
+				'type'              => self::$type,
+				'item_id'           => $item_id,
+				'notification_from' => 'bb_test_fanout_note',
+				'data'              => array(),
+			)
+		);
+
+		$expected = array_slice( $user_ids, 1 );
+		$queued   = $this->queued_chunk_user_ids();
+		sort( $queued );
+		sort( $expected );
+
+		$this->assertSame( array(), self::$sent, 'Two remaining subscribers are chunked, not sent directly.' );
+		$this->assertSame( $expected, $queued, 'The rejected subscriber must be excluded and every other subscriber queued once.' );
+	}
+
+	/**
 	 * Keyset paging covers every subscriber exactly once across full and partial pages.
 	 */
 	public function test_worker_pages_deliver_every_subscriber_exactly_once() {
@@ -966,6 +1041,21 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	 */
 	public function filter_int_max() {
 		return PHP_INT_MAX;
+	}
+
+	/**
+	 * bb_subscriptions_pre_validate helper: reject the flagged subscriber's row.
+	 *
+	 * @param bool   $validate     Whether the row is valid.
+	 * @param object $subscription Subscription row (hydrated object or raw DB row).
+	 * @return bool
+	 */
+	public function reject_flagged_subscriber( $validate, $subscription ) {
+		if ( ! empty( self::$rejected_user_id ) && isset( $subscription->user_id ) && (int) $subscription->user_id === (int) self::$rejected_user_id ) {
+			return false;
+		}
+
+		return $validate;
 	}
 
 	/**
