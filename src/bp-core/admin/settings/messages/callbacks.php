@@ -44,6 +44,7 @@ function bb_messages_sanitize_delay_time( $value ) {
  * option values from the database.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Schedules the event directly; bp_core_schedule_cron() cannot schedule after `bp_init`.
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings (JSON decoded).
@@ -68,8 +69,7 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 
 	// Always unschedule the existing cron event first.
 	// After the AJAX save, the old option value is already overwritten in the DB,
-	// so we cannot reliably compare old vs new. Clearing and re-scheduling is safe
-	// because bp_core_schedule_cron() is idempotent.
+	// so we cannot reliably compare old vs new; clearing and re-scheduling is safe.
 	$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
 	if ( $timestamp ) {
 		wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
@@ -80,8 +80,15 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 	if ( $is_enabled ) {
 		$new_time     = absint( bp_get_option( 'time_delay_email_notification', 15 ) );
 		$new_schedule = bb_get_delay_notification_time_by_minutes( $new_time );
-		if ( ! empty( $new_schedule ) ) {
-			bp_core_schedule_cron( 'digest_email_notifications', 'bb_digest_message_email_notifications', $new_schedule['schedule_key'] );
+
+		// Schedule the event directly. bp_core_schedule_cron() only queues it for
+		// BP_Core_Cron::schedule(), which runs on `bp_init` — already past in this
+		// AJAX request — so the event would never be created and delayed message
+		// emails would stop. The hook's callback is attached at load time in
+		// bp-messages-filters.php, so scheduling the event is all that is needed
+		// (same approach as bb_update_digest_schedule_event_on_change_component_status()).
+		if ( ! empty( $new_schedule ) && ! wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
+			wp_schedule_event( time(), $new_schedule['schedule_key'], 'bb_digest_email_notifications_hook' );
 		}
 	}
 }
