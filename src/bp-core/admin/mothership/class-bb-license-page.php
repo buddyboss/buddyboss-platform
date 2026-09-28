@@ -31,14 +31,18 @@ class BB_License_Page {
 	/**
 	 * Registers the page.
 	 *
-	 * @return mixed The resulting page's hook suffix or false if the user does not have the capability set in the constant self::CAPABILITY.
+	 * @since BuddyBoss [BBVERSION] Added the `$parent_slug` and `$capability` parameters.
+	 *
+	 * @param string $parent_slug Parent menu slug.
+	 * @param string $capability  Capability required to view the page.
+	 * @return mixed The resulting page's hook suffix or false if the user does not have the capability.
 	 */
-	public static function register() {
+	public static function register( string $parent_slug = 'buddyboss-platform', string $capability = self::CAPABILITY ) {
 		return add_submenu_page(
-			'buddyboss-platform',
+			$parent_slug,
 			self::pageTitle(),
 			esc_html__( 'License Activation', 'buddyboss' ),
-			self::CAPABILITY,
+			$capability,
 			self::SLUG,
 			array(
 				self::class,

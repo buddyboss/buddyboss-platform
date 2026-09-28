@@ -17,6 +17,12 @@ use BuddyBossPlatform\GroundLevel\Container\Container;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
+use BuddyBossPlatform\GroundLevel\Mothership\Util;
+use BuddyBossPlatform\GroundLevel\Mothership\Api\Request;
+use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products;
+use BuddyBossPlatform\GroundLevel\Mothership\LegacyUpdateService;
+use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
+use BuddyBossPlatform\GroundLevel\Support\View;
 use BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider;
@@ -129,6 +135,15 @@ class BB_Mothership_Loader {
 			return;
 		}
 
+		// In network mode the license lives in site options. Copy the main site's license up
+		// once, before the connector reads its plugin ID, so an install that was already
+		// network-activated keeps its activation.
+		BB_Plugin_Connector::maybe_move_license_to_network();
+
+		// Keep direct get_option() readers of the license rows (older add-ons, custom code)
+		// seeing the network license.
+		BB_Plugin_Connector::register_legacy_option_bridge();
+
 		try {
 			// Create the container.
 			$this->container = new Container();
@@ -196,6 +211,10 @@ class BB_Mothership_Loader {
 			)
 		);
 
+		// Must precede boot(): the vendor LicenseManager schedules its status cron in its
+		// constructor.
+		$this->limit_license_cron_to_main_site( $plugin_id );
+
 		try {
 			// MothershipServiceProvider is auto-registered as an IPN dependency; register
 			// it explicitly so intent and ordering are obvious.
@@ -241,8 +260,9 @@ class BB_Mothership_Loader {
 	 */
 	private function setup_hooks(): void {
 		if ( is_admin() ) {
-			// Register admin pages.
-			add_action( 'admin_menu', array( $this, 'register_admin_pages' ), 99 );
+			// Register admin pages. When network-activated the network owns the license, so the
+			// pages live in Network Admin only and are absent from every subsite dashboard.
+			add_action( BB_Plugin_Connector::is_network_mode() ? 'network_admin_menu' : 'admin_menu', array( $this, 'register_admin_pages' ), 99 );
 
 			// Register license controller using BuddyBoss custom manager.
 			add_action( 'admin_init', array( \BuddyBoss\Core\Admin\Mothership\BB_License_Manager::class, 'controller' ), 20 );
@@ -259,11 +279,22 @@ class BB_Mothership_Loader {
 		// {@see self::inject_platform_update()}.
 		add_filter( 'site_transient_update_plugins', array( $this, 'inject_platform_update' ) );
 
+		// Add-on (and add-on theme) updates for Network Admin when only another site is licensed.
+		add_filter( 'site_transient_update_plugins', array( $this, 'inject_addon_updates_via_licensed_site' ) );
+		add_filter( 'site_transient_update_themes', array( $this, 'inject_addon_updates_via_licensed_site' ) );
+
 		// Invalidate the Platform update-check cache whenever WordPress writes a fresh
 		// `update_plugins` transient. That set only happens after a genuine update fetch (cron,
 		// "Check again", or a completed install), so clearing here guarantees the next injector
 		// run re-derives the payload from a fresh version check rather than a stale 12h cache.
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'flush_platform_update_cache' ) );
+
+		// Links hard-coded to the License/Add-ons page in the other admin (e.g. `admin_url()` on a
+		// network-activated install) would otherwise hit "Sorry, you are not allowed".
+		add_action( 'admin_page_access_denied', array( $this, 'redirect_misrouted_license_pages' ) );
+
+		// Hand the network license back to the main site when Platform is network-deactivated.
+		add_action( 'deactivated_plugin', array( $this, 'handle_network_deactivation' ), 10, 2 );
 
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
@@ -276,17 +307,14 @@ class BB_Mothership_Loader {
 		// hook MUST bind to the overridden name or it would never fire — see BB_Plugin_Connector.
 		$license_active_option = $plugin_id . '_license_activation_status';
 		$license_key_option    = $plugin_id . '_license_key';
-		add_action( 'add_option_' . $license_active_option, array( $this, 'clear_platform_update_cache' ) );
-		add_action( 'update_option_' . $license_active_option, array( $this, 'clear_platform_update_cache' ) );
-		add_action( 'add_option_' . $license_key_option, array( $this, 'clear_platform_update_cache' ) );
-		add_action( 'update_option_' . $license_key_option, array( $this, 'clear_platform_update_cache' ) );
-
-		// A dynamic-plugin-ID change (edition/tier switch) repoints the version check at a
-		// different product, so the cached item is stale. This option name is fixed (not ID
-		// dependent), so it stays correct even though the license-option hooks above are bound
-		// to the ID resolved at init.
-		add_action( 'add_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
-		add_action( 'update_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
+		// Both scopes are hooked: in network mode the connector writes site options, which fire
+		// the `*_site_option_*` actions instead.
+		foreach ( array( $license_active_option, $license_key_option, 'buddyboss_dynamic_plugin_id' ) as $license_option ) {
+			add_action( 'add_option_' . $license_option, array( $this, 'clear_platform_update_cache' ) );
+			add_action( 'update_option_' . $license_option, array( $this, 'clear_platform_update_cache' ) );
+			add_action( 'add_site_option_' . $license_option, array( $this, 'clear_platform_update_cache' ) );
+			add_action( 'update_site_option_' . $license_option, array( $this, 'clear_platform_update_cache' ) );
+		}
 
 		// Handle license status changes. GroundLevel 9.1.2's periodic license check fires
 		// `{plugin_id}_active_license_invalidated` / `_active_license_expired` when the
@@ -295,6 +323,11 @@ class BB_Mothership_Loader {
 		add_action( $plugin_id . '_active_license_invalidated', array( $this, 'handle_license_revoked' ) );
 		add_action( $plugin_id . '_active_license_expired', array( $this, 'handle_license_revoked' ) );
 		add_action( $plugin_id . '_license_status_changed', array( $this, 'handle_license_status_change' ), 10, 2 );
+
+		// Add-on buttons on the Network Admin add-ons page must act network-wide.
+		if ( is_admin() ) {
+			BB_Addons_Manager::register_network_ajax_handlers( $plugin_id );
+		}
 
 		// For local development - disable SSL verification if needed.
 		if ( defined( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) && constant( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) ) {
@@ -306,16 +339,112 @@ class BB_Mothership_Loader {
 	 * Register admin pages.
 	 */
 	public function register_admin_pages(): void {
-		// Only show to users with manage_options capability.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		$capability = BB_Plugin_Connector::license_capability();
+
+		if ( ! current_user_can( $capability ) ) {
 			return;
 		}
 
+		// The BuddyBoss network menu is absent in multiblog mode; fall back to Network Settings.
+		$parent = 'buddyboss-platform';
+		if ( is_network_admin() && empty( $GLOBALS['admin_page_hooks']['buddyboss-platform'] ) ) {
+			$parent = 'settings.php';
+		}
+
 		// Register License page.
-		\BuddyBoss\Core\Admin\Mothership\BB_License_Page::register();
+		\BuddyBoss\Core\Admin\Mothership\BB_License_Page::register( $parent, $capability );
 
 		// Register Addons page.
-		\BuddyBoss\Core\Admin\Mothership\BB_Addons_Page::register();
+		\BuddyBoss\Core\Admin\Mothership\BB_Addons_Page::register( $parent, $capability );
+	}
+
+	/**
+	 * Keep the license status cron on the main site only when network-activated.
+	 *
+	 * The vendor LicenseManager schedules a twice-daily status check on every site that boots
+	 * it. In network mode all sites share one license, so each extra run is a duplicate API
+	 * call that can also revoke the shared license. Blocks scheduling on subsites and clears
+	 * any event scheduled before network activation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin_id The dynamic plugin ID the vendor names the cron hook after.
+	 */
+	private function limit_license_cron_to_main_site( string $plugin_id ): void {
+		if ( ! BB_Plugin_Connector::is_network_mode() || is_main_site() ) {
+			return;
+		}
+
+		$cron_hook = $plugin_id . '_check_license_activation_status_event';
+
+		add_filter(
+			'pre_schedule_event',
+			static function ( $pre, $event ) use ( $cron_hook ) {
+				return ( is_object( $event ) && isset( $event->hook ) && $cron_hook === $event->hook ) ? false : $pre;
+			},
+			10,
+			2
+		);
+
+		if ( wp_next_scheduled( $cron_hook ) ) {
+			wp_clear_scheduled_hook( $cron_hook );
+		}
+	}
+
+	/**
+	 * Redirect License/Add-ons page requests made in the admin that does not host them.
+	 *
+	 * In network mode the pages exist only in Network Admin, so a subsite link built with
+	 * `admin_url()` is sent there (for users who can manage the network license). In per-site
+	 * mode the pages exist only on sites, so a Network Admin link built with
+	 * `network_admin_url()` is sent to the main site when Platform runs there.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function redirect_misrouted_license_pages(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing of a page slug.
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+		if ( ! in_array( $page, array( BB_License_Page::SLUG, BB_Addons_Page::SLUG ), true ) || ! is_multisite() ) {
+			return;
+		}
+
+		$target = '';
+
+		if ( BB_Plugin_Connector::is_network_mode() ) {
+			if ( ! is_network_admin() && current_user_can( 'manage_network_options' ) ) {
+				$target = network_admin_url( 'admin.php?page=' . $page );
+			}
+		} elseif ( is_network_admin() && function_exists( 'buddypress' ) ) {
+			$main_site_id = get_main_site_id();
+			$active       = (array) get_blog_option( $main_site_id, 'active_plugins', array() );
+
+			if ( in_array( buddypress()->basename, $active, true ) ) {
+				$target = get_admin_url( $main_site_id, 'admin.php?page=' . $page );
+			}
+		}
+
+		if ( '' !== $target ) {
+			wp_safe_redirect( $target );
+			exit;
+		}
+	}
+
+	/**
+	 * Move the network license back to the main site when Platform is network-deactivated.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin              Basename of the deactivated plugin.
+	 * @param bool   $network_deactivating Whether it was deactivated network-wide.
+	 */
+	public function handle_network_deactivation( $plugin, $network_deactivating ): void {
+		if ( ! $network_deactivating || ! function_exists( 'buddypress' ) || buddypress()->basename !== $plugin ) {
+			return;
+		}
+
+		BB_Plugin_Connector::move_license_to_main_site();
+		$this->clear_platform_update_cache();
 	}
 
 	/**
@@ -391,9 +520,17 @@ class BB_Mothership_Loader {
 			: 'buddyboss-platform/bp-loader.php';
 
 		try {
-			// Only offer updates when the license is active.
+			// Only offer updates when the license is active. On a multisite network with Platform
+			// activated per site, updates are applied once from Network Admin (which runs as the
+			// main site) to files every site shares, so a license on any site that runs Platform
+			// entitles the network to them.
+			$license_site = 0;
 			if ( ! $this->pluginConnector->getLicenseActivationStatus() ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				return $transient;
+				$license_site = BB_Plugin_Connector::find_licensed_site();
+
+				if ( ! $license_site ) {
+					return $transient;
+				}
 			}
 
 			if ( ! function_exists( 'get_plugins' ) ) {
@@ -433,7 +570,7 @@ class BB_Mothership_Loader {
 
 			// Resolve the update item from the BuddyBoss-side cache (or fetch + cache on miss).
 			// Null means "no update info available" — leave the transient untouched.
-			$item = $this->get_platform_update_item( $plugins, $plugin_file );
+			$item = $this->get_platform_update_item( $plugins, $plugin_file, $license_site );
 			if ( null === $item ) {
 				return $transient;
 			}
@@ -475,26 +612,31 @@ class BB_Mothership_Loader {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array<string, array<string, mixed>> $plugins     Installed plugins ({@see get_plugins()}).
-	 * @param string                              $plugin_file The Platform plugin file (basename).
+	 * @since BuddyBoss [BBVERSION] Added the `$license_site` parameter.
+	 *
+	 * @param array<string, array<string, mixed>> $plugins      Installed plugins ({@see get_plugins()}).
+	 * @param string                              $plugin_file  The Platform plugin file (basename).
+	 * @param int                                 $license_site Blog ID whose license authorizes the check, or 0 for the current site.
 	 * @return object|null The update item object, or null when no update info is available.
 	 */
-	private function get_platform_update_item( array $plugins, string $plugin_file ): ?object {
+	private function get_platform_update_item( array $plugins, string $plugin_file, int $license_site = 0 ): ?object {
 		$cached = get_site_transient( self::UPDATE_CACHE_KEY );
 		if ( is_array( $cached ) && array_key_exists( 'item', $cached ) ) {
 			return is_array( $cached['item'] ) ? (object) $cached['item'] : null;
 		}
 
-		$version_check = $this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products::class )->getVersionCheck(
-			$this->pluginConnector->pluginId, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			array(
-				'prerelease' => $this->pluginConnector->allowPrereleaseVersions(), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				'_embed'     => 'version,product',
-			)
-		);
+		$version_check = $license_site
+			? $this->version_check_for_site( $license_site )
+			: $this->container->get( Products::class )->getVersionCheck(
+				$this->pluginConnector->pluginId, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				array(
+					'prerelease' => $this->pluginConnector->allowPrereleaseVersions(), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					'_embed'     => 'version,product',
+				)
+			);
 
 		// Do not cache errors — let the next request retry.
-		if ( $version_check->isError() ) {
+		if ( null === $version_check || $version_check->isError() ) {
 			return null;
 		}
 
@@ -531,6 +673,126 @@ class BB_Mothership_Loader {
 		set_site_transient( self::UPDATE_CACHE_KEY, array( 'item' => $item ), self::UPDATE_CACHE_TTL );
 
 		return null !== $item ? (object) $item : null;
+	}
+
+	/**
+	 * Guards {@see self::with_licensed_site()} against re-entry from filters it triggers.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool
+	 */
+	private $in_licensed_site = false;
+
+	/**
+	 * Run a callback inside another site with Mothership services bound to that site's license.
+	 *
+	 * The container's services are bound to the current site's connector, whose plugin ID and
+	 * credentials belong to that site. The callback therefore runs inside the licensed site with
+	 * a connector, credentials and request built there; credentials are read at request time, so
+	 * the switch covers the whole call.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int      $blog_id  The licensed site.
+	 * @param callable $callback Receives ( BB_Plugin_Connector $connector, Credentials $credentials, Products $products ).
+	 * @return mixed The callback's return value, or null when it could not run.
+	 */
+	private function with_licensed_site( int $blog_id, callable $callback ) {
+		if ( $this->in_licensed_site ) {
+			return null;
+		}
+
+		$this->in_licensed_site = true;
+		switch_to_blog( $blog_id );
+
+		try {
+			$connector   = new BB_Plugin_Connector();
+			$util        = $this->container->get( Util::class );
+			$credentials = new Credentials( $connector, $util );
+			$products    = new Products( new Request( $connector, $credentials, $util, 0 ) );
+
+			return $callback( $connector, $credentials, $products );
+		} catch ( \Throwable $e ) {
+			if ( function_exists( 'bb_error_log' ) ) {
+				bb_error_log( 'BuddyBoss: update check via licensed site failed: ' . $e->getMessage(), true );
+			}
+
+			return null;
+		} finally {
+			restore_current_blog();
+			$this->in_licensed_site = false;
+		}
+	}
+
+	/**
+	 * Run the Mothership version check with another site's license.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $blog_id The licensed site.
+	 * @return Response|null The version-check response, or null when it could not be made.
+	 */
+	private function version_check_for_site( int $blog_id ): ?Response {
+		return $this->with_licensed_site(
+			$blog_id,
+			static function ( BB_Plugin_Connector $connector, Credentials $credentials, Products $products ) {
+				return $products->getVersionCheck(
+					$connector->pluginId, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					array(
+						'prerelease' => $connector->allowPrereleaseVersions(),
+						'_embed'     => 'version,product',
+					)
+				);
+			}
+		);
+	}
+
+	/**
+	 * Inject add-on updates when the current site is unlicensed but another site is licensed.
+	 *
+	 * The vendor LegacyUpdateService adds add-on updates only when the CURRENT site's license
+	 * is active. With Platform activated per site, Network Admin runs as the main site, so a
+	 * license held by any other site never produced add-on updates there — although plugin
+	 * files are shared by every site and are updated once, from Network Admin. This runs the
+	 * same vendor service inside the licensed site, so the add-on list, version comparison,
+	 * signed download URLs and `Update URI` handling stay the vendor's.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $transient The update_plugins / update_themes transient.
+	 * @return mixed The (possibly modified) transient.
+	 */
+	public function inject_addon_updates_via_licensed_site( $transient ) {
+		if ( ! is_object( $transient ) || $this->in_licensed_site || ! $this->pluginConnector instanceof BB_Plugin_Connector ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			return $transient;
+		}
+
+		// Licensed here: the vendor service already handled it.
+		if ( $this->pluginConnector->getLicenseActivationStatus() ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			return $transient;
+		}
+
+		$license_site = BB_Plugin_Connector::find_licensed_site();
+		if ( ! $license_site ) {
+			return $transient;
+		}
+
+		$is_themes = 'site_transient_update_themes' === current_filter();
+		$container = $this->container;
+
+		$result = $this->with_licensed_site(
+			$license_site,
+			static function ( BB_Plugin_Connector $connector, Credentials $credentials, Products $products ) use ( $transient, $is_themes, $container ) {
+				$util    = $container->get( Util::class );
+				$addons  = new AddonsManager( $connector, $credentials, $products, $container->get( View::class ), $util );
+				$service = new LegacyUpdateService( $connector, $addons, $util );
+
+				return $is_themes ? $service->addonsUpdateThemes( $transient ) : $service->addonsUpdatePlugins( $transient );
+			}
+		);
+
+		return is_object( $result ) ? $result : $transient;
 	}
 
 	/**

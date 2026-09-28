@@ -704,6 +704,26 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		}
 
 		/**
+		 * Read a Platform license option from the scope the licence is stored in.
+		 *
+		 * Network-wide when Platform is network-activated, per site otherwise.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $name          Option name.
+		 * @param mixed  $default_value Default value.
+		 *
+		 * @return mixed
+		 */
+		protected static function bb_get_license_option( $name, $default_value = false ) {
+			if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+				return \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( $name, $default_value );
+			}
+
+			return get_option( $name, $default_value );
+		}
+
+		/**
 		 * Collect licence and plan data for the Platform and Theme.
 		 *
 		 * The Mothership plugin id doubles as the plan identifier — values like
@@ -723,7 +743,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_get_license_data() {
 			$include_key = ( 'complete' === self::$bb_telemetry_option );
 
-			$platform_id = get_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
+			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
 			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
 
 			/*
@@ -801,7 +821,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 */
 		protected function bb_theme_uses_platform_license( $plugin_id, $license_key ) {
 			// The platform licence has to exist and be activated.
-			if ( empty( $plugin_id ) || '' === (string) $license_key || empty( get_option( $plugin_id . '_license_activation_status', false ) ) ) {
+			if ( empty( $plugin_id ) || '' === (string) $license_key || empty( self::bb_get_license_option( $plugin_id . '_license_activation_status', false ) ) ) {
 				return false;
 			}
 
@@ -882,7 +902,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$data = array(
 				'plan'      => $plugin_id,
 				'has_key'   => ( '' !== $license_key ),
-				'is_active' => (bool) get_option( $plugin_id . '_license_activation_status', false ),
+				'is_active' => (bool) self::bb_get_license_option( $plugin_id . '_license_activation_status', false ),
 			);
 
 			if ( $include_key && '' !== $license_key ) {
@@ -890,7 +910,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			// Cached plan detail, populated when the licence screen was last loaded.
-			$details = get_transient( $plugin_id . '_license_details' );
+			$details = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ? \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_transient( $plugin_id . '_license_details' ) : get_transient( $plugin_id . '_license_details' );
 			if ( is_array( $details ) ) {
 				$data['product']             = isset( $details['product'] ) ? $details['product'] : '';
 				$data['status']              = isset( $details['status'] ) ? $details['status'] : '';

@@ -7,6 +7,9 @@ namespace BuddyBoss\Core\Admin\Mothership;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager;
+use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonInstallSkin;
+use BuddyBossPlatform\GroundLevel\Mothership\ExtensionType;
+use BuddyBossPlatform\GroundLevel\Mothership\Util;
 
 /**
  * BuddyBoss add-ons manager (static facade over the GroundLevel AddonsManager).
@@ -419,5 +422,159 @@ class BB_Addons_Manager extends AddonsManager {
 		// A manual refresh / license change must lift the recorded outage too, otherwise
 		// the upsell guards stay suppressed for the rest of the error window.
 		delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
+	}
+
+	/**
+	 * Route add-on activate/deactivate/install requests to network-wide handlers.
+	 *
+	 * When Platform is network-activated the add-ons page lives in Network Admin, but the
+	 * vendor AJAX handlers call `activate_plugin()` / `deactivate_plugins()` without the
+	 * network flag, so an add-on "activated" there only ran on the main site. These handlers
+	 * run first (priority 5, the vendor's run at 10) and exit with the same JSON shape the
+	 * vendor `addons.js` expects. Theme add-ons fall through to the vendor, as themes are
+	 * switched per site.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin_id The dynamic plugin ID the vendor names the AJAX actions after.
+	 */
+	public static function register_network_ajax_handlers( string $plugin_id ): void {
+		if ( ! BB_Plugin_Connector::is_network_mode() ) {
+			return;
+		}
+
+		foreach ( array( 'activate', 'deactivate', 'install' ) as $action ) {
+			add_action(
+				"wp_ajax_{$plugin_id}_addon_{$action}",
+				static function () use ( $action ) {
+					self::container()->get( self::class )->network_ajax_handler( $action );
+				},
+				5
+			);
+		}
+	}
+
+	/**
+	 * Activate, deactivate or install a plugin add-on network-wide.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $action One of `activate`, `deactivate`, `install`.
+	 */
+	public function network_ajax_handler( string $action ): void {
+		// Validates the nonce and loads the requested add-on into $this->ajaxProduct.
+		$this->setupAjaxRequest(); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+
+		$product   = $this->ajaxProduct; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$main_file = $product->main_file ?? '';
+
+		if ( ExtensionType::PLUGIN !== ( $product->extension_type ?? '' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_network_plugins' ) || ( 'install' === $action && ! current_user_can( 'install_plugins' ) ) ) {
+			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to manage network add-ons.', 'buddyboss' ) ) );
+		}
+
+		if ( 'activate' === $action ) {
+			$result = $main_file ? activate_plugin( $main_file, '', true ) : false;
+
+			if ( null !== $result ) {
+				wp_send_json_error( new \WP_Error( 'activation_failed', esc_html__( 'The add-on could not be network activated.', 'buddyboss' ) ) );
+			}
+
+			wp_send_json_success( esc_html__( 'Plugin network activated.', 'buddyboss' ) );
+		}
+
+		if ( 'deactivate' === $action ) {
+			if ( ! $main_file ) {
+				wp_send_json_error( new \WP_Error( 'deactivation_failed', esc_html__( 'The add-on could not be deactivated.', 'buddyboss' ) ) );
+			}
+
+			deactivate_plugins( $main_file, false, true );
+			wp_send_json_success( esc_html__( 'Plugin network deactivated.', 'buddyboss' ) );
+		}
+
+		$this->network_install_addon( $product );
+	}
+
+	/**
+	 * Install a plugin add-on and network-activate it.
+	 *
+	 * Mirrors {@see AddonsManager::ajaxAddonInstall()} for plugins, differing only in the
+	 * network-wide activation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $product The add-on product from the add-ons API.
+	 */
+	private function network_install_addon( $product ): void {
+		set_current_screen();
+		$creds = request_filesystem_credentials( network_admin_url( 'admin.php' ), '', false, false, null );
+		if ( false === $creds || ! \WP_Filesystem( $creds ) ) {
+			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to install add-ons.', 'buddyboss' ) ) );
+		}
+
+		$addon_url = $product->version->url ?? '';
+		if ( ! self::container()->get( Util::class )->isAllowedDownloadUrl( $addon_url ) ) {
+			wp_send_json_error( new \WP_Error( 'invalid_addon_url', esc_html__( 'Invalid add-on URL.', 'buddyboss' ) ) );
+		}
+
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
+
+		$installer = new \Plugin_Upgrader( new AddonInstallSkin() );
+		$installed = $installer->install( $addon_url );
+		if ( ! $installed || is_wp_error( $installed ) ) {
+			wp_send_json_error( new \WP_Error( 'addon_install_failed', esc_html__( 'The add-on was not installed successfully.', 'buddyboss' ) ) );
+		}
+
+		wp_cache_flush();
+
+		$base_name = $installer->plugin_info();
+		$activated = $base_name && null === activate_plugin( $base_name, '', true );
+
+		wp_send_json_success(
+			array(
+				'message'   => $activated ? esc_html__( 'Plugin installed and network activated.', 'buddyboss' ) : esc_html__( 'Plugin installed.', 'buddyboss' ),
+				'activated' => $activated,
+			)
+		);
+	}
+
+	/**
+	 * Prepare add-ons for display, reporting network activation in network mode.
+	 *
+	 * The vendor derives "Active" from `is_plugin_active()`, which is also true for a plugin
+	 * active on the main site only. On the Network Admin add-ons page that hid the Activate
+	 * button for add-ons that were not running network-wide, so it is re-evaluated here.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $products The products to prepare.
+	 * @return array The prepared products.
+	 */
+	protected function prepareProductsForDisplay( array $products ): array { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		$products = parent::prepareProductsForDisplay( $products );
+
+		if ( ! BB_Plugin_Connector::is_network_mode() ) {
+			return $products;
+		}
+
+		foreach ( $products as $product ) {
+			if (
+				'active' === $product->status &&
+				ExtensionType::PLUGIN === ( $product->extension_type ?? '' ) &&
+				! is_plugin_active_for_network( $product->main_file )
+			) {
+				$product->status      = 'inactive';
+				$product->statusLabel = esc_html__( 'Inactive', 'buddyboss' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$product->iconClass   = 'dashicons dashicons-yes-alt'; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$product->buttonLabel = esc_html__( 'Activate', 'buddyboss' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			}
+		}
+
+		return $products;
 	}
 }

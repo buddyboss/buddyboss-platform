@@ -43,8 +43,508 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return string The plugin ID.
 	 */
 	public function getDynamicPluginId(): string {
-		$storedPluginId = get_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION );
+		$storedPluginId = self::get_license_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION );
 		return ! empty( $storedPluginId ) ? $storedPluginId : PLATFORM_EDITION;
+	}
+
+	/**
+	 * Site option recording that the main site's license was copied to the network.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const NETWORK_SCOPE_MIGRATED_OPTION = 'bb_license_network_scope_migrated';
+
+	/**
+	 * Set while license rows are moved between the network and the main site, so the
+	 * legacy read bridge does not mask the per-site rows being copied.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool
+	 */
+	private static $bypass_legacy_bridge = false;
+
+	/**
+	 * Serve direct `get_option()` reads of the license rows from the network in network mode.
+	 *
+	 * Add-ons and custom code written before license state became network-scoped read these
+	 * rows with plain `get_option()` (e.g. BuddyBoss Membership copies the Platform key for its
+	 * own update checks). On a network-activated install those per-site rows are empty on
+	 * subsites and stale on the main site, so without this bridge such readers silently see an
+	 * unlicensed or outdated site. Reads only; writes still go through the connector.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public static function register_legacy_option_bridge(): void {
+		if ( ! self::is_network_mode() ) {
+			return;
+		}
+
+		$plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', '' );
+		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+
+		foreach ( self::license_option_names( $plugin_id ) as $name ) {
+			add_filter( "pre_option_{$name}", array( self::class, 'filter_legacy_option_read' ), 10, 3 );
+		}
+	}
+
+	/**
+	 * `pre_option_{$name}` callback for {@see self::register_legacy_option_bridge()}.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed  $pre           Short-circuit value from earlier filters.
+	 * @param string $name          Option name.
+	 * @param mixed  $default_value Default passed to `get_option()`.
+	 * @return mixed
+	 */
+	public static function filter_legacy_option_read( $pre, $name = '', $default_value = false ) {
+		// Respect an earlier short-circuit, and step aside while rows are being moved or
+		// once Platform is no longer network-activated (e.g. mid network deactivation).
+		if ( false !== $pre || self::$bypass_legacy_bridge || '' === $name || ! self::is_network_mode() ) {
+			return $pre;
+		}
+
+		$value = get_site_option( $name, null );
+
+		if ( null !== $value ) {
+			return $value;
+		}
+
+		// The network is authoritative: never fall through to a dormant per-site row.
+		return false === $default_value ? '' : $default_value;
+	}
+
+	/**
+	 * Whether license state is stored network-wide.
+	 *
+	 * True only when BuddyBoss Platform is network-activated on a multisite install. In that
+	 * mode the network owns a single license: it is managed from Network Admin and every
+	 * subsite reads it from site options. Otherwise each site keeps its own license in its
+	 * own options table, exactly as on a single-site install.
+	 *
+	 * Deliberately not cached: network activation/deactivation changes the answer mid-request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool
+	 */
+	public static function is_network_mode(): bool {
+		if ( ! is_multisite() || ! function_exists( 'buddypress' ) || empty( buddypress()->basename ) ) {
+			return false;
+		}
+
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		return is_plugin_active_for_network( buddypress()->basename );
+	}
+
+	/**
+	 * Capability required to view and change the license.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string `manage_network_options` in network mode, otherwise `manage_options`.
+	 */
+	public static function license_capability(): string {
+		return self::is_network_mode() ? 'manage_network_options' : 'manage_options';
+	}
+
+	/**
+	 * Reads a license option from the active storage scope.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $name          Option name.
+	 * @param mixed  $default_value Value returned when the option does not exist.
+	 * @return mixed
+	 */
+	public static function get_license_option( string $name, $default_value = false ) {
+		return self::is_network_mode() ? get_site_option( $name, $default_value ) : get_option( $name, $default_value );
+	}
+
+	/**
+	 * Writes a license option to the active storage scope.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $name  Option name.
+	 * @param mixed  $value Option value.
+	 * @return bool Whether the value was updated.
+	 */
+	public static function update_license_option( string $name, $value ): bool {
+		return (bool) ( self::is_network_mode() ? update_site_option( $name, $value ) : update_option( $name, $value ) );
+	}
+
+	/**
+	 * Deletes a license option from the active storage scope.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $name Option name.
+	 * @return bool Whether the option was deleted.
+	 */
+	public static function delete_license_option( string $name ): bool {
+		return (bool) ( self::is_network_mode() ? delete_site_option( $name ) : delete_option( $name ) );
+	}
+
+	/**
+	 * Reads a license transient from the active storage scope.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $name Transient name.
+	 * @return mixed
+	 */
+	public static function get_license_transient( string $name ) {
+		return self::is_network_mode() ? get_site_transient( $name ) : get_transient( $name );
+	}
+
+	/**
+	 * Writes a license transient to the active storage scope.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $name       Transient name.
+	 * @param mixed  $value      Transient value.
+	 * @param int    $expiration Expiration in seconds.
+	 * @return bool
+	 */
+	public static function set_license_transient( string $name, $value, int $expiration ): bool {
+		return self::is_network_mode() ? set_site_transient( $name, $value, $expiration ) : set_transient( $name, $value, $expiration );
+	}
+
+	/**
+	 * Deletes a license transient from the active storage scope.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $name Transient name.
+	 * @return bool
+	 */
+	public static function delete_license_transient( string $name ): bool {
+		return self::is_network_mode() ? delete_site_transient( $name ) : delete_transient( $name );
+	}
+
+	/**
+	 * Names of every option that makes up the license state for a plugin ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin_id The dynamic plugin ID the per-SKU options are keyed by.
+	 * @return string[]
+	 */
+	private static function license_option_names( string $plugin_id ): array {
+		return array(
+			'buddyboss_dynamic_plugin_id',
+			'buddyboss_web_plugin_id',
+			self::STABLE_LICENSE_KEY_OPTION,
+			self::ACTIVATION_DOMAIN_OPTION,
+			$plugin_id . '_license_key',
+			$plugin_id . '_license_activation_status',
+		);
+	}
+
+	/**
+	 * Copies the main site's license to the network once Platform is network-activated.
+	 *
+	 * Runs lazily on every load in network mode (one site-option read once migrated), which
+	 * covers both a fresh network activation and installs that were network-activated before
+	 * license state became network-scoped. It is a local copy — no API call — and is
+	 * idempotent:
+	 *
+	 * - A license already stored on the network is never overwritten.
+	 * - Only the MAIN site's license is copied. Its activation domain is the network domain, so
+	 *   it is the same activation record on the licensing server. A subsite's license may be a
+	 *   different customer or edition, so it is never promoted automatically.
+	 * - The per-site rows are left in place (dormant), so nothing is lost if the network
+	 *   activation is later reversed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool True when a license was copied to the network.
+	 */
+	public static function maybe_move_license_to_network(): bool {
+		if ( ! self::is_network_mode() || get_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, false ) ) {
+			return false;
+		}
+
+		update_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, 1 );
+
+		// Never overwrite a license the network already holds.
+		$network_plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION );
+		if ( '' !== (string) get_site_option( self::STABLE_LICENSE_KEY_OPTION, '' ) || '' !== (string) get_site_option( $network_plugin_id . '_license_key', '' ) ) {
+			return false;
+		}
+
+		$main_site_id = get_main_site_id();
+
+		self::$bypass_legacy_bridge = true;
+
+		$plugin_id = (string) get_blog_option( $main_site_id, 'buddyboss_dynamic_plugin_id', '' );
+		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+
+		$main_key = (string) get_blog_option( $main_site_id, $plugin_id . '_license_key', '' );
+		if ( '' === $main_key ) {
+			$main_key = (string) get_blog_option( $main_site_id, self::STABLE_LICENSE_KEY_OPTION, '' );
+		}
+
+		if ( '' === $main_key ) {
+			self::$bypass_legacy_bridge = false;
+
+			return false;
+		}
+
+		foreach ( self::license_option_names( $plugin_id ) as $name ) {
+			$value = get_blog_option( $main_site_id, $name, null );
+			if ( null !== $value ) {
+				update_site_option( $name, $value );
+			}
+		}
+
+		self::$bypass_legacy_bridge = false;
+
+		// The per-SKU key may be empty while the stable mirror holds the key.
+		update_site_option( $plugin_id . '_license_key', $main_key );
+
+		return true;
+	}
+
+	/**
+	 * Moves the network license back to the main site when Platform is network-deactivated.
+	 *
+	 * The network domain equals the main site's domain, so the main site keeps the same
+	 * activation record. The network rows are removed afterwards (a move, not a copy) so a
+	 * later network activation re-copies whatever the main site holds then instead of
+	 * resurrecting a stale network value. Subsites fall back to their own dormant license,
+	 * if any.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public static function move_license_to_main_site(): void {
+		$main_site_id = get_main_site_id();
+
+		// update_blog_option() compares against get_option(); the bridge must not answer it.
+		self::$bypass_legacy_bridge = true;
+
+		$plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', '' );
+		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+		$main_id   = (string) get_blog_option( $main_site_id, 'buddyboss_dynamic_plugin_id', '' );
+		$main_id   = '' !== $main_id ? $main_id : PLATFORM_EDITION;
+
+		$network_key = (string) get_site_option( $plugin_id . '_license_key', '' );
+		if ( '' === $network_key ) {
+			$network_key = (string) get_site_option( self::STABLE_LICENSE_KEY_OPTION, '' );
+		}
+
+		// Rows for the network ID, the main site's own ID (the one copied up) and every known
+		// edition, so per-SKU rows left by an earlier ID do not survive on either side.
+		$names = array();
+		foreach ( array_unique( array_merge( array( $plugin_id, $main_id ), self::known_plugin_ids() ) ) as $id ) {
+			$names = array_merge( $names, self::license_option_names( $id ) );
+		}
+		$names = array_unique( $names );
+
+		// The network is authoritative: the main site ends up with exactly its current state. A
+		// row the network no longer holds (e.g. after a license deactivation), or one keyed by a
+		// superseded plugin ID, is removed rather than letting a stale copy come back.
+		$current = self::license_option_names( $plugin_id );
+
+		foreach ( $names as $name ) {
+			$value = in_array( $name, $current, true ) ? get_site_option( $name, null ) : null;
+
+			if ( null !== $value ) {
+				update_blog_option( $main_site_id, $name, $value );
+			} else {
+				delete_blog_option( $main_site_id, $name );
+			}
+		}
+
+		if ( '' !== $network_key ) {
+			update_blog_option( $main_site_id, $plugin_id . '_license_key', $network_key );
+		}
+
+		self::$bypass_legacy_bridge = false;
+
+		foreach ( $names as $name ) {
+			delete_site_option( $name );
+		}
+		delete_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION );
+		delete_site_transient( $plugin_id . '_license_details' );
+	}
+
+	/**
+	 * Site option listing the sites that hold an active license (per-site activation only).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const LICENSED_SITES_OPTION = 'bb_license_licensed_sites';
+
+	/**
+	 * Record whether the current site holds an active license.
+	 *
+	 * Only meaningful when Platform is activated per site on a multisite network: plugin files
+	 * are shared by every site and are updated once from Network Admin, so the update check
+	 * there needs to know which site's license entitles the network to updates.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $status Whether the current site's license is active.
+	 */
+	private static function track_licensed_site( bool $status ): void {
+		if ( ! is_multisite() || self::is_network_mode() ) {
+			return;
+		}
+
+		$sites   = self::get_licensed_sites();
+		$blog_id = get_current_blog_id();
+
+		if ( $status ) {
+			$sites[ $blog_id ] = $blog_id;
+		} else {
+			unset( $sites[ $blog_id ] );
+		}
+
+		update_site_option( self::LICENSED_SITES_OPTION, $sites );
+	}
+
+	/**
+	 * The sites recorded as licensed, building the list once for installs that predate it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int[] Blog IDs keyed by blog ID.
+	 */
+	private static function get_licensed_sites(): array {
+		$sites = get_site_option( self::LICENSED_SITES_OPTION, null );
+
+		if ( is_array( $sites ) ) {
+			return $sites;
+		}
+
+		$sites = array();
+
+		/**
+		 * Filters how many sites are scanned when the licensed-sites list is first built.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $limit Maximum number of sites to scan.
+		 */
+		$limit = (int) apply_filters( 'bb_license_licensed_sites_scan_limit', 1000 );
+
+		$blog_ids = get_sites(
+			array(
+				'fields' => 'ids',
+				'number' => $limit,
+			)
+		);
+
+		foreach ( $blog_ids as $blog_id ) {
+			if ( null !== self::get_site_license( (int) $blog_id ) ) {
+				$sites[ (int) $blog_id ] = (int) $blog_id;
+			}
+		}
+
+		update_site_option( self::LICENSED_SITES_OPTION, $sites );
+
+		return $sites;
+	}
+
+	/**
+	 * First site on the network whose license can authorize Platform updates.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int Blog ID, or 0 when no site qualifies (or not in per-site multisite mode).
+	 */
+	public static function find_licensed_site(): int {
+		if ( ! is_multisite() || self::is_network_mode() ) {
+			return 0;
+		}
+
+		// Entries are validated, never pruned here: a site whose Platform is switched off for a
+		// moment must still count once it is back, and re-activating Platform does not touch
+		// the license status that maintains the list.
+		foreach ( self::get_licensed_sites() as $blog_id ) {
+			if ( null !== self::get_site_license( (int) $blog_id ) ) {
+				return (int) $blog_id;
+			}
+		}
+
+		// Nothing valid: rebuild once, at most every 12 hours, to catch licenses the list missed.
+		if ( false === get_site_transient( 'bb_license_licensed_sites_rescan' ) ) {
+			set_site_transient( 'bb_license_licensed_sites_rescan', 1, 12 * HOUR_IN_SECONDS );
+			delete_site_option( self::LICENSED_SITES_OPTION );
+
+			foreach ( self::get_licensed_sites() as $blog_id ) {
+				return (int) $blog_id;
+			}
+		}
+
+		return 0;
+	}
+
+	/**
+	 * A site's active Platform license, read without switching the current request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $blog_id Blog ID.
+	 * @return array{plugin_id: string}|null Null unless Platform is active on the site with an
+	 *                                       active license and a stored key.
+	 */
+	private static function get_site_license( int $blog_id ): ?array {
+		if ( ! function_exists( 'buddypress' ) || ! get_site( $blog_id ) ) {
+			return null;
+		}
+
+		if ( ! in_array( buddypress()->basename, (array) get_blog_option( $blog_id, 'active_plugins', array() ), true ) ) {
+			return null;
+		}
+
+		$plugin_id = (string) get_blog_option( $blog_id, 'buddyboss_dynamic_plugin_id', '' );
+		$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+
+		if ( ! get_blog_option( $blog_id, $plugin_id . '_license_activation_status', false ) ) {
+			return null;
+		}
+
+		$key = (string) get_blog_option( $blog_id, $plugin_id . '_license_key', '' );
+		if ( '' === $key ) {
+			$key = (string) get_blog_option( $blog_id, self::STABLE_LICENSE_KEY_OPTION, '' );
+		}
+
+		return '' !== $key ? array( 'plugin_id' => $plugin_id ) : null;
+	}
+
+	/**
+	 * Plugin IDs of every known BuddyBoss Platform edition.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string[]
+	 */
+	private static function known_plugin_ids(): array {
+		return array(
+			PLATFORM_EDITION,
+			'bb-platform-free',
+			'bb-platform-pro-1-site',
+			'bb-platform-pro-2-sites',
+			'bb-platform-pro-5-sites',
+			'bb-platform-pro-10-sites',
+			'bb-web',
+			'bb-web-2-sites',
+			'bb-web-5-sites',
+			'bb-web-10-sites',
+			'bb-web-20-sites',
+		);
 	}
 
 	/**
@@ -83,7 +583,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		// Purge caches scoped to the OLD plugin ID before changing.
 		self::clear_all_caches();
 
-		update_option( 'buddyboss_dynamic_plugin_id', $pluginId );
+		self::update_license_option( 'buddyboss_dynamic_plugin_id', $pluginId );
 		$this->pluginId  = $pluginId;
 		$this->productId = $pluginId;
 
@@ -109,7 +609,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		// Purge caches scoped to the OLD plugin ID before clearing.
 		self::clear_all_caches();
 
-		delete_option( 'buddyboss_dynamic_plugin_id' );
+		self::delete_license_option( 'buddyboss_dynamic_plugin_id' );
 		$this->pluginId  = PLATFORM_EDITION;
 		$this->productId = PLATFORM_EDITION;
 
@@ -133,7 +633,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function getLicenseActivationStatus(): bool {
 		$pluginId = $this->getCurrentPluginId();
-		$status   = get_option( $pluginId . '_license_activation_status', false );
+		$status   = self::get_license_option( $pluginId . '_license_activation_status', false );
 		return (bool) $status;
 	}
 
@@ -152,7 +652,9 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function setLicenseActivationStatus( bool $status ): bool {
 		$pluginId = $this->getCurrentPluginId();
-		$updated  = update_option( $pluginId . '_license_activation_status', $status );
+		$updated  = self::update_license_option( $pluginId . '_license_activation_status', $status );
+
+		self::track_licensed_site( $status );
 
 		// Clear license details + add-ons caches when activation status changes.
 		self::clear_all_caches();
@@ -194,13 +696,13 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function resolveLicenseKey(): string {
 		$pluginId    = $this->getCurrentPluginId();
-		$license_key = (string) get_option( $pluginId . '_license_key', '' );
+		$license_key = (string) self::get_license_option( $pluginId . '_license_key', '' );
 
 		if ( '' !== $license_key ) {
 			return $license_key;
 		}
 
-		return (string) get_option( self::STABLE_LICENSE_KEY_OPTION, '' );
+		return (string) self::get_license_option( self::STABLE_LICENSE_KEY_OPTION, '' );
 	}
 
 	/**
@@ -222,15 +724,15 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function storeLicenseKey( string $licenseKey ): bool {
 		$pluginId = $this->getCurrentPluginId();
-		$updated  = update_option( $pluginId . '_license_key', $licenseKey );
+		$updated  = self::update_license_option( $pluginId . '_license_key', $licenseKey );
 
 		if ( '' === $licenseKey ) {
-			delete_option( self::STABLE_LICENSE_KEY_OPTION );
+			self::delete_license_option( self::STABLE_LICENSE_KEY_OPTION );
 
 			return (bool) $updated;
 		}
 
-		update_option( self::STABLE_LICENSE_KEY_OPTION, $licenseKey );
+		self::update_license_option( self::STABLE_LICENSE_KEY_OPTION, $licenseKey );
 
 		return (bool) $updated;
 	}
@@ -313,7 +815,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 			return $stored;
 		}
 
-		$home_url = $this->is_network_activated() ? network_home_url() : get_home_url();
+		$home_url = self::is_network_mode() ? network_home_url() : get_home_url();
 		$host     = (string) wp_parse_url( $home_url, PHP_URL_HOST );
 
 		if ( '' === $host ) {
@@ -347,7 +849,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return string The stored domain, or an empty string when none is stored.
 	 */
 	public function getStoredActivationDomain(): string {
-		$stored = get_option( self::ACTIVATION_DOMAIN_OPTION, '' );
+		$stored = self::get_license_option( self::ACTIVATION_DOMAIN_OPTION, '' );
 
 		return is_string( $stored ) ? $stored : '';
 	}
@@ -364,12 +866,12 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function storeActivationDomain( string $domain ): void {
 		if ( '' === $domain ) {
-			delete_option( self::ACTIVATION_DOMAIN_OPTION );
+			self::delete_license_option( self::ACTIVATION_DOMAIN_OPTION );
 
 			return;
 		}
 
-		update_option( self::ACTIVATION_DOMAIN_OPTION, $domain );
+		self::update_license_option( self::ACTIVATION_DOMAIN_OPTION, $domain );
 	}
 
 	/**
@@ -380,7 +882,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function clearActivationDomain(): void {
-		delete_option( self::ACTIVATION_DOMAIN_OPTION );
+		self::delete_license_option( self::ACTIVATION_DOMAIN_OPTION );
 	}
 
 	/**
@@ -410,24 +912,5 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function getAccountUrl(): string {
 		return 'https://www.buddyboss.com/my-account/';
-	}
-
-	/**
-	 * Whether BuddyBoss Platform is network-activated on a multisite install.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return bool
-	 */
-	private function is_network_activated(): bool {
-		if ( ! is_multisite() || ! function_exists( 'buddypress' ) || empty( buddypress()->basename ) ) {
-			return false;
-		}
-
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		return is_plugin_active_for_network( buddypress()->basename );
 	}
 }

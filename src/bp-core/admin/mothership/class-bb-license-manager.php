@@ -403,7 +403,7 @@ class BB_License_Manager {
 	 * @return void
 	 */
 	public static function deactivateLicense( string $license_key, string $domain ): void { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			throw new \Exception( esc_html__( 'You do not have permission to deactivate a license', 'buddyboss' ) );
 		}
 
@@ -469,7 +469,7 @@ class BB_License_Manager {
 	 * @return void
 	 */
 	private static function validate_activation_permissions(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			throw new \Exception( esc_html__( 'You do not have permission to activate a license', 'buddyboss' ) );
 		}
 
@@ -1002,7 +1002,7 @@ class BB_License_Manager {
 			}
 
 			// Store the web plugin ID.
-			update_option( 'buddyboss_web_plugin_id', $plugin_id );
+			BB_Plugin_Connector::update_license_option( 'buddyboss_web_plugin_id', $plugin_id );
 
 			// Set the dynamic plugin ID.
 			$plugin_connector->setDynamicPluginId( $plugin_id );
@@ -1327,7 +1327,7 @@ class BB_License_Manager {
 	public static function clearLicenseDetailsCache(): void {
 		$plugin_id = self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		$cache_key = $plugin_id . '_license_details';
-		delete_transient( $cache_key );
+		BB_Plugin_Connector::delete_license_transient( $cache_key );
 	}
 
 	/**
@@ -1353,7 +1353,7 @@ class BB_License_Manager {
 
 		// Check cache first unless force refresh is requested.
 		if ( ! $force_refresh ) {
-			$cached_data = get_transient( $cache_key );
+			$cached_data = BB_Plugin_Connector::get_license_transient( $cache_key );
 			if ( false !== $cached_data && ! is_wp_error( $cached_data ) ) {
 				return $cached_data;
 			}
@@ -1438,7 +1438,7 @@ class BB_License_Manager {
 		);
 
 		// License details don't change frequently, so a 12-hour cache is reasonable.
-		set_transient( $cache_key, $license_data, 12 * HOUR_IN_SECONDS );
+		BB_Plugin_Connector::set_license_transient( $cache_key, $license_data, 12 * HOUR_IN_SECONDS );
 
 		return $license_data;
 	}
@@ -1455,7 +1455,7 @@ class BB_License_Manager {
 		}
 
 		// Check user capabilities.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
 		}
 
@@ -1552,7 +1552,7 @@ class BB_License_Manager {
 		}
 
 		// Check user capabilities.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
 		}
 
@@ -1566,7 +1566,7 @@ class BB_License_Manager {
 			$plugin_connector->clearDynamicPluginId();
 
 			// Clear web plugin ID (set when using KEY:PLUGIN_ID format).
-			delete_option( 'buddyboss_web_plugin_id' );
+			BB_Plugin_Connector::delete_license_option( 'buddyboss_web_plugin_id' );
 
 			// Clear license key.
 			$plugin_connector->updateLicenseKey( '' );
@@ -1604,8 +1604,8 @@ class BB_License_Manager {
 			// Clear all license-related data for all possible plugin IDs.
 			foreach ( $all_plugin_ids as $plugin_id ) {
 				// Clear license keys and activation status.
-				delete_option( $plugin_id . '_license_key' );
-				delete_option( $plugin_id . '_license_activation_status' );
+				BB_Plugin_Connector::delete_license_option( $plugin_id . '_license_key' );
+				BB_Plugin_Connector::delete_license_option( $plugin_id . '_license_activation_status' );
 
 				// Clear transients (both regular and site-wide for multisite). The add-ons
 				// response is cached under `-mosh-addons` in GroundLevel 9.1.2 (the legacy
@@ -1729,15 +1729,7 @@ class BB_License_Manager {
 	 * @return bool True if network activated, false otherwise.
 	 */
 	private static function is_network_activated(): bool {
-		if ( ! is_multisite() ) {
-			return false;
-		}
-
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
-		}
-
-		return is_plugin_active_for_network( buddypress()->basename );
+		return BB_Plugin_Connector::is_network_mode();
 	}
 
 	/**
