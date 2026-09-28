@@ -377,9 +377,8 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 				$field = xprofile_get_field( $field_id );
 
 				if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
-					if ( is_serialized( $value ) ) {
-						$value = maybe_unserialize( $value );
-					}
+					// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
+					$value = bb_xprofile_safe_unserialize( $value );
 
 					$value = json_decode( wp_json_encode( $value ), true );
 
@@ -401,9 +400,8 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 					$field = xprofile_get_field( $field_id );
 
 					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
-						if ( is_serialized( $value ) ) {
-							$value = maybe_unserialize( $value );
-						}
+						// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
+						$value = bb_xprofile_safe_unserialize( $value );
 
 						$value = json_decode( wp_json_encode( $value ), true );
 

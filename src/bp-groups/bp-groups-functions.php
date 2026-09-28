@@ -1745,15 +1745,21 @@ function groups_is_user_creator( $user_id, $group_id ) {
  *
  * @since BuddyPress 1.2.0
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
+ * @since BuddyBoss 3.1.0 Added 'post_title_cleared' parameter to $args.
  *
  * @param array|string $args {
  *     Array of arguments.
- *     @type int    $content  ID of the activity to edit.
- *     @type string $content  The content of the update.
- *     @type int    $user_id  Optional. ID of the user posting the update. Default:
- *                            ID of the logged-in user.
- *     @type int    $group_id Optional. ID of the group to be affiliated with the
- *                            update. Default: ID of the current group.
+ *     @type int    $content            ID of the activity to edit.
+ *     @type string $content            The content of the update.
+ *     @type string $post_title         Optional. The activity post title. Default: empty.
+ *     @type bool   $post_title_cleared Optional. Whether the user explicitly cleared an
+ *                                      optional post title while editing. When true, an
+ *                                      empty title is saved instead of falling back to the
+ *                                      previously stored title. Default: false.
+ *     @type int    $user_id            Optional. ID of the user posting the update. Default:
+ *                                      ID of the logged-in user.
+ *     @type int    $group_id           Optional. ID of the group to be affiliated with the
+ *                                      update. Default: ID of the current group.
  * }
  * @return WP_Error|bool|int Returns the ID of the new activity item on success, or false on failure.
  */
@@ -1767,16 +1773,17 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'             => false,
-			'post_title'     => false,
-			'title_required' => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
-			'content'        => false,
-			'user_id'        => bp_loggedin_user_id(),
-			'group_id'       => 0,
-			'privacy'        => 'public',
-			'error_type'     => 'bool',
-			'status'         => bb_get_activity_published_status(),
-			'recorded_time'  => bp_core_current_time(),
+			'id'                 => false,
+			'post_title'         => false,
+			'post_title_cleared' => false,
+			'title_required'     => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
+			'content'            => false,
+			'user_id'            => bp_loggedin_user_id(),
+			'group_id'           => 0,
+			'privacy'            => 'public',
+			'error_type'         => 'bool',
+			'status'             => bb_get_activity_published_status(),
+			'recorded_time'      => bp_core_current_time(),
 		),
 		'groups_post_update'
 	);
@@ -1830,22 +1837,24 @@ function groups_post_update( $args = '' ) {
 	 */
 	$post_title_filtered = apply_filters( 'bb_groups_activity_new_update_post_title', $post_title );
 
-	$activity_id = groups_record_activity(
-		array(
-			'id'             => $id,
-			'user_id'        => $user_id,
-			'action'         => $action,
-			'post_title'     => $post_title_filtered,
-			'title_required' => $r['title_required'],
-			'content'        => $content_filtered,
-			'type'           => 'activity_update',
-			'item_id'        => $group_id,
-			'privacy'        => $privacy,
-			'error_type'     => $error_type,
-			'status'         => $status,
-			'recorded_time'  => $recorded_time,
-		)
+	$record_args = array(
+		'id'             => $id,
+		'user_id'        => $user_id,
+		'action'         => $action,
+		'post_title'     => $post_title_filtered,
+		'title_required' => $r['title_required'],
+		'content'        => $content_filtered,
+		'type'           => 'activity_update',
+		'item_id'        => $group_id,
+		'privacy'        => $privacy,
+		'error_type'     => $error_type,
+		'status'         => $status,
+		'recorded_time'  => $recorded_time,
 	);
+	if ( ! empty( $r['post_title_cleared'] ) ) {
+		$record_args['post_title_cleared'] = true;
+	}
+	$activity_id = groups_record_activity( $record_args );
 
 	groups_update_groupmeta( $group_id, 'last_activity', bp_core_current_time() );
 
@@ -4037,6 +4046,8 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
  *
  * @since BuddyBoss 1.0.0
  *
+ * @since BuddyBoss 3.5.0 The 'type' attribute also accepts a group type post ID.
+ *
  * @param $atts
  *
  * @return false|string
@@ -4053,14 +4064,14 @@ function bp_group_type_short_code_callback( $atts ) {
 				</div>
 				<div id="groups-dir-list" class="groups dir-list">
 					<?php
-					$atts['group_type'] = $atts['type'];
+					// Accepts a group type key, or a group type post ID for back-compat.
+					$group_type_key     = bb_group_type_shortcode_resolve_key( $atts['type'] );
+					$atts['group_type'] = $group_type_key;
 
-					if ( ! empty( $atts['type'] ) ) {
+					if ( ! empty( $group_type_key ) ) {
 
-						$name = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $atts['type'] ) );
-
-						// Set the "current" profile type, if one is provided, in member directories.
-						buddypress()->groups->current_directory_type = $name;
+						// Set the "current" group type, if one is provided, in group directories.
+						buddypress()->groups->current_directory_type = $group_type_key;
 						buddypress()->current_component              = 'groups';
 						buddypress()->is_directory                   = true;
 					}
@@ -4993,37 +5004,6 @@ function bb_get_all_members_for_groups( $args = array() ) {
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
 }
-add_filter( 'gettext', 'bb_group_drop_down_order_metabox_translate_order_text', 10, 3 );
-
-/**
- * Translate the order text in the Group Drop Down Order metabox.
- *
- * @since BuddyBoss 2.1.6
- *
- * @param string $translated_text   Translated text.
- * @param string $untranslated_text Untranslated text.
- * @param string $domain            Domain.
- *
- * @return mixed|string|void
- */
-function bb_group_drop_down_order_metabox_translate_order_text( $translated_text, $untranslated_text, $domain ) {
-
-	if ( ! function_exists( 'get_current_screen' ) ) {
-		return $translated_text;
-	}
-	$current_screen = get_current_screen();
-
-	if ( ! is_admin() || empty( $current_screen ) || ! isset( $current_screen->id ) || ! function_exists( 'bp_groups_get_group_type_post_type' ) || bp_groups_get_group_type_post_type() !== $current_screen->id ) {
-		return $translated_text;
-	}
-
-	if ( 'Order' === $untranslated_text ) {
-		return __( 'Number', 'buddyboss' );
-	}
-
-	return $translated_text;
-
-}
 
 /**
  * Function to check the user subscribed group or not.
@@ -5756,4 +5736,53 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 		</span>
 		<?php
 	}
+}
+
+/**
+ * Resolves a group type key from a provided value for use in the group shortcode.
+ *
+ * Accepts a group type key or a group type post ID and returns the corresponding key.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param string|int $type Group type key or post ID.
+ *
+ * @return string Group type key.
+ */
+function bb_group_type_shortcode_resolve_key( $type ) {
+	$type = trim( (string) $type );
+
+	if ( '' === $type ) {
+		return '';
+	}
+
+	$key = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $type ) );
+
+	// A registered key wins outright (this also covers a key that happens to be
+	// all-digits). Only when the value is not a registered key and is purely
+	// numeric do we treat it as a legacy group type post ID and resolve its key.
+	if ( null === bp_groups_get_group_type_object( $key ) && ctype_digit( $type ) ) {
+		$type_post = get_post( absint( $type ) );
+
+		if (
+			$type_post instanceof WP_Post
+			&& bp_groups_get_group_type_post_type() === $type_post->post_type
+		) {
+			$resolved_key = bp_group_get_group_type_key( $type_post->ID );
+
+			if ( ! empty( $resolved_key ) ) {
+				$key = sanitize_key( $resolved_key );
+			}
+		}
+	}
+
+	/**
+	 * Filter resolved group type key for shortcode usage.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param string $key  The resolved group type key.
+	 * @param string $type The original type value passed in.
+	 */
+	return apply_filters( 'bb_group_type_shortcode_resolve_key', $key, $type );
 }

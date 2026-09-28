@@ -3428,7 +3428,7 @@ window.bp = window.bp || {};
 			if ( eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).data( 'id' ) !== 0 ) {
 				eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).remove();
 			}
-			eventTarget.closest( '.bb-rl-media-move-file' ).hide();
+			eventTarget.closest( '.bb-rl-media-move-file' ).hide().removeClass( 'open-popup' );
 
 		},
 
@@ -3443,7 +3443,7 @@ window.bp = window.bp || {};
 			var eventTarget    = $( event.currentTarget ),
 				closest_parent = jQuery( event.currentTarget ).closest( '.bb-rl-has-folderlocationUI' );
 			var $modalToClose;
-			
+
 			if ( eventTarget.hasClass( 'bb-rl-ac-document-close-button' ) ) {
 				$modalToClose = eventTarget.closest( '.bb-rl-media-move-file' );
 				// Close all visible document move modals to prevent duplicate modals issue
@@ -3453,6 +3453,10 @@ window.bp = window.bp || {};
 				// Close all visible folder move modals to prevent duplicate modals issue
 				$( '.bb-rl-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bb-rl-folder-move' ).attr( 'id', '' );
 			}
+
+			// Make sure the modal is closed.
+			$( '.bb-rl-media-move-file.open-popup' ).removeClass( 'open-popup' ).hide();
+			$( '.bb-rl-media-move-folder.open-popup' ).removeClass( 'open-popup' ).hide();
 
 			closest_parent.find( '.bb-rl-document-move.loading' ).removeClass( 'loading' );
 
@@ -3620,8 +3624,9 @@ window.bp = window.bp || {};
 
 			var $modal = $( event.target ).closest( '#bb-rl-media-edit-file' );
 
-			// Reset modal data.
-			$modal.find( '#bb-document-title' ).val( '' );
+			// Reset modal data and clear errors.
+			$modal.find( '#bb-document-title' ).val( '' ).removeClass( 'error' );
+			$modal.find( '.error-box' ).hide();
 			$modal.attr('data-activity-id', '');
     		$modal.attr('data-id', '');
 			$modal.attr('data-attachment-id', '');
@@ -3675,28 +3680,36 @@ window.bp = window.bp || {};
 				privacyChanged            = ( document_privacy !== '' && document_privacy !== originalPrivacy ),
 				pattern                   = '';
 
-			// Use documentType to determine validation pattern.
-			if ( 'folder' === documentType ) {
-				pattern = /[\\/?%*:|"<>]+/g; // Folder: \ / ? % * : | " < >
+			if ( 'folder' !== documentType ) {
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
 			} else {
-				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // Document: ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
+				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val ),
-				matchStatus = Boolean( matches );
+				matchStatus = Boolean( matches ),
+				$errorBox   = $modal.find( '.error-box' );
 
 			if ( ! matchStatus ) { // If any not supported character found add error class.
 				document_edit.removeClass( 'error' );
+				$errorBox.hide();
 			} else {
 				document_edit.addClass( 'error' );
+				// Show appropriate error message based on document type.
+				if ( 'folder' === documentType ) {
+					$errorBox.text( $errorBox.data( 'folder-error' ) || $errorBox.text() ).show();
+				} else {
+					$errorBox.text( $errorBox.data( 'document-error' ) || $errorBox.text() ).show();
+				}
 			}
 
-			// For documents, also check for backslash.
-			if ( 'document' === documentType ) {
-				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) {
+			if ( 'folder' !== documentType && $mediaItem.length ) {
+				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
 					document_edit.addClass( 'error' );
+					$errorBox.text( $errorBox.data( 'document-error' ) || $errorBox.text() ).show();
 				} else {
 					document_edit.removeClass( 'error' );
+					$errorBox.hide();
 				}
 			}
 

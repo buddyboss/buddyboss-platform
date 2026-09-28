@@ -111,24 +111,25 @@ class BB_Activity_Readylaunch {
 			$reaction_count_class = 'comment-reactions_count';
 		}
 
-		$most_reactions = bb_get_activity_most_reactions( $activity_id, $item_type );
+		$most_reactions = function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity_id, $item_type ) : array();
 		if ( ! empty( $most_reactions ) ) {
 			$output .= '<div class="activity-state-reactions">';
 
 			foreach ( $most_reactions as $reaction ) {
-				$icon    = bb_activity_prepare_emotion_icon( $reaction['id'] );
+				$icon    = function_exists( 'bb_activity_prepare_emotion_icon' ) ? bb_activity_prepare_emotion_icon( $reaction['id'] ) : '';
 				$output .= sprintf(
 					'<div class="reactions_item">%s</div>',
 					$icon
 				);
 			}
 
-			$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
+			$reaction_obj   = bb_load_reaction();
+			$reaction_count = $reaction_obj ? $reaction_obj->bb_get_user_reactions_count(
 				array(
 					'item_id'   => $activity_id,
 					'item_type' => $item_type,
 				)
-			);
+			) : 0;
 			if ( ! empty( $reaction_count ) ) {
 				$reaction_text = 1 === $reaction_count ?
 					esc_html__( 'reaction', 'buddyboss' ) :
@@ -368,17 +369,18 @@ class BB_Activity_Readylaunch {
 		$activity_id    = bp_get_activity_id();
 		$comment_count  = $this->bb_rl_get_activity_comment_count( $activity_id );
 		$reactions      = bb_active_reactions();
-		$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
+		$reaction_obj   = bb_load_reaction();
+		$reaction_count = $reaction_obj ? $reaction_obj->bb_get_user_reactions_count(
 			array(
 				'item_id'     => $activity_id,
 				'item_type'   => 'activity',
 				'reaction_id' => array_keys( $reactions ),
 			)
-		);
+		) : 0;
 		?>
 		<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 			<?php
-			if ( bb_is_reaction_activity_posts_enabled() ) {
+			if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
 				echo bb_get_activity_post_user_reactions_html( $activity_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 			?>

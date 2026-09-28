@@ -3695,7 +3695,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( empty( $media->type ) || 'photo' === $media->type ) {
-			$media_privacy = bb_media_user_can_access( $media->id, 'photo' );
+			if ( empty( $media->type ) ) {
+				$media_privacy = bb_media_user_can_access( $media->id, 'album' );
+			} else {
+				$media_privacy = bb_media_user_can_access( $media->id, 'photo' );
+			}
 		} else {
 			$media_privacy           = bb_media_user_can_access( $media->id, 'video' );
 			$retval['upload_poster'] = 0;
@@ -3739,6 +3743,14 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				} elseif ( 0 === (int) $media->group_id && 0 !== (int) $media->album_id ) {
 					$retval['edit_album_privacy'] = $media->album_id;
 				}
+			}
+			// For album just unset the permissions that are not applicable.
+			if ( empty( $media->type ) ) {
+				unset( $retval['download'] );
+				unset( $retval['edit_privacy'] );
+				unset( $retval['edit_post_privacy'] );
+				unset( $retval['edit_album_privacy'] );
+				unset( $retval['move'] );
 			}
 
 			if ( isset( $media_privacy['can_delete'] ) && true === (bool) $media_privacy['can_delete'] ) {

@@ -899,6 +899,24 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @param array $controllers The list of BP REST controllers to load.
 		 */
 		public function rest_api_init( $controllers = array() ) {
+			// Skip REST endpoint registration for inactive components.
+			//
+			// `bp_is_active()` checks `active_components` and
+			// `required_components` *by key*, but `required_components`
+			// stores names as values (`[ 0 => 'members', 1 => 'xprofile',
+			// 2 => 'core' ]`) — so `bp_is_active( 'core' )` returns
+			// false even though `core` is always loaded. Without the
+			// `in_array()` fallback, foundational components like `core`
+			// silently lose their REST endpoints (e.g. `BB_REST_Topics_Endpoint`)
+			// the moment the standalone Platform REST API plugin is off
+			// and Platform's bundled controllers become the only path.
+			if (
+				! bp_is_active( $this->id ) &&
+				! in_array( $this->id, (array) buddypress()->required_components, true )
+			) {
+				return;
+			}
+
 			if ( is_array( $controllers ) && $controllers ) {
 				// Built-in controllers.
 				$_controllers = $controllers;
@@ -945,6 +963,18 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @param array $blocks The list of BB Blocks to register.
 		 */
 		public function blocks_init( $blocks = array() ) {
+			// Skip block registration for inactive components.
+			// Same caveat as `rest_api_init()` above: `bp_is_active()`
+			// returns false for components in `required_components`
+			// because that array stores names as values, not keys. Honor
+			// required components explicitly so foundational components
+			// like `core` keep registering their blocks.
+			if (
+				! bp_is_active( $this->id ) &&
+				! in_array( $this->id, (array) buddypress()->required_components, true )
+			) {
+				return;
+			}
 
 			/**
 			 * Filter here to add new BB Blocks, disable some or all BB Blocks for a component.

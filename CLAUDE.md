@@ -24,11 +24,13 @@ npm run build:admin
 # Build specific admin targets
 npm run build:admin:readylaunch
 npm run build:admin:rl-onboarding
+npm run build:admin:settings-2.0
 
 # Build blocks
 npm run build:blocks
 
 # Watch mode for development (rebuilds on file changes)
+npm run watch:admin:settings-2.0
 npm run watch:admin:readylaunch
 npm run watch:admin:rl-onboarding
 npm run watch:readylaunch-header
@@ -40,11 +42,18 @@ npm run watch:readylaunch-header
 # PHP unit tests
 composer test
 
-# LearnDash integration tests
-composer test-ld
-
 # Run specific test file
 vendor/bin/phpunit tests/phpunit/testcases/path/to/test.php
+
+# NOTE: composer test-ld is retained in composer.json for historical
+# reasons but is a no-op as of PROD-9792 — the LearnDash testsuite was
+# removed from phpunit.xml.dist and tests/phpunit/testcases/integrations/
+# when the integration moved to the buddyboss-learndash addon plugin.
+
+# JavaScript tests (Jest)
+npm test
+npm run test:watch
+npm run test:coverage
 ```
 
 ### Linting & Code Quality
@@ -70,27 +79,24 @@ npm run lint-css
 composer lint
 ```
 
-**PHP standards:** WordPress Coding Standards + PHPCompatibilityWP (minimum PHP 5.6)
+**PHP standards:** WordPress Coding Standards + PHPCompatibilityWP (minimum PHP 7.4)
 **JavaScript standards:** WordPress JavaScript Coding Standards
 
 ### Grunt Tasks
 
 ```bash
-# Build production release
-grunt build
-
-# Build CSS from SASS
-grunt sass
-
-# Generate RTL CSS
-grunt rtlcss
-
-# Minify assets
-grunt uglify
-grunt cssmin
-
-# Watch for changes
-grunt watch
+grunt src                            # Full source build (SCSS, RTL, minify, lint, i18n)
+grunt build                          # Production release build (zip)
+grunt release                        # Combines src + build
+grunt webpack                        # Build blocks + admin JS
+grunt sass                           # Build CSS from SASS
+grunt rtlcss                         # Generate RTL CSS
+grunt uglify                         # Minify JavaScript
+grunt cssmin                         # Minify CSS
+grunt makepot                        # Generate POT translation file
+grunt watch                          # Watch for changes
+grunt pre-commit                     # Pre-commit checks
+grunt test                           # Run PHPUnit tests
 ```
 
 ## Architecture Overview
@@ -101,6 +107,7 @@ The plugin is organized into **components** under `src/`:
 
 - **`bp-core/`** - Core framework, admin infrastructure, hooks, template loader
 - **`bp-activity/`** - Activity streams, posts, comments
+- **`bp-blogs/`** - Blog/networking integration (multisite)
 - **`bp-groups/`** - Groups, group types, group hierarchies
 - **`bp-members/`** - Member profiles and directories
 - **`bp-messages/`** - Private messaging
@@ -115,6 +122,9 @@ The plugin is organized into **components** under `src/`:
 - **`bp-moderation/`** - Content moderation
 - **`bp-performance/`** - Performance optimizations
 - **`bp-settings/`** - User settings
+- **`bp-invites/`** - Invitation management
+- **`bp-help/`** - Help/documentation component
+- **`bp-templates/`** - Template handling (bp-nouveau)
 - **`bp-integrations/`** - Third-party integrations
 
 Each component typically contains:
@@ -126,13 +136,212 @@ Each component typically contains:
 - `screens/` - Frontend screen handlers
 - `admin/` - Admin interfaces
 
+### Feature-Based Architecture (Settings 2.0)
+
+The plugin is transitioning from the legacy WordPress Settings API to a **feature-based architecture** with a React admin UI.
+
+#### Hierarchy
+
+```
+Feature -> Side Panel -> Section -> Field
+```
+
+#### Core PHP Classes
+
+| Class | File | Purpose |
+|-------|------|---------|
+| `BB_Feature_Registry` | `src/bp-core/classes/class-bb-feature-registry.php` | Central registry for features, side panels, sections, fields. Singleton. |
+| `BB_Feature_Loader` | `src/bp-core/classes/class-bb-feature-loader.php` | Conditionally loads PHP code based on feature activation. Three loader types: `php_loaders`, `admin_loaders`, `rest_loaders`. |
+| `BB_Feature_Autoloader` | `src/bp-core/classes/class-bb-feature-autoloader.php` | Regex-based class autoloading gated by feature activation. Auto-discovers features from `src/bb-features/` directories. |
+| `BB_Icon_Registry` | `src/bp-core/classes/class-bb-icon-registry.php` | SVG/dashicon/image icon management for feature UI. |
+| `BB_Admin_Settings_Ajax` | `src/bp-core/admin/classes/class-bb-admin-settings-ajax.php` | AJAX handler for all Settings 2.0 operations (get features, toggle, get/save settings, search). |
+
+#### Admin Settings Files
+
+| File | Purpose |
+|------|---------|
+| `src/bp-core/admin/bb-admin-settings-init.php` | Bootstrap: loads classes, triggers `bb_register_features` hooks. Runs at `bp_loaded` priority 4. |
+| `src/bp-core/admin/bb-admin-settings-page.php` | Registers admin menu page (`bb-settings`), enqueues React app and CSS. |
+| `src/bp-core/admin/bb-admin-settings-features.php` | Core feature registrations (hook into `bb_register_features`). |
+| `src/bp-core/admin/bb-admin-settings-activity.php` | Activity feature settings registration. |
+| `src/bp-core/admin/bb-admin-settings-groups.php` | Groups feature settings registration. |
+| `src/bp-core/admin/bb-admin-settings-media.php` | Media feature settings registration. |
+| `src/bp-core/admin/bb-admin-settings-messages.php` | Messages feature settings registration. |
+
+Per-feature settings are further decomposed into sub-files under `src/bp-core/admin/settings/{feature}/`:
+- `callbacks.php` — sanitize/validate callbacks
+- `settings-*.php` — side panel field registrations (e.g., `settings-access-control.php`, `settings-comments.php`)
+- `meta-fields-*.php` — meta field registrations
+
+#### Facade Functions (in `bp-core-functions.php`)
+
+```php
+bb_feature_registry()                                           // Get registry singleton
+bb_feature_loader()                                             // Get loader singleton
+bb_register_feature( $feature_id, $args )                       // Register a feature
+bb_register_side_panel( $feature_id, $side_panel_id, $args )    // Register a side panel
+bb_register_feature_section( $feature_id, $panel_id, $section_id, $args )
+bb_register_feature_field( $feature_id, $panel_id, $section_id, $args )
+bb_register_feature_nav_item( $feature_id, $args )
+bb_get_feature_settings_url( $feature_id, $panel_id )
+bb_get_settings_url()
+bb_add_action_if_active( $feature_id, $tag, $function, $priority, $accepted_args )
+```
+
+#### Feature Registration Lifecycle (Hooks)
+
+1. `bb_before_register_features` -- before any features registered
+2. `bb_register_features` -- core features register here
+3. `bb_after_register_features` -- Pro plugin extends features here
+
+Per-registration hooks: `bb_feature_registered`, `bb_side_panel_registered`, `bb_feature_section_registered`, `bb_feature_field_registered`, `bb_feature_activated`, `bb_feature_deactivated`.
+
+#### Feature Config Directory Structure
+
+New features live in `src/bb-features/{category}/{feature-name}/`:
+
+```
+src/bb-features/community/reactions/
+    bb-feature-config.php       -- Feature registration (auto-discovered)
+    loader.php                  -- PHP code loading
+    admin/
+        settings.php            -- Side panels, sections, fields registration
+        callbacks.php           -- Sanitize/validate callbacks
+    classes/
+        class-bb-reaction.php
+        class-bb-rest-reactions-endpoint.php
+    bb-activity-reactions.php   -- Core reactions logic
+```
+
+The `BB_Feature_Autoloader::bb_discover_features()` scans `bb-features/{category}/*/bb-feature-config.php` via `glob()`.
+
+#### Feature Activation State (Dual-Write for Backward Compatibility)
+
+Feature activation is stored in two options:
+- **`bb-active-features`** -- primary (new system)
+- **`bp-active-components`** -- legacy sync (so `bp_is_active()` continues to work)
+
+Status check priority: custom `is_active_callback` then `bb-active-features` option then `bp-active-components` fallback.
+
+#### AJAX Endpoints
+
+| Action | Purpose |
+|--------|---------|
+| `bb_admin_get_features` | List all features with icons and status |
+| `bb_admin_toggle_feature` | Activate/deactivate a feature |
+| `bb_admin_get_feature_settings` | Get settings with field definitions for a feature |
+| `bb_admin_save_feature_settings` | Save settings (JSON payload) |
+| `bb_admin_search_settings` | Search across all features, panels, sections, fields |
+
+All endpoints require: nonce (`bb_admin_settings`), `manage_options` capability, `wp_ajax_` only (no `nopriv`).
+
+#### React Admin Interface (Settings 2.0)
+
+**Source:** `src/js/admin/settings-2.0/`
+**Build output:** `src/bp-core/admin/bb-settings/settings-2.0/build/`
+**Build command:** `npm run build:admin:settings-2.0`
+**Watch command:** `npm run watch:admin:settings-2.0`
+
+```
+src/js/admin/settings-2.0/
+    index.js                    -- Entry point
+    App.js                      -- Route initialization, layout
+    Router.js                   -- Route matching, lazy loading
+    components/
+        Header.js               -- Admin header with search
+        SettingsForm.js         -- Generic field renderer (17+ field types)
+        Toast.js                -- Notification toast
+        HelpIcon.js             -- Contextual help trigger
+        HelpSliderModal.js      -- Slide-in help panel
+        access-control/         -- Access control field component
+        activity/sharing/       -- SharePlatformsField
+        activity/topics/topic-list/ -- TopicDeleteModal, TopicItem, TopicListField, TopicModal
+        common/                 -- BBIcon, RegisteredMetaField, RichTextEditor
+        fields/                 -- Specialized field components (13+):
+                                   AsyncSelectField, AvatarCropModal, CheckboxListField,
+                                   DimensionsField, DocumentExtensionsField, ExtensionListField,
+                                   ImageRadioField, ImageUploadField, InputButtonField,
+                                   MimeCheckerPanel, StatusCheckField
+        groups/                 -- GroupCreateModal, GroupEditModal, GroupMembersTab,
+                                   GroupNavSync, GroupTopicsTab
+        modals/                 -- ConfirmToggleModal, GroupTypeModal
+        reaction/               -- Reaction-specific components
+            index.js, ReactionModeField.js, ReactionMigration.js,
+            ReactionNotice.js, MigrationModal.js, ReactionInfo.js,
+            applyReactionPostSave.js, useReactionCallbacks.js
+    screens/
+        SettingsScreen.js       -- Features grid with filtering/toggling
+        FeatureSettingsScreen.js -- Feature settings with auto-save
+        SideNavigation.js       -- Left sidebar navigation
+        featureLists.js         -- Feature list definitions
+        ActivityListScreen.js   -- Activity sub-features (lazy loaded)
+        GroupsListScreen.js     -- Groups sub-features (lazy loaded)
+        GroupTypeScreen.js      -- Group type management
+    utils/
+        ajax.js                 -- AJAX helpers (ajaxFetch, getCachedFeatures, toggleFeature, etc.)
+        constants.js            -- Shared constants
+        feature.js              -- Feature helper utilities
+        featureCache.js         -- In-memory feature data cache
+        format.js               -- Formatting utilities
+        mimeChecker.js          -- MIME type validation
+        sanitize.js             -- DOMPurify-based HTML sanitizer (sanitizeHtml)
+        url.js                  -- URL to route conversion helpers
+    styles/scss/
+        admin.scss              -- Main entry SCSS
+        screens/                -- Per-screen styles
+        utils/                  -- Variables, mixins, elements
+```
+
+**Key React patterns:**
+- Auto-save with 1s debounce (`FeatureSettingsScreen.js`)
+- Optimistic updates with rollback on feature toggle (`SettingsScreen.js`)
+- AbortController for cancelling stale requests
+- Module-level caching in `ajax.js` and `featureCache.js`
+- jQuery-React bridge for Pro emotion picker via `window.bbReactEmotionCallbacks` (`useReactionCallbacks.js`)
+- All event listeners and timers properly cleaned up in `useEffect` returns
+
+**Global JS data:** `window.bbAdminData` (set via `wp_localize_script` in `bb-admin-settings-page.php`):
+- `ajaxUrl`, `ajaxNonce`, `apiUrl`, `nonce`, `logoUrl`, `currentUser`, `debug`
+
+#### Known Issues and Technical Debt
+
+**Security — all resolved:**
+- All raw HTML rendering uses `sanitizeHtml()` DOMPurify-based sanitizer (`utils/sanitize.js`).
+- AJAX save handler has per-field `sanitize_callback` + type-aware fallback (`sanitize_text_field` for strings, `map_deep` for arrays).
+- Debug data in `wp_localize_script` is gated behind `WP_DEBUG` check.
+- Path traversal in Icon Registry resolved via `realpath()` validation + plugin directory whitelist.
+
+**Performance — all resolved:**
+- Search index transient locking prevents thundering herd on concurrent rebuilds.
+- N+1 `get_option()` resolved via `bb_prime_option_caches()` batch loader.
+
+**Code quality — mostly resolved:**
+- `ajaxFetch` consolidated to single definition in `utils/ajax.js` (properly imported everywhere).
+- Sort-by-order consolidated to single `bb_sort_by_order()` function in `bp-core-functions.php`.
+- `BBIcon` consolidated to single definition in `components/common/BBIcon.js`.
+- `SettingsForm.js` is large but complex field types are extracted to dedicated components in `components/fields/`.
+- `[BBVERSION]` placeholders remain throughout new code — these are replaced automatically during the Grunt release build process (this is by design, not a bug).
+
+#### How Pro Extends Settings 2.0
+
+Pro hooks into `bb_after_register_features` to:
+- Upgrade feature tiers (`license_tier`)
+- Add pro-only side panels and fields
+- Register entirely new features
+- Add migration wizards for reaction mode switching
+
 ### Boot Sequence
 
 1. **`bp-loader.php`** (root) - Defines constants, loads Composer autoload
 2. **`src/bp-loader.php`** - Compatibility checks, textdomain setup
 3. **`src/class-buddypress.php`** - Main singleton (`buddypress()`)
-4. Components load via `bp-{component}-loader.php` files
-5. Admin loads via `bp-core-admin.php` → `class-bp-admin.php`
+4. `bp_loaded` priority 2: `bp_setup_components` — component constructors register
+5. `bp_loaded` priority 4: `bp_include` — component `includes()` methods fire, loading functions/classes
+6. `bp_loaded` priority 4: `bb_admin_settings_init()` — loads Settings 2.0 classes and feature settings files
+7. `bp_loaded` priority 5: `BB_Feature_Registry::bb_init()` — fires `bb_register_features` hook, registering all features/panels/fields
+8. Admin menu loads via `bp-core-admin.php` → `class-bp-admin.php`
+
+**Important:** By the time `bb_register_features` fires (priority 5), all component functions are already loaded (priority 4). Feature registration code can safely call component functions like `bb_notification_get_digest_cron_times()` without `function_exists()` checks, as long as the feature guards against its component being inactive (e.g., early-return when `! bp_is_active( 'messages' )`).
 
 ### ReadyLaunch Frontend
 
@@ -212,6 +421,7 @@ BuddyBoss Platform uses the **bp-nouveau** template pack (bp-legacy has been rem
 - Embla Carousel for UI interactions
 
 **Build targets:**
+- `settings-2.0` - Main admin settings interface (React SPA)
 - `readylaunch` - Quick setup wizard
 - `rl-onboarding` - Onboarding experience
 
@@ -307,7 +517,7 @@ if ( bp_core_do_network_admin() ) {
 - Run `composer lint-php-fix` to auto-fix common issues
 - See `phpcs.xml` for specific rules and exclusions
 - Excluded paths: `deprecated/`, `bp-integrations/`, `vendor/`, `node_modules/`
-- Minimum PHP compatibility: 5.6 (checked via PHPCompatibilityWP)
+- Minimum PHP compatibility: 7.4 (checked via PHPCompatibilityWP)
 
 **Key WordPress PHP Conventions:**
 - Use tabs (not spaces) for indentation
@@ -353,6 +563,46 @@ BuddyBoss Platform uses specific prefixes for functions, classes, and files:
 **Hooks (Actions & Filters):**
 - Use `bp_` prefix (e.g., `bp_loaded`, `bp_init`, `bp_activity_after_save`)
 - Lowercase with underscores
+
+**Version Placeholder `[BBVERSION]`:**
+
+The placeholder `[BBVERSION]` is used in `@since` docblock tags throughout the codebase. It is **automatically replaced** with the actual version number during the release build process (via Grunt). Do NOT manually replace `[BBVERSION]` with a version number — leave it as-is.
+
+**`@since` Tag Requirements:**
+
+Every new or modified PHP function, JavaScript function, hook (action/filter), or class **must** include an `@since BuddyBoss [BBVERSION]` tag in its docblock. Specifically:
+
+- **New PHP function** — Add `@since BuddyBoss [BBVERSION]` to the function docblock
+- **New JavaScript function** — Add `@since BuddyBoss [BBVERSION]` to the JSDoc comment
+- **New action/filter hook** — Add `@since BuddyBoss [BBVERSION]` to the `do_action()` or `apply_filters()` docblock
+- **Moved hook/filter** — If a hook/filter is moved to a different location, add a new `@since BuddyBoss [BBVERSION]` noting the move
+- **New parameter on existing hook/filter** — Add `@since BuddyBoss [BBVERSION]` documenting the new parameter
+- **New class** — Add `@since BuddyBoss [BBVERSION]` to the class docblock
+
+**Example:**
+```php
+/**
+ * Check whether reactions feature is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if reactions feature is enabled.
+ */
+function bb_is_reactions_feature_enabled() {
+	// ...
+}
+
+/**
+ * Fires after a feature is registered.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature ID.
+ * @param array  $args       The feature arguments.
+ */
+do_action( 'bb_feature_registered', $feature_id, $args );
+```
+
 
 **Example:**
 ```php
@@ -515,6 +765,22 @@ $(document).on('click', '.my-button', (e) => {
 - `src/bp-core/bp-core-admin.php` - Admin initialization
 - `src/bp-core/classes/class-bp-admin.php` - Menu structure
 
+### Settings 2.0 Architecture
+- `src/bp-core/admin/bb-admin-settings-init.php` - Settings 2.0 bootstrap
+- `src/bp-core/admin/bb-admin-settings-page.php` - Admin page and asset enqueuing
+- `src/bp-core/admin/bb-admin-settings-features.php` - Core feature registrations
+- `src/bp-core/admin/bb-admin-settings-activity.php` - Activity feature settings
+- `src/bp-core/admin/bb-admin-settings-groups.php` - Groups feature settings
+- `src/bp-core/admin/bb-admin-settings-media.php` - Media feature settings
+- `src/bp-core/admin/bb-admin-settings-messages.php` - Messages feature settings
+- `src/bp-core/classes/class-bb-feature-registry.php` - Feature registry
+- `src/bp-core/classes/class-bb-feature-loader.php` - Conditional feature loader
+- `src/bp-core/classes/class-bb-feature-autoloader.php` - Feature class autoloader
+- `src/bp-core/classes/class-bb-icon-registry.php` - Icon registry
+- `src/bp-core/admin/classes/class-bb-admin-settings-ajax.php` - AJAX handler
+- `src/bp-core/admin/classes/class-bb-admin-meta-field-registry.php` - Admin meta field registry
+- `src/bb-features/community/reactions/bb-feature-config.php` - Reactions feature config (reference implementation)
+
 ### ReadyLaunch JavaScript
 - `src/bp-templates/bp-nouveau/readylaunch/js/buddypress-activity.js` - Activity stream
 - `src/bp-templates/bp-nouveau/readylaunch/js/buddypress-activity-post-form.js` - Activity posting
@@ -536,7 +802,7 @@ $(document).on('click', '.my-button', (e) => {
 This plugin is typically developed within a WordPress installation:
 - **WordPress location:** `wp-content/plugins/buddyboss-platform/`
 - **Node version:** >= 14.15.0 (see `package.json`)
-- **PHP version:** >= 5.6 (compatibility target), recommend 7.4+
+- **PHP version:** >= 7.4 (minimum supported)
 
 ## Security Rules
 
@@ -948,22 +1214,32 @@ $process->save()->dispatch();
 ## Major BuddyBoss Features
 
 ### Reactions System
-**Location:** `src/bp-activity/bb-activity-reactions.php`, `class-bb-reaction.php`
+**Legacy location:** `src/bp-activity/bb-activity-reactions.php`, `class-bb-reaction.php`
+**Settings 2.0 location:** `src/bb-features/community/reactions/`
 
-Emoji reactions on activities (Like, Love, Laugh, etc.)
+Emoji reactions on activities (Like, Love, Laugh, etc.). This is the first feature fully migrated to the Settings 2.0 feature-based architecture.
 
+**Reactions modes:** `likes` (free) and `emotions` (Pro only, multiple reaction types).
+
+**Settings 2.0 helper functions:**
 ```php
-// Check if reactions enabled
+// Check if reactions feature is enabled (Settings 2.0 toggle)
+bb_is_reactions_feature_enabled()
+
+// Check specific reaction settings
+bb_is_reaction_activity_posts_enabled()
+bb_is_reaction_activity_comments_enabled()
+bb_is_reaction_emotions_enabled()
+```
+
+**Legacy check (still works via backward compatibility):**
+```php
 if ( function_exists( 'bb_load_reaction' ) ) {
     // Reactions available
 }
-
-// Get activity reactions
-$reactions = bb_get_activity_reactions( $activity_id );
-
-// Add reaction
-bb_add_activity_reaction( $activity_id, $user_id, $reaction_type );
 ```
+
+**Migration:** When switching between Likes and Emotions modes, a migration wizard handles converting existing reaction data. Migration uses Pro plugin AJAX handlers with separate action-specific nonces.
 
 ### Follow System
 **Location:** `src/bp-activity/classes/class-bp-activity-follow.php`
@@ -1152,11 +1428,49 @@ BuddyBoss supports integration with third-party plugins using a consistent patte
 
 **Base Class:** `BP_Integration` (extends `BP_Component`)
 
-**Available Integrations:**
-- **LearnDash** - LMS integration for courses in groups
+**Bundled Integrations (live in `src/bp-integrations/`):**
 - **Pusher** - Real-time notifications
 - **reCAPTCHA** - Spam protection
 - **BuddyBoss App** - Mobile app connectivity
+
+**Addon-plugin Integrations (separate repos, register via `bp_setup_integrations`):**
+- **LearnDash** - `buddyboss-learndash` addon — courses in groups, profile courses tab, group reports. Extracted from Platform in PROD-9792. Platform exposes extension filters/actions the addon subscribes to (see *LearnDash Extension Points* below).
+
+### LearnDash Extension Points
+
+After PROD-9792, Platform ships no LearnDash-specific code. The hooks listed below exist so the `buddyboss-learndash` addon (and other LMS addons) can plug in:
+
+| Hook | Type | Fires from | Purpose |
+|------|------|------------|---------|
+| `bb_integration_readylaunch_loaded` | action | `BB_Readylaunch::bb_rl_init()` | ReadyLaunch is booted — addons attach their RL-specific helpers/enqueues here. |
+| `bb_readylaunch_primary_nav_courses_info` | filter | `BB_Readylaunch::get_primary_nav_menu()` | Claim the "Courses" primary nav item; return `{ is_active, url }`. |
+| `bb_readylaunch_courses_sidebar_is_active` | filter | `BB_Readylaunch::bb_is_sidebar_enabled_for_courses()` | Activate the RL courses sidebar. |
+| `bb_telemetry_active_integrations` | filter | `BB_Telemetry::get_active_integrations()` | Report addon-managed integration status to telemetry. |
+| `bb_integration_rest_init` | action | `BP_REST_Groups_Details_Endpoint::bp_rest_group_details_init()` | Boot addon sync/hook classes inside REST context. Replaces the deprecated `bp_ld_sync/init` action (still bridged for one release). |
+| `bb_integration_rest_group_settings_nav_items` | filter | `BP_REST_Group_Settings_Endpoint::register_routes()` | Add nav slugs (e.g. `courses`) to the group-settings REST nav. |
+| `bb_integration_rest_group_courses_fields` | filter | `BP_REST_Group_Settings_Endpoint::get_courses_fields()` | Provide the fields array for the group "Courses" settings tab. |
+| `bb_integration_rest_update_group_courses_fields` | filter | `BP_REST_Group_Settings_Endpoint::update_courses_fields()` | Handle the save of the group "Courses" settings tab. |
+| `bb_integration_rest_profile_menu_items` | filter | `BP_REST_Members_Details_Endpoint::get_profile_menu_items()` | Add profile nav entries (e.g. "My Courses"). |
+| `bb_search_post_thumbnail_defaults` | filter | `bp_search_get_post_thumbnail_default()` | Register post-type → icon URL map entries for search thumbnails. |
+| `bb_search_cpt_pre_query_context` | filter | `BP_Search_CPT::sql()` | Gate a CPT search query (e.g. enrolled-courses-only mode). |
+| `bb_nav_sub_item_course_label` | filter | `bp_nav_menu_get_loggedin_pages()` | Resolve the singular "Course" label used by the `my-courses` nav sub-item. |
+
+All of these were added in PROD-9792. Do not remove them without migrating every consumer — the `buddyboss-learndash` addon subscribes to 11 of the 12.
+
+### Removed LearnDash Code
+
+PROD-9792 deleted the following from Platform. Anything that previously depended on these now lives in the `buddyboss-learndash` addon:
+
+- `src/bp-integrations/learndash/` (entire directory)
+- `src/bp-core/bp-core-learndash-emails.php`
+- `src/bp-core/compatibility/class-bb-readylaunch-learndash-helper.php`
+- 3 LD search SVG icons (`course.svg`, `course-content.svg`, `quiz.svg`) under `bp-core/images/search/`
+- 3 role-sync functions from `src/bp-core/compatibility/bp-incompatible-plugins-helper.php` (`bb_learndash_delete_group`, `bb_learndash_untrash_group`, `bb_learndash_role_add`) — moved to `buddyboss-learndash/includes/group-leader-role-sync.php`
+- 26 ReadyLaunch LD template files under `src/bp-templates/bp-nouveau/readylaunch/learndash/` and `readylaunch/groups/single/*courses*`, `*reports*`
+- 17 LD SCSS partials + compiled CSS under `src/bp-templates/bp-nouveau/readylaunch/css/` (courses bundle)
+- `tests/phpunit/testcases/integrations/learndash/` (testsuite)
+
+A deprecation stub for `bp_register_learndash_integration()` lives in `src/bp-core/deprecated/buddyboss/3.0.0.php`.
 
 ### Creating Integration
 
@@ -1303,7 +1617,7 @@ define( 'SCRIPT_DEBUG', true );
 - **Test with Query Monitor** plugin for performance analysis
 
 ### Compatibility Requirements
-- **PHP version:** 5.6+ (compatibility target), 7.4+ (recommended)
+- **PHP version:** 7.4+ (minimum supported)
 - **WordPress version:** 6.0+ (minimum)
 - Test on multiple PHP versions: 7.4, 8.0, 8.1, 8.2
 - Test on multiple WordPress versions
@@ -1315,7 +1629,6 @@ define( 'SCRIPT_DEBUG', true );
 - [ ] Run `composer test` - All PHPUnit tests pass
 - [ ] Test with `WP_DEBUG` enabled - No PHP warnings/notices
 - [ ] Test in ReadyLaunch mode if applicable
-- [ ] Test with legacy mode (bp-legacy templates)
 - [ ] Verify database queries are using `$wpdb->prepare()`
 - [ ] Verify all output is properly escaped
 - [ ] Verify all input is sanitized

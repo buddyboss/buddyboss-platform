@@ -421,6 +421,8 @@ class BP_XProfile_Field {
 	 * Save a profile field.
 	 *
 	 * @since BuddyPress 1.1.0
+	 * @since BuddyBoss 3.5.0 Returns false when a Bio field would enter a
+	 *                              repeater field set.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -456,7 +458,36 @@ class BP_XProfile_Field {
 
 		$is_new_field = is_null( $this->id );
 
-		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type ) {
+		/*
+		 * The Bio field is shared with the member's WordPress "Biographical Info",
+		 * so a set that repeats its fields cannot hold one: each repeat would be
+		 * another copy of the same single WordPress value.
+		 *
+		 * Only the save that puts it there is refused — a new field, or an existing
+		 * one moving in from another set. A Bio field already sitting in a repeating
+		 * set is left editable so an admin can still rename or re-describe it while
+		 * cleaning the set up; refusing those saves too would freeze the field on
+		 * exactly the sites that need to fix it.
+		 */
+		if ( 'biography' === $this->type && bb_xprofile_is_repeater_group( $this->group_id ) ) {
+			$previous_group_id = 0;
+
+			if ( ! $is_new_field ) {
+				// Field row only — `$get_data` would pull the current user's profile
+				// data for a check that never looks at it.
+				$stored = self::get_instance( (int) $this->id, null, false );
+
+				if ( ! empty( $stored->group_id ) ) {
+					$previous_group_id = (int) $stored->group_id;
+				}
+			}
+
+			if ( $is_new_field || $previous_group_id !== (int) $this->group_id ) {
+				return false;
+			}
+		}
+
+		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type || 'biography' === $this->type ) {
 			$field = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} a WHERE parent_id = 0 AND type = %s", $this->type ) );
 			if ( $is_new_field && $field ) {
 				return false;
@@ -1290,6 +1321,7 @@ class BP_XProfile_Field {
 	 * @param string $message_type error or udpated
 	 */
 	public function render_admin_form( $message = '', $message_type = 'error' ) {
+		_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'Settings 2.0 ProfileFieldModal' );
 
 		// Users Admin URL
 		$users_url = bp_get_admin_url( 'admin.php' );

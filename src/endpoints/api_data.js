@@ -5821,196 +5821,6 @@ define({ "api": [
     "groupTitle": "Groups"
   },
   {
-    "type": "GET",
-    "url": "/wp-json/buddyboss/v1/learndash/courses",
-    "title": "LearnDash Courses",
-    "name": "GetBBLearndashCourses",
-    "group": "Learndash",
-    "description": "<p>Retrieve courses.</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "page",
-            "defaultValue": "1",
-            "description": "<p>Current page of the collection.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "per_page",
-            "defaultValue": "10",
-            "description": "<p>Maximum number of items to be returned in result set.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "search",
-            "description": "<p>Limit results to those matching a string.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "author",
-            "description": "<p>Limit result set to posts assigned to specific authors.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "author_exclude",
-            "description": "<p>Ensure result set excludes posts assigned to specific authors.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "after",
-            "description": "<p>Limit response to resources published after a given ISO8601 compliant date.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "before",
-            "description": "<p>Limit response to resources published before a given ISO8601 compliant date.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "exclude",
-            "description": "<p>Ensure result set excludes specific IDs.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "include",
-            "description": "<p>Limit result set to specific IDs.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "offset",
-            "description": "<p>Offset the result set by a specific number of items.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "asc",
-              "desc"
-            ],
-            "optional": true,
-            "field": "order",
-            "defaultValue": "asc",
-            "description": "<p>Order sort attribute ascending or descending.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "allowedValues": [
-              "author",
-              "date",
-              "id",
-              "include",
-              "modified",
-              "parent",
-              "relevance",
-              "slug",
-              "title",
-              "menu_order"
-            ],
-            "optional": true,
-            "field": "orderby",
-            "defaultValue": "date",
-            "description": "<p>Sort collection by object attribute.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "allowedValues": [
-              "publish",
-              "future",
-              "draft",
-              "pending",
-              "private",
-              "trash",
-              "auto-draft",
-              "inherit",
-              "request-pending",
-              "request-confirmed",
-              "request-failed",
-              "request-completed",
-              "closed",
-              "spam",
-              "orphan",
-              "hidden",
-              "graded",
-              "not_graded",
-              "any"
-            ],
-            "optional": true,
-            "field": "status",
-            "defaultValue": "date",
-            "description": "<p>Sort collection by object attribute.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_category",
-            "description": "<p>Limit result set to all items that have the specified term assigned in the ld_course_category taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_category_exclude",
-            "description": "<p>Limit result set to all items except those that have the specified term assigned in the ld_course_category taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_tag",
-            "description": "<p>Limit result set to all items that have the specified term assigned in the ld_course_tag taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Array",
-            "optional": true,
-            "field": "course_tag_exclude",
-            "description": "<p>Limit result set to all items except those that have the specified term assigned in the ld_course_tag taxonomy.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": true,
-            "field": "group_id",
-            "description": "<p>Limit response to specific buddypress group.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php",
-    "groupTitle": "Learndash"
-  },
-  {
     "type": "POST",
     "url": "/wp-json/buddyboss/v1/media/albums",
     "title": "Create Album",
@@ -9760,7 +9570,7 @@ define({ "api": [
     "group": "Reactions",
     "description": "<p>Retrieve supported reactions</p>",
     "version": "1.0.0",
-    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
     "groupTitle": "Reactions"
   },
   {
@@ -10278,7 +10088,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
     "groupTitle": "User_Reaction"
   },
   {
@@ -10369,7 +10179,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
     "groupTitle": "User_Reactions"
   },
   {
@@ -10419,7 +10229,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
     "groupTitle": "User_reaction"
   },
   {
@@ -10448,7 +10258,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "src/bp-core/classes/class-bb-rest-reactions-endpoint.php",
+    "filename": "src/bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php",
     "groupTitle": "User_reaction"
   },
   {

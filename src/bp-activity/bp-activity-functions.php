@@ -286,8 +286,16 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex through prepare's %s placeholder.
+			// See bp_get_userid_from_mentionname() in bp-core-functions.php for
+			// the canonical implementation — this deprecated copy mirrors it.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
@@ -931,7 +939,9 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
 	}
 
 	// Get favorites for user.
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+	$favs = function_exists( 'bb_activity_get_user_reacted_item_ids' )
+		? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+		: array();
 
 	/**
 	 * Filters the favorited activity items for a specified user.
@@ -956,14 +966,24 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
 function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$reaction = bb_load_reaction();
+
 	$r = bp_parse_args(
 		$args,
 		array(
 			'type'        => 'activity',
-			'reaction_id' => bb_load_reaction()->bb_reactions_reaction_id(),
+			'reaction_id' => $reaction ? $reaction->bb_reactions_reaction_id() : 0,
 			'error_type'  => 'bool',
 		)
 	);
+
+	// If reaction system is not loaded, bail.
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -996,7 +1016,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
+	$reacted = $reaction->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
 			'reaction_id' => $r['reaction_id'],
@@ -1073,6 +1093,15 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// If reaction system is not loaded, bail.
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_remove_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
+
 	// Check if migration is in progress.
 	if (
 		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
@@ -1089,7 +1118,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 	}
 
 	// Check if user try to un-react but there is no reaction id as per current reaction mode.
-	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+	$reacted_reaction_id = $reaction->bb_user_reacted_reaction_id(
 		array(
 			'item_id'   => $activity_id,
 			'item_type' => $r['type'],
@@ -1108,7 +1137,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		}
 	}
 
-	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
+	$un_reacted = $reaction->bb_remove_user_item_reactions(
 		array(
 			'item_type'  => $r['type'],
 			'item_id'    => $activity_id,
@@ -1155,7 +1184,7 @@ function bp_activity_favorites_upgrade_data() {
 	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
 
 		if ( bp_is_large_install() ) {
-			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools', 'panel' => 'repair_platform' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
 				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss' ),
@@ -1432,11 +1461,14 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
 	// Remove user reactions from reactions table.
-	bb_load_reaction()->bb_remove_user_item_reactions(
-		array(
-			'user_id' => $user_id,
-		)
-	);
+	$reaction = bb_load_reaction();
+	if ( $reaction ) {
+		$reaction->bb_remove_user_item_reactions(
+			array(
+				'user_id' => $user_id,
+			)
+		);
+	}
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -6234,7 +6266,12 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$reaction_id = $reaction->bb_reactions_get_like_reaction_id();
 
 	if ( empty( $paged ) ) {
 		$paged = 1;
@@ -6292,7 +6329,12 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
-	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$user_reaction_table = $reaction::$user_reaction_table;
 
 	if ( empty( $results ) ) {
 		return;
@@ -6357,8 +6399,13 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
  * @return void
  */
 function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
 	foreach ( $user_ids as $user_id ) {
-		bb_load_reaction()->bb_add_user_item_reaction(
+		$reaction->bb_add_user_item_reaction(
 			array(
 				'user_id'     => $user_id,
 				'reaction_id' => $reaction_id,
@@ -6500,102 +6547,6 @@ function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 	}
 
 	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
-}
-
-/**
- * Pin or unpin activity or group feed post.
- *
- * @since BuddyBoss 2.4.60
- *
- * @param array $args Arguments related to pin/unpin activity or group feed post.
- *
- * @return bool|string Update type pinned|pin_updated|unpinned.
- */
-function bb_activity_pin_unpin_post( $args = array() ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'action'      => 'pin',
-			'activity_id' => 0,
-			'retval'      => 'bool',
-			'user_id'     => bp_loggedin_user_id(),
-		)
-	);
-
-	$retval    = '';
-	$old_value = '';
-
-	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
-
-	if ( ! empty( $activity->id ) ) {
-
-		if ( 'unpin' === $r['action'] ) {
-			$updated_value = '';
-			$retval        = 'unpinned';
-		} else {
-			$updated_value = $r['activity_id'];
-			$retval        = 'pinned';
-		}
-
-		// Check if group activity or normal activity.
-		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$has_permission = false;
-
-			// First check if user is a site administrator.
-			if ( bp_current_user_can( 'administrator' ) ) {
-				$has_permission = true;
-			} else {
-				// Check group organizer or moderator permissions if not a site admin.
-				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
-				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
-
-				if (
-					( $is_admin || $is_mod ) &&
-					bb_is_active_activity_pinned_posts()
-				) {
-					$has_permission = true;
-				}
-			}
-
-			if ( $has_permission ) {
-				$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-				groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
-			} else {
-				$retval = 'not_allowed';
-			}
-		} elseif ( bp_current_user_can( 'administrator' ) ) {
-			$old_value = bp_get_option( 'bb_pinned_post' );
-			bp_update_option( 'bb_pinned_post', $updated_value );
-		} else {
-			$retval = 'not_allowed';
-		}
-
-		// Check if already exists and updating new value.
-		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
-			$retval = 'pin_updated';
-		}
-
-		/**
-		 * Fires after activity pin/unpin post.
-		 *
-		 * @since BuddyBoss 2.4.60
-		 *
-		 * @param int    $activity_id Activity ID.
-		 * @param string $action      Action type pin/unpin.
-		 */
-		do_action( 'bb_activity_pin_unpin_post', $activity->id, $r['action'] );
-	}
-
-	if ( 'bool' === $r['retval'] ) {
-
-		if ( ! empty( $retval ) ) {
-			$retval = true;
-		} else {
-			$retval = false;
-		}
-	}
-
-	return $retval;
 }
 
 /**
@@ -8076,4 +8027,36 @@ function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $ac
 	}
 
 	return $result;
+}
+
+/**
+ * Get the display name of an activity item's author as the current viewer may see it.
+ *
+ * Activity and comment objects carry two names: `display_name` (the raw WP users
+ * column, always the full name) and `user_fullname` (resolved per viewer by
+ * bp_core_get_user_displayname(), honouring xprofile field visibility such as a
+ * hidden last name). Public output must never use the raw column — this helper
+ * prefers `user_fullname` and falls back to a per-viewer resolution.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param object $activity_item Activity or activity comment object.
+ * @return string Display name as permitted for the current viewer, or an empty string.
+ */
+function bb_activity_get_item_user_displayname( $activity_item ) {
+	if ( empty( $activity_item ) || ! is_object( $activity_item ) ) {
+		return '';
+	}
+
+	if ( ! empty( $activity_item->user_fullname ) ) {
+		return $activity_item->user_fullname;
+	}
+
+	if ( empty( $activity_item->user_id ) ) {
+		return '';
+	}
+
+	$name = bp_core_get_user_displayname( $activity_item->user_id );
+
+	return is_string( $name ) ? $name : '';
 }

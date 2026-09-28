@@ -96,6 +96,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a reply to their activity post', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
+				'group'               => 'activity',
 			),
 			'bb_activity_comment'
 		);
@@ -111,7 +112,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a reply to their activity comment', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
-
+				'group'               => 'activity',
 			),
 			'bb_activity_comment'
 		);
@@ -595,6 +596,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone you are following posts an update.', 'buddyboss' ),
+				'group'               => 'activity',
 			),
 			'bb_activity_following_post'
 		);
@@ -660,9 +662,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$video_ids    = bp_activity_get_meta( $activity->id, 'bp_video_ids', true );
 			$gif_data     = bp_activity_get_meta( $activity->id, '_gif_data', true );
 			$poll_id      = bp_activity_get_meta( $activity->id, 'bb_poll_id' );
-			$poll         = ! empty( $poll_id ) && function_exists( 'bb_load_polls' ) ? bb_load_polls()->bb_get_poll( $poll_id ) : '';
-			$question     = ! empty( $poll->question ) ? $poll->question : '';
-			$amount       = 'single';
+			$poll         = '';
+			if ( ! empty( $poll_id ) && bb_is_feature_provided( 'polls' ) && function_exists( 'bb_load_polls' ) ) {
+				$bb_polls = bb_load_polls();
+				$poll     = $bb_polls ? $bb_polls->bb_get_poll( $poll_id ) : '';
+			}
+			$question = ! empty( $poll->question ) ? $poll->question : '';
+			$amount   = 'single';
 
 			if ( 'web_push' === $screen ) {
 				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
@@ -866,6 +872,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new follower', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone follows you.', 'buddyboss' ),
+				'group'               => 'connections',
 			),
 			'bb_following_new'
 		);

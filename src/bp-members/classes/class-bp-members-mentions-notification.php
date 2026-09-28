@@ -101,6 +101,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} mentioned you in a {{mentioned.type}}:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is mentioned by another member', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
+				'group'               => 'activity',
 			),
 			'bb_new_mention'
 		);
@@ -116,6 +117,7 @@ class BP_Members_Mentions_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{poster.name}} mentioned you in a {{mentioned.type}} in the {{group.name}} group:\n\n{{{mentioned.content}}}\n\nView the {{mentioned.type}}: {{{mentioned.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is mentioned in a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are mentioned.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_new_mention'
 		);

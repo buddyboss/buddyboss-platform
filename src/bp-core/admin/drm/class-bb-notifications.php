@@ -55,6 +55,19 @@ class BB_Notifications {
 			);
 		}
 
+		// Icon: callers may pass either an image URL (legacy) or a full inline
+		// SVG markup string (preferred for crisp scaling and per-notification
+		// theming). SVG strings pass through unchanged; URLs are wrapped in
+		// the standard <img> shell.
+		$icon_raw  = $notification['icon'] ?? '';
+		$icon_html = ( is_string( $icon_raw ) && 0 === strpos( ltrim( $icon_raw ), '<svg' ) )
+			? $icon_raw
+			: sprintf(
+				'<img alt="%1$s" src="%2$s" style="width: 100%%; height: auto;">',
+				esc_attr__( 'Notification Icon', 'buddyboss' ),
+				$icon_raw
+			);
+
 		// Add notification to GroundLevel store.
 		$store->add(
 			array(
@@ -62,11 +75,7 @@ class BB_Notifications {
 				'subject'      => $notification['title'],
 				'content'      => $notification['content'] . '<p>' . implode( ' ', $btns ) . '</p>',
 				'publishes_at' => gmdate( 'Y-m-d H:i:s', $notification['saved'] ?? time() ),
-				'icon'         => sprintf(
-					'<img alt="%1$s" src="%2$s" style="width: 100%%; height: auto;">',
-					esc_attr__( 'Notification Icon', 'buddyboss' ),
-					$notification['icon'] ?? ''
-				),
+				'icon'         => $icon_html,
 			)
 		)->persist();
 	}
