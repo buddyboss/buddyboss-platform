@@ -163,96 +163,16 @@ function bb_two_factor_template_title() {
 	esc_html_e( 'Security', 'buddyboss' );
 }
 
-/**
- * Hold the member and session token from the cookie WordPress just issued.
+/*
+ * Social Login (SSO) needs no handling here.
  *
- * The cookie goes out through setcookie(), so $_COOKIE stays empty for the rest
- * of the request and the session it created cannot be resolved from it.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int|null    $user_id Optional. Member the cookie was issued for.
- * @param string|null $token   Optional. Session token.
- * @return array Stored `user` and `token`.
+ * The Social Login addon issues the auth cookie and then fires `wp_login`. The
+ * Two Factor plugin collects the token of every cookie it sees on
+ * `set_auth_cookie` / `set_logged_in_cookie` and, in its own `wp_login` handler,
+ * destroys that session and renders the second-factor challenge. A member with
+ * two-factor enabled is therefore challenged on a social sign-in by the plugin
+ * itself. Do not remove that handler or write `two-factor-login` into the
+ * session from Platform: doing so signs the member in on the social account
+ * alone and marks the session as verified, which lets recovery codes be
+ * generated or two-factor disabled without a second factor.
  */
-function bb_two_factor_sso_session( $user_id = null, $token = null ) {
-	static $stored = array(
-		'user'  => 0,
-		'token' => '',
-	);
-
-	if ( null !== $user_id ) {
-		$stored = array(
-			'user'  => (int) $user_id,
-			'token' => (string) $token,
-		);
-	}
-
-	return $stored;
-}
-
-/**
- * Capture the member and session token as WordPress issues the cookie.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $cookie     Logged-in cookie value.
- * @param int    $expire     Cookie expiry.
- * @param int    $expiration Session expiry.
- * @param int    $user_id    Member ID.
- * @param string $scheme     Cookie scheme.
- * @param string $token      Session token.
- */
-function bb_two_factor_capture_sso_session( $cookie, $expire, $expiration, $user_id, $scheme, $token = '' ) {
-	bb_two_factor_sso_session( $user_id, $token );
-}
-add_action( 'set_logged_in_cookie', 'bb_two_factor_capture_sso_session', 10, 6 );
-
-/**
- * Call off the two-factor challenge for a social sign-in.
- *
- * The Social Login addon fires this one line before wp_login, having already set
- * the cookie, so the member is known from the capture above. Removing the
- * plugin's handler for everyone, not only members using two-factor, also keeps a
- * member whose configured providers no longer resolve out of its wp_die().
- *
- * The session is then marked as having satisfied two-factor, without which the
- * member signs in but their Security tab opens locked. Only `two-factor-login`
- * is written: the plugin reads `two-factor-provider` to pick the next challenge
- * method, and no provider was used here.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_two_factor_skip_sso_challenge() {
-
-	if ( ! bb_two_factor_is_active() ) {
-		return;
-	}
-
-	remove_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ), PHP_INT_MAX );
-
-	$session = bb_two_factor_sso_session();
-
-	if ( empty( $session['user'] ) || '' === $session['token'] ) {
-		return;
-	}
-
-	$available = Two_Factor_Core::get_available_providers_for_user( $session['user'] );
-
-	// Only a member actually using two-factor needs the mark.
-	if ( is_wp_error( $available ) || empty( $available ) ) {
-		return;
-	}
-
-	$manager = WP_Session_Tokens::get_instance( $session['user'] );
-	$data    = $manager->get( $session['token'] );
-
-	if ( empty( $data ) ) {
-		return;
-	}
-
-	$data['two-factor-login'] = time();
-
-	$manager->update( $session['token'], $data );
-}
-add_action( 'bb_sso_before_wp_login', 'bb_two_factor_skip_sso_challenge' );
