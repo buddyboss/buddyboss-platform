@@ -210,6 +210,57 @@ function bb_two_factor_keep_revalidation_return( $user ) {
 }
 add_action( 'two_factor_user_revalidated', 'bb_two_factor_keep_revalidation_return' );
 
+/**
+ * Stop the authenticator setup from switching two-factor on without a recovery method.
+ *
+ * The plugin's authenticator setup script ("Verify") posts `enable_provider: true`
+ * to its own REST route, which turns the method on straight away and never
+ * reaches the Security tab save, so the recovery-method rule would not run.
+ * When turning it on now would leave the member without a usable recovery
+ * method, the request still verifies and stores the secret but leaves the method
+ * off. The setup script then shows it as configured and ticked, and the Save
+ * button turns it on together with a recovery method, where the rule runs.
+ *
+ * Applies only to a member changing their own account. An admin setting up
+ * another user in wp-admin is left to the plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send, or null to run the endpoint.
+ * @param array                                            $handler  Route handler.
+ * @param WP_REST_Request                                  $request  Request.
+ * @return WP_REST_Response|WP_HTTP_Response|WP_Error|mixed Unchanged.
+ */
+function bb_two_factor_guard_totp_enable( $response, $handler, $request ) {
+	if ( null !== $response || ! ( $request instanceof WP_REST_Request ) ) {
+		return $response;
+	}
+
+	if ( 'POST' !== $request->get_method() || '/' . Two_Factor_Core::REST_NAMESPACE . '/totp' !== untrailingslashit( $request->get_route() ) ) {
+		return $response;
+	}
+
+	if ( ! $request->get_param( 'enable_provider' ) || ! bb_two_factor_is_active() ) {
+		return $response;
+	}
+
+	$user_id = (int) $request->get_param( 'user_id' );
+
+	if ( ! $user_id || get_current_user_id() !== $user_id ) {
+		return $response;
+	}
+
+	$enabled   = (array) Two_Factor_Core::get_enabled_providers_for_user( $user_id );
+	$enabled[] = 'Two_Factor_Totp';
+
+	if ( true !== bb_two_factor_check_recovery_method( $user_id, array_unique( $enabled ) ) ) {
+		$request->set_param( 'enable_provider', false );
+	}
+
+	return $response;
+}
+add_filter( 'rest_request_before_callbacks', 'bb_two_factor_guard_totp_enable', 10, 3 );
+
 /*
  * Social Login (SSO) needs no handling here.
  *
