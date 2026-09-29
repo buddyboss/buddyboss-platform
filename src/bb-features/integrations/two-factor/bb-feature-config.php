@@ -42,7 +42,9 @@ bb_register_integration(
 		// is_available_callback alone would only render it greyed out.
 		'hidden'                  => ! bb_two_factor_plugin_is_active(),
 
-		'is_available_callback'   => 'bb_two_factor_plugin_is_active',
+		// Active but too old to build on: the card stays visible and greyed out,
+		// which matches what the member sees (no Security tab).
+		'is_available_callback'   => 'bb_two_factor_is_supported',
 		'is_active_callback'      => 'bb_two_factor_feature_is_on',
 
 		'confirm_off_title'       => __( 'Hide two-factor settings from members?', 'buddyboss' ),

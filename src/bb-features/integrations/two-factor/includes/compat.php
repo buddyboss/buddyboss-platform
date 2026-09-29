@@ -32,8 +32,7 @@ if ( ! defined( 'BB_TWO_FACTOR_PLUGIN_BASENAME' ) ) {
  *
  * 0.16.0 is the floor because the frontend save path depends on
  * `Two_Factor_Core::action_user_profile_update_errors()`, which is public as of
- * that release, and on the `two_factor_login_backup_links` filter introduced
- * alongside it.
+ * that release; on 0.15.x the save would fatal.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -65,6 +64,9 @@ function bb_two_factor_plugin_basename() {
 /**
  * Get the minimum Two Factor version this integration supports.
  *
+ * The filter can only raise the floor. Lowering it would let the save path
+ * call a plugin method that does not exist on older releases.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @return string Version string.
@@ -74,9 +76,17 @@ function bb_two_factor_min_plugin_version() {
 	/**
 	 * Filters the minimum supported Two Factor version.
 	 *
+	 * Values below the built-in floor are ignored.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $version Minimum supported version.
 	 */
-	return (string) apply_filters( 'bb_two_factor_min_plugin_version', BB_TWO_FACTOR_MIN_VERSION );
+	$version = (string) apply_filters( 'bb_two_factor_min_plugin_version', BB_TWO_FACTOR_MIN_VERSION );
+
+	if ( '' === $version || version_compare( $version, BB_TWO_FACTOR_MIN_VERSION, '<' ) ) {
+		return BB_TWO_FACTOR_MIN_VERSION;
+	}
+
+	return $version;
 }
