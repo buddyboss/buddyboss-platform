@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.5.1 =
+* Bug: Activity - Fixed an issue where a blocked member's posts and activity were still visible in the activity feed
+* Bug: Activity - Fixed an issue where the activity post editing time limit could become invalid, causing the settings page to show the wrong value and editing to stop working correctly
+* Bug: Core - Fixed an issue where administrators were unable to edit other users’ profile settings
+* Bug: Groups - Fixed an issue where the group invite member list took a long time to load
+* Bug: Login - Fixed an issue where the login security check (reCAPTCHA) could expire before a form was submitted, incorrectly locking out legitimate users
+* Bug: ReadyLaunch - Fixed a display issue where the password show/hide icon appeared above the password field instead of inside it in ReadyLaunch
+* Bug: Translations - Fixed an issue where translated text for the post reporting options did not appear on the site
 
 = 3.5.0 =
 * New Feature! Notification - Turn a flood of notification emails into a single daily or weekly Email Digest, with each member choosing their own frequency
