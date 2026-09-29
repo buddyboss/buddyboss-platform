@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Add-ons products grid view.
+ *
+ * @var array<object> $products The prepared product objects for display.
+ */
 declare (strict_types=1);
 ?>
 
@@ -9,19 +14,22 @@ declare (strict_types=1);
             <?php 
 namespace BuddyBossPlatform;
 
-esc_html_e('Available Add-ons', 'caseproof-mothership');
+wp_nonce_field('grdlvl_mosh_refresh_addons', 'grdlvl_mosh_refresh_addons_nonce');
+?>
+            <?php 
+esc_html_e('Available Add-ons', 'ground-level');
 ?>
             <input type="submit"
                 class="button button-secondary"
                 name="submit-button-mosh-refresh-addon"
                 value="<?php 
-esc_attr_e('Refresh Add-ons', 'caseproof-mothership');
+esc_attr_e('Refresh Add-ons', 'ground-level');
 ?>"
             >
             <input type="search"
                 id="mosh-products-search"
                 placeholder="<?php 
-esc_attr_e('Search add-ons', 'caseproof-mothership');
+esc_attr_e('Search add-ons', 'ground-level');
 ?>"
             >
         </form>
@@ -43,8 +51,14 @@ if (!empty($products)) {
             ?>
                         <div class="update-message notice inline notice-warning notice-alt mosh-product-update-message">
                             <p>
-                                New version available. 
-                                <button class="button-link mosh-product-update-button" type="button">Update now</button>
+                                <?php 
+            esc_html_e('New version available.', 'ground-level');
+            ?>
+                                <button class="button-link mosh-product-update-button" type="button">
+                                    <?php 
+            esc_html_e('Update now', 'ground-level');
+            ?>
+                                </button>
                             </p>
                         </div>
                         <?php 
@@ -75,36 +89,59 @@ if (!empty($products)) {
                         <div class="mosh-product-actions mosh-clearfix">
                             <div class="mosh-product-status">
                                 <strong>
-                            <?php 
+                                <?php 
         \printf(
             // Translators: %s: add-on status label.
-            esc_html__('Status: %s', 'caseproof-mothership'),
+            esc_html__('Status: %s', 'ground-level'),
             \sprintf('<span class="mosh-product-status-label">%s</span>', esc_html($product->statusLabel))
         );
         ?>
                                 </strong>
                             </div>
                             <div class="mosh-product-action">
-                                <button type="button"
-                                    data-slug="<?php 
-        echo esc_attr($product->slug);
-        ?>"
-                                    data-extension-type="<?php 
-        echo esc_attr($product->extension_type);
-        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
-        ?>"
+                                <?php 
+        if ('upgrade' === $product->status) {
+            ?>
+                                <a class="button button-primary mosh-product-upgrade"
+                                    href="<?php 
+            echo esc_url($product->upgradeUrl);
+            ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
                                     <i class="<?php 
-        echo esc_attr($product->iconClass);
-        ?>"></i>
+            echo esc_attr($product->iconClass);
+            ?>"></i>
                                     <?php 
-        echo esc_html($product->buttonLabel);
-        ?>
+            echo esc_html($product->buttonLabel);
+            ?>
+                                </a>
+                                <?php 
+        } else {
+            ?>
+                                <button type="button"
+                                    data-slug="<?php 
+            echo esc_attr($product->slug);
+            ?>"
+                                    data-extension-type="<?php 
+            echo esc_attr($product->extension_type);
+            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
+            ?>"
+                                >
+                                    <i class="<?php 
+            echo esc_attr($product->iconClass);
+            ?>"></i>
+                                    <?php 
+            echo esc_html($product->buttonLabel);
+            ?>
                                 </button>
-                                </div>
+                                <?php 
+        }
+        ?>
                             </div>
                         </div>
                     </div>
+                </div>
                 <?php 
     }
     ?>
@@ -114,8 +151,13 @@ if (!empty($products)) {
 } else {
     ?>
         <h3><?php 
-    esc_html_e('There were no Add-ons found for your License Key.', 'caseproof-mothership');
+    esc_html_e('No Add-ons found for your License Key.', 'ground-level');
     ?></h3>
+        <p>
+            <?php 
+    esc_html_e('If you were expecting add-ons here, use the "Refresh Add-ons" button above to try again.', 'ground-level');
+    ?>
+        </p>
     <?php 
 }
 ?>

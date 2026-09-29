@@ -3,16 +3,86 @@
 declare (strict_types=1);
 namespace BuddyBossPlatform\GroundLevel\InProductNotifications\Services;
 
-use BuddyBossPlatform\GroundLevel\Container\Container;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\LoadableDependency;
-use BuddyBossPlatform\GroundLevel\Container\Service;
-use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Util as IPNUtil;
 use BuddyBossPlatform\GroundLevel\Support\Concerns\Hookable;
 use BuddyBossPlatform\GroundLevel\Support\Models\Hook;
 use BuddyBossPlatform\GroundLevel\Support\Str;
-class View extends Service implements LoadableDependency
+/**
+ * View service for rendering the IPN inbox.
+ */
+class View
 {
     use Hookable;
+    /**
+     * The IPN utility service.
+     *
+     * @var IPNUtil
+     */
+    protected IPNUtil $util;
+    /**
+     * The store service.
+     *
+     * @var Store
+     */
+    protected Store $store;
+    /**
+     * The ajax service.
+     *
+     * @var Ajax
+     */
+    protected Ajax $ajax;
+    /**
+     * The menu slug for the main admin menu item.
+     *
+     * @inject \GroundLevel\InProductNotifications\IPNServiceProvider::PARAM_MENU_SLUG
+     * @var    string
+     */
+    protected string $menuSlug;
+    /**
+     * The hook name for rendering the inbox.
+     *
+     * @inject \GroundLevel\InProductNotifications\IPNServiceProvider::PARAM_RENDER_HOOK
+     * @var    string
+     */
+    protected string $renderHook;
+    /**
+     * The file path for assets.
+     *
+     * @inject \GroundLevel\InProductNotifications\IPNServiceProvider::PARAM_FILE
+     * @var    string
+     */
+    protected string $file;
+    /**
+     * The theme configuration array.
+     *
+     * @inject \GroundLevel\InProductNotifications\IPNServiceProvider::PARAM_THEME
+     * @var    array
+     */
+    protected array $theme;
+    /**
+     * Constructor.
+     *
+     * @param IPNUtil $util       The IPN utility service.
+     * @param Store   $store      The store service.
+     * @param Ajax    $ajax       The ajax service.
+     * @param string  $menuSlug   The menu slug for the main admin menu item.
+     * @param string  $renderHook The hook name for rendering the inbox.
+     * @param string  $file       The file path for assets.
+     * @param array   $theme      The theme configuration array.
+     */
+    public function __construct(IPNUtil $util, Store $store, Ajax $ajax, string $menuSlug, string $renderHook, string $file, array $theme)
+    {
+        $this->util = $util;
+        $this->store = $store;
+        $this->ajax = $ajax;
+        $this->menuSlug = $menuSlug;
+        $this->renderHook = $renderHook;
+        $this->file = $file;
+        $this->theme = $theme;
+        if ($this->util->userHasPermission()) {
+            $this->addHooks();
+        }
+    }
     /**
      * Appends the count indicator to the main admin menu item.
      *
@@ -21,10 +91,9 @@ class View extends Service implements LoadableDependency
     public function appendCountToMainMenuItem() : void
     {
         global $menu;
-        $slug = $this->container->get(IPNService::MENU_SLUG);
-        if ($slug) {
+        if ($this->menuSlug) {
             foreach (\array_reverse($menu, \true) as $index => $menuItem) {
-                if (($menuItem[2] ?? '') === $slug) {
+                if (($menuItem[2] ?? '') === $this->menuSlug) {
                     $menu[$index][0] .= ' ' . \trim($this->getMenuCountIndicatorHtm());
                     break;
                 }
@@ -38,7 +107,7 @@ class View extends Service implements LoadableDependency
      */
     protected function configureHooks() : array
     {
-        return [new Hook(Hook::TYPE_ACTION, $this->container->get(IPNService::RENDER_HOOK), [$this, 'render']), new Hook(Hook::TYPE_ACTION, 'admin_enqueue_scripts', [$this, 'enqueue']), new Hook(Hook::TYPE_ACTION, 'admin_menu', [$this, 'appendCountToMainMenuItem'], 100), new Hook(Hook::TYPE_ACTION, 'admin_print_footer_scripts', [$this, 'maybeDequeueScript'], 5)];
+        return [new Hook(Hook::TYPE_ACTION, $this->renderHook, [$this, 'render']), new Hook(Hook::TYPE_ACTION, 'admin_enqueue_scripts', [$this, 'enqueue']), new Hook(Hook::TYPE_ACTION, 'admin_menu', [$this, 'appendCountToMainMenuItem'], 100), new Hook(Hook::TYPE_ACTION, 'admin_print_footer_scripts', [$this, 'maybeDequeueScript'], 5)];
     }
     /**
      * Checks if the inbox view has been rendered.
@@ -47,16 +116,15 @@ class View extends Service implements LoadableDependency
      */
     public function didRender() : bool
     {
-        return did_action($this->container->get(IPNService::RENDER_HOOK)) > 0;
+        return did_action($this->renderHook) > 0;
     }
     /**
      * Enqueues the service scripts.
      */
     public function enqueue() : void
     {
-        $file = $this->container->get(IPNService::FILE);
         $path = 'assets/ipn-inbox.js';
-        wp_enqueue_script($this->getScriptHandle(), plugin_dir_url($file) . $path, [], \filemtime(\dirname(__FILE__, 2) . "/{$path}"), \true);
+        wp_enqueue_script($this->getScriptHandle(), plugin_dir_url($this->file) . $path, [], \filemtime(\dirname(__FILE__, 2) . "/{$path}"), \true);
     }
     /**
      * Dequeues the service script if the inbox view has not been rendered.
@@ -77,15 +145,16 @@ class View extends Service implements LoadableDependency
      */
     protected function getMenuCountIndicatorHtm() : string
     {
-        /** @var Store $store */
-        // phpcs:ignore
-        $store = $this->container->get(Store::class);
-        $count = \count($store->fetch()->notifications(\false, Store::FILTER_UNREAD));
+        $count = \count($this->store->fetch()->notifications(\false, Store::FILTER_UNREAD));
         if (empty($count)) {
             return '';
         }
         $countI18n = number_format_i18n($count);
-        $unreadText = \sprintf(_n('%s unread notification', '%s unread notifications', $count), $countI18n);
+        $unreadText = \sprintf(
+            // Translators: %s unread notification count.
+            _n('%s unread notification', '%s unread notifications', $count, 'ground-level'),
+            $countI18n
+        );
         \ob_start();
         ?>
             <span class="menu-counter count-<?php 
@@ -119,10 +188,7 @@ class View extends Service implements LoadableDependency
      */
     protected function getNotifications() : string
     {
-        /** @var Store $store */
-        // phpcs:ignore
-        $store = $this->container->get(Store::class);
-        return wp_json_encode($store->fetch()->notifications());
+        return wp_json_encode($this->store->fetch()->notifications());
     }
     /**
      * Retrieves the HTML for the root element <div> where the inbox will be rendered.
@@ -133,7 +199,7 @@ class View extends Service implements LoadableDependency
     {
         $id = $this->getRootElementId();
         $html = '<div id="' . $id . '"></div>';
-        $prefix = $this->container->get(IPNService::class)->prefixId();
+        $prefix = $this->util->prefixId();
         /**
          * Filters the HTML for the root element where the inbox will be rendered.
          *
@@ -157,7 +223,7 @@ class View extends Service implements LoadableDependency
      */
     public function getRootElementId() : string
     {
-        return $this->container->get(IPNService::class)->prefixId('root');
+        return $this->util->prefixId('root');
     }
     /**
      * Retrievs the <script> tag used to create the inbox React component.
@@ -166,8 +232,7 @@ class View extends Service implements LoadableDependency
      */
     public function getScript() : string
     {
-        $namespace = Str::toCamelCase($this->container->get(IPNService::class)->prefixId('inbox'));
-        $ajax = $this->container->get(Ajax::class);
+        $namespace = Str::toCamelCase($this->util->prefixId('inbox'));
         \ob_start();
         ?>
         <script type="text/javascript">
@@ -221,19 +286,19 @@ class View extends Service implements LoadableDependency
                                 body: new URLSearchParams({
                                     id,
                                     action: '<?php 
-        echo $ajax->action();
+        echo $this->ajax->action();
         ?>',
                                     <?php 
-        echo $ajax::NONCE_FIELD;
+        echo Ajax::NONCE_FIELD;
         ?>: '<?php 
-        echo $ajax->nonce();
+        echo $this->ajax->nonce();
         ?>'
                                 }).toString(),
                             }
                         );
                     },
                     theme: JSON.parse('<?php 
-        echo wp_json_encode($this->container->get(IPNService::THEME));
+        echo wp_json_encode($this->theme);
         ?>'),
                 });
             });
@@ -248,18 +313,7 @@ class View extends Service implements LoadableDependency
      */
     public function getScriptHandle() : string
     {
-        return Str::toKebabCase($this->container->get(IPNService::class)->prefixId('inbox'));
-    }
-    /**
-     * Loads the dependencies for the service.
-     *
-     * @param \GroundLevel\Container\Container $container The container.
-     */
-    public function load(Container $container) : void
-    {
-        if ($container->get(IPNService::class)->userHasPermission()) {
-            $this->addHooks();
-        }
+        return Str::toKebabCase($this->util->prefixId('inbox'));
     }
     /**
      * Renders the component.

@@ -3,56 +3,74 @@
 declare (strict_types=1);
 namespace BuddyBossPlatform\GroundLevel\Mothership\Api\Request;
 
-use BuddyBossPlatform\GroundLevel\Mothership\Api\Request;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 /**
  * This class is used to interact with the licenses API.
  *
- * @see https://licenses.caseproof.com/help/api-reference#licenses
+ * @link https://licenses.caseproof.com/help/api-reference#licenses
  */
-class Licenses
+class Licenses extends AbstractResource
 {
     /**
      * Create a new license.
      *
-     * @param  array $licenseData The data to create the license.
-     * @return Response
+     * @param  array $body   The body of the request.
+     * @param  array $params Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function create(array $licenseData) : Response
+    public function create(array $body, array $params = []) : Response
     {
-        return Request::post('licenses', $licenseData);
+        return $this->request->post('licenses', $body, $params);
     }
     /**
      * Get all licenses.
      *
-     * @param  array $params The parameters to pass to the API.
-     * @return Response
+     * @param  array $params Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function list(array $params = []) : Response
+    public function list(array $params = []) : Response
     {
-        return Request::get('licenses', $params);
+        return $this->request->get('licenses', $params);
     }
     /**
      * Get a license by license key.
      *
      * @param string $licenseKey The license key.
-     * @param array  $params     Additional parameters for the request.
+     * @param array  $params     Additional query parameters.
      *
-     * @return Response
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function get(string $licenseKey, array $params = []) : Response
+    public function get(string $licenseKey, array $params = []) : Response
     {
-        return Request::get('licenses/' . $licenseKey, $params);
+        return $this->request->get('licenses/' . $licenseKey, $params);
     }
     /**
      * Update a license by license key.
      *
-     * @param  string $licenseKey  The license key.
-     * @param  array  $licenseData The data to update the license with.
-     * @return Response
+     * @param  string $licenseKey The license key.
+     * @param  array  $body       The body of the request.
+     * @param  array  $params     Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function update(string $licenseKey, array $licenseData) : Response
+    public function update(string $licenseKey, array $body, array $params = []) : Response
     {
-        return Request::patch('licenses/' . $licenseKey, $licenseData);
+        return $this->request->patch('licenses/' . $licenseKey, $body, $params);
+    }
+    /**
+     * Add or remove additional activations for a license.
+     *
+     * @param  string      $licenseKey The license key.
+     * @param  integer     $change     The number of additional activations to add or remove. Accepts negative values.
+     * @param  string|null $reference  An optional external reference ID, such as a subscription ID.
+     * @param  array       $params     Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
+     */
+    public function updateAdditionalActivations(string $licenseKey, int $change, ?string $reference = null, array $params = []) : Response
+    {
+        $body = ['change' => $change];
+        if (null !== $reference) {
+            $body['reference'] = $reference;
+        }
+        return $this->request->post('licenses/' . $licenseKey . '/additional-activations', $body, $params);
     }
 }

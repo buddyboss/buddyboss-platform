@@ -16,6 +16,30 @@ use InvalidArgumentException;
 class RequestFactory
 {
     /**
+     * The request instance.
+     *
+     * @var Request
+     */
+    private Request $request;
+    /**
+     * Constructor.
+     *
+     * @param Request $request The request instance.
+     */
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+    /**
+     * Gets the underlying request instance.
+     *
+     * @return Request
+     */
+    public function getRequest() : Request
+    {
+        return $this->request;
+    }
+    /**
      * Executes a {@see \GroundLevel\Mothership\Api\Request}.
      *
      * @param  string $method The request method to execute. One of get, post, patch, put, or delete.
@@ -30,6 +54,6 @@ class RequestFactory
         if (!\in_array($method, $validMethods, \true)) {
             throw new InvalidArgumentException(\sprintf('Invalid request method "%1$s", must be one of %2$s', $method, \implode('|', $validMethods)));
         }
-        return Request::$method(...$args);
+        return $this->request->{$method}(...$args);
     }
 }

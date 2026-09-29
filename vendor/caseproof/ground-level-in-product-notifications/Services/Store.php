@@ -3,11 +3,13 @@
 declare (strict_types=1);
 namespace BuddyBossPlatform\GroundLevel\InProductNotifications\Services;
 
-use BuddyBossPlatform\GroundLevel\Container\Service;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\Models\Notification;
 use BuddyBossPlatform\GroundLevel\Support\Time;
 use InvalidArgumentException;
-class Store extends Service
+/**
+ * Store service for managing IPN notification data.
+ */
+class Store
 {
     /**
      * Filter for unread notifications.
@@ -26,13 +28,22 @@ class Store extends Service
      *
      * @var array
      */
-    protected array $data;
+    protected array $data = [];
+    /**
+     * Constructor.
+     *
+     * @param \GroundLevel\InProductNotifications\Util $util The IPN utility service.
+     */
+    public function __construct(\BuddyBossPlatform\GroundLevel\InProductNotifications\Util $util)
+    {
+        $this->key = $util->prefixId('store');
+    }
     /**
      * Adds a notification to the store.
      *
      * @param  array   $raw        The raw notification data.
      * @param  boolean $withLastId If true, set the last notification ID.
-     * @return \GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function add(array $raw, bool $withLastId = \false) : self
     {
@@ -46,7 +57,7 @@ class Store extends Service
     /**
      * Clear all stored data.
      *
-     * @return \GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function clear() : self
     {
@@ -57,7 +68,7 @@ class Store extends Service
      * Delete a notification from the store.
      *
      * @param  string $id The notification ID.
-     * @return \GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function delete(string $id) : self
     {
@@ -68,7 +79,7 @@ class Store extends Service
      * Retrieves stored data from the database.
      *
      * @param  boolean $force If true, force a fetch from the database.
-     * @return \GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function fetch(bool $force = \false) : self
     {
@@ -83,7 +94,7 @@ class Store extends Service
      *
      * @param  string $id      The notification ID.
      * @param  string $context The notification context.
-     * @return \GroundLevel\InProductNotifications\Models\Notification|null
+     * @return Notification|null
      */
     public function get(string $id, string $context = Notification::CONTEXT_DISPLAY) : ?Notification
     {
@@ -113,7 +124,7 @@ class Store extends Service
      * Mark a notification as read.
      *
      * @param  string $id The notification ID.
-     * @return \GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function markRead(string $id) : self
     {
@@ -158,7 +169,7 @@ class Store extends Service
     /**
      * Persist data to the database.
      *
-     * @return \GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function persist() : self
     {
@@ -166,19 +177,10 @@ class Store extends Service
         return $this;
     }
     /**
-     * Sets the option key/name where notification data will be stored.
-     *
-     * @param string $key The option key/name.
-     */
-    public function setKey(string $key) : void
-    {
-        $this->key = $key;
-    }
-    /**
      * Sets the last notification ID.
      *
      * @param  string $id The notification ID.
-     * @return \GroundLevel\InProductNotifications\Services\Store
+     * @return self
      */
     public function setLastId(string $id) : self
     {

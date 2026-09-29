@@ -3,59 +3,60 @@
 declare (strict_types=1);
 namespace BuddyBossPlatform\GroundLevel\Mothership\Api\Request;
 
-use BuddyBossPlatform\GroundLevel\Mothership\Api\Request;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 /**
  * This class is used to interact with the user addons API.
  *
- * @see https://licenses.caseproof.com/help/api-reference#users
+ * @link https://licenses.caseproof.com/help/api-reference#users
  */
-class UserAddons
+class UserAddons extends AbstractResource
 {
     /**
      * Create a new user addon.
      *
-     * @param  string $userUUID  The user UUID.
-     * @param  array  $addonData The data to create the user addon.
-     * @return Response
+     * @param  string $userUUID The user UUID.
+     * @param  array  $body     The body of the request.
+     * @param  array  $params   Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function create(string $userUUID, array $addonData) : Response
+    public function create(string $userUUID, array $body, array $params = []) : Response
     {
-        return Request::post('users/' . $userUUID . '/addons', $addonData);
+        return $this->request->post('users/' . $userUUID . '/addons', $body, $params);
     }
     /**
      * Get all user addons.
      *
      * @param  string $userUUID The user UUID.
-     * @param  array  $params   The parameters to get the user addons for.
-     * @return Response
+     * @param  array  $params   Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function list(string $userUUID, array $params = []) : Response
+    public function list(string $userUUID, array $params = []) : Response
     {
-        return Request::get('users/' . $userUUID . '/addons', $params);
+        return $this->request->get('users/' . $userUUID . '/addons', $params);
     }
     /**
      * Get a user addon by user UUID and addon UUID.
      *
      * @param  string $userUUID  The user UUID.
      * @param  string $addonUUID The addon UUID.
-     * @param  array  $params    The parameters to get the user addon for.
-     * @return Response
+     * @param  array  $params    Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function get(string $userUUID, string $addonUUID, array $params = []) : Response
+    public function get(string $userUUID, string $addonUUID, array $params = []) : Response
     {
-        return Request::get('users/' . $userUUID . '/addons/' . $addonUUID, $params);
+        return $this->request->get('users/' . $userUUID . '/addons/' . $addonUUID, $params);
     }
     /**
      * Update a user addon.
      *
      * @param  string $userUUID  The user UUID.
      * @param  string $addonUUID The addon UUID.
-     * @param  array  $addonData The data to update the user addon.
-     * @return Response
+     * @param  array  $body      The body of the request.
+     * @param  array  $params    Additional query parameters.
+     * @return \GroundLevel\Mothership\Api\Response
      */
-    public static function update(string $userUUID, string $addonUUID, array $addonData) : Response
+    public function update(string $userUUID, string $addonUUID, array $body, array $params = []) : Response
     {
-        return Request::patch('users/' . $userUUID . '/addons/' . $addonUUID, $addonData);
+        return $this->request->patch('users/' . $userUUID . '/addons/' . $addonUUID, $body, $params);
     }
 }

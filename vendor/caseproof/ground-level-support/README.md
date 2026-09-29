@@ -14,6 +14,69 @@ composer require caseproof/ground-level-support
 ```
 
 
+## View
+
+[\GroundLevel\Support\View](https://github.com/caseproof/ground-level-php/blob/main/src/GroundLevel/Support/View.php) renders PHP view templates from a configured directory. It supports template overrides via the WordPress filter API and extracts variables into the view scope.
+
+### Directory Structure
+
+```
+wp-content/plugins/my-plugin/
+├── src/
+└── views/                          # Default views directory (passed to View constructor)
+    ├── license-interface.php
+    └── result-notice.php
+
+wp-content/themes/my-theme/
+└── my-plugin-views/                # Theme override directory (via filter)
+    └── license-interface.php       # Overrides plugin template when present
+```
+
+### Basic Usage
+
+```php
+use GroundLevel\Support\View;
+
+$view = new View('/path/to/views', 'my_plugin');
+
+// Render and return output
+$html = $view->render('license-interface.php', [
+    'title'   => 'License Settings',
+    'message' => 'Enter your license key below.',
+]);
+
+// Or output directly
+$view->output('license-interface.php', [
+    'title'   => 'License Settings',
+    'message' => 'Enter your license key below.',
+]);
+```
+
+### Override Directories
+
+Plugins and themes can provide override directories so their templates take precedence. Use the `{$prefix}_view_override_directories` filter:
+
+```php
+add_filter(
+    'my_plugin_view_override_directories',
+    function (array $directories, string $view): array {
+        // Prepend theme override path so it is checked first
+        return array_merge(
+            [get_stylesheet_directory() . '/my-plugin-views'],
+            $directories
+        );
+    },
+    10,
+    2
+);
+```
+
+The filter receives:
+
+- `$directories` — Existing override paths (initially empty)
+- `$view` — The view filename (e.g. `license-interface.php`)
+
+
 ## Concerns
 
 ### [\GroundLevel\Support\Concerns\HasEvents](https://github.com/caseproof/ground-level-php/blob/main/src/GroundLevel/Support/Concerns/HasEvents.php)

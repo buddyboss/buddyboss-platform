@@ -4,255 +4,223 @@ declare (strict_types=1);
 namespace BuddyBossPlatform\GroundLevel\Mothership\Manager;
 
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
-use BuddyBossPlatform\GroundLevel\Mothership\ExtensionType;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products;
-use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
-use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonInstallSkin;
-use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
-use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
+use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
+use BuddyBossPlatform\GroundLevel\Mothership\ExtensionType;
+use BuddyBossPlatform\GroundLevel\Mothership\Util;
+use BuddyBossPlatform\GroundLevel\Support\Concerns\Hookable;
+use BuddyBossPlatform\GroundLevel\Support\Models\Hook;
+use BuddyBossPlatform\GroundLevel\Support\View;
 /**
  * The AddonsManager class fetches the available add-ons and integrates with the WP extension installation API.
  */
-class AddonsManager implements StaticContainerAwareness
+class AddonsManager
 {
-    use HasStaticContainer;
+    use Hookable;
     /**
-     * Suffix for the cache key for the Products API response.
+     * Suffix for the cache key for the licensed add-ons response.
      *
      * @var string
      */
-    protected const CACHE_KEY_PRODUCTS = '-mosh-products';
+    protected const CACHE_KEY_ADDONS = '-mosh-addons';
     /**
-     * Suffix for the cache key for the update check.
-     *
-     * @var string
-     */
-    protected const CACHE_KEY_UPDATE_CHECK = '-mosh-addons-update-check';
-    /**
-     * The duration of the cache for the Products API response, default 60 minutes.
+     * Cache TTL in minutes for a successful add-ons response.
      *
      * @var integer
      */
-    protected const CACHE_DURATION_MINUTES = 60;
+    protected const CACHE_TTL_MINUTES = 60;
     /**
-     * The duration of the cache for the update check, default 30 minutes.
+     * Cache TTL in minutes for an errored add-ons response (debounces retries).
      *
      * @var integer
      */
-    protected const UPDATE_CHECK_DURATION_MINUTES = 30;
+    protected const ERROR_TTL_MINUTES = 5;
     /**
-     * The products API client. TODO: Reimplement with proper dependency injection.
+     * Page size for the bulk products list.
      *
-     * @var callable
+     * @var integer
      */
-    protected static $productsApiClient = [Products::class, 'list'];
+    protected const PER_PAGE = 100;
+    /**
+     * The plugin connection.
+     *
+     * @var AbstractPluginConnection
+     */
+    private AbstractPluginConnection $plugin;
+    /**
+     * The credentials instance.
+     *
+     * @var Credentials
+     */
+    private Credentials $credentials;
+    /**
+     * The products API.
+     *
+     * @var Products
+     */
+    private Products $products;
+    /**
+     * The view instance for rendering templates.
+     *
+     * @var View
+     */
+    private View $view;
+    /**
+     * The Mothership utility instance.
+     *
+     * @var Util
+     */
+    private Util $util;
     /**
      * The product object for the AJAX request.
      *
      * @var object|null
      */
-    protected static ?object $ajaxProduct = null;
+    protected ?object $ajaxProduct = null;
     /**
-     * Load the hooks for add-on management.
+     * Constructor.
+     *
+     * @param AbstractPluginConnection $plugin      The plugin connection.
+     * @param Credentials              $credentials The credentials instance.
+     * @param Products                 $products    The products API.
+     * @param View                     $view        The view instance for rendering templates.
+     * @param Util                     $util        The Mothership utility instance.
      */
-    public static function loadHooks() : void
+    public function __construct(AbstractPluginConnection $plugin, Credentials $credentials, Products $products, View $view, Util $util)
     {
-        add_action('wp_ajax_mosh_addon_activate', [self::class, 'ajaxAddonActivate']);
-        add_action('wp_ajax_mosh_addon_deactivate', [self::class, 'ajaxAddonDeactivate']);
-        add_action('wp_ajax_mosh_addon_install', [self::class, 'ajaxAddonInstall']);
-        add_filter('site_transient_update_themes', [self::class, 'addonsUpdateThemes']);
-        add_filter('site_transient_update_plugins', [self::class, 'addonsUpdatePlugins']);
+        $this->plugin = $plugin;
+        $this->credentials = $credentials;
+        $this->products = $products;
+        $this->view = $view;
+        $this->util = $util;
     }
     /**
-     * Update the plugins transient with the available add-ons.
+     * Configure WordPress hooks.
      *
-     * @param  mixed $transient The update plugins transient.
-     * @return mixed            The modified transient.
+     * @return array<Hook>
      */
-    public static function addonsUpdatePlugins($transient)
+    protected function configureHooks() : array
     {
-        return self::updateTransient($transient, ExtensionType::PLUGIN());
+        return [new Hook(Hook::TYPE_ACTION, "wp_ajax_{$this->plugin->pluginId}_addon_activate", [$this, 'ajaxAddonActivate']), new Hook(Hook::TYPE_ACTION, "wp_ajax_{$this->plugin->pluginId}_addon_deactivate", [$this, 'ajaxAddonDeactivate']), new Hook(Hook::TYPE_ACTION, "wp_ajax_{$this->plugin->pluginId}_addon_install", [$this, 'ajaxAddonInstall'])];
     }
     /**
-     * Update the themes transient with the available add-ons.
+     * Returns the connected product's add-ons.
      *
-     * @param  mixed $transient The update themes transient.
-     * @return mixed            The modified transient.
-     */
-    public static function addonsUpdateThemes($transient)
-    {
-        return self::updateTransient($transient, ExtensionType::THEME());
-    }
-    /**
-     * Update the transient with the available add-ons.
+     * Cached for {@see self::CACHE_TTL_MINUTES} minutes on success. On error the last cached
+     * list (or an empty list) is kept for {@see self::ERROR_TTL_MINUTES} minutes.
      *
-     * @param  mixed         $transient     The transient to update.
-     * @param  ExtensionType $extensionType The extension type being updated.
-     * @return mixed                        The modified transient.
+     * @param  boolean $cached Whether to use the cached add-ons list.
+     * @return array<object> List of add-on product objects.
      */
-    protected static function updateTransient($transient, ExtensionType $extensionType)
+    public function getAddons(bool $cached = \false) : array
     {
-        if (!self::hasActiveLicense() || !\is_object($transient)) {
-            return $transient;
+        $cacheKey = $this->plugin->pluginId . self::CACHE_KEY_ADDONS;
+        $cachedAddons = get_transient($cacheKey);
+        if ($cached && \is_array($cachedAddons)) {
+            return $cachedAddons;
         }
-        if (!isset($transient->response) || !\is_array($transient->response)) {
-            $transient->response = [];
+        $addons = $this->fetchAddons();
+        if (null === $addons) {
+            // On error, keep any previously cached list.
+            $addons = \is_array($cachedAddons) ? $cachedAddons : [];
+            set_transient($cacheKey, $addons, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS);
+            return $addons;
         }
-        $response = self::getAddons(\true);
-        if ($response instanceof Response && $response->isError()) {
-            return $transient;
-        }
-        $products = self::filterProductsByExtensionType($response->products ?? [], $extensionType);
-        return !empty($products) ? self::injectUpdates($products, $transient, $extensionType) : $transient;
+        set_transient($cacheKey, $addons, self::CACHE_TTL_MINUTES * MINUTE_IN_SECONDS);
+        return $addons;
     }
     /**
-     * Returns the modified update transient with add-on updates.
+     * Fetches the connected product's add-ons from the API.
      *
-     * @param  array         $products      The products to check.
-     * @param  mixed         $transient     The transient to update.
-     * @param  ExtensionType $extensionType The extension type to filter by.
-     * @return mixed                        The modified transient.
+     * Each add-on object exposes the latest version on a `version` property.
+     * Add-ons that require a license upgrade are typed `upgrade-addon` and listed last.
+     *
+     * @return array<object>|null The add-ons, or null on a fetch error.
      */
-    protected static function injectUpdates(array $products, $transient, ExtensionType $extensionType)
+    private function fetchAddons() : ?array
     {
-        foreach ($products ?? [] as $product) {
-            $mainFile = $product->main_file ?? '';
-            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
-            $versionLatest = $product->_embedded->{'version-latest'}->number ?? '';
-            $urlLatest = $product->_embedded->{'version-latest'}->url ?? '';
-            $item = null;
-            // Plugins use the main file while themes use the directory name.
-            $transientKey = $extensionType->equals(ExtensionType::THEME(), \false) ? \dirname($mainFile) : $mainFile;
-            if (empty($mainFile) || empty($versionLatest) || empty($urlLatest) || !isset($transient->checked[$transientKey])) {
-                continue;
+        $response = $this->products->getRelations($this->plugin->productId, ['_embed' => 'version-latest', 'per_page' => self::PER_PAGE]);
+        $products = [];
+        while (\true) {
+            if ($response->isError()) {
+                return null;
             }
-            if ($extensionType->equals(ExtensionType::PLUGIN(), \false)) {
-                $item = (object) ['id' => $mainFile, 'slug' => \dirname($mainFile), 'plugin' => $mainFile, 'new_version' => $versionLatest, 'package' => $urlLatest, 'url' => '', 'tested' => '', 'requires_php' => '', 'icons' => ['2x' => $product->image, '1x' => $product->image]];
-            } elseif ($extensionType->equals(ExtensionType::THEME(), \false)) {
-                $item = ['theme' => \dirname($mainFile), 'new_version' => $versionLatest, 'package' => $urlLatest, 'url' => '', 'requires' => '', 'requires_php' => '', 'icons' => ['2x' => $product->image, '1x' => $product->image]];
-            }
-            if (!\is_null($item)) {
-                if (\version_compare($transient->checked[$transientKey], $versionLatest, '>=')) {
-                    $transient->no_update[$transientKey] = $item;
-                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- WordPress data structure.
-                } else {
-                    $transient->response[$transientKey] = $item;
-                }
-            }
-        }
-        return $transient;
-    }
-    /**
-     * Get the add-ons from the API.
-     *
-     * @param  boolean $cached Whether to use the cached products or not.
-     * @return object                     The add-ons.
-     */
-    public static function getAddons(bool $cached = \false)
-    {
-        if ($cached && self::cachedResponseIsValid()) {
-            $response = self::getCachedApiResponse();
-            if (\is_object($response)) {
-                return $response;
-            }
-        }
-        $args['_embed'] = 'version-latest';
-        $response = \call_user_func(self::$productsApiClient, $args);
-        if ($response instanceof Response && !$response->isError()) {
-            set_transient(self::getContainer()->get(AbstractPluginConnection::class)->pluginId . self::CACHE_KEY_PRODUCTS, $response, self::CACHE_DURATION_MINUTES * MINUTE_IN_SECONDS);
-            self::markCacheRefreshed();
-        }
-        return $response;
-    }
-    /**
-     * Get the cached API response.
-     *
-     * @return mixed The cached API response, or false if unavailable.
-     */
-    protected static function getCachedApiResponse()
-    {
-        $response = get_transient(self::getContainer()->get(AbstractPluginConnection::class)->pluginId . self::CACHE_KEY_PRODUCTS);
-        return $response;
-    }
-    /**
-     * Check if the cached API response is valid.
-     *
-     * @return boolean
-     */
-    protected static function cachedResponseIsValid() : bool
-    {
-        $updateCheckTransient = get_transient(self::getContainer()->get(AbstractPluginConnection::class)->pluginId . self::CACHE_KEY_UPDATE_CHECK);
-        return \false !== $updateCheckTransient;
-    }
-    /**
-     * Mark the cached API response valid for a designated period.
-     *
-     * @param  integer $minutes Optionally set the duration of the cache, default 30 minutes.
-     * @return boolean          True if the transient was set, false otherwise.
-     */
-    protected static function markCacheRefreshed(int $minutes = 30) : bool
-    {
-        return set_transient(self::getContainer()->get(AbstractPluginConnection::class)->pluginId . self::CACHE_KEY_UPDATE_CHECK, null, $minutes * MINUTE_IN_SECONDS);
-    }
-    /**
-     * Check if the license for the product exists and is active.
-     *
-     * @return boolean
-     */
-    protected static function hasActiveLicense() : bool
-    {
-        return self::getContainer()->get(AbstractPluginConnection::class)->getLicenseKey() && self::getContainer()->get(AbstractPluginConnection::class)->getLicenseActivationStatus();
-    }
-    /**
-     * Filter products by extension type.
-     *
-     * @param  array         $products      The products to filter.
-     * @param  ExtensionType $extensionType The extension type to filter by.
-     * @return array
-     */
-    protected static function filterProductsByExtensionType(array $products, ExtensionType $extensionType) : array
-    {
-        return \array_values(\array_filter($products, function ($product) use($extensionType) {
-            return ($product->extension_type ?? \false) === $extensionType->getValue();
-            // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
-        }));
-    }
-    /**
-     * Get a product by slug.
-     *
-     * @param  string $slug The slug of the product to get.
-     * @return object|null The product, or null if not found.
-     */
-    protected static function getProductBySlug(string $slug) : ?object
-    {
-        $apiResponse = self::getAddons(\true);
-        $result = null;
-        foreach ($apiResponse->products ?? [] as $product) {
-            if (!empty($product->slug) && $product->slug === $slug) {
-                $result = $product;
+            $products = \array_merge($products, $response->getData('products', []));
+            if (!$response->hasNext()) {
                 break;
             }
+            $next = $response->next();
+            if (null === $next) {
+                break;
+            }
+            $response = $next;
         }
-        return $result;
+        $addons = [];
+        $upgrades = [];
+        foreach ($products as $product) {
+            if ('addon' !== $product->type) {
+                continue;
+            }
+            $version = $product->_embedded->{'version-latest'} ?? null;
+            $product->version = isset($version, $version->product) ? $version : null;
+            unset($product->_embedded->{'version-latest'});
+            if ($product->version) {
+                $addons[] = $product;
+            } else {
+                $product->type = 'upgrade-addon';
+                $upgrades[] = $product;
+            }
+        }
+        return \array_merge($addons, $upgrades);
     }
     /**
-     * Setup an AJAX request. All requests setup the same way: validate the nonce
-     * and slug, get a product using the slug, and set the static class property.
+     * Clears the cached add-ons response.
      *
      * @return void
      */
-    protected static function setupAjaxRequest() : void
+    public function clearCache() : void
+    {
+        delete_transient($this->plugin->pluginId . self::CACHE_KEY_ADDONS);
+    }
+    /**
+     * Gets an add-on by slug.
+     *
+     * @param string  $slug   The slug of the add-on to get.
+     * @param boolean $cached Whether to look up in the cached add-ons. Default true.
+     *
+     * @return object|null The add-on object, or null if not found.
+     */
+    public function getAddon(string $slug, bool $cached = \true) : ?object
+    {
+        foreach ($this->getAddons($cached) as $addon) {
+            if ($slug === $addon->slug) {
+                return $addon;
+            }
+        }
+        return null;
+    }
+    /**
+     * Setup an AJAX request. All requests setup the same way: validate the nonce
+     * and slug, get a product using the slug, and set the instance property.
+     *
+     * @return void
+     */
+    protected function setupAjaxRequest() : void
     {
         if (!check_ajax_referer('mosh_addons', \false, \false)) {
-            wp_send_json_error(new \WP_Error('security_check_failed', esc_html__('Security check failed.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('security_check_failed', esc_html__('Security check failed.', 'ground-level')));
         }
         if (empty($_POST['slug']) || !\is_string($_POST['slug'])) {
-            wp_send_json_error(new \WP_Error('bad_request', esc_html__('Bad request.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('bad_request', esc_html__('Bad request.', 'ground-level')));
         }
-        self::$ajaxProduct = self::getProductBySlug($_POST['slug']);
-        if (!self::$ajaxProduct) {
-            wp_send_json_error(new \WP_Error('addon_not_found', esc_html__('Add-on not found.', 'caseproof-mothership')));
+        $slug = sanitize_text_field(wp_unslash($_POST['slug'] ?? ''));
+        $this->ajaxProduct = $this->getAddon($slug);
+        if (!$this->ajaxProduct) {
+            wp_send_json_error(new \WP_Error('addon_not_found', esc_html__('Add-on not found.', 'ground-level')));
+        }
+        // Upgrade add-ons cannot be installed or managed here.
+        if ('upgrade-addon' === $this->ajaxProduct->type) {
+            wp_send_json_error(new \WP_Error('upgrade_required', esc_html__('This add-on requires a license upgrade.', 'ground-level')));
         }
     }
     /**
@@ -260,10 +228,10 @@ class AddonsManager implements StaticContainerAwareness
      *
      * @return void
      */
-    public static function ajaxAddonActivate() : void
+    public function ajaxAddonActivate() : void
     {
-        self::setupAjaxRequest();
-        $extensionType = self::$ajaxProduct->extension_type ?? \false;
+        $this->setupAjaxRequest();
+        $extensionType = $this->ajaxProduct->extension_type ?? \false;
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
         $hasPermissions = \false;
         if (ExtensionType::PLUGIN === $extensionType) {
@@ -271,12 +239,12 @@ class AddonsManager implements StaticContainerAwareness
         } elseif (ExtensionType::THEME === $extensionType) {
             $hasPermissions = current_user_can('switch_themes');
         } else {
-            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Invalid add-on type.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Invalid add-on type.', 'ground-level')));
         }
         if (!$hasPermissions) {
-            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__('You don not have the necessary permission to perform this action.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__("Sorry, you don't have the necessary permission to perform this action.", 'ground-level')));
         }
-        $mainFile = self::$ajaxProduct->main_file ?? \false;
+        $mainFile = $this->ajaxProduct->main_file ?? \false;
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
         $activated = \false;
         if ($mainFile) {
@@ -289,10 +257,10 @@ class AddonsManager implements StaticContainerAwareness
             }
         }
         if ($activated && !is_wp_error($activated)) {
-            $successMsg = ExtensionType::PLUGIN === $extensionType ? esc_html__('Plugin activated.', 'caseproof-mothership') : esc_html__('Theme activated.', 'caseproof-mothership');
+            $successMsg = ExtensionType::PLUGIN === $extensionType ? esc_html__('Plugin activated.', 'ground-level') : esc_html__('Theme activated.', 'ground-level');
             wp_send_json_success($successMsg);
         } else {
-            wp_send_json_error(new \WP_Error('activation_failed', esc_html__('The add-on could not be activated.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('activation_failed', esc_html__('The add-on could not be activated.', 'ground-level')));
         }
     }
     /**
@@ -300,29 +268,29 @@ class AddonsManager implements StaticContainerAwareness
      *
      * @return void
      */
-    public static function ajaxAddonDeactivate() : void
+    public function ajaxAddonDeactivate() : void
     {
-        self::setupAjaxRequest();
-        $extensionType = self::$ajaxProduct->extension_type ?? \false;
+        $this->setupAjaxRequest();
+        $extensionType = $this->ajaxProduct->extension_type ?? \false;
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
         $hasPermissions = \false;
         if (ExtensionType::PLUGIN === $extensionType) {
             $hasPermissions = current_user_can('deactivate_plugins');
         } elseif (ExtensionType::THEME === $extensionType) {
-            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Themes cannot be deactivated. Activate a new theme instead.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Themes cannot be deactivated. Activate a new theme instead.', 'ground-level')));
         } else {
-            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Invalid add-on type.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Invalid add-on type.', 'ground-level')));
         }
         if (!$hasPermissions) {
-            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__('Sorry, you don\'t have permission deactivate addons.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__("Sorry, you don't have permission to deactivate addons.", 'ground-level')));
         }
-        $mainFile = self::$ajaxProduct->main_file ?? \false;
+        $mainFile = $this->ajaxProduct->main_file ?? \false;
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
         if (!$mainFile) {
-            wp_send_json_error(new \WP_Error('deactivation_failed', esc_html__('The add-on could not be deactivated.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('deactivation_failed', esc_html__('The add-on could not be deactivated.', 'ground-level')));
         }
         deactivate_plugins($mainFile);
-        $successMsg = ExtensionType::PLUGIN === $extensionType ? esc_html__('Plugin deactivated.', 'caseproof-mothership') : esc_html__('Add-on deactivated.', 'caseproof-mothership');
+        $successMsg = ExtensionType::PLUGIN === $extensionType ? esc_html__('Plugin deactivated.', 'ground-level') : esc_html__('Add-on deactivated.', 'ground-level');
         wp_send_json_success($successMsg);
     }
     /**
@@ -330,10 +298,10 @@ class AddonsManager implements StaticContainerAwareness
      *
      * @return void
      */
-    public static function ajaxAddonInstall() : void
+    public function ajaxAddonInstall() : void
     {
-        self::setupAjaxRequest();
-        $extensionType = self::$ajaxProduct->extension_type ?? \false;
+        $this->setupAjaxRequest();
+        $extensionType = $this->ajaxProduct->extension_type ?? \false;
         // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
         $hasPermissions = \false;
         if (ExtensionType::PLUGIN === $extensionType) {
@@ -341,15 +309,15 @@ class AddonsManager implements StaticContainerAwareness
         } elseif (ExtensionType::THEME === $extensionType) {
             $hasPermissions = current_user_can('install_themes') && current_user_can('switch_themes');
         } else {
-            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Invalid add-on type.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('invalid_addon_type', esc_html__('Invalid add-on type.', 'ground-level')));
         }
         if (!$hasPermissions) {
-            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__('Sorry, you don\'t have permission install addons.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__("Sorry, you don't have permission to install addons.", 'ground-level')));
         }
         set_current_screen();
         $creds = request_filesystem_credentials(admin_url('admin.php'), '', \false, \false, null);
         if (\false === $creds || !\WP_Filesystem($creds)) {
-            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__('Sorry, you don\'t have permission install addons.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('insufficient_permissions', esc_html__("Sorry, you don't have permission to install addons.", 'ground-level')));
         }
         require_once \ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
         remove_action('upgrader_process_complete', ['Language_Pack_Upgrader', 'async_upgrade'], 20);
@@ -360,13 +328,13 @@ class AddonsManager implements StaticContainerAwareness
             require_once \ABSPATH . 'wp-admin/includes/theme.php';
             $installer = new \Theme_Upgrader(new AddonInstallSkin());
         }
-        $addonUrl = self::$ajaxProduct->_embedded->{'version-latest'}->url ?? '';
-        if (!\filter_var($addonUrl, \FILTER_VALIDATE_URL)) {
-            wp_send_json_error(new \WP_Error('invalid_addon_url', esc_html__('Invalid add-on URL.', 'caseproof-mothership')));
+        $addonUrl = $this->ajaxProduct->version->url ?? '';
+        if (!$this->util->isAllowedDownloadUrl($addonUrl)) {
+            wp_send_json_error(new \WP_Error('invalid_addon_url', esc_html__('Invalid add-on URL.', 'ground-level')));
         }
         $installed = $installer->install($addonUrl);
         if (!$installed || is_wp_error($installed)) {
-            wp_send_json_error(new \WP_Error('addon_install_failed', esc_html__('The add-on was not installed successfully.', 'caseproof-mothership')));
+            wp_send_json_error(new \WP_Error('addon_install_failed', esc_html__('The add-on was not installed successfully.', 'ground-level')));
         }
         wp_cache_flush();
         $activated = \false;
@@ -384,9 +352,9 @@ class AddonsManager implements StaticContainerAwareness
             }
         }
         if ($activated) {
-            wp_send_json_success(['message' => $extensionType === ExtensionType::PLUGIN ? esc_html__('Plugin installed and activated.', 'caseproof-mothership') : esc_html__('Theme installed and activated.', 'caseproof-mothership'), 'activated' => \true]);
+            wp_send_json_success(['message' => $extensionType === ExtensionType::PLUGIN ? esc_html__('Plugin installed and activated.', 'ground-level') : esc_html__('Theme installed and activated.', 'ground-level'), 'activated' => \true]);
         } else {
-            wp_send_json_success(['message' => $extensionType === ExtensionType::PLUGIN ? esc_html__('Plugin installed.', 'caseproof-mothership') : esc_html__('Theme installed.', 'caseproof-mothership'), 'activated' => \false]);
+            wp_send_json_success(['message' => $extensionType === ExtensionType::PLUGIN ? esc_html__('Plugin installed.', 'ground-level') : esc_html__('Theme installed.', 'ground-level'), 'activated' => \false]);
         }
     }
     /**
@@ -394,45 +362,47 @@ class AddonsManager implements StaticContainerAwareness
      *
      * @return string The HTML for the add-ons.
      */
-    public static function generateAddonsHtml() : string
+    public function generateAddonsHtml() : string
     {
-        if (!self::getContainer()->get(AbstractPluginConnection::class)->getLicenseKey()) {
-            return '<div class="notice notice-error is-dismissible"><p>' . esc_html__('Please enter your license key to access add-ons.', 'caseproof-mothership') . '</p></div>';
+        if (!$this->credentials->getLicenseKey()) {
+            return '<div class="notice notice-error is-dismissible"><p>' . esc_html__('Please enter your license key to access add-ons.', 'ground-level') . '</p></div>';
         }
         // Refresh the add-ons if the button is clicked.
-        if (isset($_POST['submit-button-mosh-refresh-addon'])) {
-            delete_transient(self::getContainer()->get(AbstractPluginConnection::class)->pluginId . self::CACHE_KEY_PRODUCTS);
+        if (isset($_POST['submit-button-mosh-refresh-addon']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['grdlvl_mosh_refresh_addons_nonce'] ?? '')), 'grdlvl_mosh_refresh_addons')) {
+            $this->clearCache();
         }
-        $addons = self::getAddons(\true);
-        if ($addons instanceof Response && $addons->isError()) {
-            return \sprintf('<div class=""><p>%s <b>%s</b></p></div>', esc_html__('There was an issue connecting with the API.', 'caseproof-mothership'), $addons->error);
-        }
-        self::enqueueAssets();
-        \ob_start();
-        $products = self::prepareProductsForDisplay($addons->products ?? []);
-        include_once __DIR__ . '/../Views/products.php';
-        return \ob_get_clean();
+        $this->enqueueAssets();
+        $products = $this->prepareProductsForDisplay($this->getAddons(\true));
+        return $this->view->render('products.php', ['products' => $products]);
     }
     /**
-     * Prepare the addons for display. Remove parent products and any addons that may be missing
-     * required data, and add data for installation status, text, and icon class.
+     * Prepare the addons for display. Skip any addons that are missing required data,
+     * and add data for installation status, text, and icon class.
      *
      * @param  array $products The products to prepare. Each product is a StdClass object.
      * @return array           The prepared products.
      */
-    protected static function prepareProductsForDisplay(array $products) : array
+    protected function prepareProductsForDisplay(array $products) : array
     {
         $products = \array_values(\array_filter($products, function ($product) {
-            $isAddon = !empty($product->type) && 'addon' === $product->type;
             $hasMainFile = !empty($product->main_file);
             // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
             $hasExtensionType = !empty($product->extension_type);
             // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response
-            return $isAddon && $hasMainFile && $hasExtensionType;
+            return $hasMainFile && $hasExtensionType;
         }));
         $pluginUpdates = get_site_transient('update_plugins');
         $themeUpdates = get_site_transient('update_themes');
         foreach ($products as $product) {
+            if ('upgrade-addon' === $product->type) {
+                $product->updateAvailable = \false;
+                $product->status = 'upgrade';
+                $product->statusLabel = esc_html__('Upgrade Required', 'ground-level');
+                $product->iconClass = 'dashicons dashicons-unlock';
+                $product->buttonLabel = esc_html__('Upgrade', 'ground-level');
+                $product->upgradeUrl = $this->plugin->getAccountUrl();
+                continue;
+            }
             $mainFile = $product->main_file ?? \false;
             // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps -- API response.
             $extensionType = $product->extension_type ?? \false;
@@ -451,24 +421,26 @@ class AddonsManager implements StaticContainerAwareness
             }
             if ($installed && $active) {
                 $product->status = 'active';
-                $product->statusLabel = esc_html__('Active', 'caseproof-mothership');
-                if (ExtensionType::PLUGIN === $extensionType) {
-                    $product->iconClass = 'dashicons dashicons-no-alt';
-                    $product->buttonLabel = esc_html__('Deactivate', 'caseproof-mothership');
-                } else {
+                $product->statusLabel = esc_html__('Active', 'ground-level');
+                $product->iconClass = 'dashicons dashicons-no-alt';
+                $product->buttonLabel = esc_html__('Deactivate', 'ground-level');
+                if (ExtensionType::THEME === $extensionType) {
                     $product->iconClass = 'dashicons dashicons-admin-appearance';
-                    $product->buttonLabel = esc_html__('Switch Themes', 'caseproof-mothership');
+                    $product->buttonLabel = esc_html__('Switch Themes', 'ground-level');
                 }
             } elseif (!$installed) {
                 $product->status = 'not-installed';
                 $product->iconClass = 'dashicons dashicons-download';
-                $product->statusLabel = esc_html__('Not Installed', 'caseproof-mothership');
-                $product->buttonLabel = esc_html__('Install Add-on', 'caseproof-mothership');
+                $product->statusLabel = esc_html__('Not Installed', 'ground-level');
+                $product->buttonLabel = esc_html__('Install Add-on', 'ground-level');
+                if (ExtensionType::THEME === $extensionType) {
+                    $product->buttonLabel = esc_html__('Install Theme', 'ground-level');
+                }
             } else {
                 $product->status = 'inactive';
                 $product->iconClass = 'dashicons dashicons-yes-alt';
-                $product->statusLabel = esc_html__('Inactive', 'caseproof-mothership');
-                $product->buttonLabel = esc_html__('Activate', 'caseproof-mothership');
+                $product->statusLabel = esc_html__('Inactive', 'ground-level');
+                $product->buttonLabel = esc_html__('Activate', 'ground-level');
             }
         }
         return $products;
@@ -478,11 +450,11 @@ class AddonsManager implements StaticContainerAwareness
      *
      * @return void
      */
-    public static function enqueueAssets() : void
+    public function enqueueAssets() : void
     {
         wp_enqueue_style('dashicons');
-        wp_enqueue_script('mosh-addons-js', plugin_dir_url(__FILE__) . '../assets/addons.js', [], null, \true);
-        wp_enqueue_style('mosh-addons-css', plugin_dir_url(__FILE__) . '../assets/addons.css');
-        wp_localize_script('mosh-addons-js', 'MoshAddons', ['ajax_url' => admin_url('admin-ajax.php'), 'themes_url' => admin_url('themes.php'), 'nonce' => wp_create_nonce('mosh_addons'), 'active' => esc_html__('Active', 'caseproof-mothership'), 'inactive' => esc_html__('Inactive', 'caseproof-mothership'), 'activate' => esc_html__('Activate', 'caseproof-mothership'), 'deactivate' => esc_html__('Deactivate', 'caseproof-mothership'), 'switch_themes' => esc_html__('Switch Themes', 'caseproof-mothership'), 'processing' => esc_html__('Processing...', 'caseproof-mothership'), 'install_failed' => esc_html__('Could not install theme. Please download and install manually.', 'caseproof-mothership'), 'plugin_install_failed' => esc_html__('Could not install plugin. Please download and install manually.', 'caseproof-mothership')]);
+        wp_enqueue_script('mosh-addons-js', plugin_dir_url(__FILE__) . '../assets/addons.js', [], \filemtime(__DIR__ . '/../assets/addons.js'), \true);
+        wp_enqueue_style('mosh-addons-css', plugin_dir_url(__FILE__) . '../assets/addons.css', [], \filemtime(__DIR__ . '/../assets/addons.css'));
+        wp_localize_script('mosh-addons-js', 'MoshAddons', ['ajax_url' => admin_url('admin-ajax.php'), 'actions' => ['activate' => "{$this->plugin->pluginId}_addon_activate", 'deactivate' => "{$this->plugin->pluginId}_addon_deactivate", 'install' => "{$this->plugin->pluginId}_addon_install"], 'themes_url' => admin_url('themes.php'), 'nonce' => wp_create_nonce('mosh_addons'), 'active' => esc_html__('Active', 'ground-level'), 'inactive' => esc_html__('Inactive', 'ground-level'), 'activate' => esc_html__('Activate', 'ground-level'), 'deactivate' => esc_html__('Deactivate', 'ground-level'), 'switch_themes' => esc_html__('Switch Themes', 'ground-level'), 'processing' => esc_html__('Processing...', 'ground-level'), 'install_failed' => esc_html__('Could not install theme. Please download and install manually.', 'ground-level'), 'plugin_install_failed' => esc_html__('Could not install plugin. Please download and install manually.', 'ground-level')]);
     }
 }

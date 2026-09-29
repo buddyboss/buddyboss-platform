@@ -4,9 +4,7 @@ declare (strict_types=1);
 namespace BuddyBossPlatform\GroundLevel\Container;
 
 use Closure;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\ConfiguresParameters;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\ContainerAwareness;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\LoadableDependency;
+use BuddyBossPlatform\GroundLevel\Container\Exception;
 use BuddyBossPlatform\Psr\Container\ContainerInterface;
 class Container implements ContainerInterface
 {
@@ -17,11 +15,11 @@ class Container implements ContainerInterface
      */
     protected $factories = [];
     /**
-     * Registered service dependencies.
+     * Registered singleton dependencies.
      *
      * @var array<string, \Closure>
      */
-    protected array $services = [];
+    protected array $singletons = [];
     /**
      * Registered parameter dependencies.
      *
@@ -35,70 +33,213 @@ class Container implements ContainerInterface
      */
     protected array $instances = [];
     /**
-     * Create a new container instance.
+     * Registered service providers.
      *
-     * @param array<string, \Closure> $services   Array of service dependencies.
-     * @param array<string, mixed>    $parameters Array of parameter dependencies.
-     * @param array<string, \Closure> $factories  Array of factory dependencies.
+     * @var array<class-string<\GroundLevel\Container\ServiceProvider>, \GroundLevel\Container\ServiceProvider>
      */
-    public function __construct(array $services = [], array $parameters = [], array $factories = [])
-    {
-        foreach ($services as $id => $service) {
-            $this->addService($id, $service);
-        }
-        foreach ($parameters as $id => $parameter) {
-            $this->addParameter($id, $parameter);
-        }
-        foreach ($factories as $id => $factory) {
-            $this->addFactory($id, $factory);
-        }
-    }
+    protected array $providers = [];
     /**
-     * Adds a service dependency to the container.
+     * Providers that have been booted.
      *
-     * Services are only instantiated on first use. To have a service reinstantiated
-     * it must be readded to the container.
-     *
-     * @param string   $id            The unique identifier for the service, usually the fully-qualified class name.
-     * @param \Closure $createService A closure that returns the service instance.
-     * @param boolean  $autoload      Whether to autoload the service on instantiation. If true, the service will be
-     *                                retrieved immediately after being added to the container by calling {@see Container::get}.
-     *                                This is useful for services that should be loaded immediately instead of lazily.
+     * @var array<class-string, bool>
      */
-    public function addService(string $id, Closure $createService, bool $autoload = \false) : void
+    protected array $bootedProviders = [];
+    /**
+     * The resolver instance.
+     *
+     * @var \GroundLevel\Container\Resolver|null
+     */
+    private ?Resolver $resolver = null;
+    /**
+     * Adds a singleton dependency to the container.
+     *
+     * @param string   $id      The unique identifier for the singleton.
+     * @param \Closure $closure A closure that returns the singleton instance.
+     * @param boolean  $eager   Whether to resolve immediately (eager loading).
+     */
+    private function addSingleton(string $id, Closure $closure, bool $eager = \false) : void
     {
         unset($this->instances[$id]);
-        $this->services[$id] = $createService;
-        if ($autoload) {
+        $this->singletons[$id] = $closure;
+        if ($eager) {
             $this->get($id);
         }
     }
     /**
      * Adds a factory dependency to the container.
      *
-     * Factories are always reinstantiated.
-     *
-     * @param string   $id            The unique identifier for the factory, usually the fully-qualified class name.
-     * @param \Closure $createFactory A closure that returns the factory instance.
+     * @param string   $id      The unique identifier for the factory.
+     * @param \Closure $closure A closure that returns a new instance.
      */
-    public function addFactory(string $id, Closure $createFactory) : void
+    private function addFactory(string $id, Closure $closure) : void
     {
-        $this->factories[$id] = $createFactory;
+        unset($this->instances[$id]);
+        $this->factories[$id] = $closure;
     }
     /**
      * Adds a parameter dependency to the container.
      *
-     * Parameters are stored as literal values or as a closure that returns a value.
-     * If a closure is used, the closure will be called on first use and the result
-     * will be stored as a literal value that is returned on subsequent calls.
-     *
      * @param string $id    The unique identifier for the parameter.
      * @param mixed  $value The value of the parameter.
      */
-    public function addParameter(string $id, $value) : void
+    private function addParameter(string $id, $value) : void
     {
         unset($this->instances[$id]);
         $this->parameters[$id] = $value;
+    }
+    /**
+     * Register a service provider with the container.
+     *
+     * @template T of \GroundLevel\Container\ServiceProvider
+     *
+     * @param  \GroundLevel\Container\ServiceProvider|class-string<T> $provider The provider instance or class name.
+     * @throws \Exception If the provider class does not extend {@see \GroundLevel\Container\ServiceProvider}.
+     */
+    private function registerProvider($provider) : void
+    {
+        $providerClass = \is_string($provider) ? $provider : \get_class($provider);
+        // Skip if already registered.
+        if (isset($this->providers[$providerClass])) {
+            return;
+        }
+        // Validate that the provider is a subclass of ServiceProvider.
+        if (!\is_subclass_of($provider, ServiceProvider::class)) {
+            throw new Exception("{$providerClass} must extend \\" . ServiceProvider::class);
+        }
+        // Resolve provider instance if class name given.
+        if (\is_string($provider)) {
+            $provider = new $provider($this);
+        }
+        // Register dependencies first.
+        foreach ($provider->dependencies() as $dependency) {
+            $this->registerProvider($dependency);
+        }
+        $provider->register();
+        $this->providers[$providerClass] = $provider;
+    }
+    /**
+     * Register a singleton.
+     *
+     * @template T of object
+     *
+     * @param  string|class-string<T>                        $id      The singleton identifier.
+     * @param  \Closure(\GroundLevel\Container\Container): T $closure A closure that returns the singleton instance.
+     * @param  boolean                                       $eager   Whether to resolve immediately (eager loading).
+     * @return self
+     */
+    public function singleton(string $id, Closure $closure, bool $eager = \false) : self
+    {
+        $this->addSingleton($id, $closure, $eager);
+        return $this;
+    }
+    /**
+     * Register multiple singletons.
+     *
+     * @param  array<string, \Closure> $singletons Map of id => singleton closure.
+     * @return self
+     */
+    public function singletons(array $singletons) : self
+    {
+        foreach ($singletons as $id => $closure) {
+            $this->addSingleton($id, $closure);
+        }
+        return $this;
+    }
+    /**
+     * Register a factory.
+     *
+     * Factories return a new instance every time they are retrieved.
+     *
+     * @template T of object
+     *
+     * @param  string|class-string<T>                        $id      The factory identifier.
+     * @param  \Closure(\GroundLevel\Container\Container): T $closure A closure that returns a new instance.
+     * @return self
+     */
+    public function factory(string $id, Closure $closure) : self
+    {
+        $this->addFactory($id, $closure);
+        return $this;
+    }
+    /**
+     * Register multiple factories.
+     *
+     * @param  array<string, \Closure> $factories Map of id => factory closure.
+     * @return self
+     */
+    public function factories(array $factories) : self
+    {
+        foreach ($factories as $id => $closure) {
+            $this->addFactory($id, $closure);
+        }
+        return $this;
+    }
+    /**
+     * Register a parameter.
+     *
+     * @param  string $key   The parameter key.
+     * @param  mixed  $value The parameter value.
+     * @return self
+     */
+    public function parameter(string $key, $value) : self
+    {
+        $this->addParameter($key, $value);
+        return $this;
+    }
+    /**
+     * Register multiple parameters.
+     *
+     * @param  array<string, mixed> $parameters Map of key => value.
+     * @return self
+     */
+    public function parameters(array $parameters) : self
+    {
+        foreach ($parameters as $key => $value) {
+            $this->addParameter($key, $value);
+        }
+        return $this;
+    }
+    /**
+     * Register a service provider.
+     *
+     * Dependencies are resolved automatically via the provider's dependencies() method.
+     *
+     * @template T of \GroundLevel\Container\ServiceProvider
+     *
+     * @param  class-string<T> $providerClass The provider class name.
+     * @return self
+     */
+    public function provider(string $providerClass) : self
+    {
+        $this->registerProvider($providerClass);
+        return $this;
+    }
+    /**
+     * Get the resolver instance.
+     *
+     * @return \GroundLevel\Container\Resolver
+     */
+    public function resolver() : Resolver
+    {
+        if (null === $this->resolver) {
+            $this->resolver = new Resolver($this);
+        }
+        return $this->resolver;
+    }
+    /**
+     * Register multiple service providers.
+     *
+     * Dependencies are resolved automatically via each provider's dependencies() method.
+     *
+     * @param  array<class-string<ServiceProvider>> $providerClasses Array of provider class names.
+     * @return self
+     */
+    public function providers(array $providerClasses) : self
+    {
+        foreach ($providerClasses as $providerClass) {
+            $this->registerProvider($providerClass);
+        }
+        return $this;
     }
     /**
      * Retrieves a dependency from the container.
@@ -106,66 +247,65 @@ class Container implements ContainerInterface
      * @template T of object
      *
      * @param  string|class-string<T> $id The dependency identifier.
-     * @return ($id is class-string<T> ? T : mixed) The dependency. If the dependency is a service or factory,
-     *                                               the service or factory instance will be returned. If the
-     *                                               dependency is a parameter, the parameter value will be returned.
+     * @return ($id is class-string<T> ? T : mixed) The dependency.
      *
-     * @throws \GroundLevel\Container\NotFoundException If the dependency is not registered with the container.
+     * @throws \GroundLevel\Container\NotFoundException If the dependency is not registered and cannot be auto-wired.
      */
     public function get(string $id)
     {
-        $loc = $this->locate($id);
-        $resolver = $this->{$loc}[$id];
-        // Stored instances are return immediately.
-        if ('instances' === $loc) {
-            return $resolver;
+        // Factory: always evaluate closure and return result without caching.
+        if ($this->hasFactory($id)) {
+            return $this->factories[$id]($this);
         }
-        $value = $resolver;
-        if ($resolver instanceof Closure) {
-            $value = $resolver($this);
-            // Set the container if the dependency is container aware.
-            if ($value instanceof ContainerAwareness) {
-                $value->setContainer($this);
-            }
-            // Configure the parameters if the dependency is configurable.
-            if ($value instanceof ConfiguresParameters) {
-                $value->configureParameters($this);
-            }
-            // Run the load method if the dependency is loadable.
-            if ($value instanceof LoadableDependency) {
-                $value->load($this);
-            }
+        // Resolved: return cached instance.
+        if ($this->isResolved($id)) {
+            return $this->instances[$id];
         }
-        if ('factories' !== $loc) {
+        // Singleton: evaluate closure, cache the result, and return it.
+        if ($this->hasSingleton($id)) {
+            $value = $this->singletons[$id]($this);
             $this->instances[$id] = $value;
+            return $value;
         }
-        return $value;
-    }
-    /**
-     * Determines where to find a dependency within the container.
-     *
-     * @param  string $id The depedency ID.
-     * @return string The location of the dependency.
-     * @throws \GroundLevel\Container\NotFoundException If the dependency is not registered with the container.
-     */
-    protected function locate(string $id) : string
-    {
-        foreach (['instances', 'services', 'factories', 'parameters'] as $loc) {
-            if (\array_key_exists($id, $this->{$loc})) {
-                return $loc;
+        // Parameter: evaluate closure if needed, cache the result, and return it.
+        if ($this->hasParameter($id)) {
+            $value = $this->parameters[$id];
+            if ($value instanceof Closure) {
+                $value = $value($this);
             }
+            $this->instances[$id] = $value;
+            return $value;
+        }
+        // Auto-wireable: resolve, cache the result, and return it.
+        if (\class_exists($id)) {
+            $value = $this->resolver()->resolve($id);
+            $this->instances[$id] = $value;
+            return $value;
         }
         throw NotFoundException::undefinedError($id);
     }
     /**
-     * Determines if a dependency is registered with the container.
+     * Determines if a dependency is explicitly registered with the container.
+     *
+     * Note: this does NOT cover auto-wireable classes. A class may be resolvable
+     * via {@see get()} through auto-wiring even when has() returns false.
      *
      * @param  string $id The dependency identifier.
      * @return boolean
      */
     public function has(string $id) : bool
     {
-        return $this->hasService($id) || $this->hasFactory($id) || $this->hasParameter($id);
+        return $this->hasSingleton($id) || $this->hasFactory($id) || $this->hasParameter($id);
+    }
+    /**
+     * Determines if a dependency has already been resolved and cached.
+     *
+     * @param  string $id The dependency identifier.
+     * @return boolean
+     */
+    public function isResolved(string $id) : bool
+    {
+        return \array_key_exists($id, $this->instances);
     }
     /**
      * Determines if a factory dependency is registered with the container.
@@ -173,7 +313,7 @@ class Container implements ContainerInterface
      * @param  string $id The dependency identifier.
      * @return boolean
      */
-    protected function hasFactory(string $id) : bool
+    public function hasFactory(string $id) : bool
     {
         return \array_key_exists($id, $this->factories);
     }
@@ -183,18 +323,77 @@ class Container implements ContainerInterface
      * @param  string $id The dependency identifier.
      * @return boolean
      */
-    protected function hasParameter(string $id) : bool
+    public function hasParameter(string $id) : bool
     {
         return \array_key_exists($id, $this->parameters);
     }
     /**
-     * Determines if a service dependency is registered with the container.
+     * Determines if a singleton dependency is registered with the container.
      *
      * @param  string $id The dependency identifier.
      * @return boolean
      */
-    protected function hasService(string $id) : bool
+    public function hasSingleton(string $id) : bool
     {
-        return \array_key_exists($id, $this->services);
+        return \array_key_exists($id, $this->singletons);
+    }
+    /**
+     * Determines if a provider is registered with the container.
+     *
+     * @param  string $providerClass The provider class name.
+     * @return boolean
+     */
+    public function hasProvider(string $providerClass) : bool
+    {
+        return isset($this->providers[$providerClass]);
+    }
+    /**
+     * Get a registered provider by class name.
+     *
+     * @template T of \GroundLevel\Container\ServiceProvider
+     *
+     * @param  class-string<T> $providerClass The provider class name.
+     * @return T The provider instance.
+     *
+     * @throws \GroundLevel\Container\NotFoundException If the provider is not registered.
+     */
+    public function getProvider(string $providerClass) : ServiceProvider
+    {
+        if (!isset($this->providers[$providerClass])) {
+            throw NotFoundException::undefinedError($providerClass);
+        }
+        return $this->providers[$providerClass];
+    }
+    /**
+     * Boot a service provider.
+     *
+     * @param \GroundLevel\Container\ServiceProvider $provider The provider to boot.
+     */
+    public function bootProvider(ServiceProvider $provider) : void
+    {
+        $providerClass = \get_class($provider);
+        if (isset($this->bootedProviders[$providerClass])) {
+            return;
+        }
+        // Boot dependencies first.
+        foreach ($provider->dependencies() as $dep) {
+            if (isset($this->providers[$dep])) {
+                $this->bootProvider($this->providers[$dep]);
+            }
+        }
+        $provider->boot();
+        $this->bootedProviders[$providerClass] = \true;
+    }
+    /**
+     * Boot all registered providers.
+     *
+     * @return self
+     */
+    public function boot() : self
+    {
+        foreach ($this->providers as $provider) {
+            $this->bootProvider($provider);
+        }
+        return $this;
     }
 }

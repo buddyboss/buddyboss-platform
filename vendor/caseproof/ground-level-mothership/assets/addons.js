@@ -4,22 +4,22 @@
  * @classdesc This class is responsible for managing the installation and activation of addons.
  */
 class AddonsManager {
-    /** 
+    /**
      * @type {NodeList} List of product elements.
      */
     products = document.querySelectorAll(".mosh-product");
 
-    /** 
+    /**
      * @type {NodeList} List of action buttons.
      */
     actionButtons = document.querySelectorAll(".mosh-product-action button");
 
-    /** 
+    /**
      * @type {HTMLInputElement} Search input element.
      */
     searchInput = document.getElementById("mosh-products-search");
 
-    /** 
+    /**
      * @type {Object} Icons object.
      */
     icons = Object.freeze({
@@ -86,7 +86,7 @@ class AddonsManager {
      * @param {Event} event - The click event.
      */
     handleActionButtonClick(event) {
-        var $button = event.target,
+        var $button = event.currentTarget,
             $addon = $button.closest(".mosh-product"),
             originalButtonHtml = $button.innerHTML,
             originalButtonWidth = $button.offsetWidth,
@@ -102,14 +102,14 @@ class AddonsManager {
                 window.location.href = MoshAddons.themes_url;
                 return;
             }
-            action = "mosh_addon_deactivate";
+            action = MoshAddons.actions.deactivate;
             statusClass = "mosh-product-status-inactive";
             statusText = MoshAddons.inactive;
             buttonHtml = this.icons.activate + MoshAddons.activate;
         } else if (
             $addon.classList.contains("mosh-product-status-inactive")
         ) {
-            action = "mosh_addon_activate";
+            action = MoshAddons.actions.activate;
             statusClass = "mosh-product-status-active";
             statusText = MoshAddons.active;
             if (type === "plugin") {
@@ -120,7 +120,7 @@ class AddonsManager {
         } else if (
             $addon.classList.contains("mosh-product-status-not-installed")
         ) {
-            action = "mosh_addon_install";
+            action = MoshAddons.actions.install;
             statusClass = "mosh-product-status-active";
             statusText = MoshAddons.active;
             if (type === "plugin") {
@@ -189,7 +189,7 @@ class AddonsManager {
                         handleError(response.data);
                     }
                 } else {
-                    if (action === "mosh_addon_install") {
+                    if (action === MoshAddons.actions.install) {
                         successText = response.data.message;
 
                         if (!response.data.activated) {
