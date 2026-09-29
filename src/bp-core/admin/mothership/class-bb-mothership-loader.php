@@ -22,6 +22,7 @@ use BuddyBossPlatform\GroundLevel\Mothership\Api\Request;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products;
 use BuddyBossPlatform\GroundLevel\Mothership\LegacyUpdateService;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
+use BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager;
 use BuddyBossPlatform\GroundLevel\Support\View;
 use BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
@@ -61,6 +62,19 @@ class BB_Mothership_Loader {
 	private const UPDATE_CACHE_TTL = 12 * HOUR_IN_SECONDS;
 
 	/**
+	 * TTL, in seconds, for a failed Platform update check.
+	 *
+	 * A failed check (outage, 429, 401) is cached briefly so every read of the
+	 * `update_plugins` transient does not make its own blocking HTTP request. Matches the
+	 * vendor's own error TTL for the add-ons list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	private const UPDATE_ERROR_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
+
+	/**
 	 * Singleton instance.
 	 *
 	 * @var BB_Mothership_Loader|null
@@ -80,19 +94,6 @@ class BB_Mothership_Loader {
 	 * @var \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector
 	 */
 	private $pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
-
-	/**
-	 * Whether the native vendor update filter was actually registered.
-	 *
-	 * Set only after `UpdateService::plugin()` returns without throwing. The fallback
-	 * injector in {@see self::inject_platform_update()} stands down only when this is
-	 * true, so a boot failure leaves the fallback active rather than disabling both paths.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @var bool
-	 */
-	private $native_update_registered = false;
 
 	/**
 	 * Get singleton instance.
@@ -181,12 +182,15 @@ class BB_Mothership_Loader {
 	/**
 	 * Register and boot the GroundLevel service providers.
 	 *
-	 * GroundLevel 7.4.0 replaced the old static-container `Service` classes with the
-	 * dependency-injection `ServiceProvider` pattern. Booting the providers wires the
-	 * vendor hooks (twice-daily license-status cron, `auto_update_plugin`, add-on AJAX,
-	 * plugin/theme update injection, and the In-Product Notifications UI). None of these
-	 * duplicate BuddyBoss's own hooks — BuddyBoss wires its own license controller and
-	 * admin pages separately in {@see self::setup_hooks()}.
+	 * GroundLevel 9.1.2 uses the dependency-injection `ServiceProvider` pattern. Booting
+	 * the providers wires the vendor hooks (twice-daily license-status cron, add-on AJAX,
+	 * add-on update injection, and the In-Product Notifications UI). None of these
+	 * duplicate BuddyBoss's own hooks — BuddyBoss wires its own license controller, admin
+	 * pages and the Platform's own update entry separately in {@see self::setup_hooks()}.
+	 *
+	 * The providers are always registered, so services still resolve from the container on
+	 * every request, but they are only booted where their hooks do something — see
+	 * {@see self::should_boot_services()}.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -221,27 +225,21 @@ class BB_Mothership_Loader {
 			$this->container->provider( MothershipServiceProvider::class );
 			$this->container->provider( IPNServiceProvider::class );
 
+			if ( ! $this->should_boot_services() ) {
+				return;
+			}
+
 			// Boot registers the vendor WordPress hooks.
+			//
+			// The Platform is deliberately NOT registered with the vendor UpdateService
+			// (`UpdateService::plugin( 'buddyboss-platform', ... )`). BuddyBoss Platform ships
+			// without an `Update URI` header, so its `update_plugins_{host}` filter would never
+			// fire, while its `plugins_api` handler would replace BuddyBoss's own "View details"
+			// modal and its `auto_update_plugin` filter would force background updates over the
+			// admin's per-plugin choice. Updates are served by {@see self::inject_platform_update()}.
 			$this->container->boot();
 
-			// Register the Platform's fixed slug against the dynamic Mothership product id.
-			//
-			// The vendor UpdateService self-registers `plugin( $pluginId, '' )` on `init`, which
-			// hooks `update_plugins_{$pluginId}` — a filter WordPress never fires, because it
-			// derives that suffix from the HOST of a plugin's `Update URI` header, while
-			// $pluginId is the dynamic product id (e.g. `bb-web-plus`). Registering the fixed
-			// `buddyboss-platform` slug keeps the mapping correct for anything keyed by slug.
-			//
-			// BuddyBoss Platform deliberately ships WITHOUT an `Update URI` header, so the
-			// `update_plugins_{host}` filter this registers is inert and updates are served by
-			// {@see self::inject_platform_update()} instead. The call is kept because it also
-			// registers the vendor's `plugins_api` handler, which is header-independent.
-			$this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\UpdateService::class )->plugin( 'buddyboss-platform', $plugin_id );
-
-			// Record that the native registration itself succeeded. The injector additionally
-			// requires an `Update URI` header before standing down — see
-			// {@see self::inject_platform_update()}.
-			$this->native_update_registered = true;
+			$this->disable_overwrite_guard_for_per_site_licenses();
 		} catch ( \Throwable $e ) {
 			// A resolution/boot failure must never white-screen wp-admin. Log and degrade
 			// gracefully — license activation falls back to BuddyBoss's own controller.
@@ -273,15 +271,22 @@ class BB_Mothership_Loader {
 		}
 
 		// Plugin updates. BuddyBoss Platform ships without an `Update URI` header, so WordPress
-		// never fires `update_plugins_{host}` for it and this injector is the ACTIVE update
-		// path. It stands down automatically if a header is ever added AND the native filter
-		// registered successfully, so the two can never double-fire — see
-		// {@see self::inject_platform_update()}.
-		add_filter( 'site_transient_update_plugins', array( $this, 'inject_platform_update' ) );
+		// never fires `update_plugins_{host}` for it and this injector is the only update path.
+		// Like the vendor update hooks, the injectors only run where updates are read — never
+		// on anonymous front-end page loads, where a cache miss would block the page on a
+		// remote version check.
+		if ( $this->should_boot_services() ) {
+			add_filter( 'site_transient_update_plugins', array( $this, 'inject_platform_update' ) );
 
-		// Add-on (and add-on theme) updates for Network Admin when only another site is licensed.
-		add_filter( 'site_transient_update_plugins', array( $this, 'inject_addon_updates_via_licensed_site' ) );
-		add_filter( 'site_transient_update_themes', array( $this, 'inject_addon_updates_via_licensed_site' ) );
+			// Add-on (and add-on theme) updates for Network Admin when only another site is licensed.
+			add_filter( 'site_transient_update_plugins', array( $this, 'inject_addon_updates_via_licensed_site' ) );
+			add_filter( 'site_transient_update_themes', array( $this, 'inject_addon_updates_via_licensed_site' ) );
+		}
+
+		// Tell the network admin when a subsite license could not be carried over to the network.
+		if ( is_admin() && BB_Plugin_Connector::is_network_mode() && get_site_option( BB_Plugin_Connector::NETWORK_MOVE_SKIPPED_OPTION, false ) ) {
+			add_action( 'network_admin_notices', array( $this, 'render_network_move_skipped_notice' ) );
+		}
 
 		// Invalidate the Platform update-check cache whenever WordPress writes a fresh
 		// `update_plugins` transient. That set only happens after a genuine update fetch (cron,
@@ -333,6 +338,97 @@ class BB_Mothership_Loader {
 		if ( defined( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) && constant( 'BUDDYBOSS_DISABLE_SSL_VERIFY' ) ) {
 			add_filter( 'https_ssl_verify', '__return_false' );
 		}
+	}
+
+	/**
+	 * Whether the vendor service hooks are needed on this request.
+	 *
+	 * Booting the GroundLevel providers hooks `site_transient_update_plugins` /
+	 * `site_transient_update_themes` (the vendor add-on update injection), which fetch the
+	 * add-ons list from the licensing API on a cold cache. The theme reads the
+	 * `update_themes` transient on every request, the front end included, so an anonymous
+	 * page load could block on that remote call. None of the vendor hooks does anything
+	 * useful on a public page: they serve wp-admin, admin AJAX, cron (license status check,
+	 * background auto-updates, notification fetches), WP-CLI and REST.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool
+	 */
+	private function should_boot_services(): bool {
+		// ALTERNATE_WP_CRON runs cron inside an ordinary front-end request, after plugins have
+		// loaded, so wp_doing_cron() is still false here while the vendor cron callbacks
+		// (license status check, notification fetches) will be needed later in the request.
+		// Such sites therefore keep the pre-gate behaviour of booting on every request.
+		if ( is_admin() || wp_doing_cron() || wp_doing_ajax() || ( defined( 'WP_CLI' ) && WP_CLI ) || ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) ) {
+			$should_boot = true;
+		} else {
+			// REST_REQUEST is only defined once the request is parsed, long after this runs, so
+			// detect both the pretty (`/wp-json/`) and the plain-permalink (`?rest_route=`) form.
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$should_boot = ! empty( $_GET['rest_route'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only request routing check.
+				|| ( '' !== $request_uri && false !== strpos( $request_uri, '/' . rest_get_url_prefix() . '/' ) );
+		}
+
+		/**
+		 * Filters whether the GroundLevel Mothership services are booted on this request.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool $should_boot Whether to boot the services.
+		 */
+		return (bool) apply_filters( 'bb_mothership_boot_services', $should_boot );
+	}
+
+	/**
+	 * Remove GroundLevel's license-key overwrite guard when licenses are held per site.
+	 *
+	 * The vendor's {@see LicenseManager::onLicenseKeyOverwritten()} compares the current
+	 * license key against the `{pluginId}_activation` transient. That transient is a SITE
+	 * transient named only by plugin ID, so on a multisite network where Platform is
+	 * activated per site it is shared by every site of the same edition, while each site
+	 * keeps its own key. Sites with different keys would then deactivate each other on
+	 * their next admin page load. The guard cannot give a correct answer in that mode, so
+	 * it is removed; in network mode (one shared license) and on single sites it stays.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private function disable_overwrite_guard_for_per_site_licenses(): void {
+		if ( ! is_multisite() || BB_Plugin_Connector::is_network_mode() ) {
+			return;
+		}
+
+		remove_action( 'admin_init', array( $this->container->get( LicenseManager::class ), 'onLicenseKeyOverwritten' ) );
+	}
+
+	/**
+	 * Render the notice for a subsite license that could not be moved to the network.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function render_network_move_skipped_notice(): void {
+		if ( ! current_user_can( 'manage_network_options' ) ) {
+			return;
+		}
+
+		// The network has its own license now; the notice has done its job.
+		if ( $this->pluginConnector->getLicenseActivationStatus() ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			delete_site_option( BB_Plugin_Connector::NETWORK_MOVE_SKIPPED_OPTION );
+
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-warning"><p>%s</p></div>',
+			wp_kses(
+				sprintf(
+					/* translators: %s: URL of the network License page. */
+					__( 'BuddyBoss Platform is now network-activated, so the network shares one license. The license previously activated on a subsite could not be carried over. Please <a href="%s">activate your license</a> for the network.', 'buddyboss' ),
+					esc_url( network_admin_url( 'admin.php?page=' . BB_License_Page::SLUG ) )
+				),
+				array( 'a' => array( 'href' => array() ) )
+			)
+		);
 	}
 
 	/**
@@ -490,20 +586,15 @@ class BB_Mothership_Loader {
 	/**
 	 * Injects the Platform's own plugin update into the update_plugins transient.
 	 *
-	 * This is the ACTIVE update path. BuddyBoss Platform ships without an `Update URI` header,
-	 * so WordPress never fires `update_plugins_{host}` for it and the vendor UpdateService's
-	 * native filter, although registered, is inert. Dropping the header is safe here because
-	 * `buddyboss-platform` is not a wordpress.org slug, so no w.org listing can claim the
-	 * plugin; the header's usual job of fencing w.org off has nothing to fence.
-	 *
-	 * It stands down only if BOTH the native filter registered successfully AND the plugin
-	 * declares an `Update URI` — so adding the header later hands ownership back to the native
-	 * path without the two ever double-firing, and losing either one keeps this injector live
-	 * rather than leaving the site with no update path at all.
+	 * This is the only update path. BuddyBoss Platform ships without an `Update URI` header,
+	 * so WordPress never fires `update_plugins_{host}` for it, and the Platform is not
+	 * registered with the vendor UpdateService (see {@see self::register_services()}).
+	 * Dropping the header is safe because `buddyboss-platform` is not a wordpress.org slug,
+	 * so no w.org listing can claim the plugin.
 	 *
 	 * It uses the same data source as the vendor ({@see Products::getVersionCheck()}), runs only
 	 * when licensed — leaving wordpress.org updates intact for unlicensed installs — and keys
-	 * the entry by plugin file so the vendor's auto-update / dev-block policy applies.
+	 * the entry by plugin file.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -537,28 +628,6 @@ class BB_Mothership_Loader {
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 			$plugins = get_plugins();
-
-			// Defer to the native vendor UpdateService only when it actually registered.
-			//
-			// Testing the Update URI header instead would conflate two different facts: the
-			// header is static, but the native filter is registered by the LAST statement of
-			// register_services()'s try{} block. Any throw before it (DI drift, an @inject
-			// regression, a fatal in a service constructor) is swallowed by that catch, so
-			// keying off the header alone would disable this fallback at exactly the moment
-			// it is the only remaining update path — leaving the site with no updates at all
-			// and nothing but a debug.log line.
-			//
-			// Both conditions have to hold for the native path to actually serve an update:
-			// WordPress only fires `update_plugins_{host}` for a plugin that declares an
-			// `Update URI`, and the filter behind it only exists if UpdateService::plugin()
-			// registered without throwing. Standing down on either one alone leaves a gap —
-			// drop the header and this injector would go quiet while no native filter ever
-			// fires, leaving only the vendor's @deprecated LegacyUpdateService.
-			$has_update_uri = ! empty( $plugins[ $plugin_file ]['UpdateURI'] );
-
-			if ( $this->native_update_registered && $has_update_uri ) {
-				return $transient;
-			}
 
 			$installed = isset( $transient->checked[ $plugin_file ] )
 				? (string) $transient->checked[ $plugin_file ]
@@ -603,8 +672,9 @@ class BB_Mothership_Loader {
 	 * On a cache hit the stored payload is returned with zero API/HTTP work. On a miss the
 	 * Mothership version check runs once and the outcome is cached for {@see self::UPDATE_CACHE_TTL}
 	 * (or until invalidated by {@see self::flush_platform_update_cache()} /
-	 * {@see self::clear_platform_update_cache()}). Errors are intentionally NOT cached so a
-	 * transient API failure retries on the next request rather than suppressing updates for 12h.
+	 * {@see self::clear_platform_update_cache()}). A failed check is cached as "no update info"
+	 * for only {@see self::UPDATE_ERROR_CACHE_TTL}, so an outage neither suppresses updates for
+	 * 12h nor makes every read of the `update_plugins` transient issue its own blocking request.
 	 *
 	 * The cached payload shape is `array( 'item' => array|null )`: the prepared WordPress update
 	 * entry, or null meaning "checked, no update info". The two states are distinguished from a
@@ -635,8 +705,22 @@ class BB_Mothership_Loader {
 				)
 			);
 
-		// Do not cache errors — let the next request retry.
+		// A licensed-site check skipped by the re-entry guard never ran: nothing to cache.
+		if ( null === $version_check && $this->in_licensed_site ) {
+			return null;
+		}
+
+		// Cache a failure briefly: retried soon, but not on every transient read meanwhile.
 		if ( null === $version_check || $version_check->isError() ) {
+			set_site_transient(
+				self::UPDATE_CACHE_KEY,
+				array(
+					'item'  => null,
+					'error' => true,
+				),
+				self::UPDATE_ERROR_CACHE_TTL
+			);
+
 			return null;
 		}
 
@@ -961,8 +1045,18 @@ class BB_Mothership_Loader {
 				if ( $response instanceof Response && ! $response->isError() ) {
 					try {
 						$container->get( Credentials::class )->setLicenseKey( $license_data['license_key'] );
+
+						// Pin the identifier this activation was created with, before the status
+						// flips. resolveDomain() returns host/path while the license is inactive,
+						// so without this the next request would fall back to the bare host and
+						// the status check would 404 and revoke a subdirectory install.
+						$plugin_connector->storeActivationDomain( $domain );
+
 						// updateLicenseActivationStatus() clears the add-ons cache via the connector.
 						$plugin_connector->updateLicenseActivationStatus( true );
+
+						// Drop the stale vendor activation cache and announce the valid license.
+						BB_License_Manager::after_license_activated();
 
 						if ( $network_activated ) {
 							update_site_option( 'bb_mothership_licenses_migrated', true );

@@ -137,6 +137,11 @@ class BB_Addons_Manager extends AddonsManager {
 		if ( $refresh_requested ) {
 			$addons_manager->clearCache();
 
+			// A forced refresh is a real fetch, not an outage re-seed, and it replaces the
+			// outage copy: dropping it lets the next tracked read store the fresh list.
+			delete_transient( $plugin->pluginId . self::RESEEDED_ADDONS_SUFFIX ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			delete_transient( $plugin->pluginId . self::LAST_GOOD_ADDONS_SUFFIX ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
 			// The vendor drops its own transient; the memo has to go with it.
 			self::reset_addons_memo();
 		}
@@ -190,6 +195,49 @@ class BB_Addons_Manager extends AddonsManager {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Gets the latest release of an add-on product returned by {@see self::checkProductBySlug()}.
+	 *
+	 * GroundLevel 9.1.2 moves the embedded latest release onto `$product->version` and unsets
+	 * `$product->_embedded->{'version-latest'}`, so readers written against the 2.2.1 shape
+	 * always saw an empty release. The legacy location is still read as a fallback for any
+	 * product object that did not come through the 9.1.2 add-ons manager.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object|null $product Add-on product object.
+	 * @return object|null The release object (exposing `number` and `url`), or null when none.
+	 */
+	public static function get_product_latest_version( $product ): ?object {
+		if ( ! is_object( $product ) ) {
+			return null;
+		}
+
+		if ( isset( $product->version ) && is_object( $product->version ) ) {
+			return $product->version;
+		}
+
+		if ( isset( $product->_embedded->{'version-latest'} ) && is_object( $product->_embedded->{'version-latest'} ) ) {
+			return $product->_embedded->{'version-latest'};
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the package download URL of an add-on's latest release.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object|null $product Add-on product object.
+	 * @return string The download URL, or an empty string when none is available.
+	 */
+	public static function get_product_download_url( $product ): string {
+		$version = self::get_product_latest_version( $product );
+
+		return ( null !== $version && ! empty( $version->url ) ) ? (string) $version->url : '';
 	}
 
 	/**
@@ -270,6 +318,38 @@ class BB_Addons_Manager extends AddonsManager {
 	const PRODUCTS_ERROR_TRANSIENT = 'bb_products_api_error';
 
 	/**
+	 * Suffix of the transient holding the last non-empty add-ons list for a plugin ID.
+	 *
+	 * GroundLevel 9.1.2 caches the list for only 60 minutes and, when a fetch fails on an
+	 * expired cache, stores an empty list. This BuddyBoss-owned copy lets an outage keep
+	 * serving the customer's real plan instead of turning every add-on into an upsell.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const LAST_GOOD_ADDONS_SUFFIX = '_bb_addons_last_good';
+
+	/**
+	 * How long the last non-empty add-ons list is kept, in seconds.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const LAST_GOOD_ADDONS_TTL = 12 * HOUR_IN_SECONDS;
+
+	/**
+	 * Suffix of the transient marking the vendor add-ons cache as re-seeded from the
+	 * last-good copy (rather than filled by a real fetch).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const RESEEDED_ADDONS_SUFFIX = '_bb_addons_reseeded';
+
+	/**
 	 * Per-request memo of the add-ons list, or null when not yet resolved.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -298,10 +378,17 @@ class BB_Addons_Manager extends AddonsManager {
 	 * no add-ons". Every outage guard downstream therefore fails open in the wrong
 	 * direction — a licensed customer gets UPGRADE placeholder cards and DRM nags.
 	 *
-	 * A warm cache tells the two apart: if the vendor cache was absent BEFORE the call and
-	 * the call returned nothing, the fetch failed. A licensed plan that genuinely returns
-	 * nothing is also recorded, but that errs toward suppressing an upsell — the safe
-	 * direction.
+	 * Two signals tell the two apart:
+	 *
+	 * - A BuddyBoss-owned copy of the last non-empty list exists, but the vendor now returns
+	 *   nothing. The vendor's own update filter often fetches first on an admin page load
+	 *   (and caches the empty list), so the cold-cache probe alone misses most outages. The
+	 *   copy is served instead, and re-seeded into the vendor cache for the vendor's error
+	 *   TTL, so every consumer sees the real plan during the outage. The copy is dropped on
+	 *   any license change, so it never outlives the license it was fetched for.
+	 * - Otherwise, the vendor cache was absent BEFORE the call and the call returned nothing.
+	 *   A licensed plan that genuinely returns nothing is also recorded, but that errs toward
+	 *   suppressing an upsell — the safe direction.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -334,11 +421,34 @@ class BB_Addons_Manager extends AddonsManager {
 			$addons = array();
 		}
 
+		$last_good_key = $connection->pluginId . self::LAST_GOOD_ADDONS_SUFFIX; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$reseeded_key  = $connection->pluginId . self::RESEEDED_ADDONS_SUFFIX; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
 		if ( ! empty( $addons ) ) {
-			delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
-		} elseif ( $was_cold ) {
-			// Match the vendor's own error TTL so the two expire together.
-			set_transient( self::PRODUCTS_ERROR_TRANSIENT, 1, 5 * MINUTE_IN_SECONDS );
+			// A list re-seeded from the last-good copy is not a fresh fetch: it must neither
+			// lift the outage marker nor extend the copy's 12h deadline.
+			if ( false === get_transient( $reseeded_key ) ) {
+				delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
+
+				// Written only after a real fetch (or to seed a missing copy), so warm reads
+				// cause no database write.
+				if ( $was_cold || false === get_transient( $last_good_key ) ) {
+					set_transient( $last_good_key, $addons, self::LAST_GOOD_ADDONS_TTL );
+				}
+			}
+		} else {
+			$last_good = get_transient( $last_good_key );
+
+			if ( is_array( $last_good ) && ! empty( $last_good ) ) {
+				// Serve the real plan through the outage; retried after the vendor error TTL.
+				$addons = $last_good;
+				set_transient( $cache_key, $addons, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+				set_transient( $reseeded_key, 1, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+				set_transient( self::PRODUCTS_ERROR_TRANSIENT, 1, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+			} elseif ( $was_cold ) {
+				// Match the vendor's own error TTL so the two expire together.
+				set_transient( self::PRODUCTS_ERROR_TRANSIENT, 1, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+			}
 		}
 
 		self::$addons_memo = $addons;
@@ -418,6 +528,10 @@ class BB_Addons_Manager extends AddonsManager {
 
 		delete_transient( $plugin_id . self::CACHE_KEY_ADDONS );
 		delete_site_transient( $plugin_id . self::CACHE_KEY_ADDONS );
+
+		// The last-known-good copy belongs to the license it was fetched for.
+		delete_transient( $plugin_id . self::LAST_GOOD_ADDONS_SUFFIX );
+		delete_transient( $plugin_id . self::RESEEDED_ADDONS_SUFFIX );
 
 		// A manual refresh / license change must lift the recorded outage too, otherwise
 		// the upsell guards stay suppressed for the rest of the error window.

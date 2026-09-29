@@ -258,9 +258,13 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * idempotent:
 	 *
 	 * - A license already stored on the network is never overwritten.
-	 * - Only the MAIN site's license is copied. Its activation domain is the network domain, so
-	 *   it is the same activation record on the licensing server. A subsite's license may be a
-	 *   different customer or edition, so it is never promoted automatically.
+	 * - The MAIN site's license is preferred. Its activation domain is the network domain, so
+	 *   it is the same activation record on the licensing server.
+	 * - Only when the main site has no license is a subsite license carried over, and only if
+	 *   exactly one distinct key is active among the subsites whose activation host matches
+	 *   the network — see {@see self::find_subsite_license_for_network()}. Anything
+	 *   else is left for the network admin to activate from Network Admin. This scan runs on
+	 *   an admin, cron or WP-CLI request only, never on a front-end page view.
 	 * - The per-site rows are left in place (dormant), so nothing is lost if the network
 	 *   activation is later reversed.
 	 *
@@ -273,11 +277,11 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 			return false;
 		}
 
-		update_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, 1 );
-
 		// Never overwrite a license the network already holds.
 		$network_plugin_id = (string) get_site_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION );
 		if ( '' !== (string) get_site_option( self::STABLE_LICENSE_KEY_OPTION, '' ) || '' !== (string) get_site_option( $network_plugin_id . '_license_key', '' ) ) {
+			update_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, 1 );
+
 			return false;
 		}
 
@@ -293,14 +297,43 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 			$main_key = (string) get_blog_option( $main_site_id, self::STABLE_LICENSE_KEY_OPTION, '' );
 		}
 
-		if ( '' === $main_key ) {
-			self::$bypass_legacy_bridge = false;
+		$source_site_id = $main_site_id;
+		$source_domain  = '';
 
-			return false;
+		if ( '' === $main_key ) {
+			// The subsite scan below can touch many sites; keep it off front-end page views and
+			// retry on the next admin, cron or WP-CLI request. Nothing is written until then.
+			if ( ! ( is_admin() || wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) ) ) {
+				self::$bypass_legacy_bridge = false;
+
+				return false;
+			}
+
+			// The scan completes in this request, found or not, so it runs only once.
+			update_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, 1 );
+
+			// Before license state was network-scoped, a network-activated install could only
+			// enter its key from a single site's dashboard — possibly a subsite. Carry such a
+			// license over rather than silently dropping it.
+			$candidate = self::find_subsite_license_for_network( $main_site_id );
+
+			if ( null === $candidate ) {
+				self::$bypass_legacy_bridge = false;
+
+				return false;
+			}
+
+			$source_site_id = $candidate['blog_id'];
+			$plugin_id      = $candidate['plugin_id'];
+			$main_key       = $candidate['key'];
+			$source_domain  = $candidate['domain'];
+		} else {
+			// The main site's license is copied now, so this runs only once.
+			update_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, 1 );
 		}
 
 		foreach ( self::license_option_names( $plugin_id ) as $name ) {
-			$value = get_blog_option( $main_site_id, $name, null );
+			$value = get_blog_option( $source_site_id, $name, null );
 			if ( null !== $value ) {
 				update_site_option( $name, $value );
 			}
@@ -311,7 +344,148 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		// The per-SKU key may be empty while the stable mirror holds the key.
 		update_site_option( $plugin_id . '_license_key', $main_key );
 
+		// Pin the identifier the subsite was activated with, so the network keeps using
+		// that activation record instead of resolving a new one, and remember where it came
+		// from so a later network deactivation does not hand it to the main site.
+		if ( '' !== $source_domain ) {
+			update_site_option( self::ACTIVATION_DOMAIN_OPTION, $source_domain );
+			update_site_option(
+				self::NETWORK_SOURCE_SITE_OPTION,
+				array(
+					'blog_id' => $source_site_id,
+					'domain'  => $source_domain,
+				)
+			);
+		}
+
 		return true;
+	}
+
+	/**
+	 * Site option recording the subsite a network license was carried over from.
+	 *
+	 * Holds `array( 'blog_id' => int, 'domain' => string )`. Read by
+	 * {@see self::move_license_to_main_site()}: while the network still uses that subsite's
+	 * activation, the license is not copied to the main site on network deactivation — the
+	 * subsite still holds its own (dormant) copy, and two sites must not share one activation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const NETWORK_SOURCE_SITE_OPTION = 'bb_license_network_source_site';
+
+	/**
+	 * Site option naming a subsite whose license could not be moved to the network.
+	 *
+	 * Set by {@see self::maybe_move_license_to_network()} when the main site has no license
+	 * and no subsite license can be carried over safely (activated for a different host, or
+	 * several subsites hold different keys), so the network admin can be told to activate
+	 * the license from Network Admin.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const NETWORK_MOVE_SKIPPED_OPTION = 'bb_license_network_move_skipped_site';
+
+	/**
+	 * Finds an active subsite license that the network can take over.
+	 *
+	 * Only a license whose activation domain has the network's host is returned: the
+	 * network resolves its activation domain from the network home URL, so a license
+	 * activated for another host (a subdomain or mapped-domain subsite) would 404 on the
+	 * next status check and be revoked. When more than one distinct key is active across
+	 * the subsites, none is chosen: they may belong to different customers or editions.
+	 * Either way the case is recorded in {@see self::NETWORK_MOVE_SKIPPED_OPTION} so the
+	 * network admin is asked to activate the license from Network Admin.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $main_site_id The main site ID, which is skipped.
+	 * @return array{blog_id: int, plugin_id: string, key: string, domain: string}|null
+	 */
+	private static function find_subsite_license_for_network( int $main_site_id ): ?array {
+		$network_host = strtolower( (string) wp_parse_url( network_home_url(), PHP_URL_HOST ) );
+
+		if ( '' === $network_host ) {
+			return null;
+		}
+
+		/** This filter is documented in src/bp-core/admin/mothership/class-bb-plugin-connector.php */
+		$limit = (int) apply_filters( 'bb_license_licensed_sites_scan_limit', 1000 );
+
+		$blog_ids = get_sites(
+			array(
+				'fields'       => 'ids',
+				'number'       => $limit,
+				'site__not_in' => array( $main_site_id ),
+				'network_id'   => get_current_network_id(),
+				'archived'     => 0,
+				'deleted'      => 0,
+				'spam'         => 0,
+			)
+		);
+
+		$skipped    = 0;
+		$candidates = array();
+
+		foreach ( $blog_ids as $blog_id ) {
+			$blog_id   = (int) $blog_id;
+			$plugin_id = (string) get_blog_option( $blog_id, 'buddyboss_dynamic_plugin_id', '' );
+			$plugin_id = '' !== $plugin_id ? $plugin_id : PLATFORM_EDITION;
+
+			if ( ! get_blog_option( $blog_id, $plugin_id . '_license_activation_status', false ) ) {
+				continue;
+			}
+
+			$key = (string) get_blog_option( $blog_id, $plugin_id . '_license_key', '' );
+			if ( '' === $key ) {
+				$key = (string) get_blog_option( $blog_id, self::STABLE_LICENSE_KEY_OPTION, '' );
+			}
+
+			if ( '' === $key ) {
+				continue;
+			}
+
+			// A license activated before the stored-domain option existed was activated
+			// against the site's bare host.
+			$domain = (string) get_blog_option( $blog_id, self::ACTIVATION_DOMAIN_OPTION, '' );
+			if ( '' === $domain ) {
+				$domain = (string) wp_parse_url( get_home_url( $blog_id ), PHP_URL_HOST );
+			}
+
+			if ( '' === $domain || self::domain_host( $domain ) !== $network_host ) {
+				$skipped = $skipped ? $skipped : $blog_id;
+
+				continue;
+			}
+
+			// The first site found for a key is the one carried over.
+			if ( ! isset( $candidates[ $key ] ) ) {
+				$candidates[ $key ] = array(
+					'blog_id'   => $blog_id,
+					'plugin_id' => $plugin_id,
+					'key'       => $key,
+					'domain'    => $domain,
+				);
+			}
+		}
+
+		if ( 1 === count( $candidates ) ) {
+			return reset( $candidates );
+		}
+
+		if ( ! empty( $candidates ) ) {
+			$first   = reset( $candidates );
+			$skipped = $first['blog_id'];
+		}
+
+		if ( $skipped ) {
+			update_site_option( self::NETWORK_MOVE_SKIPPED_OPTION, $skipped );
+		}
+
+		return null;
 	}
 
 	/**
@@ -323,10 +497,27 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * resurrecting a stale network value. Subsites fall back to their own dormant license,
 	 * if any.
 	 *
+	 * A license that was carried over from a subsite (and is still on that subsite's
+	 * activation) is not copied to the main site: the subsite keeps its own dormant copy,
+	 * and two sites must not share one activation record.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function move_license_to_main_site(): void {
 		$main_site_id = get_main_site_id();
+
+		// Nothing was ever moved up, or it has already been handed back: a repeat run must not
+		// wipe the main site's license rows.
+		$network_id_for_check = (string) get_site_option( 'buddyboss_dynamic_plugin_id', '' );
+		$network_id_for_check = '' !== $network_id_for_check ? $network_id_for_check : PLATFORM_EDITION;
+		if (
+			! get_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION, false ) &&
+			'' === (string) get_site_option( self::STABLE_LICENSE_KEY_OPTION, '' ) &&
+			'' === (string) get_site_option( $network_id_for_check . '_license_key', '' ) &&
+			! get_site_option( $network_id_for_check . '_license_activation_status', false )
+		) {
+			return;
+		}
 
 		// update_blog_option() compares against get_option(); the bridge must not answer it.
 		self::$bypass_legacy_bridge = true;
@@ -354,18 +545,24 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		// superseded plugin ID, is removed rather than letting a stale copy come back.
 		$current = self::license_option_names( $plugin_id );
 
-		foreach ( $names as $name ) {
-			$value = in_array( $name, $current, true ) ? get_site_option( $name, null ) : null;
+		$source           = get_site_option( self::NETWORK_SOURCE_SITE_OPTION, array() );
+		$from_other_site  = is_array( $source ) && ! empty( $source['blog_id'] ) && (int) $source['blog_id'] !== (int) $main_site_id;
+		$still_its_record = $from_other_site && isset( $source['domain'] ) && (string) get_site_option( self::ACTIVATION_DOMAIN_OPTION, '' ) === (string) $source['domain'];
 
-			if ( null !== $value ) {
-				update_blog_option( $main_site_id, $name, $value );
-			} else {
-				delete_blog_option( $main_site_id, $name );
+		if ( ! $still_its_record ) {
+			foreach ( $names as $name ) {
+				$value = in_array( $name, $current, true ) ? get_site_option( $name, null ) : null;
+
+				if ( null !== $value ) {
+					update_blog_option( $main_site_id, $name, $value );
+				} else {
+					delete_blog_option( $main_site_id, $name );
+				}
 			}
-		}
 
-		if ( '' !== $network_key ) {
-			update_blog_option( $main_site_id, $plugin_id . '_license_key', $network_key );
+			if ( '' !== $network_key ) {
+				update_blog_option( $main_site_id, $plugin_id . '_license_key', $network_key );
+			}
 		}
 
 		self::$bypass_legacy_bridge = false;
@@ -374,6 +571,8 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 			delete_site_option( $name );
 		}
 		delete_site_option( self::NETWORK_SCOPE_MIGRATED_OPTION );
+		delete_site_option( self::NETWORK_MOVE_SKIPPED_OPTION );
+		delete_site_option( self::NETWORK_SOURCE_SITE_OPTION );
 		delete_site_transient( $plugin_id . '_license_details' );
 	}
 
@@ -794,9 +993,15 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * the twice-daily status cron would 404 and GroundLevel would revoke the license. So
 	 * the resolution order is:
 	 *
-	 * 1. The domain stored at activation time, when present — always authoritative.
+	 * 1. The domain stored at activation time, when its host still matches this site (or, in
+	 *    network mode, the main site).
 	 * 2. The bare host, for a license activated before that option existed (legacy).
 	 * 3. `host/path`, for a fresh activation only.
+	 *
+	 * The stored domain is ignored once its host no longer matches the site's home URL.
+	 * A staging copy or database clone inherits the option, and without this check it
+	 * would keep authenticating as production — and a "Deactivate" clicked on the clone
+	 * would release production's activation on the licensing server.
 	 *
 	 * When BuddyBoss Platform is network-activated, the network home URL is used so
 	 * every site in the network resolves the same domain for the shared license.
@@ -809,14 +1014,22 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @return string The activation domain (`host` or `host/path`).
 	 */
 	public function resolveDomain(): string {
-		$stored = $this->getStoredActivationDomain();
+		$network  = self::is_network_mode();
+		$home_url = $network ? network_home_url() : get_home_url();
+		$host     = (string) wp_parse_url( $home_url, PHP_URL_HOST );
+		$stored   = $this->getStoredActivationDomain();
 
-		if ( '' !== $stored ) {
-			return $stored;
+		// In network mode the license may have been activated from the main site before it
+		// moved to the network, and the main site's host can differ from the network's
+		// (domain mapping). Either host belongs to this install, never to a clone.
+		$hosts = array( strtolower( $host ) );
+		if ( $network ) {
+			$hosts[] = strtolower( (string) wp_parse_url( get_home_url( get_main_site_id() ), PHP_URL_HOST ) );
 		}
 
-		$home_url = self::is_network_mode() ? network_home_url() : get_home_url();
-		$host     = (string) wp_parse_url( $home_url, PHP_URL_HOST );
+		if ( '' !== $stored && ( '' === $host || in_array( self::domain_host( $stored ), $hosts, true ) ) ) {
+			return $stored;
+		}
 
 		if ( '' === $host ) {
 			return '';
@@ -830,6 +1043,20 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		}
 
 		return $host . untrailingslashit( (string) wp_parse_url( $home_url, PHP_URL_PATH ) );
+	}
+
+	/**
+	 * Gets the lower-cased host part of an activation domain (`host` or `host/path`).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $domain Activation domain.
+	 * @return string The host.
+	 */
+	private static function domain_host( string $domain ): string {
+		$parts = explode( '/', $domain, 2 );
+
+		return strtolower( $parts[0] );
 	}
 
 	/**
@@ -865,6 +1092,10 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * @param string $domain The domain the activation was performed with.
 	 */
 	public function storeActivationDomain( string $domain ): void {
+		// A new activation is the network's own, no longer the subsite record it was
+		// carried over from — see self::NETWORK_SOURCE_SITE_OPTION.
+		delete_site_option( self::NETWORK_SOURCE_SITE_OPTION );
+
 		if ( '' === $domain ) {
 			self::delete_license_option( self::ACTIVATION_DOMAIN_OPTION );
 
@@ -883,6 +1114,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function clearActivationDomain(): void {
 		self::delete_license_option( self::ACTIVATION_DOMAIN_OPTION );
+		delete_site_option( self::NETWORK_SOURCE_SITE_OPTION );
 	}
 
 	/**

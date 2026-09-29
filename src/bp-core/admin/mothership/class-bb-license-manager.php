@@ -458,6 +458,7 @@ class BB_License_Manager {
 			$plugin_connector->clearActivationDomain();
 		}
 		self::clear_activation_transient();
+		self::flush_license_dependent_caches();
 
 		bb_error_log( 'BuddyBoss: License deactivated', true );
 	}
@@ -672,9 +673,9 @@ class BB_License_Manager {
 			// updateLicenseActivationStatus() clears the add-ons cache via the plugin connector.
 			$plugin_connector->updateLicenseActivationStatus( true );
 
-			// The cached activation still holds the previous key; leaving it would make
-			// GroundLevel's onLicenseKeyOverwritten() guard deactivate this new license.
-			self::clear_activation_transient();
+			// Drop the stale vendor activation cache and the revocation notice, and refresh
+			// everything keyed on the license state.
+			self::after_license_activated();
 
 			$plugin_id = $plugin_connector->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
@@ -692,6 +693,64 @@ class BB_License_Manager {
 			self::disable_header_capture();
 			bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
 			throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss' ) );
+		}
+	}
+
+	/**
+	 * Runs the follow-up work for a license that has just been activated.
+	 *
+	 * GroundLevel 2.2.1 fired `{pluginId}_license_status_changed` with `true` after every
+	 * successful status check, and BuddyBoss hung its "license is valid again" cleanup on
+	 * that. GroundLevel 9.1.2 only fires it (deprecated, with `false`) on revocation, so the
+	 * cleanup has to run from BuddyBoss's own activation paths instead:
+	 *
+	 * - the vendor's cached activation still holds the previous key, which would make its
+	 *   onLicenseKeyOverwritten() guard deactivate the new license;
+	 * - the vendor's persistent "license revoked" notice would keep showing after the
+	 *   license is working again;
+	 * - the placeholder-card and field-upgrade catalogs are resolved per license tier.
+	 *
+	 * The DRM state is cleared by {@see \BuddyBoss\Core\Admin\DRM\BB_DRM_Controller::drm_init()}
+	 * once the license validates.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public static function after_license_activated(): void {
+		self::clear_activation_transient();
+
+		try {
+			// The container singleton is prefixed with the plugin ID at boot, but activation can
+			// switch the ID mid-request (KEY:PLUGIN_ID), so clear the current ID's store too.
+			$stores = array( self::container()->get( \BuddyBossPlatform\GroundLevel\Support\AdminNotices::class ) );
+
+			$plugin_id = (string) self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( '' !== $plugin_id ) {
+				$stores[] = new \BuddyBossPlatform\GroundLevel\Support\AdminNotices( $plugin_id );
+			}
+
+			foreach ( $stores as $notices ) {
+				$notices->remove( 'license_revoked' );
+				$notices->remove( 'license_key_overwritten' );
+			}
+		} catch ( \Throwable $e ) {
+			bb_error_log( sprintf( 'BuddyBoss: could not clear license notices: %s', $e->getMessage() ), true );
+		}
+
+		self::flush_license_dependent_caches();
+	}
+
+	/**
+	 * Refreshes the admin catalogs whose contents depend on the license tier.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private static function flush_license_dependent_caches(): void {
+		if ( function_exists( 'bb_clear_placeholder_cache_on_license_change' ) ) {
+			bb_clear_placeholder_cache_on_license_change();
+		}
+
+		if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
+			bb_flush_field_upgrades_cache_full();
 		}
 	}
 
@@ -1580,6 +1639,7 @@ class BB_License_Manager {
 				$plugin_connector->clearActivationDomain();
 			}
 			self::clear_activation_transient();
+			self::flush_license_dependent_caches();
 
 			// Clear migration flag.
 			delete_option( 'bb_mothership_licenses_migrated' );
