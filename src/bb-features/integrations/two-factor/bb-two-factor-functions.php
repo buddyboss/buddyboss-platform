@@ -261,13 +261,103 @@ function bb_two_factor_get_recovery_providers() {
 }
 
 /**
- * Check that a submitted set of methods keeps a usable recovery method.
+ * Check that a set of enabled methods keeps a usable recovery method.
  *
  * Members manage two-factor without wp-admin, so nobody can reset it for them
  * from the profile screen if they lose their device. A primary method may
- * therefore only be saved alongside a recovery method that is already set up.
+ * therefore only be enabled alongside a recovery method that is already set up.
  * Turning every method off, or enabling a recovery method on its own, is
  * always allowed.
+ *
+ * Only recovery providers the site actually offers the member count. When the
+ * site offers none - for example, an admin turned Recovery Codes off in the Two
+ * Factor settings - the rule cannot be met and is waived, so members can still
+ * turn two-factor on.
+ *
+ * Shared by the Security tab save and the guard on the plugin's authenticator
+ * REST route, which is why it takes the provider list rather than reading POST.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int      $user_id      Member being changed.
+ * @param string[] $provider_ids Provider class names that would be enabled.
+ * @return true|WP_Error True when the set may be enabled.
+ */
+function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
+
+	/**
+	 * Filters whether a recovery method is required before a primary method can be enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $required Default true.
+	 * @param int  $user_id  Member being changed.
+	 */
+	if ( ! apply_filters( 'bb_two_factor_require_recovery_method', true, $user_id ) ) {
+		return true;
+	}
+
+	$supported = Two_Factor_Core::get_supported_providers_for_user( $user_id );
+
+	if ( ! is_array( $supported ) || empty( $supported ) ) {
+		return true;
+	}
+
+	$provider_ids = array_filter( array_map( 'strval', (array) $provider_ids ) );
+	$enabled      = array_intersect_key( $supported, array_flip( $provider_ids ) );
+	$recovery_ids = bb_two_factor_get_recovery_providers();
+	$primary      = array_diff_key( $enabled, array_flip( $recovery_ids ) );
+
+	if ( empty( $primary ) ) {
+		return true;
+	}
+
+	// Recovery providers the site offers this member. None offered: the rule cannot be met, so it does not apply.
+	$offered = array_intersect_key( $supported, array_flip( $recovery_ids ) );
+
+	if ( empty( $offered ) ) {
+		return true;
+	}
+
+	$user         = get_userdata( $user_id );
+	$unconfigured = null;
+
+	foreach ( $offered as $provider_id => $provider ) {
+		if ( ! isset( $enabled[ $provider_id ] ) ) {
+			continue;
+		}
+
+		if ( $user && $provider->is_available_for_user( $user ) ) {
+			return true;
+		}
+
+		if ( null === $unconfigured ) {
+			$unconfigured = $provider;
+		}
+	}
+
+	if ( null !== $unconfigured ) {
+		if ( 'Two_Factor_Backup_Codes' === get_class( $unconfigured ) ) {
+			$message = __( 'Generate your recovery codes before saving, so you can still sign in if you lose access to your device.', 'buddyboss' );
+		} else {
+			$message = sprintf(
+				/* translators: %s: recovery method name, e.g. "Recovery Codes". */
+				__( 'Finish setting up %s before saving, so you can still sign in if you lose access to your device.', 'buddyboss' ),
+				wp_strip_all_tags( $unconfigured->get_label() )
+			);
+		}
+
+		return new WP_Error( 'bb_two_factor_recovery_not_configured', $message );
+	}
+
+	return new WP_Error(
+		'bb_two_factor_recovery_required',
+		__( 'Set up and enable a recovery method, such as Recovery Codes, before turning on a two-factor method, so you can still sign in if you lose access to your device.', 'buddyboss' )
+	);
+}
+
+/**
+ * Check the methods submitted from the Security tab keep a usable recovery method.
  *
  * Reads the same POST field the plugin's saver reads. The caller has verified
  * both nonces before this runs.
@@ -278,57 +368,13 @@ function bb_two_factor_get_recovery_providers() {
  * @return true|WP_Error True when the submission may be saved.
  */
 function bb_two_factor_validate_recovery_method( $user_id ) {
-
-	/**
-	 * Filters whether a recovery method is required before a primary method can be saved.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $required Default true.
-	 * @param int  $user_id  Member being saved.
-	 */
-	if ( ! apply_filters( 'bb_two_factor_require_recovery_method', true, $user_id ) ) {
-		return true;
-	}
-
 	$field = Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY;
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Both nonces are verified by bb_two_factor_settings_save() before this runs.
 	$input = isset( $_POST[ $field ] ) && is_array( $_POST[ $field ] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST[ $field ] ) ) : array();
 
-	// The plugin prints an empty placeholder input so the field always posts; drop it.
-	$input = array_filter( $input );
-
-	$supported = Two_Factor_Core::get_supported_providers_for_user( $user_id );
-	$enabled   = is_array( $supported ) ? array_intersect_key( $supported, array_flip( $input ) ) : array();
-	$recovery  = bb_two_factor_get_recovery_providers();
-	$primary   = array_diff_key( $enabled, array_flip( $recovery ) );
-
-	if ( empty( $primary ) ) {
-		return true;
-	}
-
-	$user = get_userdata( $user_id );
-
-	foreach ( $recovery as $provider_key ) {
-		if ( ! isset( $enabled[ $provider_key ] ) ) {
-			continue;
-		}
-
-		if ( $user && $enabled[ $provider_key ]->is_available_for_user( $user ) ) {
-			return true;
-		}
-
-		return new WP_Error(
-			'bb_two_factor_recovery_not_configured',
-			__( 'Generate your recovery codes before saving, so you can still sign in if you lose access to your device.', 'buddyboss' )
-		);
-	}
-
-	return new WP_Error(
-		'bb_two_factor_recovery_required',
-		__( 'Set up and enable a recovery method, such as Recovery Codes, before turning on a two-factor method, so you can still sign in if you lose access to your device.', 'buddyboss' )
-	);
+	// The plugin prints an empty placeholder input so the field always posts; it is dropped by the check.
+	return bb_two_factor_check_recovery_method( $user_id, $input );
 }
 
 /**
