@@ -384,6 +384,32 @@ function bb_two_factor_set_revalidate_return( $html, $return_url ) {
 }
 
 /**
+ * Reword plugin strings that only make sense on the wp-admin profile screen.
+ *
+ * Attached around Two_Factor_Core::user_two_factor_options() only, so the
+ * plugin's own wp-admin screen is untouched.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $translation Translated text.
+ * @param string $text        Original text.
+ * @param string $domain      Text domain.
+ * @return string
+ */
+function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
+	if ( 'two-factor' !== $domain ) {
+		return $translation;
+	}
+
+	// The wp-admin note points at the Application Passwords fields "above", which the Security tab does not have.
+	if ( 'Authentication for REST API and XML-RPC must use application passwords (defined above) instead of your regular password.' === $text ) {
+		return __( 'Authentication for the REST API and XML-RPC must use an application password instead of your regular password.', 'buddyboss' );
+	}
+
+	return $translation;
+}
+
+/**
  * Render the plugin's own two-factor options for a member.
  *
  * Output is the plugin's wp-admin profile section verbatim, so every provider it
@@ -402,9 +428,13 @@ function bb_two_factor_render_options( $user ) {
 		return;
 	}
 
+	add_filter( 'gettext', 'bb_two_factor_filter_plugin_strings', 10, 3 );
+
 	ob_start();
 	Two_Factor_Core::user_two_factor_options( $user );
 	$html = ob_get_clean();
+
+	remove_filter( 'gettext', 'bb_two_factor_filter_plugin_strings', 10 );
 
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup is produced and escaped by Two_Factor_Core.
 	echo bb_two_factor_set_revalidate_return( $html, bb_two_factor_get_settings_url( $user->ID ) );
