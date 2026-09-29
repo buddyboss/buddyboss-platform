@@ -127,13 +127,206 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	}
 
 	/**
+	 * Build the meta query for the potential group invites user query.
+	 *
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss [BBVERSION] Resolve a lone `NOT EXISTS` clause to an excluded user ID list
+	 *                              and join the `WP_Meta_Query` fallback on the query's uid column.
+	 *
+	 * @param BP_User_Query $bp_user_query The user query being built.
 	 */
 	public function build_meta_query( BP_User_Query $bp_user_query ) {
-		if ( isset( $this->query_vars['scope'] ) && 'members' === $this->query_vars['scope'] && isset( $this->query_vars['meta_query'] ) ) {
+		global $wpdb;
 
-			$invites_meta_query = new WP_Meta_Query( $this->query_vars['meta_query'] );
-			$meta_sql           = $invites_meta_query->get_sql( 'user', 'u', 'ID' );
+		if ( isset( $this->query_vars['scope'] ) && 'members' === $this->query_vars['scope'] && isset( $this->query_vars['meta_query'] ) ) {
+			$meta_query = $this->query_vars['meta_query'];
+
+			// A `NOT EXISTS` anti-join scans the whole user table, so query the excluded ids
+			// instead. The fast path is deliberately restricted to the one meta key the invite
+			// screen uses: the AJAX handler merges `$_POST` wholesale, so any invite-capable
+			// member could otherwise point this lookup at an arbitrary key and force an uncached
+			// scan of the whole usermeta table. Every other shape (relation, keyed/nested
+			// clauses, compare_key, array keys, any other key) keeps the WP_Meta_Query path
+			// below, whose semantics the fast path cannot replicate.
+			if (
+				is_array( $meta_query ) &&
+				1 === count( $meta_query ) &&
+				isset( $meta_query[0]['key'], $meta_query[0]['compare'] ) &&
+				'_bp_nouveau_restrict_invites_to_friends' === $meta_query[0]['key'] &&
+				is_string( $meta_query[0]['compare'] ) &&
+				'NOT EXISTS' === strtoupper( $meta_query[0]['compare'] ) &&
+				( ! isset( $meta_query[0]['compare_key'] ) || '=' === $meta_query[0]['compare_key'] )
+			) {
+
+				/**
+				 * Filters the hard ceiling on excluded user IDs resolved inline for group invites.
+				 *
+				 * This is only a memory backstop for pathological data. It is deliberately not a
+				 * performance boundary: the inline `NOT IN` gets *faster* as the excluded set
+				 * grows, because fewer rows survive to the sort, while the `WP_Meta_Query`
+				 * anti-join it falls back to is roughly 3x slower. The default keeps the emitted
+				 * SQL under a conservative 1MB `max_allowed_packet`.
+				 *
+				 * Return `0` to force the legacy path whenever any user holds the meta, or a
+				 * negative value to force it unconditionally. The distinction matters: with
+				 * nobody opted in there is nothing to exclude, so a `0` ceiling still returns
+				 * on the fast path without ever building a `WP_Meta_Query` - and third-party
+				 * code filtering `get_meta_sql` for this clause would never see it. A negative
+				 * ceiling is the only way to guarantee the clause is always built.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int $limit Maximum number of excluded user IDs. Default 100000.
+				 *                   `0` disables the fast path once anyone holds the meta;
+				 *                   any negative value disables it unconditionally.
+				 */
+				$raw_limit = (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 100000 );
+
+				// A negative ceiling opts out of the fast path entirely. Handled as an
+				// immediate over-ceiling verdict so no lookup runs and no cache is touched.
+				$fast_path_disabled = $raw_limit < 0;
+				$limit              = min( max( 0, $raw_limit ), PHP_INT_MAX - 1 );
+
+				/**
+				 * Filters the largest excluded-ID list that is written to the object cache.
+				 *
+				 * Deliberately separate from the ceiling above, because the two are sized
+				 * against different limits. The ceiling bounds the emitted SQL against
+				 * `max_allowed_packet` — 100k ids is ~0.7MB. The cached payload is a
+				 * serialised PHP array, and the same 100k ids are ~1.6MB, which exceeds
+				 * memcached's 1MB default item size: such a set is dropped silently, so every
+				 * request re-pays the lookup while believing it cached the result. Redis has
+				 * no comparable per-item limit, so no second ceiling is imposed by default —
+				 * lower this on a memcached backend with a small item size.
+				 *
+				 * A list larger than this is still used inline for the request; it is only
+				 * not stored.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int $cacheable Maximum number of ids to store. Defaults to $limit.
+				 * @param int $limit     The resolved inline ceiling.
+				 */
+				$cacheable = max( 0, (int) apply_filters( 'bb_nouveau_group_invites_cacheable_ids_limit', $limit, $limit ) );
+
+				// Capture the cache version BEFORE reading or querying. Invalidation resets the
+				// incrementor, so a rebuild that raced a member toggling the setting writes under
+				// a key nobody will read again, instead of overwriting the fresh state with its
+				// pre-toggle snapshot. All three keys below carry it, so one reset clears them.
+				$incrementor   = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+				$list_key      = 'bb_restrict_invites_ids_' . $incrementor;
+				$ceiling_key   = 'bb_restrict_invites_over_' . $limit . '_' . $incrementor;
+				$lock_key      = 'bb_restrict_invites_lock_' . $incrementor;
+				$lookup_failed = false;
+
+				// Past the ceiling the lookup result is truncated and discarded, so remember that
+				// verdict briefly: re-running a throwaway lookup on every request costs more than
+				// the anti-join it falls back to. Keyed by `$limit` so a caller that filters the
+				// ceiling down cannot force the fallback on callers using a different ceiling.
+				$over_ceiling = $fast_path_disabled ? true : (bool) wp_cache_get( $ceiling_key, 'bb_nouveau_group_invites' );
+				$excluded_ids = $over_ceiling ? false : wp_cache_get( $list_key, 'bb_nouveau_group_invites' );
+
+				// A miss returns false; anything not an array is unusable, so re-query rather
+				// than counting it. A cached empty array is a valid hit and is kept.
+				if ( ! $over_ceiling && ! is_array( $excluded_ids ) ) {
+
+					// Reduces — but does not bound — a rebuild stampede: the cache goes cold on
+					// every toggle and this runs for each concurrent viewer. The winner rebuilds
+					// while a loser re-reads once, which is often enough to catch a just-finished
+					// rebuild; a loser that still misses queries rather than blocking the request.
+					$lock_held_elsewhere = ! wp_cache_add( $lock_key, 1, 'bb_nouveau_group_invites', 30 );
+
+					if ( $lock_held_elsewhere ) {
+						$excluded_ids = wp_cache_get( $list_key, 'bb_nouveau_group_invites' );
+					}
+
+					if ( ! is_array( $excluded_ids ) ) {
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Indexed meta_key lookup, cached immediately below.
+						$excluded_ids  = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT %d", $meta_query[0]['key'], $limit + 1 ) ) );
+						$lookup_failed = ! empty( $wpdb->last_error );
+
+						// `LIMIT $limit + 1` means an over-ceiling result is truncated and must
+						// never be cached or emitted as an exclusion.
+						if ( ! $lookup_failed && count( $excluded_ids ) > $limit ) {
+							$over_ceiling = true;
+
+							// Without a persistent object cache this verdict does not survive the
+							// request, so such a site re-pays the throwaway lookup each time.
+							wp_cache_set( $ceiling_key, 1, 'bb_nouveau_group_invites', 5 * MINUTE_IN_SECONDS );
+						} elseif ( ! $lookup_failed && count( $excluded_ids ) <= $cacheable ) {
+							// Cache the parsed ids: the payload is smaller than the raw string
+							// column and callers get integers back. Skipped above the cacheable
+							// size so a backend that would silently drop the set is not asked to
+							// take it on every request - see the filter docblock.
+							wp_cache_set( $list_key, $excluded_ids, 'bb_nouveau_group_invites', HOUR_IN_SECONDS );
+						}
+					}
+
+					if ( ! $lock_held_elsewhere ) {
+						wp_cache_delete( $lock_key, 'bb_nouveau_group_invites' );
+					}
+				}
+
+				// On a lookup failure fall through to `WP_Meta_Query` — a privacy exclusion must
+				// fail closed, never silently disappear. The count is re-checked here so a cached
+				// list built under a higher ceiling still honours a lowered one.
+				if ( ! $lookup_failed && ! $over_ceiling && is_array( $excluded_ids ) && count( $excluded_ids ) <= $limit ) {
+					if ( ! empty( $excluded_ids ) ) {
+						// Re-parsed rather than trusted: the value may have come from the object
+						// cache, and it is interpolated straight into SQL.
+						$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', wp_parse_id_list( $excluded_ids ) ) . ')';
+					}
+
+					return;
+				}
+
+				// The invite list re-queries on submitted searches and on every page of results,
+				// so log each distinct reason once per request rather than once per query.
+				//
+				// Keyed by request rather than left to accumulate: a function static is scoped to
+				// the process, not the request, so under a worker SAPI (Swoole, RoadRunner,
+				// FrankenPHP worker mode) it would survive between requests and silence this
+				// diagnostic for every later request that worker handled. Standard PHP-FPM and
+				// mod_php reset it anyway; this makes the cadence the same everywhere.
+				static $logged_fallbacks = array();
+				static $logged_request   = null;
+
+				// Cast rather than sanitised: the value is only compared with itself to detect a
+				// request boundary, and a float cast is what makes that safe.
+				$request_token = isset( $_SERVER['REQUEST_TIME_FLOAT'] ) ? (float) $_SERVER['REQUEST_TIME_FLOAT'] : 0.0;
+
+				if ( $logged_request !== $request_token ) {
+					$logged_fallbacks = array();
+					$logged_request   = $request_token;
+				}
+
+				if ( $lookup_failed ) {
+					$fallback_kind   = 'error';
+					$fallback_reason = 'lookup query failed: ' . $wpdb->last_error;
+				} elseif ( $fast_path_disabled ) {
+					$fallback_kind   = 'disabled';
+					$fallback_reason = 'the bb_nouveau_group_invites_excluded_ids_limit filter returned a negative ceiling';
+				} else {
+					$fallback_kind   = 'ceiling';
+					$fallback_reason = 'more than ' . $limit . ' users hold the meta, exceeding the inline ceiling';
+				}
+
+				if ( empty( $logged_fallbacks[ $fallback_kind ] ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					$logged_fallbacks[ $fallback_kind ] = true;
+
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Diagnostic logging gated behind WP_DEBUG.
+					error_log(
+						sprintf(
+							'[BuddyBoss] Group invites excluded-ID fast path skipped for meta key "%s" (%s); using the WP_Meta_Query anti-join fallback.',
+							$meta_query[0]['key'],
+							$fallback_reason
+						)
+					);
+				}
+			}
+
+			$invites_meta_query = new WP_Meta_Query( $meta_query );
+			$meta_sql           = $invites_meta_query->get_sql( 'user', 'u', $bp_user_query->uid_name );
 
 			if ( empty( $meta_sql['join'] ) || empty( $meta_sql['where'] ) ) {
 				return;
