@@ -1095,11 +1095,15 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  * Re-create the delayed message email event when it is missing.
  *
  * With delayed emails on, new-message emails are only sent by this event, so a site
- * without it sends none. Saving the Settings 2.0 Messages panel on 3.0.0–3.5.0 removed
- * the event without re-adding it, and nothing repaired it on upgrade. Declaring the cron
- * on every load lets BP_Core_Cron::schedule() re-create it; that only schedules an event
- * when none exists, so an existing schedule is never changed. Only the root blog, where the
- * delay settings live, gets the event.
+ * without it sends none. Saving the Settings 2.0 Messages panel on 3.0.0–3.5.1 removed
+ * the event without re-adding it, and nothing repaired it on upgrade. This checks on every
+ * load and schedules the event only when none exists, so an existing schedule is never
+ * changed. Only the root blog, where the delay settings live, gets the event.
+ *
+ * Runs on `bp_init` priority 11: the BuddyBoss cron intervals are registered on `bp_init`
+ * priority 10, and wp_schedule_event() rejects an unknown recurrence. The event is scheduled
+ * directly rather than through bp_core_schedule_cron(), so the BP_Core_Cron singleton is not
+ * built earlier than on release, which would start scheduling unrelated declared crons.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -1120,6 +1124,10 @@ function bb_messages_maybe_schedule_digest_email_notifications() {
 		return;
 	}
 
+	if ( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
+		return;
+	}
+
 	if ( ! function_exists( 'bb_check_delay_email_notification' ) || ! bb_check_delay_email_notification() ) {
 		return;
 	}
@@ -1129,9 +1137,14 @@ function bb_messages_maybe_schedule_digest_email_notifications() {
 		return;
 	}
 
-	bp_core_schedule_cron( 'digest_email_notifications', 'bb_digest_message_email_notifications', $schedule['schedule_key'] );
+	// The same per-hook veto BP_Core_Cron::schedule() applies to declared crons.
+	if ( ! apply_filters( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', true ) ) {
+		return;
+	}
+
+	wp_schedule_event( time(), $schedule['schedule_key'], 'bb_digest_email_notifications_hook' );
 }
-add_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications', 3 );
+add_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications', 11 );
 
 /**
  * Prepare the email notification content.

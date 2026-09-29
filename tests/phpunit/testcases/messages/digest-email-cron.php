@@ -49,16 +49,24 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		unset( $_POST['time_delay_email_notification'] );
 		remove_filter( 'bb_enable_legacy_notification_preference', '__return_true' );
 		remove_filter( 'bp_get_root_blog_id', array( $this, 'other_root_blog_id' ) );
+		remove_filter( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', array( $this, 'veto_digest_event' ) );
 		parent::tearDown();
 	}
 
 	/**
-	 * Run the load-time declaration the way a request does: declare on `bp_init`, then let
-	 * BP_Core_Cron::schedule() (`bp_init` priority 10) create what is missing.
+	 * Run the load-time repair the way a request does (`bp_init` priority 11).
 	 */
 	protected function run_load_time_schedule() {
 		bb_messages_maybe_schedule_digest_email_notifications();
-		bp_core_cron()->schedule();
+	}
+
+	/**
+	 * Veto the digest event through the BP_Core_Cron per-hook filter.
+	 *
+	 * @return bool
+	 */
+	public function veto_digest_event() {
+		return false;
 	}
 
 	/**
@@ -78,11 +86,44 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	}
 
 	/**
-	 * Repair — the declaration runs on every load, before BP_Core_Cron::schedule().
+	 * Repair — runs on every load, after `bp_init` priority 10 where the BuddyBoss cron intervals
+	 * (bb_schedule_15min, …) are registered; earlier, wp_schedule_event() rejects the recurrence
+	 * and the repair would silently do nothing on a real site (the test process has the
+	 * intervals registered already, so only the priority can be pinned here).
 	 */
-	public function test_digest_event_declaration_is_hooked_before_the_cron_scheduler() {
-		$this->assertSame( 3, has_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications' ) );
-		$this->assertSame( 10, has_action( 'bp_init', array( bp_core_cron(), 'schedule' ) ) );
+	public function test_digest_repair_runs_after_the_cron_intervals_are_registered() {
+		$priority = has_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications' );
+		$this->assertIsInt( $priority );
+		$this->assertGreaterThan( 10, $priority );
+	}
+
+	/**
+	 * Repair — it schedules the event itself and declares nothing to BP_Core_Cron, so the cron
+	 * singleton is not built earlier than on release (that would start scheduling unrelated
+	 * declared crons, e.g. the media/document/video symlink deleters).
+	 */
+	public function test_digest_repair_does_not_declare_crons_to_bp_core_cron() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'time_delay_email_notification', 15 );
+
+		$this->run_load_time_schedule();
+
+		$this->assertNotFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ), 'precondition: the repair ran' );
+		$this->assertSame( array(), bp_core_cron()->crons, 'nothing declared to BP_Core_Cron' );
+	}
+
+	/**
+	 * Repair — honours the same per-hook veto BP_Core_Cron::schedule() applies.
+	 */
+	public function test_no_digest_event_on_load_when_the_cron_filter_vetoes_it() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'time_delay_email_notification', 15 );
+		add_filter( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', array( $this, 'veto_digest_event' ) );
+
+		$this->run_load_time_schedule();
+
+		remove_filter( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', array( $this, 'veto_digest_event' ) );
+		$this->assertFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) );
 	}
 
 	/**

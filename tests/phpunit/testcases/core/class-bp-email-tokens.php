@@ -330,6 +330,23 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 	}
 
 	/**
+	 * Two emails in one request that identify their message only by `message_id` each resolve
+	 * their own stored sender (the per-request lookup memo is keyed by message).
+	 */
+	public function test_message_id_senders_are_resolved_per_message_in_one_request() {
+		$message_a = $this->create_message( $this->sender_a, 'Stored as A' );
+		$message_b = $this->create_message( $this->sender_b, 'Stored as B' );
+
+		$html_a = $this->send_unread( array( 'message_id' => $message_a ) );
+		$html_b = $this->send_unread( array( 'message_id' => $message_b ) );
+
+		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_a ), $html_a );
+		$this->assertStringNotContainsString( bp_core_get_user_domain( $this->sender_b ), $html_a );
+		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_b ), $html_b );
+		$this->assertStringNotContainsString( bp_core_get_user_domain( $this->sender_a ), $html_b );
+	}
+
+	/**
 	 * `sender.id` takes precedence over the sender stored for `message_id` (producers that pass
 	 * both are authoritative about who the email is from).
 	 */
