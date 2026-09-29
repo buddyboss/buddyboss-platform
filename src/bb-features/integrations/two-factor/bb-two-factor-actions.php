@@ -174,6 +174,42 @@ function bb_two_factor_template_title() {
 	esc_html_e( 'Security', 'buddyboss' );
 }
 
+/**
+ * Keep a revalidation round trip pointed at the Security tab.
+ *
+ * The plugin passes the tab URL through the `login_redirect` filter before it
+ * redirects, and Platform's bb_login_redirect() replaces that destination with
+ * the site's Login Redirect or profile-type redirect for every non-admin. That
+ * is right for a sign-in and wrong for a member who was mid-way through their
+ * security settings, so the override is lifted for this request only, and only
+ * when the destination really is the member's own Security tab.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_User $user The revalidated member.
+ */
+function bb_two_factor_keep_revalidation_return( $user ) {
+	if ( ! ( $user instanceof WP_User ) ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The plugin verified its login nonce before firing this action; the value is only compared.
+	$redirect_to = isset( $_REQUEST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_REQUEST['redirect_to'] ) ) : '';
+
+	if ( '' === $redirect_to ) {
+		return;
+	}
+
+	$security_url = bb_two_factor_get_settings_url( $user->ID );
+
+	if ( '' === $security_url || untrailingslashit( $redirect_to ) !== untrailingslashit( $security_url ) ) {
+		return;
+	}
+
+	remove_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX );
+}
+add_action( 'two_factor_user_revalidated', 'bb_two_factor_keep_revalidation_return' );
+
 /*
  * Social Login (SSO) needs no handling here.
  *
