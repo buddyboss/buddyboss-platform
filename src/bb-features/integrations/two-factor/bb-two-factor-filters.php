@@ -15,12 +15,23 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add the Security entry to the Account admin-bar menu.
  *
+ * The value is not always an array. BuddyBoss Theme replaces every
+ * `bp_{component}_admin_nav` result with an empty string when a menu is assigned
+ * to its Profile Dropdown location (buddyboss_theme_add_admin_menus()), so the
+ * theme's own dropdown can take over. Appending to that string is a fatal error,
+ * so anything that is not an array is passed through untouched.
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $wp_admin_nav Admin-bar items for the Settings component.
- * @return array
+ * @param array|string $wp_admin_nav Admin-bar items for the Settings component, or the
+ *                                   theme's empty-string replacement.
+ * @return array|string
  */
 function bb_two_factor_settings_admin_nav( $wp_admin_nav ) {
+	if ( ! is_array( $wp_admin_nav ) ) {
+		return $wp_admin_nav;
+	}
+
 	if ( ! bb_two_factor_is_active() || ! is_user_logged_in() ) {
 		return $wp_admin_nav;
 	}
