@@ -1744,6 +1744,7 @@ function bp_activity_user_can_delete( $activity = false ) {
  * @global object                    $activities_template {@link BP_Activity_Template}
  *
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss [BBVERSION] Returns false while activity editing is disabled, unless `$privacy_edit`.
  */
 function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 	global $activities_template;
@@ -1777,14 +1778,19 @@ function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 
 	if ( $can_edit && ! $privacy_edit ) {
 
-		// Check activity edit time expiration.
-		$activity_edit_time        = (int) bp_get_activity_edit_time(); // for 10 minutes, 600
-		$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
-		$activity_edit_expire_time = strtotime( $activity->date_recorded ) + $activity_edit_time;
-
-		// Checking if expire time still greater than current time.
-		if ( - 1 !== $activity_edit_time && $activity_edit_expire_time <= $bp_dd_get_time ) {
+		if ( ! bp_is_activity_edit_enabled() ) {
+			// Editing is switched off; without it there is no edit window at all.
 			$can_edit = false;
+		} else {
+			// Check activity edit time expiration.
+			$activity_edit_time        = (int) bp_get_activity_edit_time(); // for 10 minutes, 600
+			$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
+			$activity_edit_expire_time = strtotime( $activity->date_recorded ) + $activity_edit_time;
+
+			// Checking if expire time still greater than current time.
+			if ( - 1 !== $activity_edit_time && $activity_edit_expire_time <= $bp_dd_get_time ) {
+				$can_edit = false;
+			}
 		}
 	}
 
@@ -4464,6 +4470,7 @@ function bp_get_activity_entry_css_class() {
  * Determine if the current user can edit an activity comment item.
  *
  * @since BuddyBoss 2.4.40
+ * @since BuddyBoss [BBVERSION] Returns false while comment editing is disabled, unless `$privacy_edit`.
  *
  * @param false|BP_Activity_Activity $activity_comment Optional. Falls back on the current item in the loop.
  * @param bool                       $privacy_edit     Optional. True if editing privacy.
@@ -4499,14 +4506,19 @@ function bb_activity_comment_user_can_edit( $activity_comment = false, $privacy_
 
 	if ( $can_edit && ! $privacy_edit ) {
 
-		// Check activity comment edit time expiration.
-		$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
-		$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
-		$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
-
-		// Checking if expire time still greater than current time.
-		if ( - 1 !== $activity_comment_edit_time && $activity_comment_edit_expire_time <= $bp_dd_get_time ) {
+		if ( ! bb_is_activity_comment_edit_enabled() ) {
+			// Editing is switched off; without it there is no edit window at all.
 			$can_edit = false;
+		} else {
+			// Check activity comment edit time expiration.
+			$activity_comment_edit_time        = (int) bb_get_activity_comment_edit_time(); // for 10 minutes, 600.
+			$bp_dd_get_time                    = bp_core_current_time( true, 'timestamp' );
+			$activity_comment_edit_expire_time = strtotime( $activity_comment->date_recorded ) + $activity_comment_edit_time;
+
+			// Checking if expire time still greater than current time.
+			if ( - 1 !== $activity_comment_edit_time && $activity_comment_edit_expire_time <= $bp_dd_get_time ) {
+				$can_edit = false;
+			}
 		}
 	}
 
