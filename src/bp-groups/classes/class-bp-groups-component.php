@@ -1141,7 +1141,7 @@ class BP_Groups_Component extends BP_Component {
 	 * Setup cache groups
 	 *
 	 * @since BuddyPress 2.2.0
-	 * @since BuddyBoss [BBVERSION] Added the `bb_nouveau_group_invites` global cache group.
+	 * @since BuddyBoss 3.5.1 Added the `bb_nouveau_group_invites` global cache group.
 	 */
 	public function setup_cache_groups() {
 

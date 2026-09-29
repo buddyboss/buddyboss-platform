@@ -130,7 +130,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	 * Build the meta query for the potential group invites user query.
 	 *
 	 * @since BuddyPress 3.0.0
-	 * @since BuddyBoss [BBVERSION] Resolve a lone `NOT EXISTS` clause to an excluded user ID list
+	 * @since BuddyBoss 3.5.1 Resolve a lone `NOT EXISTS` clause to an excluded user ID list
 	 *                              and join the `WP_Meta_Query` fallback on the query's uid column.
 	 *
 	 * @param BP_User_Query $bp_user_query The user query being built.
@@ -174,7 +174,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				 * code filtering `get_meta_sql` for this clause would never see it. A negative
 				 * ceiling is the only way to guarantee the clause is always built.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.5.1
 				 *
 				 * @param int $limit Maximum number of excluded user IDs. Default 100000.
 				 *                   `0` disables the fast path once anyone holds the meta;
@@ -202,7 +202,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				 * A list larger than this is still used inline for the request; it is only
 				 * not stored.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.5.1
 				 *
 				 * @param int $cacheable Maximum number of ids to store. Defaults to $limit.
 				 * @param int $limit     The resolved inline ceiling.

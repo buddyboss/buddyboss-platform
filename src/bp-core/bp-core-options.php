@@ -1119,7 +1119,7 @@ function bp_activity_edit_times( $time = null ) {
  * where the admin files are not loaded.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss [BBVERSION] Moved here from the admin settings callbacks so the front end can read it.
+ * @since BuddyBoss 3.5.1 Moved here from the admin settings callbacks so the front end can read it.
  *
  * @return array Allowed integer values.
  */
@@ -1148,7 +1148,7 @@ function bb_activity_get_allowed_edit_times() {
  * stored value is already invalid (migrations, partial saves, direct database edits) behave
  * as documented instead of silently disabling the feature.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.1
  *
  * @param mixed $value   Stored value.
  * @param mixed $default Value to fall back to. Must itself be an allowed duration, otherwise 600
@@ -1181,7 +1181,7 @@ function bb_activity_normalize_edit_time( $value, $default = 600 ) {
  * Lives here rather than in the admin settings callbacks because the depth is read on the front
  * end, where the admin files are not loaded.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.1
  *
  * @param mixed $value Stored value.
  *
@@ -1204,7 +1204,7 @@ function bb_activity_normalize_comment_threading_depth( $value ) {
  * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
  *
  * @since BuddyBoss 1.5.0
- * @since BuddyBoss [BBVERSION] The return value is normalised to an allowed duration.
+ * @since BuddyBoss 3.5.1 The return value is normalised to an allowed duration.
  *
  * @param mixed $default Value used when the option row is absent. Honoured only if it is an allowed duration.
  *
@@ -2557,7 +2557,7 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
  * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
  *
  * @since BuddyBoss 2.4.40
- * @since BuddyBoss [BBVERSION] The return value is normalised to an allowed duration.
+ * @since BuddyBoss 3.5.1 The return value is normalised to an allowed duration.
  *
  * @param mixed $default Value used when the option row is absent. Honoured only if it is an allowed duration.
  *

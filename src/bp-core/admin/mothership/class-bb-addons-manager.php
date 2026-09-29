@@ -39,7 +39,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Get the BuddyBoss Mothership container.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return \BuddyBossPlatform\GroundLevel\Container\Container
 	 */
@@ -50,14 +50,14 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Resolve the vendor add-ons manager instance from the container.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * Returns null when the container has no such service — which happens when the
 	 * GroundLevel vendor tree is stale (so {@see BB_Mothership_Loader::init()} bailed
 	 * before registering anything) or when provider boot threw. Callers must treat null
 	 * as "the add-ons API is unavailable", never as "the plan has no add-ons".
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return AddonsManager|null
 	 */
@@ -72,12 +72,12 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Resolve the plugin connection from the container.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * Returns null when the container has no such service — see
 	 * {@see self::addons_manager()} for when that happens.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return AbstractPluginConnection|null
 	 */
@@ -205,7 +205,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * always saw an empty release. The legacy location is still read as a fallback for any
 	 * product object that did not come through the 9.1.2 add-ons manager.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param object|null $product Add-on product object.
 	 * @return object|null The release object (exposing `number` and `url`), or null when none.
@@ -229,7 +229,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Gets the package download URL of an add-on's latest release.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param object|null $product Add-on product object.
 	 * @return string The download URL, or an empty string when none is available.
@@ -292,7 +292,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Also drops our outage marker, so a license that has come back to life is not masked
 	 * by a stale "products API errored" flag.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	protected static function refresh_license_status(): void {
 		delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
@@ -311,7 +311,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Transient recording that an add-ons fetch failed on a cold cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -324,7 +324,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * expired cache, stores an empty list. This BuddyBoss-owned copy lets an outage keep
 	 * serving the customer's real plan instead of turning every add-on into an upsell.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -333,7 +333,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * How long the last non-empty add-ons list is kept, in seconds.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var int
 	 */
@@ -343,7 +343,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Suffix of the transient marking the vendor add-ons cache as re-seeded from the
 	 * last-good copy (rather than filled by a real fetch).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -352,7 +352,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Per-request memo of the add-ons list, or null when not yet resolved.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var array|null
 	 */
@@ -364,7 +364,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Must be called by anything that invalidates the underlying add-ons cache, otherwise
 	 * a clear performed mid-request would be invisible to later reads in the same request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public static function reset_addons_memo(): void {
 		self::$addons_memo = null;
@@ -390,7 +390,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 *   A licensed plan that genuinely returns nothing is also recorded, but that errs toward
 	 *   suppressing an upsell — the safe direction.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return array The add-ons list (possibly empty).
 	 */
@@ -550,7 +550,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * install/activate/deactivate handlers answered "Add-on not found" for an add-on the
 	 * card had just offered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $plugin_id The dynamic plugin ID the vendor names the AJAX actions after.
 	 */
@@ -566,7 +566,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Runs before the vendor handler (and the network handlers), which verify the nonce and
 	 * capabilities themselves; this only changes which product they look up.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public static function normalize_ajax_addon_slug(): void {
 		if ( ! check_ajax_referer( 'mosh_addons', false, false ) || empty( $_POST['slug'] ) || ! is_string( $_POST['slug'] ) ) {
@@ -597,7 +597,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * vendor `addons.js` expects. Theme add-ons fall through to the vendor, as themes are
 	 * switched per site.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $plugin_id The dynamic plugin ID the vendor names the AJAX actions after.
 	 */
@@ -620,7 +620,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Activate, deactivate or install a plugin add-on network-wide.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $action One of `activate`, `deactivate`, `install`.
 	 */
@@ -667,7 +667,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Mirrors {@see AddonsManager::ajaxAddonInstall()} for plugins, differing only in the
 	 * network-wide activation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param object $product The add-on product from the add-ons API.
 	 */
@@ -713,7 +713,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * active on the main site only. On the Network Admin add-ons page that hid the Activate
 	 * button for add-ons that were not running network-wide, so it is re-evaluated here.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param array $products The products to prepare.
 	 * @return array The prepared products.

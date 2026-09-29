@@ -1235,7 +1235,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * (see bb_rest_update_read_params()), so that is added back. A registered argument that
 	 * merely echoes the stored value (post_title, content) is not an edit; anything else is.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param WP_REST_Request      $request  Full details about the request.
 	 * @param BP_Activity_Activity $activity The activity being updated.
@@ -1297,7 +1297,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * Keep this in step with the direct get_param() reads in update_item(); anything listed here
 	 * counts as data when deciding whether an update touches more than the privacy.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return array Parameter names.
 	 */
@@ -1308,7 +1308,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	/**
 	 * Whether two text values are the same once line endings are normalised.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param mixed $supplied Value from the request.
 	 * @param mixed $stored   Value on the activity.
@@ -1338,7 +1338,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] A privacy-only update is exempt from the edit toggle and window.
+	 * @since BuddyBoss 3.5.1 A privacy-only update is exempt from the edit toggle and window.
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(

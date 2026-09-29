@@ -50,7 +50,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Site option recording that the main site's license was copied to the network.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -60,7 +60,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Set while license rows are moved between the network and the main site, so the
 	 * legacy read bridge does not mask the per-site rows being copied.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var bool
 	 */
@@ -75,7 +75,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * subsites and stale on the main site, so without this bridge such readers silently see an
 	 * unlicensed or outdated site. Reads only; writes still go through the connector.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public static function register_legacy_option_bridge(): void {
 		if ( ! self::is_network_mode() ) {
@@ -93,7 +93,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * `pre_option_{$name}` callback for {@see self::register_legacy_option_bridge()}.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param mixed  $pre           Short-circuit value from earlier filters.
 	 * @param string $name          Option name.
@@ -127,7 +127,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 *
 	 * Deliberately not cached: network activation/deactivation changes the answer mid-request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return bool
 	 */
@@ -146,7 +146,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Capability required to view and change the license.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string `manage_network_options` in network mode, otherwise `manage_options`.
 	 */
@@ -157,7 +157,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Reads a license option from the active storage scope.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $name          Option name.
 	 * @param mixed  $default_value Value returned when the option does not exist.
@@ -170,7 +170,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Writes a license option to the active storage scope.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $name  Option name.
 	 * @param mixed  $value Option value.
@@ -183,7 +183,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Deletes a license option from the active storage scope.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $name Option name.
 	 * @return bool Whether the option was deleted.
@@ -195,7 +195,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Reads a license transient from the active storage scope.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $name Transient name.
 	 * @return mixed
@@ -207,7 +207,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Writes a license transient to the active storage scope.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $name       Transient name.
 	 * @param mixed  $value      Transient value.
@@ -221,7 +221,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Deletes a license transient from the active storage scope.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $name Transient name.
 	 * @return bool
@@ -233,7 +233,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Names of every option that makes up the license state for a plugin ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $plugin_id The dynamic plugin ID the per-SKU options are keyed by.
 	 * @return string[]
@@ -268,7 +268,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * - The per-site rows are left in place (dormant), so nothing is lost if the network
 	 *   activation is later reversed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return bool True when a license was copied to the network.
 	 */
@@ -369,7 +369,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * activation, the license is not copied to the main site on network deactivation — the
 	 * subsite still holds its own (dormant) copy, and two sites must not share one activation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -383,7 +383,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * several subsites hold different keys), so the network admin can be told to activate
 	 * the license from Network Admin.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -400,7 +400,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Either way the case is recorded in {@see self::NETWORK_MOVE_SKIPPED_OPTION} so the
 	 * network admin is asked to activate the license from Network Admin.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param int $main_site_id The main site ID, which is skipped.
 	 * @return array{blog_id: int, plugin_id: string, key: string, domain: string}|null
@@ -501,7 +501,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * activation) is not copied to the main site: the subsite keeps its own dormant copy,
 	 * and two sites must not share one activation record.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public static function move_license_to_main_site(): void {
 		$main_site_id = get_main_site_id();
@@ -579,7 +579,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Site option listing the sites that hold an active license (per-site activation only).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -592,7 +592,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * are shared by every site and are updated once from Network Admin, so the update check
 	 * there needs to know which site's license entitles the network to updates.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param bool $status Whether the current site's license is active.
 	 */
@@ -616,7 +616,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * The sites recorded as licensed, building the list once for installs that predate it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return int[] Blog IDs keyed by blog ID.
 	 */
@@ -632,7 +632,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		/**
 		 * Filters how many sites are scanned when the licensed-sites list is first built.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.1
 		 *
 		 * @param int $limit Maximum number of sites to scan.
 		 */
@@ -659,7 +659,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * First site on the network whose license can authorize Platform updates.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return int Blog ID, or 0 when no site qualifies (or not in per-site multisite mode).
 	 */
@@ -693,7 +693,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * A site's active Platform license, read without switching the current request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param int $blog_id Blog ID.
 	 * @return array{plugin_id: string}|null Null unless Platform is active on the site with an
@@ -726,7 +726,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Plugin IDs of every known BuddyBoss Platform edition.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string[]
 	 */
@@ -753,7 +753,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * of a plugin-ID change (before, to purge the OLD ID's caches; after, to purge the NEW
 	 * ID's caches) — the two calls clear different keys, they are not redundant.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	private static function clear_all_caches(): void {
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
@@ -844,7 +844,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * the GroundLevel 9.1.2 base defaults to `{pluginId}_license_active`, which would
 	 * orphan every existing activation. Also clears BuddyBoss license/add-on caches.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param boolean $status The status to update.
 	 * @return boolean Whether the option was updated successfully.
@@ -889,7 +889,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * through this method, so this is the only placement that also keeps the
 	 * GroundLevel read path working across a plugin-id change.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string The license key.
 	 */
@@ -916,7 +916,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * base contract describes and the value `Credentials::setLicenseKey()` hands
 	 * back to its callers; the mirror is a BuddyBoss-side durability copy.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $licenseKey The license key to store.
 	 * @return boolean Whether the option was updated successfully.
@@ -1009,7 +1009,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * A `BUDDYBOSS_DOMAIN` constant or environment variable still takes precedence via
 	 * {@see \BuddyBossPlatform\GroundLevel\Mothership\Credentials::getDomain()}.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string The activation domain (`host` or `host/path`).
 	 */
@@ -1048,7 +1048,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Gets the lower-cased host part of an activation domain (`host` or `host/path`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $domain Activation domain.
 	 * @return string The host.
@@ -1062,7 +1062,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Option holding the domain a license was actually activated against.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -1071,7 +1071,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	/**
 	 * Gets the domain stored at activation time.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string The stored domain, or an empty string when none is stored.
 	 */
@@ -1087,7 +1087,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Called on a successful activation so the identifier stays stable for the life of
 	 * that activation, whatever the site URL does afterwards.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $domain The domain the activation was performed with.
 	 */
@@ -1110,7 +1110,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 *
 	 * Called on deactivation/reset so the next activation resolves a fresh identifier.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public function clearActivationDomain(): void {
 		self::delete_license_option( self::ACTIVATION_DOMAIN_OPTION );
@@ -1138,7 +1138,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * current license does not include) and from the plugin update row when an update
 	 * cannot be downloaded because of the license state.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string The account URL.
 	 */

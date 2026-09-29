@@ -36,7 +36,7 @@ function bb_sanitize_topic_list_noop( $value ) {
  * Handles the toggle + select combo for activity edit and comment edit fields.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss [BBVERSION] Delegates to bb_activity_normalize_edit_time().
+ * @since BuddyBoss 3.5.1 Delegates to bb_activity_normalize_edit_time().
  *
  * @param mixed $value The value to sanitize.
  *
@@ -118,7 +118,7 @@ function bb_activity_sanitize_comment_visibility( $value ) {
  * Accepts values 1-4 for thread depth levels.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss [BBVERSION] Delegates to bb_activity_normalize_comment_threading_depth().
+ * @since BuddyBoss 3.5.1 Delegates to bb_activity_normalize_comment_threading_depth().
  *
  * @param mixed $value The value to sanitize.
  *

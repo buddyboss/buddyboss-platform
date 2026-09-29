@@ -708,7 +708,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 *
 		 * Network-wide when Platform is network-activated, per site otherwise.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.1
 		 *
 		 * @param string $name          Option name.
 		 * @param mixed  $default_value Default value.

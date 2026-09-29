@@ -39,7 +39,7 @@ class BB_License_Manager {
 	 * Replaces the removed GroundLevel `HasStaticContainer::getContainer()` static
 	 * accessor — the BuddyBoss container is owned by {@see BB_Mothership_Loader}.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return Container
 	 */
@@ -394,7 +394,7 @@ class BB_License_Manager {
 	 * {@see LicenseActivations::deactivate()} instance API resolved from the container,
 	 * then clears the stored license key, activation status, and add-on caches.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $license_key The license key.
 	 * @param string $domain      The domain to deactivate.
@@ -713,7 +713,7 @@ class BB_License_Manager {
 	 * The DRM state is cleared by {@see \BuddyBoss\Core\Admin\DRM\BB_DRM_Controller::drm_init()}
 	 * once the license validates.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public static function after_license_activated(): void {
 		self::clear_activation_transient();
@@ -742,7 +742,7 @@ class BB_License_Manager {
 	/**
 	 * Refreshes the admin catalogs whose contents depend on the license tier.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	private static function flush_license_dependent_caches(): void {
 		if ( function_exists( 'bb_clear_placeholder_cache_on_license_change' ) ) {
@@ -773,7 +773,7 @@ class BB_License_Manager {
 	 * Deleting is preferred over calling syncActivationTransient(), which would add an API
 	 * round-trip to every activation and silently no-op when that request fails.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	private static function clear_activation_transient(): void {
 		try {
@@ -1081,7 +1081,7 @@ class BB_License_Manager {
 	 * license admin view (views/admin.php) calls this single entry point: it renders the
 	 * disconnect form when a license is active, otherwise the activation form.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string The license form HTML.
 	 */

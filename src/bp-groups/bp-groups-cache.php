@@ -497,7 +497,7 @@ add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
  * deleted_user_meta). Writers that bypass the meta API entirely (direct $wpdb writes,
  * SQL imports, DB restores) fire no hook; the cache TTL bounds those.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.1
  *
  * @param int|array $meta_ids Meta ID, or an array of meta IDs when deleting. Unused.
  * @param int       $user_id  ID of the user the meta belongs to. Unused.

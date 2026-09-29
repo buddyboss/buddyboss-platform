@@ -6994,7 +6994,7 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
  * outside 1-4, including an empty row, resolves to 3 — the same rule the settings control applies.
  *
  * @since BuddyBoss 2.5.80
- * @since BuddyBoss [BBVERSION] The return value is normalised to a depth the settings control can show.
+ * @since BuddyBoss 3.5.1 The return value is normalised to a depth the settings control can show.
  *
  * @param int $default Optional. Fallback value if not found in the database.
  *                     Default: 3.

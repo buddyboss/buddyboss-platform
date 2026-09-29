@@ -22,7 +22,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	/**
 	 * Per-request cache of the licensed decision, keyed by product slug.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var array
 	 */
@@ -40,7 +40,7 @@ class BB_DRM_Addon extends BB_Base_DRM {
 	 *
 	 * Called from the plugin connector whenever licence caches are purged.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public static function reset_licensed_cache(): void {
 		self::$licensed_cache = array();

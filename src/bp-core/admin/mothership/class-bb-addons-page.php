@@ -31,7 +31,7 @@ class BB_Addons_Page {
 	/**
 	 * Registers the page.
 	 *
-	 * @since BuddyBoss [BBVERSION] Added the `$parent_slug` and `$capability` parameters.
+	 * @since BuddyBoss 3.5.1 Added the `$parent_slug` and `$capability` parameters.
 	 *
 	 * @param string $parent_slug Parent menu slug.
 	 * @param string $capability  Capability required to view the page.

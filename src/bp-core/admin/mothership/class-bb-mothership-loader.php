@@ -44,7 +44,7 @@ class BB_Mothership_Loader {
 	 * transient it feeds is itself a site transient). Invalidated on a genuine WordPress
 	 * update fetch and on any license change — see {@see self::setup_hooks()}.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
@@ -55,7 +55,7 @@ class BB_Mothership_Loader {
 	 * the cache is event-invalidated (update fetch + license change); the TTL is only a
 	 * backstop for sites where neither event fires.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var int
 	 */
@@ -68,7 +68,7 @@ class BB_Mothership_Loader {
 	 * `update_plugins` transient does not make its own blocking HTTP request. Matches the
 	 * vendor's own error TTL for the add-ons list.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var int
 	 */
@@ -192,7 +192,7 @@ class BB_Mothership_Loader {
 	 * every request, but they are only booted where their hooks do something — see
 	 * {@see self::should_boot_services()}.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	private function register_services(): void {
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
@@ -352,7 +352,7 @@ class BB_Mothership_Loader {
 	 * useful on a public page: they serve wp-admin, admin AJAX, cron (license status check,
 	 * background auto-updates, notification fetches), WP-CLI and REST.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return bool
 	 */
@@ -374,7 +374,7 @@ class BB_Mothership_Loader {
 		/**
 		 * Filters whether the GroundLevel Mothership services are booted on this request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.5.1
 		 *
 		 * @param bool $should_boot Whether to boot the services.
 		 */
@@ -392,7 +392,7 @@ class BB_Mothership_Loader {
 	 * their next admin page load. The guard cannot give a correct answer in that mode, so
 	 * it is removed; in network mode (one shared license) and on single sites it stays.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	private function disable_overwrite_guard_for_per_site_licenses(): void {
 		if ( ! is_multisite() || BB_Plugin_Connector::is_network_mode() ) {
@@ -405,7 +405,7 @@ class BB_Mothership_Loader {
 	/**
 	 * Render the notice for a subsite license that could not be moved to the network.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public function render_network_move_skipped_notice(): void {
 		if ( ! current_user_can( 'manage_network_options' ) ) {
@@ -463,7 +463,7 @@ class BB_Mothership_Loader {
 	 * call that can also revoke the shared license. Blocks scheduling on subsites and clears
 	 * any event scheduled before network activation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $plugin_id The dynamic plugin ID the vendor names the cron hook after.
 	 */
@@ -496,7 +496,7 @@ class BB_Mothership_Loader {
 	 * mode the pages exist only on sites, so a Network Admin link built with
 	 * `network_admin_url()` is sent to the main site when Platform runs there.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public function redirect_misrouted_license_pages(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing of a page slug.
@@ -530,7 +530,7 @@ class BB_Mothership_Loader {
 	/**
 	 * Move the network license back to the main site when Platform is network-deactivated.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $plugin              Basename of the deactivated plugin.
 	 * @param bool   $network_deactivating Whether it was deactivated network-wide.
@@ -551,7 +551,7 @@ class BB_Mothership_Loader {
 	 * `_active_license_expired` actions to BuddyBoss's existing deactivation handler.
 	 * Accepts no arguments so it is safe regardless of how many the action passes.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public function handle_license_revoked(): void {
 		$this->handle_license_status_change( false, null );
@@ -597,7 +597,7 @@ class BB_Mothership_Loader {
 	 * when licensed — leaving wordpress.org updates intact for unlicensed installs — and keys
 	 * the entry by plugin file.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param mixed $transient The update_plugins transient (object) or false.
 	 * @return mixed The (possibly modified) transient.
@@ -681,9 +681,9 @@ class BB_Mothership_Loader {
 	 * entry, or null meaning "checked, no update info". The two states are distinguished from a
 	 * cache miss by {@see get_site_transient()} returning `false` only when nothing is stored.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
-	 * @since BuddyBoss [BBVERSION] Added the `$license_site` parameter.
+	 * @since BuddyBoss 3.5.1 Added the `$license_site` parameter.
 	 *
 	 * @param array<string, array<string, mixed>> $plugins      Installed plugins ({@see get_plugins()}).
 	 * @param string                              $plugin_file  The Platform plugin file (basename).
@@ -763,7 +763,7 @@ class BB_Mothership_Loader {
 	/**
 	 * Guards {@see self::with_licensed_site()} against re-entry from filters it triggers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var bool
 	 */
@@ -777,7 +777,7 @@ class BB_Mothership_Loader {
 	 * a connector, credentials and request built there; credentials are read at request time, so
 	 * the switch covers the whole call.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param int      $blog_id  The licensed site.
 	 * @param callable $callback Receives ( BB_Plugin_Connector $connector, Credentials $credentials, Products $products ).
@@ -813,7 +813,7 @@ class BB_Mothership_Loader {
 	/**
 	 * Run the Mothership version check with another site's license.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param int $blog_id The licensed site.
 	 * @return Response|null The version-check response, or null when it could not be made.
@@ -843,7 +843,7 @@ class BB_Mothership_Loader {
 	 * same vendor service inside the licensed site, so the add-on list, version comparison,
 	 * signed download URLs and `Update URI` handling stay the vendor's.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param mixed $transient The update_plugins / update_themes transient.
 	 * @return mixed The (possibly modified) transient.
@@ -884,7 +884,7 @@ class BB_Mothership_Loader {
 	 * Flush the Platform update-check cache when WordPress writes a fresh `update_plugins`
 	 * transient (a genuine update fetch). Passes the value through unchanged.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param mixed $value The value WordPress is about to store. Returned unmodified.
 	 * @return mixed The unmodified value.
@@ -898,7 +898,7 @@ class BB_Mothership_Loader {
 	 * Clear the Platform update-check cache. Used as an action callback on license changes, so
 	 * a newly activated/validated/revoked license is reflected on the next update check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public function clear_platform_update_cache(): void {
 		delete_site_transient( self::UPDATE_CACHE_KEY );

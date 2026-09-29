@@ -2294,7 +2294,7 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
  * Keeping the source strings here lets us re-translate them at render
  * time without depending on the locale that was active during install.
  *
- * @since [BBVERSION]
+ * @since 3.5.1
  *
  * @return array
  */
@@ -2335,7 +2335,7 @@ function bp_moderation_get_default_report_categories() {
  *
  * @param WP_Term|object $term Term object.
  *
- * @since [BBVERSION]
+ * @since 3.5.1
  * 
  * @return WP_Term|object
  */

@@ -275,7 +275,7 @@ abstract class BP_Moderation_Abstract {
 	 * no longer generates suspend entries for their existing content, this is the
 	 * only reliable way to exclude a blocked member's content at query time.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $column Fully qualified author id column (e.g. `a.user_id`).
 	 *
