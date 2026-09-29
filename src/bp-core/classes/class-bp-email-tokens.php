@@ -18,9 +18,14 @@ defined( 'ABSPATH' ) || exit;
 class BP_Email_Tokens {
 
 	/**
-	 * Message sender id.
+	 * Sender primed by `messages_message_sent` in this request.
+	 *
+	 * Only a fallback: emails identify their sender through the `sender.id` / `message_id`
+	 * tokens (see bb_get_message_sender_id()), because one request can render emails for
+	 * several senders.
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] No longer written from email tokens; read only as the last fallback.
 	 */
 	protected $_message_sender_id = false;
 
@@ -1014,6 +1019,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token message
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Resolves the sender per email instead of caching the first sender of the request.
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
@@ -1085,17 +1091,14 @@ class BP_Email_Tokens {
 		$sender_name   = '';
 		$sender_link   = '';
 		$sender_avatar = '';
+		$sender_id     = $this->bb_get_message_sender_id( $tokens );
 
-		if ( empty( $this->_message_sender_id ) ) {
-			$this->_message_sender_id = ! empty( $tokens['sender.id'] ) ? $tokens['sender.id'] : 0;
-		}
-
-		if ( $this->_message_sender_id ) {
-			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $this->_message_sender_id, $this->bb_get_receiver_user_id( $tokens ) );
-			$sender_link   = bp_core_get_user_domain( $this->_message_sender_id );
+		if ( $sender_id ) {
+			$sender_name   = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id, $this->bb_get_receiver_user_id( $tokens ) );
+			$sender_link   = bp_core_get_user_domain( $sender_id );
 			$sender_avatar = bp_core_fetch_avatar(
 				array(
-					'item_id' => $this->_message_sender_id,
+					'item_id' => $sender_id,
 					'width'   => 100,
 					'height'  => 100,
 					'type'    => 'full',
@@ -1388,6 +1391,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token sender.url
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Resolves the sender per email instead of caching the first sender of the request.
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
@@ -1396,11 +1400,13 @@ class BP_Email_Tokens {
 	 * @return string html for the output
 	 */
 	public function token__sender_url( $bp_email, $formatted_tokens, $tokens ) {
-		if ( empty( $this->_message_sender_id ) ) {
+		$sender_id = $this->bb_get_message_sender_id( $tokens );
+
+		if ( empty( $sender_id ) ) {
 			return '';
 		}
 
-		return bp_core_get_user_domain( $this->_message_sender_id );
+		return bp_core_get_user_domain( $sender_id );
 	}
 
 	/**
@@ -3089,6 +3095,63 @@ class BP_Email_Tokens {
 		$receiver_id = isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 0;
 
 		return ( $receiver_id > 0 ) ? $receiver_id : bb_core_guest_viewer_id();
+	}
+
+	/**
+	 * Resolve the sender of the message an email is about.
+	 *
+	 * Several message emails can be rendered by one request — the delayed-notification
+	 * digest cron loops every thread, and queued batches drain several jobs — and this
+	 * object is shared by all of them. The sender is therefore resolved from the email's
+	 * own tokens on every call and never cached on the object. Order: the `sender.id`
+	 * token, then the sender stored for the `message_id` token, then the sender primed by
+	 * `messages_message_sent` for producers that pass neither.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $tokens Email tokens.
+	 *
+	 * @return int Sender user ID, or 0 when it cannot be determined.
+	 */
+	protected function bb_get_message_sender_id( $tokens ) {
+		if ( ! empty( $tokens['sender.id'] ) ) {
+			return (int) $tokens['sender.id'];
+		}
+
+		$sender_id = ! empty( $tokens['message_id'] ) ? $this->bb_get_sender_id_by_message_id( (int) $tokens['message_id'] ) : 0;
+		if ( $sender_id > 0 ) {
+			return $sender_id;
+		}
+
+		return (int) $this->_message_sender_id;
+	}
+
+	/**
+	 * Get the sender of a stored message, memoised for the request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $message_id Message ID.
+	 *
+	 * @return int Sender user ID, or 0 when the message does not exist.
+	 */
+	protected function bb_get_sender_id_by_message_id( $message_id ) {
+		static $senders = array();
+
+		if ( $message_id <= 0 ) {
+			return 0;
+		}
+
+		if ( ! isset( $senders[ $message_id ] ) ) {
+			global $wpdb;
+
+			$table_name = bp_core_get_table_prefix() . 'bp_messages_messages';
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$senders[ $message_id ] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT sender_id FROM `{$table_name}` WHERE id = %d", $message_id ) );
+		}
+
+		return $senders[ $message_id ];
 	}
 
 }
