@@ -44,6 +44,7 @@ function buddyboss_setup_mothership_aliases() {
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations' => 'GroundLevel\Mothership\Api\Request\LicenseActivations',
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products' => 'GroundLevel\Mothership\Api\Request\Products',
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Licenses' => 'GroundLevel\Mothership\Api\Request\Licenses',
+		'BuddyBossPlatform\GroundLevel\Mothership\Api\Request\ProductInsights' => 'GroundLevel\Mothership\Api\Request\ProductInsights',
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\RequestFactory' => 'GroundLevel\Mothership\Api\RequestFactory',
 		'BuddyBossPlatform\GroundLevel\Mothership\Util' => 'GroundLevel\Mothership\Util',
 		'BuddyBossPlatform\GroundLevel\Mothership\UpdateService' => 'GroundLevel\Mothership\UpdateService',
@@ -54,6 +55,11 @@ function buddyboss_setup_mothership_aliases() {
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonInstallSkin' => 'GroundLevel\Mothership\Manager\AddonInstallSkin',
 		'BuddyBossPlatform\GroundLevel\Mothership\ExtensionType' => 'GroundLevel\Mothership\ExtensionType',
 		'BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider' => 'GroundLevel\InProductNotifications\IPNServiceProvider',
+
+		// Insights (NPS survey) classes.
+		'BuddyBossPlatform\GroundLevel\Insights\InsightsServiceProvider' => 'GroundLevel\Insights\InsightsServiceProvider',
+		'BuddyBossPlatform\GroundLevel\Insights\Services\NetPromoterScore' => 'GroundLevel\Insights\Services\NetPromoterScore',
+		'BuddyBossPlatform\GroundLevel\Insights\Services\RestApi' => 'GroundLevel\Insights\Services\RestApi',
 	);
 
 	// Create aliases from actual namespace to BuddyBossPlatform namespace.
@@ -98,6 +104,7 @@ function buddyboss_setup_mothership_inject_aliases() {
 		// Un-prefixed alias => actual prefixed class.
 		'GroundLevel\Mothership\MothershipServiceProvider'             => 'BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider',
 		'GroundLevel\InProductNotifications\IPNServiceProvider'        => 'BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider',
+		'GroundLevel\Insights\InsightsServiceProvider'                 => 'BuddyBossPlatform\GroundLevel\Insights\InsightsServiceProvider',
 		'GroundLevel\Component\ComponentServiceProvider'               => 'BuddyBossPlatform\GroundLevel\Component\ComponentServiceProvider',
 	);
 

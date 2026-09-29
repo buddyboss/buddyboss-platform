@@ -3,7 +3,7 @@
  * BuddyBoss Platform - Mothership Loader
  *
  * Main loader class for BuddyBoss Mothership functionality.
- * Handles initialization of licensing and In-Product Notifications services.
+ * Handles initialization of licensing, In-Product Notifications and Insights (NPS) services.
  *
  * @package BuddyBoss\Core\Admin\Mothership
  * @since   BuddyBoss 2.14.0
@@ -20,6 +20,8 @@ use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
 use BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Util as IPNUtil;
+use BuddyBossPlatform\GroundLevel\Insights\InsightsServiceProvider;
 
 /**
  * Main loader class for BuddyBoss Mothership functionality.
@@ -156,7 +158,7 @@ class BB_Mothership_Loader {
 			return;
 		}
 
-		// Register and boot the Mothership + In-Product Notifications service providers.
+		// Register and boot the Mothership + In-Product Notifications + Insights service providers.
 		$this->register_services();
 
 		// Set up hooks.
@@ -169,7 +171,8 @@ class BB_Mothership_Loader {
 	 * GroundLevel 7.4.0 replaced the old static-container `Service` classes with the
 	 * dependency-injection `ServiceProvider` pattern. Booting the providers wires the
 	 * vendor hooks (twice-daily license-status cron, `auto_update_plugin`, add-on AJAX,
-	 * plugin/theme update injection, and the In-Product Notifications UI). None of these
+	 * plugin/theme update injection, the In-Product Notifications UI and the Insights NPS
+	 * survey). None of these
 	 * duplicate BuddyBoss's own hooks — BuddyBoss wires its own license controller and
 	 * admin pages separately in {@see self::setup_hooks()}.
 	 *
@@ -201,6 +204,7 @@ class BB_Mothership_Loader {
 			// it explicitly so intent and ordering are obvious.
 			$this->container->provider( MothershipServiceProvider::class );
 			$this->container->provider( IPNServiceProvider::class );
+			$this->register_insights_provider( $plugin_id );
 
 			// Boot registers the vendor WordPress hooks.
 			$this->container->boot();
@@ -237,6 +241,80 @@ class BB_Mothership_Loader {
 	}
 
 	/**
+	 * Register the GroundLevel Insights provider — the in-product NPS survey.
+	 *
+	 * Mirrors MemberPress/MemberCore: the package files a "How are we doing?" notification in
+	 * the IPN inbox 14 days after install and every 90 days after the last survey event, and
+	 * posts the score/feedback to Mothership at `products/{product_slug}/insights/nps`. It
+	 * therefore depends on IPN (inbox store + view) and Mothership (API request), so it is
+	 * registered after both and before {@see Container::boot()} wires the provider hooks.
+	 *
+	 * Guarded on the provider class, as MemberCore does, so a build that drops the package
+	 * from composer degrades to "no survey" instead of handing the container a missing class.
+	 *
+	 * The prefix is derived from the dynamic plugin ID exactly as the IPN prefix is, so the
+	 * survey state is keyed per licence edition alongside the inbox store (e.g. plugin ID
+	 * `bb-web-plus` gives store `bb-web-plus_ipn_store` and option
+	 * `bb_web_plus_insights_nps_data`). The package snake-cases the prefix, so it also drives
+	 * cron hook `bb_web_plus_insights_nps_check`, filter
+	 * `bb_web_plus_insights_should_show_nps_notification` and the script handle. The product
+	 * slug, capability and inbox come from the IPN parameters set in
+	 * {@see self::register_services()}.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin_id The dynamic plugin ID from {@see BB_Plugin_Connector::getDynamicPluginId()}.
+	 */
+	private function register_insights_provider( string $plugin_id ): void {
+		if ( ! class_exists( InsightsServiceProvider::class ) ) {
+			return;
+		}
+
+		// Parameter overrides MUST be set before provider() — see register_services().
+		$this->container->parameters(
+			array(
+				InsightsServiceProvider::PARAM_PRODUCT_NAME => 'BuddyBoss',
+				InsightsServiceProvider::PARAM_PREFIX => sanitize_title( $plugin_id ) . '_insights_',
+				InsightsServiceProvider::PARAM_REST_NAMESPACE => 'buddyboss/insights',
+			)
+		);
+
+		$this->container->provider( InsightsServiceProvider::class );
+	}
+
+	/**
+	 * Sort the IPN store option so the inbox lists the newest notification first.
+	 *
+	 * Bound to `option_{prefix}_ipn_store`. Notification rows are ordered by publish date
+	 * descending; the package's `__lastId` pagination cursor (and any other scalar entry) is
+	 * kept and re-appended untouched. Mothership rows carry ISO-8601 dates with an offset and
+	 * the NPS row carries `Y-m-d H:i:s` in PHP's default (UTC) timezone — strtotime() handles
+	 * both, so no format normalisation is needed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value The raw option value.
+	 * @return mixed The sorted store, or the original value if it is not a multi-row array.
+	 */
+	public function sort_ipn_store_newest_first( $value ) {
+		if ( ! is_array( $value ) || count( $value ) < 2 ) {
+			return $value;
+		}
+
+		$rows   = array_filter( $value, 'is_array' );
+		$others = array_diff_key( $value, $rows );
+
+		uasort(
+			$rows,
+			static function ( array $a, array $b ): int {
+				return (int) strtotime( $b['publishesAt'] ?? $b['publishes_at'] ?? '' ) <=> (int) strtotime( $a['publishesAt'] ?? $a['publishes_at'] ?? '' );
+			}
+		);
+
+		return $rows + $others;
+	}
+
+	/**
 	 * Setup WordPress hooks.
 	 */
 	private function setup_hooks(): void {
@@ -266,6 +344,16 @@ class BB_Mothership_Loader {
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'flush_platform_update_cache' ) );
 
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+		// Show the IPN inbox newest-first. The GroundLevel Store renders notifications in raw
+		// option order (Mothership delivers oldest-first and the NPS survey is appended last)
+		// and neither Store::notifications() nor the React inbox sorts, so the survey always
+		// sits at the bottom. The Store reads through get_option(), so sorting the option on
+		// read reorders what the inbox receives without touching vendor code. The option name
+		// comes from the package's own prefix helper so it tracks the licence edition.
+		if ( $this->container->has( IPNUtil::class ) ) {
+			add_filter( 'option_' . $this->container->get( IPNUtil::class )->prefixId( 'store' ), array( $this, 'sort_ipn_store_newest_first' ) );
+		}
 
 		// Invalidate the update-check cache on any license change. These fire from
 		// BB_Plugin_Connector::setLicenseActivationStatus()/storeLicenseKey() (and BuddyBoss's
