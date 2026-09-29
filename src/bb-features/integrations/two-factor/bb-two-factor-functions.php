@@ -178,10 +178,15 @@ function bb_two_factor_get_broken_config( $user_id ) {
 /**
  * Whether the current user may change two-factor settings right now.
  *
- * Reimplements Two_Factor_Core::current_user_can_update_two_factor_options(),
- * which reaches get_primary_provider_for_user() and its wp_die(). The branch
- * order is kept identical, including that a non-two-factor session is refused
- * before the grace period is consulted.
+ * On Two Factor 0.17.0 and later this defers to the plugin's own
+ * Two_Factor_Core::current_user_can_update_two_factor_options(), so the two
+ * answers can never disagree: that release removed the wp_die() from
+ * get_primary_provider_for_user() and added the `two_factor_is_required_for_user`
+ * filter, which sites use to bypass two-factor for trusted addresses.
+ *
+ * On 0.16.x the plugin method still reaches that wp_die(), so the check is
+ * reimplemented with the same branch order, including that a non-two-factor
+ * session is refused before the grace period is consulted.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -198,8 +203,17 @@ function bb_two_factor_current_user_can_manage( $context = 'display' ) {
 	$user_id   = get_current_user_id();
 	$available = Two_Factor_Core::get_available_providers_for_user( $user_id );
 
-	// Not using two-factor, or a configuration that no longer resolves: nothing to revalidate against.
-	if ( is_wp_error( $available ) || empty( $available ) ) {
+	// A configuration that no longer resolves is reported by the caller; there is nothing to revalidate against.
+	if ( is_wp_error( $available ) ) {
+		return true;
+	}
+
+	if ( version_compare( bb_two_factor_plugin_version(), '0.17.0', '>=' ) ) {
+		return (bool) Two_Factor_Core::current_user_can_update_two_factor_options( $context );
+	}
+
+	// Not using two-factor: nothing to revalidate against.
+	if ( empty( $available ) ) {
 		return true;
 	}
 
