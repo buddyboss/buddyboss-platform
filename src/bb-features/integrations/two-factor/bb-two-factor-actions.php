@@ -141,6 +141,14 @@ function bb_two_factor_settings_save() {
 		bp_core_redirect( $redirect );
 	}
 
+	// A member without wp-admin has no other way back in, so a primary method needs a recovery method beside it.
+	$recovery = bb_two_factor_validate_recovery_method( $user_id );
+
+	if ( is_wp_error( $recovery ) ) {
+		bp_core_add_message( $recovery->get_error_message(), 'error' );
+		bp_core_redirect( $redirect );
+	}
+
 	Two_Factor_Core::user_two_factor_options_update( $user_id );
 
 	$errors = bb_two_factor_drain_errors();

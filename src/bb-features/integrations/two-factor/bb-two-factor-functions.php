@@ -239,6 +239,99 @@ function bb_two_factor_current_user_can_manage( $context = 'display' ) {
 }
 
 /**
+ * Provider keys that count as a recovery method.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string[] Provider class names, e.g. 'Two_Factor_Backup_Codes'.
+ */
+function bb_two_factor_get_recovery_providers() {
+
+	/**
+	 * Filters which two-factor providers count as a recovery method.
+	 *
+	 * A member must have one of these set up and enabled before a primary
+	 * method can be saved from the Security tab.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string[] $providers Provider class names.
+	 */
+	return (array) apply_filters( 'bb_two_factor_recovery_providers', array( 'Two_Factor_Backup_Codes' ) );
+}
+
+/**
+ * Check that a submitted set of methods keeps a usable recovery method.
+ *
+ * Members manage two-factor without wp-admin, so nobody can reset it for them
+ * from the profile screen if they lose their device. A primary method may
+ * therefore only be saved alongside a recovery method that is already set up.
+ * Turning every method off, or enabling a recovery method on its own, is
+ * always allowed.
+ *
+ * Reads the same POST field the plugin's saver reads. The caller has verified
+ * both nonces before this runs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id Member being saved.
+ * @return true|WP_Error True when the submission may be saved.
+ */
+function bb_two_factor_validate_recovery_method( $user_id ) {
+
+	/**
+	 * Filters whether a recovery method is required before a primary method can be saved.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $required Default true.
+	 * @param int  $user_id  Member being saved.
+	 */
+	if ( ! apply_filters( 'bb_two_factor_require_recovery_method', true, $user_id ) ) {
+		return true;
+	}
+
+	$field = Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY;
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Both nonces are verified by bb_two_factor_settings_save() before this runs.
+	$input = isset( $_POST[ $field ] ) && is_array( $_POST[ $field ] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST[ $field ] ) ) : array();
+
+	// The plugin prints an empty placeholder input so the field always posts; drop it.
+	$input = array_filter( $input );
+
+	$supported = Two_Factor_Core::get_supported_providers_for_user( $user_id );
+	$enabled   = is_array( $supported ) ? array_intersect_key( $supported, array_flip( $input ) ) : array();
+	$recovery  = bb_two_factor_get_recovery_providers();
+	$primary   = array_diff_key( $enabled, array_flip( $recovery ) );
+
+	if ( empty( $primary ) ) {
+		return true;
+	}
+
+	$user = get_userdata( $user_id );
+
+	foreach ( $recovery as $provider_key ) {
+		if ( ! isset( $enabled[ $provider_key ] ) ) {
+			continue;
+		}
+
+		if ( $user && $enabled[ $provider_key ]->is_available_for_user( $user ) ) {
+			return true;
+		}
+
+		return new WP_Error(
+			'bb_two_factor_recovery_not_configured',
+			__( 'Generate your recovery codes before saving, so you can still sign in if you lose access to your device.', 'buddyboss' )
+		);
+	}
+
+	return new WP_Error(
+		'bb_two_factor_recovery_required',
+		__( 'Set up and enable a recovery method, such as Recovery Codes, before turning on a two-factor method, so you can still sign in if you lose access to your device.', 'buddyboss' )
+	);
+}
+
+/**
  * Drain the plugin's private profile-error store into a WP_Error.
  *
  * @since BuddyBoss [BBVERSION]
