@@ -114,17 +114,20 @@ function bb_two_factor_settings_save() {
 		bp_core_redirect( $redirect );
 	}
 
+	// The plugin returns silently outside the revalidation window; tell the member instead.
+	// Checked before the plugin's nonce: a locked form disables the fieldset that
+	// carries that nonce, so the nonce check would otherwise answer first with a
+	// misleading "session expired" for a member who only needs to revalidate.
+	if ( ! bb_two_factor_current_user_can_manage( 'save' ) ) {
+		bp_core_add_message( __( 'For your security, confirm it is you before changing these settings.', 'buddyboss' ), 'error' );
+		bp_core_redirect( $redirect );
+	}
+
 	// The plugin's nonce, pre-verified so its check_admin_referer() can never wp_die() mid-page.
 	$plugin_nonce = isset( $_POST['_nonce_user_two_factor_options'] ) ? sanitize_text_field( wp_unslash( $_POST['_nonce_user_two_factor_options'] ) ) : '';
 
 	if ( ! wp_verify_nonce( $plugin_nonce, 'user_two_factor_options' ) ) {
 		bp_core_add_message( __( 'Your session expired before the change could be saved. Please try again.', 'buddyboss' ), 'error' );
-		bp_core_redirect( $redirect );
-	}
-
-	// The plugin returns silently outside the revalidation window; tell the member instead.
-	if ( ! bb_two_factor_current_user_can_manage( 'save' ) ) {
-		bp_core_add_message( __( 'For your security, confirm it is you before changing these settings.', 'buddyboss' ), 'error' );
 		bp_core_redirect( $redirect );
 	}
 
