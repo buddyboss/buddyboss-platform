@@ -328,4 +328,24 @@ class BB_Tests_Email_Tokens_Message_Sender extends BP_UnitTestCase_Emails {
 		$this->assertStringContainsString( $this->avatar_of( $this->sender_a ), $html );
 		$this->assertStringNotContainsString( bp_core_get_user_domain( $this->sender_b ), $html );
 	}
+
+	/**
+	 * `sender.id` takes precedence over the sender stored for `message_id` (producers that pass
+	 * both are authoritative about who the email is from).
+	 */
+	public function test_sender_id_token_takes_precedence_over_message_id() {
+		$message_id = $this->create_message( $this->sender_a, 'Stored as A' );
+
+		$html = $this->send_unread(
+			array(
+				'sender.id'   => $this->sender_b,
+				'message_id'  => $message_id,
+				'sender.name' => 'Sender Bravo',
+			)
+		);
+
+		$this->assertStringContainsString( bp_core_get_user_domain( $this->sender_b ), $html );
+		$this->assertStringContainsString( $this->avatar_of( $this->sender_b ), $html );
+		$this->assertStringNotContainsString( $this->avatar_of( $this->sender_a ), $html, 'the stored sender must not override sender.id' );
+	}
 }
