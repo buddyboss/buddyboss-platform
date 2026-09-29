@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.4.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-09-03 13:04:23+00:00\n"
+"POT-Creation-Date: 2026-09-29 10:44:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2270,6 +2270,86 @@ msgstr ""
 
 #: bb-features/integrations/recaptcha/bb-recaptcha-functions.php:732
 msgid "Could not get a response from the reCAPTCHA server."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-feature-config.php:26
+#: bb-features/integrations/two-factor/classes/class-bb-two-factor-integration.php:42
+msgid "Two-Factor Authentication"
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-feature-config.php:27
+msgid "Add a second layer of login security with authenticator apps, email codes, or one-time recovery codes."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-feature-config.php:50
+msgid "Hide two-factor settings from members?"
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-feature-config.php:51
+msgid "The Security tab will be removed from the Account page, so members can no longer set up or change two-factor authentication from the front end. Anyone who already turned it on is still asked for a second factor when they sign in, and their authenticator apps and recovery codes are untouched."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-actions.php:45
+#: bb-features/integrations/two-factor/bb-two-factor-actions.php:174
+#: bb-features/integrations/two-factor/bb-two-factor-filters.php:44
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/security.php:19
+#: bp-templates/bp-nouveau/readylaunch/members/single/settings/security.php:19
+msgid "Security"
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-actions.php:105
+msgid "You cannot manage two-factor authentication for another account."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-actions.php:113
+msgid "There was a problem saving your settings. Please try again."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-actions.php:122
+msgid "For your security, confirm it is you before changing these settings."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-actions.php:130
+msgid "Your session expired before the change could be saved. Please try again."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-actions.php:161
+msgid "Your security settings have been saved."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-filters.php:69
+#: bp-core/classes/class-bb-readylaunch.php:4371
+#: bp-groups/classes/class-bp-group-extension.php:524
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:66
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:103
+#: bp-templates/bp-nouveau/includes/functions.php:1530
+#: bp-templates/bp-nouveau/includes/functions.php:1561
+#: bp-templates/bp-nouveau/includes/functions.php:1572
+#: bp-templates/bp-nouveau/includes/functions.php:1583
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:365
+msgid "Save Changes"
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-functions.php:341
+msgid "Generate your recovery codes before saving, so you can still sign in if you lose access to your device."
+msgstr ""
+
+#. translators: %s: recovery method name, e.g. "Recovery Codes".
+#: bb-features/integrations/two-factor/bb-two-factor-functions.php:345
+#, php-format
+msgid "Finish setting up %s before saving, so you can still sign in if you lose access to your device."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-functions.php:355
+msgid "Set up and enable a recovery method, such as Recovery Codes, before turning on a two-factor method, so you can still sign in if you lose access to your device."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-functions.php:452
+msgid "Authentication for the REST API and XML-RPC must use an application password instead of your regular password."
+msgstr ""
+
+#: bb-features/integrations/two-factor/bb-two-factor-functions.php:524
+msgid "Add a second step to your sign-in so a stolen password is not enough to reach your account."
 msgstr ""
 
 #: bp-activity/actions/delete.php:60
@@ -15983,18 +16063,6 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4371
-#: bp-groups/classes/class-bp-group-extension.php:524
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:66
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:103
-#: bp-templates/bp-nouveau/includes/functions.php:1530
-#: bp-templates/bp-nouveau/includes/functions.php:1561
-#: bp-templates/bp-nouveau/includes/functions.php:1572
-#: bp-templates/bp-nouveau/includes/functions.php:1583
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:365
-msgid "Save Changes"
-msgstr ""
-
 #: bp-core/classes/class-bb-readylaunch.php:4417
 msgid "Please login to perform this action."
 msgstr ""
@@ -17001,11 +17069,11 @@ msgid_plural "%d groups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/classes/class-bp-core.php:410
+#: bp-core/classes/class-bp-core.php:411
 msgid "BuddyBoss emails"
 msgstr ""
 
-#: bp-core/classes/class-bp-core.php:433
+#: bp-core/classes/class-bp-core.php:434
 msgid "BuddyBoss group type"
 msgstr ""
 
