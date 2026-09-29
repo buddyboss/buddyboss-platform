@@ -23,6 +23,20 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	protected $allow_batch = array( 'v1' => true );
 
 	/**
+	 * Whether the `name` submitted with the request being served was dropped as a redaction echo.
+	 *
+	 * Set by prepare_item_for_database() and read once by prepare_item_for_response(), which turns
+	 * it into a response header. Without it the write is invisible: after the value is dropped the
+	 * member is re-prepared unchanged, so the client is handed back exactly the string it sent and
+	 * cannot tell a save from a no-op.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @var bool
+	 */
+	protected $ignored_name_write = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -140,6 +154,38 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
+
+		// Registered from here, rather than from includes/filters.php, because that file is excluded
+		// from the `grunt bp_rest` sync (Gruntfile.js `copy:bp_rest_core`) while this one is copied
+		// into Platform - a site running Platform without this plugin has to get the header exposed
+		// too, and it serves its own generated copy of this class.
+		add_filter( 'rest_exposed_cors_headers', array( $this, 'expose_cors_headers' ) );
+	}
+
+	/**
+	 * Let a browser client read the headers this endpoint answers with.
+	 *
+	 * A cross-origin reader - the web app, and anything else driven from a browser - is handed only
+	 * the CORS-safelisted headers plus whatever `Access-Control-Expose-Headers` names. Without this
+	 * the `X-BP-Ignored-Fields` header below is sent and then dropped by the user agent, so the one
+	 * client that has to react to a dropped `name` write cannot see that it happened.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param string[] $expose_headers The list of response headers to expose.
+	 * @return string[] The list with this endpoint's own headers added.
+	 */
+	public function expose_cors_headers( $expose_headers ) {
+		$expose_headers = (array) $expose_headers;
+
+		// `rest_api_init` can fire more than once in a process - the REST test harness rebuilds the
+		// server for every test - and each pass hooks a fresh instance, so guard against listing
+		// the same header twice.
+		if ( ! in_array( 'X-BP-Ignored-Fields', $expose_headers, true ) ) {
+			$expose_headers[] = 'X-BP-Ignored-Fields';
+		}
+
+		return $expose_headers;
 	}
 
 	/**
@@ -677,6 +723,16 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		$response->add_links( $this->prepare_links( $user ) );
 
+		// Report the one field this endpoint may decline to write. A dropped `name` leaves the
+		// member unchanged, so the value echoed back here is identical to the one that was sent and
+		// carries no sign of the no-op - the header is the only thing that distinguishes them. Read
+		// once and cleared, because the same controller instance also prepares unrelated members.
+		if ( $this->ignored_name_write ) {
+			$response->header( 'X-BP-Ignored-Fields', 'name' );
+
+			$this->ignored_name_write = false;
+		}
+
 		// Update current user's last activity.
 		if ( strpos( $request->get_route(), 'members/me' ) !== false && get_current_user_id() === $user->ID ) {
 			bp_update_user_last_activity();
@@ -720,9 +776,26 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$member_types = bp_get_member_type( $user->ID, false );
 		}
 
+		// Names are viewer-dependent (a member may hide their last name from guests/non-friends).
+		// NOTE for reviewers: bp_core_get_user_displayname()'s 2nd argument is the VIEWER id in
+		// BuddyBoss Platform (bp-members-functions.php: an empty value falls back to
+		// bp_loggedin_user_id(), and it is passed to bp_xprofile_get_hidden_fields_for_user() as
+		// the visibility_user_id) - it is NOT BuddyPress core's historical username-lookup hint, so
+		// this performs real per-viewer redaction. The repeated hidden-fields lookups this and
+		// get_visible_display_name() make for the same user are collapsed to one query per request
+		// by Platform's BB_XProfile_Visibility per-request memo (PROD-9896).
+		// Resolved the same way the groups endpoint in this repo resolves it, so the two cannot
+		// disagree: bb_core_get_viewer_user_id() prefers BuddyPress' logged-in global, which
+		// messaging and the personal-data exporters deliberately re-point, and falls back to the
+		// WordPress current user only when BP has no value. Guarded because this plugin can run
+		// against a Platform that predates the helper.
+		$viewer_id = function_exists( 'bb_core_get_viewer_user_id' )
+			? (int) bb_core_get_viewer_user_id()
+			: (int) get_current_user_id();
+
 		$data      = array(
 			'id'                 => $user->ID,
-			'name'               => $user->display_name,
+			'name'               => $this->get_visible_display_name( $user, $viewer_id ),
 			'user_login'         => $user->user_login,
 			'link'               => bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login ),
 			'member_types'       => $member_types,
@@ -730,7 +803,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'capabilities'       => array(),
 			'extra_capabilities' => array(),
 			'registered_date'    => bp_rest_prepare_date_response( $user_data->user_registered ),
-			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
+			// Decoded, as Platform's own core-author bridge decodes: the resolver's filter chain
+			// ends in esc_html(), which is right for HTML output and wrong for a JSON string -
+			// it shipped `O&#039;Brien` where the column holds `O'Brien`. ENT_QUOTES because the
+			// default ENT_NOQUOTES does not undo the apostrophe.
+			'profile_name'       => wp_specialchars_decode( (string) bp_core_get_user_displayname( $user->ID, $viewer_id ), ENT_QUOTES ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
 			'is_online'          => function_exists( 'bb_is_online_user' ) ? (bool) bb_is_online_user( $user->ID ) : false,
 			'xprofile'           => array(),
@@ -748,7 +825,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		// Load xprofile data when required.
 		if ( 'embed' !== $context ) {
-			$data['xprofile'] = $this->xprofile_data( $user->ID );
+			$data['xprofile'] = $this->xprofile_data( $user->ID, $viewer_id );
 		}
 
 		$data['friendship_status'] = (
@@ -916,11 +993,74 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @since 0.1.0
 	 */
 	protected function prepare_item_for_database( $request ) {
+		// One item of a batch request must not be told about the item before it. This controller is
+		// a single instance shared by every item WP_REST_Server::serve_batch_request_v1() dispatches,
+		// and update_item() returns before prepare_item_for_response() - the only place that clears
+		// the flag - on three failure paths: wp_update_user(), the `meta` update and
+		// update_additional_fields_for_object(). Resetting here, at the start of handling each item,
+		// is what makes the flag describe THIS write and no other.
+		$this->ignored_name_write = false;
+
 		$prepared_user = parent::prepare_item_for_database( $request );
 
 		// The parent class uses username instead of user_login.
 		if ( ! isset( $prepared_user->user_login ) && isset( $request['user_login'] ) ) {
 			$prepared_user->user_login = $request['user_login'];
+		}
+
+		// `name` is viewer-redacted on read but is also a write field - WP core maps it straight
+		// onto display_name. A client that GETs a member and PATCHes the object back, which is the
+		// most ordinary REST pattern there is, would therefore write OUR redaction into the real
+		// column and truncate it permanently for everyone, the member themselves included. No
+		// special role is needed: current_user_can( 'edit_user', $id ) passes for one's own id, and
+		// under a "First Name" site format a member's own name already reads back redacted.
+		//
+		// Suppress only that echo: the submitted value is dropped when it is exactly what this
+		// viewer was served AND the stored column says something fuller. A deliberate rename to any
+		// other value still writes, so the field stays as writable as it was before the redaction
+		// was introduced.
+		if (
+			isset( $prepared_user->ID, $prepared_user->display_name )
+			&& isset( $request['name'] )
+			&& function_exists( 'bp_is_active' )
+			&& bp_is_active( 'xprofile' )
+		) {
+			$existing_user = get_userdata( (int) $prepared_user->ID );
+
+			if ( $existing_user instanceof WP_User ) {
+				$stored_name = (string) $existing_user->display_name;
+				$served_name = (string) $this->get_visible_display_name(
+					$existing_user,
+					function_exists( 'bb_core_get_viewer_user_id' ) ? (int) bb_core_get_viewer_user_id() : (int) get_current_user_id()
+				);
+
+				if (
+					$served_name !== $stored_name
+					&& (string) $prepared_user->display_name === $served_name
+				) {
+					/**
+					 * Filters whether a `name` write that exactly echoes the redacted value is dropped.
+					 *
+					 * The guard cannot tell a round-trip echo from a deliberate rename to that same
+					 * string, so it keeps the fuller stored column - the safe direction, since the
+					 * column is what every other viewer is resolved from. A client that genuinely
+					 * means to set this value (an administrator repairing a drifted display_name on a
+					 * "First Name" site, say) can return false here to let the write through.
+					 *
+					 * @since BuddyBoss 3.5.0
+					 *
+					 * @param bool    $suppress Whether to drop the submitted value. Default true.
+					 * @param WP_User $user     The member being updated.
+					 * @param string  $served_name The redacted value this viewer was served.
+					 * @param string  $stored_name The value currently in the column.
+					 */
+					if ( apply_filters( 'bp_rest_members_suppress_redacted_name_write', true, $existing_user, $served_name, $stored_name ) ) {
+						unset( $prepared_user->display_name );
+
+						$this->ignored_name_write = true;
+					}
+				}
+			}
 		}
 
 		// Set member type.
@@ -944,17 +1084,30 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Get XProfile info from the user.
 	 *
-	 * @param int $user_id User ID.
+	 * @param int $user_id   User ID whose profile data is returned.
+	 * @param int $viewer_id ID of the user viewing the data. Fields hidden from this viewer by their
+	 *                       per-field visibility are omitted. 0 falls back to the logged-in user
+	 *                       inside bp_xprofile_get_hidden_fields_for_user().
 	 *
 	 * @return array
 	 * @since 0.1.0
 	 */
-	protected function xprofile_data( $user_id ) {
+	protected function xprofile_data( $user_id, $viewer_id = 0 ) {
 		$data = array();
 
 		// Get XProfile groups, only if the component is active.
 		if ( bp_is_active( 'xprofile' ) ) {
 			$fields_endpoint = new BP_REST_XProfile_Fields_Endpoint();
+
+			// Fields hidden from this viewer are ALSO excluded by Platform: BP_XProfile_Group::get()
+			// merges bp_xprofile_get_hidden_fields_for_user() into its exclude_fields SQL. We do NOT
+			// rely on that alone - this endpoint and Platform release independently, and a member's
+			// hidden surname must never surface here even if that internal SQL behaviour ever changes.
+			// So we suppress hidden fields explicitly too (mirroring BP_REST_XProfile_Fields_Endpoint),
+			// making the privacy guarantee self-contained. A self-view/admin resolves to an empty list.
+			$hidden_fields = function_exists( 'bp_xprofile_get_hidden_fields_for_user' )
+				? array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) )
+				: array();
 
 			$groups = bp_xprofile_get_groups(
 				array(
@@ -972,6 +1125,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				);
 
 				foreach ( $group->fields as $item ) {
+
+					// Omit any field hidden from this viewer by its visibility level (defence in depth;
+					// see above). A restricted profile field's value is never returned to a disallowed
+					// viewer, independent of Platform's own exclusion.
+					if ( in_array( (int) $item->id, $hidden_fields, true ) ) {
+						continue;
+					}
 
 					/**
 					 * Added support for display name format support from platform.
@@ -1139,7 +1299,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'readonly'    => true,
 				),
 				'name'               => array(
-					'description' => __( 'Display name for the member.', 'buddyboss' ),
+					'description' => __( 'Display name for the member, assembled from the name fields the current user may see: a part withheld by profile field visibility or by the site-wide display name format is left out, and the member\'s nickname - then their user_nicename - is returned where no permitted part holds a value. Nothing is withheld from the current user returns the stored display name untouched. On write, a value identical to the redacted form just served to the current user is ignored, so that reading a member and sending the object back cannot truncate the stored name - the response then carries an X-BP-Ignored-Fields: name header. Any other value is saved.', 'buddyboss' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -1573,6 +1733,238 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		} else {
 			return ( function_exists( 'bp_get_followers' ) && bp_is_activity_follow_active() ? bp_get_followers( $args ) : '' );
 		}
+	}
+
+	/**
+	 * Return the member's WP display name as the given viewer may see it.
+	 *
+	 * The stored display_name always holds the full name, so when a name part is withheld from the
+	 * viewer - by the field's visibility level or by the site-wide Display Name Format - the API
+	 * would otherwise expose what the web front end withholds from that same viewer.
+	 *
+	 * The name is then ASSEMBLED from the fields this viewer may see rather than subtracted out of
+	 * the stored column, mirroring Platform's bb_core_build_visible_display_name() (PROD-9896).
+	 * While nothing is withheld the `name` field stays anchored to the stored display name, which
+	 * is what keeps it round-trippable against WP_REST_Users_Controller.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param WP_User $user      User object.
+	 * @param int     $viewer_id ID of the user viewing the data (0 for a guest).
+	 *
+	 * @return string
+	 */
+	protected function get_visible_display_name( $user, $viewer_id = 0 ) {
+		$display_name = isset( $user->display_name ) ? (string) $user->display_name : '';
+
+		if (
+			'' === $display_name
+			|| ! function_exists( 'bp_is_active' )
+			|| ! bp_is_active( 'xprofile' )
+			|| ! function_exists( 'bp_xprofile_get_hidden_fields_for_user' )
+			|| ! function_exists( 'bp_xprofile_lastname_field_id' )
+		) {
+			return $display_name;
+		}
+
+		$active_display_format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+		// Under the Nickname display format the visible name is the nickname and nothing else -
+		// neither name field is part of it, whether or not either has data - so read it directly
+		// rather than trusting a display_name that may have drifted to a full name.
+		//
+		// WHICH nickname, though: Platform resolves the xprofile Nickname FIELD, while the fallback
+		// below reads the `nickname` USER META and then user_nicename. Those two drift, and when
+		// they did this endpoint published a different name in `name` than `profile_name` four keys
+		// later in the same response, and than the groups endpoint's admins[]/mods[]. So delegate
+		// where Platform can answer - the groups endpoint resolves the same way, for the same
+		// reason - and keep the meta chain only for a Platform that cannot.
+		if ( 'nickname' === $active_display_format ) {
+			if ( function_exists( 'bb_core_build_visible_display_name' ) && function_exists( 'bp_core_get_user_displayname' ) ) {
+				// Decoded for the same reason as `profile_name` above - the resolver's chain ends
+				// in esc_html(), which is an HTML-output concern, not a JSON one.
+				$resolved = wp_specialchars_decode( (string) bp_core_get_user_displayname( $user->ID, (int) $viewer_id ), ENT_QUOTES );
+
+				if ( is_string( $resolved ) && '' !== $resolved ) {
+					return $resolved;
+				}
+			}
+
+			return $this->get_fallback_display_name( $user );
+		}
+
+		$hidden_fields       = array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user->ID, $viewer_id ) );
+		$first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? (int) bp_xprofile_firstname_field_id() : 0;
+		$last_name_field_id  = (int) bp_xprofile_lastname_field_id();
+
+		// The first name can be restricted per member, or site-wide through the field's own default
+		// visibility, which bp_xprofile_get_fields_by_visibility_levels() applies to every member
+		// even where custom visibility is disabled.
+		$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $hidden_fields, true ) );
+
+		// A visibility level a permitted viewer COULD see, as opposed to the site-wide format hide
+		// below, which is applied to every viewer alike.
+		$last_name_access_hidden = ( $last_name_field_id > 0 && in_array( $last_name_field_id, $hidden_fields, true ) );
+
+		// The surname is not part of the "First Name" format at all, whether or not the Last Name
+		// field is enabled, and that site-wide hide never enters the per-viewer list. Gating on
+		// bp_core_hide_display_name_field() was too narrow - it only reports the field DISABLED.
+		$last_name_hidden = ( 'first_name' === $active_display_format ) || $last_name_access_hidden;
+
+		// Nothing is withheld from this viewer: the stored column is the public name and is returned
+		// untouched, which is what keeps a deliberately customised display name intact and keeps
+		// `name` round-trippable against WP_REST_Users_Controller.
+		if ( ! $first_name_hidden && ! $last_name_hidden ) {
+			return $display_name;
+		}
+
+		// Something has to be withheld, so the answer cannot be the stored column minus that part.
+		// display_name is DERIVED and drifts (an import, the wp-admin "Display name publicly as"
+		// dropdown, a third-party write), and removing one name from a drifted string is not
+		// decidable: a surname sits inside unrelated words ("Ng" in "Armstrong") as readily as it is
+		// the name being hidden. Assemble the name from the fields this viewer may see instead -
+		// which is what Platform's bb_core_build_visible_display_name() does for `profile_name` in
+		// this same response - including the nickname/user_nicename fallback it ends on when no
+		// permitted part has a value - so the two agree by construction (PROD-9896).
+		$first_name = $this->get_visible_name_field_value( $first_name_field_id, $user->ID, 'first_name' );
+
+		$parts = array();
+
+		if ( ! $first_name_hidden ) {
+			$parts[] = $first_name;
+		}
+
+		if ( ! $last_name_hidden ) {
+			$parts[] = $this->get_visible_name_field_value( $last_name_field_id, $user->ID, 'last_name' );
+		}
+
+		$visible = trim( implode( ' ', array_filter( $parts, 'strlen' ) ) );
+
+		if ( '' !== $visible ) {
+			return $visible;
+		}
+
+		// No permitted name part has a value, so there is nothing to assemble and the answer cannot
+		// come from the stored column either: something IS being withheld from this viewer on this
+		// branch, and display_name is a DERIVED value that drifts (an import, the wp-admin "Display
+		// name publicly as" dropdown, a third-party write), so whatever it spells is not the name
+		// the permitted fields describe. Fall back to the nickname, then user_nicename - the same
+		// chain, in the same order, that Platform's bb_core_build_visible_display_name() ends on,
+		// so `name`, `profile_name` four keys later in this same response, and the group
+		// admins[]/mods[] names all resolve one member to one string.
+		//
+		// This used to stay anchored to display_name whenever neither name field held a value, on
+		// the argument that a round-trip write would otherwise truncate the column. That argument
+		// no longer holds: prepare_item_for_database() drops a submitted `name` that merely echoes
+		// the value this viewer was served and reports it with X-BP-Ignored-Fields, so the column
+		// survives the round trip while the served value stays consistent with every other producer.
+		// A deliberate rename to any other string still writes.
+		return $this->get_fallback_display_name( $user );
+	}
+
+	/**
+	 * Read one name profile field for get_visible_display_name().
+	 *
+	 * Unicode-aware trim so a value padded with a non-ASCII space (U+00A0 pasted from a word
+	 * processor, which PHP's trim() leaves in place) does not reach the assembled name, and a
+	 * non-string no-value normalises to '' rather than to something that cannot be concatenated.
+	 *
+	 * The WordPress user meta is read when the profile field has no stored row, because that is
+	 * what bp_xprofile_get_member_display_name() itself back-fills from: on an imported member the
+	 * xprofile row does not exist yet, and reading only the field would drop a name the viewer is
+	 * entitled to see. Delegates to Platform's bb_core_get_name_field_value() so every endpoint
+	 * resolves a name part the same way, and keeps a self-contained fallback for a Platform that
+	 * predates it.
+	 *
+	 * WHY THIS BODY IS COPIED IN THREE CONTROLLERS, AND WHY IT STAYS THAT WAY. The groups and
+	 * invites endpoints carry a byte-identical copy. Every shared home was checked and none
+	 * survives:
+	 *
+	 *  - `includes/functions.php` is required from bp-rest.php only AFTER an early return on
+	 *    `function_exists( 'bp_rest_namespace' )`, and Platform always defines that
+	 *    (bp-core/bp-core-rest-api.php). Verified at runtime: actions.php and filters.php are in
+	 *    get_included_files() on a booted site, functions.php is not. It is exactly the
+	 *    older-Platform window this fallback exists for, so a shared symbol there would be missing
+	 *    precisely when it is needed.
+	 *  - Grunt's `bp_rest_core` sync excludes actions.php, filters.php and functions.php by name,
+	 *    so a symbol defined in any of them is absent from Platform's generated copies of these
+	 *    controllers and would fatal there.
+	 *  - A trait would sync, but Platform's autoloader (src/class-buddypress.php) resolves exactly
+	 *    one trait by a hard-coded path (`trait-bp-rest-attachments.php`); a second one needs an
+	 *    entry added to that map - an edit in another repo, which a refactor with no runtime effect
+	 *    does not justify.
+	 *  - A `BB_Core_*` class at the top of includes/ would sync into src/bp-core/classes/ and
+	 *    autoload, but it would then exist twice on a paired install (here and in Platform) with no
+	 *    guard against a redeclaration fatal - a new failure mode traded for no behaviour change.
+	 *
+	 * The drift this leaves is bounded by delegation: on any Platform that HAS
+	 * bb_core_get_name_field_value() all three controllers return Platform's answer, so the copies
+	 * below only ever run on an unpaired install and only ever have to stay in step with each
+	 * other. Keep them byte-identical, signature included, and change all three together.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
+	 * @param int    $user_id  ID of the member the field belongs to.
+	 * @param string $meta_key WordPress user meta key holding the same name part.
+	 * @return string The stored value, or '' when there is none.
+	 */
+	protected function get_visible_name_field_value( $field_id, $user_id, $meta_key = '' ) {
+		$field_id = (int) $field_id;
+		$user_id  = (int) $user_id;
+		$meta_key = (string) $meta_key;
+
+		// Platform owns the rule. Delegating means a later change to it - a different empty-value
+		// test, another Unicode class - reaches every endpoint at once instead of leaving the
+		// copies below to drift into publishing a name part a sibling endpoint withholds.
+		if ( function_exists( 'bb_core_get_name_field_value' ) ) {
+			return (string) bb_core_get_name_field_value( $field_id, $user_id, $meta_key );
+		}
+
+		// Self-contained fallback for a Platform that predates that helper, since this plugin is
+		// upgraded independently of it.
+		$value = '';
+
+		if ( $field_id > 0 && function_exists( 'xprofile_get_field_data' ) ) {
+			$stored = xprofile_get_field_data( $field_id, $user_id );
+			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+		}
+
+		if ( '' === $value && '' !== $meta_key ) {
+			$stored = get_user_meta( $user_id, $meta_key, true );
+			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Last-resort label for a member whose name resolved to nothing.
+	 *
+	 * Platform's bp_core_get_user_displayname() ends its chain at `user_nicename`, not at the
+	 * nickname: the nickname usermeta can be empty on a raw import, and WordPress guarantees a
+	 * non-empty nicename for every real user. Stopping one step earlier here meant `name` could
+	 * come back as an empty string while `profile_name` in the SAME response - which delegates to
+	 * Platform - carried the nicename, so an app rendered a blank member card. Neither value can
+	 * carry a hidden name part, so continuing the chain costs no privacy.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param WP_User $user The member being rendered.
+	 * @return string The nickname, else the user_nicename, else an empty string.
+	 */
+	protected function get_fallback_display_name( $user ) {
+		if ( ! isset( $user->ID ) ) {
+			return '';
+		}
+
+		$nickname = (string) get_the_author_meta( 'nickname', $user->ID );
+
+		if ( '' !== trim( $nickname ) ) {
+			return $nickname;
+		}
+
+		return (string) get_the_author_meta( 'user_nicename', $user->ID );
 	}
 
 	/**

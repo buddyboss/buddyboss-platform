@@ -2337,7 +2337,13 @@ function bp_activity_post_update( $args = '' ) {
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+					// bp_activity_user_can_edit() is false both for an expired window and for a
+					// feature the admin switched off; blaming the timer for the latter is wrong.
+					$edit_error = bp_is_activity_edit_enabled()
+						? __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' )
+						: __( 'Editing activity posts is currently disabled.', 'buddyboss' );
+
+					return new WP_Error( 'error', $edit_error );
 				} else {
 					return false;
 				}
@@ -3153,7 +3159,13 @@ function bp_activity_new_comment( $args = '' ) {
 
 			if ( ! bb_activity_comment_user_can_edit( $activity_comment ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					return new WP_Error( 'error', __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss' ) );
+					// bb_activity_comment_user_can_edit() is false both for an expired window and
+					// for a feature the admin switched off; blaming the timer for the latter is wrong.
+					$comment_edit_error = bb_is_activity_comment_edit_enabled()
+						? __( 'Allowed time for editing this activity comment is passed already, you can not edit now.', 'buddyboss' )
+						: __( 'Editing activity comments is currently disabled.', 'buddyboss' );
+
+					return new WP_Error( 'error', $comment_edit_error );
 				} else {
 					return false;
 				}
@@ -6978,7 +6990,11 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
 /**
  * Get activity comment threading depth.
  *
+ * The stored value is normalised with bb_activity_normalize_comment_threading_depth(): anything
+ * outside 1-4, including an empty row, resolves to 3 — the same rule the settings control applies.
+ *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION] The return value is normalised to a depth the settings control can show.
  *
  * @param int $default Optional. Fallback value if not found in the database.
  *                     Default: 3.
@@ -6987,6 +7003,8 @@ function bb_is_activity_comment_threading_enabled( $default = true ) {
  */
 function bb_get_activity_comment_threading_depth( $default = 3 ) {
 
+	$depth = bb_activity_normalize_comment_threading_depth( bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
+
 	/**
 	 * Apply filter to modify the activity comments threading depth.
 	 *
@@ -6994,7 +7012,7 @@ function bb_get_activity_comment_threading_depth( $default = 3 ) {
 	 *
 	 * @param bool $default Value of activity comments threading depth.
 	 */
-	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', bp_get_option( '_bb_activity_comment_threading_depth', $default ) );
+	return (int) apply_filters( 'bb_get_activity_comment_threading_depth', $depth );
 }
 
 /**
@@ -8027,4 +8045,36 @@ function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $ac
 	}
 
 	return $result;
+}
+
+/**
+ * Get the display name of an activity item's author as the current viewer may see it.
+ *
+ * Activity and comment objects carry two names: `display_name` (the raw WP users
+ * column, always the full name) and `user_fullname` (resolved per viewer by
+ * bp_core_get_user_displayname(), honouring xprofile field visibility such as a
+ * hidden last name). Public output must never use the raw column — this helper
+ * prefers `user_fullname` and falls back to a per-viewer resolution.
+ *
+ * @since BuddyBoss 3.5.0
+ *
+ * @param object $activity_item Activity or activity comment object.
+ * @return string Display name as permitted for the current viewer, or an empty string.
+ */
+function bb_activity_get_item_user_displayname( $activity_item ) {
+	if ( empty( $activity_item ) || ! is_object( $activity_item ) ) {
+		return '';
+	}
+
+	if ( ! empty( $activity_item->user_fullname ) ) {
+		return $activity_item->user_fullname;
+	}
+
+	if ( empty( $activity_item->user_id ) ) {
+		return '';
+	}
+
+	$name = bp_core_get_user_displayname( $activity_item->user_id );
+
+	return is_string( $name ) ? $name : '';
 }

@@ -267,6 +267,35 @@ abstract class BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Prepare Where sql to exclude content authored by members blocked by the current user.
+	 *
+	 * Unlike blocked_user_query(), this condition matches on the content author's
+	 * user id directly, so it does not depend on suspend/suspend_details entries
+	 * being materialized for each individual content item. Since blocking a member
+	 * no longer generates suspend entries for their existing content, this is the
+	 * only reliable way to exclude a blocked member's content at query time.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $column Fully qualified author id column (e.g. `a.user_id`).
+	 *
+	 * @return string|bool Where sql on success, false otherwise.
+	 */
+	protected function blocked_author_query( $column ) {
+		if ( empty( $column ) || ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return false;
+		}
+
+		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
+
+		if ( empty( $hidden_users_ids ) ) {
+			return false;
+		}
+
+		return "( {$column} NOT IN ( " . implode( ',', wp_parse_id_list( $hidden_users_ids ) ) . ' ) )';
+	}
+
+	/**
 	 * Reporting Setting enabled for current content.
 	 *
 	 * @since BuddyBoss 1.5.6
