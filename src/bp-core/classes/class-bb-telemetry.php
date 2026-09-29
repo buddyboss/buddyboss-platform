@@ -704,6 +704,26 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		}
 
 		/**
+		 * Read a Platform license option from the scope the licence is stored in.
+		 *
+		 * Network-wide when Platform is network-activated, per site otherwise.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $name          Option name.
+		 * @param mixed  $default_value Default value.
+		 *
+		 * @return mixed
+		 */
+		protected static function bb_get_license_option( $name, $default_value = false ) {
+			if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+				return \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( $name, $default_value );
+			}
+
+			return get_option( $name, $default_value );
+		}
+
+		/**
 		 * Collect licence and plan data for the Platform and Theme.
 		 *
 		 * The Mothership plugin id doubles as the plan identifier — values like
@@ -723,7 +743,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_get_license_data() {
 			$include_key = ( 'complete' === self::$bb_telemetry_option );
 
-			$platform_id = get_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
+			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
 			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
 
 			/*
@@ -735,7 +755,17 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$platform_key = '';
 			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
 				try {
-					$platform_key = (string) \BuddyBossPlatform\GroundLevel\Mothership\Credentials::getLicenseKey();
+					/*
+					 * getLicenseKey() was static in GroundLevel 2.2.1 but is an instance
+					 * method as of 9.1.2, so it has to be resolved from the container.
+					 * Calling it statically throws an Error that the catch below swallows,
+					 * which silently defeats the constant/environment lookup this block
+					 * exists for.
+					 */
+					$platform_key = (string) \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()
+						->get_container()
+						->get( \BuddyBossPlatform\GroundLevel\Mothership\Credentials::class )
+						->getLicenseKey();
 				} catch ( \Throwable $e ) {
 					$platform_key = '';
 				}
@@ -791,7 +821,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 */
 		protected function bb_theme_uses_platform_license( $plugin_id, $license_key ) {
 			// The platform licence has to exist and be activated.
-			if ( empty( $plugin_id ) || '' === (string) $license_key || empty( get_option( $plugin_id . '_license_activation_status', false ) ) ) {
+			if ( empty( $plugin_id ) || '' === (string) $license_key || empty( self::bb_get_license_option( $plugin_id . '_license_activation_status', false ) ) ) {
 				return false;
 			}
 
@@ -815,13 +845,26 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * next send after an admin visit warms the add-ons cache.
 			 */
 			try {
-				$cached = get_transient( $plugin_id . '_add_ons' );
+				/*
+				 * GroundLevel 9.1.2 caches the add-ons under `{pluginId}-mosh-addons` as a
+				 * plain ARRAY of product objects. The `{pluginId}_add_ons` key read here
+				 * previously, and the `->products` shape it carried, both belong to 2.2.1:
+				 * the writer was removed with the API migration, so this lookup had no
+				 * writer left and could only return false once the stale row expired —
+				 * silently reporting the theme as not covered by the Platform licence.
+				 */
+				$cached = get_transient( $plugin_id . '-mosh-addons' );
 
-				if ( empty( $cached ) || empty( $cached->products ) || ! is_iterable( $cached->products ) ) {
+				if ( empty( $cached ) || ! is_iterable( $cached ) ) {
 					return false;
 				}
 
-				foreach ( $cached->products as $product ) {
+				foreach ( $cached as $product ) {
+					// `upgrade-addon` entries are upsell placeholders, not entitlements.
+					if ( ! is_object( $product ) || 'upgrade-addon' === ( $product->type ?? '' ) ) {
+						continue;
+					}
+
 					if (
 						! empty( $product->slug ) &&
 						false !== strpos( $product->slug, 'buddyboss-theme' ) &&
@@ -859,7 +902,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$data = array(
 				'plan'      => $plugin_id,
 				'has_key'   => ( '' !== $license_key ),
-				'is_active' => (bool) get_option( $plugin_id . '_license_activation_status', false ),
+				'is_active' => (bool) self::bb_get_license_option( $plugin_id . '_license_activation_status', false ),
 			);
 
 			if ( $include_key && '' !== $license_key ) {
@@ -867,7 +910,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			// Cached plan detail, populated when the licence screen was last loaded.
-			$details = get_transient( $plugin_id . '_license_details' );
+			$details = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ? \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_transient( $plugin_id . '_license_details' ) : get_transient( $plugin_id . '_license_details' );
 			if ( is_array( $details ) ) {
 				$data['product']             = isset( $details['product'] ) ? $details['product'] : '';
 				$data['status']              = isset( $details['status'] ) ? $details['status'] : '';

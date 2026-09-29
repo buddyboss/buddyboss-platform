@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
-use BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer;
-use BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness;
-
 /**
  * This class registers and renders an admin page that displays a list of add-ons available for the License.
  */
-class BB_Addons_Page implements StaticContainerAwareness {
-
-	use HasStaticContainer;
+class BB_Addons_Page {
 
 	/**
 	 * The capability required to view the page.
@@ -36,14 +31,18 @@ class BB_Addons_Page implements StaticContainerAwareness {
 	/**
 	 * Registers the page.
 	 *
-	 * @return mixed The resulting page's hook suffix or false if the user does not have the capability set in the constant self::CAPABILITY.
+	 * @since BuddyBoss [BBVERSION] Added the `$parent_slug` and `$capability` parameters.
+	 *
+	 * @param string $parent_slug Parent menu slug.
+	 * @param string $capability  Capability required to view the page.
+	 * @return mixed The resulting page's hook suffix or false if the user does not have the capability.
 	 */
-	public static function register() {
+	public static function register( string $parent_slug = 'buddyboss-platform', string $capability = self::CAPABILITY ) {
 		return add_submenu_page(
-			'buddyboss-platform',
+			$parent_slug,
 			self::pageTitle(),
 			esc_html__( 'Add-ons', 'buddyboss' ),
-			self::CAPABILITY,
+			$capability,
 			self::SLUG,
 			array(
 				self::class,
@@ -59,7 +58,7 @@ class BB_Addons_Page implements StaticContainerAwareness {
 		echo '<div class="wrap">';
 			echo '<h2>' . self::pageTitle() . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<br>';
-			echo BB_Addons_Manager::generateAddonsHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo BB_Addons_Manager::render_addons_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</div>';
 	}
 }
