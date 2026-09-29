@@ -331,6 +331,7 @@ class BB_Mothership_Loader {
 
 		// Add-on buttons on the Network Admin add-ons page must act network-wide.
 		if ( is_admin() ) {
+			BB_Addons_Manager::register_ajax_slug_normalizer( $plugin_id );
 			BB_Addons_Manager::register_network_ajax_handlers( $plugin_id );
 		}
 

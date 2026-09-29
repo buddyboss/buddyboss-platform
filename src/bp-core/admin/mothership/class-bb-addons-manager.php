@@ -539,6 +539,55 @@ class BB_Addons_Manager extends AddonsManager {
 	}
 
 	/**
+	 * Map the base add-on slug BuddyBoss posts to the product's real slug before the vendor
+	 * add-on AJAX handlers run.
+	 *
+	 * BuddyBoss callers (Email Digest card, placeholder feature cards, Settings screen) post
+	 * the base slug, e.g. `buddyboss-addons`, and entitlement is decided with
+	 * {@see self::checkProductBySlug()}, which matches by prefix. The licensing server can
+	 * list the product under a plan-specific slug (e.g. `buddyboss-addons-scale`), and
+	 * GroundLevel's {@see AddonsManager::getAddon()} matches exactly, so the vendor
+	 * install/activate/deactivate handlers answered "Add-on not found" for an add-on the
+	 * card had just offered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $plugin_id The dynamic plugin ID the vendor names the AJAX actions after.
+	 */
+	public static function register_ajax_slug_normalizer( string $plugin_id ): void {
+		foreach ( array( 'activate', 'deactivate', 'install' ) as $action ) {
+			add_action( "wp_ajax_{$plugin_id}_addon_{$action}", array( self::class, 'normalize_ajax_addon_slug' ), 1 );
+		}
+	}
+
+	/**
+	 * Rewrites `$_POST['slug']` to the entitled product's real slug when it has no exact match.
+	 *
+	 * Runs before the vendor handler (and the network handlers), which verify the nonce and
+	 * capabilities themselves; this only changes which product they look up.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public static function normalize_ajax_addon_slug(): void {
+		if ( ! check_ajax_referer( 'mosh_addons', false, false ) || empty( $_POST['slug'] ) || ! is_string( $_POST['slug'] ) ) {
+			return;
+		}
+
+		$slug    = sanitize_text_field( wp_unslash( $_POST['slug'] ) );
+		$manager = self::addons_manager();
+
+		if ( '' === $slug || null === $manager || null !== $manager->getAddon( $slug ) ) {
+			return;
+		}
+
+		$product = self::checkProductBySlug( $slug );
+
+		if ( null !== $product && ! empty( $product->slug ) && is_string( $product->slug ) ) {
+			$_POST['slug'] = $product->slug;
+		}
+	}
+
+	/**
 	 * Route add-on activate/deactivate/install requests to network-wide handlers.
 	 *
 	 * When Platform is network-activated the add-ons page lives in Network Admin, but the
