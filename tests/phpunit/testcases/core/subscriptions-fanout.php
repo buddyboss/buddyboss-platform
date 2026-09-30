@@ -1383,4 +1383,88 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$this->assertFalse( $result );
 		$this->assertSame( array(), self::$sent );
 	}
+
+	/**
+	 * A queue chunk size filtered to 0 or below must not fatal the dispatcher
+	 * (array_chunk() throws on a size below 1 under PHP 8); each subscriber is
+	 * queued in a chunk of one instead.
+	 */
+	public function test_dispatcher_clamps_non_positive_chunk_size() {
+		foreach ( array( 0, -5 ) as $size ) {
+			$this->truncate_queue();
+			$filter = function () use ( $size ) {
+				return $size;
+			};
+			add_filter( 'bb_subscription_queue_min_count', $filter );
+
+			$item_id  = $this->next_item_id();
+			$user_ids = $this->create_subscribers( 3, $item_id );
+
+			bb_send_notifications_to_subscribers(
+				array(
+					'type'              => self::$type,
+					'item_id'           => $item_id,
+					'notification_from' => 'bb_test_fanout_note',
+					'data'              => array(),
+				)
+			);
+
+			remove_filter( 'bb_subscription_queue_min_count', $filter );
+
+			$rows = $this->get_queue_rows();
+			$this->assertCount( 3, $rows, "Chunk size {$size} is treated as 1." );
+			foreach ( $rows as $row ) {
+				$this->assertCount( 1, $row['args']['user_ids'] );
+			}
+			$queued = $this->queued_chunk_user_ids();
+			sort( $queued );
+			sort( $user_ids );
+			$this->assertSame( $user_ids, $queued );
+		}
+	}
+
+	/**
+	 * The background fan-out worker clamps the same filter.
+	 */
+	public function test_worker_clamps_non_positive_chunk_size() {
+		$filter = function () {
+			return 0;
+		};
+		add_filter( 'bb_subscription_queue_min_count', $filter );
+
+		$item_id  = $this->next_item_id();
+		$user_ids = $this->create_subscribers( 3, $item_id );
+
+		bb_send_notifications_to_subscribers_batch(
+			array(
+				'type'              => self::$type,
+				'item_id'           => $item_id,
+				'blog_id'           => get_current_blog_id(),
+				'data'              => array(),
+				'notification_type' => 'bb_test_fanout_note',
+				'notification_from' => 'bb_test_fanout_note',
+				'last_id'           => 0,
+				'per_page'          => 10,
+			)
+		);
+
+		remove_filter( 'bb_subscription_queue_min_count', $filter );
+
+		$chunks = array_values(
+			array_filter(
+				$this->get_queue_rows(),
+				function ( $row ) {
+					return 'bb_send_notifications_to_subscribers_batch' !== $row['callback'];
+				}
+			)
+		);
+		$this->assertCount( 3, $chunks, 'Chunk size 0 is treated as 1.' );
+		foreach ( $chunks as $row ) {
+			$this->assertCount( 1, $row['args']['user_ids'] );
+		}
+		$queued = $this->queued_chunk_user_ids();
+		sort( $queued );
+		sort( $user_ids );
+		$this->assertSame( $user_ids, $queued );
+	}
 }

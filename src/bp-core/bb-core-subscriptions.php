@@ -1199,8 +1199,9 @@ function bb_send_notifications_to_subscribers( $args ) {
 	 * @since BuddyBoss [BBVERSION] Also sizes the chunks queued by the background fan-out worker, bb_send_notifications_to_subscribers_batch().
 	 *
 	 * @param int $min_count Number of subscribers per queued chunk. Default 20.
+	 *                       Values below 1 are treated as 1.
 	 */
-	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
+	$min_count = max( 1, (int) apply_filters( 'bb_subscription_queue_min_count', 20 ) );
 
 	$parse_args = array(
 		'type'              => $type,
@@ -1822,7 +1823,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	global $bb_background_updater, $wpdb;
 
 	/** This filter is documented in src/bp-core/bb-core-subscriptions.php */
-	$min_count  = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
+	$min_count  = max( 1, (int) apply_filters( 'bb_subscription_queue_min_count', 20 ) );
 	$parse_args = array(
 		'type'              => $type,
 		'item_id'           => $item_id,
