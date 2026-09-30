@@ -6015,10 +6015,14 @@ window.bp = window.bp || {};
 								location.reload( true );
 							}
 						} else {
+							target.prop( 'disabled', false ).removeClass( 'loading' );
 							/* jshint ignore:start */
 							alert( response.data.feedback.replace( '&#039;', '\'' ) );
 							/* jshint ignore:end */
 						}
+					},
+					error: function () {
+						target.prop( 'disabled', false ).removeClass( 'loading' );
 					}
 				}
 			);
@@ -6070,10 +6074,14 @@ window.bp = window.bp || {};
 							location.reload( true );
 							//}
 						} else {
+							target.prop( 'disabled', false ).removeClass( 'loading' );
 							/* jshint ignore:start */
 							alert( response.data.feedback.replace( '&#039;', '\'' ) );
 							/* jshint ignore:end */
 						}
+					},
+					error: function () {
+						target.prop( 'disabled', false ).removeClass( 'loading' );
 					}
 				}
 			);
@@ -6128,12 +6136,16 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							window.location.reload( true );
 						} else {
+							target.prop( 'disabled', false ).removeClass( 'loading' );
 							if ( self.current_folder ) {
 								$( '#bp-media-single-album' ).prepend( response.data.feedback );
 							} else {
 								$( '#boss-media-create-album-popup .bb-model-header' ).after( response.data.feedback );
 							}
 						}
+					},
+					error: function () {
+						target.prop( 'disabled', false ).removeClass( 'loading' );
 					}
 				}
 			);
