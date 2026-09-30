@@ -22,14 +22,16 @@ $enabled_profile_type  = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_followers     = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'followers' );
 $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'last-active' );
 $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
+
+// Directory loading mode: infinite scroll appends pages via AJAX and only the list items are
+// returned for those requests; classic pagination renders the full list with page links.
+$bb_directory_autoload   = function_exists( 'bb_is_directory_autoload_active' ) && bb_is_directory_autoload_active();
+$bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 ?>
 
 <?php if ( bp_has_members( bp_ajax_querystring( 'members' ) ) ) : ?>
 
-	<?php
-	$bb_current_page = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-	if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
-	?>
+	<?php if ( ! $bb_is_load_more_request ) : ?>
 
 		<?php if ( bp_get_current_member_type() ) : ?>
 			<div class="bp-feedback info">
@@ -258,31 +260,38 @@ $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element
 		<?php endwhile; ?>
 
 	<?php
-	// Load more button when more pages exist.
-	global $members_template;
-	$members_pag_num     = max( 1, (int) $members_template->pag_num );
-	$members_total_pages = ceil( (int) $members_template->total_member_count / $members_pag_num );
-	if ( (int) $members_template->pag_page < $members_total_pages ) :
-		$next_page_url = add_query_arg( $members_template->pag_arg, (int) $members_template->pag_page + 1, '' );
-		?>
-		<li class="load-more">
-			<a class="button outline" href="<?php echo esc_url( $next_page_url ); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-		</li>
-	<?php endif; ?>
+	if ( $bb_directory_autoload ) :
+		// Load more button when more pages exist.
+		global $members_template;
+		$members_pag_num     = max( 1, (int) $members_template->pag_num );
+		$members_total_pages = ceil( (int) $members_template->total_member_count / $members_pag_num );
+		if ( (int) $members_template->pag_page < $members_total_pages ) :
+			$next_page_url = add_query_arg( $members_template->pag_arg, (int) $members_template->pag_page + 1, '' );
+			?>
+			<li class="load-more">
+				<a class="button outline" href="<?php echo esc_url( $next_page_url ); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			</li>
+			<?php
+		endif;
+	endif;
+	?>
 
-	<?php if ( empty( $bb_current_page ) || 1 === $bb_current_page ) : ?>
+	<?php if ( ! $bb_is_load_more_request ) : ?>
 	</ul>
 	<?php endif; ?>
 
-<?php
+	<?php
+	if ( ! $bb_directory_autoload ) :
+		bp_nouveau_pagination( 'bottom' );
+	endif;
 else :
 	bp_nouveau_user_feedback( 'members-loop-none' );
 endif;
 
 bp_nouveau_after_loop();
 
-if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
-?>
+if ( ! $bb_is_load_more_request ) :
+	?>
 
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">

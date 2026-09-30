@@ -189,6 +189,7 @@ function bp_get_default_options() {
 		'bb_ajax_request_page_load'                  => 1,
 		'bb_load_activity_per_request'               => 10,
 		'bb_activity_load_type'                      => 'infinite',
+		'bb_directory_load_type'                     => 'pagination',
 
 		'bb-enable-content-counts'                   => 0,
 		'bb-enable-sso'                              => false,
@@ -1023,6 +1024,57 @@ function bp_is_activity_autoload_active( $default = true ) {
 	 * @param bool $value true if Autoload is enabled, otherwise false.
 	 */
 	return (bool) apply_filters( 'bp_is_activity_autoload_active', ( 'infinite' === bp_get_option( 'bb_activity_load_type', $default_val ) ) );
+}
+
+/**
+ * Get the directory (members/groups) page loading type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                        Default: 'pagination'.
+ *
+ * @return string 'pagination' for classic pagination (default), 'infinite' for infinite scroll.
+ */
+function bb_get_directory_load_type( $default = 'pagination' ) {
+	$load_type = bp_get_option( 'bb_directory_load_type', $default );
+
+	if ( ! in_array( $load_type, array( 'infinite', 'pagination' ), true ) ) {
+		$load_type = $default;
+	}
+
+	/**
+	 * Filters the directory page loading type.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $load_type 'infinite' or 'pagination'.
+	 */
+	return apply_filters( 'bb_get_directory_load_type', $load_type );
+}
+
+/**
+ * Check whether infinite scroll is enabled for directory (members/groups) pages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false (classic pagination).
+ *
+ * @return bool True if infinite scroll is enabled, false when pagination is used.
+ */
+function bb_is_directory_autoload_active( $default = false ) {
+
+	$default_val = true === $default ? 'infinite' : 'pagination';
+
+	/**
+	 * Filters whether directory infinite scroll is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $value True if infinite scroll is enabled, otherwise false.
+	 */
+	return (bool) apply_filters( 'bb_is_directory_autoload_active', ( 'infinite' === bb_get_directory_load_type( $default_val ) ) );
 }
 
 /**

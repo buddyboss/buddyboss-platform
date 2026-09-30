@@ -1127,9 +1127,9 @@ window.bp = window.bp || {};
 			// Pagination.
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
 
-			// Members/Groups load more (infinite scroll).
-			$( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
-			if ( $( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).length ) {
+			// Members/Groups load more (infinite scroll) — only when Directory Loading is set to infinite scroll.
+			if ( BP_Nouveau.directory_autoload && $( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).length ) {
+				$( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
 				$( window ).on( 'scroll', this.autoLoadMoreItems );
 			}
 
