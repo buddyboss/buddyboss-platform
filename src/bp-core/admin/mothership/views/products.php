@@ -3,7 +3,7 @@
  * Products view template for displaying available add-ons.
  *
  * @package BuddyBoss\Core\Admin\Mothership
- * @since 1.0.0
+ * @since BuddyBoss 2.14.0
  */
 
 // Exit if accessed directly.
@@ -38,6 +38,7 @@ wp_add_inline_style(
 <div id="mosh-admin-addons" class="wrap">
 	<h3>
 		<form method="post" action="">
+			<?php wp_nonce_field( 'bb_mosh_refresh_addons', 'bb_mosh_refresh_nonce' ); ?>
 			<input type="submit"
 				class="button button-secondary"
 				name="submit-button-mosh-refresh-addon"
@@ -126,6 +127,16 @@ wp_add_inline_style(
 								</strong>
 							</div>
 							<div class="mosh-product-action">
+								<?php if ( 'upgrade' === $product->status ) : ?>
+								<a class="button button-primary mosh-product-upgrade"
+									href="<?php echo esc_url( $product->upgradeUrl ); ?>"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									<i class="<?php echo esc_attr( $product->iconClass ); ?>"></i>
+									<?php echo esc_html( $product->buttonLabel ); ?>
+								</a>
+								<?php else : ?>
 								<button type="button"
 									data-slug="<?php echo esc_attr( $product->slug ); ?>"
 									data-extension-type="<?php echo esc_attr( $product->extension_type ); ?>"
@@ -134,6 +145,7 @@ wp_add_inline_style(
 									<i class="<?php echo esc_attr( $product->iconClass ); ?>"></i>
 									<?php echo esc_html( $product->buttonLabel ); ?>
 								</button>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
@@ -142,7 +154,8 @@ wp_add_inline_style(
 			</div>
 		</div>
 	<?php else : ?>
-		<h3><?php esc_html_e( 'There were no Add-ons found for your License Key.', 'buddyboss' ); ?></h3>
+		<h3><?php esc_html_e( 'No Add-ons found for your License Key.', 'buddyboss' ); ?></h3>
+		<p><?php esc_html_e( 'If you were expecting add-ons here, use the "Refresh Add-ons" button above to try again.', 'buddyboss' ); ?></p>
 	<?php endif; ?>
 
 	<?php
