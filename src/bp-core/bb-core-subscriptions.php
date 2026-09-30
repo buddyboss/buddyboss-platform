@@ -1185,6 +1185,21 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	$subscription_ids = $id_page['subscriptions'];
 
+	/**
+	 * Filters how many subscribers go into each queued notification chunk.
+	 *
+	 * When a notification is sent in the background, the subscriber list is
+	 * split into chunks of this size and each chunk is queued as one background
+	 * job that calls the subscription type's send callback for those
+	 * recipients. The subscription migration and group-member subscription
+	 * routines use the same filter to size their own batches and pass their own
+	 * defaults.
+	 *
+	 * @since BuddyBoss 2.2.6
+	 * @since BuddyBoss [BBVERSION] Also sizes the chunks queued by the background fan-out worker, bb_send_notifications_to_subscribers_batch().
+	 *
+	 * @param int $min_count Number of subscribers per queued chunk. Default 20.
+	 */
 	$min_count = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 
 	$parse_args = array(
@@ -1806,6 +1821,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 
 	global $bb_background_updater, $wpdb;
 
+	/** This filter is documented in src/bp-core/bb-core-subscriptions.php */
 	$min_count  = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
 	$parse_args = array(
 		'type'              => $type,
