@@ -23,9 +23,10 @@ $join_button        = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'gr
 $group_alignment    = bb_platform_group_grid_style( 'left' );
 $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_get_group_cover_image_height() : 'small';
 
-// Directory loading mode: infinite scroll appends pages via AJAX and only the list items are
-// returned for those requests; classic pagination renders the full list with page links.
-$bb_directory_autoload   = function_exists( 'bb_is_directory_autoload_active' ) && bb_is_directory_autoload_active();
+// Directory loading mode: infinite scroll applies to the main Groups directory only; profile and
+// subgroup tabs that reuse this loop keep classic pagination. Infinite scroll appends pages via
+// AJAX and only the list items are returned for those requests.
+$bb_directory_autoload   = function_exists( 'bb_is_directory_autoload_active' ) && bb_is_directory_autoload_active() && bp_is_groups_directory();
 $bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
