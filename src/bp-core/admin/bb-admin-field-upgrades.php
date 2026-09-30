@@ -454,20 +454,25 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 		return array();
 	}
 
+	// Two key sets describe the same payload: the catalog's `upgrade_*` names, and the
+	// shorter names a `pro_notice.modal` is registered with in PHP. Accept either, catalog
+	// names winning, so a caller cannot silently get an empty modal by reaching for the
+	// wrong set — the failure mode is invisible, because every missing key falls through
+	// to a benign default and the dialog renders blank rather than erroring.
 	$media = bb_admin_build_upgrade_media(
-		$entry['upgrade_video_url'] ?? '',
-		$entry['upgrade_image_url'] ?? ''
+		$entry['upgrade_video_url'] ?? $entry['video_url'] ?? '',
+		$entry['upgrade_image_url'] ?? $entry['image_url'] ?? ''
 	);
 
 	return array(
-		'tier'        => sanitize_key( $entry['upgrade_tier']        ?? 'pro' ),
-		'label'       => sanitize_text_field( $entry['label']        ?? $fallback_label ),
-		'title'       => sanitize_text_field( $entry['upgrade_title'] ?? '' ),
-		'description' => wp_kses_post( $entry['upgrade_description'] ?? '' ),
+		'tier'        => sanitize_key( $entry['upgrade_tier'] ?? $entry['tier'] ?? 'pro' ),
+		'label'       => sanitize_text_field( $entry['label'] ?? $fallback_label ),
+		'title'       => sanitize_text_field( $entry['upgrade_title'] ?? $entry['title'] ?? '' ),
+		'description' => wp_kses_post( $entry['upgrade_description'] ?? $entry['description'] ?? '' ),
 		// Kept for backward-compat with any consumer that still reads `image_url`.
 		'image_url'   => 'image' === $media['type'] ? $media['url'] : ( $media['poster'] ?? '' ),
 		'media'       => $media,
-		'url'         => esc_url_raw( $entry['upgrade_url']          ?? 'https://www.buddyboss.com/pricing/' ),
+		'url'         => esc_url_raw( $entry['upgrade_url'] ?? $entry['url'] ?? 'https://www.buddyboss.com/pricing/' ),
 	);
 }
 
@@ -551,7 +556,8 @@ function bb_register_field_upgrades_license_hooks() {
 		return;
 	}
 
-	$plugin_id = get_option( 'buddyboss_dynamic_plugin_id', '' );
+	// Network-wide when Platform is network-activated.
+	$plugin_id = \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( 'buddyboss_dynamic_plugin_id', '' );
 	if ( empty( $plugin_id ) && defined( 'PLATFORM_EDITION' ) ) {
 		$plugin_id = PLATFORM_EDITION;
 	}
