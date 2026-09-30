@@ -6,7 +6,7 @@
  * the license activation and add-ons functionality.
  *
  * @package BuddyBoss
- * @since 1.0.0
+ * @since BuddyBoss 2.14.0
  */
 
 // Exit if accessed directly.
@@ -50,7 +50,9 @@ function buddyboss_init_drm() {
 	BuddyBoss\Core\Admin\DRM\BB_DRM_Controller::init();
 }
 
-// Hook into WordPress admin_init to initialize mothership.
+// Initialize mothership immediately on include (this file is required during
+// BuddyBoss's includes() at bp_loaded priority 4). The singleton in
+// BB_Mothership_Loader::instance() prevents duplicate hook registration.
 buddyboss_init_mothership();
 
 /**
@@ -58,8 +60,4 @@ buddyboss_init_mothership();
  *
  * define( 'BUDDYBOSS_MOTHERSHIP_API_BASE_URL', 'https://your-local-api.test/v1/' );
  * define( 'BUDDYBOSS_DISABLE_SSL_VERIFY', true );
- * define( 'BUDDYBOSS_LICENSE_KEY', 'your-test-license-key' );
- * define( 'BUDDYBOSS_ACTIVATION_DOMAIN', 'your-test-domain.com' );
- * define( 'BUDDYBOSS_API_EMAIL', 'your-api-email@example.com' );
- * define( 'BUDDYBOSS_API_TOKEN', 'your-api-token' );
  */
