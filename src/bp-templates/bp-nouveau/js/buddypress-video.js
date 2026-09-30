@@ -1713,11 +1713,6 @@ window.bp = window.bp || {};
 									}
 								);
 
-								var length = $( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
-								if ( length == 0 ) {
-									$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
-
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
@@ -2057,8 +2052,9 @@ window.bp = window.bp || {};
 				data.group_id = self.group_id;
 			}
 
-			// remove all feedback erros from the DOM.
-			$( '#bp-media-single-album .bp-feedback' ).remove();
+			// Remove all feedback errors from the DOM, keeping the info notice
+			// (the "no photos or videos" empty-state message) intact.
+			$( '#bp-media-single-album .bp-feedback' ).not( '.info' ).remove();
 			$( '#boss-media-create-album-popup .bp-feedback' ).remove();
 
 			$.ajax(

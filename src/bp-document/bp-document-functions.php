@@ -542,7 +542,11 @@ function bp_document_add( $args = '' ) {
 		$document->privacy = $r['privacy'];
 	} elseif ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
-		if ( ! empty( $document->activity_id ) ) {
+		// `BP_Activity_Activity` is loaded by the activity component and is
+		// NOT in the always-on autoload list. Guard against fatals when
+		// activity is deactivated but a group document upload still
+		// references an activity_id. Mirrors the gating in bp_media_add().
+		if ( ! empty( $document->activity_id ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $document->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
 				$document->privacy = $r['privacy'];
@@ -1242,7 +1246,17 @@ function folders_check_folder_access( $folder_id ) {
 			return true;
 		}
 
-		if ( is_user_logged_in() && 'friends' === $folder->privacy && friends_check_friendship( get_current_user_id(), $folder->user_id ) ) {
+		// `friends_check_friendship()` is loaded by the friends component.
+		// A folder previously set to "friends only" privacy can outlive a
+		// friends deactivation — gate the call so access falls through to
+		// the default (deny) instead of fatalling on the missing function.
+		if (
+			is_user_logged_in() &&
+			'friends' === $folder->privacy &&
+			bp_is_active( 'friends' ) &&
+			function_exists( 'friends_check_friendship' ) &&
+			friends_check_friendship( get_current_user_id(), $folder->user_id )
+		) {
 			return true;
 		}
 

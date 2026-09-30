@@ -376,7 +376,12 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			$group_type_id             = bp_group_get_group_type_id( $group_type );
 			$get_selected_member_types = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_group_invites', true );
 			if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
-				$request['member_type'] = implode( ',', $get_selected_member_types );
+				if ( is_array( $get_selected_member_types ) ) {
+					$request['member_type'] = implode( ',', $get_selected_member_types );
+				} elseif ( 'none' === $get_selected_member_types ) {
+					// 'none' means no member types are allowed to invite — use a non-existent type to return zero results.
+					$request['member_type'] = 'none';
+				}
 			}
 		}
 

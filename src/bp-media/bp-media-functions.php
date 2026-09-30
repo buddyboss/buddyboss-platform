@@ -553,7 +553,11 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
-		if ( ! empty( $media->activity_id ) ) {
+		// `BP_Activity_Activity` is loaded by the activity component and is
+		// NOT in the always-on autoload list (src/class-buddypress.php). When
+		// activity is deactivated via Settings, the class is missing and
+		// the unguarded `new` would fatal during a group media upload.
+		if ( ! empty( $media->activity_id ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $media->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
 				$media->privacy = $r['privacy'];
@@ -3152,7 +3156,12 @@ function bp_media_get_activity_media( $activity_id ) {
 			return;
 		}
 
-		$media_content = bb_media_get_activity_media( $activity_id, array( 'user_id' => false ) );
+		$activity = new BP_Activity_Activity( $activity_id );
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return;
+		}
+
+		$media_content = bb_media_get_activity_media( $activity, array( 'user_id' => false ) );
 		if ( empty( $media_content ) ) {
 			return;
 		}
@@ -3934,6 +3943,9 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 						$can_edit = true;
 					}
 					if ( 'video' === $type && ( $is_admin || 'members' === bp_group_get_video_status( $media_group_id ) ) ) {
+						$can_edit = true;
+					}
+					if ( 'album' === $type && ( $is_admin || 'members' === bp_group_get_album_status( $media_group_id ) ) ) {
 						$can_edit = true;
 					}
 					$can_move = true;

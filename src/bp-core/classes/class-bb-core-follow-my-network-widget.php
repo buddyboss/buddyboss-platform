@@ -180,7 +180,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			foreach ( $ids as $member_id ) {
 				?>
 				<div class="item-avatar">
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						echo wp_kses_post(
 							bp_core_fetch_avatar(
@@ -199,6 +199,12 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				</div>
 				<?php
 			}
+		} else {
+			?>
+			<div class="bb-rl-widget-empty-state">
+				<p><?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss' ); ?></p>
+			</div>
+			<?php
 		}
 		?>
 		</div>
@@ -323,7 +329,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 		$result = array(
 			'success' => 0,
-			'data'    => esc_html__( 'There were no members found, please try another filter.', 'buddyboss' ),
+			'data'    => '<div class="bb-rl-widget-empty-state"><p>' . esc_html__( 'There were no members found, please try another filter.', 'buddyboss' ) . '</p></div>',
 		);
 
 		// No data.
@@ -334,7 +340,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			foreach ( $ids as $member_id ) {
 				?>
 				<div class="item-avatar">
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						echo wp_kses_post(
 							bp_core_fetch_avatar(

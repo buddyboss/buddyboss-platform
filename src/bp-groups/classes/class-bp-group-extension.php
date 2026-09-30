@@ -1194,8 +1194,8 @@ class BP_Group_Extension {
 		// Initialize the metabox.
 		add_action( 'bp_groups_admin_meta_boxes', array( $this, '_meta_box_display_callback' ) );
 
-		// Catch the metabox save.
-		add_action( 'bp_group_admin_edit_after', array( $this, 'call_admin_screen_save' ), 10 );
+		// Note: Legacy metabox save via 'bp_group_admin_edit_after' removed.
+		// Settings 2.0 handles group extension save via BB_Admin_Meta_Field_Registry.
 	}
 
 	/**
@@ -1211,9 +1211,11 @@ class BP_Group_Extension {
 	/**
 	 * Check the nonce, and call the admin_screen_save() method.
 	 *
-	 * @since BuddyPress 1.8.0
+	 * @since      BuddyPress 1.8.0
+	 * @deprecated BuddyBoss 3.0.0 Use BB_Admin_Meta_Field_Registry via bb_register_groups_meta_fields hook instead.
 	 */
 	public function call_admin_screen_save() {
+		_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry::save_fields_data()' );
 		$this->check_nonce( 'admin' );
 		call_user_func( $this->screens['admin']['screen_save_callback'], $this->group_id );
 	}
@@ -1224,7 +1226,12 @@ class BP_Group_Extension {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function _meta_box_display_callback() {
-		$group_id = isset( $_GET['gid'] ) ? (int) $_GET['gid'] : 0;
+		$current_screen = get_current_screen();
+		if ( ! $current_screen ) {
+			return;
+		}
+
+		$group_id = isset( $_GET['gid'] ) ? absint( wp_unslash( $_GET['gid'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$screen   = $this->screens['admin'];
 
 		$extension_slug = $this->slug;
@@ -1236,7 +1243,7 @@ class BP_Group_Extension {
 			$screen['slug'],
 			$screen['name'],
 			$callback,
-			get_current_screen()->id,
+			$current_screen->id,
 			$screen['metabox_context'],
 			$screen['metabox_priority']
 		);

@@ -2819,6 +2819,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$thread_messages  = BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
 		$recepients       = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
 
+		// Ensure $thread_messages is an array to prevent PHP 8+ fatal errors
+		// when object cache returns unexpected data.
+		if ( ! is_array( $thread_messages ) ) {
+			$thread_messages = array();
+		}
+
 		if ( count( $recepients ) > 2 ) {
 			foreach ( $thread_messages as $message ) {
 				if ( $message->sender_id !== $user_id ) {

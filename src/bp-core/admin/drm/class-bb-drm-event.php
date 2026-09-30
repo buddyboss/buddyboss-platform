@@ -572,6 +572,19 @@ class BB_DRM_Event {
 		$table_name      = self::get_table_name();
 		$charset_collate = $wpdb->get_charset_collate();
 
+		// Composite-key prefix lengths kept at 100 chars (was 191) so the
+		// `unique_event` index stays under MyISAM's 1000-byte hard limit on
+		// servers where `default_storage_engine = MyISAM`. With utf8mb4 (4
+		// bytes/char) the math is:
+		//   event(100) + evt_id (bigint) + evt_id_type(100)
+		//   = 100*4 + 8 + 100*4 = 808 bytes  ✓  (was 1536 bytes  ✗)
+		// 100 chars is comfortably more than the actual data ever stores —
+		// event names like 'no-license'/'invalid-license' and evt_id_type
+		// values like 'platform'/'addon' are all well under that cap.
+		//
+		// The single-column indexes stay at (191) because each is only ~764
+		// bytes on its own — fits MyISAM's 1000-byte ceiling — and keeps
+		// full uniqueness scope for direct WHERE-event= lookups.
 		$sql = "CREATE TABLE {$table_name} (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			event varchar(255) NOT NULL DEFAULT '',
@@ -580,7 +593,7 @@ class BB_DRM_Event {
 			evt_id_type varchar(255) NOT NULL DEFAULT 'platform',
 			created_at datetime NOT NULL,
 			PRIMARY KEY (id),
-			UNIQUE KEY unique_event (event(191), evt_id, evt_id_type(191)),
+			UNIQUE KEY unique_event (event(100), evt_id, evt_id_type(100)),
 			KEY event_event (event(191)),
 			KEY event_evt_id (evt_id),
 			KEY event_evt_id_type (evt_id_type(191)),

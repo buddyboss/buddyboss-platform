@@ -407,7 +407,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 				// Set topic id when activity type reply.
 				if ( $this->reply_create === $activity->type ) {
-					$topic    = bbp_get_reply( $topic_id );
+					$topic = bbp_get_reply( $topic_id );
+					if ( empty( $topic ) ) {
+						return $content;
+					}
 					$topic_id = $topic->post_parent;
 				}
 			}
@@ -419,7 +422,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 				// Set topic id when activity type reply.
 				if ( $this->reply_create === $activity->type ) {
-					$topic    = bbp_get_reply( $topic_id );
+					$topic = bbp_get_reply( $topic_id );
+					if ( empty( $topic ) ) {
+						return $content;
+					}
 					$topic_id = $topic->post_parent;
 				}
 			}
@@ -528,6 +534,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				if ( $this->component === $activity->component ) {
 					$reply_id = $activity->item_id;
 					$topic    = bbp_get_reply( $reply_id );
+					if ( empty( $topic ) ) {
+						return array();
+					}
 					$topic_id = $topic->post_parent;
 				}
 
@@ -535,6 +544,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				if ( 'groups' === $activity->component ) {
 					$reply_id = $activity->secondary_item_id;
 					$topic    = bbp_get_reply( $reply_id );
+					if ( empty( $topic ) ) {
+						return array();
+					}
 					$topic_id = $topic->post_parent;
 				}
 

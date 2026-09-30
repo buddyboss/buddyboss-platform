@@ -1,15 +1,23 @@
+import { bbRlSidebarIncludes } from '../../utils/normalizeSidebar';
+
 export const FeedRightSidebar = ({ formData = {} }) => {
     const { bb_rl_activity_sidebars } = formData;
-    
-    // Helper function to check if a widget should be shown
+
+    // Helper function to check if a widget should be shown.
+    //
+    // Accepts BOTH the onboarding `draggable`-field sequential list
+    // (`[ 'complete_profile', 'latest_updates' ]`) and the persisted map shape
+    // (`{ complete_profile: true }`) via `bbRlSidebarIncludes()`. Before the
+    // normalizer existed the preview silently rendered nothing on any site
+    // that had already saved from the admin because `.includes()` on an
+    // object returns `undefined`.
     const shouldShowWidget = (widgetId) => {
-        // If no configuration exists, show all widgets by default
+        // If no configuration exists yet, show all widgets by default.
         if ( typeof bb_rl_activity_sidebars === 'undefined' ) {
             return true;
         }
-        
-        // Show widget if it's in the array
-        return bb_rl_activity_sidebars.includes(widgetId);
+
+        return bbRlSidebarIncludes( bb_rl_activity_sidebars, widgetId );
     };
 
     // Define all widgets

@@ -257,9 +257,9 @@
 							width: 2px;
 							background-color: var(--bb-rl-border-tertiary-color);
 							position: absolute;
-							left: -32px;
-							top: 15px;
-							height: calc(100% - 20px);
+							left: 24px;
+							top: 64px;
+							height: calc(100% - 60px);
 						}
 					}
 
@@ -418,6 +418,17 @@
 						height: 20px;
 						width: 20px;
 						margin: 0;
+					}
+
+					i {
+						display: flex;
+						font-size: 20px;
+						font-weight: 200;
+						line-height: 1;
+
+						&:before {
+							margin: 0;
+						}
 					}
 
 					&:not(:first-child) {

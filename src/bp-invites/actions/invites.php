@@ -71,6 +71,27 @@ function bp_member_invite_submit() {
 		}
 		$duplicate_email_inputs[] = strtolower( trim( $_POST['email'][ $key ][0] ) );
 
+		/*
+		 * Sanitize and gate the invitee Profile Type before it is stored.
+		 *
+		 * This value is saved as `_bp_invitee_member_type` and read back at activation by
+		 * bp_assign_default_member_type_to_activate_user(), which applies the type's
+		 * `_bp_member_type_wp_roles` mapping via add_role(). It was previously taken from
+		 * $_POST verbatim — unlike the name and email on the same lines — so any member who
+		 * can send invites could name a profile type that the dropdown never offered
+		 * (including one mapped to a privileged role), invite an address they control and
+		 * self-assign that role on registration. Anything not actually offered to this
+		 * inviter falls back to no type, which is the same result as leaving the select
+		 * on its default "-- Select Type --" option.
+		 */
+		$bb_invitee_member_type = isset( $_POST['member-type'][ $key ][0] )
+			? sanitize_text_field( wp_unslash( $_POST['member-type'][ $key ][0] ) )
+			: '';
+
+		if ( '' !== $bb_invitee_member_type && ! bb_is_member_type_allowed_on_invite( $bb_invitee_member_type ) ) {
+			$bb_invitee_member_type = '';
+		}
+
 		if ( '' !== $_POST['invitee'][ $key ][0] && '' !== $_POST['email'][ $key ][0] && is_email( $_POST['email'][ $key ][0] ) ) {
 			if ( email_exists( (string) sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ) ) ) {
 				$invite_exists_array[] = sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) );
@@ -80,7 +101,7 @@ function bp_member_invite_submit() {
 				$invite_correct_array[] = array(
 					'name'        => sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ),
 					'email'       => sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ),
-					'member_type' => ( isset( $_POST['member-type'][ $key ][0] ) && ! empty( $_POST['member-type'][ $key ][0] ) ) ? $_POST['member-type'][ $key ][0] : '',
+					'member_type' => $bb_invitee_member_type,
 				);
 			} else {
 				$invite_restricted_array[] = sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) );
@@ -89,7 +110,7 @@ function bp_member_invite_submit() {
 			$invite_wrong_array[] = array(
 				'name'        => sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ),
 				'email'       => sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ),
-				'member_type' => ( isset( $_POST['member-type'][ $key ][0] ) && ! empty( $_POST['member-type'][ $key ][0] ) ) ? $_POST['member-type'][ $key ][0] : '',
+				'member_type' => $bb_invitee_member_type,
 			);
 		}
 	}
@@ -116,13 +137,15 @@ function bp_member_invite_submit() {
 		$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 		$member_type    = $value['member_type'];
 		$query_string[] = $email;
-		$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
+		// Delivered to a plain email address with no member behind it - resolve the inviter's name
+		// as the public, logged-out view rather than as the inviter sees their own profile.
+		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 
 		$message .= '
 
 ' . bp_get_member_invites_wildcard_replace( stripslashes( strip_tags( bp_get_invites_member_invite_url() ) ), $email );
 
-		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 		$site_name    = get_bloginfo( 'name' );
 		$inviter_url  = bp_loggedin_user_domain();
 

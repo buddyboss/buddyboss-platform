@@ -29,7 +29,17 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			return false;
 		}
 
-		$post   = get_post( $comment->comment_post_ID );
+		$post = get_post( $comment->comment_post_ID );
+
+		// The underlying post may have been deleted between when the
+		// comment was written and when this notification dispatches
+		// (a routine race on busy sites). Bail gracefully instead of
+		// fatalling on `null->post_author`. Mirrors the defensive
+		// pattern WP core uses in pluggable.php for the same function.
+		if ( ! $post instanceof WP_Post ) {
+			return false;
+		}
+
 		$author = get_userdata( $post->post_author );
 
 		// Who to notify? By default, just the post author, but others can be added.
@@ -383,8 +393,24 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 		}
 
 		$comment = get_comment( $comment_id );
-		$post    = get_post( $comment->comment_post_ID );
-		$user    = get_userdata( $post->post_author );
+
+		// `get_comment()` returns null when the comment row has been
+		// removed between scheduling and dispatch. Without this guard
+		// the next line would fatal on `null->comment_post_ID`.
+		if ( ! $comment instanceof WP_Comment ) {
+			return false;
+		}
+
+		$post = get_post( $comment->comment_post_ID );
+
+		// And the post itself may have been deleted concurrently — bail
+		// rather than fatal on `null->post_author`. Matches the defensive
+		// pattern WP core uses in pluggable.php for the same function.
+		if ( ! $post instanceof WP_Post ) {
+			return false;
+		}
+
+		$user = get_userdata( $post->post_author );
 		// Send to the administration and to the post author if the author can modify the comment.
 		$emails = array( get_option( 'admin_email' ) );
 		if ( $user && user_can( $user->ID, 'edit_comment', $comment_id ) && ! empty( $user->user_email ) ) {

@@ -1,0 +1,304 @@
+<?php
+/**
+ * BuddyBoss Feature Autoloader with Code Compartmentalization
+ *
+ * Implements autoloader gates to prevent loading classes for inactive features.
+ * Ensures strict security with regex validation.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Feature Autoloader Class
+ *
+ * @since BuddyBoss 3.0.0
+ */
+class BB_Feature_Autoloader {
+
+	/**
+	 * Feature class mapping patterns.
+	 *
+	 * Maps class name patterns to feature IDs for conditional loading.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var array
+	 */
+	private static $feature_class_map = array(
+		// Add your feature class mappings here.
+	);
+
+	/**
+	 * Register autoloader gate.
+	 *
+	 * IMPORTANT: registered with `$prepend = false` intentionally — this
+	 * autoloader must run AFTER Composer and any other registered autoloaders
+	 * so non-feature classes continue to load normally. The gate only
+	 * participates in the chain to short-circuit (return false) for classes
+	 * that belong to an inactive feature.
+	 *
+	 * Changing the prepend flag to true will cause every `BP_*` class lookup
+	 * to hit this autoloader first, and any class that doesn't match a
+	 * feature pattern will still return false — fine today, but relies on
+	 * subsequent autoloaders running. Leave as append unless every code path
+	 * is audited.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public static function bb_register() {
+		// Signature: spl_autoload_register( $callback, $throw = true, $prepend = false ).
+		spl_autoload_register( array( __CLASS__, 'bb_autoload' ), true, false );
+	}
+
+	/**
+	 * Autoloader with feature gating.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $class Class name to load.
+	 * @return bool|void True if class loaded, false if not found, void if gated.
+	 */
+	public static function bb_autoload( $class ) {
+		// Fast prefix check: only process classes that look like BuddyBoss classes.
+		// This avoids running regex + filter logic for every non-BB class autoload.
+		$upper_class = strtoupper( substr( $class, 0, 3 ) );
+		if ( 'BB_' !== $upper_class && 'BB\\' !== $upper_class && 'BP_' !== $upper_class && 'BP\\' !== $upper_class ) {
+			return false;
+		}
+
+		// SECURITY: Use strict regex patterns to prevent class name injection.
+		// Only allow alphanumeric, underscore, and backslash in class names.
+		if ( ! preg_match( '/^[a-zA-Z0-9_\\\\]+$/', $class ) ) {
+			return false; // Reject invalid class names.
+		}
+
+		// Get feature class mappings (cached after first call).
+		$feature_class_map = self::bb_get_feature_class_map();
+
+		// Check if class belongs to a feature.
+		$matched_feature = null;
+		foreach ( $feature_class_map as $pattern => $feature_id ) {
+			if ( preg_match( $pattern, $class ) ) {
+				$matched_feature = $feature_id;
+				break; // Found matching feature, stop checking.
+			}
+		}
+
+		// If class matches a feature pattern, gate it.
+		if ( $matched_feature ) {
+			// Only allow autoloading if feature is active.
+			if ( ! bp_is_active( $matched_feature ) ) {
+				// Feature is inactive - prevent class loading.
+				return false; // Don't load - feature is inactive.
+			}
+			// Feature is active - allow normal autoloading to continue.
+			// Don't return here - let other autoloaders (Composer, etc.) handle the actual loading.
+		}
+
+		// For classes that don't match our patterns, or matched features that are active,
+		// let other autoloaders handle them. Return false to continue autoloader chain.
+		return false;
+	}
+
+	/**
+	 * Add feature class mapping.
+	 *
+	 * Allows third-party plugins to register their feature class patterns.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param string $pattern   Regex pattern to match class names.
+	 * @param string $feature_id Feature ID to check.
+	 */
+	public static function bb_add_feature_class_map( $pattern, $feature_id ) {
+		// Validate pattern.
+		if ( @preg_match( $pattern, '' ) === false ) {
+			_doing_it_wrong(
+				__METHOD__,
+				sprintf(
+					/* translators: %s: pattern */
+					__( 'Invalid regex pattern for feature class mapping: %s', 'buddyboss' ),
+					$pattern
+				),
+				'3.0.0'
+			);
+			return;
+		}
+
+		self::$feature_class_map[ $pattern ] = $feature_id;
+
+		// Invalidate cached map so bb_get_feature_class_map() picks up the new mapping.
+		self::bb_invalidate_class_map_cache();
+	}
+
+	/**
+	 * Invalidate the cached feature class map.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	private static function bb_invalidate_class_map_cache() {
+		// Reset the static cache in bb_get_feature_class_map().
+		// We use a flag that the method checks.
+		self::$class_map_cache_dirty = true;
+	}
+
+	/**
+	 * Flag indicating the class map cache needs refresh.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 * @var bool
+	 */
+	private static $class_map_cache_dirty = false;
+
+	/**
+	 * Get feature class mappings.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return array Feature class mappings.
+	 */
+	public static function bb_get_feature_class_map() {
+		// Cache the filtered result to avoid re-running apply_filters on every autoload call.
+		static $cached_map = null;
+
+		if ( null === $cached_map || self::$class_map_cache_dirty ) {
+			self::$class_map_cache_dirty = false;
+			/**
+			 * Filter feature class mappings.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param array $feature_class_map Feature class mappings.
+			 */
+			$cached_map = apply_filters( 'bb_feature_class_map', self::$feature_class_map );
+		}
+
+		return $cached_map;
+	}
+
+	/**
+	 * Discover and load features from the features directory.
+	 *
+	 * Scans bb-features/integrations/ and bb-features/community/ directories
+	 * for bb-feature-config.php files and loads them.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return void
+	 */
+	public static function bb_discover_features() {
+		$base_dir = buddypress()->plugin_dir . 'bb-features/';
+
+		// Allow admins to manually clear the feature discovery cache via query parameter.
+		// Usage: Add ?bb_clear_features_cache=1 to any admin URL.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only cache clear, capability-gated.
+		if ( ! empty( $_GET['bb_clear_features_cache'] ) && is_admin() && current_user_can( 'manage_options' ) ) {
+			self::bb_clear_feature_discovery_cache();
+		}
+
+		// Version the transient key with BP_PLATFORM_VERSION so plugin upgrades
+		// automatically invalidate the cache without relying on the
+		// activated_plugin / upgrader_process_complete hooks (which don't fire
+		// on direct filesystem deploys).
+		$cache_key    = self::bb_get_discovery_cache_key();
+		$config_files = get_transient( $cache_key );
+
+		if ( false === $config_files ) {
+			$config_files = array();
+
+			// Feature categories to scan.
+			$categories = array(
+				'integrations',
+				'community',
+			);
+
+			foreach ( $categories as $category ) {
+				$category_dir = $base_dir . $category . '/';
+
+				// Check if category directory exists.
+				if ( ! is_dir( $category_dir ) ) {
+					continue;
+				}
+
+				// Get all subdirectories (each is a feature).
+				$features = glob( $category_dir . '*', GLOB_ONLYDIR );
+
+				if ( empty( $features ) ) {
+					continue;
+				}
+
+				foreach ( $features as $feature_dir ) {
+					$config_file = $feature_dir . '/bb-feature-config.php';
+
+					if ( file_exists( $config_file ) ) {
+						$config_files[] = $config_file;
+					}
+				}
+			}
+
+			// Cache for 1 week; busted by plugin activation/upgrade via bb_clear_feature_discovery_cache()
+			// and automatically invalidated by version bumps via the version-keyed transient name.
+			set_transient( $cache_key, $config_files, WEEK_IN_SECONDS );
+		}
+
+		// Load each discovered config file.
+		// Validate that cached paths still reside within the expected plugin directory
+		// to prevent inclusion of arbitrary files if the transient is tampered with.
+		$real_base_dir = realpath( $base_dir );
+
+		foreach ( $config_files as $config_file ) {
+			if ( file_exists( $config_file ) && $real_base_dir && 0 === strpos( realpath( $config_file ), $real_base_dir ) ) {
+				require_once $config_file;
+
+				$feature_dir = dirname( $config_file );
+
+				/**
+				 * Fires after a feature config is loaded.
+				 *
+				 * @since BuddyBoss 3.0.0
+				 *
+				 * @param string $feature_dir Feature directory path.
+				 * @param string $config_file Feature config file path.
+				 */
+				do_action( 'bb_feature_config_loaded', $feature_dir, $config_file );
+			}
+		}
+
+		/**
+		 * Fires after all features have been discovered and loaded.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 */
+		do_action( 'bb_features_discovered' );
+	}
+
+	/**
+	 * Clear the cached feature discovery paths.
+	 *
+	 * Should be called when plugins are activated/deactivated/upgraded
+	 * or when the feature directory structure changes.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 */
+	public static function bb_clear_feature_discovery_cache() {
+		delete_transient( self::bb_get_discovery_cache_key() );
+		// Also delete the legacy unversioned key so sites upgrading from older
+		// builds don't leave stale entries behind.
+		delete_transient( 'bb_feature_config_paths' );
+	}
+
+	/**
+	 * Build the versioned cache key for feature-config discovery.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return string Transient key.
+	 */
+	private static function bb_get_discovery_cache_key() {
+		$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+		return 'bb_feature_config_paths_v_' . md5( $version );
+	}
+}
