@@ -1202,7 +1202,7 @@ Bar!';
 		$this->set_current_user( $u );
 
 		$bp                     = buddypress();
-		$displayed_user_backup  = $bp->displayed_user->id;
+		$displayed_user_backup  = isset( $bp->displayed_user->id ) ? $bp->displayed_user->id : 0;
 		$component_backup       = $bp->current_component;
 		$action_backup          = $bp->current_action;
 		$action_vars_backup     = $bp->action_variables;
@@ -1369,4 +1369,381 @@ Bar!';
 
 		return $f;
 	}
+
+	/**
+	 * buddypress()->displayed_user->fullname is seeded from the raw WP display_name; the
+	 * xprofile override must always re-resolve it for the current viewer (not only when
+	 * profile sync is disabled), otherwise a hidden last name leaks through every
+	 * bp_get_displayed_user_fullname() consumer — e.g. the member RSS <link> title.
+	 *
+	 * @group xprofile_override_user_fullnames
+	 * @group bp_get_displayed_user_fullname
+	 */
+	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_enabled() {
+		$bp                 = buddypress();
+		$displayed_backup   = $bp->displayed_user;
+		$loggedin_backup    = $bp->loggedin_user;
+		$format_backup      = bp_get_option( 'bp-display-name-format' );
+		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bp_is_active( 'xprofile' );
+
+		buddypress()->active_components['xprofile'] = '1';
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// Profile sync on. Note this option is what an admin sets, but bp_disable_profile_sync()
+		// does not read it (it only runs its filter), so asserting on that function here would
+		// be a tautology - the point of this test is that the override no longer depends on it.
+		bp_update_option( 'bp-disable-profile-sync', 0 );
+
+		$u      = self::factory()->user->create();
+		$member = self::factory()->user->create();
+
+		// `profile_update` syncs first/last name into the xprofile fields.
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		// Refresh the per-request name memo primed during user creation.
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		// Seed the globals exactly as BP_Members_Component::setup_globals() does (raw column).
+		$bp->displayed_user           = new stdClass();
+		$bp->displayed_user->id       = $u;
+		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
+
+		// try/finally so a failing assertion cannot leave the BP globals, the display-name
+		// format or the xprofile activation flag mutated for every later test in this process.
+		try {
+			// Guest viewer.
+			$this->set_current_user( 0 );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+
+			if ( bp_is_active( 'activity' ) ) {
+				ob_start();
+				bp_members_activity_feed();
+				$rss_link = ob_get_clean();
+				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+				$this->assertStringContainsString( '| Alex |', $rss_link );
+			}
+
+			// Logged-in member viewer gets the full name.
+			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+			$this->set_current_user( $member );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			$bp->displayed_user = $displayed_backup;
+			$bp->loggedin_user  = $loggedin_backup;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			if ( ! $xprofile_is_active ) {
+				unset( buddypress()->active_components['xprofile'] );
+			}
+		}
+	}
+
+	/**
+	 * The same redaction must hold with profile sync DISABLED.
+	 *
+	 * xprofile_override_user_fullnames() used to begin with
+	 * `if ( ! bp_disable_profile_sync() ) { return; }`, so with sync off it never ran and
+	 * $bp->displayed_user->fullname kept the raw wp_users.display_name - which is where the
+	 * drifted full name lives. The RSS <link rel="alternate"> title on a member page is built
+	 * from that global, which is how the surname reached page source. The early
+	 * return is gone, so the option must now make no difference at all; the sibling test above
+	 * pins the sync-enabled half.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_disabled() {
+		$bp                 = buddypress();
+		$displayed_backup   = $bp->displayed_user;
+		$loggedin_backup    = $bp->loggedin_user;
+		$format_backup      = bp_get_option( 'bp-display-name-format' );
+		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bp_is_active( 'xprofile' );
+
+		buddypress()->active_components['xprofile'] = '1';
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// The only difference from the sibling test: profile sync is off.
+		bp_update_option( 'bp-disable-profile-sync', 1 );
+
+		$u      = self::factory()->user->create();
+		$member = self::factory()->user->create();
+
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		// With sync off, `profile_update` may not populate the xprofile fields - write them
+		// directly so the redaction has the field values it reads, which is exactly the state a
+		// sync-disabled site is in once a member has filled in their profile.
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Alex' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		$bp->displayed_user           = new stdClass();
+		$bp->displayed_user->id       = $u;
+		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
+
+		try {
+			// Guest viewer - the surname must not survive, sync off or not.
+			$this->set_current_user( 0 );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+
+			if ( bp_is_active( 'activity' ) ) {
+				ob_start();
+				bp_members_activity_feed();
+				$rss_link = ob_get_clean();
+				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+				$this->assertStringContainsString( '| Alex |', $rss_link );
+			}
+
+			// A logged-in member is still allowed the full name.
+			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+			$this->set_current_user( $member );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			$bp->displayed_user = $displayed_backup;
+			$bp->loggedin_user  = $loggedin_backup;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			if ( ! $xprofile_is_active ) {
+				unset( buddypress()->active_components['xprofile'] );
+			}
+		}
+	}
+
+	/**
+	 * A failed visibility query must report "could not resolve", never "nobody restricted anything".
+	 *
+	 * bb_xprofile_filter_possible_hidden_users() narrows the set of members whose search match has
+	 * to be re-tested against their viewer-visible name. Its callers treat an array as an
+	 * authoritative narrowing - bb_xprofile_filter_field_search_matches() returns the whole matched
+	 * set unfiltered when that narrowing comes back empty - so a query error resolving to array()
+	 * publishes exactly the names the filter exists to withhold.
+	 *
+	 * It cannot be detected from the return value of the query: wpdb::get_col() initialises its
+	 * return to array() and never hands back null, so an error and an empty result set are the same
+	 * value. This pins the $wpdb->last_error check that replaced that dead comparison.
+	 *
+	 * The sentinel is three-valued and the two non-array answers mean opposite things, so they are
+	 * pinned separately: `false` here, "the narrowing could not be RESOLVED", on which the callers
+	 * withhold their leg; `null` in the companion below, "the narrowing does not APPLY", on which
+	 * the callers keep their whole set. Collapsing the two is what turned one transient read
+	 * failure into a 90% result cull.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_filter_possible_hidden_users_fails_closed_on_query_error() {
+		global $wpdb;
+
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+		$levels   = array( 'friends', 'loggedin', 'adminsonly' );
+
+		// Healthy control: the narrowing applies and returns an array.
+		$this->assertIsArray(
+			bb_xprofile_filter_possible_hidden_users( $user_ids, $levels ),
+			'A healthy query should return the narrowed candidate array.'
+		);
+
+		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text
+		// ('DISTINCT user_id') this silently stopped breaking any read whose SELECT list was
+		// reworded - the query still read the same table, the fixture just no longer recognised it,
+		// and the test went green against a leg that was never broken. `FROM` keeps
+		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
+		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
+		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+
+		$break_query = function ( $query ) use ( $visibility_table ) {
+			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
+				return 'SELECT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			$result = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$this->assertFalse(
+			$result,
+			'A failed visibility query must return false so the caller withholds its leg, rather than an empty array it would treat as an authoritative narrowing.'
+		);
+	}
+
+	/**
+	 * A community-wide forced default means the narrowing does not APPLY, which is not a failure.
+	 *
+	 * `allow_custom_visibility = 'disabled'` makes the admin default replace every member's own
+	 * setting on both branches of bp_xprofile_get_fields_by_visibility_levels(), so the field is
+	 * restricted for the whole community and no candidate set is smaller than the set handed in.
+	 * The answer is null, and the callers keep everything they were given and let their own budget
+	 * decide - reading it as `false` would withhold the leg on an ordinary configuration, and
+	 * reading it as an empty array would publish the names.
+	 *
+	 * The companion to the query-error test above: the two answers are one character apart in the
+	 * callers and mean opposite things, so both directions are pinned.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_filter_possible_hidden_users_returns_null_when_a_forced_default_disables_narrowing() {
+		$field_id = bp_xprofile_lastname_field_id();
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+
+		$default_backup = bp_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
+		$allow_backup   = bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' );
+
+		// Both members hold their own, entirely public, row - so the only thing that can make them
+		// candidates is the forced default.
+		foreach ( $user_ids as $user_id ) {
+			xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+		}
+
+		bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
+		bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
+		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+		try {
+			// Control: with custom visibility allowed the default does not reach a member who has
+			// their own row, so the narrowing still applies and returns an array.
+			$this->assertIsArray(
+				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				'With custom visibility allowed the narrowing must still apply.'
+			);
+
+			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'disabled' );
+			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+			$this->assertNull(
+				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				'A forced community-wide default must stand the narrowing down with null, not report a read failure or an authoritative empty set.'
+			);
+		} finally {
+			bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', $default_backup );
+			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', $allow_backup );
+			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+		}
+	}
+
+	/**
+	 * The user_data_exists() memo must not be filled from a read that failed.
+	 *
+	 * BB_XProfile_Visibility::prime_user_data_exists_cache() fills, for a whole batch, the probe
+	 * that decides which branch bp_xprofile_get_fields_by_visibility_levels() takes per member. A
+	 * failed query returns the same empty result as "nobody has a row" - wpdb::get_col() never
+	 * hands back null - so memoising it would tell every later caller in the request that a member
+	 * resolves from user meta when they may in fact hold a restricting row, and a member whose name
+	 * field is hidden would be judged on meta they never wrote and served.
+	 *
+	 * Leaving the memo unfilled costs an uncached read per member and is the fail-closed direction.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_prime_user_data_exists_cache_does_not_memoise_a_failed_read() {
+		global $wpdb;
+
+		if ( ! class_exists( 'BB_XProfile_Visibility' ) ) {
+			$this->markTestSkipped( 'The visibility class is not available in this configuration.' );
+		}
+
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+
+		$memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'user_data_exists_cache' );
+		$memo->setAccessible( true );
+
+		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text
+		// ('DISTINCT user_id') this silently stopped breaking any read whose SELECT list was
+		// reworded - the query still read the same table, the fixture just no longer recognised it,
+		// and the test went green against a leg that was never broken. `FROM` keeps
+		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
+		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
+		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+
+		$break_query = function ( $query ) use ( $visibility_table ) {
+			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
+				return 'SELECT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		BB_XProfile_Visibility::flush_field_ids_cache();
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$after_failure = $memo->getValue();
+
+		foreach ( $user_ids as $user_id ) {
+			$this->assertArrayNotHasKey(
+				$user_id,
+				$after_failure,
+				'A failed batch read was memoised, so every later caller in this request reads "no visibility row" for a member who may hold one.'
+			);
+		}
+
+		// Control: the healthy read does fill the memo, so the assertion above is about the error
+		// handling rather than about the priming never working.
+		BB_XProfile_Visibility::flush_field_ids_cache();
+		BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+
+		$after_success = $memo->getValue();
+
+		foreach ( $user_ids as $user_id ) {
+			$this->assertArrayHasKey(
+				$user_id,
+				$after_success,
+				'A healthy batch read did not fill the memo it exists to fill.'
+			);
+		}
+
+		BB_XProfile_Visibility::flush_field_ids_cache();
+	}
+
 }
