@@ -1004,9 +1004,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
 
 		// The chunk is fully processed; false removes the queue row. A truthy
-		// return re-queues the row via BB_Background_Updater::task() for a
-		// second pass without its original args (the runner passes itself
-		// instead), which no-ops at the guards above.
+		// return would make BB_Background_Updater::task() re-run the row with
+		// the updater object as its only argument; that pass stops at the array
+		// check in bb_subscriptions_send_notification_chunk() (or, for a row
+		// queued before the chunk runner existed, at the guards above).
 		return false;
 	}
 
@@ -1171,9 +1172,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
 
 		// The chunk is fully processed; false removes the queue row. A truthy
-		// return re-queues the row via BB_Background_Updater::task() for a
-		// second pass without its original args (the runner passes itself
-		// instead), which no-ops at the guards above.
+		// return would make BB_Background_Updater::task() re-run the row with
+		// the updater object as its only argument; that pass stops at the array
+		// check in bb_subscriptions_send_notification_chunk() (or, for a row
+		// queued before the chunk runner existed, at the guards above).
 		return false;
 	}
 

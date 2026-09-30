@@ -710,6 +710,16 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		sort( $user_ids );
 		$this->assertSame( $user_ids, $queued, 'Keyset paging must cover every subscriber exactly once.' );
 		$this->assertSame( $where_filters_before, $this->count_filter_callbacks( 'bb_subscriptions_get_where_conditions' ), 'The keyset where-filter closure must not leak past the worker run.' );
+
+		// The worker's chunk rows go through the Platform runner, like the dispatcher's.
+		$chunk_callbacks = array();
+		foreach ( $this->get_queue_rows() as $row ) {
+			if ( 'bb_send_notifications_to_subscribers_batch' !== $row['callback'] ) {
+				$chunk_callbacks[] = is_array( $row['callback'] ) ? implode( '::', $row['callback'] ) : (string) $row['callback'];
+			}
+		}
+		$this->assertNotEmpty( $chunk_callbacks );
+		$this->assertSame( array( 'bb_subscriptions_send_notification_chunk' ), array_values( array_unique( $chunk_callbacks ) ), 'Worker chunk rows must name the runner, not the raw send callback.' );
 	}
 
 	/**
@@ -1074,5 +1084,303 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 				$wpdb->delete( $table, array( 'id' => $row->id ) ); // phpcs:ignore
 			}
 		}
+	}
+
+	/**
+	 * Build a group-activity email whose body uses both activity-reading tokens.
+	 *
+	 * @param array $tokens Raw tokens.
+	 * @return string Rendered HTML.
+	 */
+	protected function render_group_activity_email( $tokens ) {
+		// The producer (bb_subscription_send_subscribe_group_notifications) always
+		// sends these alongside the activity; the media helper reads activity.url
+		// unguarded, so mirror the real payload.
+		$tokens += array(
+			'activity.url'  => 'https://example.org/activity/p/1/',
+			'group.url'     => 'https://example.org/groups/test/',
+			'group.name'    => 'Test group',
+			'activity.type' => 'an update',
+		);
+
+		$email = new BP_Email( 'groups-new-activity' );
+		$email->set_content_html( '<a href="{{{poster.url}}}">{{poster.name}}</a>{{{activity.content}}}' );
+		$email->set_to( isset( $tokens['receiver-user.id'] ) ? (int) $tokens['receiver-user.id'] : 1 );
+		$email->set_tokens( $tokens );
+
+		return $email->get_content_html( 'replace-tokens' );
+	}
+
+	/**
+	 * With the object present (runner rehydration / callback re-inject) both
+	 * activity-reading tokens render and nothing is re-populated.
+	 */
+	public function test_email_tokens_render_from_present_object_without_repopulating() {
+		$author   = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $author ) );
+		$activity = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->groups->id,
+				'type'      => 'activity_update',
+				'user_id'   => $author,
+				'item_id'   => $group_id,
+				'content'   => 'Object already present 4343',
+			)
+		);
+		$object   = new BP_Activity_Activity( $activity );
+
+		$populates = 0;
+		$counter   = function ( $validate ) use ( &$populates ) {
+			$populates++;
+			return $validate;
+		};
+		add_filter( 'bp_activity_activity_pre_validate', $counter );
+
+		$html = $this->render_group_activity_email(
+			array(
+				'activity'         => $object,
+				'activity.id'      => $activity,
+				'poster.name'      => 'Author',
+				'receiver-user.id' => $author,
+			)
+		);
+
+		remove_filter( 'bp_activity_activity_pre_validate', $counter );
+
+		$this->assertStringContainsString( 'Object already present 4343', $html );
+		$this->assertSame( 0, $populates, 'The stock callback path never re-populates the activity.' );
+	}
+
+	/**
+	 * A compacted token set whose activity was never restored (deleted activity,
+	 * third-party caller) renders empty tokens instead of reading a string's
+	 * properties.
+	 */
+	public function test_email_tokens_missing_activity_object_renders_blank_without_fatal() {
+		$receiver = self::factory()->user->create();
+
+		$html = $this->render_group_activity_email(
+			array(
+				'activity.id'      => 987654321,
+				'poster.name'      => 'Author',
+				'receiver-user.id' => $receiver,
+			)
+		);
+
+		$this->assertStringContainsString( 'href=""', $html, 'poster.url is empty when the activity cannot be resolved.' );
+		$this->assertStringNotContainsString( 'border-radius: 50%', $html, 'group activity content is not rendered for an unresolvable activity.' );
+	}
+
+	/**
+	 * Chunk rows name the Platform runner, never the type's raw send callback.
+	 */
+	public function test_dispatcher_chunk_rows_queue_the_platform_runner() {
+		$item_id  = $this->next_item_id();
+		$user_ids = $this->create_subscribers( 3, $item_id );
+
+		add_filter( 'bb_subscription_queue_min_count', array( $this, 'filter_two' ) );
+		bb_send_notifications_to_subscribers(
+			array(
+				'type'              => self::$type,
+				'item_id'           => $item_id,
+				'notification_from' => 'bbtest_runner',
+				'data'              => array( 'x' => 'y' ),
+			)
+		);
+		remove_filter( 'bb_subscription_queue_min_count', array( $this, 'filter_two' ) );
+
+		$rows = $this->get_queue_rows();
+		$this->assertCount( 2, $rows );
+		foreach ( $rows as $row ) {
+			$this->assertSame( 'bb_subscriptions_send_notification_chunk', $row['callback'] );
+			$this->assertSame( self::$type, $row['args']['type'] );
+		}
+		$this->assertEqualSets( $user_ids, $this->queued_chunk_user_ids() );
+		$this->assertSame( array(), self::$sent, 'Queuing must not invoke the send callback.' );
+	}
+
+	/**
+	 * The runner restores the activity object a compacted row dropped, so the
+	 * send callback receives the same payload shape it received before
+	 * compaction — and the callback's return value passes through.
+	 */
+	public function test_chunk_runner_restores_activity_object_before_send_callback() {
+		$author   = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $author ) );
+		$activity = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->groups->id,
+				'type'      => 'activity_update',
+				'user_id'   => $author,
+				'item_id'   => $group_id,
+				'content'   => 'Rehydrated for the callback 4444',
+			)
+		);
+
+		$compact = bb_subscriptions_compact_notification_data(
+			array(
+				'activity_id'  => $activity,
+				'email_tokens' => array(
+					'tokens' => array(
+						'activity'    => new BP_Activity_Activity( $activity ),
+						'poster.name' => 'Author',
+					),
+				),
+			)
+		);
+		$this->assertArrayNotHasKey( 'activity', $compact['email_tokens']['tokens'], 'Precondition: the queued shape has no object.' );
+
+		$result = bb_subscriptions_send_notification_chunk(
+			array(
+				'type'              => self::$type,
+				'item_id'           => $group_id,
+				'blog_id'           => get_current_blog_id(),
+				'notification_from' => 'bbtest_runner',
+				'data'              => $compact,
+				'user_ids'          => array( $author ),
+			)
+		);
+
+		$this->assertFalse( $result, 'The send callback return value (false) is passed through.' );
+		$this->assertCount( 1, self::$sent );
+		$received = self::$sent[0]['data']['email_tokens']['tokens']['activity'];
+		$this->assertInstanceOf( 'BP_Activity_Activity', $received );
+		$this->assertSame( (int) $activity, $received->id );
+		$this->assertSame( 'Rehydrated for the callback 4444', $received->content );
+		$this->assertSame( 'Author', self::$sent[0]['data']['email_tokens']['tokens']['poster.name'], 'Other tokens are untouched.' );
+
+		// Every other chunk field reaches the callback unchanged.
+		$this->assertSame( self::$type, self::$sent[0]['type'] );
+		$this->assertSame( $group_id, self::$sent[0]['item_id'] );
+		$this->assertSame( get_current_blog_id(), self::$sent[0]['blog_id'] );
+		$this->assertSame( 'bbtest_runner', self::$sent[0]['notification_from'] );
+		$this->assertSame( array( $author ), self::$sent[0]['user_ids'] );
+
+		// The claim key hashed by the callback after rehydration must equal the
+		// key of the compacted row as queued, or claims, refreshes and completion
+		// markers would stop agreeing.
+		$queued_args = array(
+			'type'              => self::$type,
+			'item_id'           => $group_id,
+			'blog_id'           => get_current_blog_id(),
+			'notification_from' => 'bbtest_runner',
+			'data'              => $compact,
+			'user_ids'          => array( $author ),
+		);
+		$this->assertSame(
+			bb_subscriptions_get_notification_chunk_key( $queued_args ),
+			bb_subscriptions_get_notification_chunk_key( self::$sent[0] ),
+			'Rehydration must not change the chunk claim key.'
+		);
+	}
+
+	/**
+	 * A re-run pass that hands the runner something other than the args array
+	 * (BB_Background_Updater::task() passes itself on a truthy return) is dropped
+	 * without calling the send callback.
+	 */
+	public function test_chunk_runner_drops_non_array_args() {
+		global $bb_background_updater;
+
+		$this->assertFalse( bb_subscriptions_send_notification_chunk( $bb_background_updater ), 'The updater object itself is refused.' );
+		$this->assertFalse( bb_subscriptions_send_notification_chunk( new stdClass() ) );
+		$this->assertFalse( bb_subscriptions_send_notification_chunk( 'group' ) );
+		$this->assertFalse( bb_subscriptions_send_notification_chunk( array( 'item_id' => 1, 'user_ids' => array( 1 ) ) ), 'An args array without a type is refused.' );
+		$this->assertSame( array(), self::$sent );
+	}
+
+	/**
+	 * A registered type whose send callback is not callable drops the row.
+	 */
+	public function test_chunk_runner_drops_row_for_non_callable_callback() {
+		$add_type = function ( $types ) {
+			$types['bbtest_broken'] = array(
+				'label'              => array( 'singular' => 'Broken', 'plural' => 'Brokens' ),
+				'subscription_type'  => 'bbtest_broken',
+				'items_callback'     => '__return_empty_array',
+				'send_callback'      => 'bbtest_function_that_does_not_exist',
+				'validate_callback'  => '__return_true',
+				'notification_type'  => 'bb_test_broken_note',
+				'notification_group' => 'core',
+			);
+			return $types;
+		};
+		add_filter( 'bb_register_subscriptions_types', $add_type );
+
+		$result = bb_subscriptions_send_notification_chunk( array( 'type' => 'bbtest_broken', 'item_id' => 1, 'data' => array(), 'user_ids' => array( 1 ) ) );
+
+		remove_filter( 'bb_register_subscriptions_types', $add_type );
+
+		$this->assertFalse( $result );
+		$this->assertSame( array(), self::$sent );
+	}
+
+	/**
+	 * Legacy rows that still carry the object, and rows whose activity no longer
+	 * resolves, pass through the rehydrator without being rewritten.
+	 */
+	public function test_rehydrate_leaves_object_rows_and_unresolvable_ids_alone() {
+		$author   = self::factory()->user->create();
+		$real_id  = self::factory()->activity->create( array( 'user_id' => $author, 'content' => 'resolvable 7777' ) );
+		$object   = new stdClass();
+		$object->id = $real_id;
+
+		// A resolvable id must NOT be rebuilt when the row already carries an object.
+		$legacy = array( 'activity_id' => $real_id, 'email_tokens' => array( 'tokens' => array( 'activity' => $object, 'activity.id' => $real_id ) ) );
+		$out    = bb_subscriptions_rehydrate_notification_data( $legacy );
+		$this->assertSame( $object, $out['email_tokens']['tokens']['activity'], 'A row that already carries the object keeps that exact object.' );
+		$this->assertSame( $legacy, $out );
+
+		$gone = array( 'activity_id' => 987654321, 'email_tokens' => array( 'tokens' => array( 'activity.id' => 987654321 ) ) );
+		$this->assertSame( $gone, bb_subscriptions_rehydrate_notification_data( $gone ), 'An unresolvable id leaves the token absent.' );
+
+		// Never compacted: no marker, so a bare activity_id must not grow an object.
+		$never = array( 'activity_id' => $real_id, 'email_tokens' => array( 'tokens' => array( 'poster.name' => 'x' ) ) );
+		$this->assertSame( $never, bb_subscriptions_rehydrate_notification_data( $never ), 'Only the compaction marker triggers rehydration.' );
+
+		$plain = array( 'topic_id' => 5, 'email_tokens' => array( 'tokens' => array( 'x' => 'y' ) ) );
+		$this->assertSame( $plain, bb_subscriptions_rehydrate_notification_data( $plain ), 'Payloads that were never compacted pass through.' );
+	}
+
+	/**
+	 * The runner returns whatever the send callback returns, including a truthy value.
+	 */
+	public function test_chunk_runner_passes_truthy_return_through() {
+		$add_type = function ( $types ) {
+			$types['bbtest_truthy'] = array(
+				'label'              => array( 'singular' => 'Truthy', 'plural' => 'Truthies' ),
+				'subscription_type'  => 'bbtest_truthy',
+				'items_callback'     => '__return_empty_array',
+				'send_callback'      => '__return_true',
+				'validate_callback'  => '__return_true',
+				'notification_type'  => 'bb_test_truthy_note',
+				'notification_group' => 'core',
+			);
+			return $types;
+		};
+		add_filter( 'bb_register_subscriptions_types', $add_type );
+
+		$result = bb_subscriptions_send_notification_chunk( array( 'type' => 'bbtest_truthy', 'item_id' => 1, 'data' => array(), 'user_ids' => array( 1 ) ) );
+
+		remove_filter( 'bb_register_subscriptions_types', $add_type );
+
+		$this->assertTrue( $result );
+	}
+
+	/**
+	 * A row whose type was unregistered after queuing is dropped, not fataled.
+	 */
+	public function test_chunk_runner_drops_row_for_unregistered_type() {
+		$result = bb_subscriptions_send_notification_chunk(
+			array(
+				'type'     => 'bbtest_no_such_type',
+				'item_id'  => 1,
+				'data'     => array(),
+				'user_ids' => array( 1 ),
+			)
+		);
+
+		$this->assertFalse( $result );
+		$this->assertSame( array(), self::$sent );
 	}
 }

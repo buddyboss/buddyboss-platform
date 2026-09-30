@@ -1151,11 +1151,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				return false;
 			}
 
-			// Queued jobs carry only data.activity_id (the serialized activity object
-			// is stripped to keep queue rows small); the email renderer
-			// (BP_Email_Tokens::token__group_activity_content) requires the object, so
-			// always provide the resolved one. Idempotent for legacy rows that still
-			// carry the object.
+			// Queued rows are compacted (the serialized activity object is stripped
+			// to keep them small) and the chunk runner restores the object before
+			// this callback runs; the email renderer requires it, so always provide
+			// the resolved one. Idempotent for rows that already carry the object.
 			$r['data']['email_tokens']['tokens']['activity'] = $activity;
 
 			$type_key                = 'bb_groups_subscribed_activity';
@@ -1276,9 +1275,10 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
 
 		// The chunk is fully processed; false removes the queue row. A truthy
-		// return re-queues the row via BB_Background_Updater::task() for a
-		// second pass without its original args (the runner passes itself
-		// instead), which no-ops at the guards above.
+		// return would make BB_Background_Updater::task() re-run the row with
+		// the updater object as its only argument; that pass stops at the array
+		// check in bb_subscriptions_send_notification_chunk() (or, for a row
+		// queued before the chunk runner existed, at the guards above).
 		return false;
 	}
 

@@ -1239,7 +1239,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		$fanout_args['fanout_id'] = wp_generate_uuid4();
 
 		// Drop the serialized activity object so the queue rows stay small; the
-		// send callbacks and the email renderer rebuild it from its id.
+		// chunk runner restores it once per chunk before the send callback.
 		$fanout_args['data'] = bb_subscriptions_compact_notification_data( $fanout_args['data'] );
 
 		$bb_background_updater->data(
@@ -1285,7 +1285,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	if ( true === $background_process ) {
 		// Drop the serialized activity object so each queue row stays small; the
-		// send callbacks and the email renderer rebuild it from its id. The
+		// chunk runner restores it once per chunk before the send callback. The
 		// direct-call path below keeps the object (no serialization involved).
 		$parse_args['data'] = bb_subscriptions_compact_notification_data( $parse_args['data'] );
 
@@ -1300,7 +1300,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 						'group'    => 'send_notifications_to_subscribers',
 						'data_id'  => $item_id,
 						'priority' => 5,
-						'callback' => $send_callback,
+						'callback' => 'bb_subscriptions_send_notification_chunk',
 						'args'     => array( $parse_args ),
 					),
 				);
@@ -1830,7 +1830,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 				'group'    => 'send_notifications_to_subscribers',
 				'data_id'  => $item_id,
 				'priority' => 5,
-				'callback' => $type_data['send_callback'],
+				'callback' => 'bb_subscriptions_send_notification_chunk',
 				'args'     => array( $parse_args ),
 			)
 		);
@@ -1936,11 +1936,13 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 /**
  * Compact a subscription notification payload for the background queue.
  *
- * Drops the serialized activity object from the email tokens (the send
- * callbacks rebuild it from data.activity_id) and leaves an `activity.id`
- * token behind so the email renderer can rebuild it too when a send callback
- * — an older add-on build, a third-party subscription type — does not
- * re-inject the object. Payloads without the object are returned unchanged.
+ * Drops the serialized activity object from the email tokens so a queue row
+ * stays small, and leaves an `activity.id` token behind as the marker.
+ * bb_subscriptions_rehydrate_notification_data() reads that marker once per
+ * chunk in bb_subscriptions_send_notification_chunk(), before the send
+ * callback, so every callback — BuddyBoss or third-party — still receives the
+ * object whenever the activity still resolves at send time. Payloads without
+ * the object are returned unchanged.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1967,8 +1969,8 @@ function bb_subscriptions_compact_notification_data( $data ) {
 	if ( ! empty( $activity_id ) ) {
 		$data['email_tokens']['tokens']['activity.id'] = $activity_id;
 
-		// The send callbacks rebuild from data.activity_id; a third-party caller
-		// that only supplied the object must not lose its notification.
+		// The send callbacks' own fallback reads data.activity_id; a third-party
+		// caller that only supplied the object must not lose its notification.
 		if ( empty( $data['activity_id'] ) ) {
 			$data['activity_id'] = $activity_id;
 		}
@@ -1978,14 +1980,96 @@ function bb_subscriptions_compact_notification_data( $data ) {
 }
 
 /**
+ * Restore the activity object a compacted subscription payload dropped.
+ *
+ * Counterpart of bb_subscriptions_compact_notification_data(): a payload is
+ * rehydrated only when it carries the `activity.id` marker that compaction
+ * leaves behind and no `activity` object. The object is rebuilt from that id
+ * (cache-backed primary-key lookup) and put back where the producer placed
+ * it; the marker and `data.activity_id` are left in place. Payloads that
+ * already carry the object — legacy queue rows, the direct-call path — and
+ * payloads that were never compacted are returned unchanged, and an id that
+ * no longer resolves (deleted activity, component inactive) leaves the token
+ * absent for the send callback to handle.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $data The notification `data` payload.
+ *
+ * @return array The payload with the activity object restored where possible.
+ */
+function bb_subscriptions_rehydrate_notification_data( $data ) {
+	if (
+		! is_array( $data ) ||
+		empty( $data['email_tokens']['tokens']['activity.id'] ) ||
+		! empty( $data['email_tokens']['tokens']['activity'] ) ||
+		! bp_is_active( 'activity' ) ||
+		! class_exists( 'BP_Activity_Activity' )
+	) {
+		return $data;
+	}
+
+	$activity_id = (int) $data['email_tokens']['tokens']['activity.id'];
+	if ( empty( $activity_id ) ) {
+		return $data;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+	if ( ! empty( $activity->id ) ) {
+		$data['email_tokens']['tokens']['activity'] = $activity;
+	}
+
+	return $data;
+}
+
+/**
+ * Run one queued subscription notification chunk.
+ *
+ * Queue rows name this runner instead of the type's send callback so the
+ * payload can be compacted at queue time and restored here, once per chunk,
+ * before the callback sees it. The callback is re-resolved from the type at
+ * run time (never serialized), and its return value is passed through
+ * unchanged, so `false` deletes the row exactly as it did when the row named
+ * the callback directly.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Parsed send-callback arguments: type, item_id, blog_id,
+ *                    notification_from, data, user_ids.
+ *
+ * @return mixed The send callback's return value; false when the type is no
+ *               longer registered or has no callable send callback.
+ */
+function bb_subscriptions_send_notification_chunk( $args ) {
+	if ( ! is_array( $args ) || empty( $args['type'] ) ) {
+		return false;
+	}
+
+	$type_data = bb_register_subscriptions_types( $args['type'] );
+	if (
+		empty( $type_data ) ||
+		empty( $type_data['send_callback'] ) ||
+		! is_callable( $type_data['send_callback'] )
+	) {
+		return false;
+	}
+
+	if ( isset( $args['data'] ) ) {
+		$args['data'] = bb_subscriptions_rehydrate_notification_data( $args['data'] );
+	}
+
+	return call_user_func( $type_data['send_callback'], $args );
+}
+
+/**
  * Build the cache-key hash that identifies one notification chunk.
  *
  * The hash covers the type, item, blog, source, payload and the chunk's user
  * ids. The serialized activity object is excluded from the payload before
- * hashing: legacy queue rows still carry it, new rows carry only
- * data.activity_id, and the group send callback re-injects it after claiming —
- * the key has to be identical across all of those shapes so a claim, its
- * refreshes and its completion marker all agree.
+ * hashing: legacy queue rows still carry it, new rows carry only the
+ * `activity.id` marker, and the chunk runner restores the object before the
+ * callback claims — the key has to be identical across all of those shapes so
+ * a claim, its refreshes and its completion marker all agree.
  *
  * @since BuddyBoss [BBVERSION]
  *
