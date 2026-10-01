@@ -3168,7 +3168,11 @@ window.bp = window.bp || {};
 				filter      = store.filter || null,
 				search_terms = '',
 				currentPage = $list.data( 'bp-current-page' ) || 1,
-				nextPage    = currentPage + 1;
+				linkParams  = self.getLinkParams( $loadMore.find( 'a' ).first().attr( 'href' ) ) || {},
+				linkPage    = parseInt( linkParams[ Object.keys( linkParams )[ 0 ] ], 10 ),
+				// The server renders the next page into the button link, so a list opened on a later
+				// page (e.g. a ?upage=3 URL rendered on page load) continues from there.
+				nextPage    = linkPage > 0 ? linkPage : currentPage + 1;
 
 			// Show loading state.
 			$loadMore.find( 'a' ).first().addClass( 'loading' );
