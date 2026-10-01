@@ -264,16 +264,44 @@ function bb_two_factor_guard_totp_enable( $response, $handler, $request ) {
 }
 add_filter( 'rest_request_before_callbacks', 'bb_two_factor_guard_totp_enable', 10, 3 );
 
-/*
- * Social Login (SSO) needs no handling here.
+/**
+ * Do not ask for a second factor on a BuddyBoss Social Login sign-in.
  *
- * The Social Login addon issues the auth cookie and then fires `wp_login`. The
- * Two Factor plugin collects the token of every cookie it sees on
- * `set_auth_cookie` / `set_logged_in_cookie` and, in its own `wp_login` handler,
- * destroys that session and renders the second-factor challenge. A member with
- * two-factor enabled is therefore challenged on a social sign-in by the plugin
- * itself. Do not remove that handler or write `two-factor-login` into the
- * session from Platform: doing so signs the member in on the social account
- * alone and marks the session as verified, which lets recovery codes be
- * generated or two-factor disabled without a second factor.
+ * Product decision: signing in through Social Login (any supported provider)
+ * does not require two-factor. The Social Login addon issues the auth cookie and
+ * fires `bb_sso_before_wp_login` immediately before `wp_login`; the Two Factor
+ * plugin's `wp_login` handler would destroy that session and render its
+ * challenge, so it is detached for the rest of this request.
+ *
+ * The session is deliberately NOT marked as having passed two-factor (the
+ * plugin's `two-factor-login` session key is not written). A member who uses
+ * two-factor is signed in, but the Security tab stays locked behind the plugin's
+ * "Revalidate now" step, so someone holding only the social account cannot
+ * generate recovery codes or turn two-factor off without the second factor.
+ *
+ * Only the web sign-in fires this action; the addon's REST/App sign-in does not.
+ *
+ * @since BuddyBoss [BBVERSION]
  */
+function bb_two_factor_skip_social_login_challenge() {
+	if ( ! bb_two_factor_is_active() ) {
+		return;
+	}
+
+	/**
+	 * Filters whether a BuddyBoss Social Login sign-in skips the two-factor challenge.
+	 *
+	 * Return false to keep asking for the second factor on social sign-ins.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $skip    Default true.
+	 * @param int  $user_id Member signing in.
+	 */
+	if ( ! apply_filters( 'bb_two_factor_skip_on_social_login', true, get_current_user_id() ) ) {
+		return;
+	}
+
+	remove_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ), PHP_INT_MAX );
+}
+add_action( 'bb_sso_before_wp_login', 'bb_two_factor_skip_social_login_challenge' );

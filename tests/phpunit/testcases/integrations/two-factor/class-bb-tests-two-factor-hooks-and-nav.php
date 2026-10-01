@@ -16,22 +16,75 @@ require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/includes/testcase-two-
  */
 class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 
-	// SSO (F-1): the plugin's own wp_login challenge must stay in place.
+	// Social Login: no second factor at sign-in, but the session is never marked as verified.
 
 	/**
-	 * Nothing hooked on sso before wp login.
+	 * The skip is hooked on the Social Login action.
 	 */
-	public function test_nothing_hooked_on_sso_before_wp_login() {
-		$this->assertFalse( has_action( 'bb_sso_before_wp_login' ) );
+	public function test_social_login_skip_is_hooked() {
+		$this->assertSame( 10, has_action( 'bb_sso_before_wp_login', 'bb_two_factor_skip_social_login_challenge' ) );
 	}
 
 	/**
-	 * Sso skip functions are gone.
+	 * The round-1 session capture and marker writer stay removed.
 	 */
-	public function test_sso_skip_functions_are_gone() {
+	public function test_session_marker_helpers_are_gone() {
 		$this->assertFalse( function_exists( 'bb_two_factor_skip_sso_challenge' ) );
 		$this->assertFalse( function_exists( 'bb_two_factor_capture_sso_session' ) );
 		$this->assertFalse( function_exists( 'bb_two_factor_sso_session' ) );
+	}
+
+	/**
+	 * A Social Login sign-in detaches the plugin's challenge for that request.
+	 */
+	public function test_social_login_detaches_the_wp_login_challenge() {
+		self::set_current_user( $this->create_member( 'tfa_r2_test_sso_skip' ) );
+
+		do_action( 'bb_sso_before_wp_login' );
+
+		$this->assertFalse( has_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ) ) );
+	}
+
+	/**
+	 * A Social Login sign-in does not mark the session as having passed two-factor.
+	 */
+	public function test_social_login_does_not_mark_session_verified() {
+		$member = $this->create_member( 'tfa_r2_test_sso_marker' );
+		self::set_current_user( $member );
+		update_user_meta( $member, Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY, array( 'Two_Factor_Email' ) );
+
+		$manager = WP_Session_Tokens::get_instance( $member );
+		$token   = $manager->create( time() + HOUR_IN_SECONDS );
+
+		do_action( 'set_logged_in_cookie', '', time() + HOUR_IN_SECONDS, time() + HOUR_IN_SECONDS, $member, 'logged_in', $token );
+		do_action( 'bb_sso_before_wp_login' );
+
+		$session = $manager->get( $token );
+
+		$this->assertIsArray( $session );
+		$this->assertArrayNotHasKey( 'two-factor-login', $session );
+	}
+
+	/**
+	 * Returning false from the filter keeps the challenge on social sign-ins.
+	 */
+	public function test_filter_false_keeps_the_challenge_on_social_login() {
+		add_filter( 'bb_two_factor_skip_on_social_login', '__return_false' );
+
+		do_action( 'bb_sso_before_wp_login' );
+
+		$this->assertSame( PHP_INT_MAX, has_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ) ) );
+	}
+
+	/**
+	 * With the feature switched off the plugin is left alone.
+	 */
+	public function test_feature_off_keeps_the_challenge_on_social_login() {
+		add_filter( 'bb_two_factor_is_enabled', '__return_false' );
+
+		do_action( 'bb_sso_before_wp_login' );
+
+		$this->assertSame( PHP_INT_MAX, has_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ) ) );
 	}
 
 	/**
@@ -56,10 +109,12 @@ class BB_Tests_Two_Factor_Hooks_And_Nav extends BB_Two_Factor_UnitTestCase {
 	}
 
 	/**
-	 * Nothing from platform removes the wp login challenge on sso hook.
+	 * A password sign-in never fires the Social Login action, so its challenge stays.
 	 */
-	public function test_nothing_from_platform_removes_the_wp_login_challenge_on_sso_hook() {
-		do_action( 'bb_sso_before_wp_login', get_userdata( $this->create_member( 'tfa_r2_test_sso' ) ) );
+	public function test_password_login_keeps_the_challenge() {
+		self::set_current_user( $this->create_member( 'tfa_r2_test_password' ) );
+
+		do_action( 'set_logged_in_cookie', '', time() + HOUR_IN_SECONDS, time() + HOUR_IN_SECONDS, get_current_user_id(), 'logged_in', 'token' );
 
 		$this->assertSame( PHP_INT_MAX, has_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ) ) );
 	}
