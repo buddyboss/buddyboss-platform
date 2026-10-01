@@ -547,6 +547,41 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 						'status' => rest_authorization_required_code(),
 					)
 				);
+			} elseif ( bp_is_active( 'groups' ) ) {
+				// For a reply, resolve the root activity to check group membership against.
+				$root_activity = $activity;
+				if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+					$root_activity = new BP_Activity_Activity( (int) $activity->item_id );
+				}
+
+				/** This filter is documented in bp-activity/bp-activity-functions.php */
+				$validate_group_membership = apply_filters(
+					'bb_activity_new_comment_validate_group_membership',
+					true,
+					array(
+						'user_id'     => bp_loggedin_user_id(),
+						'activity_id' => $root_activity->id,
+					),
+					$root_activity
+				);
+
+				if (
+					$validate_group_membership &&
+					buddypress()->groups->id === $root_activity->component &&
+					! bp_current_user_can( 'bp_moderate' ) &&
+					(
+						! groups_is_user_member( bp_loggedin_user_id(), $root_activity->item_id ) ||
+						groups_is_user_banned( bp_loggedin_user_id(), $root_activity->item_id )
+					)
+				) {
+					$retval = new WP_Error(
+						'bp_rest_authorization_required',
+						__( 'Sorry, you need to be a member of this group to comment.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 

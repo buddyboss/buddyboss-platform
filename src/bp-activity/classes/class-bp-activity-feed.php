@@ -458,7 +458,7 @@ class BP_Activity_Feed {
 					<content:encoded><![CDATA[<?php $this->feed_content(); ?>]]></content:encoded>
 				<?php endif; ?>
 
-				<?php if ( bp_activity_can_comment() ) : ?>
+				<?php if ( bb_activity_can_view_comments() ) : ?>
 					<slash:comments><?php bp_activity_comment_count(); ?></slash:comments>
 				<?php endif; ?>
 
