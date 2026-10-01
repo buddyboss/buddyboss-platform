@@ -3419,6 +3419,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 		}
 
 		/* Prepare array to return group specific progress details */
+		/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
 		$single_group_progress['group_name']             = apply_filters( 'bp_get_the_profile_group_name', $single_group_details->name );
 		$single_group_progress['group_total_fields']     = $group_total_fields;
 		$single_group_progress['group_completed_fields'] = $group_completed_fields;
