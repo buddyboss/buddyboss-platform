@@ -73,30 +73,6 @@
 			left: 0;
 		}
 
-		.bb-rl-forum-form-anonymous {
-			margin: var(--bb-rl-space-200) 0 0;
-
-			legend {
-				font-size: 15px;
-			}
-
-			br {
-				display: none;
-			}
-
-			label {
-				display: block;
-				font-size: var(--bb-rl-font-size-sm);
-				font-weight: 500;
-				margin-bottom: var(--bb-rl-space-100);
-				line-height: 1.2;
-			}
-
-			p {
-				margin-bottom: var(--bb-rl-space-200);
-			}
-		}
-
 		.bb-rl-forum-id-selection {
 			border-top: 1px solid var(--bb-rl-border-secondary-color);
 			padding-top: var(--bb-rl-space-200);
@@ -230,7 +206,7 @@
 			background-color: transparent;
 			padding: var(--bb-rl-space-50);
 			cursor: pointer;
-			margin-left: var(--bb-rl-space-300);
+			margin-left: auto;
 
 			&:focus {
 				outline: none;
@@ -245,6 +221,11 @@
 				font-size: 24px;
 			}
 		}
+
+		.bb-rl-forum-modal-type + .bb-rl-forum-modal-close {
+			margin-left: var(--bb-rl-space-300);
+		}
+
 	}
 
 	.bb-rl-forum-modal-content {
@@ -720,17 +701,29 @@
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 		padding-bottom: var(--bb-rl-space-200);
 
+		legend {
+			font-size: 15px;
+		}
+
+		br {
+			display: none;
+		}
+
 		p {
-			margin-bottom: var(--bb-rl-space-100);
+			margin-bottom: var(--bb-rl-space-200);
 
 			label {
-				font-size: 14px;
+				display: block;
+				font-size: var(--bb-rl-font-size-sm);
 				font-weight: 500;
 				margin-bottom: var(--bb-rl-space-100);
 				line-height: 1.2;
 			}
-		}
 
+			input {
+				width: 100%;
+			}
+		}
 	}
 }
 

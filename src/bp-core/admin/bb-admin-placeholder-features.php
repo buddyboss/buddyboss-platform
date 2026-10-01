@@ -228,7 +228,38 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 		$plugin_slug = bb_get_placeholder_product_slug( $item );
 		$product     = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $plugin_slug );
 		$in_plan     = ! empty( $product );
+
+		// A failed add-ons API lookup (outage, rate limit backoff) is not
+		// evidence the product is missing from the plan. Fall back to the
+		// install state so a licensed customer's installed add-ons don't
+		// flip to an "UPGRADE" badge while the API is unreachable.
+		if ( ! $in_plan && \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
+			$in_plan = file_exists( WP_PLUGIN_DIR . '/' . $plugin_file );
+		}
 	}
+
+	/**
+	 * Filters whether a placeholder feature counts as included in the site's plan.
+	 *
+	 * The product lookup above is PLUGIN-level (one Mothership product per
+	 * plugin), but some plugins ship MODULES gated to specific plans — e.g.
+	 * the buddyboss-addons product exists on every paid plan while its
+	 * universally-translate module belongs to the Scale plan only. The plugin
+	 * that owns the module consumes this filter to apply that finer-grained
+	 * entitlement, so the card correctly shows its upgrade badge on a
+	 * valid-license-wrong-plan site.
+	 *
+	 * IMPORTANT: LOCK-ONLY (the project's entitlement-filter mandate) — the
+	 * final value is `in_plan AND filter`, so a callback can revoke in-plan
+	 * status but can never grant it to a product the license does not carry.
+	 *
+	 * @since BuddyBoss 3.4.4
+	 *
+	 * @param bool   $in_plan Whether the product resolved as included in the plan.
+	 * @param array  $item    The placeholder catalog item (id, plugin_file, …).
+	 * @param string $slug    The resolved Mothership product slug.
+	 */
+	$in_plan = $in_plan && (bool) apply_filters( 'bb_placeholder_feature_in_plan', $in_plan, $item, bb_get_placeholder_product_slug( $item ) );
 
 	if ( ! $in_plan ) {
 		return 'not_in_plan';
@@ -745,7 +776,8 @@ function bb_register_placeholder_cache_clear_hooks() {
 		return;
 	}
 
-	$plugin_id = get_option( 'buddyboss_dynamic_plugin_id', '' );
+	// Network-wide when Platform is network-activated.
+	$plugin_id = \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( 'buddyboss_dynamic_plugin_id', '' );
 	if ( empty( $plugin_id ) && defined( 'PLATFORM_EDITION' ) ) {
 		$plugin_id = PLATFORM_EDITION;
 	}

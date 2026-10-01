@@ -955,6 +955,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
+				// The poster's name was resolved once, before this fan-out, in the poster's own
+				// request - where nothing of their own name is ever hidden from them. Sent as-is it
+				// would carry a name part into every subscriber's inbox that the site withholds from
+				// them on screen. Re-resolve it for THIS recipient, as the group subscription
+				// fan-out in BP_Groups_Notification already does.
+				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
+					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+				}
+
 				// Send notification email.
 				bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $email_tokens );
 			}
@@ -1081,6 +1090,15 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
+
+				// The poster's name was resolved once, before this fan-out, in the poster's own
+				// request - where nothing of their own name is ever hidden from them. Sent as-is it
+				// would carry a name part into every subscriber's inbox that the site withholds from
+				// them on screen. Re-resolve it for THIS recipient, as the group subscription
+				// fan-out in BP_Groups_Notification already does.
+				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
+					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+				}
 
 				// Send notification email.
 				bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $email_tokens );
