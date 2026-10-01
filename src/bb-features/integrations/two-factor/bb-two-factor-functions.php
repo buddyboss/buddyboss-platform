@@ -493,14 +493,16 @@ function bb_two_factor_render_options( $user ) {
  * that overrides members/single/settings.php without a 'security' case still gets
  * the section through members/single/plugins.php.
  *
- * Restricted to the profile the viewer may edit, which under View As is the
- * member the admin switched to. The sub-nav already enforces this; repeating it
- * here keeps the guarantee local to the markup that exposes the settings.
+ * Restricted to the viewer's own profile, which under View As is the member the
+ * admin switched to. bp_core_can_edit_settings() is not used: it also admits
+ * admins to another member's settings, where this section would render the
+ * admin's own two-factor. The sub-nav already enforces this; repeating it here
+ * keeps the guarantee local to the markup that exposes the settings.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_two_factor_render_section() {
-	if ( ! bb_two_factor_is_active() || ! bp_core_can_edit_settings() ) {
+	if ( ! bb_two_factor_is_active() || ! bp_is_my_profile() ) {
 		return;
 	}
 

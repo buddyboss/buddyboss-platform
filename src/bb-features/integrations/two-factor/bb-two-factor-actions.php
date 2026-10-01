@@ -18,10 +18,12 @@ defined( 'ABSPATH' ) || exit;
  * Register the Security tab under Account.
  *
  * Fired by BP_Component::setup_nav() after the Settings component has built its
- * own items. Access is bp_core_can_edit_settings(), the same gate every other
- * Account tab uses: own profile only - it returns false for an admin viewing
- * another member - and true under View As, where the switched admin is the
- * member, so the tab behaves like the rest of the Account screen.
+ * own items. Access is bp_is_my_profile(): the tab can only ever manage the
+ * logged-in member's own two-factor, so it is shown on their own profile only.
+ * bp_core_can_edit_settings() is not used because it also lets admins and
+ * moderators into another member's settings, where this tab would show and save
+ * the admin's own two-factor instead. Under View As the switched session is the
+ * member, so bp_is_my_profile() is true and the tab works for them.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -49,7 +51,7 @@ function bb_two_factor_setup_nav() {
 			'screen_function' => 'bb_two_factor_screen_security',
 			'item_css_id'     => 'security',
 			'position'        => 15,
-			'user_has_access' => bp_core_can_edit_settings(),
+			'user_has_access' => bp_is_my_profile(),
 		),
 		'members'
 	);
@@ -101,7 +103,8 @@ function bb_two_factor_settings_save() {
 
 	$redirect = bb_two_factor_get_settings_url();
 
-	if ( ! bp_core_can_edit_settings() ) {
+	// Own profile only: the save always writes the logged-in member's two-factor.
+	if ( ! bp_is_my_profile() ) {
 		bp_core_add_message( __( 'You cannot manage two-factor authentication for another account.', 'buddyboss' ), 'error' );
 		bp_core_redirect( $redirect );
 	}
