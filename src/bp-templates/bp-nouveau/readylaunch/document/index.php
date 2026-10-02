@@ -31,10 +31,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				echo '<div class="bb-rl-document-actions bb-rl-actions-buttons flex items-center">';
 				?>
 				<a href="#" id="bb-create-folder" class="action-secondary bb-create-folder button small">
-					<i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+					<i class="bb-icons-rl-folder-plus"></i>
+					<?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 				</a>
 				<a href="#" id="bp-add-document" class="action-primary bb-add-document button small">
-					<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
+					<i class="bb-icons-rl-plus"></i>
+					<?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
 				</a>
 				<?php
 				bp_get_template_part( 'document/document-uploader' );
