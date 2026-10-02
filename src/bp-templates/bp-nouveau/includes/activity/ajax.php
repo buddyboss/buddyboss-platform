@@ -1174,6 +1174,25 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
 
+		/*
+		 * The client's data_key names the usermeta row this handler writes or deletes, so it
+		 * must never reach bp_update_user_meta()/bp_delete_user_meta() unchecked - an arbitrary
+		 * key (e.g. wp_capabilities) would let a member overwrite any of their own meta,
+		 * including their role. Only the keys the composers actually use are allowed:
+		 * draft_user, draft_user_{id} and draft_group_{id}. A non-scalar key (a crafted array)
+		 * becomes '' and is rejected cleanly rather than emitting an "Array to string" notice.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'This draft could not be saved.', 'buddyboss' ),
+				)
+			);
+		}
+
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
