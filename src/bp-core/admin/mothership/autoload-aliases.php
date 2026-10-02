@@ -6,8 +6,8 @@
  * BuddyBossPlatform\GroundLevel namespace regardless of whether
  * PHP-Scoper was actually used or not.
  *
+ * @since   BuddyBoss 2.14.0
  * @package BuddyBoss\Core\Admin\Mothership
- * @since BuddyBoss 2.14.0
  */
 
 // Exit if accessed directly.
@@ -46,13 +46,16 @@ function buddyboss_setup_mothership_aliases() {
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Licenses' => 'GroundLevel\Mothership\Api\Request\Licenses',
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\Request\ProductInsights' => 'GroundLevel\Mothership\Api\Request\ProductInsights',
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\RequestFactory' => 'GroundLevel\Mothership\Api\RequestFactory',
-		'BuddyBossPlatform\GroundLevel\Mothership\Util' => 'GroundLevel\Mothership\Util',
+		'BuddyBossPlatform\GroundLevel\Mothership\Util'    => 'GroundLevel\Mothership\Util',
 		'BuddyBossPlatform\GroundLevel\Mothership\UpdateService' => 'GroundLevel\Mothership\UpdateService',
 		'BuddyBossPlatform\GroundLevel\Mothership\LegacyUpdateService' => 'GroundLevel\Mothership\LegacyUpdateService',
 		'BuddyBossPlatform\GroundLevel\Mothership\Transients\ActivationTransient' => 'GroundLevel\Mothership\Transients\ActivationTransient',
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager' => 'GroundLevel\Mothership\Manager\LicenseManager',
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager' => 'GroundLevel\Mothership\Manager\AddonsManager',
-		'BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonInstallSkin' => 'GroundLevel\Mothership\Manager\AddonInstallSkin',
+		// NOTE: Manager\AddonInstallSkin is deliberately NOT aliased. It `extends \WP_Upgrader_Skin`,
+		// which only exists once wp-admin/includes/class-wp-upgrader.php is loaded, so autoloading
+		// it here (every request, front end included) fatals a non-scoped checkout. Only the vendor
+		// AddonsManager references it, by its own (un-prefixed) name, so no alias is needed.
 		'BuddyBossPlatform\GroundLevel\Mothership\ExtensionType' => 'GroundLevel\Mothership\ExtensionType',
 		'BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider' => 'GroundLevel\InProductNotifications\IPNServiceProvider',
 
@@ -74,7 +77,7 @@ function buddyboss_setup_mothership_aliases() {
 		// mothership-init include time, before anything has referenced the vendor classes, so
 		// without autoloading every check would return false and no aliases would be created —
 		// which then fatals when BB_Plugin_Connector/BB_Addons_Manager extend the prefixed
-		// parent names. (The reverse-alias function already autoloads for the same reason.)
+		// parent names. (The reverse-alias function already autoloads for the same reason).
 		if ( class_exists( $original ) ) {
 			class_alias( $original, $alias );
 		} elseif ( interface_exists( $original ) ) {
@@ -102,10 +105,10 @@ function buddyboss_setup_mothership_aliases() {
 function buddyboss_setup_mothership_inject_aliases() {
 	$provider_mappings = array(
 		// Un-prefixed alias => actual prefixed class.
-		'GroundLevel\Mothership\MothershipServiceProvider'             => 'BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider',
-		'GroundLevel\InProductNotifications\IPNServiceProvider'        => 'BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider',
-		'GroundLevel\Insights\InsightsServiceProvider'                 => 'BuddyBossPlatform\GroundLevel\Insights\InsightsServiceProvider',
-		'GroundLevel\Component\ComponentServiceProvider'               => 'BuddyBossPlatform\GroundLevel\Component\ComponentServiceProvider',
+		'GroundLevel\Mothership\MothershipServiceProvider'      => 'BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider',
+		'GroundLevel\InProductNotifications\IPNServiceProvider' => 'BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider',
+		'GroundLevel\Insights\InsightsServiceProvider'          => 'BuddyBossPlatform\GroundLevel\Insights\InsightsServiceProvider',
+		'GroundLevel\Component\ComponentServiceProvider'        => 'BuddyBossPlatform\GroundLevel\Component\ComponentServiceProvider',
 	);
 
 	foreach ( $provider_mappings as $alias => $original ) {
