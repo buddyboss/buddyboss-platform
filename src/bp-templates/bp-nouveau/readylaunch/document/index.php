@@ -23,19 +23,22 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
-				bp_get_template_part( 'common/search-and-filters-bar' );
+			bp_get_template_part( 'common/search-and-filters-bar' );
 
-				$active_extensions = bp_document_get_allowed_extension();
+			$active_extensions = bp_document_get_allowed_extension();
 
 			if ( ! empty( $active_extensions ) && bp_is_profile_document_support_enabled() && is_user_logged_in() && bb_user_can_create_document() ) {
-
 				echo '<div class="bb-rl-document-actions bb-rl-actions-buttons flex items-center">';
 				?>
-					<a href="#" id="bb-create-folder" class="action-secondary bb-create-folder button small"><i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
-					<a href="#" id="bp-add-document" class="action-primary bb-add-document button small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?></a>
-					<?php
-					bp_get_template_part( 'document/document-uploader' );
-					bp_get_template_part( 'document/create-folder' );
+				<a href="#" id="bb-create-folder" class="action-secondary bb-create-folder button small">
+					<i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+				</a>
+				<a href="#" id="bp-add-document" class="action-primary bb-add-document button small">
+					<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
+				</a>
+				<?php
+				bp_get_template_part( 'document/document-uploader' );
+				bp_get_template_part( 'document/create-folder' );
 				echo '</div>';
 			}
 			?>
