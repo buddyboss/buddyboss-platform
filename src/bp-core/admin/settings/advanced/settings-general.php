@@ -111,24 +111,24 @@ function bb_advanced_register_general_fields() {
 	);
 
 	// =========================================================================
-	// SECTION 2: Activity (conditional on Activity component)
+	// SECTION 2: Page Loading
 	// =========================================================================
 
+	bb_register_feature_section(
+		$feature_id,
+		$panel_id,
+		'advanced_page_loading',
+		array(
+			'title'       => __( 'Page Loading', 'buddyboss' ),
+			'description' => __( 'Use infinite scrolling to automatically load while scrolling down feeds and lists. Increasing the number of load items retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ),
+			'order'       => 20,
+			'help_url'    => '636197',
+		)
+	);
+
+	// Field 6: Feed Page Loading — two inline selects (conditional on Activity component).
+	// Figma: "Load [10 ▾] activity posts at a time using [Infinite Scroll ▾]".
 	if ( bp_is_active( 'activity' ) ) {
-
-		bb_register_feature_section(
-			$feature_id,
-			$panel_id,
-			'advanced_activity',
-			array(
-				'title'    => __( 'Activity', 'buddyboss' ),
-				'order'    => 20,
-				'help_url' => '636197',
-			)
-		);
-
-		// Field 6: Activity Loading — two inline selects.
-		// Figma: "Load [10 ▾] activity posts at a time using [Infinite Scroll ▾]".
 		$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
 		$activity_per_page = bp_parse_args( $activity_per_page, array( 5, 10, 15, 20 ) );
 		asort( $activity_per_page );
@@ -158,18 +158,16 @@ function bb_advanced_register_general_fields() {
 			);
 		}
 
-		// Figma: "Load [10 ▾] activity posts at a time using [Infinite Scroll ▾]" (no toggle).
 		bb_register_feature_field(
 			$feature_id,
 			$panel_id,
-			'advanced_activity',
+			'advanced_page_loading',
 			array(
 				'name'                 => 'bb_load_activity_per_request',
-				'label'                => __( 'Activity Loading', 'buddyboss' ),
+				'label'                => __( 'Feed Page Loading', 'buddyboss' ),
 				'type'                 => 'hidden',
 				/* translators: 1: inline select for number of posts, 2: inline select for load type. */
 				'description'          => __( 'Load %1$s activity posts at a time using %2$s', 'buddyboss' ),
-				'help_text'            => __( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ),
 				'default'              => bb_get_load_activity_per_request(),
 				'sanitize_callback'    => 'absint',
 				'description_controls' => array(
@@ -193,6 +191,50 @@ function bb_advanced_register_general_fields() {
 		);
 	}
 
+	// Field 7: Directory Loading — inline select for members/groups directories.
+	// Figma: "Load items in a directory page using [Pagination ▾]" — pagination is the default, infinite scroll is opt-in.
+	$directory_autoload_options = apply_filters( 'bb_performance_directory_autoload', array() );
+	$directory_autoload_options = bp_parse_args(
+		$directory_autoload_options,
+		array(
+			'pagination' => __( 'Pagination', 'buddyboss' ),
+			'infinite'   => __( 'Infinite Scroll', 'buddyboss' ),
+		)
+	);
+
+	$directory_load_type_options = array();
+	foreach ( $directory_autoload_options as $key => $label ) {
+		$directory_load_type_options[] = array(
+			'value' => $key,
+			'label' => $label,
+		);
+	}
+
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		'advanced_page_loading',
+		array(
+			'name'                 => 'bb_directory_load_type',
+			'label'                => __( 'Directory Loading', 'buddyboss' ),
+			'type'                 => 'hidden',
+			/* translators: %s: inline select for directory load type. */
+			'description'          => __( 'Load items in a directory page using %s', 'buddyboss' ),
+			'default'              => bb_get_directory_load_type(),
+			'sanitize_callback'    => 'bb_advanced_sanitize_directory_load_type',
+			'description_controls' => array(
+				array(
+					'type'              => 'select',
+					'name'              => 'bb_directory_load_type',
+					'default'           => bb_get_directory_load_type(),
+					'sanitize_callback' => 'bb_advanced_sanitize_directory_load_type',
+					'options'           => $directory_load_type_options,
+				),
+			),
+			'order'                => 20,
+		)
+	);
+
 	// =========================================================================
 	// SECTION 3: Toolbar Settings
 	// =========================================================================
@@ -208,7 +250,7 @@ function bb_advanced_register_general_fields() {
 		)
 	);
 
-	// Field 7: Toolbar for admins.
+	// Field 8: Toolbar for admins.
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
@@ -225,7 +267,7 @@ function bb_advanced_register_general_fields() {
 		)
 	);
 
-	// Field 8: Toolbar for members.
+	// Field 9: Toolbar for members.
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
@@ -242,7 +284,7 @@ function bb_advanced_register_general_fields() {
 		)
 	);
 
-	// Field 9: Toolbar for logged out.
+	// Field 10: Toolbar for logged out.
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
