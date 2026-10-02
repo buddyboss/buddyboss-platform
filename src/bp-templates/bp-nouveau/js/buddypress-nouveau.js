@@ -3226,34 +3226,31 @@ window.bp = window.bp || {};
 		/**
 		 * Auto-trigger "Load More" when scrolling near the button (Members/Groups).
 		 */
-		autoLoadMoreItems: (function () {
-			var throttleTimer;
-			return function () {
-				if ( throttleTimer ) {
+		autoLoadMoreItems: function () {
+			// Check on every scroll event, like the activity feed autoload (loadMoreActivities).
+			// Start loading while the Load More button is still up to one screen below the
+			// viewport: a page of member/group cards is heavy, so a 50px trigger would leave
+			// the member waiting on "Loading..." at the bottom of the list.
+			var $loadMoreBtns = $( '#buddypress [data-bp-list="members"] li.load-more:visible, #buddypress [data-bp-list="groups"] li.load-more:visible' ),
+				$window       = $( window );
+
+			$loadMoreBtns.each( function () {
+				var $btn = $( this );
+
+				if ( $btn.data( 'bp-autoloaded' ) ) {
 					return;
 				}
-				throttleTimer = setTimeout( function () { throttleTimer = null; }, 200 );
 
-				var $loadMoreBtns = $( '#buddypress [data-bp-list="members"] li.load-more:visible, #buddypress [data-bp-list="groups"] li.load-more:visible' );
+				var pos    = $btn.offset(),
+					offset = pos.top - $window.height();
 
-				$loadMoreBtns.each( function () {
-					var $btn = $( this );
-
-					if ( $btn.data( 'bp-autoloaded' ) ) {
-						return;
-					}
-
-					var pos    = $btn.offset(),
-						offset = pos.top - 50;
-
-					if ( $( window ).scrollTop() + $( window ).height() > offset ) {
-						$btn.data( 'bp-autoloaded', 1 );
-						$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
-						$btn.find( 'a' ).trigger( 'click' );
-					}
-				} );
-			};
-		})(),
+				if ( $window.scrollTop() + $window.height() > offset ) {
+					$btn.data( 'bp-autoloaded', 1 );
+					$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
+					$btn.find( 'a' ).trigger( 'click' );
+				}
+			} );
+		},
 
 		enableSubmitOnLegalAgreement: function () {
 			if ( $( 'body #buddypress #register-page #signup-form #legal_agreement' ).length ) {
