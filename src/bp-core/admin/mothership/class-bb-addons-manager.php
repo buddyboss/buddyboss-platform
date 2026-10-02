@@ -7,6 +7,9 @@ namespace BuddyBoss\Core\Admin\Mothership;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager;
+use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonInstallSkin;
+use BuddyBossPlatform\GroundLevel\Mothership\ExtensionType;
+use BuddyBossPlatform\GroundLevel\Mothership\Util;
 
 /**
  * BuddyBoss add-ons manager (static facade over the GroundLevel AddonsManager).
@@ -36,7 +39,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Get the BuddyBoss Mothership container.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return \BuddyBossPlatform\GroundLevel\Container\Container
 	 */
@@ -47,14 +50,14 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Resolve the vendor add-ons manager instance from the container.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * Returns null when the container has no such service — which happens when the
 	 * GroundLevel vendor tree is stale (so {@see BB_Mothership_Loader::init()} bailed
 	 * before registering anything) or when provider boot threw. Callers must treat null
 	 * as "the add-ons API is unavailable", never as "the plan has no add-ons".
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return AddonsManager|null
 	 */
@@ -69,12 +72,12 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Resolve the plugin connection from the container.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * Returns null when the container has no such service — see
 	 * {@see self::addons_manager()} for when that happens.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return AbstractPluginConnection|null
 	 */
@@ -134,6 +137,11 @@ class BB_Addons_Manager extends AddonsManager {
 		if ( $refresh_requested ) {
 			$addons_manager->clearCache();
 
+			// A forced refresh is a real fetch, not an outage re-seed, and it replaces the
+			// outage copy: dropping it lets the next tracked read store the fresh list.
+			delete_transient( $plugin->pluginId . self::RESEEDED_ADDONS_SUFFIX ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			delete_transient( $plugin->pluginId . self::LAST_GOOD_ADDONS_SUFFIX ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
 			// The vendor drops its own transient; the memo has to go with it.
 			self::reset_addons_memo();
 		}
@@ -190,6 +198,49 @@ class BB_Addons_Manager extends AddonsManager {
 	}
 
 	/**
+	 * Gets the latest release of an add-on product returned by {@see self::checkProductBySlug()}.
+	 *
+	 * GroundLevel 9.1.2 moves the embedded latest release onto `$product->version` and unsets
+	 * `$product->_embedded->{'version-latest'}`, so readers written against the 2.2.1 shape
+	 * always saw an empty release. The legacy location is still read as a fallback for any
+	 * product object that did not come through the 9.1.2 add-ons manager.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param object|null $product Add-on product object.
+	 * @return object|null The release object (exposing `number` and `url`), or null when none.
+	 */
+	public static function get_product_latest_version( $product ): ?object {
+		if ( ! is_object( $product ) ) {
+			return null;
+		}
+
+		if ( isset( $product->version ) && is_object( $product->version ) ) {
+			return $product->version;
+		}
+
+		if ( isset( $product->_embedded->{'version-latest'} ) && is_object( $product->_embedded->{'version-latest'} ) ) {
+			return $product->_embedded->{'version-latest'};
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the package download URL of an add-on's latest release.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param object|null $product Add-on product object.
+	 * @return string The download URL, or an empty string when none is available.
+	 */
+	public static function get_product_download_url( $product ): string {
+		$version = self::get_product_latest_version( $product );
+
+		return ( null !== $version && ! empty( $version->url ) ) ? (string) $version->url : '';
+	}
+
+	/**
 	 * Whether the last add-ons API lookup could not be trusted.
 	 *
 	 * Lets callers tell "this product is not in your plan" apart from "we could not
@@ -241,7 +292,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Also drops our outage marker, so a license that has come back to life is not masked
 	 * by a stale "products API errored" flag.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	protected static function refresh_license_status(): void {
 		delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
@@ -260,16 +311,48 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Transient recording that an add-ons fetch failed on a cold cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var string
 	 */
 	const PRODUCTS_ERROR_TRANSIENT = 'bb_products_api_error';
 
 	/**
+	 * Suffix of the transient holding the last non-empty add-ons list for a plugin ID.
+	 *
+	 * GroundLevel 9.1.2 caches the list for only 60 minutes and, when a fetch fails on an
+	 * expired cache, stores an empty list. This BuddyBoss-owned copy lets an outage keep
+	 * serving the customer's real plan instead of turning every add-on into an upsell.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @var string
+	 */
+	const LAST_GOOD_ADDONS_SUFFIX = '_bb_addons_last_good';
+
+	/**
+	 * How long the last non-empty add-ons list is kept, in seconds.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @var int
+	 */
+	const LAST_GOOD_ADDONS_TTL = 12 * HOUR_IN_SECONDS;
+
+	/**
+	 * Suffix of the transient marking the vendor add-ons cache as re-seeded from the
+	 * last-good copy (rather than filled by a real fetch).
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @var string
+	 */
+	const RESEEDED_ADDONS_SUFFIX = '_bb_addons_reseeded';
+
+	/**
 	 * Per-request memo of the add-ons list, or null when not yet resolved.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @var array|null
 	 */
@@ -281,7 +364,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Must be called by anything that invalidates the underlying add-ons cache, otherwise
 	 * a clear performed mid-request would be invisible to later reads in the same request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	public static function reset_addons_memo(): void {
 		self::$addons_memo = null;
@@ -295,12 +378,19 @@ class BB_Addons_Manager extends AddonsManager {
 	 * no add-ons". Every outage guard downstream therefore fails open in the wrong
 	 * direction — a licensed customer gets UPGRADE placeholder cards and DRM nags.
 	 *
-	 * A warm cache tells the two apart: if the vendor cache was absent BEFORE the call and
-	 * the call returned nothing, the fetch failed. A licensed plan that genuinely returns
-	 * nothing is also recorded, but that errs toward suppressing an upsell — the safe
-	 * direction.
+	 * Two signals tell the two apart:
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * - A BuddyBoss-owned copy of the last non-empty list exists, but the vendor now returns
+	 *   nothing. The vendor's own update filter often fetches first on an admin page load
+	 *   (and caches the empty list), so the cold-cache probe alone misses most outages. The
+	 *   copy is served instead, and re-seeded into the vendor cache for the vendor's error
+	 *   TTL, so every consumer sees the real plan during the outage. The copy is dropped on
+	 *   any license change, so it never outlives the license it was fetched for.
+	 * - Otherwise, the vendor cache was absent BEFORE the call and the call returned nothing.
+	 *   A licensed plan that genuinely returns nothing is also recorded, but that errs toward
+	 *   suppressing an upsell — the safe direction.
+	 *
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return array The add-ons list (possibly empty).
 	 */
@@ -331,11 +421,34 @@ class BB_Addons_Manager extends AddonsManager {
 			$addons = array();
 		}
 
+		$last_good_key = $connection->pluginId . self::LAST_GOOD_ADDONS_SUFFIX; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$reseeded_key  = $connection->pluginId . self::RESEEDED_ADDONS_SUFFIX; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
 		if ( ! empty( $addons ) ) {
-			delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
-		} elseif ( $was_cold ) {
-			// Match the vendor's own error TTL so the two expire together.
-			set_transient( self::PRODUCTS_ERROR_TRANSIENT, 1, 5 * MINUTE_IN_SECONDS );
+			// A list re-seeded from the last-good copy is not a fresh fetch: it must neither
+			// lift the outage marker nor extend the copy's 12h deadline.
+			if ( false === get_transient( $reseeded_key ) ) {
+				delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
+
+				// Written only after a real fetch (or to seed a missing copy), so warm reads
+				// cause no database write.
+				if ( $was_cold || false === get_transient( $last_good_key ) ) {
+					set_transient( $last_good_key, $addons, self::LAST_GOOD_ADDONS_TTL );
+				}
+			}
+		} else {
+			$last_good = get_transient( $last_good_key );
+
+			if ( is_array( $last_good ) && ! empty( $last_good ) ) {
+				// Serve the real plan through the outage; retried after the vendor error TTL.
+				$addons = $last_good;
+				set_transient( $cache_key, $addons, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+				set_transient( $reseeded_key, 1, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+				set_transient( self::PRODUCTS_ERROR_TRANSIENT, 1, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+			} elseif ( $was_cold ) {
+				// Match the vendor's own error TTL so the two expire together.
+				set_transient( self::PRODUCTS_ERROR_TRANSIENT, 1, self::ERROR_TTL_MINUTES * MINUTE_IN_SECONDS );
+			}
 		}
 
 		self::$addons_memo = $addons;
@@ -416,8 +529,215 @@ class BB_Addons_Manager extends AddonsManager {
 		delete_transient( $plugin_id . self::CACHE_KEY_ADDONS );
 		delete_site_transient( $plugin_id . self::CACHE_KEY_ADDONS );
 
+		// The last-known-good copy belongs to the license it was fetched for.
+		delete_transient( $plugin_id . self::LAST_GOOD_ADDONS_SUFFIX );
+		delete_transient( $plugin_id . self::RESEEDED_ADDONS_SUFFIX );
+
 		// A manual refresh / license change must lift the recorded outage too, otherwise
 		// the upsell guards stay suppressed for the rest of the error window.
 		delete_transient( self::PRODUCTS_ERROR_TRANSIENT );
+	}
+
+	/**
+	 * Map the base add-on slug BuddyBoss posts to the product's real slug before the vendor
+	 * add-on AJAX handlers run.
+	 *
+	 * BuddyBoss callers (Email Digest card, placeholder feature cards, Settings screen) post
+	 * the base slug, e.g. `buddyboss-addons`, and entitlement is decided with
+	 * {@see self::checkProductBySlug()}, which matches by prefix. The licensing server can
+	 * list the product under a plan-specific slug (e.g. `buddyboss-addons-scale`), and
+	 * GroundLevel's {@see AddonsManager::getAddon()} matches exactly, so the vendor
+	 * install/activate/deactivate handlers answered "Add-on not found" for an add-on the
+	 * card had just offered.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param string $plugin_id The dynamic plugin ID the vendor names the AJAX actions after.
+	 */
+	public static function register_ajax_slug_normalizer( string $plugin_id ): void {
+		foreach ( array( 'activate', 'deactivate', 'install' ) as $action ) {
+			add_action( "wp_ajax_{$plugin_id}_addon_{$action}", array( self::class, 'normalize_ajax_addon_slug' ), 1 );
+		}
+	}
+
+	/**
+	 * Rewrites `$_POST['slug']` to the entitled product's real slug when it has no exact match.
+	 *
+	 * Runs before the vendor handler (and the network handlers), which verify the nonce and
+	 * capabilities themselves; this only changes which product they look up.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 */
+	public static function normalize_ajax_addon_slug(): void {
+		if ( ! check_ajax_referer( 'mosh_addons', false, false ) || empty( $_POST['slug'] ) || ! is_string( $_POST['slug'] ) ) {
+			return;
+		}
+
+		$slug    = sanitize_text_field( wp_unslash( $_POST['slug'] ) );
+		$manager = self::addons_manager();
+
+		if ( '' === $slug || null === $manager || null !== $manager->getAddon( $slug ) ) {
+			return;
+		}
+
+		$product = self::checkProductBySlug( $slug );
+
+		if ( null !== $product && ! empty( $product->slug ) && is_string( $product->slug ) ) {
+			$_POST['slug'] = $product->slug;
+		}
+	}
+
+	/**
+	 * Route add-on activate/deactivate/install requests to network-wide handlers.
+	 *
+	 * When Platform is network-activated the add-ons page lives in Network Admin, but the
+	 * vendor AJAX handlers call `activate_plugin()` / `deactivate_plugins()` without the
+	 * network flag, so an add-on "activated" there only ran on the main site. These handlers
+	 * run first (priority 5, the vendor's run at 10) and exit with the same JSON shape the
+	 * vendor `addons.js` expects. Theme add-ons fall through to the vendor, as themes are
+	 * switched per site.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param string $plugin_id The dynamic plugin ID the vendor names the AJAX actions after.
+	 */
+	public static function register_network_ajax_handlers( string $plugin_id ): void {
+		if ( ! BB_Plugin_Connector::is_network_mode() ) {
+			return;
+		}
+
+		foreach ( array( 'activate', 'deactivate', 'install' ) as $action ) {
+			add_action(
+				"wp_ajax_{$plugin_id}_addon_{$action}",
+				static function () use ( $action ) {
+					self::container()->get( self::class )->network_ajax_handler( $action );
+				},
+				5
+			);
+		}
+	}
+
+	/**
+	 * Activate, deactivate or install a plugin add-on network-wide.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param string $action One of `activate`, `deactivate`, `install`.
+	 */
+	public function network_ajax_handler( string $action ): void {
+		// Validates the nonce and loads the requested add-on into $this->ajaxProduct.
+		$this->setupAjaxRequest(); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+
+		$product   = $this->ajaxProduct; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$main_file = $product->main_file ?? '';
+
+		if ( ExtensionType::PLUGIN !== ( $product->extension_type ?? '' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_network_plugins' ) || ( 'install' === $action && ! current_user_can( 'install_plugins' ) ) ) {
+			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to manage network add-ons.', 'buddyboss' ) ) );
+		}
+
+		if ( 'activate' === $action ) {
+			$result = $main_file ? activate_plugin( $main_file, '', true ) : false;
+
+			if ( null !== $result ) {
+				wp_send_json_error( new \WP_Error( 'activation_failed', esc_html__( 'The add-on could not be network activated.', 'buddyboss' ) ) );
+			}
+
+			wp_send_json_success( esc_html__( 'Plugin network activated.', 'buddyboss' ) );
+		}
+
+		if ( 'deactivate' === $action ) {
+			if ( ! $main_file ) {
+				wp_send_json_error( new \WP_Error( 'deactivation_failed', esc_html__( 'The add-on could not be deactivated.', 'buddyboss' ) ) );
+			}
+
+			deactivate_plugins( $main_file, false, true );
+			wp_send_json_success( esc_html__( 'Plugin network deactivated.', 'buddyboss' ) );
+		}
+
+		$this->network_install_addon( $product );
+	}
+
+	/**
+	 * Install a plugin add-on and network-activate it.
+	 *
+	 * Mirrors {@see AddonsManager::ajaxAddonInstall()} for plugins, differing only in the
+	 * network-wide activation.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param object $product The add-on product from the add-ons API.
+	 */
+	private function network_install_addon( $product ): void {
+		set_current_screen();
+		$creds = request_filesystem_credentials( network_admin_url( 'admin.php' ), '', false, false, null );
+		if ( false === $creds || ! \WP_Filesystem( $creds ) ) {
+			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to install add-ons.', 'buddyboss' ) ) );
+		}
+
+		$addon_url = $product->version->url ?? '';
+		if ( ! self::container()->get( Util::class )->isAllowedDownloadUrl( $addon_url ) ) {
+			wp_send_json_error( new \WP_Error( 'invalid_addon_url', esc_html__( 'Invalid add-on URL.', 'buddyboss' ) ) );
+		}
+
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
+
+		$installer = new \Plugin_Upgrader( new AddonInstallSkin() );
+		$installed = $installer->install( $addon_url );
+		if ( ! $installed || is_wp_error( $installed ) ) {
+			wp_send_json_error( new \WP_Error( 'addon_install_failed', esc_html__( 'The add-on was not installed successfully.', 'buddyboss' ) ) );
+		}
+
+		wp_cache_flush();
+
+		$base_name = $installer->plugin_info();
+		$activated = $base_name && null === activate_plugin( $base_name, '', true );
+
+		wp_send_json_success(
+			array(
+				'message'   => $activated ? esc_html__( 'Plugin installed and network activated.', 'buddyboss' ) : esc_html__( 'Plugin installed.', 'buddyboss' ),
+				'activated' => $activated,
+			)
+		);
+	}
+
+	/**
+	 * Prepare add-ons for display, reporting network activation in network mode.
+	 *
+	 * The vendor derives "Active" from `is_plugin_active()`, which is also true for a plugin
+	 * active on the main site only. On the Network Admin add-ons page that hid the Activate
+	 * button for add-ons that were not running network-wide, so it is re-evaluated here.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param array $products The products to prepare.
+	 * @return array The prepared products.
+	 */
+	protected function prepareProductsForDisplay( array $products ): array { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+		$products = parent::prepareProductsForDisplay( $products );
+
+		if ( ! BB_Plugin_Connector::is_network_mode() ) {
+			return $products;
+		}
+
+		foreach ( $products as $product ) {
+			if (
+				'active' === $product->status &&
+				ExtensionType::PLUGIN === ( $product->extension_type ?? '' ) &&
+				! is_plugin_active_for_network( $product->main_file )
+			) {
+				$product->status      = 'inactive';
+				$product->statusLabel = esc_html__( 'Inactive', 'buddyboss' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$product->iconClass   = 'dashicons dashicons-yes-alt'; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$product->buttonLabel = esc_html__( 'Activate', 'buddyboss' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			}
+		}
+
+		return $products;
 	}
 }

@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * is the dynamic Mothership edition. The React settings screen posts to these when
  * installing/activating a placeholder feature's add-on.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.1
  *
  * @return array<string,string> Action names keyed by `install`, `activate`, `deactivate`.
  */

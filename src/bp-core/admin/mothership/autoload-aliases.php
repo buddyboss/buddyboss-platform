@@ -100,7 +100,7 @@ function buddyboss_setup_mothership_aliases() {
  * Without these aliases the resolver throws "@inject references undefined constant" and the
  * Mothership/IPN services fail to boot.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.5.1
  */
 function buddyboss_setup_mothership_inject_aliases() {
 	$provider_mappings = array(

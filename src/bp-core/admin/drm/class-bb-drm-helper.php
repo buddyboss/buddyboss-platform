@@ -121,7 +121,7 @@ class BB_DRM_Helper {
 	 * GroundLevel 7.3.1 replaced the static {@see Credentials} API with an instance
 	 * resolved from the container, so the license key is read through this service.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return Credentials
 	 */

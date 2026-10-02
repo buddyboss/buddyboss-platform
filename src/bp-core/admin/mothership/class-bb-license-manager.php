@@ -39,7 +39,7 @@ class BB_License_Manager {
 	 * Replaces the removed GroundLevel `HasStaticContainer::getContainer()` static
 	 * accessor — the BuddyBoss container is owned by {@see BB_Mothership_Loader}.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return Container
 	 */
@@ -394,7 +394,7 @@ class BB_License_Manager {
 	 * {@see LicenseActivations::deactivate()} instance API resolved from the container,
 	 * then clears the stored license key, activation status, and add-on caches.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @param string $license_key The license key.
 	 * @param string $domain      The domain to deactivate.
@@ -403,7 +403,7 @@ class BB_License_Manager {
 	 * @return void
 	 */
 	public static function deactivateLicense( string $license_key, string $domain ): void { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			throw new \Exception( esc_html__( 'You do not have permission to deactivate a license', 'buddyboss' ) );
 		}
 
@@ -458,6 +458,7 @@ class BB_License_Manager {
 			$plugin_connector->clearActivationDomain();
 		}
 		self::clear_activation_transient();
+		self::flush_license_dependent_caches();
 
 		bb_error_log( 'BuddyBoss: License deactivated', true );
 	}
@@ -469,7 +470,7 @@ class BB_License_Manager {
 	 * @return void
 	 */
 	private static function validate_activation_permissions(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			throw new \Exception( esc_html__( 'You do not have permission to activate a license', 'buddyboss' ) );
 		}
 
@@ -672,9 +673,9 @@ class BB_License_Manager {
 			// updateLicenseActivationStatus() clears the add-ons cache via the plugin connector.
 			$plugin_connector->updateLicenseActivationStatus( true );
 
-			// The cached activation still holds the previous key; leaving it would make
-			// GroundLevel's onLicenseKeyOverwritten() guard deactivate this new license.
-			self::clear_activation_transient();
+			// Drop the stale vendor activation cache and the revocation notice, and refresh
+			// everything keyed on the license state.
+			self::after_license_activated();
 
 			$plugin_id = $plugin_connector->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
@@ -692,6 +693,64 @@ class BB_License_Manager {
 			self::disable_header_capture();
 			bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
 			throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss' ) );
+		}
+	}
+
+	/**
+	 * Runs the follow-up work for a license that has just been activated.
+	 *
+	 * GroundLevel 2.2.1 fired `{pluginId}_license_status_changed` with `true` after every
+	 * successful status check, and BuddyBoss hung its "license is valid again" cleanup on
+	 * that. GroundLevel 9.1.2 only fires it (deprecated, with `false`) on revocation, so the
+	 * cleanup has to run from BuddyBoss's own activation paths instead:
+	 *
+	 * - the vendor's cached activation still holds the previous key, which would make its
+	 *   onLicenseKeyOverwritten() guard deactivate the new license;
+	 * - the vendor's persistent "license revoked" notice would keep showing after the
+	 *   license is working again;
+	 * - the placeholder-card and field-upgrade catalogs are resolved per license tier.
+	 *
+	 * The DRM state is cleared by {@see \BuddyBoss\Core\Admin\DRM\BB_DRM_Controller::drm_init()}
+	 * once the license validates.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 */
+	public static function after_license_activated(): void {
+		self::clear_activation_transient();
+
+		try {
+			// The container singleton is prefixed with the plugin ID at boot, but activation can
+			// switch the ID mid-request (KEY:PLUGIN_ID), so clear the current ID's store too.
+			$stores = array( self::container()->get( \BuddyBossPlatform\GroundLevel\Support\AdminNotices::class ) );
+
+			$plugin_id = (string) self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( '' !== $plugin_id ) {
+				$stores[] = new \BuddyBossPlatform\GroundLevel\Support\AdminNotices( $plugin_id );
+			}
+
+			foreach ( $stores as $notices ) {
+				$notices->remove( 'license_revoked' );
+				$notices->remove( 'license_key_overwritten' );
+			}
+		} catch ( \Throwable $e ) {
+			bb_error_log( sprintf( 'BuddyBoss: could not clear license notices: %s', $e->getMessage() ), true );
+		}
+
+		self::flush_license_dependent_caches();
+	}
+
+	/**
+	 * Refreshes the admin catalogs whose contents depend on the license tier.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 */
+	private static function flush_license_dependent_caches(): void {
+		if ( function_exists( 'bb_clear_placeholder_cache_on_license_change' ) ) {
+			bb_clear_placeholder_cache_on_license_change();
+		}
+
+		if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
+			bb_flush_field_upgrades_cache_full();
 		}
 	}
 
@@ -714,7 +773,7 @@ class BB_License_Manager {
 	 * Deleting is preferred over calling syncActivationTransient(), which would add an API
 	 * round-trip to every activation and silently no-op when that request fails.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 */
 	private static function clear_activation_transient(): void {
 		try {
@@ -1002,7 +1061,7 @@ class BB_License_Manager {
 			}
 
 			// Store the web plugin ID.
-			update_option( 'buddyboss_web_plugin_id', $plugin_id );
+			BB_Plugin_Connector::update_license_option( 'buddyboss_web_plugin_id', $plugin_id );
 
 			// Set the dynamic plugin ID.
 			$plugin_connector->setDynamicPluginId( $plugin_id );
@@ -1022,7 +1081,7 @@ class BB_License_Manager {
 	 * license admin view (views/admin.php) calls this single entry point: it renders the
 	 * disconnect form when a license is active, otherwise the activation form.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.5.1
 	 *
 	 * @return string The license form HTML.
 	 */
@@ -1327,7 +1386,7 @@ class BB_License_Manager {
 	public static function clearLicenseDetailsCache(): void {
 		$plugin_id = self::container()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		$cache_key = $plugin_id . '_license_details';
-		delete_transient( $cache_key );
+		BB_Plugin_Connector::delete_license_transient( $cache_key );
 	}
 
 	/**
@@ -1353,7 +1412,7 @@ class BB_License_Manager {
 
 		// Check cache first unless force refresh is requested.
 		if ( ! $force_refresh ) {
-			$cached_data = get_transient( $cache_key );
+			$cached_data = BB_Plugin_Connector::get_license_transient( $cache_key );
 			if ( false !== $cached_data && ! is_wp_error( $cached_data ) ) {
 				return $cached_data;
 			}
@@ -1438,7 +1497,7 @@ class BB_License_Manager {
 		);
 
 		// License details don't change frequently, so a 12-hour cache is reasonable.
-		set_transient( $cache_key, $license_data, 12 * HOUR_IN_SECONDS );
+		BB_Plugin_Connector::set_license_transient( $cache_key, $license_data, 12 * HOUR_IN_SECONDS );
 
 		return $license_data;
 	}
@@ -1455,7 +1514,7 @@ class BB_License_Manager {
 		}
 
 		// Check user capabilities.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
 		}
 
@@ -1552,7 +1611,7 @@ class BB_License_Manager {
 		}
 
 		// Check user capabilities.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( BB_Plugin_Connector::license_capability() ) ) {
 			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
 		}
 
@@ -1566,7 +1625,7 @@ class BB_License_Manager {
 			$plugin_connector->clearDynamicPluginId();
 
 			// Clear web plugin ID (set when using KEY:PLUGIN_ID format).
-			delete_option( 'buddyboss_web_plugin_id' );
+			BB_Plugin_Connector::delete_license_option( 'buddyboss_web_plugin_id' );
 
 			// Clear license key.
 			$plugin_connector->updateLicenseKey( '' );
@@ -1580,6 +1639,7 @@ class BB_License_Manager {
 				$plugin_connector->clearActivationDomain();
 			}
 			self::clear_activation_transient();
+			self::flush_license_dependent_caches();
 
 			// Clear migration flag.
 			delete_option( 'bb_mothership_licenses_migrated' );
@@ -1604,8 +1664,8 @@ class BB_License_Manager {
 			// Clear all license-related data for all possible plugin IDs.
 			foreach ( $all_plugin_ids as $plugin_id ) {
 				// Clear license keys and activation status.
-				delete_option( $plugin_id . '_license_key' );
-				delete_option( $plugin_id . '_license_activation_status' );
+				BB_Plugin_Connector::delete_license_option( $plugin_id . '_license_key' );
+				BB_Plugin_Connector::delete_license_option( $plugin_id . '_license_activation_status' );
 
 				// Clear transients (both regular and site-wide for multisite). The add-ons
 				// response is cached under `-mosh-addons` in GroundLevel 9.1.2 (the legacy
@@ -1729,15 +1789,7 @@ class BB_License_Manager {
 	 * @return bool True if network activated, false otherwise.
 	 */
 	private static function is_network_activated(): bool {
-		if ( ! is_multisite() ) {
-			return false;
-		}
-
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
-		}
-
-		return is_plugin_active_for_network( buddypress()->basename );
+		return BB_Plugin_Connector::is_network_mode();
 	}
 
 	/**
