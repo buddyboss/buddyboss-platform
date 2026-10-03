@@ -298,6 +298,7 @@ class BP_Notifications_Component extends BP_Component {
 				'bp_notifications_unread_count',
 				'bp_notifications_read_count',
 				'bp_notifications_grouped_notifications',
+				'bp_notifications_count_incrementor',
 			)
 		);
 
