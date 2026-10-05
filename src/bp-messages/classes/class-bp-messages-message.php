@@ -459,7 +459,8 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
-		$results    = BP_Messages_Thread::get_threads_for_user(
+		add_filter( 'bb_messages_thread_sub_query', 'bb_messages_include_group_threads_sub_query' );
+		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'     => 'ids',
 				'having_sql' => $having_sql,
@@ -467,6 +468,7 @@ class BP_Messages_Message {
 				'page'       => 1,
 			)
 		);
+		remove_filter( 'bb_messages_thread_sub_query', 'bb_messages_include_group_threads_sub_query' );
 
 		if ( empty( $results['threads'] ) ) {
 			return null;
@@ -501,6 +503,7 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
+		add_filter( 'bb_messages_thread_sub_query', 'bb_messages_include_group_threads_sub_query' );
 		$results = BP_Messages_Thread::get_threads_for_user(
 			array(
 				'fields'      => 'select',
@@ -508,6 +511,7 @@ class BP_Messages_Message {
 				'force_cache' => $force_cache,
 			)
 		);
+		remove_filter( 'bb_messages_thread_sub_query', 'bb_messages_include_group_threads_sub_query' );
 
 		if ( empty( $results['threads'] ) ) {
 			return null;

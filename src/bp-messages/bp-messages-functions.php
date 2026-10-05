@@ -1852,7 +1852,8 @@ function bb_messages_update_unread_count( $sub_query, $r ) {
  * Keep group threads in the user's thread list while group messages are disabled.
  *
  * Only the open group messages are left out, so the threads that members replied to
- * are still returned, e.g. to delete them for a deleted user.
+ * are still returned, as in release: the existing-thread lookup on send and deleting
+ * the threads of a deleted user rely on that.
  *
  * @since BuddyBoss [BBVERSION]
  *

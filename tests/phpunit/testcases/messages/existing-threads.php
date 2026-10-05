@@ -63,17 +63,18 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	/**
 	 * Create a group thread with a member's reply and return its ID.
 	 *
-	 * @param int $sender   Sender ID.
-	 * @param int $member   Member ID.
-	 * @param int $group_id Group ID.
+	 * @param int       $sender   Sender ID.
+	 * @param int|array $members  Member ID(s); the first one replies.
+	 * @param int       $group_id Group ID.
 	 *
 	 * @return int
 	 */
-	protected function create_group_thread_with_reply( $sender, $member, $group_id ) {
+	protected function create_group_thread_with_reply( $sender, $members, $group_id ) {
+		$members       = (array) $members;
 		$group_message = self::factory()->message->create_and_get(
 			array(
 				'sender_id'  => $sender,
-				'recipients' => array( $member ),
+				'recipients' => $members,
 				'subject'    => 'Group broadcast',
 			)
 		);
@@ -83,9 +84,9 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		// A member's reply carries no group meta of its own.
 		self::factory()->message->create(
 			array(
-				'sender_id'  => $member,
+				'sender_id'  => $members[0],
 				'thread_id'  => $group_thread,
-				'recipients' => array( $sender ),
+				'recipients' => array_merge( array( $sender ), array_slice( $members, 1 ) ),
 				'content'    => 'Reply',
 			)
 		);
@@ -176,27 +177,11 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	public function test_group_thread_with_replies_is_hidden_when_group_messages_disabled() {
 		$u1       = self::factory()->user->create();
 		$u2       = self::factory()->user->create();
+		$u3       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
-		$group_message = self::factory()->message->create_and_get(
-			array(
-				'sender_id'  => $u1,
-				'recipients' => array( $u2 ),
-				'subject'    => 'Group broadcast',
-			)
-		);
-		$group_thread  = (int) $group_message->thread_id;
-		$this->flag_group_message( $group_message->id, $group_thread, $group_id );
-
-		// A member's reply carries no group meta of its own.
-		self::factory()->message->create(
-			array(
-				'sender_id'  => $u2,
-				'thread_id'  => $group_thread,
-				'recipients' => array( $u1 ),
-				'content'    => 'Reply',
-			)
-		);
+		// Three members, so the private message below cannot land in the group thread.
+		$group_thread = $this->create_group_thread_with_reply( $u1, array( $u2, $u3 ), $group_id );
 
 		bp_update_option( 'bp-disable-group-messages', 0 );
 		$private_thread = $this->create_thread( $u1, array( $u2 ) );
@@ -276,8 +261,9 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		buddypress()->active_components = $active_components;
 
-		// As in release: only the group message itself is left out, the replied thread stays listed.
+		// As in release: only the group message itself is left out, the replied thread stays listed and opens (TC-18).
 		$this->assertContains( $group_thread, array_map( 'intval', (array) $threads['threads'] ) );
+		$this->assertSame( $group_thread, bb_messages_validate_groups_thread( $group_thread ) );
 	}
 
 	/**
@@ -324,5 +310,170 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$this->assertArrayHasKey( $group_thread, $deleted, 'The group thread must be deleted for the deleted user.' );
 		$this->assertSame( $u2, $deleted[ $group_thread ] );
+	}
+
+	/**
+	 * Header preview: the paged recipients are the first rows of the full list (TC-03, TC-09).
+	 */
+	public function test_thread_recipients_are_first_page_of_full_list() {
+		$sender = self::factory()->user->create();
+		$others = self::factory()->user->create_many( 25 );
+
+		$thread_id = $this->create_thread( $sender, $others );
+		$this->set_current_user( $sender );
+		wp_cache_flush();
+
+		$thread   = new BP_Messages_Thread( $thread_id );
+		$per_page = bb_messages_recipients_per_page();
+		$full     = array_keys( $thread->get_recipients() );
+
+		$this->assertCount( $per_page, $thread->recipients );
+		$this->assertSame( array_slice( $full, 0, $per_page ), array_keys( $thread->recipients ) );
+	}
+
+	/**
+	 * Compose and send twice to the same member: one new thread, then the same thread (TC-11, TC-12).
+	 */
+	public function test_second_message_to_same_recipient_reuses_thread() {
+		$sender    = self::factory()->user->create();
+		$recipient = self::factory()->user->create();
+		$others    = self::factory()->user->create_many( 25 );
+
+		// The sender is also in a large thread with the recipient.
+		$this->create_thread( $sender, array_merge( array( $recipient ), $others ) );
+		$this->set_current_user( $sender );
+
+		$first = messages_new_message(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $recipient ),
+				'subject'    => 'PROD-9747 test',
+				'content'    => 'First message',
+			)
+		);
+		$second = messages_new_message(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $recipient ),
+				'subject'    => 'PROD-9747 test',
+				'content'    => 'Second message',
+			)
+		);
+
+		$this->assertIsInt( $first );
+		$this->assertSame( $first, $second );
+		$this->assertSame( 2, (int) BP_Messages_Thread::get_messages_count( $first ) );
+	}
+
+	/**
+	 * The recipient sees the new thread as unread (TC-13).
+	 */
+	public function test_new_thread_is_listed_unread_for_recipient() {
+		$sender    = self::factory()->user->create();
+		$recipient = self::factory()->user->create();
+
+		$thread_id = $this->create_thread( $sender, array( $recipient ) );
+		$this->set_current_user( $recipient );
+		wp_cache_flush();
+
+		$threads = BP_Messages_Thread::get_current_threads_for_user(
+			array(
+				'user_id' => $recipient,
+				'fields'  => 'ids',
+			)
+		);
+
+		$this->assertContains( $thread_id, array_map( 'intval', (array) $threads['threads'] ) );
+		$this->assertSame( 1, (int) messages_get_unread_count( $recipient ) );
+	}
+
+	/**
+	 * Hiding group threads leaves the unread count as it was (TC-14).
+	 *
+	 * @group groups
+	 */
+	public function test_unread_count_ignores_group_thread_when_group_messages_disabled() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$this->create_group_thread_with_reply( $u1, array( $u2, self::factory()->user->create() ), $group_id );
+		$this->create_thread( $u1, array( $u2 ) );
+		wp_cache_flush();
+
+		$this->assertSame( 1, (int) messages_get_unread_count( $u2 ), 'Only the private thread counts as unread.' );
+
+		// Changing the setting in tear_down() unsets the unread-count group straight from the object cache.
+		wp_cache_flush();
+	}
+
+	/**
+	 * Group Messages OFF hides the thread, ON lists it, OFF hides it again (TC-15).
+	 *
+	 * @group groups
+	 */
+	public function test_group_thread_follows_group_messages_setting() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+		groups_join_group( $group_id, $u2 );
+
+		$group_thread = $this->create_group_thread_with_reply( $u1, $u2, $group_id );
+		$this->set_current_user( $u2 );
+
+		$listed = function () use ( $u2 ) {
+			$threads = BP_Messages_Thread::get_current_threads_for_user(
+				array(
+					'user_id' => $u2,
+					'fields'  => 'ids',
+				)
+			);
+
+			return empty( $threads['threads'] ) ? array() : array_map( 'intval', $threads['threads'] );
+		};
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$this->assertNotContains( $group_thread, $listed() );
+		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ) );
+
+		bp_update_option( 'bp-disable-group-messages', 1 );
+		$this->assertContains( $group_thread, $listed() );
+		$this->assertSame( $group_thread, bb_messages_validate_groups_thread( $group_thread ) );
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$this->assertNotContains( $group_thread, $listed() );
+	}
+
+	/**
+	 * A member who is not in the thread has no access to it (TC-16).
+	 */
+	public function test_non_recipient_has_no_access_to_thread() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+
+		$thread_id = $this->create_thread( $u1, array( $u2 ) );
+
+		$this->assertNotEmpty( messages_check_thread_access( $thread_id, $u2 ) );
+		$this->assertEmpty( messages_check_thread_access( $thread_id, $u3 ) );
+	}
+
+	/**
+	 * As in release: a private message to the only other member of a group thread
+	 * goes into that group thread, also while Group Messages is disabled.
+	 *
+	 * @group groups
+	 */
+	public function test_private_message_to_two_member_group_thread_uses_group_thread() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$group_thread = $this->create_group_thread_with_reply( $u1, $u2, $group_id );
+
+		$this->assertSame( $group_thread, (int) BP_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
+		$this->assertSame( $group_thread, $this->create_thread( $u1, array( $u2 ) ) );
 	}
 }
