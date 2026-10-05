@@ -170,6 +170,20 @@ describeWithLibs.each( BUNDLES )( 'Load More query (%s)', ( label, bundle ) => {
 		expect( posts[ 1 ].search_terms ).toBe( '' );
 	} );
 
+	test( 'a server-rendered list ignores search text typed after the page loaded', () => {
+		const posts = boot(
+			bundle,
+			'<div data-bp-search="groups"><input type="search" value="rendered"></div>' +
+				LIST( 'groups', '?grpage=2' )
+		);
+		document.querySelector( '[data-bp-search] input' ).value =
+			'typed-not-submitted';
+
+		clickLoadMore();
+
+		expect( posts[ 0 ].search_terms ).toBe( 'rendered' );
+	} );
+
 	test( 'a Connections search (registered as "friends") is kept by Load More of the members list', () => {
 		const posts = boot( bundle, LIST( 'members', '?upage=2' ) );
 		window.bp.Nouveau.objectRequest( {

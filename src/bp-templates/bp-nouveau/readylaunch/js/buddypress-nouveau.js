@@ -2950,8 +2950,9 @@ window.bp = window.bp || {};
 			if ( ! $search.length ) {
 				$search = $( '#buddypress .dir-search input[type=search]' );
 			}
+			// The search this list was rendered with, not text typed since and not submitted yet.
 			if ( $search.length ) {
-				query.search_terms = $search.val();
+				query.search_terms = $search.prop( 'defaultValue' ) || '';
 			}
 
 			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
