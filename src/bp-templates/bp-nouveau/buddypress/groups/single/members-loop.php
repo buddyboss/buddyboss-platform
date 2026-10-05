@@ -20,14 +20,24 @@ $enabled_followers     = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'last-active' );
 $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
 
+// Members & Groups Loading: with infinite scroll, the group Members list loads more members as the
+// member scrolls. Load more requests return only the list items; the group hooks still run so their
+// listeners (e.g. moderation avatar filters) apply to every page.
+$bb_directory_autoload   = function_exists( 'bb_is_list_autoload_active' ) && bb_is_list_autoload_active( 'group_members' );
+$bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
 if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group_role' ) ) {
 
 	bp_nouveau_group_hook( 'before', 'members_content' );
-	bp_nouveau_pagination( 'top' );
+	if ( ! $bb_directory_autoload ) {
+		bp_nouveau_pagination( 'top' );
+	}
 	bp_nouveau_group_hook( 'before', 'members_list' );
 	?>
 
+	<?php if ( ! $bb_is_load_more_request ) : ?>
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> members-list">
+	<?php endif; ?>
 		<?php
 		while ( bp_group_members() ) :
 			bp_group_the_member();
@@ -205,17 +215,40 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 			</li>
 
 		<?php endwhile; ?>
+
+	<?php
+	if ( $bb_directory_autoload ) :
+		// Load more button when more pages exist.
+		global $members_template;
+		$members_pag_num     = max( 1, (int) $members_template->pag_num );
+		$members_total_pages = ceil( (int) $members_template->total_member_count / $members_pag_num );
+		if ( (int) $members_template->pag_page < $members_total_pages ) :
+			$next_page_url = add_query_arg( $members_template->pag_arg, (int) $members_template->pag_page + 1, '' );
+			?>
+			<li class="load-more">
+				<a class="button outline" href="<?php echo esc_url( $next_page_url ); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			</li>
+			<?php
+		endif;
+	endif;
+	?>
+
+	<?php if ( ! $bb_is_load_more_request ) : ?>
 	</ul>
+	<?php endif; ?>
 
 	<?php
 	bp_nouveau_group_hook( 'after', 'members_list' );
-	bp_nouveau_pagination( 'bottom' );
+	if ( ! $bb_directory_autoload ) {
+		bp_nouveau_pagination( 'bottom' );
+	}
 	bp_nouveau_group_hook( 'after', 'members_content' );
 } else {
 	bp_nouveau_user_feedback( 'group-members-none' );
 }
 ?>
 
+<?php if ( ! $bb_is_load_more_request ) : ?>
 <!-- Remove Connection confirmation popup -->
 <div class="bb-remove-connection bb-action-popup" style="display: none">
 	<transition name="modal">
@@ -248,3 +281,4 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 		</div>
 	</transition>
 </div> <!-- .bb-remove-connection -->
+<?php endif; ?>

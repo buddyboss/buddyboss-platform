@@ -1,10 +1,10 @@
 <?php
 /**
- * Tests for the Members/Groups directory loop markup under the Directory Loading setting.
+ * Tests for the Members/Groups loop markup under the Members & Groups Loading setting.
  *
  * Each loop is rendered the way bp_nouveau_ajax_object_template_loader() renders it:
- * the current component is set and flagged as a directory, then the template file is
- * loaded. Both the BP Nouveau and the ReadyLaunch copies are covered.
+ * the current screen (directory, profile tab or group tab) is set up, then the template
+ * file is loaded. Both the BP Nouveau and the ReadyLaunch copies are covered.
  *
  * @group core
  * @group PROD-9724
@@ -50,8 +50,11 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 		unset( $_POST['page'] );
 		bp_delete_option( 'bb_directory_load_type' );
 		bp_update_is_directory( false, '' );
-		buddypress()->displayed_user->id = 0;
-		buddypress()->current_action     = '';
+		buddypress()->displayed_user->id    = 0;
+		buddypress()->current_action        = '';
+		buddypress()->current_item          = '';
+		buddypress()->is_single_item        = false;
+		buddypress()->groups->current_group = null;
 
 		parent::tear_down();
 	}
@@ -65,6 +68,16 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 	 * @return string
 	 */
 	public function filter_querystring( $qs, $object ) {
+		// The group members loop is limited to the current group and appends its own type.
+		if ( 'group_members' === $object ) {
+			return build_query(
+				array(
+					'per_page' => self::PER_PAGE,
+					'page'     => $this->page,
+				)
+			);
+		}
+
 		if ( ! in_array( $object, array( 'members', 'groups' ), true ) ) {
 			return $qs;
 		}
@@ -94,6 +107,18 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 	}
 
 	/**
+	 * Group members loop templates under test.
+	 *
+	 * @return array
+	 */
+	public function data_group_member_loops() {
+		return array(
+			'nouveau group members'     => array( 'buddypress/groups/single/members-loop.php' ),
+			'readylaunch group members' => array( 'readylaunch/groups/single/members-loop.php' ),
+		);
+	}
+
+	/**
 	 * Create enough members or groups for at least three pages.
 	 *
 	 * @param string $object 'members' or 'groups'.
@@ -110,28 +135,35 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 
 		foreach ( $this->item_ids as $user_id ) {
 			bp_update_user_last_activity( $user_id, bp_core_current_time() );
+
+			// The profile Connections tab lists the displayed member's connections.
+			friends_add_friend( $this->owner_id, $user_id, true );
 		}
 	}
 
 	/**
-	 * Render a loop on its directory, or on a member's profile tab, at a given page.
+	 * Render a loop on a screen at a given page.
 	 *
-	 * @param string $object       'members' or 'groups'.
-	 * @param string $template     Template path relative to bp-templates/bp-nouveau/.
-	 * @param int    $page         Page to render.
-	 * @param bool   $is_directory True for the directory; false for the profile
-	 *                             Connections (members) or Groups (groups) tab.
+	 * @param string $object   'members' or 'groups'.
+	 * @param string $template Template path relative to bp-templates/bp-nouveau/.
+	 * @param int    $page     Page to render.
+	 * @param string $screen   'directory'; 'profile' for the profile Connections (members) or
+	 *                         Groups (groups) tab; 'mutual' for profile Mutual Connections;
+	 *                         'none' for a loop rendered outside these screens (widget, shortcode).
 	 *
 	 * @return string
 	 */
-	protected function render( $object, $template, $page = 1, $is_directory = true ) {
+	protected function render( $object, $template, $page = 1, $screen = 'directory' ) {
 		$this->page                     = $page;
 		buddypress()->current_component = $object;
-		bp_update_is_directory( $is_directory, $object );
+		bp_update_is_directory( 'directory' === $screen, $object );
 
-		if ( ! $is_directory ) {
+		if ( in_array( $screen, array( 'profile', 'mutual' ), true ) ) {
+			buddypress()->current_component  = 'groups' === $object ? 'groups' : 'friends';
 			buddypress()->displayed_user->id = $this->owner_id;
-			buddypress()->current_action     = 'groups' === $object ? 'my-groups' : 'my-friends';
+			buddypress()->current_action     = 'groups' === $object ? 'my-groups' : ( 'mutual' === $screen ? 'mutual' : 'my-friends' );
+		} elseif ( 'none' === $screen ) {
+			buddypress()->current_component = '';
 		}
 
 		// A load-more request posts the page it wants; a full (re)load posts page 1.
@@ -276,19 +308,185 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 	}
 
 	/**
-	 * Profile tabs that reuse these loops keep classic pagination.
+	 * Members & Groups Loading applies to the profile Connections and Groups tabs, like Feed
+	 * Page Loading applies to the profile Timeline (PROD-9724 scope update).
 	 *
 	 * @dataProvider data_loops
 	 */
-	public function test_infinite_mode_is_limited_to_the_directory( $object, $template ) {
+	public function test_infinite_mode_applies_to_the_profile_tabs( $object, $template ) {
 		$this->create_items( $object );
 		bp_update_option( 'bb_directory_load_type', 'infinite' );
 
-		$html = $this->render( $object, $template, 2, false );
+		$first  = $this->render( $object, $template, 1, 'profile' );
+		$append = $this->render( $object, $template, 2, 'profile' );
 
 		$this->assertFalse( 'groups' === $object ? bp_is_groups_directory() : bp_is_members_directory(), 'precondition: a profile tab is not the directory' );
+		$this->assertStringNotContainsString( 'data-bp-pagination', $first );
+		$this->assertSame( array( '?' . $this->pag_arg( $object ) . '=2' ), $this->load_more_links( $first ) );
+		$this->assertSame( 1, $this->list_wrappers( $object, $first ) );
+		$this->assertSame( 0, $this->list_wrappers( $object, $append ), 'A page-2 request on a profile tab is an append' );
+	}
+
+	/**
+	 * @dataProvider data_member_loops
+	 */
+	public function test_infinite_mode_applies_to_mutual_connections( $object, $template ) {
+		$this->create_items( $object );
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		$html = $this->render( $object, $template, 1, 'mutual' );
+
+		$this->assertStringNotContainsString( 'data-bp-pagination', $html );
+		$this->assertSame( array( '?upage=2' ), $this->load_more_links( $html ) );
+	}
+
+	/**
+	 * Lists rendered outside the supported screens (widgets, Network Search, Elementor) keep
+	 * classic pagination.
+	 *
+	 * @dataProvider data_loops
+	 */
+	public function test_infinite_mode_keeps_pagination_outside_the_supported_screens( $object, $template ) {
+		$this->create_items( $object );
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		$html = $this->render( $object, $template, 2, 'none' );
+
 		$this->assertSame( array(), $this->load_more_links( $html ) );
 		$this->assertStringContainsString( 'data-bp-pagination', $html );
-		$this->assertSame( 1, $this->list_wrappers( $object, $html ), 'A page-2 request outside the directory is a full list, not an append' );
+		$this->assertSame( 1, $this->list_wrappers( $object, $html ), 'A page-2 request outside the supported screens is a full list, not an append' );
+	}
+
+	/**
+	 * Members loop templates only.
+	 *
+	 * @return array
+	 */
+	public function data_member_loops() {
+		return array_filter(
+			$this->data_loops(),
+			function ( $loop ) {
+				return 'members' === $loop[0];
+			}
+		);
+	}
+
+	/**
+	 * Create a group with enough members for at least three pages and open its Members tab.
+	 */
+	protected function open_group_members_tab() {
+		$this->owner_id = self::factory()->user->create();
+		$group_id       = self::factory()->group->create( array( 'creator_id' => $this->owner_id ) );
+
+		foreach ( self::factory()->user->create_many( 5 ) as $user_id ) {
+			groups_join_group( $group_id, $user_id );
+		}
+
+		$group = groups_get_group( $group_id );
+
+		buddypress()->current_component     = 'groups';
+		buddypress()->current_action        = 'members';
+		buddypress()->current_item          = $group->slug;
+		buddypress()->is_single_item        = true;
+		buddypress()->groups->current_group = $group;
+		bp_update_is_directory( false, 'groups' );
+	}
+
+	/**
+	 * Render the group members loop at a given page.
+	 *
+	 * @param string $template Template path relative to bp-templates/bp-nouveau/.
+	 * @param int    $page     Page to render.
+	 *
+	 * @return string
+	 */
+	protected function render_group_members( $template, $page = 1 ) {
+		$this->page    = $page;
+		$_POST['page'] = $page;
+
+		ob_start();
+		require buddypress()->plugin_dir . 'bp-templates/bp-nouveau/' . $template;
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * Total pages of the group members loop that was rendered last.
+	 *
+	 * @return int
+	 */
+	protected function group_member_pages() {
+		global $members_template;
+
+		return (int) ceil( $members_template->total_member_count / self::PER_PAGE );
+	}
+
+	/**
+	 * @dataProvider data_group_member_loops
+	 */
+	public function test_group_members_pagination_mode_keeps_classic_pagination( $template ) {
+		$this->open_group_members_tab();
+		bp_update_option( 'bb_directory_load_type', 'pagination' );
+
+		$html = $this->render_group_members( $template );
+
+		$this->assertGreaterThanOrEqual( 3, $this->group_member_pages(), 'precondition: the group spans three pages' );
+		$this->assertStringContainsString( 'data-bp-pagination', $html );
+		$this->assertSame( array(), $this->load_more_links( $html ) );
+	}
+
+	/**
+	 * @dataProvider data_group_member_loops
+	 */
+	public function test_group_members_infinite_mode_first_page_has_load_more( $template ) {
+		$this->open_group_members_tab();
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		$html = $this->render_group_members( $template );
+
+		$this->assertGreaterThanOrEqual( 3, $this->group_member_pages(), 'precondition: the group spans three pages' );
+		$this->assertStringNotContainsString( 'data-bp-pagination', $html );
+		$this->assertSame( array( '?mlpage=2' ), $this->load_more_links( $html ) );
+		$this->assertSame( 1, $this->list_wrappers( 'members', $html ) );
+	}
+
+	/**
+	 * An appended group members page returns list items only, and the group list hooks still
+	 * run for it (moderation swaps blocked members' avatars from them).
+	 *
+	 * @dataProvider data_group_member_loops
+	 */
+	public function test_group_members_load_more_request_returns_items_only( $template ) {
+		$this->open_group_members_tab();
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		$before = did_action( 'bp_before_group_members_list' );
+		$this->render_group_members( $template );
+		$full_render_hooks = did_action( 'bp_before_group_members_list' ) - $before;
+
+		$before = did_action( 'bp_before_group_members_list' );
+		$html   = $this->render_group_members( $template, 2 );
+
+		$this->assertSame( 0, $this->list_wrappers( 'members', $html ) );
+		$this->assertStringNotContainsString( '</ul>', $html );
+		$this->assertStringNotContainsString( 'bb-remove-connection', $html );
+		$this->assertStringNotContainsString( 'data-bp-pagination', $html );
+		$this->assertSame( array( '?mlpage=3' ), $this->load_more_links( $html ) );
+		$this->assertSame( self::PER_PAGE, preg_match_all( '/data-bp-item-id="\d+"/', $html ) );
+		$this->assertSame( $full_render_hooks, did_action( 'bp_before_group_members_list' ) - $before, 'An appended page fires the same list hooks as a full render' );
+	}
+
+	/**
+	 * @dataProvider data_group_member_loops
+	 */
+	public function test_group_members_last_page_has_no_load_more( $template ) {
+		$this->open_group_members_tab();
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		$this->render_group_members( $template );
+		$html = $this->render_group_members( $template, $this->group_member_pages() );
+
+		$this->assertGreaterThan( 0, preg_match_all( '/data-bp-item-id="\d+"/', $html ), 'precondition: the last page has items' );
+		$this->assertSame( array(), $this->load_more_links( $html ) );
 	}
 }

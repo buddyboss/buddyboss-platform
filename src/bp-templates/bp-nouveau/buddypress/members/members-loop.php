@@ -23,10 +23,10 @@ $enabled_followers     = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'last-active' );
 $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
 
-// Directory loading mode: infinite scroll applies to the main Members directory only; profile
-// tabs that reuse this loop keep classic pagination. Infinite scroll appends pages via AJAX and
-// only the list items are returned for those requests.
-$bb_directory_autoload   = function_exists( 'bb_is_directory_autoload_active' ) && bb_is_directory_autoload_active() && bp_is_members_directory();
+// Members & Groups Loading: with infinite scroll, the Members directory and the profile
+// Connections lists load more items as the member scrolls; other screens that reuse this
+// loop keep classic pagination. Load more requests return only the list items.
+$bb_directory_autoload   = function_exists( 'bb_is_list_autoload_active' ) && bb_is_list_autoload_active( 'members' );
 $bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 ?>
 

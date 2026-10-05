@@ -38,6 +38,7 @@ class BB_Tests_Core_Functions_BbDirectoryLoadType extends BP_UnitTestCase {
 		$this->registry_state( $this->registry_snapshot );
 
 		bp_delete_option( 'bb_directory_load_type' );
+		$this->set_screen( '', '', false );
 
 		parent::tear_down();
 	}
@@ -207,5 +208,100 @@ class BB_Tests_Core_Functions_BbDirectoryLoadType extends BP_UnitTestCase {
 		$this->assertArrayHasKey( 'advanced_page_loading', bb_feature_registry()->bb_get_sections( 'advanced', 'general' ) );
 		$this->assertArrayHasKey( 'bb_directory_load_type', $section_fields );
 		$this->assertArrayNotHasKey( 'bb_load_activity_per_request', $section_fields, 'The feed row is gated on the Activity component' );
+	}
+
+	/**
+	 * Set up the current screen.
+	 *
+	 * @param string $component    Current component.
+	 * @param string $action       Current action.
+	 * @param bool   $is_directory Whether the screen is the component directory.
+	 * @param string $context      'user' for a member profile, 'group' for a single group, '' otherwise.
+	 */
+	protected function set_screen( $component, $action, $is_directory, $context = '' ) {
+		$bp = buddypress();
+
+		$bp->current_component     = $component;
+		$bp->current_action        = $action;
+		$bp->displayed_user->id    = 'user' === $context ? self::factory()->user->create() : 0;
+		$bp->is_single_item        = 'group' === $context;
+		$bp->current_item          = 'group' === $context ? 'prod-9724-group' : '';
+		$bp->groups->current_group = null;
+		bp_update_is_directory( $is_directory, $component );
+	}
+
+	/**
+	 * Screens and the lists that load with infinite scroll on them (PROD-9724 scope update:
+	 * directories, profile Connections + Mutual and Groups, group Members and Subgroups).
+	 *
+	 * @return array
+	 */
+	public function data_list_screens() {
+		return array(
+			'members directory'         => array( array( 'members', '', true, '' ), array( 'members' ) ),
+			'groups directory'          => array( array( 'groups', '', true, '' ), array( 'groups' ) ),
+			'profile connections'       => array( array( 'friends', 'my-friends', false, 'user' ), array( 'members' ) ),
+			'profile mutual'            => array( array( 'friends', 'mutual', false, 'user' ), array( 'members' ) ),
+			'profile groups'            => array( array( 'groups', 'my-groups', false, 'user' ), array( 'groups' ) ),
+			'group subgroups'           => array( array( 'groups', 'subgroups', false, 'group' ), array( 'groups' ) ),
+			'group members'             => array( array( 'groups', 'members', false, 'group' ), array( 'group_members' ) ),
+			'profile connection invites' => array( array( 'friends', 'requests', false, 'user' ), array() ),
+			'profile group invites'     => array( array( 'groups', 'invites', false, 'user' ), array() ),
+			'group manage members'      => array( array( 'groups', 'admin', false, 'group' ), array() ),
+			'no screen (widget)'        => array( array( '', '', false, '' ), array() ),
+		);
+	}
+
+	/**
+	 * @dataProvider data_list_screens
+	 */
+	public function test_list_autoload_applies_to_the_supported_screens( $screen, $expected ) {
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+		call_user_func_array( array( $this, 'set_screen' ), $screen );
+
+		foreach ( array( 'members', 'groups', 'group_members' ) as $list ) {
+			$this->assertSame( in_array( $list, $expected, true ), bb_is_list_autoload_active( $list ), "List: {$list}" );
+		}
+
+		$this->assertSame( ! empty( $expected ), bb_is_list_autoload_active(), 'Any list' );
+	}
+
+	/**
+	 * @dataProvider data_list_screens
+	 */
+	public function test_list_autoload_is_off_in_pagination_mode( $screen ) {
+		bp_update_option( 'bb_directory_load_type', 'pagination' );
+		call_user_func_array( array( $this, 'set_screen' ), $screen );
+
+		$this->assertFalse( bb_is_list_autoload_active() );
+		$this->assertFalse( bb_is_list_autoload_active( 'members' ) );
+		$this->assertFalse( bb_is_list_autoload_active( 'groups' ) );
+		$this->assertFalse( bb_is_list_autoload_active( 'group_members' ) );
+	}
+
+	public function test_list_autoload_filter_receives_the_list() {
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+		$this->set_screen( 'members', '', true );
+
+		$seen   = array();
+		$filter = function ( $is_active, $list ) use ( &$seen ) {
+			$seen[] = array( $is_active, $list );
+			return false;
+		};
+		add_filter( 'bb_is_list_autoload_active', $filter, 10, 2 );
+
+		$value = bb_is_list_autoload_active( 'members' );
+
+		remove_filter( 'bb_is_list_autoload_active', $filter, 10 );
+
+		$this->assertFalse( $value );
+		$this->assertSame( array( array( true, 'members' ) ), $seen );
+	}
+
+	public function test_page_loading_field_uses_the_members_and_groups_label() {
+		$fields = $this->page_loading_fields();
+
+		$this->assertSame( 'Members & Groups Loading', $fields['bb_directory_load_type']['label'] );
+		$this->assertSame( 'Load members and groups lists using %s', $fields['bb_directory_load_type']['description'] );
 	}
 }

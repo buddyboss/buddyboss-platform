@@ -1078,6 +1078,46 @@ function bb_is_directory_autoload_active( $default = false ) {
 }
 
 /**
+ * Check whether a members or groups list on the current screen loads with infinite scroll.
+ *
+ * The Members & Groups Loading setting applies to the same places as Feed Page Loading does for
+ * activity: the directories, the profile lists and the group lists. Lists rendered on any other
+ * screen (widgets, Network Search, group management screens) keep pagination.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $list_name Optional. List to check: 'members' (Members directory, including the
+ *                          Following/Followers tabs, and profile Connections + Mutual Connections),
+ *                          'groups' (Groups directory, profile Groups and group Subgroups) or
+ *                          'group_members' (group Members). Default empty, which checks every list.
+ *
+ * @return bool True when the list uses infinite scroll on the current screen.
+ */
+function bb_is_list_autoload_active( $list_name = '' ) {
+	$is_active = false;
+
+	if ( bb_is_directory_autoload_active() ) {
+		$lists = array(
+			'members'       => bp_is_members_directory() || ( bp_is_user_friends() && in_array( bp_current_action(), array( 'my-friends', 'mutual' ), true ) ),
+			'groups'        => bp_is_groups_directory() || ( bp_is_user_groups() && bp_is_current_action( 'my-groups' ) ) || bp_is_group_subgroups(),
+			'group_members' => bp_is_group_members(),
+		);
+
+		$is_active = empty( $list_name ) ? in_array( true, $lists, true ) : ! empty( $lists[ $list_name ] );
+	}
+
+	/**
+	 * Filters whether a members or groups list on the current screen loads with infinite scroll.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $is_active True when the list uses infinite scroll.
+	 * @param string $list_name List being checked, or empty for any list.
+	 */
+	return (bool) apply_filters( 'bb_is_list_autoload_active', $is_active, $list_name );
+}
+
+/**
  * Check whether Activity edit is enabled.
  *
  * @since BuddyBoss 1.5.0

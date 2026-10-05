@@ -191,8 +191,9 @@ function bb_advanced_register_general_fields() {
 		);
 	}
 
-	// Field 7: Directory Loading — inline select for members/groups directories.
-	// Figma: "Load items in a directory page using [Pagination ▾]" — pagination is the default, infinite scroll is opt-in.
+	// Field 7: Members & Groups Loading — inline select for the members and groups lists (directories,
+	// profile Connections and Groups, group Members and Subgroups), like Feed Page Loading for activity.
+	// Pagination is the default, infinite scroll is opt-in.
 	$directory_autoload_options = apply_filters( 'bb_performance_directory_autoload', array() );
 	$directory_autoload_options = bp_parse_args(
 		$directory_autoload_options,
@@ -216,10 +217,10 @@ function bb_advanced_register_general_fields() {
 		'advanced_page_loading',
 		array(
 			'name'                 => 'bb_directory_load_type',
-			'label'                => __( 'Directory Loading', 'buddyboss' ),
+			'label'                => __( 'Members & Groups Loading', 'buddyboss' ),
 			'type'                 => 'hidden',
-			/* translators: %s: inline select for directory load type. */
-			'description'          => __( 'Load items in a directory page using %s', 'buddyboss' ),
+			/* translators: %s: inline select for the members and groups lists load type. */
+			'description'          => __( 'Load members and groups lists using %s', 'buddyboss' ),
 			'default'              => bb_get_directory_load_type(),
 			'sanitize_callback'    => 'bb_advanced_sanitize_directory_load_type',
 			'description_controls' => array(

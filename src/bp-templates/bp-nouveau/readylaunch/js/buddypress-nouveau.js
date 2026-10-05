@@ -1170,9 +1170,9 @@ window.bp = window.bp || {};
 			// Pagination.
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a:not([data-method])', this, this.paginateAction );
 
-			// Members/Groups load more (infinite scroll) — only when Directory Loading is set to infinite scroll.
-			if ( BP_Nouveau.directory_autoload && $( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).length ) {
-				$( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
+			// Members/Groups load more (infinite scroll) — only when Members & Groups Loading is set to infinite scroll.
+			if ( BP_Nouveau.directory_autoload && $( this.autoloadLists ).length ) {
+				$( this.autoloadLists ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
 				$( window ).on( 'scroll', this.autoLoadMoreItems );
 			}
 
@@ -2816,6 +2816,12 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Members/Groups lists that load with infinite scroll: directories, profile Connections and
+		 * Groups, group Members and Subgroups.
+		 */
+		autoloadLists: '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"], #buddypress [data-bp-list="group_members"], #buddypress [data-bp-list="group_subgroups"]',
+
+		/**
 		 * Handle "Load More" click for Members/Groups infinite scroll.
 		 *
 		 * @param {Object} event Click event.
@@ -2831,6 +2837,7 @@ window.bp = window.bp || {};
 				scope       = store.scope || null,
 				filter      = store.filter || null,
 				search_terms = '',
+				$search     = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ),
 				currentPage = $list.data( 'bp-current-page' ) || 1,
 				linkParams  = self.getLinkParams( $loadMore.find( 'a' ).first().attr( 'href' ) ) || {},
 				linkPage    = parseInt( linkParams[ Object.keys( linkParams )[ 0 ] ], 10 ),
@@ -2841,11 +2848,16 @@ window.bp = window.bp || {};
 			// Show loading state.
 			$loadMore.find( 'a' ).first().addClass( 'loading' );
 
-			// Get search terms if present.
-			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
-				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
-			} else if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
-				search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+			// Get search terms if present. The profile Connections search box is registered as
+			// "friends" while its list is "members".
+			if ( ! $search.length && 'members' === object ) {
+				$search = $( '#buddypress [data-bp-search="friends"] input[type=search]' );
+			}
+			if ( ! $search.length ) {
+				$search = $( '#buddypress .dir-search input[type=search]' );
+			}
+			if ( $search.length ) {
+				search_terms = $search.val();
 			}
 
 			var queryData = {
@@ -2876,6 +2888,20 @@ window.bp = window.bp || {};
 						// Track current page on the list container.
 						$list.data( 'bp-current-page', nextPage );
 
+						// Each group members page starts with its role heading (organizers, moderators,
+						// members); drop it when the appended page continues the section already shown.
+						if ( 'group_members' === object ) {
+							var lastHeading = null;
+							$list.find( 'ul.bp-list > li.item-entry-header' ).each( function () {
+								var heading = $.trim( $( this ).text() );
+								if ( heading === lastHeading ) {
+									$( this ).remove();
+								} else {
+									lastHeading = heading;
+								}
+							} );
+						}
+
 						// Trigger lazy load for images.
 						jQuery( window ).scroll();
 					}
@@ -2895,7 +2921,7 @@ window.bp = window.bp || {};
 			// Start loading while the Load More button is still up to one screen below the
 			// viewport: a page of member/group cards is heavy, so a 50px trigger would leave
 			// the member waiting on "Loading..." at the bottom of the list.
-			var $loadMoreBtns = $( '#buddypress [data-bp-list="members"] li.load-more:visible, #buddypress [data-bp-list="groups"] li.load-more:visible' ),
+			var $loadMoreBtns = $( bp.Nouveau.autoloadLists ).find( 'li.load-more:visible' ),
 				$window       = $( window );
 
 			$loadMoreBtns.each( function () {
