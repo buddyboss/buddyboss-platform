@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-09-29 11:37:32+00:00\n"
+"POT-Creation-Date: 2026-10-05 09:31:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15785,7 +15785,7 @@ msgid "Active"
 msgstr ""
 
 #: bp-core/classes/class-bb-group-members-widget.php:112
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:554
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:555
 msgid "New"
 msgstr ""
 
@@ -22912,7 +22912,7 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1824
 #: bp-messages/bp-messages-template.php:2089
 #: bp-messages/classes/class-bp-messages-thread.php:1638
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:394
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:395
 msgid "Deleted User"
 msgstr ""
 
@@ -30088,49 +30088,49 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2245
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1060
 #: bp-templates/bp-nouveau/includes/messages/functions.php:199
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:445
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:446
 msgid "Sent a photo"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2247
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1062
 #: bp-templates/bp-nouveau/includes/messages/functions.php:200
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:448
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:449
 msgid "Sent some photos"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2259
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1074
 #: bp-templates/bp-nouveau/includes/messages/functions.php:201
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:461
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:462
 msgid "Sent a video"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2261
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1076
 #: bp-templates/bp-nouveau/includes/messages/functions.php:202
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:464
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:465
 msgid "Sent some videos"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2273
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1088
 #: bp-templates/bp-nouveau/includes/messages/functions.php:203
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:477
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:478
 msgid "Sent a document"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2275
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1090
 #: bp-templates/bp-nouveau/includes/messages/functions.php:204
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:480
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:481
 msgid "Sent some documents"
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:2285
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1100
 #: bp-templates/bp-nouveau/includes/messages/functions.php:198
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:490
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:491
 msgid "Sent a gif"
 msgstr ""
 
@@ -33309,7 +33309,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-no-threads.php:17
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-no-threads.php:15
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:549
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:550
 msgid "When you have new messages, they will appear here."
 msgstr ""
 
@@ -34764,8 +34764,8 @@ msgid "Sorry, you were not able to report this member."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/moderation/moderation-blocked-members-entry.php:19
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:401
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:517
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:402
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:518
 #: bp-templates/bp-nouveau/readylaunch/moderation/moderation-blocked-members-entry.php:21
 msgid "Blocked Member"
 msgstr ""
@@ -36881,7 +36881,7 @@ msgid "1 other"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/functions.php:187
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:414
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:415
 msgid "others"
 msgstr ""
 
@@ -37488,12 +37488,12 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:399
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:515
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:400
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:516
 msgid "Suspended Member"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:547
+#: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:548
 msgid "No message found"
 msgstr ""
 

@@ -166,19 +166,20 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			}
 		}
 
-		// Fetch all recipient.
-		$messages_template->thread->recipients = $messages_template->thread->get_recipients();
-
+		// The thread already holds one page of recipients; only the header preview is built from it.
+		// Building every recipient here runs several queries per member and stalls large threads.
 		if ( function_exists( 'bb_messages_user_can_send_message' ) ) {
-			$recipient_ids = wp_list_pluck( (array) $messages_template->thread->recipients, 'user_id' );
-			$can_message   = bb_messages_user_can_send_message(
+			// Without recipients_id the platform reads the thread's recipient IDs itself.
+			$can_message = bb_messages_user_can_send_message(
 				array(
-					'sender_id'     => bp_loggedin_user_id(),
-					'recipients_id' => $recipient_ids,
-					'thread_id'     => $messages_template->thread->thread_id,
+					'sender_id' => bp_loggedin_user_id(),
+					'thread_id' => $messages_template->thread->thread_id,
 				)
 			);
 		} else {
+			// The friendship check below needs every recipient.
+			$messages_template->thread->recipients = $messages_template->thread->get_recipients();
+
 			$can_message        = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
 			$is_check_un_access = $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message();
 			$un_access_users    = false;
