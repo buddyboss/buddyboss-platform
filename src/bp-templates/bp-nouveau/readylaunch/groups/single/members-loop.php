@@ -318,7 +318,8 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 	if ( ! $bb_directory_autoload ) {
 		bp_nouveau_pagination( 'bottom' );
 	}
-} else {
+} elseif ( ! $bb_is_load_more_request ) {
+	// An empty load-more page ends the list; the "none found" notice belongs to a full (re)load only.
 	bp_nouveau_user_feedback( 'group-members-none' );
 }
 ?>
