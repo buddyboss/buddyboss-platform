@@ -926,7 +926,8 @@ class BP_Messages_Thread {
 
 		$sub_query = '';
 		if ( false === bp_disable_group_messages() || ! bp_is_active( 'groups' ) ) {
-			$sub_query = "AND m.id NOT IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_users' AND meta_value = 'all' AND message_id IN ( SELECT DISTINCT message_id FROM {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_type' AND meta_value = 'open' ) )";
+			// Hide the whole group thread, as opening it is blocked: members' replies carry no group meta of their own.
+			$sub_query = "AND m.thread_id NOT IN ( SELECT DISTINCT thread_id FROM {$bp->messages->table_name_messages} WHERE id IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_users' AND meta_value = 'all' AND message_id IN ( SELECT DISTINCT message_id FROM {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_type' AND meta_value = 'open' ) ) )";
 		} elseif ( bp_is_active( 'groups' ) ) {
 			// Determine groups of user.
 			$groups = groups_get_groups(
