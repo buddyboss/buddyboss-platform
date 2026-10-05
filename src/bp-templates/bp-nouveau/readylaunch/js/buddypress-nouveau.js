@@ -725,6 +725,18 @@ window.bp = window.bp || {};
 
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
 
+			// Remember the query a list is (re)loaded with, so its Load More continues that same
+			// list rather than whatever session memory holds for the object.
+			var listObject = data.object,
+				listQuery  = 'reset' === data.method ? {
+					scope          : data.scope,
+					filter         : data.filter,
+					search_terms   : data.search_terms,
+					extras         : data.extras,
+					member_type_id : data.member_type_id,
+					group_type     : data.group_type
+				} : null;
+
 			if ( 'friends' === data.object || 'group_members' === data.object || 'manage_group_members' === data.object ) {
 				data.template = data.object;
 				data.object   = 'members';
@@ -758,6 +770,10 @@ window.bp = window.bp || {};
 				function ( response ) {
 					if ( false === response.success || _.isUndefined( response.data ) ) {
 						return;
+					}
+
+					if ( listQuery ) {
+						$( '#buddypress [data-bp-list="' + listObject + '"]' ).data( 'bp-list-query', listQuery );
 					}
 
 					// Control the scheduled posts layout view.
@@ -2833,11 +2849,10 @@ window.bp = window.bp || {};
 				$loadMore   = $( event.currentTarget ).closest( 'li.load-more' ),
 				$list       = $loadMore.closest( '[data-bp-list]' ),
 				object      = $list.data( 'bp-list' ),
-				store       = self.getStorage( 'bp-' + object ),
-				scope       = store.scope || null,
-				filter      = store.filter || null,
-				search_terms = '',
-				$search     = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ),
+				// Continue the list that is on screen: reuse the query it was loaded with, or, for a
+				// list the server rendered with the page, read the query from the page itself.
+				// Session memory is shared by every list of the object, so it is not used here.
+				query       = $list.data( 'bp-list-query' ) || self.getListQueryFromScreen( object ),
 				currentPage = $list.data( 'bp-current-page' ) || 1,
 				linkParams  = self.getLinkParams( $loadMore.find( 'a' ).first().attr( 'href' ) ) || {},
 				linkPage    = parseInt( linkParams[ Object.keys( linkParams )[ 0 ] ], 10 ),
@@ -2848,36 +2863,23 @@ window.bp = window.bp || {};
 			// Show loading state.
 			$loadMore.find( 'a' ).first().addClass( 'loading' );
 
-			// Get search terms if present. The profile Connections search box is registered as
-			// "friends" while its list is "members".
-			if ( ! $search.length && 'members' === object ) {
-				$search = $( '#buddypress [data-bp-search="friends"] input[type=search]' );
-			}
-			if ( ! $search.length ) {
-				$search = $( '#buddypress .dir-search input[type=search]' );
-			}
-			if ( $search.length ) {
-				search_terms = $search.val();
-			}
-
 			var queryData = {
 				object       : object,
-				scope        : scope,
-				filter       : filter,
-				search_terms : search_terms,
+				scope        : query.scope,
+				filter       : query.filter,
+				search_terms : query.search_terms,
+				extras       : query.extras,
 				page         : nextPage,
 				method       : 'append',
 				target       : '#buddypress [data-bp-list="' + object + '"] ul.bp-list'
 			};
 
-			// Include group type filter if present.
-			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
-				queryData.group_type = $( '#buddypress [data-bp-group-type-filter]' ).val();
+			if ( undefined !== query.group_type ) {
+				queryData.group_type = query.group_type;
 			}
 
-			// Include member type filter if present.
-			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
-				queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter]' ).val();
+			if ( undefined !== query.member_type_id ) {
+				queryData.member_type_id = query.member_type_id;
 			}
 
 			self.objectRequest( queryData ).done(
@@ -2911,6 +2913,54 @@ window.bp = window.bp || {};
 					$loadMore.find( 'a' ).first().removeClass( 'loading' );
 				}
 			);
+		},
+
+		/**
+		 * Read the query of a Members/Groups list from the page, for a list that the server
+		 * rendered with the page and that has not been reloaded since.
+		 *
+		 * @param {string} object List object (data-bp-list value).
+		 * @return {Object} Query with scope, filter, search_terms and, when present, the types.
+		 */
+		getListQueryFromScreen: function ( object ) {
+			var $scope  = $( this.objectNavParent + ' .bb-rl-scope-filter select' ).find( ':selected[data-bp-object="' + object + '"]' ),
+				$filter = $( '#buddypress [data-bp-filter="' + object + '"]' ),
+				$search = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ),
+				query   = { scope: null, filter: null, search_terms: '' };
+
+			if ( ! $scope.length ) {
+				$scope = $( this.objectNavParent + ' [data-bp-object="' + object + '"].selected' );
+			}
+			if ( $scope.length && $scope.data( 'bp-scope' ) ) {
+				query.scope = $scope.data( 'bp-scope' );
+			}
+
+			// The profile Connections controls are registered as "friends" while the list is "members".
+			if ( ! $filter.length && 'members' === object ) {
+				$filter = $( '#buddypress [data-bp-filter="friends"]' );
+			}
+			if ( $filter.length && '-1' !== $filter.val() && '0' !== $filter.val() ) {
+				query.filter = $filter.val();
+			}
+
+			if ( ! $search.length && 'members' === object ) {
+				$search = $( '#buddypress [data-bp-search="friends"] input[type=search]' );
+			}
+			if ( ! $search.length ) {
+				$search = $( '#buddypress .dir-search input[type=search]' );
+			}
+			if ( $search.length ) {
+				query.search_terms = $search.val();
+			}
+
+			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				query.group_type = $( '#buddypress [data-bp-group-type-filter]' ).val();
+			}
+			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				query.member_type_id = $( '#buddypress [data-bp-member-type-filter]' ).val();
+			}
+
+			return query;
 		},
 
 		/**
