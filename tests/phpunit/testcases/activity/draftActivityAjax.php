@@ -278,4 +278,30 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertTrue( $response['success'] );
 		$this->assertIsArray( bp_get_user_meta( $user_id, 'draft_user_' . $user_id, true ) );
 	}
+
+	/**
+	 * The legitimate draft_group_{id} key (group activity composer) is accepted.
+	 *
+	 * Pins the `group` arm of the allowlist: narrowing the regex to user-only keys
+	 * would silently break group-activity drafts for every community, and this is
+	 * the only test that would then go red.
+	 */
+	public function test_update_allows_draft_group_suffixed_key() {
+		$user_id  = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$group_id = self::factory()->group->create( array( 'creator_id' => $user_id ) );
+
+		$response = $this->invoke_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => 'draft_group_' . $group_id,
+				'object'      => 'group',
+				'post_action' => 'update',
+				'data'        => array( 'content' => 'hello group draft' ),
+			)
+		);
+
+		$this->assertIsArray( $response );
+		$this->assertTrue( $response['success'], 'A valid draft_group_{id} save must succeed.' );
+		$this->assertIsArray( bp_get_user_meta( $user_id, 'draft_group_' . $group_id, true ) );
+	}
 }
