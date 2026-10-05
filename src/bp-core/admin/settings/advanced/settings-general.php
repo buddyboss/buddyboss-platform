@@ -194,6 +194,18 @@ function bb_advanced_register_general_fields() {
 	// Field 7: Members & Groups Loading — inline select for the members and groups lists (directories,
 	// profile Connections and Groups, group Members and Subgroups), like Feed Page Loading for activity.
 	// Pagination is the default, infinite scroll is opt-in.
+
+	/**
+	 * Filters the options of the Members & Groups Loading setting.
+	 *
+	 * Options are merged over the defaults ('pagination' and 'infinite'), shown in the setting's
+	 * select and accepted when the setting is saved. Only 'infinite' turns infinite scroll on;
+	 * any other saved value loads the lists with pagination.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $options Additional options as value => label. Default empty array.
+	 */
 	$directory_autoload_options = apply_filters( 'bb_performance_directory_autoload', array() );
 	$directory_autoload_options = bp_parse_args(
 		$directory_autoload_options,

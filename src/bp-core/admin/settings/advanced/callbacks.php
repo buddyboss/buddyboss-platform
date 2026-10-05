@@ -68,6 +68,7 @@ function bb_advanced_sanitize_directory_load_type( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array_keys(
 		bp_parse_args(
+			/** This filter is documented in bp-core/admin/settings/advanced/settings-general.php */
 			apply_filters( 'bb_performance_directory_autoload', array() ),
 			array(
 				'pagination' => __( 'Pagination', 'buddyboss' ),
