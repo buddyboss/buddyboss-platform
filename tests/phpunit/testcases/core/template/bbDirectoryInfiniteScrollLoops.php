@@ -55,6 +55,8 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 		buddypress()->current_item          = '';
 		buddypress()->is_single_item        = false;
 		buddypress()->groups->current_group = null;
+		buddypress()->current_member_type           = '';
+		buddypress()->groups->current_directory_type = '';
 
 		parent::tear_down();
 	}
@@ -488,5 +490,48 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 
 		$this->assertGreaterThan( 0, preg_match_all( '/data-bp-item-id="\d+"/', $html ), 'precondition: the last page has items' );
 		$this->assertSame( array(), $this->load_more_links( $html ) );
+	}
+
+	/**
+	 * The [profile type=""] shortcode marks its page as the members directory, but it is not
+	 * one of the screens the setting applies to, so it keeps pagination.
+	 */
+	public function test_member_type_shortcode_keeps_pagination() {
+		$this->create_items( 'members' );
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		bp_register_member_type( 'prod9724type', array( 'labels' => array( 'name' => 'PROD 9724' ) ) );
+		foreach ( $this->item_ids as $user_id ) {
+			bp_set_member_type( $user_id, 'prod9724type' );
+		}
+
+		$html = bp_member_type_shortcode_callback( array( 'type' => 'prod9724type' ) );
+
+		$this->assertTrue( bp_is_members_directory(), 'precondition: the shortcode flags the page as the members directory' );
+		$this->assertGreaterThan( 0, preg_match_all( '/data-bp-item-id="\d+"/', $html ), 'precondition: the shortcode lists members' );
+		$this->assertSame( array(), $this->load_more_links( $html ) );
+		$this->assertStringContainsString( 'data-bp-pagination', $html );
+		$this->assertFalse( has_filter( 'bb_is_list_autoload_active', '__return_false' ), 'The shortcode removes its override after the loop' );
+	}
+
+	/**
+	 * Same for the [group type=""] shortcode.
+	 */
+	public function test_group_type_shortcode_keeps_pagination() {
+		$this->create_items( 'groups' );
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		bp_groups_register_group_type( 'prod9724gtype' );
+		foreach ( $this->item_ids as $group_id ) {
+			bp_groups_set_group_type( $group_id, 'prod9724gtype' );
+		}
+
+		$html = bp_group_type_short_code_callback( array( 'type' => 'prod9724gtype' ) );
+
+		$this->assertTrue( bp_is_groups_directory(), 'precondition: the shortcode flags the page as the groups directory' );
+		$this->assertGreaterThan( 0, preg_match_all( '/data-bp-item-id="\d+"/', $html ), 'precondition: the shortcode lists groups' );
+		$this->assertSame( array(), $this->load_more_links( $html ) );
+		$this->assertStringContainsString( 'data-bp-pagination', $html );
+		$this->assertFalse( has_filter( 'bb_is_list_autoload_active', '__return_false' ), 'The shortcode removes its override after the loop' );
 	}
 }
