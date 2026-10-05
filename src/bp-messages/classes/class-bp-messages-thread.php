@@ -1178,10 +1178,14 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['having_sql'] ) ) {
 			if ( strpos( $r['having_sql'], 'HAVING recipient_list' ) !== false ) {
 				preg_match_all( '!\d+!', $r['having_sql'], $matches );
-				$recipient_list = array_filter( array_unique( bp_array_flatten( $matches ) ) );
+				$recipient_list = array_filter( array_unique( array_map( 'intval', bp_array_flatten( $matches ) ) ) );
 				if ( ! empty( $recipient_list ) ) {
-					$recipient_list = implode( ',', array_unique( $recipient_list ) );
-					$where_sql     .= " AND m.thread_id IN ( SELECT DISTINCT thread_id from {$bp->messages->table_name_recipients} where user_id in ({$recipient_list}) ) ";
+					$recipient_count = count( $recipient_list );
+					$recipient_list  = implode( ',', $recipient_list );
+
+					// Keep only threads whose recipients are exactly these users, using the recipients table alone.
+					// Joining every recipient of a very large thread to its messages for GROUP_CONCAT takes minutes.
+					$where_sql .= " AND m.thread_id IN ( SELECT thread_id FROM ( SELECT thread_id FROM {$bp->messages->table_name_recipients} WHERE thread_id IN ( SELECT thread_id FROM {$bp->messages->table_name_recipients} WHERE user_id IN ({$recipient_list}) ) GROUP BY thread_id HAVING COUNT( DISTINCT user_id ) = {$recipient_count} AND COUNT( DISTINCT CASE WHEN user_id IN ({$recipient_list}) THEN user_id END ) = {$recipient_count} ) AS bb_matched_threads ) ";
 				}
 			}
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
