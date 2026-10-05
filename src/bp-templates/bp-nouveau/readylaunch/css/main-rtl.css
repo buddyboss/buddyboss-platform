@@ -650,18 +650,6 @@ h6 {
   font-size: 14px;
 }
 
-.bb-rl-members ul.bp-list .bb-rl-load-more .loading:after,
-.bb-rl-groups ul.bp-list .bb-rl-load-more .loading:after {
-  content: "";
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  border: 2px solid var(--bb-rl-border-quaternary-color);
-  border-top-color: var(--bb-rl-border-tertiary-color);
-  border-radius: var(--bb-rl-radius-full);
-  animation: spin 3s infinite linear;
-  margin-right: var(--bb-rl-space-100);
-}
 
 .bp-screen-reader-text,
 .bb-screen-reader-text,
