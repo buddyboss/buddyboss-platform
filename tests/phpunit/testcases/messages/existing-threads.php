@@ -60,6 +60,39 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		bp_messages_update_meta( $message_id, 'message_from', 'group' );
 	}
 
+	/**
+	 * Create a group thread with a member's reply and return its ID.
+	 *
+	 * @param int $sender   Sender ID.
+	 * @param int $member   Member ID.
+	 * @param int $group_id Group ID.
+	 *
+	 * @return int
+	 */
+	protected function create_group_thread_with_reply( $sender, $member, $group_id ) {
+		$group_message = self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $member ),
+				'subject'    => 'Group broadcast',
+			)
+		);
+		$group_thread  = (int) $group_message->thread_id;
+		$this->flag_group_message( $group_message->id, $group_thread, $group_id );
+
+		// A member's reply carries no group meta of its own.
+		self::factory()->message->create(
+			array(
+				'sender_id'  => $member,
+				'thread_id'  => $group_thread,
+				'recipients' => array( $sender ),
+				'content'    => 'Reply',
+			)
+		);
+
+		return $group_thread;
+	}
+
 	public function test_existing_thread_matches_exact_recipients() {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
@@ -165,9 +198,9 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 			)
 		);
 
+		bp_update_option( 'bp-disable-group-messages', 0 );
 		$private_thread = $this->create_thread( $u1, array( $u2 ) );
 
-		bp_update_option( 'bp-disable-group-messages', 0 );
 		$this->set_current_user( $u2 );
 		wp_cache_flush();
 
@@ -215,5 +248,81 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		);
 
 		$this->assertContains( $group_thread, array_map( 'intval', (array) $threads['threads'] ) );
+	}
+
+	/**
+	 * @group groups
+	 */
+	public function test_group_thread_with_replies_is_listed_when_groups_component_inactive() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		$group_thread = $this->create_group_thread_with_reply( $u1, $u2, $group_id );
+
+		bp_update_option( 'bp-disable-group-messages', 1 );
+		$this->set_current_user( $u2 );
+		wp_cache_flush();
+
+		$active_components = buddypress()->active_components;
+		unset( buddypress()->active_components['groups'] );
+
+		$threads = BP_Messages_Thread::get_current_threads_for_user(
+			array(
+				'user_id' => $u2,
+				'fields'  => 'ids',
+			)
+		);
+
+		buddypress()->active_components = $active_components;
+
+		// As in release: only the group message itself is left out, the replied thread stays listed.
+		$this->assertContains( $group_thread, array_map( 'intval', (array) $threads['threads'] ) );
+	}
+
+	/**
+	 * @group groups
+	 */
+	public function test_deleted_user_group_thread_is_deleted_when_group_messages_disabled() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$u3       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		$group_message = self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $u1,
+				'recipients' => array( $u2, $u3 ),
+				'subject'    => 'Group broadcast',
+			)
+		);
+		$group_thread  = (int) $group_message->thread_id;
+		$this->flag_group_message( $group_message->id, $group_thread, $group_id );
+
+		// Another member's reply keeps the thread listed for $u2 once $u2's own messages are deleted.
+		self::factory()->message->create(
+			array(
+				'sender_id'  => $u3,
+				'thread_id'  => $group_thread,
+				'recipients' => array( $u1, $u2 ),
+				'content'    => 'Reply',
+			)
+		);
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		wp_cache_flush();
+
+		$deleted  = array();
+		$callback = function ( $thread_id, $user_id ) use ( &$deleted ) {
+			$deleted[ (int) $thread_id ] = (int) $user_id;
+		};
+		add_action( 'bp_messages_thread_before_mark_delete', $callback, 10, 2 );
+
+		BP_Messages_Message::delete_user_message( $u2 );
+
+		remove_action( 'bp_messages_thread_before_mark_delete', $callback, 10 );
+
+		$this->assertArrayHasKey( $group_thread, $deleted, 'The group thread must be deleted for the deleted user.' );
+		$this->assertSame( $u2, $deleted[ $group_thread ] );
 	}
 }

@@ -1849,6 +1849,28 @@ function bb_messages_update_unread_count( $sub_query, $r ) {
 }
 
 /**
+ * Keep group threads in the user's thread list while group messages are disabled.
+ *
+ * Only the open group messages are left out, so the threads that members replied to
+ * are still returned, e.g. to delete them for a deleted user.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $sub_query Sub query to filter the thread messages.
+ *
+ * @return string
+ */
+function bb_messages_include_group_threads_sub_query( $sub_query ) {
+	$bp = buddypress();
+
+	if ( false === bp_disable_group_messages() ) {
+		$sub_query = "AND m.id NOT IN ( SELECT DISTINCT message_id from {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_users' AND meta_value = 'all' AND message_id IN ( SELECT DISTINCT message_id FROM {$bp->messages->table_name_meta} WHERE meta_key = 'group_message_type' AND meta_value = 'open' ) )";
+	}
+
+	return $sub_query;
+}
+
+/**
  * Checks whether a message thread is archived or not.
  *
  * @since BuddyBoss 2.1.4

@@ -422,7 +422,11 @@ class BP_Messages_Message {
 		}
 
 		// Delete the thread of user.
-		if ( bp_has_message_threads( array( 'user_id' => $user_id ) ) ) {
+		add_filter( 'bb_messages_thread_sub_query', 'bb_messages_include_group_threads_sub_query' );
+		$has_threads = bp_has_message_threads( array( 'user_id' => $user_id ) );
+		remove_filter( 'bb_messages_thread_sub_query', 'bb_messages_include_group_threads_sub_query' );
+
+		if ( $has_threads ) {
 			while ( bp_message_threads() ) :
 				bp_message_thread();
 				$thread_id = bp_get_message_thread_id();

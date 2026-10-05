@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-05 10:04:34+00:00\n"
+"POT-Creation-Date: 2026-10-05 10:45:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3425,7 +3425,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:902
 #: bp-document/bp-document-filters.php:300
-#: bp-messages/bp-messages-functions.php:2561
+#: bp-messages/bp-messages-functions.php:2583
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:37
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:270
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2017
@@ -13670,9 +13670,9 @@ msgstr ""
 #. Translators: %d is the amount of hours.
 #. translators: %s: The admin setting field label.
 #: bp-core/bp-core-cssjs.php:773
-#: bp-messages/bp-messages-functions.php:2170
-#: bp-messages/bp-messages-functions.php:2179
-#: bp-messages/bp-messages-functions.php:2188
+#: bp-messages/bp-messages-functions.php:2192
+#: bp-messages/bp-messages-functions.php:2201
+#: bp-messages/bp-messages-functions.php:2210
 #, php-format
 msgid "%d hours"
 msgstr ""
@@ -19442,7 +19442,7 @@ msgid "Privacy of the document."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1429
-#: bp-messages/bp-messages-functions.php:2497
+#: bp-messages/bp-messages-functions.php:2519
 #: bp-templates/bp-nouveau/buddypress/document/audio-preview.php:26
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2727
 #: bp-templates/bp-nouveau/readylaunch/document/audio-preview.php:23
@@ -22908,10 +22908,10 @@ msgstr ""
 
 #: bp-forums/replies/functions.php:2690
 #: bp-members/bp-members-functions.php:714
-#: bp-messages/bp-messages-functions.php:2226
+#: bp-messages/bp-messages-functions.php:2248
 #: bp-messages/bp-messages-template.php:1824
 #: bp-messages/bp-messages-template.php:2089
-#: bp-messages/classes/class-bp-messages-thread.php:1643
+#: bp-messages/classes/class-bp-messages-thread.php:1649
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:395
 msgid "Deleted User"
 msgstr ""
@@ -29932,7 +29932,7 @@ msgid "Message marked unread."
 msgstr ""
 
 #: bp-messages/actions/view.php:42
-#: bp-messages/bp-messages-functions.php:2615
+#: bp-messages/bp-messages-functions.php:2637
 msgid "Your reply was sent successfully"
 msgstr ""
 
@@ -30043,7 +30043,7 @@ msgid "There was a problem sending your message."
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:1431
-#: bp-messages/bp-messages-functions.php:1980
+#: bp-messages/bp-messages-functions.php:2002
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1546
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1842
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:782
@@ -30063,20 +30063,20 @@ msgid "Send Connection Request"
 msgstr ""
 
 #. translators: %s: The admin setting field label.
-#: bp-messages/bp-messages-functions.php:2134
-#: bp-messages/bp-messages-functions.php:2143
-#: bp-messages/bp-messages-functions.php:2152
+#: bp-messages/bp-messages-functions.php:2156
+#: bp-messages/bp-messages-functions.php:2165
+#: bp-messages/bp-messages-functions.php:2174
 #, php-format
 msgid "%d mins"
 msgstr ""
 
 #. translators: %s: The admin setting field label.
-#: bp-messages/bp-messages-functions.php:2161
+#: bp-messages/bp-messages-functions.php:2183
 #, php-format
 msgid "%d hour"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2215
+#: bp-messages/bp-messages-functions.php:2237
 #: bp-messages/bp-messages-template.php:2207
 #: bp-messages/bp-messages-template.php:2242
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1574
@@ -30085,57 +30085,57 @@ msgstr ""
 msgid "This message was deleted"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2245
+#: bp-messages/bp-messages-functions.php:2267
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1060
 #: bp-templates/bp-nouveau/includes/messages/functions.php:199
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:446
 msgid "Sent a photo"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2247
+#: bp-messages/bp-messages-functions.php:2269
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1062
 #: bp-templates/bp-nouveau/includes/messages/functions.php:200
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:449
 msgid "Sent some photos"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2259
+#: bp-messages/bp-messages-functions.php:2281
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1074
 #: bp-templates/bp-nouveau/includes/messages/functions.php:201
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:462
 msgid "Sent a video"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2261
+#: bp-messages/bp-messages-functions.php:2283
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1076
 #: bp-templates/bp-nouveau/includes/messages/functions.php:202
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:465
 msgid "Sent some videos"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2273
+#: bp-messages/bp-messages-functions.php:2295
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1088
 #: bp-templates/bp-nouveau/includes/messages/functions.php:203
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:478
 msgid "Sent a document"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2275
+#: bp-messages/bp-messages-functions.php:2297
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1090
 #: bp-templates/bp-nouveau/includes/messages/functions.php:204
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:481
 msgid "Sent some documents"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2285
+#: bp-messages/bp-messages-functions.php:2307
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1100
 #: bp-templates/bp-nouveau/includes/messages/functions.php:198
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:491
 msgid "Sent a gif"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2526
-#: bp-messages/bp-messages-functions.php:2563
+#: bp-messages/bp-messages-functions.php:2548
+#: bp-messages/bp-messages-functions.php:2585
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:36
 #: bp-templates/bp-nouveau/buddypress/document/code-preview.php:37
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2756
@@ -30144,19 +30144,19 @@ msgstr ""
 msgid "Expand"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2559
+#: bp-messages/bp-messages-functions.php:2581
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2789
 msgid "Click to view"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2562
+#: bp-messages/bp-messages-functions.php:2584
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:36
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2792
 #: bp-templates/bp-nouveau/readylaunch/document/code-preview.php:43
 msgid "Collapse"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2564
+#: bp-messages/bp-messages-functions.php:2586
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:51
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:273
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2794
@@ -30165,7 +30165,7 @@ msgstr ""
 msgid "Copy Download Link"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2565
+#: bp-messages/bp-messages-functions.php:2587
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:234
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:41
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:57
@@ -30189,48 +30189,48 @@ msgstr ""
 msgid "More actions"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2650
-#: bp-messages/bp-messages-functions.php:2690
+#: bp-messages/bp-messages-functions.php:2672
 #: bp-messages/bp-messages-functions.php:2712
-#: bp-messages/bp-messages-functions.php:2718
+#: bp-messages/bp-messages-functions.php:2734
+#: bp-messages/bp-messages-functions.php:2740
 #, php-format
 msgid "%1$s left the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2650
-#: bp-messages/bp-messages-functions.php:2690
+#: bp-messages/bp-messages-functions.php:2672
 #: bp-messages/bp-messages-functions.php:2712
-#: bp-messages/bp-messages-functions.php:2718
+#: bp-messages/bp-messages-functions.php:2734
+#: bp-messages/bp-messages-functions.php:2740
 #, php-format
 msgid "%1$s joined the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2680
+#: bp-messages/bp-messages-functions.php:2702
 msgid "Left group"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2705
+#: bp-messages/bp-messages-functions.php:2727
 #, php-format
 msgid "%1$s and %2$s left the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2705
+#: bp-messages/bp-messages-functions.php:2727
 #, php-format
 msgid "%1$s and %2$s joined the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2752
+#: bp-messages/bp-messages-functions.php:2774
 #: bp-templates/bp-nouveau/includes/messages/functions.php:186
 #, php-format
 msgid "%d others"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2771
+#: bp-messages/bp-messages-functions.php:2793
 #, php-format
 msgid "%1$s left the group, along with %2$s"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2771
+#: bp-messages/bp-messages-functions.php:2793
 #, php-format
 msgid "%1$s joined the group, along with %2$s"
 msgstr ""
@@ -30755,7 +30755,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1634
+#: bp-messages/classes/class-bp-messages-thread.php:1640
 #, php-format
 msgid "%s Recipients"
 msgstr ""
