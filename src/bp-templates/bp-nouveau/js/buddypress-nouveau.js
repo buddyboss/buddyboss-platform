@@ -688,8 +688,9 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
 
 			// Remember the query a list is (re)loaded with, so its Load More continues that same
-			// list rather than whatever session memory holds for the object.
-			var listObject = data.object,
+			// list rather than whatever session memory holds for the object. The profile
+			// Connections controls are registered as "friends" while the list is "members".
+			var listObject = 'friends' === data.object ? 'members' : data.object,
 				listQuery  = 'reset' === data.method ? {
 					scope          : data.scope,
 					filter         : data.filter,
