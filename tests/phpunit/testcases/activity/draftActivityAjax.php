@@ -229,7 +229,10 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 
 		$this->assertIsArray( $response );
 		$this->assertFalse( $response['success'] );
-		$this->assertFalse( user_can( $user_id, 'manage_options' ) );
+		// Pin that the allowlist gate itself rejected it (not a coincidental downstream
+		// failure): the crafted array key coerces to '' and is refused with the gate's
+		// own message. user_can() here would be invariant, so assert the message instead.
+		$this->assertSame( 'This draft could not be saved.', $response['data']['message'] ?? '' );
 	}
 
 	/**
