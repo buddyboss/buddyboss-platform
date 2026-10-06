@@ -1294,7 +1294,30 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	$avatar_urls      = array();
 	$avatars_user_ids = array();
 	$thread_messages  = BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
-	$recepients       = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+
+	// Only the recipient count and the first few recipients are used below, so read a page and
+	// the total instead of the full recipient list (get_messages() above may still load it on a
+	// cache miss). Keep the full list when its filter is in use.
+	if ( has_filter( 'bp_messages_thread_get_recipients' ) ) {
+		$recepients       = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+		$recipients_count = count( $recepients );
+	} else {
+		$recipients_page = BP_Messages_Thread::get(
+			array(
+				'include_threads' => array( (int) $thread_id ),
+				'per_page'        => 10,
+				'count_total'     => true,
+			)
+		);
+
+		$recepients = array();
+		foreach ( (array) $recipients_page['recipients'] as $recipient ) {
+			$recepients[ $recipient->user_id ] = (object) array_map( 'intval', (array) $recipient );
+		}
+
+		// The page holds every recipient when the total fits in it.
+		$recipients_count = (int) $recipients_page['total'] > count( $recipients_page['recipients'] ) ? (int) $recipients_page['total'] : count( $recepients );
+	}
 
 	// Ensure $thread_messages is an array to prevent PHP 8+ fatal errors
 	// when object cache returns unexpected data.
@@ -1302,7 +1325,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 		$thread_messages = array();
 	}
 
-	if ( count( $recepients ) > 2 ) {
+	if ( $recipients_count > 2 ) {
 		foreach ( $thread_messages as $message ) {
 			if ( $message->sender_id !== $user_id ) {
 
@@ -1322,7 +1345,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 		}
 	}
 
-	if ( count( $recepients ) > 2 && count( $avatars_user_ids ) < 2 ) {
+	if ( $recipients_count > 2 && count( $avatars_user_ids ) < 2 ) {
 		unset( $recepients[ $user_id ] );
 		if ( count( $avatars_user_ids ) === 0 ) {
 			$avatars_user_ids = array_slice( array_keys( $recepients ), 0, 2 );
