@@ -249,4 +249,31 @@ describeWithLibs.each( BUNDLES )( 'Load More query (%s)', ( label, bundle ) => {
 			page: 2,
 		} );
 	} );
+	test( 'an item that comes back on the next page keeps only its first card', () => {
+		boot(
+			bundle,
+			'<div data-bp-list="members"><ul class="bp-list">' +
+				'<li data-bp-item-id="1"></li><li data-bp-item-id="2"></li>' +
+				'<li class="load-more"><a href="?upage=2">Load More</a></li></ul></div>'
+		);
+		// Member 2 became active between the two loads, so page 2 starts with them again.
+		window.bp.Nouveau.ajax = () =>
+			window.jQuery
+				.Deferred()
+				.resolve( {
+					success: true,
+					data: {
+						contents:
+							'<li data-bp-item-id="2"></li><li data-bp-item-id="3"></li>',
+					},
+				} )
+				.promise();
+
+		clickLoadMore();
+
+		const ids = Array.from(
+			document.querySelectorAll( 'ul.bp-list > li[data-bp-item-id]' )
+		).map( ( li ) => li.getAttribute( 'data-bp-item-id' ) );
+		expect( ids ).toEqual( [ '1', '2', '3' ] );
+	} );
 } );

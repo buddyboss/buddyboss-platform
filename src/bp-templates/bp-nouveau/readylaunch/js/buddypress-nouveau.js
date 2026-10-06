@@ -2891,6 +2891,19 @@ window.bp = window.bp || {};
 						// Track current page on the list container.
 						$list.data( 'bp-current-page', nextPage );
 
+						// Pages are fetched by offset, so when the order shifts between two loads (a
+						// member becomes active under "Recently Active") an item can come back on the
+						// next page. Keep only its first card.
+						var shownItems = {};
+						$list.find( 'ul.bp-list > li[data-bp-item-id]' ).each( function () {
+							var itemId = $( this ).attr( 'data-bp-item-id' );
+							if ( shownItems[ itemId ] ) {
+								$( this ).remove();
+							} else {
+								shownItems[ itemId ] = true;
+							}
+						} );
+
 						// Each group members page starts with its role heading (organizers, moderators,
 						// members); drop it when the appended page continues the section already shown.
 						if ( 'group_members' === object ) {
