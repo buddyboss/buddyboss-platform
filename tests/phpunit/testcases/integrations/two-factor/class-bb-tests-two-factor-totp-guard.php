@@ -2,7 +2,7 @@
 /**
  * Two-Factor integration: the authenticator "Verify" REST call and the recovery rule.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @package BuddyBoss\Tests
  */
 

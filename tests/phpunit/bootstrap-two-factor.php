@@ -15,7 +15,7 @@
  *  1. BB_TWO_FACTOR_TESTS_PLUGIN_FILE environment variable (absolute path).
  *  2. A `two-factor/` folder beside this plugin's folder (a normal site checkout).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @package BuddyBoss\Tests
  */
 
@@ -45,7 +45,7 @@ if ( ! defined( 'BB_TWO_FACTOR_TESTS_BASENAME' ) ) {
 /**
  * Resolve the Two Factor plugin main file.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string Absolute path, or an empty string when the plugin is absent.
  */
@@ -75,7 +75,7 @@ function _bb_two_factor_tests_plugin_file() {
  * Both bb_two_factor_plugin_is_active() and BP_Integration::is_activated() read
  * the `active_plugins` option. A test may stack a later filter to flip it back.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string[]
  */
@@ -89,7 +89,7 @@ function _bb_two_factor_tests_active_plugins() {
  * If the test install's own plugins directory holds a copy, WordPress loads that
  * one from `active_plugins`; requiring a second copy would redeclare its classes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function _bb_two_factor_tests_load_plugin() {
 	if ( defined( 'WP_PLUGIN_DIR' ) && file_exists( WP_PLUGIN_DIR . '/' . BB_TWO_FACTOR_TESTS_BASENAME ) ) {
@@ -113,7 +113,7 @@ function _bb_two_factor_tests_load_plugin() {
  * options a fresh test install does not have. The files are guarded by
  * require_once, so this is a no-op when the real path already ran.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function _bb_two_factor_tests_include_integration() {
 	if ( ! class_exists( 'Two_Factor_Core' ) || ! function_exists( 'bb_two_factor_is_active' ) || ! bb_two_factor_is_active() ) {

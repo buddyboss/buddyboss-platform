@@ -7,7 +7,7 @@
  * guards below are therefore belt-and-braces, for a caller that ever reaches one
  * of these functions from somewhere that does not load behind that gate.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.6.0
  * @package BuddyBoss\Features\Integrations\TwoFactor
  */
 
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * the admin's own two-factor instead. Under View As the switched session is the
  * member, so bp_is_my_profile() is true and the tab works for them.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_setup_nav() {
 	if ( ! bb_two_factor_is_active() ) {
@@ -61,7 +61,7 @@ add_action( 'bp_settings_setup_nav', 'bb_two_factor_setup_nav' );
 /**
  * Screen handler for the Security tab.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_screen_security() {
 	if ( bp_action_variables() ) {
@@ -77,7 +77,7 @@ function bb_two_factor_screen_security() {
 	/**
 	 * Filters the template loaded for the Security tab.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string $template Template part slug.
 	 */
@@ -90,7 +90,7 @@ function bb_two_factor_screen_security() {
  * Validates before handing off to the plugin's own saver, then drains its private
  * error store into BuddyBoss feedback.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_settings_save() {
 	if ( ! bp_is_post_request() || ! bp_is_settings_component() || ! bp_is_current_action( 'security' ) || ! isset( $_POST['bb-two-factor-submit'] ) ) {
@@ -171,7 +171,7 @@ add_action( 'bp_actions', 'bb_two_factor_settings_save' );
 /**
  * Heading for the Security tab when rendered through members/single/plugins.php.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_template_title() {
 	esc_html_e( 'Security', 'buddyboss' );
@@ -187,7 +187,7 @@ function bb_two_factor_template_title() {
  * security settings, so the override is lifted for this request only, and only
  * when the destination really is the member's own Security tab.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param WP_User $user The revalidated member.
  */
@@ -227,7 +227,7 @@ add_action( 'two_factor_user_revalidated', 'bb_two_factor_keep_revalidation_retu
  * Applies only to a member changing their own account. An admin setting up
  * another user in wp-admin is left to the plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send, or null to run the endpoint.
  * @param array                                            $handler  Route handler.
@@ -281,7 +281,7 @@ add_filter( 'rest_request_before_callbacks', 'bb_two_factor_guard_totp_enable', 
  *
  * Only the web sign-in fires this action; the addon's REST/App sign-in does not.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_skip_social_login_challenge() {
 	if ( ! bb_two_factor_is_active() ) {
@@ -293,7 +293,7 @@ function bb_two_factor_skip_social_login_challenge() {
 	 *
 	 * Return false to keep asking for the second factor on social sign-ins.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param bool $skip    Default true.
 	 * @param int  $user_id Member signing in.

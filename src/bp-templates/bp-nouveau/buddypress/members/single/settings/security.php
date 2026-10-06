@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @version 1.0.0
  */
 

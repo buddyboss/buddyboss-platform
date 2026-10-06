@@ -5,7 +5,7 @@
  * Loaded from the integration's includes() on bp_include @8, only when the Two
  * Factor plugin is active and the feature is enabled.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.6.0
  * @package BuddyBoss\Features\Integrations\TwoFactor
  */
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * theme's own dropdown can take over. Appending to that string is a fatal error,
  * so anything that is not an array is passed through untouched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param array|string $wp_admin_nav Admin-bar items for the Settings component, or the
  *                                   theme's empty-string replacement.
@@ -53,7 +53,7 @@ add_filter( 'bp_settings_admin_nav', 'bb_two_factor_settings_admin_nav', 15 );
 /**
  * Register the Security tab submit button.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param array $buttons Registered submit buttons.
  * @return array
@@ -83,7 +83,7 @@ add_filter( 'bp_nouveau_get_submit_button', 'bb_two_factor_submit_button' );
  * plugin's own behaviour. AJAX and REST are member contexts even though
  * is_admin() is true for the former.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param array $providers Provider instances keyed by provider class name.
  * @return array

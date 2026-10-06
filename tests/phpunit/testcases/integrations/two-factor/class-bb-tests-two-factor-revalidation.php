@@ -2,7 +2,7 @@
 /**
  * Two-Factor integration: Security URL, revalidation return and string override.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @package BuddyBoss\Tests
  */
 

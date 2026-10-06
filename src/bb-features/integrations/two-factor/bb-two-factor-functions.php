@@ -8,7 +8,7 @@
  * wrappers answer from get_available_providers_for_user(), which returns a
  * WP_Error instead of dying on one.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.6.0
  * @package BuddyBoss\Features\Integrations\TwoFactor
  */
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * Reads the active-plugins options rather than calling is_plugin_active(), which
  * lives in wp-admin/includes/plugin.php and is absent on the front end.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return bool True when the plugin is active for this site.
  */
@@ -48,7 +48,7 @@ function bb_two_factor_plugin_is_active() {
  * The constant is defined unconditionally when the plugin's main file runs, so
  * an empty return means the plugin has not loaded.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string Version string, or an empty string when the plugin is absent.
  */
@@ -62,7 +62,7 @@ function bb_two_factor_plugin_version() {
  * The class check is required as well as the option check: the option can say
  * "active" before the plugin's own code has run.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return bool True when the integration can safely call into the plugin.
  */
@@ -88,7 +88,7 @@ function bb_two_factor_is_supported() {
  * BB_Feature_Registry::bb_is_feature_active() returns false for a feature it has
  * not registered yet. An absent key means on, matching reCAPTCHA and Reactions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return bool True when the feature is enabled.
  */
@@ -104,7 +104,7 @@ function bb_two_factor_feature_is_on() {
 	/**
 	 * Filters whether the Two-Factor feature is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param bool $is_on Whether the feature is enabled.
 	 */
@@ -118,7 +118,7 @@ function bb_two_factor_feature_is_on() {
  * both read `bp-active-components`, which the Integration Bridge writes only
  * after the first admin toggle, so a fresh install would read as off.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return bool True when the integration should do anything at all.
  */
@@ -129,7 +129,7 @@ function bb_two_factor_is_active() {
 /**
  * URL of a member's Security tab.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param int $user_id Optional. Defaults to the displayed user, then the logged-in user.
  * @return string
@@ -160,7 +160,7 @@ function bb_two_factor_get_settings_url( $user_id = 0 ) {
  * renderer then passes that WP_Error to array_keys() and to the wp_die() inside
  * get_primary_provider_for_user(), so this must be checked before rendering.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param int $user_id Member ID.
  * @return WP_Error|false The plugin's error, or false when the configuration resolves.
@@ -188,7 +188,7 @@ function bb_two_factor_get_broken_config( $user_id ) {
  * reimplemented with the same branch order, including that a non-two-factor
  * session is refused before the grace period is consulted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param string $context 'display' or 'save'. Save has twice the grace time.
  *                        Only 'save' has a caller today; 'display' is kept so
@@ -241,7 +241,7 @@ function bb_two_factor_current_user_can_manage( $context = 'display' ) {
 /**
  * Provider keys that count as a recovery method.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string[] Provider class names, e.g. 'Two_Factor_Backup_Codes'.
  */
@@ -253,7 +253,7 @@ function bb_two_factor_get_recovery_providers() {
 	 * A member must have one of these set up and enabled before a primary
 	 * method can be saved from the Security tab.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string[] $providers Provider class names.
 	 */
@@ -277,7 +277,7 @@ function bb_two_factor_get_recovery_providers() {
  * Shared by the Security tab save and the guard on the plugin's authenticator
  * REST route, which is why it takes the provider list rather than reading POST.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param int      $user_id      Member being changed.
  * @param string[] $provider_ids Provider class names that would be enabled.
@@ -288,7 +288,7 @@ function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
 	/**
 	 * Filters whether a recovery method is required before a primary method can be enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param bool $required Default true.
 	 * @param int  $user_id  Member being changed.
@@ -362,7 +362,7 @@ function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
  * Reads the same POST field the plugin's saver reads. The caller has verified
  * both nonces before this runs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param int $user_id Member being saved.
  * @return true|WP_Error True when the submission may be saved.
@@ -380,7 +380,7 @@ function bb_two_factor_validate_recovery_method( $user_id ) {
 /**
  * Drain the plugin's private profile-error store into a WP_Error.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return WP_Error
  */
@@ -403,7 +403,7 @@ function bb_two_factor_drain_errors() {
  * the challenge form, then the login_redirect filter before wp_safe_redirect() -
  * so replacing it here is enough to land the member back on the tab.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param string $html       Markup from the plugin's options renderer.
  * @param string $return_url Where revalidation should return to.
@@ -435,7 +435,7 @@ function bb_two_factor_set_revalidate_return( $html, $return_url ) {
  * Attached around Two_Factor_Core::user_two_factor_options() only, so the
  * plugin's own wp-admin screen is untouched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param string $translation Translated text.
  * @param string $text        Original text.
@@ -461,7 +461,7 @@ function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
  * Output is the plugin's wp-admin profile section verbatim, so every provider it
  * knows about - including ones from third-party plugins - appears unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param WP_User $user The member.
  */
@@ -499,7 +499,7 @@ function bb_two_factor_render_options( $user ) {
  * admin's own two-factor. The sub-nav already enforces this; repeating it here
  * keeps the guarantee local to the markup that exposes the settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_render_section() {
 	if ( ! bb_two_factor_is_active() || ! bp_is_my_profile() ) {

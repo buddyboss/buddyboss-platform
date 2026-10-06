@@ -88,7 +88,7 @@ class BB_Mothership_Loader {
 	 * model (`mepr_insights_`). The Mothership product slug stays dynamic — it comes from the
 	 * IPN product-slug parameter, not from this prefix.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @var string
 	 */
@@ -99,7 +99,7 @@ class BB_Mothership_Loader {
 	 *
 	 * Equals `Str::toSnakeCase( self::INSIGHTS_PREFIX . 'nps_check' )`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @var string
 	 */
@@ -111,7 +111,7 @@ class BB_Mothership_Loader {
 	 * Stable across license editions, so sites and white-label integrations can opt out with
 	 * `add_filter( 'buddyboss_insights_should_show_nps_notification', '__return_false' )`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @var string
 	 */
@@ -120,7 +120,7 @@ class BB_Mothership_Loader {
 	/**
 	 * REST namespace for the survey submission endpoint (`{namespace}/nps/submit`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @var string
 	 */
@@ -153,7 +153,7 @@ class BB_Mothership_Loader {
 	 * False when the package is absent from the vendor tree; the Insights-specific hooks in
 	 * {@see self::setup_hooks()} are only attached when this is true.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @var bool
 	 */
@@ -355,7 +355,7 @@ class BB_Mothership_Loader {
 	 * on the site, i.e. from the upgrade to the release that ships this, not from the original
 	 * plugin install.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 */
 	private function register_insights_provider(): void {
 		if ( ! class_exists( InsightsServiceProvider::class ) ) {
@@ -383,7 +383,7 @@ class BB_Mothership_Loader {
 	 * non-scoped (dev) checkout, whereas a class-name service key only matches in one of the
 	 * two, so a `has( Util::class )` guard silently fails in dev.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string $id Identifier to prefix, e.g. `store`, `clean`, `remote_fetch`.
 	 * @return string The prefixed id (e.g. `bb-web-plus_ipn_store`), or '' if IPN is not registered.
@@ -409,7 +409,7 @@ class BB_Mothership_Loader {
 	 * In a php-scoper build the vendor registers the prefixed class name; in a non-scoped
 	 * checkout it registers the un-prefixed one. Resolving by exact string keeps both working.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @return object|null The Store service, or null when IPN is not registered.
 	 */
@@ -435,7 +435,7 @@ class BB_Mothership_Loader {
 	 * Every store consumer addresses rows by id, so persisting the re-sorted order (which the
 	 * vendor Store does on its next write) has no functional effect.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param mixed $value The raw option value.
 	 * @return mixed The sorted store, or the original value if it is not a multi-row array.
@@ -470,7 +470,7 @@ class BB_Mothership_Loader {
 	 * recurrence. Only the expired survey row is touched; unexpired and read rows are left to
 	 * the vendor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 */
 	public function purge_expired_nps_survey(): void {
 		try {
@@ -500,7 +500,7 @@ class BB_Mothership_Loader {
 	 * so without this {@see self::INSIGHTS_NPS_CRON_HOOK} keeps firing as a no-op after
 	 * deactivation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 */
 	public function clear_scheduled_events(): void {
 		wp_clear_scheduled_hook( self::INSIGHTS_NPS_CRON_HOOK );
