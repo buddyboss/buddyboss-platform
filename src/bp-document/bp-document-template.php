@@ -2581,7 +2581,7 @@ function bp_get_document_link( $document_id ) {
  * the 'bb_document_user_can_add_to_folder' filter, which is applied last and can
  * veto every branch.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the destination folder.
  * @return bool True if the user can add content to the folder, false otherwise.
@@ -2635,7 +2635,7 @@ function bb_document_user_can_add_to_folder( $folder = false ) {
 	/**
 	 * Filters whether the current user can add content to a folder.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param bool   $can_add Whether the user can add content to the folder.
 	 * @param object $folder   Destination folder object.

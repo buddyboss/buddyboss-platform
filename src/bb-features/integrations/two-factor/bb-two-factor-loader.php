@@ -5,7 +5,7 @@
  * Included by BP_Core::load_integrations() via the bp_integrations whitelist, so it
  * must keep this exact filename.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.6.0
  * @package BuddyBoss\Features\Integrations\TwoFactor
  */
 
@@ -22,7 +22,7 @@ require_once __DIR__ . '/bb-two-factor-functions.php';
 /**
  * Let the Settings 2.0 feature toggle gate BP_Integration::is_activated().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_register_managed_integration() {
 	if ( function_exists( 'bb_integration_bridge' ) ) {
@@ -36,7 +36,7 @@ add_action( 'bb_integration_bridge_init', 'bb_two_factor_register_managed_integr
  *
  * Priority 20 matches reCAPTCHA: after bp_setup_components, inside bp_setup_integrations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 function bb_register_two_factor_integration() {
 	require_once __DIR__ . '/classes/class-bb-two-factor-integration.php';

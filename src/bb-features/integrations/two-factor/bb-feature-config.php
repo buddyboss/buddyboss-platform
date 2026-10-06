@@ -6,7 +6,7 @@
  * BB_Feature_Autoloader from bb-features/integrations/two-factor/, so this file
  * runs on every request and must stay cheap.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.6.0
  * @package BuddyBoss\Features\Integrations\TwoFactor
  */
 

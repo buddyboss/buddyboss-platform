@@ -2,7 +2,7 @@
 /**
  * Two-Factor integration: SSO hook regression and the Security sub-nav.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @package BuddyBoss\Tests
  */
 
