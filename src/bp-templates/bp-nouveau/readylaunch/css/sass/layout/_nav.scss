@@ -188,6 +188,13 @@
 			}
 		}
 
+		&#bb-rl-security-personal-li {
+
+			a::before {
+				content: "\e40c";
+			}
+		}
+
 		&#bb-rl-profile-personal-li {
 
 			a::before {
