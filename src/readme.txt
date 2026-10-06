@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.5.1
+Stable tag: 3.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.6.0 =
+* Enhancement: Social Login - Added frontend Two-Factor Authentication management under Account - Security, allowing members to securely set up and manage 2FA and use it seamlessly with BuddyBoss Social Login
+* Bug: Groups - Fixed an issue where group members could not move documents into a group folder created by another member
+* Bug: Media - Fixed a display issue where the page layout broke after deleting all photos, videos or documents in comment and media pop-ups
+* Bug: Media - Fixed an issue where the empty album message was not shown after deleting the last photo or video in an album
+* Bug: Members - Fixed an issue where using the browser's back button after searching members showed a "Confirm Form Resubmission" error instead of the members list
+* Bug: ReadyLaunch - Fixed an issue where the comment box appeared inside the activity post and the layout broke after editing an activity or deleting its media
 
 = 3.5.1 =
 * Bug: Activity - Fixed an issue where a blocked member's posts and activity were still visible in the activity feed
