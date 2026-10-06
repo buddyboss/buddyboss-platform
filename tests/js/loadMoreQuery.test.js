@@ -200,6 +200,27 @@ describeWithLibs.each( BUNDLES )( 'Load More query (%s)', ( label, bundle ) => {
 		}
 	);
 
+	test( 'loading more on Connections leaves the remembered Members directory order alone', () => {
+		const posts = boot(
+			bundle,
+			'<select data-bp-filter="friends"><option value="active">a</option><option value="alphabetical" selected>b</option></select>' +
+				LIST( 'members', '?upage=2' )
+		);
+		// The Members directory was last browsed by "Recently Active".
+		window.sessionStorage.setItem(
+			'bp-members',
+			JSON.stringify( { scope: 'all', filter: 'active' } )
+		);
+
+		clickLoadMore();
+
+		expect( posts[ 0 ] ).toMatchObject( { filter: 'alphabetical', page: 2 } );
+		expect( posts[ 0 ] ).not.toHaveProperty( 'continue_list' );
+		expect(
+			JSON.parse( window.sessionStorage.getItem( 'bp-members' ) )
+		).toEqual( { scope: 'all', filter: 'active' } );
+	} );
+
 	test( 'a server-rendered list ignores search text typed after the page loaded', () => {
 		const posts = boot(
 			bundle,

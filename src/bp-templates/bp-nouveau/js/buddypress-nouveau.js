@@ -586,8 +586,9 @@ window.bp = window.bp || {};
 				data.order_by = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
 			}
 
-			// Set session's data.
-			if ( null !== data.scope ) {
+			// Set session's data. A Load More only continues the list on screen (continue_list),
+			// so it leaves the query remembered for the object (other lists share it) unchanged.
+			if ( null !== data.scope && ! data.continue_list ) {
 				if( data.object === 'activity' ) {
 					if( ( 'undefined' !== data.user_timeline && true === data.user_timeline ) || $( 'body.my-activity:not(.activity-singular)' ).length ) {
 						this.setStorage( 'bp-user-activity', 'scope', data.scope );
@@ -599,11 +600,11 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if ( null !== data.filter ) {
+			if ( null !== data.filter && ! data.continue_list ) {
 				this.setStorage( 'bp-' + data.object, 'filter', data.filter );
 			}
 
-			if ( null !== data.extras ) {
+			if ( null !== data.extras && ! data.continue_list ) {
 				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
@@ -727,6 +728,9 @@ window.bp = window.bp || {};
 			}
 			if( ! _.isUndefined( postdata.user_timeline ) ) {
 				delete postdata.user_timeline;
+			}
+			if ( ! _.isUndefined( postdata.continue_list ) ) {
+				delete postdata.continue_list;
 			}
 
 			return this.ajax( postdata, data.object ).done(
@@ -3208,7 +3212,9 @@ window.bp = window.bp || {};
 				extras       : query.extras,
 				page         : nextPage,
 				method       : 'append',
-				target       : '#buddypress [data-bp-list="' + object + '"] ul.bp-list'
+				target       : '#buddypress [data-bp-list="' + object + '"] ul.bp-list',
+				// Continue this list only: do not change the query remembered for the object.
+				continue_list: true
 			};
 
 			if ( undefined !== query.group_type ) {
