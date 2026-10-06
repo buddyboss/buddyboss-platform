@@ -23391,7 +23391,8 @@ ul.bb-albums-list .load-more {
 #buddypress .bb-photo-list li.load-more > a,
 #buddypress .bb-video-list li.load-more > a,
 #buddypress .members-list li.load-more > a,
-#buddypress .groups-list li.load-more > a {
+#buddypress .groups-list li.load-more > a,
+#buddypress .bp-list.grid > li.load-more > a {
   max-width: 33%;
   pointer-events: auto;
 }
