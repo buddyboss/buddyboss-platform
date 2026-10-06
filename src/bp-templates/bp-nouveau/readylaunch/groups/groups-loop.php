@@ -29,18 +29,18 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 $bb_directory_autoload   = function_exists( 'bb_is_list_autoload_active' ) && bb_is_list_autoload_active( 'groups' );
 $bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
+if ( ! $bb_is_load_more_request && bp_get_current_group_directory_type() ) {
+	?>
+	<div class="bp-feedback info">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
+	</div>
+	<?php
+}
+
 if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 
 	if ( ! $bb_is_load_more_request ) :
-
-		if ( bp_get_current_group_directory_type() ) {
-			?>
-			<div class="bp-feedback info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
-			</div>
-			<?php
-		}
 		?>
 
 	<ul id="groups-list" class="

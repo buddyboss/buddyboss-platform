@@ -62,17 +62,20 @@ if ( ! empty( $_GET['bb-rl-scope'] ) ) {
 $bb_directory_autoload   = function_exists( 'bb_is_list_autoload_active' ) && bb_is_list_autoload_active( 'members' );
 $bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
+?>
+
+<?php if ( ! $bb_is_load_more_request && bp_get_current_member_type() ) : ?>
+	<div class="bp-feedback info">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p><?php bp_current_member_type_message(); ?></p>
+	</div>
+<?php endif; ?>
+
+<?php
 if ( bp_has_members( $members_query_string ) ) :
 	?>
 
 	<?php if ( ! $bb_is_load_more_request ) : ?>
-
-		<?php if ( bp_get_current_member_type() ) : ?>
-			<div class="bp-feedback info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php bp_current_member_type_message(); ?></p>
-			</div>
-		<?php endif; ?>
 
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
 	<?php endif; ?>

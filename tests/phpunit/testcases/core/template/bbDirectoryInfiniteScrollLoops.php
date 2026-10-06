@@ -534,4 +534,66 @@ class BB_Tests_Core_Template_BbDirectoryInfiniteScrollLoops extends BP_UnitTestC
 		$this->assertStringContainsString( 'data-bp-pagination', $html );
 		$this->assertFalse( has_filter( 'bb_is_list_autoload_active', '__return_false' ), 'The shortcode removes its override after the loop' );
 	}
+
+	/**
+	 * Put the directory on a profile / group type, as /members/type/x/ and /groups/type/x/ do,
+	 * and give the test items that type.
+	 *
+	 * @param string $object 'members' or 'groups'.
+	 */
+	protected function view_type( $object ) {
+		if ( 'groups' === $object ) {
+			bp_groups_register_group_type( 'prod9724view', array( 'labels' => array( 'name' => 'PROD 9724 View' ) ) );
+			buddypress()->groups->current_directory_type = 'prod9724view';
+			foreach ( $this->item_ids as $group_id ) {
+				bp_groups_set_group_type( $group_id, 'prod9724view' );
+			}
+			return;
+		}
+
+		bp_register_member_type( 'prod9724view', array( 'labels' => array( 'name' => 'PROD 9724 View' ) ) );
+		buddypress()->current_member_type = 'prod9724view';
+		foreach ( $this->item_ids as $user_id ) {
+			bp_set_member_type( $user_id, 'prod9724view' );
+		}
+	}
+
+	/**
+	 * A type directory with nobody of that type still says which type it shows, as on release.
+	 *
+	 * @dataProvider data_loops
+	 */
+	public function test_empty_type_directory_keeps_the_type_notice( $object, $template ) {
+		$this->owner_id = self::factory()->user->create();
+		$this->item_ids = array();
+		$this->view_type( $object );
+		$this->item_ids = array( PHP_INT_MAX ); // Nothing matches.
+
+		foreach ( array( 'pagination', 'infinite' ) as $mode ) {
+			bp_update_option( 'bb_directory_load_type', $mode );
+
+			$html = $this->render( $object, $template );
+
+			$this->assertSame( 0, $this->list_wrappers( $object, $html ), "precondition ({$mode}): the list is empty" );
+			$this->assertStringContainsString( 'PROD 9724 View', $html, "{$mode}: the type notice is shown" );
+		}
+	}
+
+	/**
+	 * A load-more request returns only the next items, without the type notice.
+	 *
+	 * @dataProvider data_loops
+	 */
+	public function test_load_more_request_has_no_type_notice( $object, $template ) {
+		$this->create_items( $object );
+		$this->view_type( $object );
+		bp_update_option( 'bb_directory_load_type', 'infinite' );
+
+		$first = $this->render( $object, $template, 1 );
+		$next  = $this->render( $object, $template, 2 );
+
+		$this->assertGreaterThan( 0, preg_match_all( '/data-bp-item-id="\d+"/', $next ), 'precondition: page 2 has items of the type' );
+		$this->assertStringContainsString( 'PROD 9724 View', $first, 'The first page shows the type notice' );
+		$this->assertStringNotContainsString( 'PROD 9724 View', $next, 'A load-more page does not repeat it' );
+	}
 }
