@@ -174,7 +174,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	/**
 	 * @group groups
 	 */
-	public function test_group_thread_with_replies_is_hidden_when_group_messages_disabled() {
+	public function test_group_thread_with_replies_stays_listed_when_group_messages_disabled() {
 		$u1       = self::factory()->user->create();
 		$u2       = self::factory()->user->create();
 		$u3       = self::factory()->user->create();
@@ -197,9 +197,10 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		);
 		$listed  = array_map( 'intval', (array) $threads['threads'] );
 
-		$this->assertNotContains( $group_thread, $listed, 'Group thread must be hidden while group messages are disabled.' );
-		$this->assertContains( $private_thread, $listed, 'Other threads must stay listed.' );
-		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ), 'Opening the group thread is blocked.' );
+		// As in release: only the group message itself is left out, so the replied thread stays listed; the web open gate blocks it.
+		$this->assertContains( $group_thread, $listed, 'Group thread with replies stays listed, as in release.' );
+		$this->assertContains( $private_thread, $listed, 'Other threads stay listed.' );
+		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ), 'Opening the group thread on the web is blocked.' );
 	}
 
 	/**
@@ -388,7 +389,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Hiding group threads leaves the unread count as it was (TC-14).
+	 * The unread count leaves out group threads while group messages are disabled (TC-14).
 	 *
 	 * @group groups
 	 */
@@ -409,7 +410,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Group Messages OFF hides the thread, ON lists it, OFF hides it again (TC-15).
+	 * The group thread stays listed whatever the Group Messages setting; only opening it follows the setting (TC-15).
 	 *
 	 * @group groups
 	 */
@@ -434,7 +435,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		};
 
 		bp_update_option( 'bp-disable-group-messages', 0 );
-		$this->assertNotContains( $group_thread, $listed() );
+		$this->assertContains( $group_thread, $listed() );
 		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ) );
 
 		bp_update_option( 'bp-disable-group-messages', 1 );
@@ -442,7 +443,8 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->assertSame( $group_thread, bb_messages_validate_groups_thread( $group_thread ) );
 
 		bp_update_option( 'bp-disable-group-messages', 0 );
-		$this->assertNotContains( $group_thread, $listed() );
+		$this->assertContains( $group_thread, $listed() );
+		$this->assertSame( 0, bb_messages_validate_groups_thread( $group_thread ) );
 	}
 
 	/**
