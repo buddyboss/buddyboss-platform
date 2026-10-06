@@ -30,7 +30,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 		$last_message_id = (int) $messages_template->thread->last_message_id;
 
 		$group_id = bp_messages_get_meta( $last_message_id, 'group_id', true );
-		if ( 0 === $last_message_id && ! $group_id ) {
+
+		// A member's reply carries no group meta, so read the group from the first message like the thread list.
+		if ( ! $group_id ) {
 			$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
 			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
