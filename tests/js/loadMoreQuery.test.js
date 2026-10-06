@@ -6,20 +6,20 @@
  * the real BP Nouveau and ReadyLaunch bundles (sources and builds) against WordPress's own
  * jQuery and Underscore, stub only the AJAX transport, and check the request Load More sends.
  *
- * Run: npx wp-scripts test-unit-js src/js/bp-nouveau/__tests__/loadMoreQuery.test.js
+ * Run: npx wp-scripts test-unit-js tests/js/loadMoreQuery.test.js
  *
- * Kept under src/js/ (not next to the bundles): Grunt's ES5 jsvalidate/jshint and the release
- * copy exclude src/js/, so this ES2015+ test neither breaks the build nor ships in the zip.
+ * Kept outside src/: every Grunt task (ES5 jsvalidate/jshint, uglify, the release copy) works
+ * on src/, so this ES2015+ test neither breaks the build, gets minified, nor ships in the zip.
  */
 /* eslint-disable no-eval -- the bundles and WordPress's jQuery are classic scripts that must run in the jsdom global scope. */
 const fs = require( 'fs' );
 const path = require( 'path' );
 
-const NOUVEAU = path.resolve( __dirname, '../../../bp-templates/bp-nouveau' );
+const NOUVEAU = path.resolve( __dirname, '../../src/bp-templates/bp-nouveau' );
 // The plugin is developed inside a WordPress install; reuse the jQuery/Underscore it ships.
 const WP_JS = path.resolve(
 	__dirname,
-	'../../../../../../../wp-includes/js'
+	'../../../../../wp-includes/js'
 );
 const LIBS = [
 	path.join( WP_JS, 'jquery/jquery.js' ),
