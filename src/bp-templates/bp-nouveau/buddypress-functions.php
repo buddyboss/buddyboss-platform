@@ -687,6 +687,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'card_load_error'            => __( 'Failed to load data.', 'buddyboss' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
+			'loadingMore'                => esc_html__( 'Loading...', 'buddyboss' ),
+			'directory_autoload'         => function_exists( 'bb_is_list_autoload_active' ) && bb_is_list_autoload_active(),
 			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
 			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
 			// same value but is only registered when the Activity component is enabled — with

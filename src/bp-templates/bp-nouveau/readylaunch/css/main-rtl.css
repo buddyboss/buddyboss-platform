@@ -638,6 +638,18 @@ h6 {
   width: 100%;
 }
 
+.bb-rl-members ul.bp-list .bb-rl-load-more,
+.bb-rl-groups ul.bp-list .bb-rl-load-more {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--bb-rl-space-200) 0;
+}
+
+.bb-rl-members ul.bp-list .bb-rl-load-more .bb-rl-button,
+.bb-rl-groups ul.bp-list .bb-rl-load-more .bb-rl-button {
+  font-size: 14px;
+}
+
 .bp-screen-reader-text,
 .bb-screen-reader-text,
 .bb-rl-screen-reader-text {

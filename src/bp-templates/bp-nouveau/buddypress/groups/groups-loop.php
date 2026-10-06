@@ -14,15 +14,6 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 bp_nouveau_before_loop();
 
-if ( bp_get_current_group_directory_type() ) {
-	?>
-	<div class="bp-feedback info">
-		<span class="bp-icon" aria-hidden="true"></span>
-		<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
-	</div>
-	<?php
-}
-
 $cover_class        = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
 $meta_privacy       = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
 $meta_group_type    = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
@@ -31,17 +22,38 @@ $join_button        = ! bb_platform_group_element_enable( 'join-buttons' ) ? 'gr
 $group_alignment    = bb_platform_group_grid_style( 'left' );
 $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_get_group_cover_image_height() : 'small';
 
+// Members & Groups Loading: with infinite scroll, the Groups directory, profile Groups and
+// group Subgroups load more items as the member scrolls; other screens that reuse this
+// loop keep classic pagination. Load more requests return only the list items.
+$bb_directory_autoload   = function_exists( 'bb_is_list_autoload_active' ) && bb_is_list_autoload_active( 'groups' );
+$bb_is_load_more_request = $bb_directory_autoload && isset( $_POST['page'] ) && absint( $_POST['page'] ) > 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+if ( ! $bb_is_load_more_request && bp_get_current_group_directory_type() ) {
+	?>
+	<div class="bp-feedback info">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
+	</div>
+	<?php
+}
+
 if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 
-	bp_nouveau_pagination( 'top' );
-	?>
+	if ( ! $bb_is_load_more_request ) :
+
+		if ( ! $bb_directory_autoload ) {
+			bp_nouveau_pagination( 'top' );
+		}
+		?>
 
 	<ul id="groups-list" class="
-	<?php
-	bp_nouveau_loop_classes();
-	echo esc_attr( ' ' . $cover_class . ' ' . $group_alignment );
-	?>
+		<?php
+		bp_nouveau_loop_classes();
+		echo esc_attr( ' ' . $cover_class . ' ' . $group_alignment );
+		?>
 	groups-dir-list">
+
+	<?php endif; ?>
 
 		<?php
 		while ( bp_groups() ) :
@@ -132,6 +144,25 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 			</li>
 
 		<?php endwhile; ?>
+
+	<?php
+	if ( $bb_directory_autoload ) :
+		// Load more button when more pages exist.
+		global $groups_template;
+		$groups_pag_num     = max( 1, (int) $groups_template->pag_num );
+		$groups_total_pages = ceil( (int) $groups_template->total_group_count / $groups_pag_num );
+		if ( (int) $groups_template->pag_page < $groups_total_pages ) :
+			$next_page_url = add_query_arg( $groups_template->pag_arg, (int) $groups_template->pag_page + 1, '' );
+			?>
+			<li class="load-more">
+				<a class="button outline" href="<?php echo esc_url( $next_page_url ); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			</li>
+			<?php
+		endif;
+	endif;
+	?>
+
+	<?php if ( ! $bb_is_load_more_request ) : ?>
 	</ul>
 
 	<!-- Leave Group confirmation popup -->
@@ -160,9 +191,14 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 		</transition>
 	</div> <!-- .bb-leave-group-popup -->
 
+	<?php endif; ?>
+
 	<?php
-	bp_nouveau_pagination( 'bottom' );
-} else {
+	if ( ! $bb_directory_autoload ) {
+		bp_nouveau_pagination( 'bottom' );
+	}
+} elseif ( ! $bb_is_load_more_request ) {
+	// An empty load-more page ends the list; the "none found" notice belongs to a full (re)load only.
 	bp_nouveau_user_feedback( 'groups-loop-none' );
 }
 

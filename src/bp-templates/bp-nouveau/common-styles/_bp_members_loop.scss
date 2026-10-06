@@ -160,6 +160,43 @@
 
 		}
 
+		// Load more button for infinite scroll.
+		.load-more {
+			background: none;
+			border: none;
+			font-size: 110%;
+			margin: $marg-med 0;
+			padding: 0;
+			text-align: center;
+			width: 100%;
+			flex-basis: 100%;
+			max-width: 100%;
+
+			a {
+				color: $dark-grey;
+				display: block;
+				padding: $pad-sml 0;
+
+				&:focus,
+				&:hover {
+					color: $black;
+				}
+
+				&.loading:after {
+					content: "";
+					display: inline-block;
+					height: 16px;
+					width: 16px;
+					border: 2px solid $light-grey;
+					border-top-color: $dark-grey;
+					border-radius: 50%;
+					animation: spin 3s infinite linear;
+					margin-left: 8px;
+					vertical-align: middle;
+				}
+			}
+		}
+
 	} // close .members-list
 
 	// Members group specific list
