@@ -2253,6 +2253,7 @@ function bp_check_member_type_field_have_options() {
  * Get the display_name for member based on user_id
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] The cached name is refreshed when the member's profile data changes.
  *
  * @param string $display_name
  * @param int    $user_id
@@ -2268,7 +2269,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	global $bb_default_display_avatar;
 
-	$cache_key = 'bp_xprofile_get_member_display_name_' . trim( $user_id );
+	$cache_key = 'bp_xprofile_get_member_display_name_' . trim( $user_id ) . '_' . bb_xprofile_member_display_name_cache_version( $user_id );
 	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
 	}
