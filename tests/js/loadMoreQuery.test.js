@@ -173,6 +173,33 @@ describeWithLibs.each( BUNDLES )( 'Load More query (%s)', ( label, bundle ) => {
 		expect( posts[ 1 ].search_terms ).toBe( '' );
 	} );
 
+	test.each( [
+		[ 'members', 'members_search', '?upage=2' ],
+		[ 'groups', 'groups_search', '?grpage=2' ],
+	] )(
+		'a server-rendered %s list opened from a search link keeps that search',
+		( object, arg, href ) => {
+			// Page Requests = 1: the server rendered page 1 for ?<arg>=..., the template prints
+			// an empty box, and initObjects() only fills it in with .val().
+			window.history.replaceState( {}, '', '/list/?' + arg + '=Dummy+1%26co' );
+			const posts = boot(
+				bundle,
+				'<div data-bp-search="' +
+					object +
+					'"><input type="search" value=""></div>' +
+					LIST( object, href )
+			);
+			window.bp.Nouveau.querystring = window.bp.Nouveau.getLinkParams();
+			document.querySelector( '[data-bp-search] input' ).value =
+				'Dummy 1&co';
+
+			clickLoadMore();
+			window.history.replaceState( {}, '', '/' );
+
+			expect( posts[ 0 ].search_terms ).toBe( 'Dummy 1&co' );
+		}
+	);
+
 	test( 'a server-rendered list ignores search text typed after the page loaded', () => {
 		const posts = boot(
 			bundle,

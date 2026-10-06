@@ -3300,7 +3300,19 @@ window.bp = window.bp || {};
 				$search = $( '#buddypress .dir-search input[type=search]' );
 			}
 			// The search this list was rendered with, not text typed since and not submitted yet.
-			if ( $search.length ) {
+			// The server reads it from the URL (members_search / groups_search), and initObjects()
+			// only copies that into the box with .val(), so read the URL first; the box's rendered
+			// value covers a template that prints the search itself.
+			var searchArg = ( 'groups' === object || 'group_subgroups' === object ? 'groups' : 'members' ) + '_search',
+				urlSearch = this.querystring && this.querystring[ searchArg ];
+
+			if ( urlSearch ) {
+				try {
+					query.search_terms = decodeURIComponent( urlSearch.replace( /\+/g, ' ' ) );
+				} catch ( e ) {
+					query.search_terms = urlSearch;
+				}
+			} else if ( $search.length ) {
 				query.search_terms = $search.prop( 'defaultValue' ) || '';
 			}
 
