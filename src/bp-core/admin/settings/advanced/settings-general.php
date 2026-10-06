@@ -114,10 +114,12 @@ function bb_advanced_register_general_fields() {
 	// SECTION 2: Page Loading
 	// =========================================================================
 
+	// The id stays 'advanced_activity' (shipped in 3.5.0) so fields that add-ons register into
+	// this section keep showing; only the title changed when Members & Groups Loading joined it.
 	bb_register_feature_section(
 		$feature_id,
 		$panel_id,
-		'advanced_page_loading',
+		'advanced_activity',
 		array(
 			'title'       => __( 'Page Loading', 'buddyboss' ),
 			'description' => __( 'Use infinite scrolling to automatically load while scrolling down feeds and lists. Increasing the number of load items retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ),
@@ -161,7 +163,7 @@ function bb_advanced_register_general_fields() {
 		bb_register_feature_field(
 			$feature_id,
 			$panel_id,
-			'advanced_page_loading',
+			'advanced_activity',
 			array(
 				'name'                 => 'bb_load_activity_per_request',
 				'label'                => __( 'Feed Page Loading', 'buddyboss' ),
@@ -226,7 +228,7 @@ function bb_advanced_register_general_fields() {
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
-		'advanced_page_loading',
+		'advanced_activity',
 		array(
 			'name'                 => 'bb_directory_load_type',
 			'label'                => __( 'Members & Groups Loading', 'buddyboss' ),
