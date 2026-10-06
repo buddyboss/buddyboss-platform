@@ -211,6 +211,65 @@ class BB_Tests_Core_Functions_BbDirectoryLoadType extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Add-ons that still register into the pre-rename "advanced_activity" section keep their field.
+	 */
+	public function test_field_registered_into_the_old_section_id_lands_in_page_loading() {
+		$this->setExpectedDeprecated( 'BB_Feature_Registry::bb_register_field' );
+		bb_admin_settings_register_advanced_feature();
+
+		$result = bb_register_feature_field(
+			'advanced',
+			'general',
+			'advanced_activity',
+			array(
+				'name'  => 'prod9724_addon_field',
+				'label' => 'Add-on field',
+				'type'  => 'toggle',
+			)
+		);
+
+		$this->assertTrue( $result );
+		$this->assertArrayHasKey( 'prod9724_addon_field', bb_feature_registry()->bb_get_fields( 'advanced', 'general', 'advanced_page_loading' ) );
+		$this->assertArrayNotHasKey( 'advanced_activity', bb_feature_registry()->bb_get_sections( 'advanced', 'general' ), 'No second card is created' );
+	}
+
+	public function test_reading_fields_by_the_old_section_id_returns_page_loading_fields() {
+		$this->setExpectedDeprecated( 'BB_Feature_Registry::bb_get_fields' );
+
+		$current = $this->page_loading_fields();
+		$old     = bb_feature_registry()->bb_get_fields( 'advanced', 'general', 'advanced_activity' );
+
+		$this->assertNotEmpty( $current );
+		$this->assertSame( array_keys( $current ), array_keys( $old ) );
+	}
+
+	/**
+	 * Before the rename the section existed only with Activity on, so without it the old ID still fails.
+	 */
+	public function test_old_section_id_is_not_aliased_when_activity_is_inactive() {
+		$filter = function ( $retval, $component ) {
+			return 'activity' === $component ? false : $retval;
+		};
+		add_filter( 'bp_is_active', $filter, 10, 2 );
+
+		bb_admin_settings_register_advanced_feature();
+		$result = bb_register_feature_field(
+			'advanced',
+			'general',
+			'advanced_activity',
+			array(
+				'name'  => 'prod9724_addon_field',
+				'label' => 'Add-on field',
+			)
+		);
+
+		remove_filter( 'bp_is_active', $filter, 10 );
+
+		$this->assertWPError( $result );
+		$this->assertSame( 'section_not_found', $result->get_error_code() );
+	}
+
+	/**
 	 * Set up the current screen.
 	 *
 	 * @param string $component    Current component.
