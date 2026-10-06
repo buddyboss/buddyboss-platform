@@ -79,7 +79,7 @@ class BB_Tests_Core_Functions_BbDirectoryLoadType extends BP_UnitTestCase {
 	protected function page_loading_fields() {
 		bb_admin_settings_register_advanced_feature();
 
-		return bb_feature_registry()->bb_get_fields( 'advanced', 'general', 'advanced_activity' );
+		return bb_feature_registry()->bb_get_fields( 'advanced', 'general', 'advanced_page_loading' );
 	}
 
 	public function test_default_option_is_pagination() {
@@ -172,7 +172,7 @@ class BB_Tests_Core_Functions_BbDirectoryLoadType extends BP_UnitTestCase {
 		$fields   = $this->page_loading_fields();
 		$sections = bb_feature_registry()->bb_get_sections( 'advanced', 'general' );
 
-		$this->assertArrayHasKey( 'advanced_activity', $sections );
+		$this->assertArrayHasKey( 'advanced_page_loading', $sections );
 		$this->assertArrayHasKey( 'bb_directory_load_type', $fields );
 		$this->assertArrayHasKey( 'bb_load_activity_per_request', $fields );
 
@@ -205,7 +205,7 @@ class BB_Tests_Core_Functions_BbDirectoryLoadType extends BP_UnitTestCase {
 
 		remove_filter( 'bp_is_active', $filter, 10 );
 
-		$this->assertArrayHasKey( 'advanced_activity', bb_feature_registry()->bb_get_sections( 'advanced', 'general' ) );
+		$this->assertArrayHasKey( 'advanced_page_loading', bb_feature_registry()->bb_get_sections( 'advanced', 'general' ) );
 		$this->assertArrayHasKey( 'bb_directory_load_type', $section_fields );
 		$this->assertArrayNotHasKey( 'bb_load_activity_per_request', $section_fields, 'The feed row is gated on the Activity component' );
 	}
