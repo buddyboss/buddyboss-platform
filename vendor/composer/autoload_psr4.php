@@ -20,6 +20,7 @@ return array(
     'BuddyBossPlatform\\Neutron\\' => array($vendorDir . '/neutron/temporary-filesystem/src/Neutron'),
     'BuddyBossPlatform\\GroundLevel\\Support\\' => array($vendorDir . '/caseproof/ground-level-support'),
     'BuddyBossPlatform\\GroundLevel\\Mothership\\' => array($vendorDir . '/caseproof/ground-level-mothership'),
+    'BuddyBossPlatform\\GroundLevel\\Insights\\' => array($vendorDir . '/caseproof/ground-level-insights'),
     'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\' => array($vendorDir . '/caseproof/ground-level-in-product-notifications'),
     'BuddyBossPlatform\\GroundLevel\\Container\\' => array($vendorDir . '/caseproof/ground-level-container'),
     'BuddyBossPlatform\\FFMpeg\\' => array($vendorDir . '/php-ffmpeg/php-ffmpeg/src/FFMpeg'),

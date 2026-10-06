@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc432c1ea7b8c2828192d90b97d351527
+class ComposerStaticInit5705c898cd9f700371dc32bbbad1f515
 {
     public static $files = array (
         'bb_platform_a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -35,6 +35,7 @@ class ComposerStaticInitc432c1ea7b8c2828192d90b97d351527
             'BuddyBossPlatform\\Neutron\\' => 26,
             'BuddyBossPlatform\\GroundLevel\\Support\\' => 38,
             'BuddyBossPlatform\\GroundLevel\\Mothership\\' => 41,
+            'BuddyBossPlatform\\GroundLevel\\Insights\\' => 39,
             'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\' => 53,
             'BuddyBossPlatform\\GroundLevel\\Container\\' => 40,
             'BuddyBossPlatform\\FFMpeg\\' => 25,
@@ -100,6 +101,10 @@ class ComposerStaticInitc432c1ea7b8c2828192d90b97d351527
         'BuddyBossPlatform\\GroundLevel\\Mothership\\' => 
         array (
             0 => __DIR__ . '/..' . '/caseproof/ground-level-mothership',
+        ),
+        'BuddyBossPlatform\\GroundLevel\\Insights\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/caseproof/ground-level-insights',
         ),
         'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\' => 
         array (
@@ -302,6 +307,9 @@ class ComposerStaticInitc432c1ea7b8c2828192d90b97d351527
         'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\Store' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/Store.php',
         'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Services\\View' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Services/View.php',
         'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\Util' => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications/Util.php',
+        'BuddyBossPlatform\\GroundLevel\\Insights\\InsightsServiceProvider' => __DIR__ . '/..' . '/caseproof/ground-level-insights/InsightsServiceProvider.php',
+        'BuddyBossPlatform\\GroundLevel\\Insights\\Services\\NetPromoterScore' => __DIR__ . '/..' . '/caseproof/ground-level-insights/Services/NetPromoterScore.php',
+        'BuddyBossPlatform\\GroundLevel\\Insights\\Services\\RestApi' => __DIR__ . '/..' . '/caseproof/ground-level-insights/Services/RestApi.php',
         'BuddyBossPlatform\\GroundLevel\\Mothership\\AbstractPluginConnection' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/AbstractPluginConnection.php',
         'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\Request' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/Request.php',
         'BuddyBossPlatform\\GroundLevel\\Mothership\\Api\\RequestFactory' => __DIR__ . '/..' . '/caseproof/ground-level-mothership/Api/RequestFactory.php',
@@ -539,9 +547,9 @@ class ComposerStaticInitc432c1ea7b8c2828192d90b97d351527
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc432c1ea7b8c2828192d90b97d351527::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc432c1ea7b8c2828192d90b97d351527::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc432c1ea7b8c2828192d90b97d351527::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5705c898cd9f700371dc32bbbad1f515::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5705c898cd9f700371dc32bbbad1f515::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5705c898cd9f700371dc32bbbad1f515::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -1,0 +1,13 @@
+{
+  "name": "@caseproof/ground-level-insights",
+  "description": "The GroundLevel Insights package.",
+  "author": "Team Caseproof <developers@caseproof.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "terser": "^5.46.0"
+  },
+  "scripts": {
+    "build": "terser ./src/insights.js -o ./assets/insights.js -c -m",
+    "postinstall": "npm run build"
+  }
+}
