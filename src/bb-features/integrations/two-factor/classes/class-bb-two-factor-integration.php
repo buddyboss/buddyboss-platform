@@ -2,7 +2,7 @@
 /**
  * Two-Factor integration class.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.6.0
  * @package BuddyBoss\Features\Integrations\TwoFactor
  */
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Passes the real plugin basename as required_plugin. Integrations that pass an
  * empty array are never activated, so the base class would not hook includes().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 class BB_Two_Factor_Integration extends BP_Integration {
 
@@ -25,7 +25,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	 * Declared because BP_Integration reads it on every
 	 * bp_register_admin_integrations pass without declaring it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @var string
 	 */
@@ -34,7 +34,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 */
 	public function __construct() {
 		$this->start(
@@ -53,7 +53,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	 * BP_Integration::start() resolves $this->path under bp-integrations/, which is
 	 * the wrong tree for this integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @return string
 	 */
@@ -67,7 +67,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	 * Runs on bp_include @8 when is_activated() is true. The extra guard covers an
 	 * unsupported plugin version and the feature toggle.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param array $includes Unused; signature inherited.
 	 */

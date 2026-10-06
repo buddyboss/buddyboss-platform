@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.5.1\n"
+"Project-Id-Version: BuddyBoss Platform 3.6.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-06 07:03:59+00:00\n"
+"POT-Creation-Date: 2026-10-06 11:26:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2126,7 +2126,7 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1022
 #: bp-moderation/classes/class-bp-moderation-list-table.php:381
 #: bp-moderation/classes/class-bp-moderation-list-table.php:399
-#: bp-search/classes/class-bp-search.php:989
+#: bp-search/classes/class-bp-search.php:994
 #: bp-templates/bp-nouveau/buddypress/activity/index.php:29
 #: bp-templates/bp-nouveau/readylaunch/activity/index.php:42
 #: bp-templates/bp-nouveau/readylaunch/blog/archive-header.php:73
@@ -2250,11 +2250,11 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:253
 #: bp-activity/classes/class-bb-activity-readylaunch.php:299
 #: bp-core/bp-core-actions.php:1142
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1640
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1649
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1695
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1764
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1773
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1653
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1662
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1708
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1777
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1786
 msgid "Invalid request."
 msgstr ""
 
@@ -2417,7 +2417,7 @@ msgstr ""
 #: bb-features/community/reactions/classes/class-bb-rest-reactions-endpoint.php:842
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3372
 #: bp-core/classes/class-bb-rest-subscriptions-endpoint.php:887
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1738
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1749
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1148
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1231
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1744
@@ -3165,7 +3165,7 @@ msgstr ""
 
 #: bp-activity/actions/delete.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:439
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1956
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1969
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -3713,7 +3713,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6918
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2030
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1605
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1618
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -4064,25 +4064,25 @@ msgid "reactions"
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:261
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1657
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1781
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1670
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1794
 msgid "Activity id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:269
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1665
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1678
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:289
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1685
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1698
 msgid "Sorry, You are not allowed to view more comments."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:322
 #: bp-activity/classes/class-bb-activity-readylaunch.php:346
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1715
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1741
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1728
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1754
 msgid "No more items to load."
 msgstr ""
 
@@ -5156,8 +5156,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:141
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:167
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3020
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1166
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1558
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1177
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1569
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1388
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1643
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1227
@@ -5351,8 +5351,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1870
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2037
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3865
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1564
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1825
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1577
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1838
 #: bp-templates/bp-nouveau/includes/activity/functions.php:261
 #: bp-templates/bp-nouveau/includes/activity/functions.php:262
 #: bp-templates/bp-nouveau/includes/activity/functions.php:265
@@ -5374,12 +5374,12 @@ msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2028
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1603
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1616
 msgid "You turned on commenting for this post"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2032
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1607
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1620
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
@@ -5668,17 +5668,17 @@ msgid "The action is required."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3856
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1858
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1871
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3858
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1860
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1873
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3860
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1862
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1875
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
@@ -10420,12 +10420,12 @@ msgid "BuddyBoss License Activation"
 msgstr ""
 
 #. translators: %s: URL of the network License page.
-#: bp-core/admin/mothership/class-bb-mothership-loader.php:427
+#: bp-core/admin/mothership/class-bb-mothership-loader.php:701
 msgid "BuddyBoss Platform is now network-activated, so the network shares one license. The license previously activated on a subsite could not be carried over. Please <a href=\"%s\">activate your license</a> for the network."
 msgstr ""
 
 #. Translators: %s is the response error message.
-#: bp-core/admin/mothership/class-bb-mothership-loader.php:1035
+#: bp-core/admin/mothership/class-bb-mothership-loader.php:1309
 msgid "Migrate License activation failed: %s"
 msgstr ""
 
@@ -19676,7 +19676,7 @@ msgid "Document privacy."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:88
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1207
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1218
 msgid "A unique numeric ID for the document."
 msgstr ""
 
@@ -19704,9 +19704,9 @@ msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:465
 #: bp-document/classes/class-bp-rest-document-endpoint.php:520
-#: bp-document/classes/class-bp-rest-document-endpoint.php:818
-#: bp-document/classes/class-bp-rest-document-endpoint.php:981
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1058
+#: bp-document/classes/class-bp-rest-document-endpoint.php:824
+#: bp-document/classes/class-bp-rest-document-endpoint.php:987
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1069
 msgid "Invalid document ID."
 msgstr ""
 
@@ -19733,72 +19733,72 @@ msgstr ""
 msgid "Invalid Parent Folder ID."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:718
+#: bp-document/classes/class-bp-rest-document-endpoint.php:724
 msgid "You don't have a permission to create a document inside this folder."
 msgstr ""
 
 #. translators: Attachment ID.
-#: bp-document/classes/class-bp-rest-document-endpoint.php:740
+#: bp-document/classes/class-bp-rest-document-endpoint.php:746
 #: bp-media/classes/class-bp-rest-media-endpoint.php:668
 #: bp-video/classes/class-bp-rest-video-endpoint.php:790
 msgid "Invalid attachment id: %d"
 msgstr ""
 
 #. translators: Attachment ID.
-#: bp-document/classes/class-bp-rest-document-endpoint.php:752
+#: bp-document/classes/class-bp-rest-document-endpoint.php:758
 #: bp-media/classes/class-bp-rest-media-endpoint.php:680
 #: bp-video/classes/class-bp-rest-video-endpoint.php:802
 msgid "You are not a valid author for attachment id: %d"
 msgstr ""
 
 #. translators: Attachment ID.
-#: bp-document/classes/class-bp-rest-document-endpoint.php:767
+#: bp-document/classes/class-bp-rest-document-endpoint.php:773
 msgid "Document already exists for attachment id: %d"
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:857
+#: bp-document/classes/class-bp-rest-document-endpoint.php:863
 msgid "Sorry, you are not allowed to move this document with folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:919
+#: bp-document/classes/class-bp-rest-document-endpoint.php:925
 msgid "Cannot update existing document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:965
+#: bp-document/classes/class-bp-rest-document-endpoint.php:971
 msgid "Sorry, you need to be logged in to update this document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1001
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1007
 msgid "You don't have a permission to edit a document inside this group."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1013
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1024
 msgid "You don't have permission to move/update a document inside the folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1075
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1086
 msgid "Sorry, you are not allowed to delete this document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1117
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3250
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1128
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3261
 msgid "Sorry, you need to be logged in to delete this document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1156
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3098
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3118
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3138
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1167
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3109
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3129
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3149
 msgid "Document specific IDs."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1175
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1186
 msgid "Document Content."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1182
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1552
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1789
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1193
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1563
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1800
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:108
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1073
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1188
@@ -19827,16 +19827,16 @@ msgstr ""
 msgid "A unique numeric ID for the Group."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1189
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1200
 msgid "A unique numeric ID for the Document Folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1196
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1576
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1207
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1587
 msgid "Privacy of the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1429
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1440
 #: bp-messages/bp-messages-functions.php:2502
 #: bp-templates/bp-nouveau/buddypress/document/audio-preview.php:26
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2727
@@ -19844,15 +19844,15 @@ msgstr ""
 msgid "Your browser does not support the audio element."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1458
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1469
 msgid "Click to expand"
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1504
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1515
 msgid "A unique numeric ID for the Document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1510
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1521
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1601
 #: bp-moderation/classes/class-bp-rest-moderation-endpoint.php:903
 #: bp-moderation/classes/class-bp-rest-moderation-report-endpoint.php:726
@@ -19860,172 +19860,172 @@ msgstr ""
 msgid "Current Site ID."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1516
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1527
 msgid "Unique identifier for the document object."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1522
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1533
 msgid "The ID for the author of the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1528
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1539
 msgid "The Document title."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1534
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1545
 msgid "The Document description."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1540
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1551
 msgid "Whether it is a document or folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1546
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1557
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1181
 msgid "A unique numeric ID for the parent Folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1564
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1575
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1649
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1350
 msgid "A unique numeric ID for the Message thread."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1570
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1581
 msgid "Based on this hide like/comment button for document activity comments."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1583
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1594
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1668
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1369
 msgid "Order of the item."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1589
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1600
 msgid "The date the document was created, in the site's timezone."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1596
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1607
 msgid "The date the document was modified, in the site's timezone."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1603
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1614
 msgid "Group name associate with the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1609
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1620
 msgid "Group status associate with the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1615
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1626
 msgid "Visibility of the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1621
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1632
 msgid "Count of the child documents and folders of the folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1627
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1638
 msgid "Download URL for the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1633
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1644
 msgid "Document file extension."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1639
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1650
 msgid "Document file description."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1645
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1656
 msgid "Document Icon based on the extension."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1651
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1662
 msgid "Full name of the document file with extension."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1657
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1668
 msgid "Size of the uploaded document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1663
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1674
 msgid "Message preview for the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1669
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1680
 msgid "Wordpress Document Data."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1675
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1686
 msgid "Document URL with full image size."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1681
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1692
 msgid "Document URL with thumbnail image size."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1687
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1698
 msgid "Document URL for the activity image size."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1693
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1704
 msgid "Meta items for the document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1701
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1712
 msgid "The User's nice name to create a document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1707
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1718
 msgid "The User's login name to create a document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1713
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1724
 msgid "The User's display name to create a document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1747
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1758
 msgid "Order documents by which attribute."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1756
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1767
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1166
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1178
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1812
 msgid "Maximum number of results to return"
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1763
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1774
 msgid "Scope of the Document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1774
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1785
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1173
 msgid "Limit results to a specific user."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1782
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1793
 msgid "A unique numeric ID for the Folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1796
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1807
 msgid "A unique numeric ID for the Document's Activity."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1803
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1814
 msgid "Privacy of the Document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1814
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1825
 msgid "Ensure result set includes specific document IDs."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1823
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1834
 msgid "Ensure result set excludes specific document IDs."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1832
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1843
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1224
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1227
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1880
@@ -20033,18 +20033,18 @@ msgstr ""
 msgid "Show total count or not."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:1838
+#: bp-document/classes/class-bp-rest-document-endpoint.php:1849
 msgid "Type of document."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:2113
+#: bp-document/classes/class-bp-rest-document-endpoint.php:2124
 msgid "Error creating document, please try again."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3184
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3196
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3262
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3195
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3207
 #: bp-document/classes/class-bp-rest-document-endpoint.php:3273
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3284
 #: bp-media/classes/class-bp-rest-media-endpoint.php:3909
 #: bp-media/classes/class-bp-rest-media-endpoint.php:3921
 #: bp-media/classes/class-bp-rest-media-endpoint.php:3987
@@ -20057,13 +20057,13 @@ msgstr ""
 msgid "Invalid attachment ID."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3209
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3220
 #: bp-media/classes/class-bp-rest-media-endpoint.php:3934
 #: bp-video/classes/class-bp-rest-video-endpoint.php:2737
 msgid "Could not delete the attachment."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-endpoint.php:3285
+#: bp-document/classes/class-bp-rest-document-endpoint.php:3296
 msgid "Sorry, you are not allowed to delete this document attachment."
 msgstr ""
 
@@ -32539,17 +32539,17 @@ msgstr ""
 msgid "No results found."
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:625
+#: bp-search/classes/class-bp-search.php:626
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-search/classes/class-bp-search.php:641
+#: bp-search/classes/class-bp-search.php:642
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:902
+#: bp-search/classes/class-bp-search.php:907
 msgid "All Results"
 msgstr ""
 
@@ -35073,7 +35073,7 @@ msgid "Sorry, there was no activity found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:299
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1883
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1896
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
@@ -35153,27 +35153,27 @@ msgstr ""
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1267
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1280
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1267
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1280
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1438
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1451
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1488
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1501
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1570
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1583
 msgid "There was a problem marking this operation. Close comments setting is disabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1929
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1942
 msgid "You don't have permission to delete scheduled activity."
 msgstr ""
 

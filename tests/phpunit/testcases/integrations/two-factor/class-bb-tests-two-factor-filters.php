@@ -2,7 +2,7 @@
 /**
  * Two-Factor integration: admin-bar entry and Dummy provider filter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @package BuddyBoss\Tests
  */
 

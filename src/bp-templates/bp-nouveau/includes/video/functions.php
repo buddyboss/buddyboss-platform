@@ -357,7 +357,7 @@ function bp_video_allowed_video_type() {
  * standalone video album screen, so the AJAX response can carry the same
  * markup the template would render on a fresh page load.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string The video-album empty-state HTML for the active theme.
  */
@@ -372,7 +372,7 @@ function bb_nouveau_video_get_album_empty_state() {
 	/**
 	 * Filters the single video-album empty-state markup.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string $html The rendered empty-state HTML.
 	 */

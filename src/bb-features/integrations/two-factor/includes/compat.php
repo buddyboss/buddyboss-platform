@@ -9,7 +9,7 @@
  * Nothing here loads the plugin, depends on it being active, or needs wp-admin
  * includes, so every helper is front-end safe.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.6.0
  * @package BuddyBoss\Features\Integrations\TwoFactor
  */
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Also the `required_plugin` value passed to BP_Integration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 if ( ! defined( 'BB_TWO_FACTOR_PLUGIN_BASENAME' ) ) {
 	define( 'BB_TWO_FACTOR_PLUGIN_BASENAME', 'two-factor/two-factor.php' );
@@ -34,7 +34,7 @@ if ( ! defined( 'BB_TWO_FACTOR_PLUGIN_BASENAME' ) ) {
  * `Two_Factor_Core::action_user_profile_update_errors()`, which is public as of
  * that release; on 0.15.x the save would fatal.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 if ( ! defined( 'BB_TWO_FACTOR_MIN_VERSION' ) ) {
 	define( 'BB_TWO_FACTOR_MIN_VERSION', '0.16.0' );
@@ -43,7 +43,7 @@ if ( ! defined( 'BB_TWO_FACTOR_MIN_VERSION' ) ) {
 /**
  * Get the Two Factor plugin file, relative to the plugins directory.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string Plugin basename, e.g. 'two-factor/two-factor.php'.
  */
@@ -54,7 +54,7 @@ function bb_two_factor_plugin_basename() {
 	 *
 	 * For sites that ship the plugin under a different folder name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string $basename Plugin basename.
 	 */
@@ -67,7 +67,7 @@ function bb_two_factor_plugin_basename() {
  * The filter can only raise the floor. Lowering it would let the save path
  * call a plugin method that does not exist on older releases.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string Version string.
  */
@@ -78,7 +78,7 @@ function bb_two_factor_min_plugin_version() {
 	 *
 	 * Values below the built-in floor are ignored.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string $version Minimum supported version.
 	 */
