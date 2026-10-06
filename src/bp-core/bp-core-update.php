@@ -4652,13 +4652,15 @@ function bb_install_addons_bundle_on_upgrade() {
 
 		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
 
-		if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
+		$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
+
+		if ( '' === $download_url ) {
 			return;
 		}
 
 		$skin      = new Automatic_Upgrader_Skin();
 		$upgrader  = new Plugin_Upgrader( $skin );
-		$installed = $upgrader->install( $product->_embedded->{'version-latest'}->url );
+		$installed = $upgrader->install( $download_url );
 
 		if ( true !== $installed ) {
 			// Filesystem not writable / download failed. Fail silently for the
