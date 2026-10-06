@@ -2,7 +2,7 @@
 /**
  * Two-Factor integration: load gate and feature toggle.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @package BuddyBoss\Tests
  */
 

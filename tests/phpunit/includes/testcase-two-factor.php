@@ -2,7 +2,7 @@
 /**
  * Base test case for the Two-Factor integration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  * @package BuddyBoss\Tests
  */
 
@@ -11,14 +11,14 @@
  * loaded, which is the case under the default bootstrap. Run the suite through
  * tests/phpunit/two-factor.xml, which uses bootstrap-two-factor.php.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  */
 abstract class BB_Two_Factor_UnitTestCase extends BP_UnitTestCase {
 
 	/**
 	 * Skip unless the plugin and the integration are loaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 */
 	public function setUp(): void {
 		parent::setUp();
@@ -31,7 +31,7 @@ abstract class BB_Two_Factor_UnitTestCase extends BP_UnitTestCase {
 	/**
 	 * Clean request globals the integration reads.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 */
 	public function tearDown(): void {
 		unset(
@@ -45,7 +45,7 @@ abstract class BB_Two_Factor_UnitTestCase extends BP_UnitTestCase {
 	/**
 	 * Create a member with a fixed login so URLs can be asserted literally.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string $login User login, also the nicename.
 	 * @param string $role  Role.
@@ -65,7 +65,7 @@ abstract class BB_Two_Factor_UnitTestCase extends BP_UnitTestCase {
 	/**
 	 * Report a plugin list without Two Factor in it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @return string[]
 	 */

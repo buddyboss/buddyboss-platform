@@ -21,7 +21,8 @@
         "php-ffmpeg/php-ffmpeg": "^0.16.0",
         "maennchen/zipstream-php": "^2.1",
 		"caseproof/ground-level-mothership": "9.1.2",
-		"caseproof/ground-level-in-product-notifications": "9.1.2"
+		"caseproof/ground-level-in-product-notifications": "9.1.2",
+        "caseproof/ground-level-insights": "9.1.2"
     },
 	"require-dev": {
 		"humbug/php-scoper": "^0.17.5"

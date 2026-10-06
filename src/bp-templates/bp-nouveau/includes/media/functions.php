@@ -331,7 +331,7 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
  * media delete and activity delete AJAX handlers so the single-album view can
  * show the empty-state when the album becomes empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.0
  *
  * @return string The album empty-state HTML for the active theme.
  */
@@ -348,7 +348,7 @@ function bb_nouveau_media_get_album_empty_state() {
 	/**
 	 * Filters the single-album empty-state markup.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.0
 	 *
 	 * @param string $html The rendered empty-state HTML.
 	 */
