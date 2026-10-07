@@ -59,6 +59,7 @@ function bp_video_reset_cache_incrementor() {
 }
 add_action( 'bp_video_delete', 'bp_video_reset_cache_incrementor' );
 add_action( 'bp_video_add', 'bp_video_reset_cache_incrementor' );
+add_action( 'bp_video_after_save', 'bp_video_reset_cache_incrementor' );
 
 /**
  * Clear a user's cached video count.
@@ -138,12 +139,15 @@ add_action( 'bp_video_add', 'bp_video_clear_video_group_object_cache', 10 );
  * Clear a group's cached video count when delete.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Fixed iteration over the deleted video rows
+ *              so the group video count cache is actually cleared for every
+ *              affected group.
  *
  * @param array $videos DB results of video items.
  */
 function bp_video_clear_video_group_object_cache_on_delete( $videos ) {
-	if ( ! empty( $videos[0] ) ) {
-		foreach ( (array) $videos[0] as $deleted_video ) {
+	if ( ! empty( $videos ) ) {
+		foreach ( (array) $videos as $deleted_video ) {
 			$group_id = ! empty( $deleted_video->group_id ) ? $deleted_video->group_id : false;
 
 			if ( $group_id ) {
@@ -197,6 +201,7 @@ function bp_video_album_reset_cache_incrementor() {
 }
 add_action( 'bp_video_album_delete', 'bp_video_album_reset_cache_incrementor' );
 add_action( 'bp_video_album_add', 'bp_video_album_reset_cache_incrementor' );
+add_action( 'bp_video_album_after_save', 'bp_video_album_reset_cache_incrementor' );
 
 /**
  * Clear a group's cached album count.
@@ -222,12 +227,15 @@ add_action( 'bp_video_album_add', 'bp_video_clear_album_group_object_cache', 10 
  * Clear a group's cached album count when delete.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Fixed iteration over the deleted album rows
+ *              so the group album count cache is actually cleared for every
+ *              affected group.
  *
  * @param array $albums DB results of album items.
  */
 function bp_video_clear_album_group_object_cache_on_delete( $albums ) {
-	if ( ! empty( $albums[0] ) ) {
-		foreach ( (array) $albums[0] as $deleted_album ) {
+	if ( ! empty( $albums ) ) {
+		foreach ( (array) $albums as $deleted_album ) {
 			$group_id = ! empty( $deleted_album->group_id ) ? $deleted_album->group_id : 0;
 			$user_id  = ! empty( $deleted_album->user_id ) ? $deleted_album->user_id : 0;
 
