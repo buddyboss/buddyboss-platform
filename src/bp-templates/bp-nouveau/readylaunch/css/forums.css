@@ -2321,6 +2321,9 @@
 .bb-rl-topic-header .bb-rl-topic-footer {
   display: flex;
   flex-wrap: wrap;
+}
+
+.bb-rl-topic-header .bb-rl-topic-footer:has(.bbp-topic-tags) {
   margin: var(--bb-rl-space-100) 0;
 }
 

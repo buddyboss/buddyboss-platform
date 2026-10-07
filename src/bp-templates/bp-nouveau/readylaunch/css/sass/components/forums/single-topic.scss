@@ -230,7 +230,10 @@
 	.bb-rl-topic-footer {
 		display: flex;
 		flex-wrap: wrap;
-		margin: var(--bb-rl-space-100) 0;
+
+		&:has(.bbp-topic-tags) {
+			margin: var(--bb-rl-space-100) 0;
+		}
 
 		.bbp-topic-tags {
 			width: 100%;
