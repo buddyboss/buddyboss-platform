@@ -1031,7 +1031,6 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 			$video->privacy,
 			array(
 				'forums',
-				'comment',
 				'message',
 			),
 			true
@@ -4619,9 +4618,49 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 				}
 			} elseif ( ! $file ) {
 
-				bp_video_regenerate_attachment_thumbnails( $attachment_id );
+				$unavailable_sizes = get_post_meta( $attachment_id, '_bb_video_thumb_unavailable_sizes', true );
+				if ( ! is_array( $unavailable_sizes ) ) {
+					$unavailable_sizes = array();
+				}
 
-				$file = image_get_intermediate_size( $attachment_id, $size );
+				if ( ! in_array( $size, $unavailable_sizes, true ) ) {
+					bp_video_regenerate_attachment_thumbnails( $attachment_id );
+
+					$file = image_get_intermediate_size( $attachment_id, $size );
+
+					// Only permanently skip this size when the source poster image is verifiably
+					// smaller than (or equal to) the registered target dimensions on both axes --
+					// that is the one failure WP's own non-cropped resize can never recover from on
+					// a later attempt. Any other cause of a missing $file (memory exhaustion during
+					// wp_generate_attachment_metadata(), a source file that isn't readable or fully
+					// flushed yet, no available image editor, a timeout mid-regeneration) is
+					// transient, so it's left off the blacklist and simply retried next request.
+					if ( ! $file ) {
+						$target_size = array();
+						foreach ( bb_video_get_image_sizes() as $registered_name => $registered_size ) {
+							if ( sanitize_key( $registered_name ) === $size ) {
+								$target_size = $registered_size;
+								break;
+							}
+						}
+
+						$source_meta   = wp_get_attachment_metadata( $attachment_id );
+						$source_width  = ! empty( $source_meta['width'] ) ? (int) $source_meta['width'] : 0;
+						$source_height = ! empty( $source_meta['height'] ) ? (int) $source_meta['height'] : 0;
+
+						if (
+							! empty( $target_size['width'] ) &&
+							! empty( $target_size['height'] ) &&
+							$source_width > 0 &&
+							$source_height > 0 &&
+							$source_width <= (int) $target_size['width'] &&
+							$source_height <= (int) $target_size['height']
+						) {
+							$unavailable_sizes[] = $size;
+							update_post_meta( $attachment_id, '_bb_video_thumb_unavailable_sizes', $unavailable_sizes );
+						}
+					}
+				}
 
 				if ( $file && ! empty( $file['path'] ) ) {
 
