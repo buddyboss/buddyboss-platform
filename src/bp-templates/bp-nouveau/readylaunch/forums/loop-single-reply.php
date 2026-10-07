@@ -143,7 +143,39 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 				</div>
 			</div><!-- .bbp-meta -->
-		<?php } ?>
+			<?php
+		}
+
+		/**
+		 * Logged-out (anonymous) users can still post a threaded reply when the
+		 * forum allows anonymous posting. The reply-link helpers already gate on
+		 * bbp_current_user_can_publish_replies(), so build the link first and only
+		 * render the "Reply" button when a link is actually returned.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		if ( ! is_user_logged_in() ) {
+
+			// If post is a topic, print the topic reply link, otherwise the reply-to link.
+			if ( bbp_is_topic( bbp_get_reply_id() ) ) {
+				$anonymous_reply_link = bbp_get_topic_reply_link();
+			} else {
+				$anonymous_reply_link = bbp_get_reply_to_link();
+			}
+
+			if ( ! empty( wp_strip_all_tags( $anonymous_reply_link ) ) ) {
+				?>
+				<div class="bb-rl-reply-meta">
+					<div class="bb-rl-more-actions bb-reply-actions bb-rl-dropdown-wrap">
+						<div class="bb_more_options forum-dropdown bb-rl-context-wrap bb-rl-no-actions">
+							<?php echo $anonymous_reply_link; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						</div>
+					</div>
+				</div><!-- .bbp-meta -->
+				<?php
+			}
+		}
+		?>
 
 	</div>
 
