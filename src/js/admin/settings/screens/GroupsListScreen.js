@@ -172,6 +172,12 @@ export function GroupsListScreen( { onNavigate } ) {
 	var deleteTargetIds = deleteTargetIdsState[ 0 ];
 	var setDeleteTargetIds = deleteTargetIdsState[ 1 ];
 
+	// Only set for a single-group delete, so the confirmation can name the
+	// group being deleted; left blank for bulk deletes (see handleBulkApply).
+	var deleteTargetNameState = useState( '' );
+	var deleteTargetName = deleteTargetNameState[ 0 ];
+	var setDeleteTargetName = deleteTargetNameState[ 1 ];
+
 	var deleteConfirmState = useState( false );
 	var deleteConfirmChecked = deleteConfirmState[ 0 ];
 	var setDeleteConfirmChecked = deleteConfirmState[ 1 ];
@@ -396,6 +402,12 @@ export function GroupsListScreen( { onNavigate } ) {
 
 		if ( 'delete' === action ) {
 			setDeleteTargetIds( selectedIds.slice() );
+
+			var singleGroup = 1 === selectedIds.length
+				? groups.find( function ( group ) { return group.id === selectedIds[ 0 ]; } )
+				: null;
+			setDeleteTargetName( singleGroup ? singleGroup.name : '' );
+
 			setDeleteConfirmChecked( false );
 			setDeleteModalOpen( true );
 			return;
@@ -424,6 +436,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	 */
 	var handleDeleteGroup = function ( group ) {
 		setDeleteTargetIds( [ group.id ] );
+		setDeleteTargetName( group.name );
 		setDeleteConfirmChecked( false );
 		setDeleteModalOpen( true );
 	};
@@ -751,6 +764,7 @@ export function GroupsListScreen( { onNavigate } ) {
 												target="_blank"
 												rel="noopener noreferrer"
 												className="bb-groups-list__group-name"
+												title={ decodeEntities( group.name ) }
 												>
 													{ decodeEntities( group.name ) }
 												</a>
@@ -860,7 +874,11 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ /* Delete Group Modal */ }
 			{ deleteModalOpen && (
 				<Modal
-					title={ __( 'Delete Group?', 'buddyboss' ) }
+					title={
+						1 === deleteTargetIds.length
+							? __( 'Delete Group?', 'buddyboss' )
+							: __( 'Delete Groups?', 'buddyboss' )
+					}
 					onRequestClose={ function () {
 						setDeleteModalOpen( false );
 					} }
@@ -880,7 +898,13 @@ export function GroupsListScreen( { onNavigate } ) {
 							</div>
 						</div>
 						<p className="bb-group-delete-modal__description">
-							{ __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
+							{ 1 === deleteTargetIds.length && deleteTargetName
+								? sprintf(
+										/* translators: %s: group name. */
+										__( 'Deleting "%s" will remove it from the community and the WordPress backend listings. It will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ),
+										decodeEntities( deleteTargetName )
+								  )
+								: __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
 						</p>
 						<CheckboxControl
 							label={ __( 'I understand this will permanently delete the group.', 'buddyboss' ) }
