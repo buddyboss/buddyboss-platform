@@ -861,10 +861,12 @@ function bp_core_get_js_strings_callback( $params ) {
 	if ( is_user_logged_in() ) {
 		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
 			array(
-				'fields'      => 'ids',
-				'user_id'     => bp_loggedin_user_id(),
-				'is_hidden'   => true,
-				'thread_type' => 'archived',
+				'fields'                         => 'ids',
+				'user_id'                        => bp_loggedin_user_id(),
+				'is_hidden'                      => true,
+				'thread_type'                    => 'archived',
+				// Same rule as the archived list, so the flag does not count threads the list hides.
+				'exclude_disabled_group_threads' => true,
 			)
 		);
 

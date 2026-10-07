@@ -370,10 +370,12 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 						</a>
 						<?php
 					} else {
-						$recipient = ! empty( $first_three[0] ) ? $first_three[0] : $current_user;
+						// Like release, show the other member who has not left the thread, else the viewer.
+						$recipient = ! empty( $first_three[0] ) ? $first_three[0] : ( $other_recipients_count > 0 ? false : $current_user );
 
 						// The member to show can be outside the loaded page of recipients: the other member who has
-						// not left the thread, or the viewer when no other member is left. Release read the full list.
+						// not left the thread (even when the viewer is on the page), or the viewer when no other member
+						// is left. Release read the full list.
 						if ( empty( $recipient ) && isset( $messages_template->thread->total_recipients_count ) && (int) $messages_template->thread->total_recipients_count > count( (array) $messages_template->thread->recipients ) ) {
 							$page_recipients = BP_Messages_Thread::get(
 								array(

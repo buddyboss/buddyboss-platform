@@ -1516,16 +1516,66 @@ function bb_messages_is_group_thread( $thread_id ) {
  * is picked as BP_Messages_Thread::get_first_message() does: the oldest message (date_sent, then id)
  * with meta other than the group joined/left markers. Two queries whatever the number of threads.
  *
+ * Design: the list is built from the messages tables in one pass instead of running the open check for
+ * each thread, so it follows the core rule, not every way a site can change that check:
+ * - When bb_messages_validate_groups_thread() is unhooked from 'bb_messages_validate_thread', group
+ *   threads open again, so no thread is disabled and the list is empty.
+ * - Other callbacks on 'bb_messages_validate_thread' and filters on the message meta are not applied:
+ *   that would mean one open check per thread. Use the 'bb_messages_disabled_group_thread_ids' filter
+ *   to keep custom rules in line with the list.
+ *
+ * The result has its own cache, reset only by the events that can change it (see
+ * bb_messages_reset_disabled_group_thread_ids_cache()): sending, reading or archiving other messages
+ * keeps it. Without a persistent object cache it is also kept in a non-autoloaded option.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @return array Thread IDs, empty while "Group Messages" is enabled.
  */
 function bb_messages_get_disabled_group_thread_ids() {
-	global $wpdb;
 
 	if ( ! bp_is_active( 'messages' ) || ! function_exists( 'bp_disable_group_messages' ) || true === bp_disable_group_messages() ) {
 		return array();
 	}
+
+	if ( false === has_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' ) ) {
+		// Group threads open while the core check is unhooked.
+		$thread_ids = array();
+	} else {
+		$thread_ids = bb_messages_get_cached_disabled_group_thread_ids();
+
+		if ( false === $thread_ids ) {
+			$thread_ids = bb_messages_query_disabled_group_thread_ids();
+			bb_messages_set_cached_disabled_group_thread_ids( $thread_ids );
+		}
+	}
+
+	/**
+	 * Filters the group threads that cannot be opened while "Group Messages" is disabled.
+	 *
+	 * The list hides these threads from the message lists and refuses replies to them. Keep it in line
+	 * with any custom 'bb_messages_validate_thread' rule. The filtered list is not cached.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $thread_ids Thread IDs.
+	 */
+	$thread_ids = apply_filters( 'bb_messages_disabled_group_thread_ids', $thread_ids );
+
+	return array_values( array_filter( wp_parse_id_list( $thread_ids ) ) );
+}
+
+/**
+ * Read the disabled group threads from the messages tables.
+ *
+ * Use bb_messages_get_disabled_group_thread_ids(), which caches the result.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Thread IDs.
+ */
+function bb_messages_query_disabled_group_thread_ids() {
+	global $wpdb;
 
 	$bp       = buddypress();
 	$messages = $bp->messages->table_name_messages;
@@ -1547,46 +1597,129 @@ function bb_messages_get_disabled_group_thread_ids() {
 		INNER JOIN {$meta} mm ON mm.message_id = m.id AND mm.meta_key NOT IN ( {$markers} )
 		GROUP BY m.thread_id";
 
-	$thread_ids = bp_core_get_incremented_cache( $sql, 'bp_messages' );
+	$thread_ids     = array();
+	$first_messages = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-	if ( false === $thread_ids ) {
-		$thread_ids = array();
+	if ( empty( $first_messages ) ) {
+		return $thread_ids;
+	}
 
-		// Cached with the incremented 'bp_messages' key, reset whenever a message or the setting changes.
-		$first_messages = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	// Only the four keys the check reads: priming all meta would also load large keys such as message_users_ids.
+	$first_message_ids = implode( ',', array_map( 'intval', wp_list_pluck( $first_messages, 'id' ) ) );
+	$meta_rows         = $wpdb->get_results( "SELECT message_id, meta_key, meta_value FROM {$meta} WHERE message_id IN ( {$first_message_ids} ) AND meta_key IN ( 'message_from', 'group_message_thread_id', 'group_message_users', 'group_message_type' ) ORDER BY id ASC" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		if ( ! empty( $first_messages ) ) {
-			// Only the four keys the check reads: priming all meta would also load large keys such as message_users_ids.
-			$first_message_ids = implode( ',', array_map( 'intval', wp_list_pluck( $first_messages, 'id' ) ) );
-			$meta_rows         = $wpdb->get_results( "SELECT message_id, meta_key, meta_value FROM {$meta} WHERE message_id IN ( {$first_message_ids} ) AND meta_key IN ( 'message_from', 'group_message_thread_id', 'group_message_users', 'group_message_type' ) ORDER BY id ASC" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-
-			// First value of each key, as bp_messages_get_meta( $id, $key, true ) returns.
-			$flags = array();
-			foreach ( (array) $meta_rows as $meta_row ) {
-				if ( ! isset( $flags[ $meta_row->message_id ][ $meta_row->meta_key ] ) ) {
-					$flags[ $meta_row->message_id ][ $meta_row->meta_key ] = maybe_unserialize( $meta_row->meta_value );
-				}
-			}
-
-			foreach ( $first_messages as $first_message ) {
-				$message_flags = isset( $flags[ $first_message->id ] ) ? $flags[ $first_message->id ] : array();
-
-				if (
-					isset( $message_flags['message_from'], $message_flags['group_message_users'], $message_flags['group_message_type'] ) &&
-					'group' === $message_flags['message_from'] &&
-					! empty( $message_flags['group_message_thread_id'] ) &&
-					'all' === $message_flags['group_message_users'] &&
-					'open' === $message_flags['group_message_type']
-				) {
-					$thread_ids[] = (int) $first_message->thread_id;
-				}
-			}
+	// First value of each key, as bp_messages_get_meta( $id, $key, true ) returns.
+	$flags = array();
+	foreach ( (array) $meta_rows as $meta_row ) {
+		if ( ! isset( $flags[ $meta_row->message_id ][ $meta_row->meta_key ] ) ) {
+			$flags[ $meta_row->message_id ][ $meta_row->meta_key ] = maybe_unserialize( $meta_row->meta_value );
 		}
+	}
 
-		bp_core_set_incremented_cache( $sql, 'bp_messages', $thread_ids );
+	foreach ( $first_messages as $first_message ) {
+		$message_flags = isset( $flags[ $first_message->id ] ) ? $flags[ $first_message->id ] : array();
+
+		if (
+			isset( $message_flags['message_from'], $message_flags['group_message_users'], $message_flags['group_message_type'] ) &&
+			'group' === $message_flags['message_from'] &&
+			! empty( $message_flags['group_message_thread_id'] ) &&
+			'all' === $message_flags['group_message_users'] &&
+			'open' === $message_flags['group_message_type']
+		) {
+			$thread_ids[] = (int) $first_message->thread_id;
+		}
 	}
 
 	return $thread_ids;
+}
+
+/**
+ * Cache key of the disabled group threads.
+ *
+ * The messages tables are shared by every site that uses them, and so is the cache group: the key names
+ * the tables, so sites (or networks) with their own tables get their own entry.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_messages_disabled_group_thread_ids_cache_key() {
+	$bp    = buddypress();
+	$table = isset( $bp->messages->table_name_messages ) ? $bp->messages->table_name_messages : bp_core_get_table_prefix() . 'bp_messages_messages';
+
+	return 'thread_ids_' . md5( $table );
+}
+
+/**
+ * Get the cached disabled group threads.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array|false Thread IDs, false when nothing is cached.
+ */
+function bb_messages_get_cached_disabled_group_thread_ids() {
+	$thread_ids = wp_cache_get( bb_messages_disabled_group_thread_ids_cache_key(), 'bb_messages_disabled_group_threads' );
+
+	if ( false === $thread_ids && ! wp_using_ext_object_cache() ) {
+		// Kept on the root site, with the other options of the messages tables.
+		$thread_ids = bp_get_option( '_bb_messages_disabled_group_thread_ids', false );
+
+		if ( is_array( $thread_ids ) ) {
+			wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), $thread_ids, 'bb_messages_disabled_group_threads' );
+		}
+	}
+
+	return is_array( $thread_ids ) ? $thread_ids : false;
+}
+
+/**
+ * Cache the disabled group threads.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $thread_ids Thread IDs.
+ *
+ * @return void
+ */
+function bb_messages_set_cached_disabled_group_thread_ids( $thread_ids ) {
+	$thread_ids = array_map( 'intval', (array) $thread_ids );
+
+	wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), $thread_ids, 'bb_messages_disabled_group_threads' );
+
+	if ( wp_using_ext_object_cache() ) {
+		return;
+	}
+
+	// Not autoloaded: only the requests that use the list read it.
+	$switched = is_multisite() && get_current_blog_id() !== (int) bp_get_root_blog_id();
+	if ( $switched ) {
+		switch_to_blog( bp_get_root_blog_id() );
+	}
+
+	update_option( '_bb_messages_disabled_group_thread_ids', $thread_ids, false );
+
+	if ( $switched ) {
+		restore_current_blog();
+	}
+}
+
+/**
+ * Reset the cached disabled group threads.
+ *
+ * Called when the list can change: the "Group Messages" setting or the active components change, a
+ * message gets, changes or loses the group meta the check reads (a group thread is created, or the
+ * first message of a thread changes), a thread is deleted, or a group is deleted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_reset_disabled_group_thread_ids_cache() {
+	wp_cache_delete( bb_messages_disabled_group_thread_ids_cache_key(), 'bb_messages_disabled_group_threads' );
+
+	if ( function_exists( 'bp_delete_option' ) ) {
+		bp_delete_option( '_bb_messages_disabled_group_thread_ids' );
+	}
 }
 
 /**
@@ -1649,7 +1782,12 @@ function bb_messages_get_disabled_group_thread_redirect_url( $thread_id, $archiv
 /**
  * Check whether a user is an active (not deleted) recipient of a thread with a one-row lookup.
  *
- * Same answer as messages_check_thread_access(), without loading every recipient of the thread.
+ * True when the thread has at least one recipient row for the user with is_deleted = 0, the rule the
+ * thread list query uses, without loading every recipient of the thread. This is the answer
+ * messages_check_thread_access() gives for the usual single row per member. It can differ only when
+ * a thread holds duplicate rows for the same member: messages_check_thread_access() keys the full
+ * recipient list by user ID, so it reads one of those rows, while any active row counts here.
+ * While 'bp_messages_thread_get_recipients' is filtered, messages_check_thread_access() is used instead.
  *
  * @since BuddyBoss [BBVERSION]
  *

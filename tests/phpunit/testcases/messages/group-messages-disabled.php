@@ -623,7 +623,7 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 
 	/**
 	 * A group thread created while Group Messages is enabled is hidden once the setting is disabled
-	 * (the cache filled before it existed is dropped by the setting-change incrementor reset).
+	 * (the cache filled before it existed is dropped when the group meta is saved and when the setting changes).
 	 */
 	public function test_group_thread_created_while_enabled_is_hidden_after_disabling() {
 		$f = $this->fixture();
@@ -642,7 +642,8 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The list is cached with the incremented 'bp_messages' key; any saved message resets it.
+	 * X-5: the list has its own cache. A new message in another thread keeps it; removing the group flag of the
+	 * first message resets it.
 	 */
 	public function test_new_message_invalidates_disabled_group_thread_ids() {
 		$f = $this->fixture();
@@ -650,14 +651,15 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 
 		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids() );
 
-		// Drop the group flag without saving a message: the cached value is still served.
+		// A new private thread does not change the list: the cached value is kept.
+		$this->create_private_thread( $f['u3'], $f['u1'] );
+		$this->assertNotFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'Kept after an unrelated message.' );
+
+		// Dropping the group flag of the first message resets it.
 		$first = BP_Messages_Thread::get_first_message( $f['group_thread'] );
 		bp_messages_delete_meta( $first->id, 'group_message_users' );
-		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids(), 'Cached (no reset yet).' );
-
-		// Any new message resets the incrementor (bb_core_clear_message_cache on messages_message_after_save / messages_message_sent).
-		$this->create_private_thread( $f['u3'], $f['u1'] );
-		$this->assertSame( array(), bb_messages_get_disabled_group_thread_ids(), 'Recomputed after a new message.' );
+		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'Reset when the flag is removed.' );
+		$this->assertSame( array(), bb_messages_get_disabled_group_thread_ids(), 'Recomputed.' );
 	}
 
 	/**
@@ -722,9 +724,8 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 		$f = $this->fixture();
 
 		$count_queries = function () use ( $wpdb ) {
-			bp_core_reset_incrementor( 'bp_messages' );
 			$before = $wpdb->num_queries;
-			bb_messages_get_disabled_group_thread_ids();
+			bb_messages_query_disabled_group_thread_ids();
 
 			return $wpdb->num_queries - $before;
 		};
@@ -935,6 +936,10 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 		$u3       = self::factory()->user->create();
 		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
+		// Fill the cache first, so assert_matches_open_check() also checks the invalidation hooks.
+		bb_messages_get_disabled_group_thread_ids();
+		$this->assertNotFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'Cache filled.' );
+
 		return compact( 'u1', 'u2', 'u3', 'group_id' );
 	}
 
@@ -947,16 +952,18 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 	 * @return void
 	 */
 	protected function assert_matches_open_check( $thread_id, $expected ) {
+		// Cached list, kept up to date only by the invalidation hooks (edge_fixture() fills it first).
+		$cached = in_array( $thread_id, bb_messages_get_disabled_group_thread_ids(), true );
+
 		bp_core_reset_incrementor( 'bp_messages' );
 		wp_cache_flush();
 		$open_check = 0 === bb_messages_validate_groups_thread( $thread_id );
 
-		bp_core_reset_incrementor( 'bp_messages' );
-		wp_cache_flush();
-		$lookup = in_array( $thread_id, bb_messages_get_disabled_group_thread_ids(), true );
+		$lookup = in_array( $thread_id, bb_messages_query_disabled_group_thread_ids(), true );
 
 		$this->assertSame( $expected, $open_check, 'Release open check (get_first_message + meta).' );
 		$this->assertSame( $open_check, $lookup, 'Single-SQL lookup agrees with the open check.' );
+		$this->assertSame( $open_check, $cached, 'Cached list (reset only by the invalidation hooks) agrees with the open check.' );
 	}
 
 	/**
@@ -1550,10 +1557,11 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 		$this->assertFalse( bp_disable_group_messages(), 'Group Messages disabled (also reloads the option before counting).' );
 
 		$before = $wpdb->num_queries;
-		$ids    = bb_messages_get_disabled_group_thread_ids();
+		$ids    = bb_messages_query_disabled_group_thread_ids();
 
 		$this->assertSame( array( $f['group_thread'] ), $ids );
 		$this->assertLessThanOrEqual( 2, $wpdb->num_queries - $before, 'Two queries at most.' );
+		$this->assertSame( $ids, bb_messages_get_disabled_group_thread_ids() );
 		$this->assertFalse( wp_cache_get( $first_message->id, 'message_meta' ), 'The meta of the first message is not primed.' );
 
 		$before = $wpdb->num_queries;
@@ -1671,5 +1679,299 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 
 		$this->assertTrue( $json['success'] );
 		$this->assertSame( 0, $this->is_hidden_for( $f['private_thread'], $f['u2'] ), 'Recipients are not archived for the moderator.' );
+	}
+
+	/* Review round 7 cross-check (doc 54): X-3, X-5, X-6, X-9 ------------------------------------------ */
+
+	/**
+	 * Number of queries a callback runs.
+	 *
+	 * @param callable $callback Callback.
+	 *
+	 * @return int
+	 */
+	protected function count_queries( $callback ) {
+		global $wpdb;
+
+		$before = $wpdb->num_queries;
+		call_user_func( $callback );
+
+		return $wpdb->num_queries - $before;
+	}
+
+	/**
+	 * Whether the cached list and a fresh read agree with the release open check for every thread.
+	 *
+	 * @param string $step Step name for the failure message.
+	 *
+	 * @return void
+	 */
+	protected function assert_cache_matches_open_check_for_all_threads( $step ) {
+		global $wpdb;
+
+		$cached = bb_messages_get_disabled_group_thread_ids();
+
+		bp_core_reset_incrementor( 'bp_messages' );
+		wp_cache_flush();
+		$thread_ids = array_map( 'intval', $wpdb->get_col( 'SELECT DISTINCT thread_id FROM ' . buddypress()->messages->table_name_messages ) ); // phpcs:ignore
+		$expected   = array();
+		foreach ( $thread_ids as $thread_id ) {
+			if ( 0 === bb_messages_validate_groups_thread( $thread_id ) ) {
+				$expected[] = $thread_id;
+			}
+		}
+		sort( $expected );
+		sort( $cached );
+		$fresh = bb_messages_query_disabled_group_thread_ids();
+		sort( $fresh );
+
+		$this->assertSame( $expected, $fresh, $step . ': fresh lookup agrees with the open check.' );
+		$this->assertSame( $expected, $cached, $step . ': cached lookup agrees with the open check.' );
+	}
+
+	/**
+	 * X-3: the archived-thread IDs given to the JS (BP_Nouveau.archived_threads) skip disabled group threads, as the
+	 * archived list does.
+	 */
+	public function test_js_archived_threads_exclude_disabled_group_threads() {
+		$f = $this->fixture();
+		$this->archive_thread_for( $f['group_thread'], $f['u2'] );
+		$this->archive_thread_for( $f['private_thread'], $f['u2'] );
+		$this->set_current_user( $f['u2'] );
+
+		$this->set_group_messages( false );
+		$params = bp_core_get_js_strings_callback( array() );
+		$this->assertSame( array( $f['private_thread'] ), array_map( 'intval', $params['archived_threads'] ), 'Disabled: the group thread is not listed.' );
+
+		$this->set_group_messages( true );
+		$params = bp_core_get_js_strings_callback( array() );
+		$listed = array_map( 'intval', $params['archived_threads'] );
+		sort( $listed );
+		$expected = array( $f['group_thread'], $f['private_thread'] );
+		sort( $expected );
+		$this->assertSame( $expected, $listed, 'Enabled: both archived threads, as in release.' );
+	}
+
+	/**
+	 * X-5: once cached, the lookup runs no query, also after messages that cannot change the list: a new private
+	 * thread, a private reply, a reply in the group thread, mark read / unread, archive and a members-only group message.
+	 */
+	public function test_disabled_lookup_cache_survives_unrelated_message_saves() {
+		global $wpdb;
+
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids() );
+
+		$this->create_private_thread( $f['u3'], $f['u2'] );
+		self::factory()->message->create(
+			array(
+				'sender_id'  => $f['u2'],
+				'thread_id'  => $f['private_thread'],
+				'recipients' => array( $f['u1'] ),
+				'content'    => 'Private reply',
+			)
+		);
+
+		// Reply in the group thread, with the meta bp_media_messages_save_group_data() copies from the first message.
+		$reply = self::factory()->message->create(
+			array(
+				'sender_id'  => $f['u2'],
+				'thread_id'  => $f['group_thread'],
+				'recipients' => array( $f['u1'], $f['u3'] ),
+				'content'    => 'Group reply',
+			)
+		);
+		$this->flag_group_message( $reply, $f['group_thread'], $f['group_id'] );
+
+		// Members-only group message in its own thread (group_message_users = individual).
+		$individual = self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $f['u1'],
+				'recipients' => array( $f['u3'] ),
+				'subject'    => 'Members only',
+			)
+		);
+		bp_messages_update_meta( $individual->id, 'group_id', $f['group_id'] );
+		bp_messages_update_meta( $individual->id, 'group_message_users', 'individual' );
+		bp_messages_update_meta( $individual->id, 'group_message_type', 'private' );
+		bp_messages_update_meta( $individual->id, 'message_from', 'personal' );
+		bp_messages_update_meta( $individual->id, 'group_message_thread_id', $individual->thread_id );
+
+		messages_mark_thread_read( $f['private_thread'], $f['u2'] );
+		messages_mark_thread_unread( $f['private_thread'] );
+		// Archive without archive_thread_for(), which flushes the object cache.
+		$wpdb->query( $wpdb->prepare( 'UPDATE ' . buddypress()->messages->table_name_recipients . ' SET is_hidden = 1 WHERE thread_id = %d AND user_id = %d', $f['private_thread'], $f['u1'] ) ); // phpcs:ignore
+		do_action( 'bb_messages_thread_archived', $f['private_thread'], $f['u1'] );
+		bp_core_reset_incrementor( 'bp_messages' );
+
+		$this->assertSame( 0, $this->count_queries( 'bb_messages_get_disabled_group_thread_ids' ), 'Cache hit: no query.' );
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids() );
+		$this->assert_cache_matches_open_check_for_all_threads( 'After unrelated saves' );
+	}
+
+	/**
+	 * X-5: the cache is reset when the list can change: the setting, a new group thread, a deleted thread, a change of
+	 * the group meta of the first message, the active components. Each step is checked against the open check.
+	 */
+	public function test_disabled_lookup_cache_is_reset_when_the_list_can_change() {
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+		bb_messages_get_disabled_group_thread_ids();
+
+		// Setting change.
+		$this->assertNotFalse( bb_messages_get_cached_disabled_group_thread_ids() );
+		$this->set_group_messages( true );
+		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'Reset by enabling Group Messages.' );
+		$this->set_group_messages( false );
+		$this->assert_cache_matches_open_check_for_all_threads( 'Setting toggled' );
+
+		// New group thread.
+		bb_messages_get_disabled_group_thread_ids();
+		$u4     = self::factory()->user->create();
+		$second = $this->create_group_thread( $f['u1'], array( $f['u3'], $u4 ), $f['group_id'] );
+		$this->assertContains( $second, bb_messages_get_disabled_group_thread_ids(), 'New group thread is listed.' );
+		$this->assert_cache_matches_open_check_for_all_threads( 'New group thread' );
+
+		// First message of a listed thread changes its group meta.
+		bb_messages_get_disabled_group_thread_ids();
+		$first = BP_Messages_Thread::get_first_message( $second );
+		bp_messages_update_meta( $first->id, 'group_message_type', 'private' );
+		$this->assertNotContains( $second, bb_messages_get_disabled_group_thread_ids(), 'Type changed to private.' );
+		$this->assert_cache_matches_open_check_for_all_threads( 'First message meta changed' );
+		bp_messages_update_meta( $first->id, 'group_message_type', 'open' );
+		$this->assertContains( $second, bb_messages_get_disabled_group_thread_ids(), 'Type back to open.' );
+		$this->assert_cache_matches_open_check_for_all_threads( 'First message meta restored' );
+
+		// Thread deleted by every recipient.
+		bb_messages_get_disabled_group_thread_ids();
+		foreach ( array( $f['u1'], $f['u3'], $u4 ) as $user_id ) {
+			messages_delete_thread( $second, $user_id );
+		}
+		$this->assertSame( 0, $this->count_thread_messages( $second ), 'Thread removed.' );
+		$this->assertNotContains( $second, bb_messages_get_disabled_group_thread_ids(), 'Deleted thread is no longer listed.' );
+		$this->assert_cache_matches_open_check_for_all_threads( 'Thread deleted' );
+
+		// Active components and group delete reset it too.
+		bb_messages_get_disabled_group_thread_ids();
+		do_action( 'update_option_bp-active-components', array(), array() ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Core option hook.
+		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'Reset when the components change.' );
+		bb_messages_get_disabled_group_thread_ids();
+		groups_delete_group( self::factory()->group->create( array( 'creator_id' => $f['u1'] ) ) );
+		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'Reset when a group is deleted.' );
+		$this->assert_cache_matches_open_check_for_all_threads( 'Group deleted' );
+	}
+
+	/**
+	 * X-5: without a persistent object cache the list is also kept in an option, so a new request (empty object
+	 * cache) reads it with at most one query instead of the two lookup queries; a reset removes it.
+	 */
+	public function test_disabled_lookup_persistent_fallback() {
+		if ( wp_using_ext_object_cache() ) {
+			$this->markTestSkipped( 'A persistent object cache is used: no option fallback.' );
+		}
+
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+		bb_messages_get_disabled_group_thread_ids();
+		$this->assertSame( array( $f['group_thread'] ), bp_get_option( '_bb_messages_disabled_group_thread_ids', false ) );
+
+		wp_cache_flush();
+		$this->assertFalse( bp_disable_group_messages(), 'Reload the setting before counting.' );
+		$this->assertLessThanOrEqual( 1, $this->count_queries( 'bb_messages_get_disabled_group_thread_ids' ), 'Read from the option.' );
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids() );
+
+		bb_messages_reset_disabled_group_thread_ids_cache();
+		$this->assertFalse( bp_get_option( '_bb_messages_disabled_group_thread_ids', false ), 'Reset removes the option.' );
+	}
+
+	/**
+	 * X-6: the list can be filtered; the filtered list is what the lists and the reply checks use.
+	 */
+	public function test_disabled_group_thread_ids_filter() {
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+		$this->assertTrue( bb_messages_is_disabled_group_thread( $f['group_thread'] ) );
+
+		$filter = function ( $thread_ids ) use ( $f ) {
+			$this->assertSame( array( $f['group_thread'] ), $thread_ids, 'The filter gets the cached list.' );
+			$thread_ids   = array_diff( $thread_ids, array( $f['group_thread'] ) );
+			$thread_ids[] = (string) $f['private_thread'];
+
+			return $thread_ids;
+		};
+		add_filter( 'bb_messages_disabled_group_thread_ids', $filter );
+
+		$this->assertSame( array( $f['private_thread'] ), bb_messages_get_disabled_group_thread_ids(), 'Filtered list, as integers.' );
+		$this->assertFalse( bb_messages_is_disabled_group_thread( $f['group_thread'] ) );
+		$this->assertTrue( bb_messages_is_disabled_group_thread( $f['private_thread'] ) );
+
+		remove_filter( 'bb_messages_disabled_group_thread_ids', $filter );
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids(), 'The filtered list is not cached.' );
+	}
+
+	/**
+	 * X-6: when the core open check is unhooked, group threads open again, so the list is empty (no thread is
+	 * hidden or refused), as the open check.
+	 */
+	public function test_disabled_group_thread_ids_empty_when_open_check_is_unhooked() {
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids() );
+
+		remove_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' );
+		$opens = (int) apply_filters( 'bb_messages_validate_thread', $f['group_thread'] );
+		$ids   = bb_messages_get_disabled_group_thread_ids();
+		add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' );
+
+		$this->assertSame( $f['group_thread'], $opens, 'The thread opens.' );
+		$this->assertSame( array(), $ids, 'Nothing is disabled.' );
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids(), 'Back once hooked again.' );
+	}
+
+	/**
+	 * X-9: the AJAX open refusal names the reason after a one-row recipient check: the same number of queries for a
+	 * group thread of 3 and of 40 members, and the full recipient list is not loaded.
+	 */
+	public function test_ajax_open_refusal_does_not_load_all_recipients() {
+		$f       = $this->fixture();
+		$members = self::factory()->user->create_many( 40 );
+		foreach ( $members as $member ) {
+			groups_join_group( $f['group_id'], $member );
+		}
+		$large = $this->create_group_thread( $f['u1'], $members, $f['group_id'] );
+		$this->set_group_messages( false );
+
+		$measure = function ( $thread_id, $user_id ) {
+			$this->set_current_user( $user_id );
+			bb_messages_get_disabled_group_thread_ids();
+			bp_core_reset_incrementor( 'bp_messages' );
+			wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
+			$json    = null;
+			$queries = $this->count_queries(
+				function () use ( $thread_id, &$json ) {
+					$json = $this->ajax_open_thread( $thread_id );
+				}
+			);
+			$this->assertTrue( $json['data']['group_messages_disabled'], 'Reason named for a recipient.' );
+			$this->assertFalse( wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' ), 'The full recipient list is not loaded.' );
+
+			return $queries;
+		};
+
+		$small_queries = $measure( $f['group_thread'], $f['u2'] );
+		$large_queries = $measure( $large, $members[5] );
+
+		$this->assertSame( $small_queries, $large_queries, 'Same queries for 3 and 40 members.' );
+
+		// A moderator is answered before any recipient lookup.
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		if ( is_multisite() ) {
+			grant_super_admin( $admin );
+		}
+		$this->set_current_user( $admin );
+		$json = $this->ajax_open_thread( $large );
+		$this->assertTrue( $json['data']['group_messages_disabled'] );
+		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $large, 'bp_messages' ) );
 	}
 }

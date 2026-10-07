@@ -1231,7 +1231,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		// Name the reason only to members who can see the thread; others keep the generic answer.
 		if (
 			bb_messages_is_disabled_group_thread( $requested_thread_id ) &&
-			( messages_check_thread_access( $requested_thread_id ) || bp_current_user_can( 'bp_moderate' ) )
+			( bp_current_user_can( 'bp_moderate' ) || bb_messages_is_active_thread_recipient( $requested_thread_id ) )
 		) {
 			$response = array(
 				'feedback'                => __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),

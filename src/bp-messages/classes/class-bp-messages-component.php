@@ -420,6 +420,7 @@ class BP_Messages_Component extends BP_Component {
 				'bp_messages_threads',
 				'bp_messages_unread_count',
 				'message_meta',
+				'bb_messages_disabled_group_threads',
 			)
 		);
 

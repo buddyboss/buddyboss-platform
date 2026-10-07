@@ -299,4 +299,179 @@ class BP_Tests_Messages_ReadyLaunch_Header_Unread extends BP_UnitTestCase {
 		$this->assertArrayHasKey( $thread_id, $items );
 		$this->assertSame( 'Hello there', $this->span_text( $items[ $thread_id ], 'posted' ) );
 	}
+
+	/**
+	 * Avatar block of an item.
+	 *
+	 * @param string $item Item HTML.
+	 *
+	 * @return string
+	 */
+	protected function avatar_html( $item ) {
+		if ( ! preg_match( '#<div class="notification-avatar[^"]*">(.*?)</div>#s', $item, $match ) ) {
+			return '';
+		}
+
+		return $match[1];
+	}
+
+	/**
+	 * Thread of 25 members that is larger than one recipient page, rendered through the header fallback branch
+	 * (bp_messages_get_avatars() returns nothing, as when a site filters it out).
+	 *
+	 * @return array {
+	 *     @type int   $thread_id Thread ID.
+	 *     @type int[] $members   All members.
+	 *     @type int[] $page_ids  Members on the first recipient page.
+	 *     @type int[] $outside   Members outside the first page.
+	 * }
+	 */
+	protected function create_large_thread_for_fallback() {
+		$members = array();
+		for ( $i = 0; $i < 25; $i++ ) {
+			$members[] = self::factory()->user->create();
+		}
+
+		$this->set_group_messages( true );
+		$thread_id = (int) self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $members[0],
+				'recipients' => array_slice( $members, 1 ),
+				'subject'    => 'Large thread',
+				'content'    => 'First message',
+			)
+		)->thread_id;
+
+		$per_page = (int) bb_messages_recipients_per_page();
+		$page     = BP_Messages_Thread::get(
+			array(
+				'include_threads' => array( $thread_id ),
+				'per_page'        => $per_page,
+			)
+		);
+		$page_ids = array_map( 'intval', wp_list_pluck( $page['recipients'], 'user_id' ) );
+		$this->assertCount( $per_page, $page_ids, 'First page is full.' );
+		$outside = array_values( array_diff( $members, $page_ids ) );
+		$this->assertGreaterThanOrEqual( 3, count( $outside ), 'Some members are outside the first page.' );
+
+		add_filter( 'bp_messages_get_avatars', '__return_empty_array' );
+
+		return compact( 'thread_id', 'members', 'page_ids', 'outside' );
+	}
+
+	/**
+	 * Mark members as having left the thread.
+	 *
+	 * @param int   $thread_id Thread ID.
+	 * @param int[] $user_ids  Members.
+	 *
+	 * @return void
+	 */
+	protected function leave_thread( $thread_id, $user_ids ) {
+		global $wpdb;
+
+		$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+		if ( empty( $user_ids ) ) {
+			return;
+		}
+
+		$bp = buddypress();
+		$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 1 WHERE thread_id = " . (int) $thread_id . ' AND user_id IN (' . implode( ',', $user_ids ) . ')' ); // phpcs:ignore
+		bp_core_reset_incrementor( 'bp_messages' );
+	}
+
+	/**
+	 * R6-9: fallback branch, the last sender is outside the loaded page and still in the thread: the avatar link
+	 * gets the profile hover, as in release (release read the full list). No PHP notice (notices fail the test).
+	 */
+	public function test_fallback_last_sender_outside_page_gets_hover_like_release() {
+		$t           = $this->create_large_thread_for_fallback();
+		$viewer      = $t['page_ids'][0];
+		$last_sender = $t['outside'][0];
+		self::factory()->message->create(
+			array(
+				'sender_id'  => $last_sender,
+				'thread_id'  => $t['thread_id'],
+				'recipients' => array( $viewer ),
+				'content'    => 'Reply from outside the page',
+			)
+		);
+
+		$items = $this->render( $viewer );
+		$this->assertArrayHasKey( $t['thread_id'], $items );
+		$this->assertStringContainsString( 'data-bb-hp-profile="' . $last_sender . '"', $this->avatar_html( $items[ $t['thread_id'] ] ) );
+	}
+
+	/**
+	 * R6-9: fallback branch, the last sender outside the page has left the thread: no profile hover, as in
+	 * release (release skipped members who left when it built the list).
+	 */
+	public function test_fallback_last_sender_who_left_gets_no_hover_like_release() {
+		$t           = $this->create_large_thread_for_fallback();
+		$viewer      = $t['page_ids'][0];
+		$last_sender = $t['outside'][0];
+		self::factory()->message->create(
+			array(
+				'sender_id'  => $last_sender,
+				'thread_id'  => $t['thread_id'],
+				'recipients' => array( $viewer ),
+				'content'    => 'Reply, then left',
+			)
+		);
+		$this->leave_thread( $t['thread_id'], array( $last_sender ) );
+
+		$items = $this->render( $viewer );
+		$this->assertArrayHasKey( $t['thread_id'], $items );
+		$avatar = $this->avatar_html( $items[ $t['thread_id'] ] );
+		$this->assertStringNotContainsString( 'data-bb-hp-profile="' . $last_sender . '"', $avatar );
+		$this->assertStringContainsString( esc_url( bp_core_get_user_domain( $last_sender ) ), $avatar, 'The avatar still links to the last sender.' );
+	}
+
+	/**
+	 * R6-9: fallback branch, viewer outside the page and the only other active member outside the page too: the
+	 * other member is shown (release: first other active member of the full list).
+	 */
+	public function test_fallback_viewer_outside_page_shows_other_active_member_like_release() {
+		$t      = $this->create_large_thread_for_fallback();
+		$viewer = $t['outside'][0];
+		$other  = $t['outside'][1];
+		$this->leave_thread( $t['thread_id'], array_diff( $t['members'], array( $viewer, $other ) ) );
+
+		$items = $this->render( $viewer );
+		$this->assertArrayHasKey( $t['thread_id'], $items );
+		$avatar = $this->avatar_html( $items[ $t['thread_id'] ] );
+		$this->assertStringContainsString( 'data-bb-hp-profile="' . $other . '"', $avatar );
+		$this->assertStringNotContainsString( '<img class="avatar" src="" alt="" />', $avatar, 'Not the empty avatar.' );
+	}
+
+	/**
+	 * R6-9: fallback branch, viewer outside the page and every other member left: the viewer is shown
+	 * (release: $current_user), not an empty avatar.
+	 */
+	public function test_fallback_viewer_outside_page_alone_shows_viewer_like_release() {
+		$t      = $this->create_large_thread_for_fallback();
+		$viewer = $t['outside'][0];
+		$this->leave_thread( $t['thread_id'], array_diff( $t['members'], array( $viewer ) ) );
+
+		$items = $this->render( $viewer );
+		$this->assertArrayHasKey( $t['thread_id'], $items );
+		$avatar = $this->avatar_html( $items[ $t['thread_id'] ] );
+		$this->assertStringContainsString( 'data-bb-hp-profile="' . $viewer . '"', $avatar );
+	}
+
+	/**
+	 * R6-9 / release parity: fallback branch, viewer on the page and the only other active member outside it.
+	 * Release read the full list, so $first_three held that member and the avatar showed them (R7-T1).
+	 */
+	public function test_fallback_viewer_on_page_other_active_member_outside_page_like_release() {
+		$t      = $this->create_large_thread_for_fallback();
+		$viewer = $t['page_ids'][0];
+		$other  = $t['outside'][0];
+		$this->leave_thread( $t['thread_id'], array_diff( $t['members'], array( $viewer, $other ) ) );
+
+		$items = $this->render( $viewer );
+		$this->assertArrayHasKey( $t['thread_id'], $items );
+		$avatar = $this->avatar_html( $items[ $t['thread_id'] ] );
+		$this->assertStringContainsString( 'data-bb-hp-profile="' . $other . '"', $avatar, 'Release showed the other active member.' );
+	}
 }
