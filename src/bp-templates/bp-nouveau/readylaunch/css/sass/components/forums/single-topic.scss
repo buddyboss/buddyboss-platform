@@ -231,6 +231,10 @@
 		display: flex;
 		flex-wrap: wrap;
 
+		&:has(.bbp-topic-tags) {
+			margin: var(--bb-rl-space-100) 0;
+		}
+
 		.bbp-topic-tags {
 			width: 100%;
 			margin-bottom: var(--bb-rl-space-200);
