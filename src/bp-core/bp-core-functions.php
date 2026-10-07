@@ -4962,6 +4962,15 @@ function bp_core_parse_url( $url ) {
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
+				$class = $image->getAttribute( 'class' );
+
+				// Skip avatar images (e.g. WP core get_avatar() always adds an
+				// "avatar" class) so a commenter's or the logged-in user's
+				// profile photo is never picked over the page's actual content
+				// image when no og:image is present.
+				if ( false !== stripos( $class, 'avatar' ) ) {
+					continue;
+				}
 
 				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
 					$images[] = $src;
