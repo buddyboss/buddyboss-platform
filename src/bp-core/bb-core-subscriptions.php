@@ -1164,6 +1164,19 @@ function bb_send_notifications_to_subscribers( $args ) {
 	// every subscriber past it. Same two-step shape as the background worker.
 	$fanout_page_size = max( 1, $fanout_min_count ) + 1;
 
+	// Capture the page size the query actually ran with. A third-party clamp on
+	// the parse-args filters below the probe size would otherwise make a
+	// truncated page read as "the whole list" and silently skip every
+	// subscriber past it. Forced read: this is a one-off, and the memo would
+	// hide the capture on a repeat call.
+	$effective_page_size = $fanout_page_size;
+	$bb_fanout_capture   = function ( $parsed ) use ( &$effective_page_size ) {
+		$effective_page_size = isset( $parsed['per_page'] ) ? (int) $parsed['per_page'] : 0;
+
+		return $parsed;
+	};
+	add_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', $bb_fanout_capture, PHP_INT_MAX );
+
 	$id_page = bb_get_subscription_users(
 		array(
 			'type'     => $type,
@@ -1176,8 +1189,11 @@ function bb_send_notifications_to_subscribers( $args ) {
 			'order_by' => 'id',
 			'order'    => 'ASC',
 			'count'    => false,
-		)
+		),
+		true
 	);
+
+	remove_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', $bb_fanout_capture, PHP_INT_MAX );
 
 	if ( empty( $id_page['subscriptions'] ) ) {
 		return;
@@ -1226,15 +1242,18 @@ function bb_send_notifications_to_subscribers( $args ) {
 	}
 
 	// The page holds threshold + 1 rows at most, so its size alone decides:
-	// overflow = large list, otherwise it is the whole list. Caveat: this
-	// trusts per_page surviving the bb_get_subscription_users and
-	// bb_subscriptions_subscription_get parse-args filters — a third-party
-	// clamp below the probe size would read a truncated page as complete.
-	$total_subscribers = count( $subscription_ids );
+	// overflow = large list, otherwise it is the whole list. If a filter
+	// clamped the page below the probe size and the page filled that clamp,
+	// more rows may exist beyond it — take the bounded background path, which
+	// paginates with the same effective size and misses nobody.
+	$total_subscribers     = count( $subscription_ids );
+	$page_may_be_truncated = $effective_page_size > 0
+		&& $effective_page_size < $fanout_page_size
+		&& $total_subscribers >= $effective_page_size;
 
 	global $bb_background_updater;
 
-	if ( $total_subscribers > $fanout_min_count ) {
+	if ( $total_subscribers > $fanout_min_count || $page_may_be_truncated ) {
 
 		/**
 		 * Filters the number of subscribers fetched per page by the background fan-out worker.
@@ -1257,6 +1276,12 @@ function bb_send_notifications_to_subscribers( $args ) {
 		// Drop the serialized activity object so the queue rows stay small; the
 		// chunk runner restores it once per chunk before the send callback.
 		$fanout_args['data'] = bb_subscriptions_compact_notification_data( $fanout_args['data'] );
+
+		// A chain that never reached a normal end (queue row purged, item
+		// deleted while the row was held) leaves its cursor option behind, and
+		// the per-dispatch fanout_id means nothing ever reuses or clears it.
+		// Starting a new chain is the rare, cheap moment to sweep those.
+		bb_subscriptions_sweep_stale_fanout_cursors();
 
 		$bb_background_updater->data(
 			array(
@@ -1677,7 +1702,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	// would be re-sent. The cursor survives queue-row deletion, so a re-run
 	// RESUMES past pages whose chunk jobs were already queued.
 	$fanout_cursor_key = 'bb_sub_fanout_cursor_' . md5( maybe_serialize( array( $type, $item_id, (int) $r['blog_id'], $r['notification_from'], $r['data'], $r['fanout_id'] ) ) );
-	$fanout_done_to    = (int) get_option( $fanout_cursor_key, 0 );
+	$fanout_done_to    = bb_subscriptions_get_fanout_cursor_last_id( get_option( $fanout_cursor_key, 0 ) );
 	if ( $last_id < $fanout_done_to ) {
 		$last_id = $fanout_done_to;
 	}
@@ -1768,6 +1793,18 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	};
 	add_filter( 'bb_subscriptions_get_where_conditions', $bb_fanout_keyset_where );
 
+	// Capture the page size the query actually ran with (see the dispatcher):
+	// the "full page → more pages" test below must compare against the
+	// effective size, or a third-party clamp would end the chain early and
+	// silently drop the rest of the list.
+	$effective_per_page = $per_page;
+	$bb_fanout_capture  = function ( $parsed ) use ( &$effective_per_page ) {
+		$effective_per_page = isset( $parsed['per_page'] ) ? (int) $parsed['per_page'] : 0;
+
+		return $parsed;
+	};
+	add_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', $bb_fanout_capture, PHP_INT_MAX );
+
 	$id_page = bb_get_subscription_users(
 		array(
 			'type'     => $type,
@@ -1785,6 +1822,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		true
 	);
 
+	remove_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', $bb_fanout_capture, PHP_INT_MAX );
 	remove_filter( 'bb_subscriptions_get_where_conditions', $bb_fanout_keyset_where );
 
 	$subscription_ids = ! empty( $id_page['subscriptions'] ) ? $id_page['subscriptions'] : array();
@@ -1857,17 +1895,28 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 
 	// Advance the durable cursor now that this page's chunk jobs are queued —
 	// a re-run of this row from here on resumes at the next page instead of
-	// re-sending this one.
+	// re-sending this one. The timestamp is what lets
+	// bb_subscriptions_sweep_stale_fanout_cursors() age out a cursor whose
+	// chain never ended normally; it is refreshed on every page.
 	$page_end_id = (int) end( $subscription_ids );
-	update_option( $fanout_cursor_key, $page_end_id, false );
+	update_option(
+		$fanout_cursor_key,
+		array(
+			'last_id' => $page_end_id,
+			'time'    => time(),
+		),
+		false
+	);
 
 	// A full ID page means more subscribers may remain: queue the next page,
 	// keyed by the last subscription row ID of this page (termination is based
 	// on the ID page, not the user resolution, so a row deleted between the two
-	// queries can never abandon the chain). Row ordering (priority, id) runs
-	// this page's send jobs before the next page's fan-out row, which naturally
-	// paces the queue.
-	if ( count( $subscription_ids ) === $per_page ) {
+	// queries can never abandon the chain). "Full" is judged against the size
+	// the query actually ran with; a non-positive effective size means a filter
+	// removed the LIMIT, so the page already held the whole remainder. Row
+	// ordering (priority, id) runs this page's send jobs before the next page's
+	// fan-out row, which naturally paces the queue.
+	if ( $effective_per_page > 0 && count( $subscription_ids ) >= $effective_per_page ) {
 		$next_args             = $r;
 		$next_args['last_id']  = $page_end_id;
 		$next_args['per_page'] = $per_page;
@@ -1912,8 +1961,15 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		// remaining page.
 		$next_page_claimed = false;
 		if ( empty( $existing_next ) ) {
-			$next_page_claimed = wp_cache_add( $next_page_claim, microtime( true ), 'bb_subscriptions', 30 )
-				|| false === wp_cache_get( $next_page_claim, 'bb_subscriptions' );
+			// Upgrade bridge: a page row claimed by a pre-release build at deploy
+			// time holds this key in the `bb_subscriptions` data group (30s TTL).
+			// @todo: Remove the legacy-group read one release after this ships.
+			$legacy_next_page_claimed = false !== wp_cache_get( $next_page_claim, 'bb_subscriptions' );
+
+			$next_page_claimed = ! $legacy_next_page_claimed && (
+				wp_cache_add( $next_page_claim, microtime( true ), 'bb_subscriptions_claims', 30 )
+				|| false === wp_cache_get( $next_page_claim, 'bb_subscriptions_claims' )
+			);
 		}
 
 		if ( $next_page_claimed ) {
@@ -2160,7 +2216,11 @@ function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
  * without one the claim is per-process, which simply matches the
  * pre-existing behavior.
  *
- * Three cooperating markers, all in the `bb_subscriptions` cache group:
+ * Three cooperating markers, all in the dedicated `bb_subscriptions_claims`
+ * cache group — deliberately NOT the `bb_subscriptions` data group, which
+ * bb_delete_group_forum_topic_subscriptions() and the migration routines flush
+ * wholesale; a flush mid-fan-out would otherwise erase every claim and
+ * completion marker and let a re-run send a finished chunk again:
  * - the claim (short TTL, see bb_subscriptions_get_notification_chunk_claim_ttl())
  *   blocks a concurrent duplicate run; the send callbacks refresh it after
  *   every recipient via bb_subscriptions_touch_notification_chunk_claim() so a
@@ -2205,17 +2265,30 @@ function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
 	}
 
 	// A completed chunk is never sent again, however late the duplicate row runs.
-	if ( false !== wp_cache_get( 'bb_sub_chunk_done_' . $chunk_key, 'bb_subscriptions' ) ) {
+	if ( false !== wp_cache_get( 'bb_sub_chunk_done_' . $chunk_key, 'bb_subscriptions_claims' ) ) {
 		return false;
 	}
 
 	$claim_key = 'bb_sub_chunk_claim_' . $chunk_key;
 
-	if ( wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) ) ) {
+	// Upgrade bridge: builds before this release kept both markers in the
+	// `bb_subscriptions` data group. A chunk mid-flight at deploy time still
+	// holds its claim there, and completion markers written up to a day before
+	// the deploy live there too, so honor them read-only until they expire.
+	// Only reads — new markers always go to the dedicated group above.
+	// @todo: Remove the legacy-group reads one release after this ships.
+	if (
+		false !== wp_cache_get( 'bb_sub_chunk_done_' . $chunk_key, 'bb_subscriptions' ) ||
+		false !== wp_cache_get( $claim_key, 'bb_subscriptions' )
+	) {
+		return false;
+	}
+
+	if ( wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions_claims', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) ) ) {
 		return true;
 	}
 
-	return false === wp_cache_get( $claim_key, 'bb_subscriptions' );
+	return false === wp_cache_get( $claim_key, 'bb_subscriptions_claims' );
 }
 
 /**
@@ -2242,7 +2315,36 @@ function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = ''
 		return;
 	}
 
-	wp_cache_set( 'bb_sub_chunk_claim_' . $chunk_key, microtime( true ), 'bb_subscriptions', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) );
+	wp_cache_set( 'bb_sub_chunk_claim_' . $chunk_key, microtime( true ), 'bb_subscriptions_claims', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) );
+}
+
+/**
+ * Release the claim on a notification chunk that will not be sent.
+ *
+ * Called by the send callbacks on a bail path reached after the claim was
+ * taken (component inactive, source item gone, payload incomplete) so the
+ * chunk is not held for the remainder of the claim TTL. No completion marker
+ * is written: nothing was delivered, so an identical row may legitimately
+ * run later.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
+ * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
+ *                          that was used to claim the chunk. Default ''.
+ *
+ * @return void
+ */
+function bb_subscriptions_release_notification_chunk_claim( $args, $chunk_key = '' ) {
+	if ( '' === $chunk_key ) {
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+	}
+
+	if ( '' === $chunk_key ) {
+		return;
+	}
+
+	wp_cache_delete( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' );
 }
 
 /**
@@ -2284,6 +2386,122 @@ function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) 
 	 */
 	$done_ttl = (int) apply_filters( 'bb_subscription_notification_chunk_done_ttl', DAY_IN_SECONDS, $args );
 
-	wp_cache_set( 'bb_sub_chunk_done_' . $chunk_key, time(), 'bb_subscriptions', max( 1, $done_ttl ) );
-	wp_cache_delete( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions' );
+	wp_cache_set( 'bb_sub_chunk_done_' . $chunk_key, time(), 'bb_subscriptions_claims', max( 1, $done_ttl ) );
+	wp_cache_delete( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' );
+}
+
+/**
+ * Read the last processed subscription id out of a stored fan-out cursor.
+ *
+ * Cursors are stored as `array( 'last_id' => int, 'time' => int )`; a bare
+ * integer (a cursor written before the timestamp existed) is accepted too.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $cursor Stored cursor option value.
+ *
+ * @return int The last processed subscription row id, 0 when unset.
+ */
+function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
+	if ( is_array( $cursor ) ) {
+		return isset( $cursor['last_id'] ) ? (int) $cursor['last_id'] : 0;
+	}
+
+	return (int) $cursor;
+}
+
+/**
+ * Delete fan-out page cursors left behind by chains that never ended normally.
+ *
+ * The worker, bb_send_notifications_to_subscribers_batch(), deletes its cursor
+ * on every code path that ends a chain, but a chain can also disappear without
+ * running that code: the queue row purged by an operator, the queue table
+ * cleared, a row dropped after repeated fatals. Each cursor is namespaced by a
+ * per-dispatch id, so nothing ever reuses or clears an orphan — it would sit
+ * in wp_options forever (autoload off, so bloat rather than a page-load cost).
+ *
+ * A cursor is considered abandoned once its timestamp is older than the
+ * filterable maximum age; an in-flight chain refreshes the timestamp on every
+ * page, so only a chain stalled for longer than that window is affected, and
+ * the consequence is merely that a re-run of its row re-queues one page.
+ *
+ * Upgrade bridge: builds before this release stored the cursor as a bare
+ * integer with no timestamp. Such a cursor may belong to a chain that is
+ * still in flight at deploy time (possibly on a server still running the old
+ * build during a rolling deploy), so the sweep never touches it: a live chain
+ * rewrites its cursor in the timestamped shape on its next page, and the few
+ * truly abandoned pre-release cursors are a bounded, one-time leftover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Number of cursor options deleted.
+ */
+function bb_subscriptions_sweep_stale_fanout_cursors() {
+	global $wpdb;
+
+	/**
+	 * Filters the age after which an abandoned fan-out cursor is swept.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $max_age Maximum cursor age in seconds. Default WEEK_IN_SECONDS.
+	 */
+	$max_age = max( HOUR_IN_SECONDS, (int) apply_filters( 'bb_subscription_fanout_cursor_max_age', WEEK_IN_SECONDS ) );
+
+	/**
+	 * Filters how many cursor options the sweep reads per query.
+	 *
+	 * The sweep walks the options table by keyset (option_id) in batches of
+	 * this size, so its memory stays bounded however many cursors exist.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $batch_size Cursor options per batch. Default 500.
+	 */
+	$batch_size = max( 1, (int) apply_filters( 'bb_subscription_fanout_cursor_sweep_batch', 500 ) );
+
+	$deleted        = 0;
+	$now            = time();
+	$cutoff         = $now - $max_age;
+	$last_option_id = 0;
+	$like           = $wpdb->esc_like( 'bb_sub_fanout_cursor_' ) . '%';
+
+	do {
+		// Keyset pagination on option_id: stamping (update_option) keeps a row's
+		// id and deleting removes it, so the cursor position is stable.
+		$cursors = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT option_id, option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s AND option_id > %d ORDER BY option_id ASC LIMIT %d",
+				$like,
+				$last_option_id,
+				$batch_size
+			)
+		);
+
+		$batch_count = is_array( $cursors ) ? count( $cursors ) : 0;
+
+		if ( 0 === $batch_count ) {
+			break;
+		}
+
+		foreach ( $cursors as $row ) {
+			$last_option_id = (int) $row->option_id;
+			$cursor         = maybe_unserialize( $row->option_value );
+
+			if ( ! is_array( $cursor ) || ! isset( $cursor['time'] ) ) {
+				// Pre-release shape (bare integer): no age, possibly in flight — leave it.
+				continue;
+			}
+
+			if ( (int) $cursor['time'] > $cutoff ) {
+				continue;
+			}
+
+			if ( delete_option( $row->option_name ) ) {
+				++$deleted;
+			}
+		}
+	} while ( $batch_count === $batch_size );
+
+	return $deleted;
 }

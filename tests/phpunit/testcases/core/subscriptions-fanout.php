@@ -964,13 +964,13 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		$this->assertNotSame( $chunk_key, bb_subscriptions_get_notification_chunk_key( $mutated ), 'Removing the author changes the derived key — the premise of the explicit key.' );
 
 		bb_subscriptions_touch_notification_chunk_claim( $mutated, $chunk_key );
-		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions' ), 'The refresh must land on the pristine claim key.' );
+		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' ), 'The refresh must land on the pristine claim key.' );
 
 		bb_subscriptions_complete_notification_chunk( $mutated, $chunk_key );
 
-		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_done_' . $chunk_key, 'bb_subscriptions' ), 'The completion marker must land on the pristine key.' );
-		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions' ), 'Completion releases the pristine claim.' );
-		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . bb_subscriptions_get_notification_chunk_key( $mutated ), 'bb_subscriptions' ), 'Nothing may be written under the mutated key.' );
+		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_done_' . $chunk_key, 'bb_subscriptions_claims' ), 'The completion marker must land on the pristine key.' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions_claims' ), 'Completion releases the pristine claim.' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . bb_subscriptions_get_notification_chunk_key( $mutated ), 'bb_subscriptions_claims' ), 'Nothing may be written under the mutated key.' );
 
 		// The claim is gone (as if its TTL lapsed), so only the marker can refuse.
 		$this->assertFalse(
@@ -997,7 +997,7 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		wp_suspend_cache_addition( false );
 
 		$this->assertTrue( $claimed, 'An infrastructure failure must not be mistaken for a lost race.' );
-		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . bb_subscriptions_get_notification_chunk_key( $args ), 'bb_subscriptions' ), 'Nothing was stored while additions were suspended.' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . bb_subscriptions_get_notification_chunk_key( $args ), 'bb_subscriptions_claims' ), 'Nothing was stored while additions were suspended.' );
 
 		// With a working cache the same chunk is a normal claim / lost race.
 		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args ) );
@@ -1023,12 +1023,12 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		bb_subscriptions_complete_notification_chunk( $args );
 
 		// Simulate the claim TTL lapsing: only the completion marker remains.
-		wp_cache_delete( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions' );
+		wp_cache_delete( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' );
 
 		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args ), 'A late duplicate row must be refused by the completion marker alone.' );
 
 		// Without the marker the same chunk would be claimable again — proves the marker is what refuses.
-		wp_cache_delete( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions' );
+		wp_cache_delete( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' );
 		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args ) );
 	}
 
@@ -1466,5 +1466,324 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 		sort( $queued );
 		sort( $user_ids );
 		$this->assertSame( $user_ids, $queued );
+	}
+
+	/**
+	 * Releasing a claim on a bail path makes the chunk claimable again at once,
+	 * without marking it complete.
+	 */
+	public function test_release_claim_allows_immediate_reclaim() {
+		$args = array(
+			'type'              => self::$type,
+			'item_id'           => $this->next_item_id(),
+			'blog_id'           => get_current_blog_id(),
+			'notification_from' => 'bb_test_fanout_note',
+			'data'              => array( 'activity_id' => 654 ),
+			'user_ids'          => array( 40, 41 ),
+		);
+		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+
+		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ) );
+		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'Held claims are refused.' );
+
+		bb_subscriptions_release_notification_chunk_claim( $args, $key );
+
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' ), 'Release deletes the claim.' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' ), 'A released chunk is not marked complete.' );
+		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ), 'The chunk is claimable again after release.' );
+	}
+
+	/**
+	 * The claim markers live outside the `bb_subscriptions` data group, so the
+	 * wholesale flushes of that group cannot erase them mid-fan-out.
+	 */
+	public function test_claim_markers_survive_subscriptions_group_flush() {
+		if ( ! function_exists( 'wp_cache_flush_group' ) || ! wp_cache_supports( 'flush_group' ) ) {
+			$this->markTestSkipped( 'The object cache in use cannot flush a group.' );
+		}
+
+		$args = array(
+			'type'              => self::$type,
+			'item_id'           => $this->next_item_id(),
+			'blog_id'           => get_current_blog_id(),
+			'notification_from' => 'bb_test_fanout_note',
+			'data'              => array( 'activity_id' => 987 ),
+			'user_ids'          => array( 50, 51 ),
+		);
+		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+
+		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ) );
+		bb_subscriptions_complete_notification_chunk( $args, $key );
+
+		wp_cache_flush_group( 'bb_subscriptions' );
+
+		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' ), 'The completion marker survives the data-group flush.' );
+		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'A duplicate row is still refused after the flush.' );
+	}
+
+	/**
+	 * Abandoned fan-out cursors are swept by age; fresh ones are kept.
+	 */
+	public function test_stale_fanout_cursors_are_swept_by_age() {
+		$stale  = 'bb_sub_fanout_cursor_' . md5( 'stale-' . $this->next_item_id() );
+		$fresh  = 'bb_sub_fanout_cursor_' . md5( 'fresh-' . $this->next_item_id() );
+		$legacy = 'bb_sub_fanout_cursor_' . md5( 'legacy-' . $this->next_item_id() );
+
+		update_option(
+			$stale,
+			array(
+				'last_id' => 5,
+				'time'    => time() - ( 2 * WEEK_IN_SECONDS ),
+			),
+			false
+		);
+		update_option(
+			$fresh,
+			array(
+				'last_id' => 9,
+				'time'    => time(),
+			),
+			false
+		);
+		update_option( $legacy, 7, false );
+
+		$deleted = bb_subscriptions_sweep_stale_fanout_cursors();
+
+		$this->assertSame( 1, $deleted, 'Only the aged cursor is swept.' );
+		$this->assertFalse( get_option( $stale ), 'The aged cursor is gone.' );
+		$this->assertNotFalse( get_option( $fresh ), 'An in-flight cursor is kept.' );
+		$this->assertSame( 9, bb_subscriptions_get_fanout_cursor_last_id( get_option( $fresh ) ) );
+
+		// A pre-release integer cursor may belong to a chain still in flight
+		// (even on an old-build server mid-deploy): the sweep leaves it exactly
+		// as it found it, and the reader still understands it.
+		$this->assertSame( 7, get_option( $legacy ), 'A timestamp-less cursor is never touched by the sweep.' );
+		$this->assertSame( 7, bb_subscriptions_get_fanout_cursor_last_id( get_option( $legacy ) ), 'A bare integer cursor still reads.' );
+		$this->assertSame( 0, bb_subscriptions_sweep_stale_fanout_cursors(), 'A second sweep finds nothing else to delete.' );
+
+		delete_option( $legacy );
+		delete_option( $fresh );
+	}
+
+	/**
+	 * Markers written by a pre-release build into the `bb_subscriptions` group
+	 * are still honored (read-only) so a chunk mid-flight at deploy time is not
+	 * sent twice.
+	 */
+	public function test_claim_honors_legacy_group_markers_during_upgrade() {
+		$args = array(
+			'type'              => self::$type,
+			'item_id'           => $this->next_item_id(),
+			'blog_id'           => get_current_blog_id(),
+			'notification_from' => 'bb_test_fanout_note',
+			'data'              => array( 'activity_id' => 111 ),
+			'user_ids'          => array( 60, 61 ),
+		);
+		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+
+		// A claim held by the old build.
+		wp_cache_set( 'bb_sub_chunk_claim_' . $key, microtime( true ), 'bb_subscriptions', 30 );
+		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'A legacy-group claim refuses the chunk.' );
+		wp_cache_delete( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions' );
+
+		// A completion marker written by the old build.
+		wp_cache_set( 'bb_sub_chunk_done_' . $key, time(), 'bb_subscriptions', DAY_IN_SECONDS );
+		$this->assertFalse( bb_subscriptions_claim_notification_chunk( $args, $key ), 'A legacy-group completion marker refuses the chunk.' );
+		wp_cache_delete( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions' );
+
+		// Nothing legacy left: the chunk claims normally, into the new group only.
+		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ) );
+		$this->assertNotFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' ) );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions' ), 'New claims never go to the legacy group.' );
+	}
+
+	/**
+	 * Dispatching a new fan-out chain sweeps abandoned cursors as a side effect.
+	 */
+	public function test_dispatcher_sweeps_stale_cursors_when_starting_a_chain() {
+		add_filter( 'bb_subscription_background_fanout_min_count', array( $this, 'filter_two' ) );
+
+		$stale = 'bb_sub_fanout_cursor_' . md5( 'dispatch-stale-' . $this->next_item_id() );
+		update_option(
+			$stale,
+			array(
+				'last_id' => 3,
+				'time'    => time() - ( 2 * WEEK_IN_SECONDS ),
+			),
+			false
+		);
+
+		$item_id = $this->next_item_id();
+		$this->create_subscribers( 3, $item_id );
+
+		bb_send_notifications_to_subscribers(
+			array(
+				'type'              => self::$type,
+				'item_id'           => $item_id,
+				'notification_from' => 'bb_test_fanout_note',
+				'data'              => array(),
+			)
+		);
+
+		remove_filter( 'bb_subscription_background_fanout_min_count', array( $this, 'filter_two' ) );
+
+		$this->assertFalse( get_option( $stale ), 'Starting a chain sweeps the abandoned cursor.' );
+		$this->assertCount( 1, $this->get_queue_rows(), 'Over the threshold, exactly one fan-out row is queued.' );
+	}
+
+	/**
+	 * Parse-args helper: clamp any requested per_page above 2 down to 2, the way
+	 * a third-party query limiter would.
+	 *
+	 * @param array $parsed Parsed BB_Subscriptions::get() arguments.
+	 * @return array
+	 */
+	public function clamp_per_page_to_two( $parsed ) {
+		if ( ! empty( $parsed['per_page'] ) && (int) $parsed['per_page'] > 2 ) {
+			$parsed['per_page'] = 2;
+		}
+
+		return $parsed;
+	}
+
+	/**
+	 * A third-party clamp on per_page must not end the worker chain early: the
+	 * "full page" test uses the size the query actually ran with, so every
+	 * subscriber is still delivered exactly once, in smaller pages.
+	 */
+	public function test_worker_survives_third_party_per_page_clamp() {
+		add_filter( 'bb_subscription_queue_min_count', array( $this, 'filter_two' ) );
+		add_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', array( $this, 'clamp_per_page_to_two' ) );
+
+		$item_id  = $this->next_item_id();
+		$user_ids = $this->create_subscribers( 5, $item_id );
+
+		$args = array(
+			'type'              => self::$type,
+			'item_id'           => $item_id,
+			'blog_id'           => get_current_blog_id(),
+			'data'              => array(),
+			'notification_type' => 'bb_test_fanout_note',
+			'notification_from' => 'bb_test_fanout_note',
+			'last_id'           => 0,
+			'per_page'          => 10,
+		);
+
+		$pages = 0;
+		$guard = 0;
+		while ( $args && $guard++ < 10 ) {
+			$this->truncate_page_rows_only();
+			bb_send_notifications_to_subscribers_batch( $args );
+			++$pages;
+
+			$args = null;
+			foreach ( $this->get_queue_rows() as $row ) {
+				if ( 'bb_send_notifications_to_subscribers_batch' === $row['callback'] ) {
+					$args = $row['args'];
+				}
+			}
+		}
+
+		remove_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', array( $this, 'clamp_per_page_to_two' ) );
+
+		$queued = $this->queued_chunk_user_ids();
+		sort( $queued );
+		sort( $user_ids );
+		$this->assertSame( $user_ids, $queued, 'A clamped page size must not truncate the list.' );
+		$this->assertSame( 3, $pages, 'Five subscribers at an effective page size of two take three pages (2, 2, 1).' );
+	}
+
+	/**
+	 * A third-party clamp below the probe size must send the dispatcher down the
+	 * bounded background path instead of treating the truncated page as the
+	 * whole list.
+	 */
+	public function test_dispatcher_routes_to_batch_when_probe_page_is_clamped() {
+		add_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', array( $this, 'clamp_per_page_to_two' ) );
+
+		$item_id = $this->next_item_id();
+		$this->create_subscribers( 3, $item_id );
+
+		bb_send_notifications_to_subscribers(
+			array(
+				'type'              => self::$type,
+				'item_id'           => $item_id,
+				'notification_from' => 'bb_test_fanout_note',
+				'data'              => array(),
+			)
+		);
+
+		remove_filter( 'bp_after_bb_subscriptions_subscription_get_parse_args', array( $this, 'clamp_per_page_to_two' ) );
+
+		$rows = $this->get_queue_rows();
+		$this->assertCount( 1, $rows, 'Exactly one fan-out row is queued.' );
+		$this->assertSame( 'bb_send_notifications_to_subscribers_batch', $rows[0]['callback'], 'The clamped probe routes to the background worker.' );
+		$this->assertSame( array(), self::$sent, 'Nothing is sent in-request from a page that may be truncated.' );
+	}
+
+	/**
+	 * The cursor sweep walks the options table in bounded batches and still
+	 * reaches every abandoned cursor.
+	 */
+	public function test_sweep_processes_all_cursors_in_batches() {
+		$batch_filter = function () {
+			return 2;
+		};
+		add_filter( 'bb_subscription_fanout_cursor_sweep_batch', $batch_filter );
+
+		$names = array();
+		for ( $i = 0; $i < 5; $i++ ) {
+			$name    = 'bb_sub_fanout_cursor_' . md5( 'batch-' . $this->next_item_id() );
+			$names[] = $name;
+			update_option(
+				$name,
+				array(
+					'last_id' => $i,
+					'time'    => time() - ( 2 * WEEK_IN_SECONDS ),
+				),
+				false
+			);
+		}
+
+		$deleted = bb_subscriptions_sweep_stale_fanout_cursors();
+
+		remove_filter( 'bb_subscription_fanout_cursor_sweep_batch', $batch_filter );
+
+		$this->assertSame( 5, $deleted, 'Every stale cursor is swept across batches of two.' );
+		foreach ( $names as $name ) {
+			$this->assertFalse( get_option( $name ) );
+		}
+	}
+
+	/**
+	 * The real groups send callback releases its claim when it bails after
+	 * claiming (here: the source activity does not exist), so an identical
+	 * chunk is claimable again at once instead of being held for the claim TTL.
+	 */
+	public function test_group_callback_releases_claim_on_bail() {
+		add_filter( 'bb_enable_legacy_notification_preference', '__return_false' );
+		add_filter( 'bb_enable_group_subscriptions', '__return_true' );
+
+		if ( ! class_exists( 'BP_Groups_Notification' ) || ! bp_is_active( 'activity' ) || ! bb_is_enabled_subscription( 'group' ) ) {
+			$this->markTestSkipped( 'Group subscriptions are not available in this test environment.' );
+		}
+
+		$args = array(
+			'type'              => 'group',
+			'item_id'           => $this->next_item_id(),
+			'blog_id'           => get_current_blog_id(),
+			'notification_type' => 'bb_groups_subscribed_activity',
+			'notification_from' => 'bb_groups_subscribed_activity',
+			'data'              => array( 'activity_id' => PHP_INT_MAX ),
+			'user_ids'          => array( 70, 71 ),
+		);
+		$key  = bb_subscriptions_get_notification_chunk_key( $args );
+
+		$result = BP_Groups_Notification::instance()->bb_send_subscribed_group_notifications( $args );
+
+		$this->assertFalse( $result, 'A missing activity bails with false (row deleted).' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_claim_' . $key, 'bb_subscriptions_claims' ), 'The bail path releases the claim.' );
+		$this->assertFalse( wp_cache_get( 'bb_sub_chunk_done_' . $key, 'bb_subscriptions_claims' ), 'A bailed chunk is not marked complete.' );
+		$this->assertTrue( bb_subscriptions_claim_notification_chunk( $args, $key ), 'The chunk is claimable again immediately.' );
 	}
 }

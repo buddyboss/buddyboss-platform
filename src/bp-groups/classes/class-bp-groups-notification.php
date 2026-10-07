@@ -1135,8 +1135,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$email_notification_type = '';
 		$usernames               = array();
 		if ( 'bb_groups_subscribed_activity' === $r['notification_from'] ) {
-			// Bail if component is not activated.
+			// Bail if component is not activated. Release the claim on every
+			// bail below the claim so nothing holds the chunk for the TTL.
 			if ( ! bp_is_active( 'activity' ) ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
 
@@ -1148,6 +1151,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			if ( empty( $activity ) || 'groups' !== $activity->component ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
 
@@ -1164,6 +1169,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_from'] ) {
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_topic_content' ) ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
 
@@ -1175,6 +1182,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		if ( empty( $data_id ) || empty( $author_id ) || empty( $type_key ) || empty( $email_notification_type ) ) {
+			bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 			return false;
 		}
 
