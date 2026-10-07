@@ -2409,6 +2409,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 	// the repair that call would have performed. The value itself is identical either way - only
 	// the persistence differs - so not caching costs one resolution, never correctness.
 	if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+		// Store under the member's version as it is now: a self-heal write above advances it, and
+		// caching under the pre-resolution key would make every later call miss and heal again.
+		$cache_key           = 'bp_xprofile_get_member_display_name_' . trim( $user_id ) . '_' . bb_xprofile_member_display_name_cache_version( $user_id );
 		$cache[ $cache_key ] = $name;
 	}
 
