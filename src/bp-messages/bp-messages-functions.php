@@ -1305,7 +1305,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 		$recipients_page = BP_Messages_Thread::get(
 			array(
 				'include_threads' => array( (int) $thread_id ),
-				'per_page'        => 10,
+				// Same page size as populate(), so the query is usually already cached; the checks below need up to 4 rows.
+				'per_page'        => max( 4, (int) bb_messages_recipients_per_page() ),
 				'count_total'     => true,
 			)
 		);
