@@ -494,6 +494,12 @@ function bp_nouveau_ajax_messages_send_reply() {
 		wp_send_json_error( $response );
 	}
 
+	// Group threads cannot be opened while "Group Messages" is disabled, so they cannot be replied to either.
+	if ( bb_messages_is_disabled_group_thread( $thread_id ) ) {
+		$response['feedback'] = __( 'Group messages have been disabled by a site administrator.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	if ( ! empty( $_POST['media'] ) ) {
 		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_media ) {
@@ -1218,8 +1224,18 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	$post = $_POST;
 
+	$requested_thread_id = $thread_id;
+
 	$thread_id = apply_filters( 'bb_messages_validate_thread', $thread_id );
 	if ( empty( $thread_id ) ) {
+		if ( bb_messages_is_disabled_group_thread( $requested_thread_id ) ) {
+			$response = array(
+				'feedback'                => __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+				'type'                    => 'warning',
+				'group_messages_disabled' => true,
+			);
+		}
+
 		wp_send_json_error( $response );
 	}
 

@@ -63,6 +63,12 @@ function messages_screen_conversation() {
 		}
 	}
 
+	// Group threads cannot be opened while "Group Messages" is disabled: back to the inbox with a notice, as for other unavailable threads.
+	if ( bb_messages_is_disabled_group_thread( $thread_id ) ) {
+		bp_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
+		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) );
+	}
+
 	// Load up BuddyPress one time.
 	$bp = buddypress();
 

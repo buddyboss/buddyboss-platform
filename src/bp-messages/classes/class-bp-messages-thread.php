@@ -880,6 +880,8 @@ class BP_Messages_Thread {
 	 * @type int    $page         The page number to get. Defaults to null.
 	 * @type string $search_terms The search term to use. Defaults to ''.
 	 * @type array  $meta_query   Meta query arguments. See WP_Meta_Query for more details.
+	 * @type bool   $exclude_disabled_group_threads Exclude the group threads that cannot be opened while
+	 *                                "Group Messages" is disabled. Defaults to false. @since BuddyBoss [BBVERSION]
 	 * }
 	 * @return array|bool Array on success. Boolean false on failure.
 	 */
@@ -1157,6 +1159,14 @@ class BP_Messages_Thread {
 			$where_sql .= " AND r.thread_id IN ($user_threads_query)";
 		} elseif ( ! empty( $additional_where ) ) {
 			$where_sql .= ' AND ' . implode( ' AND ', $additional_where );
+		}
+
+		// Hide whole group threads from the lists while "Group Messages" is disabled; the open check refuses them.
+		if ( ! empty( $r['exclude_disabled_group_threads'] ) ) {
+			$disabled_group_thread_ids = bb_messages_get_disabled_group_thread_ids();
+			if ( ! empty( $disabled_group_thread_ids ) ) {
+				$where_sql .= ' AND r.thread_id NOT IN (' . implode( ',', array_map( 'intval', $disabled_group_thread_ids ) ) . ')';
+			}
 		}
 
 		// Process meta query into SQL.

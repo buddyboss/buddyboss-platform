@@ -1509,6 +1509,62 @@ function bb_messages_is_group_thread( $thread_id ) {
 }
 
 /**
+ * Get the group threads that cannot be opened while "Group Messages" is disabled.
+ *
+ * Candidates are the threads holding an open message sent to all group members; each one is
+ * checked with the same `bb_messages_validate_thread` filter that refuses opening it, so the
+ * lists hide exactly the threads that cannot be opened.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Thread IDs, empty while "Group Messages" is enabled.
+ */
+function bb_messages_get_disabled_group_thread_ids() {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'messages' ) || ! function_exists( 'bp_disable_group_messages' ) || true === bp_disable_group_messages() ) {
+		return array();
+	}
+
+	$bp = buddypress();
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$sql = "SELECT DISTINCT m.thread_id FROM {$bp->messages->table_name_messages} m INNER JOIN {$bp->messages->table_name_meta} mu ON mu.message_id = m.id AND mu.meta_key = 'group_message_users' AND mu.meta_value = 'all' INNER JOIN {$bp->messages->table_name_meta} mt ON mt.message_id = m.id AND mt.meta_key = 'group_message_type' AND mt.meta_value = 'open'";
+
+	$thread_ids = bp_core_get_incremented_cache( $sql, 'bp_messages' );
+
+	if ( false === $thread_ids ) {
+		$thread_ids = array();
+
+		// Cached above with the incremented 'bp_messages' key, reset whenever a message changes.
+		foreach ( $wpdb->get_col( $sql ) as $thread_id ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			if ( empty( apply_filters( 'bb_messages_validate_thread', (int) $thread_id ) ) ) {
+				$thread_ids[] = (int) $thread_id;
+			}
+		}
+
+		bp_core_set_incremented_cache( $sql, 'bp_messages', $thread_ids );
+	}
+
+	return $thread_ids;
+}
+
+/**
+ * Check whether a thread is a group thread that cannot be used while "Group Messages" is disabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id Thread ID.
+ *
+ * @return bool
+ */
+function bb_messages_is_disabled_group_thread( $thread_id ) {
+	$thread_id = (int) $thread_id;
+
+	return $thread_id > 0 && in_array( $thread_id, bb_messages_get_disabled_group_thread_ids(), true );
+}
+
+/**
  * Recipients per page list.
  *
  * @return int $per_page Return per page for recipients.

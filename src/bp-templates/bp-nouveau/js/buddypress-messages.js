@@ -1401,6 +1401,22 @@ window.bp = window.bp || {};
 				self.createCookie( 'bb-thread-unarchive', '', -1 );
 			}
 
+			var group_messages_disabled = self.readCookie( 'bb-group-messages-disabled' );
+			if ( group_messages_disabled ) {
+				jQuery( document ).trigger(
+					'bb_trigger_toast_message',
+					[
+						'',
+						group_messages_disabled,
+						'warning',
+						null,
+						true
+					]
+				);
+
+				self.createCookie( 'bb-group-messages-disabled', '', -1 );
+			}
+
 			// Show detail page in mobile after un-archived thread.
 			var show_detail_page = self.readCookie( 'bb-show-detail-page' );
 			if ( show_detail_page ) {
@@ -5487,6 +5503,19 @@ window.bp = window.bp || {};
 
 			messagesFetchError: function( collection, response ) {
 				var loadMore = null;
+
+				// Group messages are disabled: refresh the page and show the reason as a toast, like a deleted conversation (PROD-3077).
+				if ( response && response.group_messages_disabled ) {
+					bp.Nouveau.Messages.createCookie( 'bb-group-messages-disabled', response.feedback, 5 );
+
+					if ( 'undefined' !== typeof BP_Nouveau.messages.message_url && '' !== BP_Nouveau.messages.message_url ) {
+						window.location.href = BP_Nouveau.messages.message_url;
+					} else {
+						window.location.reload();
+					}
+					return;
+				}
+
 				if ( ! response.messages ) {
 					collection.hasMore = false;
 				}

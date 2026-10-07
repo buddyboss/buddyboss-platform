@@ -448,6 +448,115 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 	}
 
 	/**
+	 * List thread IDs for a user with the given extra arguments.
+	 *
+	 * @param int   $user_id User ID.
+	 * @param array $args    Extra arguments.
+	 *
+	 * @return array
+	 */
+	protected function list_thread_ids( $user_id, $args = array() ) {
+		$threads = BP_Messages_Thread::get_current_threads_for_user(
+			array_merge(
+				array(
+					'user_id' => $user_id,
+					'fields'  => 'ids',
+				),
+				$args
+			)
+		);
+
+		return empty( $threads['threads'] ) ? array() : array_map( 'intval', $threads['threads'] );
+	}
+
+	/**
+	 * Lists that opt in hide the whole group thread while Group Messages is disabled (PROD-3077).
+	 *
+	 * @group groups
+	 */
+	public function test_lists_exclude_group_thread_when_group_messages_disabled() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$u3       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		$group_thread = $this->create_group_thread_with_reply( $u1, array( $u2, $u3 ), $group_id );
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$private_thread = $this->create_thread( $u1, array( $u2 ) );
+		$this->set_current_user( $u2 );
+
+		$listed = $this->list_thread_ids( $u2, array( 'exclude_disabled_group_threads' => true ) );
+		$this->assertNotContains( $group_thread, $listed, 'Group thread is hidden from the list.' );
+		$this->assertContains( $private_thread, $listed, 'Other threads stay listed.' );
+
+		$this->assertContains( $group_thread, $this->list_thread_ids( $u2 ), 'Callers that do not opt in keep the group thread (release).' );
+
+		$this->assertTrue( bb_messages_is_disabled_group_thread( $group_thread ) );
+		$this->assertFalse( bb_messages_is_disabled_group_thread( $private_thread ) );
+	}
+
+	/**
+	 * The list follows the setting, including the cached group thread IDs.
+	 *
+	 * @group groups
+	 */
+	public function test_list_exclusion_follows_group_messages_setting() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$u3       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		$group_thread = $this->create_group_thread_with_reply( $u1, array( $u2, $u3 ), $group_id );
+		$this->set_current_user( $u2 );
+		$args = array( 'exclude_disabled_group_threads' => true );
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$this->assertNotContains( $group_thread, $this->list_thread_ids( $u2, $args ) );
+
+		bp_update_option( 'bp-disable-group-messages', 1 );
+		$this->assertContains( $group_thread, $this->list_thread_ids( $u2, $args ), 'Group Messages enabled: listed as before.' );
+		$this->assertFalse( bb_messages_is_disabled_group_thread( $group_thread ) );
+		$this->assertSame( array(), bb_messages_get_disabled_group_thread_ids() );
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$this->assertNotContains( $group_thread, $this->list_thread_ids( $u2, $args ) );
+	}
+
+	/**
+	 * The header and sidebar lists opt in through the 'messages' query string, only while Group Messages is disabled.
+	 *
+	 * @group groups
+	 */
+	public function test_messages_querystring_opts_in_only_when_group_messages_disabled() {
+		$u1       = self::factory()->user->create();
+		$u2       = self::factory()->user->create();
+		$u3       = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		$group_thread = $this->create_group_thread_with_reply( $u1, array( $u2, $u3 ), $group_id );
+		$this->set_current_user( $u2 );
+
+		bp_update_option( 'bp-disable-group-messages', 1 );
+		$this->assertStringNotContainsString( 'exclude_disabled_group_threads', (string) bp_ajax_querystring( 'messages' ) );
+
+		bp_update_option( 'bp-disable-group-messages', 0 );
+		$this->assertStringContainsString( 'exclude_disabled_group_threads=1', (string) bp_ajax_querystring( 'messages' ) );
+		$this->assertStringNotContainsString( 'exclude_disabled_group_threads', (string) bp_ajax_querystring( 'members' ) );
+
+		global $messages_template;
+		bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . $u2 );
+		$this->assertNotContains( $group_thread, array_map( 'intval', wp_list_pluck( (array) $messages_template->threads, 'thread_id' ) ) );
+
+		// Attachment access checks and other array callers keep release behaviour.
+		bp_has_message_threads( array( 'user_id' => $u2 ) );
+		$this->assertContains( $group_thread, array_map( 'intval', wp_list_pluck( (array) $messages_template->threads, 'thread_id' ) ) );
+
+		// The loop cached an unread count; release's setting-change hook cannot unset it from the test cache (tear_down).
+		wp_cache_flush();
+	}
+
+	/**
 	 * A member who is not in the thread has no access to it (TC-16).
 	 */
 	public function test_non_recipient_has_no_access_to_thread() {
