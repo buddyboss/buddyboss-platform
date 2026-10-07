@@ -2450,6 +2450,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token group activity.content
 	 *
 	 * @since BuddyBoss 2.2.9.1
+	 * @since BuddyBoss [BBVERSION] Returns an empty string instead of reading properties on a missing activity object.
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.
@@ -2462,6 +2463,14 @@ class BP_Email_Tokens {
 
 		$settings = bp_email_get_appearance_settings();
 		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
+
+		// Compacted queue rows are rehydrated by the chunk runner before the send
+		// callback, and the callback re-injects the object; when neither could
+		// (deleted activity, component off) bail instead of reading properties on
+		// a non-object below.
+		if ( ! is_object( $activity ) || empty( $activity->user_id ) ) {
+			return '';
+		}
 
 		ob_start();
 		?>
