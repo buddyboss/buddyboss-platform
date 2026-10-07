@@ -19,6 +19,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { removeEditorParagraphs } from '../common/RichTextEditor';
 import { GroupMembersTab } from './GroupMembersTab';
 import { GroupTopicsTab } from './GroupTopicsTab';
 
@@ -327,6 +328,9 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + group.id );
 					if ( editorInstance ) {
 						val = editorInstance.getContent();
+						if ( field.extra_data && field.extra_data.autop ) {
+							val = removeEditorParagraphs( val );
+						}
 					}
 				}
 

@@ -584,6 +584,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					label={ field.label }
 					value={ null != value ? String( value ) : '' }
 					onChange={ isDisabled ? function () {} : onChange }
+					autop={ !! ( field.extra_data && field.extra_data.autop ) }
 				/>
 				{ ( field.description || descLink ) && (
 					<p className="bb-admin-meta-field__description">
