@@ -22,6 +22,20 @@ function messages_screen_conversation() {
 
 	$thread_id = (int) bp_action_variable( 0 );
 
+	// Group threads cannot be opened while "Group Messages" is disabled: leave with a notice, as for other unavailable
+	// threads. Checked before the archived redirect below, and only for members who can see the thread.
+	if (
+		bb_messages_is_disabled_group_thread( $thread_id ) &&
+		bp_is_my_profile() &&
+		( messages_check_thread_access( $thread_id ) || bp_current_user_can( 'bp_moderate' ) )
+	) {
+		// Inbox, or compose for members with no listed threads: straight to the final page, so the notice is shown there.
+		$redirect = bb_messages_get_disabled_group_thread_redirect_url( $thread_id );
+
+		bp_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
+		bp_core_redirect( $redirect );
+	}
+
 	if ( ! empty( $thread_id ) && messages_is_valid_archived_thread( $thread_id ) ) {
 		if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
 			$thread_id = 0;
@@ -61,12 +75,6 @@ function messages_screen_conversation() {
 			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
 			bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) );
 		}
-	}
-
-	// Group threads cannot be opened while "Group Messages" is disabled: back to the inbox with a notice, as for other unavailable threads.
-	if ( bb_messages_is_disabled_group_thread( $thread_id ) ) {
-		bp_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
-		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) );
 	}
 
 	// Load up BuddyPress one time.

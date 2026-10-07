@@ -57,6 +57,7 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		bp_messages_update_meta( $message_id, 'group_message_thread_id', $thread_id );
 		bp_messages_update_meta( $message_id, 'group_message_users', 'all' );
 		bp_messages_update_meta( $message_id, 'group_message_type', 'open' );
+		bp_messages_update_meta( $message_id, 'group_message_thread_type', 'new' );
 		bp_messages_update_meta( $message_id, 'message_from', 'group' );
 	}
 
@@ -584,7 +585,10 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		bp_update_option( 'bp-disable-group-messages', 0 );
 		$group_thread = $this->create_group_thread_with_reply( $u1, $u2, $group_id );
 
+		// The lookup used by the compose redirect finds the group thread, as in release.
 		$this->assertSame( $group_thread, (int) BP_Messages_Message::get_existing_thread( array( $u2 ), $u1 ) );
-		$this->assertSame( $group_thread, $this->create_thread( $u1, array( $u2 ) ) );
+
+		// Sending skips an open group thread (group_message_thread_type = new) and starts a private thread.
+		$this->assertNotSame( $group_thread, $this->create_thread( $u1, array( $u2 ) ) );
 	}
 }

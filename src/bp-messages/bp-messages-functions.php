@@ -1511,9 +1511,10 @@ function bb_messages_is_group_thread( $thread_id ) {
 /**
  * Get the group threads that cannot be opened while "Group Messages" is disabled.
  *
- * Candidates are the threads holding an open message sent to all group members; each one is
- * checked with the same `bb_messages_validate_thread` filter that refuses opening it, so the
- * lists hide exactly the threads that cannot be opened.
+ * A thread qualifies when its first message is an open group message sent to all members, which is
+ * the check bb_messages_validate_groups_thread() makes before refusing to open it. The first message
+ * is picked as BP_Messages_Thread::get_first_message() does: the oldest message (date_sent, then id)
+ * with meta other than the group joined/left markers. Two queries whatever the number of threads.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1526,20 +1527,59 @@ function bb_messages_get_disabled_group_thread_ids() {
 		return array();
 	}
 
-	$bp = buddypress();
+	$bp       = buddypress();
+	$messages = $bp->messages->table_name_messages;
+	$meta     = $bp->messages->table_name_meta;
+	$markers  = "'group_message_group_joined', 'group_message_group_left'";
 
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	$sql = "SELECT DISTINCT m.thread_id FROM {$bp->messages->table_name_messages} m INNER JOIN {$bp->messages->table_name_meta} mu ON mu.message_id = m.id AND mu.meta_key = 'group_message_users' AND mu.meta_value = 'all' INNER JOIN {$bp->messages->table_name_meta} mt ON mt.message_id = m.id AND mt.meta_key = 'group_message_type' AND mt.meta_value = 'open'";
+	// First message of each thread that holds an open message sent to all group members.
+	$sql = "SELECT m.thread_id, MIN( m.id ) AS id FROM {$messages} m
+		INNER JOIN (
+			SELECT fm.thread_id, MIN( fm.date_sent ) AS date_sent FROM {$messages} fm
+			INNER JOIN {$meta} fmm ON fmm.message_id = fm.id AND fmm.meta_key NOT IN ( {$markers} )
+			WHERE fm.thread_id IN (
+				SELECT gm.thread_id FROM {$messages} gm
+				INNER JOIN {$meta} gu ON gu.message_id = gm.id AND gu.meta_key = 'group_message_users' AND gu.meta_value = 'all'
+				INNER JOIN {$meta} gt ON gt.message_id = gm.id AND gt.meta_key = 'group_message_type' AND gt.meta_value = 'open'
+			)
+			GROUP BY fm.thread_id
+		) f ON f.thread_id = m.thread_id AND f.date_sent = m.date_sent
+		INNER JOIN {$meta} mm ON mm.message_id = m.id AND mm.meta_key NOT IN ( {$markers} )
+		GROUP BY m.thread_id";
 
 	$thread_ids = bp_core_get_incremented_cache( $sql, 'bp_messages' );
 
 	if ( false === $thread_ids ) {
 		$thread_ids = array();
 
-		// Cached above with the incremented 'bp_messages' key, reset whenever a message changes.
-		foreach ( $wpdb->get_col( $sql ) as $thread_id ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			if ( empty( apply_filters( 'bb_messages_validate_thread', (int) $thread_id ) ) ) {
-				$thread_ids[] = (int) $thread_id;
+		// Cached with the incremented 'bp_messages' key, reset whenever a message or the setting changes.
+		$first_messages = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( ! empty( $first_messages ) ) {
+			// Only the four keys the check reads: priming all meta would also load large keys such as message_users_ids.
+			$first_message_ids = implode( ',', array_map( 'intval', wp_list_pluck( $first_messages, 'id' ) ) );
+			$meta_rows         = $wpdb->get_results( "SELECT message_id, meta_key, meta_value FROM {$meta} WHERE message_id IN ( {$first_message_ids} ) AND meta_key IN ( 'message_from', 'group_message_thread_id', 'group_message_users', 'group_message_type' ) ORDER BY id ASC" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+			// First value of each key, as bp_messages_get_meta( $id, $key, true ) returns.
+			$flags = array();
+			foreach ( (array) $meta_rows as $meta_row ) {
+				if ( ! isset( $flags[ $meta_row->message_id ][ $meta_row->meta_key ] ) ) {
+					$flags[ $meta_row->message_id ][ $meta_row->meta_key ] = maybe_unserialize( $meta_row->meta_value );
+				}
+			}
+
+			foreach ( $first_messages as $first_message ) {
+				$message_flags = isset( $flags[ $first_message->id ] ) ? $flags[ $first_message->id ] : array();
+
+				if (
+					isset( $message_flags['message_from'], $message_flags['group_message_users'], $message_flags['group_message_type'] ) &&
+					'group' === $message_flags['message_from'] &&
+					! empty( $message_flags['group_message_thread_id'] ) &&
+					'all' === $message_flags['group_message_users'] &&
+					'open' === $message_flags['group_message_type']
+				) {
+					$thread_ids[] = (int) $first_message->thread_id;
+				}
 			}
 		}
 
@@ -1562,6 +1602,86 @@ function bb_messages_is_disabled_group_thread( $thread_id ) {
 	$thread_id = (int) $thread_id;
 
 	return $thread_id > 0 && in_array( $thread_id, bb_messages_get_disabled_group_thread_ids(), true );
+}
+
+/**
+ * Get where to send the logged-in member who tried to open or reply to a disabled group thread.
+ *
+ * Returns the page the member finally lands on, so the "Group messages have been disabled" notice is
+ * shown there: the next screen would otherwise redirect again and the notice cookie would be used up
+ * on the way. The inbox sends members without listed threads on to compose (messages_screen_inbox()),
+ * and the archived list sends them on to the latest archived thread (messages_action_archived()).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $thread_id Disabled group thread ID.
+ * @param bool $archived  Whether the member came from the archived thread screen.
+ *
+ * @return string Redirect URL.
+ */
+function bb_messages_get_disabled_group_thread_redirect_url( $thread_id, $archived = false ) {
+	$thread_id    = (int) $thread_id;
+	$query_string = bp_ajax_querystring( 'messages' ) . '&user_id=' . bp_loggedin_user_id();
+
+	if ( $archived ) {
+		if ( bp_has_message_threads( $query_string . '&thread_type=archived' ) ) {
+			while ( bp_message_threads() ) :
+				bp_message_thread();
+				$archived_thread_id = (int) bp_get_message_thread_id();
+				if ( $archived_thread_id !== $thread_id ) {
+					return bb_get_message_archived_thread_view_link( $archived_thread_id );
+				}
+			endwhile;
+		}
+
+		return trailingslashit( bb_get_messages_archived_url() );
+	}
+
+	$redirect = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+
+	if ( ! bp_has_message_threads( $query_string ) ) {
+		$redirect = trailingslashit( $redirect . 'compose' );
+	}
+
+	return $redirect;
+}
+
+/**
+ * Check whether a user is an active (not deleted) recipient of a thread with a one-row lookup.
+ *
+ * Same answer as messages_check_thread_access(), without loading every recipient of the thread.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id Thread ID.
+ * @param int $user_id   Optional. User ID. Default: the logged-in user.
+ *
+ * @return bool
+ */
+function bb_messages_is_active_thread_recipient( $thread_id, $user_id = 0 ) {
+	$thread_id = (int) $thread_id;
+	$user_id   = $user_id ? (int) $user_id : (int) bp_loggedin_user_id();
+
+	if ( 0 >= $thread_id || 0 >= $user_id ) {
+		return false;
+	}
+
+	// The full list can be changed by its filter: keep the exact check then.
+	if ( has_filter( 'bp_messages_thread_get_recipients' ) ) {
+		return (bool) messages_check_thread_access( $thread_id, $user_id );
+	}
+
+	$recipient = BP_Messages_Thread::get(
+		array(
+			'include_threads' => array( $thread_id ),
+			'user_id'         => $user_id,
+			'is_deleted'      => 0,
+			'per_page'        => 1,
+			'fields'          => 'ids',
+		)
+	);
+
+	return ! empty( $recipient['recipients'] );
 }
 
 /**

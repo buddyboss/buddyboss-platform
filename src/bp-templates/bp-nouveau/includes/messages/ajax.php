@@ -1228,7 +1228,11 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	$thread_id = apply_filters( 'bb_messages_validate_thread', $thread_id );
 	if ( empty( $thread_id ) ) {
-		if ( bb_messages_is_disabled_group_thread( $requested_thread_id ) ) {
+		// Name the reason only to members who can see the thread; others keep the generic answer.
+		if (
+			bb_messages_is_disabled_group_thread( $requested_thread_id ) &&
+			( messages_check_thread_access( $requested_thread_id ) || bp_current_user_can( 'bp_moderate' ) )
+		) {
 			$response = array(
 				'feedback'                => __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
 				'type'                    => 'warning',
@@ -2914,6 +2918,13 @@ function bp_nouveau_ajax_hide_thread() {
 
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
 
+	// Only threads the member is in (or moderators, as for deleting): the toast below names the recipients or the group.
+	foreach ( $thread_ids as $thread_id ) {
+		if ( ! bb_messages_is_active_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error( $response );
+		}
+	}
+
 	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
 	if ( $is_group_message_thread ) {
 		$thread_id     = current( $thread_ids );
@@ -3008,6 +3019,26 @@ function bp_nouveau_ajax_hide_thread() {
 }
 
 /**
+ * Check that the current user may list the recipients of a thread over AJAX.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $thread_id Thread ID.
+ *
+ * @return bool
+ */
+function bb_nouveau_ajax_can_list_thread_recipients( $thread_id ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
+		return false;
+	}
+
+	$thread_id = (int) $thread_id;
+
+	// One recipient row instead of messages_check_thread_access(), which loads every recipient of the thread.
+	return $thread_id > 0 && ( bp_current_user_can( 'bp_moderate' ) || bb_messages_is_active_thread_recipient( $thread_id ) );
+}
+
+/**
  * Function which get next recipients list for block member in message section and message header.
  */
 function bb_nouveau_ajax_recipient_list_for_blocks() {
@@ -3016,6 +3047,10 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 
 	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+	if ( ! bb_nouveau_ajax_can_list_thread_recipients( $post_data['thread_id'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'You do not have access to that conversation.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -3127,6 +3162,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+	if ( ! bb_nouveau_ajax_can_list_thread_recipients( $post_data['thread_id'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'You do not have access to that conversation.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 	if ( ! isset( $post_data['page_no'] ) ) {
@@ -3347,6 +3386,13 @@ function bb_nouveau_ajax_left_join_members_list() {
 		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'Missing message type.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
+
+	// The joined/left members belong to a group thread message: same access as the thread.
+	$message = new BP_Messages_Message( (int) $post_data['message_id'] );
+	if ( empty( $message->thread_id ) || ! bb_nouveau_ajax_can_list_thread_recipients( $message->thread_id ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'You do not have access to that conversation.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
 	$html = '';
 
 	if ( 'joined' === $post_data['message_type'] ) {
@@ -3431,6 +3477,13 @@ function bp_nouveau_ajax_unhide_thread() {
 	}
 
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
+
+	// Only threads the member is in (or moderators, as for deleting): the toast below names the recipients or the group.
+	foreach ( $thread_ids as $thread_id ) {
+		if ( ! bb_messages_is_active_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error( $response );
+		}
+	}
 
 	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
 	if ( $is_group_message_thread ) {

@@ -39,10 +39,13 @@ function messages_screen_archived() {
 		}
 	}
 
-	// Group threads cannot be opened while "Group Messages" is disabled: back to the archived list with a notice, as for other unavailable threads.
+	// Group threads cannot be opened while "Group Messages" is disabled: leave with a notice, as for other unavailable threads.
+	// Straight to the latest other archived thread (or the archived list), where the archived list would send the member on.
 	if ( ! $is_redirect && bb_messages_is_disabled_group_thread( $thread_id ) ) {
+		$redirect = bb_messages_get_disabled_group_thread_redirect_url( $thread_id, true );
+
 		bp_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
-		bp_core_redirect( trailingslashit( bb_get_messages_archived_url() ) );
+		bp_core_redirect( $redirect );
 	}
 
 	if ( $is_redirect ) {
