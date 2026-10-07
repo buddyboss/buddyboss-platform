@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-06 11:30:42+00:00\n"
+"POT-Creation-Date: 2026-10-07 09:47:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3334,8 +3334,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-notification.php:648
 #: bp-core/classes/class-bb-post-notification.php:145
 #: bp-forums/classes/class-bp-forums-notification.php:428
-#: bp-groups/classes/class-bp-groups-notification.php:1286
-#: bp-groups/classes/class-bp-groups-notification.php:1487
+#: bp-groups/classes/class-bp-groups-notification.php:1324
+#: bp-groups/classes/class-bp-groups-notification.php:1525
 #: bp-messages/classes/class-bp-messages-notification.php:218
 #: bp-notifications/bp-notifications-functions.php:1390
 #: bp-notifications/bp-notifications-functions.php:1439
@@ -3606,14 +3606,14 @@ msgstr ""
 #: bp-activity/bp-activity-functions.php:4288
 #: bp-blogs/bp-blogs-filters.php:266
 #: bp-core/bp-core-actions.php:1004
-#: bp-core/classes/class-bp-email-tokens.php:2765
+#: bp-core/classes/class-bp-email-tokens.php:2774
 msgid "View Comment"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4291
 #: bp-activity/bp-activity-functions.php:4296
 #: bp-core/classes/class-bp-email-tokens.php:2310
-#: bp-core/classes/class-bp-email-tokens.php:2627
+#: bp-core/classes/class-bp-email-tokens.php:2636
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:70
 #: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:122
 #: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:174
@@ -4836,49 +4836,49 @@ msgstr ""
 
 #. translators: %s: Total reply count.
 #: bp-activity/classes/class-bp-activity-notification.php:718
-#: bp-groups/classes/class-bp-groups-notification.php:1379
+#: bp-groups/classes/class-bp-groups-notification.php:1417
 msgid "You have %1$d new posts"
 msgstr ""
 
 #. translators: 1: User full name, 2: Activity content.
 #: bp-activity/classes/class-bp-activity-notification.php:727
-#: bp-groups/classes/class-bp-groups-notification.php:1312
+#: bp-groups/classes/class-bp-groups-notification.php:1350
 msgid "%1$s posted an update: %2$s"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:736
-#: bp-groups/classes/class-bp-groups-notification.php:1321
+#: bp-groups/classes/class-bp-groups-notification.php:1359
 msgid "%1$s posted some photos"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:742
-#: bp-groups/classes/class-bp-groups-notification.php:1327
+#: bp-groups/classes/class-bp-groups-notification.php:1365
 msgid "%1$s posted a photo"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:751
-#: bp-groups/classes/class-bp-groups-notification.php:1336
+#: bp-groups/classes/class-bp-groups-notification.php:1374
 msgid "%1$s posted some documents"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:757
-#: bp-groups/classes/class-bp-groups-notification.php:1342
+#: bp-groups/classes/class-bp-groups-notification.php:1380
 msgid "%1$s posted a document"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:766
-#: bp-groups/classes/class-bp-groups-notification.php:1351
+#: bp-groups/classes/class-bp-groups-notification.php:1389
 msgid "%1$s posted some videos"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:772
-#: bp-groups/classes/class-bp-groups-notification.php:1357
+#: bp-groups/classes/class-bp-groups-notification.php:1395
 msgid "%1$s posted a video"
 msgstr ""
 
@@ -4886,7 +4886,7 @@ msgstr ""
 #. translators: %s: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:779
 #: bp-activity/classes/class-bp-activity-notification.php:792
-#: bp-groups/classes/class-bp-groups-notification.php:1370
+#: bp-groups/classes/class-bp-groups-notification.php:1408
 msgid "%1$s posted an update"
 msgstr ""
 
@@ -7740,7 +7740,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:1535
 #: bp-core/bb-core-subscriptions.php:93
 #: bp-core/bb-core-subscriptions.php:390
-#: bp-core/bb-core-subscriptions.php:1325
+#: bp-core/bb-core-subscriptions.php:1494
 #: bp-forums/admin/tools.php:445
 #: bp-forums/admin/tools.php:447
 #: bp-forums/admin/tools.php:505
@@ -13754,14 +13754,14 @@ msgid "There is an error while adding the subscription."
 msgstr ""
 
 #. translators: total topics
-#: bp-core/bb-core-subscriptions.php:1304
+#: bp-core/bb-core-subscriptions.php:1473
 msgid "%d group forum and discussion subscriptions migrated successfully"
 msgid_plural "%d groups forum and discussion subscriptions migrated successfully"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: Status of current action.
-#: bp-core/bb-core-subscriptions.php:1320
+#: bp-core/bb-core-subscriptions.php:1489
 msgid "Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s"
 msgstr ""
 
@@ -18001,7 +18001,7 @@ msgstr ""
 msgid "View Discussion"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:3039
+#: bp-core/classes/class-bp-email-tokens.php:3048
 msgid "and %d more"
 msgstr ""
 
@@ -26298,67 +26298,67 @@ msgid "You will no longer receive emails of new discussions in groups you are su
 msgstr ""
 
 #. translators: User full name.
-#: bp-groups/classes/class-bp-groups-notification.php:1364
+#: bp-groups/classes/class-bp-groups-notification.php:1402
 msgid "%1$s posted a gif"
 msgstr ""
 
 #. translators: 1: User full name, 2: Group name, 3: Activity content.
-#: bp-groups/classes/class-bp-groups-notification.php:1389
+#: bp-groups/classes/class-bp-groups-notification.php:1427
 msgid "%1$s posted an update in %2$s: %3$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1399
+#: bp-groups/classes/class-bp-groups-notification.php:1437
 msgid "%1$s posted some photos in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1406
+#: bp-groups/classes/class-bp-groups-notification.php:1444
 msgid "%1$s posted a photo in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1416
+#: bp-groups/classes/class-bp-groups-notification.php:1454
 msgid "%1$s posted some documents in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1423
+#: bp-groups/classes/class-bp-groups-notification.php:1461
 msgid "%1$s posted a document in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1433
+#: bp-groups/classes/class-bp-groups-notification.php:1471
 msgid "%1$s posted some videos in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1440
+#: bp-groups/classes/class-bp-groups-notification.php:1478
 msgid "%1$s posted a video in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1448
+#: bp-groups/classes/class-bp-groups-notification.php:1486
 msgid "%1$s posted a gif in %2$s"
 msgstr ""
 
 #. translators: %s: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1455
+#: bp-groups/classes/class-bp-groups-notification.php:1493
 msgid "%1$s posted an update in %2$s"
 msgstr ""
 
 #. translators: 1: User full name, 2: Group name, 3: Discussion Title.
-#: bp-groups/classes/class-bp-groups-notification.php:1512
+#: bp-groups/classes/class-bp-groups-notification.php:1550
 msgid "%1$s started a discussion%2$s"
 msgstr ""
 
 #. translators: %s: Total reply count.
-#: bp-groups/classes/class-bp-groups-notification.php:1521
+#: bp-groups/classes/class-bp-groups-notification.php:1559
 msgid "You have %1$d new discussions"
 msgstr ""
 
 #. translators: 1: User full name, 2: Group name, 3: Discussion Title.
-#: bp-groups/classes/class-bp-groups-notification.php:1528
+#: bp-groups/classes/class-bp-groups-notification.php:1566
 msgid "%1$s started a discussion%2$s%3$s"
 msgstr ""
 
