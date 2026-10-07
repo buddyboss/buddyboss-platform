@@ -2218,9 +2218,16 @@ function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
  *
  * Three cooperating markers, all in the dedicated `bb_subscriptions_claims`
  * cache group — deliberately NOT the `bb_subscriptions` data group, which
- * bb_delete_group_forum_topic_subscriptions() and the migration routines flush
- * wholesale; a flush mid-fan-out would otherwise erase every claim and
- * completion marker and let a re-run send a finished chunk again:
+ * bb_delete_group_forum_topic_subscriptions() flushes with
+ * wp_cache_flush_group() when a group's forum changes; a group flush
+ * mid-fan-out would otherwise erase every claim and completion marker. The
+ * dedicated group does NOT survive a full wp_cache_flush(): the moderation
+ * component issues one on every hide, unhide, suspend and report save
+ * (bb_moderation_clear_status_change_cache() and siblings in
+ * bp-moderation-filters.php, also reached when a forum is connected to a
+ * group), and the subscription migrations do too. After such a flush a
+ * re-run of an already-finished chunk row is no longer refused, so the
+ * duplicate protection is best-effort across full flushes, not a guarantee:
  * - the claim (short TTL, see bb_subscriptions_get_notification_chunk_claim_ttl())
  *   blocks a concurrent duplicate run; the send callbacks refresh it after
  *   every recipient via bb_subscriptions_touch_notification_chunk_claim() so a
