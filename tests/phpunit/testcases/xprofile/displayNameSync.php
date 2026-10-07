@@ -262,4 +262,42 @@ class BP_Tests_XProfile_DisplayNameSync extends BP_UnitTestCase {
 		$this->assertGreaterThan( $u_before, bb_xprofile_member_display_name_cache_version( $u ) );
 		$this->assertSame( $other_before, bb_xprofile_member_display_name_cache_version( $other ) );
 	}
+
+	/**
+	 * A self-heal that cannot stick must not repeat on every lookup.
+	 *
+	 * The resolver copies an empty xprofile name part from the WordPress copy. When that copy
+	 * sanitizes to empty (markup or whitespace written straight to usermeta by an importer or SSO
+	 * plugin) the copy saves or deletes an empty row, which advances the member's cache version. The
+	 * resolved name must still be cached under the current version, so the heal runs once and later
+	 * lookups are served from the cache.
+	 */
+	public function test_self_heal_that_cannot_stick_writes_once_not_on_every_lookup() {
+		$u      = $this->create_harry();
+		$viewer = self::factory()->user->create();
+
+		xprofile_delete_field_data( bp_xprofile_lastname_field_id(), $u );
+		update_user_meta( $u, 'last_name', '<div></div>' );
+
+		$writes  = 0;
+		$counter = function ( $data_obj ) use ( $u, &$writes ) {
+			if ( (int) $data_obj->user_id === $u ) {
+				++$writes;
+			}
+		};
+		add_action( 'xprofile_data_after_save', $counter );
+		add_action( 'xprofile_data_after_delete', $counter );
+
+		$this->set_current_user( $viewer );
+		$names = array();
+		for ( $i = 0; $i < 20; $i++ ) {
+			$names[] = bp_core_get_user_displayname( $u );
+		}
+
+		remove_action( 'xprofile_data_after_save', $counter );
+		remove_action( 'xprofile_data_after_delete', $counter );
+
+		$this->assertLessThanOrEqual( 1, $writes, 'The self-heal must not write on every name lookup.' );
+		$this->assertCount( 1, array_unique( $names ), 'Every lookup resolves the same name.' );
+	}
 }
