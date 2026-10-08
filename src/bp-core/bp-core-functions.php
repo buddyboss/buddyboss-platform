@@ -11711,7 +11711,9 @@ function bb_media_preview_get_receiver_id( $segment, $item_id, $attachment_id ) 
 
 	$receiver_id = absint( $matches[1] );
 
-	if ( empty( $receiver_id ) || ! hash_equals( bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ), $matches[2] ) ) {
+	$expected = bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id );
+
+	if ( empty( $receiver_id ) || '' === $expected || ! hash_equals( $expected, $matches[2] ) ) {
 		return 0;
 	}
 
@@ -11730,8 +11732,14 @@ function bb_media_preview_get_receiver_id( $segment, $item_id, $attachment_id ) 
  * @return string 32-character hex signature.
  */
 function bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ) {
-	$item_id       = absint( preg_replace( '/\D/', '', (string) $item_id ) );
-	$attachment_id = absint( preg_replace( '/\D/', '', (string) $attachment_id ) );
+	// Accept only a plain number with an optional `forbidden_` prefix. Anything else (e.g. `1x2`)
+	// would normalise differently here than the endpoint's (int) cast and let one signature cover another item.
+	if ( ! preg_match( '/^(?:forbidden_)?(\d+)$/', (string) $item_id, $item_match ) || ! preg_match( '/^(?:forbidden_)?(\d+)$/', (string) $attachment_id, $attachment_match ) ) {
+		return '';
+	}
+
+	$item_id       = absint( $item_match[1] );
+	$attachment_id = absint( $attachment_match[1] );
 
 	return substr( hash_hmac( 'sha256', 'bb_media_preview_receiver|' . absint( $receiver_id ) . '|' . $item_id . '|' . $attachment_id, wp_salt( 'auth' ) ), 0, 32 );
 }
