@@ -51,7 +51,15 @@ function bp_member_revoke_invite_admin() {
 	}
 
 	$post_id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
-	if ( isset( $post_id ) && '' !== $post_id ) {
+
+	// GET request: require a nonce bound to this invite so it cannot be triggered cross-site.
+	$nonce = bb_filter_input_string( INPUT_GET, '_wpnonce' );
+	if (
+		! empty( $post_id ) &&
+		! empty( $nonce ) &&
+		wp_verify_nonce( $nonce, 'bp_member_revoke_invite_admin_' . $post_id ) &&
+		bb_invites_user_can_revoke( $post_id )
+	) {
 		wp_delete_post( $post_id, true );
 	}
 

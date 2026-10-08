@@ -386,7 +386,19 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$video                     = new BP_Video( $id );
+		$video = new BP_Video( $id );
+
+		// An existing attachment must be one of this video's previews or the user's uploaded thumbnail.
+		if ( ! empty( $request->get_param( 'attachment_id' ) ) && ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id ) ) {
+			return new WP_Error(
+				'bp_rest_attachment_invalid_id',
+				__( 'Invalid attachment ID.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
 		$auto_generated_thumbnails = (array) get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 
 		// New thumbnail upload time remove the previous one.
@@ -513,6 +525,17 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		$video                     = new BP_Video( $id );
 		$auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 		$preview_thumbnail_id      = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+
+		// Only a custom uploaded thumbnail of this video can be deleted, never an arbitrary post.
+		if ( empty( $attachment_id ) || ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id, false ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_default_id',
+				__( 'Sorry, You have passed invalid poster ID.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
 
 		if (
 			isset( $auto_generated_thumbnails['default_images'] ) &&

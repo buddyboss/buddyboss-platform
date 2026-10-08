@@ -11660,3 +11660,238 @@ function bb_is_feature_provided( $feature ) {
 			return false;
 	}
 }
+
+/**
+ * Build the signed "receiver" URL segment for a media or video preview URL.
+ *
+ * Preview URLs embedded in emails (for example message notifications) name the
+ * recipient so the image renders where the recipient is not logged in. The segment
+ * carries an HMAC bound to the receiver, the item and the attachment, so it cannot be
+ * forged or reused for another user or file.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $receiver_id   Receiver user ID.
+ * @param int|string $item_id       Media or video ID (a `forbidden_` prefix is ignored).
+ * @param int|string $attachment_id Attachment ID (a `forbidden_` prefix is ignored).
+ *
+ * @return string Base64-encoded URL segment, or an empty string when no receiver is given.
+ */
+function bb_media_preview_receiver_segment( $receiver_id, $item_id, $attachment_id ) {
+	$receiver_id = absint( $receiver_id );
+
+	if ( empty( $receiver_id ) ) {
+		return '';
+	}
+
+	return base64_encode( 'receiver_' . $receiver_id . '_' . bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+}
+
+/**
+ * Validate a "receiver" URL segment of a media or video preview URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string     $segment       Base64-encoded segment taken from the URL.
+ * @param int|string $item_id       Media or video ID from the same URL.
+ * @param int|string $attachment_id Attachment ID from the same URL.
+ *
+ * @return int Receiver user ID when the signature is valid, 0 otherwise.
+ */
+function bb_media_preview_get_receiver_id( $segment, $item_id, $attachment_id ) {
+	if ( empty( $segment ) || ! is_string( $segment ) ) {
+		return 0;
+	}
+
+	$decoded = base64_decode( $segment, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+
+	if ( false === $decoded || ! preg_match( '/^receiver_(\d+)_([a-f0-9]{32})$/', $decoded, $matches ) ) {
+		return 0;
+	}
+
+	$receiver_id = absint( $matches[1] );
+
+	if ( empty( $receiver_id ) || ! hash_equals( bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ), $matches[2] ) ) {
+		return 0;
+	}
+
+	return $receiver_id;
+}
+
+/**
+ * Compute the signature used in preview receiver segments.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $receiver_id   Receiver user ID.
+ * @param int|string $item_id       Media or video ID.
+ * @param int|string $attachment_id Attachment ID.
+ *
+ * @return string 32-character hex signature.
+ */
+function bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ) {
+	$item_id       = absint( preg_replace( '/\D/', '', (string) $item_id ) );
+	$attachment_id = absint( preg_replace( '/\D/', '', (string) $attachment_id ) );
+
+	return substr( hash_hmac( 'sha256', 'bb_media_preview_receiver|' . absint( $receiver_id ) . '|' . $item_id . '|' . $attachment_id, wp_salt( 'auth' ) ), 0, 32 );
+}
+
+if ( ! function_exists( 'bb_video_get_thumbnail_editable_video' ) ) {
+	/**
+	 * Get a video the current user may change the thumbnail of.
+	 *
+	 * The video must exist, belong to the given video attachment, and the current user
+	 * must have the requested permission on it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $video_id            Video ID.
+	 * @param int    $video_attachment_id Attachment ID of the video file.
+	 * @param string $permission          'edit' or 'delete'. Default 'edit'.
+	 *
+	 * @return BP_Video|false Video object on success, false otherwise.
+	 */
+	function bb_video_get_thumbnail_editable_video( $video_id, $video_attachment_id, $permission = 'edit' ) {
+		$video_id            = absint( $video_id );
+		$video_attachment_id = absint( $video_attachment_id );
+
+		if ( ! is_user_logged_in() || empty( $video_id ) || empty( $video_attachment_id ) || ! class_exists( 'BP_Video' ) ) {
+			return false;
+		}
+
+		$video = new BP_Video( $video_id );
+
+		if ( empty( $video->id ) || (int) $video->attachment_id !== $video_attachment_id ) {
+			return false;
+		}
+
+		$allowed = ( 'delete' === $permission ) ? bp_video_user_can_delete( $video ) : bp_video_user_can_edit( $video );
+
+		return $allowed ? $video : false;
+	}
+}
+
+if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
+	/**
+	 * Check whether an attachment may be used, or deleted, as a thumbnail of a video.
+	 *
+	 * Accepts the video's own auto-generated previews (when `$allow_auto_generated` is true)
+	 * and custom thumbnails uploaded through the video thumbnail uploader that are already
+	 * this video's custom thumbnail / poster, or belong to the current user. On delete paths
+	 * (`$allow_auto_generated` false) the current user's upload is accepted only while it is
+	 * not yet saved as a thumbnail of any video.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Video $video                Video object.
+	 * @param int      $thumbnail_id         Attachment ID of the thumbnail.
+	 * @param bool     $allow_auto_generated Whether auto-generated previews are accepted. Default true.
+	 *
+	 * @return bool
+	 */
+	function bb_video_is_valid_thumbnail_for_video( $video, $thumbnail_id, $allow_auto_generated = true ) {
+		$thumbnail_id = absint( $thumbnail_id );
+
+		if ( empty( $video->id ) || empty( $thumbnail_id ) || 'attachment' !== get_post_type( $thumbnail_id ) ) {
+			return false;
+		}
+
+		$auto_generated = function_exists( 'bb_video_get_auto_generated_preview_ids' ) ? array_map( 'absint', (array) bb_video_get_auto_generated_preview_ids( $video->attachment_id ) ) : array();
+
+		if ( in_array( $thumbnail_id, $auto_generated, true ) ) {
+			return $allow_auto_generated;
+		}
+
+		if ( ! get_post_meta( $thumbnail_id, 'bp_video_thumbnail_upload', true ) ) {
+			return false;
+		}
+
+		$thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
+		$current_id = absint( get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true ) );
+
+		// This video's own custom thumbnail, or its current poster.
+		if (
+			( ! empty( $thumbnails['custom_image'] ) && absint( $thumbnails['custom_image'] ) === $thumbnail_id ) ||
+			$current_id === $thumbnail_id
+		) {
+			return true;
+		}
+
+		if ( (int) get_post_field( 'post_author', $thumbnail_id ) !== bp_loggedin_user_id() ) {
+			return false;
+		}
+
+		// Selecting the user's own upload is fine; on delete paths it must still be unsaved.
+		if ( $allow_auto_generated ) {
+			return true;
+		}
+
+		// `bp_video_thumbnail_saved` is never flipped after upload, so detect use directly:
+		// a saved thumbnail is flagged `bp_video_upload` (legacy save) or referenced by a video.
+		if ( get_post_meta( $thumbnail_id, 'bp_video_upload', true ) ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$in_use = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_id FROM {$wpdb->postmeta} WHERE ( meta_key = 'bp_video_preview_thumbnail_id' AND meta_value = %s ) OR ( meta_key = 'video_preview_thumbnails' AND ( meta_value LIKE %s OR meta_value LIKE %s ) ) LIMIT 1",
+				(string) $thumbnail_id,
+				'%' . $wpdb->esc_like( '"custom_image";i:' . $thumbnail_id . ';' ) . '%',
+				'%' . $wpdb->esc_like( '"custom_image";s:' . strlen( (string) $thumbnail_id ) . ':"' . $thumbnail_id . '";' ) . '%'
+			)
+		);
+
+		return empty( $in_use );
+	}
+}
+
+/**
+ * Check whether a user may flag or delete an attachment referenced by a composer draft.
+ *
+ * Draft payloads (activity, forum topic/reply) carry client-supplied attachment IDs. Only
+ * the user's own attachments may be flagged as drafted, and only the user's own attachments
+ * that are not yet linked to a saved media, document, video or activity may be deleted when
+ * the draft is discarded.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $attachment_id Attachment ID from the draft payload.
+ * @param bool $for_delete    Whether the attachment is about to be deleted. Default false.
+ * @param int  $user_id       User ID. Default the logged-in user.
+ *
+ * @return bool
+ */
+function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = false, $user_id = 0 ) {
+	$attachment_id = absint( $attachment_id );
+	$user_id       = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+
+	if ( empty( $attachment_id ) || empty( $user_id ) || 'attachment' !== get_post_type( $attachment_id ) ) {
+		return false;
+	}
+
+	$can_manage = ( (int) get_post_field( 'post_author', $attachment_id ) === $user_id );
+
+	if ( $can_manage && $for_delete ) {
+		foreach ( array( 'bp_media_id', 'bp_document_id', 'bp_video_id', 'bb_activity_id' ) as $meta_key ) {
+			if ( get_post_meta( $attachment_id, $meta_key, true ) ) {
+				$can_manage = false;
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Filters whether a user may flag or delete an attachment referenced by a composer draft.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $can_manage    Whether the user may manage the attachment.
+	 * @param int  $attachment_id Attachment ID.
+	 * @param bool $for_delete    Whether the attachment is about to be deleted.
+	 * @param int  $user_id       User ID.
+	 */
+	return (bool) apply_filters( 'bb_user_can_manage_draft_attachment', $can_manage, $attachment_id, $for_delete, $user_id );
+}

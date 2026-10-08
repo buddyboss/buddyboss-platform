@@ -2619,7 +2619,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 							<?php
 						}
-						$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+						// Use the video's poster image, not the video file attachment itself.
+						$poster_id     = bb_get_video_thumb_id( bp_get_video_attachment_id() );
+						$thumbnail_url = $poster_id ? bb_video_get_thumb_url( bp_get_video_id(), $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' ) : '';
 
 						if ( empty( $thumbnail_url ) ) {
 							$thumbnail_url = bb_get_video_default_placeholder_image();

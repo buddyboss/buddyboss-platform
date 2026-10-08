@@ -49,7 +49,7 @@ function bp_member_revoke_invite() {
 	}
 
 	$post_id = filter_input( INPUT_POST, 'item_id', FILTER_VALIDATE_INT );
-	if ( isset( $post_id ) && '' !== $post_id ) {
+	if ( ! empty( $post_id ) && bb_invites_user_can_revoke( $post_id ) ) {
 		wp_delete_post( $post_id, true );
 	}
 

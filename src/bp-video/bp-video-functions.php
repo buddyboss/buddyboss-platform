@@ -3603,7 +3603,7 @@ function bb_video_get_thumb_url( $video_id, $attachment_id, $size = 'bb-video-ac
 			$attachment_url = home_url( '/' ) . 'bb-video-thumb-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $video_id ) . '/' . $size;
 
 			if ( 0 < $receiver_id ) {
-				$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+				$attachment_url = $attachment_url . '/' . bb_media_preview_receiver_segment( $receiver_id, $video_id, $attachment_id );
 			}
 		}
 
