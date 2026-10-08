@@ -3004,8 +3004,8 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 			// User is viewing someone else's profile (so use their display name)
 		} else {
-			/* translators: %s: user display name. */
-			$new_title['text'] = sprintf( esc_attr_x( "%s's", 'User viewing another users profile', 'buddyboss-platform' ), get_userdata( bbp_get_user_id() )->display_name );
+			/* translators: %s: User display name. */
+			$new_title['text'] = sprintf( esc_attr_x( "%s's", 'User viewing another users profile', 'buddyboss-platform' ), bp_core_get_user_displayname( bbp_get_user_id() ) );
 		}
 
 		// User topics created
@@ -3043,9 +3043,9 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 			// Other user
 		} else {
-			$new_title['text']   = get_userdata( bbp_get_user_id() )->display_name;
-			/* translators: %s: user display name. */
-		$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss-platform' );
+			$new_title['text']   = bp_core_get_user_displayname( bbp_get_user_id() );
+			/* translators: %s: User display name. */
+			$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss-platform' );
 		}
 
 		/** Views */

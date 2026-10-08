@@ -420,6 +420,17 @@
 						margin: 0;
 					}
 
+					i {
+						display: flex;
+						font-size: 20px;
+						font-weight: 200;
+						line-height: 1;
+
+						&:before {
+							margin: 0;
+						}
+					}
+
 					&:not(:first-child) {
 						margin-left: -4px;
 					}

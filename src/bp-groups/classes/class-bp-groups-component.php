@@ -1142,6 +1142,7 @@ class BP_Groups_Component extends BP_Component {
 	 * Setup cache groups
 	 *
 	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 3.5.1 Added the `bb_nouveau_group_invites` global cache group.
 	 */
 	public function setup_cache_groups() {
 
@@ -1158,6 +1159,7 @@ class BP_Groups_Component extends BP_Component {
 				'bp_groups_invitations_as_memberships',
 				'bp_groups_group_type',
 				'bp_groups_member',
+				'bb_nouveau_group_invites',
 			)
 		);
 

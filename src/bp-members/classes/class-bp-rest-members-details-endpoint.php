@@ -1415,6 +1415,47 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	}
 
 	/**
+	 * Check access for the member hover-card information endpoint.
+	 *
+	 * Runs the standard member permission check, then refuses the hover-card
+	 * payload for moderated members: suspended members, members the current
+	 * user has blocked, and members who have blocked the current user. The
+	 * /detail route intentionally keeps serving those members (the app renders
+	 * their blocked/suspended profile screens); the hover card must not.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function get_member_information_permissions_check( $request ) {
+		$retval = $this->get_item_permissions_check( $request );
+
+		if ( is_wp_error( $retval ) || true !== $retval ) {
+			return $retval;
+		}
+
+		$user_id = (int) $request['id'];
+
+		$is_suspended  = function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user_id );
+		$is_blocked    = function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user_id );
+		$is_blocked_by = function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $user_id );
+
+		if ( $is_suspended || $is_blocked || $is_blocked_by ) {
+			// Fixed 403 with a distinct code: 401 + the shared auth code makes API
+			// clients treat a moderated member as an expired session.
+			return new WP_Error(
+				'bb_rest_member_moderated',
+				__( 'Sorry, you are not allowed to view this member information.', 'buddyboss-platform' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		return $retval;
+	}
+
+	/**
 	 * Get member information.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -1469,14 +1510,16 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$followers = $this->members_endpoint->rest_bp_get_follower_ids( array( 'user_id' => $user_id ) );
 
+		$avatar_full = bp_core_fetch_avatar(
+			array(
+				'item_id' => $user_id,
+				'html'    => false,
+				'type'    => 'full',
+			)
+		);
+
 		$avatar_urls = array(
-			'full'       => bp_core_fetch_avatar(
-				array(
-					'item_id' => $user_id,
-					'html'    => false,
-					'type'    => 'full',
-				)
-			),
+			'full'       => $avatar_full,
 			'thumb'      => bp_core_fetch_avatar(
 				array(
 					'item_id' => $user_id,
@@ -1484,7 +1527,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					'type'    => 'thumb',
 				)
 			),
-			'is_default' => ! bp_get_user_has_avatar( $user_id ),
+			'is_default' => $this->bb_is_default_avatar_url( $avatar_full, $user_id ),
 		);
 
 		$message_url = '';
@@ -1544,49 +1587,6 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to member information.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 *
-	 * @return bool|WP_Error
-	 */
-	public function get_member_information_permissions_check( $request ) {
-		$retval = true;
-
-		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		if ( true === $retval && ! bp_is_active( 'members' ) ) {
-			$retval = new WP_Error(
-				'bp_rest_component_required',
-				__( 'Sorry, Members component was not enabled.', 'buddyboss-platform' ),
-				array(
-					'status' => '404',
-				)
-			);
-		}
-
-		/**
-		 * Filter the member information permissions check.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param bool|WP_Error   $retval  Returned value.
-		 * @param WP_REST_Request $request The request sent to the API.
-		 */
-		return apply_filters( 'bb_rest_member_information_permissions_check', $retval, $request );
-	}
-
-	/**
 	 * Function to get rest sub nav timeline filter.
 	 *
 	 * @param bool $is_profile_dropdown_default_menu True|False True if nav items for profile dropdown.
@@ -1642,5 +1642,27 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		return $subnav;
+	}
+
+	/**
+	 * Whether an avatar URL is the member's default (i.e. not an uploaded avatar).
+	 *
+	 * URL-based port of bp_get_user_has_avatar()'s path tests: uploaded avatars are
+	 * served from /avatars/{user_id}/ while auto-generated defaults live under
+	 * /default/{user_id}/. Testing the already-fetched URL avoids the extra
+	 * bp_core_fetch_avatar() call the canonical helper issues per member.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $avatar_url Avatar URL from a bp_core_fetch_avatar( html=false ) call.
+	 * @param int    $user_id    Member ID the URL was fetched for.
+	 *
+	 * @return bool True when the URL is not the member's own uploaded avatar.
+	 */
+	protected function bb_is_default_avatar_url( $avatar_url, $user_id ) {
+		$has_uploaded = ( false !== strpos( $avatar_url, '/' . $user_id . '/' ) )
+			&& ( false === strpos( $avatar_url, '/default/' . $user_id . '/' ) );
+
+		return ! $has_uploaded;
 	}
 }

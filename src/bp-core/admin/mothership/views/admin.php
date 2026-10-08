@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="buddyboss-mothership-block">
 			<div class="inside">
 				<h2><?php esc_html_e( 'Manual Connect', 'buddyboss-platform' ); ?></h2>
-				<p>
+				<ol>
 					<li>
 						<?php
 						/* translators: %s: Link to BuddyBoss.com */
@@ -43,12 +43,9 @@ defined( 'ABSPATH' ) || exit;
 						<?php esc_html_e( 'Enter your license key below', 'buddyboss-platform' ); ?>
 					</li>
 					<li>
-						<?php esc_html_e( 'Enter your BuddyBoss account email', 'buddyboss-platform' ); ?>
+						<?php esc_html_e( 'Click "Activate License"', 'buddyboss-platform' ); ?>
 					</li>
-					<li>
-						<?php esc_html_e( 'Click "Update License"', 'buddyboss-platform' ); ?>
-					</li>
-				</p>
+				</ol>
 			</div>
 		</div>
 

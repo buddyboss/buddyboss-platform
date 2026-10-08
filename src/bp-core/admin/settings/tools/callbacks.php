@@ -188,9 +188,10 @@ function bb_tools_ajax_install_plugin() {
 			);
 		}
 
-		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-tools' );
+		$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-tools' );
+		$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
 
-		if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
+		if ( '' === $download_url ) {
 			wp_send_json_error(
 				array(
 					'message'     => __( 'The BuddyBoss Tools add-on is not available under your current license.', 'buddyboss-platform' ),
@@ -198,8 +199,6 @@ function bb_tools_ajax_install_plugin() {
 				)
 			);
 		}
-
-		$download_url = $product->_embedded->{'version-latest'}->url;
 	} else {
 
 		// Fallback for environments without the Mothership license layer.

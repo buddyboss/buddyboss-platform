@@ -386,7 +386,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					// ajaxFetch, so no other AJAX caller's behaviour changes.
 					return Promise.resolve( op() ).then( function ( response ) {
 						if ( response && false === response.success ) {
-							throw new Error( ( response.data && response.data.message ) || __( 'Failed to update member role.', 'buddyboss' ) );
+							throw new Error( ( response.data && response.data.message ) || __( 'Failed to update member role.', 'buddyboss-platform' ) );
 						}
 						return response;
 					} );

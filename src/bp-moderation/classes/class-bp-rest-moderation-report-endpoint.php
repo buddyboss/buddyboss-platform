@@ -85,9 +85,14 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$reports_terms = get_terms( array( 'taxonomy' => 'bpm_category', 'hide_empty' => false ) );
 		if ( ! empty( $reports_terms ) ) {
 			foreach ( $reports_terms as $reports_term ) {
+				// Translate default categories for current locale.
+				if ( function_exists( 'bp_moderation_maybe_translate_report_term' ) ) {
+					$reports_term = bp_moderation_maybe_translate_report_term( $reports_term );
+				}
+
 				$show_when           = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
 				$fields['options'][] = array(
-					'id'                => $reports_term->term_id,
+					'id'                => (int) $reports_term->term_id,
 					'type'              => 'option',
 					'name'              => wp_specialchars_decode( $reports_term->name ),
 					'description'       => wp_specialchars_decode( $reports_term->description ),

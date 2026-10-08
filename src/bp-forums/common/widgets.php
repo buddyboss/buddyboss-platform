@@ -967,13 +967,15 @@ class BBP_Topics_Widget extends WP_Widget {
 				endif;
 
 				$author_url = bbp_get_topic_author_url( $topic_id );
+				$author_id  = bbp_get_topic_author_id( $topic_id );
+				$hp_attr    = bb_get_hover_card_profile_attr( $author_id );
 				?>
 
 				<li class="<?php echo esc_attr( $author_related_class ); ?>">
 
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow">
+						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 							<span class="bbp-author-avatar">
 								<?php echo wp_kses_post( bbp_get_topic_author_avatar( $topic_id ) ); ?>
 							</span>
@@ -987,7 +989,7 @@ class BBP_Topics_Widget extends WP_Widget {
 						<?php
 						if ( ! empty( $author_link ) ) :
 							/* translators: %1$s: topic author link. */
-							echo wp_kses_post( sprintf( __( 'by %1$s', 'buddyboss-platform' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' ) );
+							echo wp_kses_post( sprintf( __( 'by %1$s', 'buddyboss-platform' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '"' . $hp_attr . '>' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' ) );
 						endif;
 						?>
 
@@ -1392,13 +1394,15 @@ class BBP_Replies_Widget extends WP_Widget {
 				endif;
 
 				$reply_author_url = bbp_get_reply_author_url( $reply_id );
+				$reply_author_id  = bbp_get_reply_author_id( $reply_id );
+				$hp_attr          = bb_get_hover_card_profile_attr( $reply_author_id );
 
 				?>
 
 				<li class="<?php echo esc_attr( $author_related_class ); ?>">
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow">
+					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<span class="bbp-author-avatar">
 							<?php echo wp_kses_post( bbp_get_reply_author_avatar( $reply_id ) ); ?>
 						</span>
@@ -1411,7 +1415,7 @@ class BBP_Replies_Widget extends WP_Widget {
 						<?php
 						if ( ! empty( $author_link ) ) :
 							/* translators: %1$s: reply author link. */
-							echo wp_kses_post( sprintf( __( '%1$s on ', 'buddyboss-platform' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' ) );
+							echo wp_kses_post( sprintf( __( '%1$s on ', 'buddyboss-platform' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '"' . $hp_attr . '>' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' ) );
 						endif;
 
 						echo wp_kses_post( $reply_link );

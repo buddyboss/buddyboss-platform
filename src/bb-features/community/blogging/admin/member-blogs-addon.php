@@ -553,9 +553,10 @@ function bb_member_blogging_ajax_install_plugin() {
 		);
 	}
 
-	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
+	$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
+	$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
 
-	if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
+	if ( '' === $download_url ) {
 		wp_send_json_error(
 			array(
 				'message'     => __( 'The Member Blogging add-on is not available under your current license.', 'buddyboss-platform' ),
@@ -566,7 +567,7 @@ function bb_member_blogging_ajax_install_plugin() {
 
 	$skin     = new WP_Ajax_Upgrader_Skin();
 	$upgrader = new Plugin_Upgrader( $skin );
-	$result   = $upgrader->install( $product->_embedded->{'version-latest'}->url );
+	$result   = $upgrader->install( $download_url );
 
 	if ( is_wp_error( $result ) || ! $result ) {
 		$detail = is_wp_error( $result ) ? $result->get_error_message() : '';

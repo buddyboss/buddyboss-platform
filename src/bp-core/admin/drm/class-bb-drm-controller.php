@@ -49,7 +49,7 @@ class BB_DRM_Controller {
 		try {
 			// Use a singleton instance to avoid duplicate hook registration.
 			$loader           = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
-			$plugin_connector = $loader->getContainer()->get( \BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection::class );
+			$plugin_connector = $loader->get_container()->get( \BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection::class );
 			return $plugin_connector->pluginId;
 		} catch ( \Exception $e ) {
 			// Fallback to PLATFORM_EDITION constant or default if container access fails.
@@ -67,9 +67,9 @@ class BB_DRM_Controller {
 		// Get dynamic plugin ID from Mothership connection.
 		$plugin_id = $this->get_plugin_id();
 
-		// Listen to vendor's license_status_changed hook.
-		// This hook is fired by LicenseManager::checkLicenseStatus() every 12 hours via cron.
-		// It provides both activation (valid=true) and deactivation/expiration (valid=false) events.
+		// Listen to vendor's license_status_changed hook. GroundLevel 9.1.2 fires it (deprecated)
+		// only with valid=false, when its twice-daily status check finds the license revoked or
+		// expired. The "license is valid again" cleanup runs from drm_init() instead.
 		add_action( $plugin_id . '_license_status_changed', array( $this, 'drm_license_status_changed' ), 10, 2 );
 
 		// Run DRM checks on admin_init.
@@ -176,7 +176,14 @@ class BB_DRM_Controller {
 	public function drm_init() {
 		// Check if Platform license is valid.
 		if ( BB_DRM_Helper::is_valid() ) {
-			// License is valid - no DRM checks needed.
+			// License is valid - clear any DRM state left from an earlier invalid period.
+			// GroundLevel 9.1.2 no longer fires `{pluginId}_license_status_changed` with
+			// `true`, so drm_license_status_changed() never sees the license come back;
+			// without this the lock and its notices outlive a reactivation.
+			if ( get_option( 'bb_drm_invalid_license', false ) || get_option( 'bb_drm_no_license', false ) ) {
+				$this->drm_license_activated();
+			}
+
 			return;
 		}
 

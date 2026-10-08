@@ -497,7 +497,7 @@ export function GroupsListScreen( { onNavigate } ) {
 		saveGroup( payload ).then( function ( response ) {
 			if ( ! response.success ) {
 				setIsEditSaving( false );
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save group.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save group.', 'buddyboss-platform' ) } );
 				return;
 			}
 

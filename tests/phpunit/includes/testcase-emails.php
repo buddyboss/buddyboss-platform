@@ -3,7 +3,7 @@ require_once dirname( __FILE__ ) . '/testcase.php';
 
 class BP_UnitTestCase_Emails extends BP_UnitTestCase {
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 
 		require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
@@ -15,7 +15,7 @@ class BP_UnitTestCase_Emails extends BP_UnitTestCase {
 		bp_core_install_emails();
 	}
 
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		$emails = get_posts( array(
 			'fields'                 => 'ids',
 			'post_status'            => 'any',

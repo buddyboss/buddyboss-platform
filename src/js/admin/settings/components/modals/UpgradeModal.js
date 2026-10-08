@@ -136,7 +136,7 @@ export function UpgradeModal( { feature, onClose } ) {
 
 	var tierLabel;
 	if ( 'plus' === feature.upgrade_tier ) {
-		tierLabel = __( 'UPGRADE SCALE', 'buddyboss' );
+		tierLabel = __( 'UPGRADE SCALE', 'buddyboss-platform' );
 	} else if ( 'start' === feature.upgrade_tier ) {
 		// Features that moved into the BuddyBoss Addons plugin upsell to the
 		// add-on plan rather than Pro.

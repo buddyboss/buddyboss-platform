@@ -434,6 +434,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'template_type' => '',
 				'forum_search'  => false,
 				'number'        => 3,
+				'ajax_per_page' => 0,
 			);
 
 			$args = bp_parse_args( $args, $defaults );
@@ -854,6 +855,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 			if ( isset( $args['per_page'] ) ) {
 				$args['per_page'] = absint( $args['per_page'] );
+			}
+
+			if ( isset( $args['ajax_per_page'] ) ) {
+				$args['ajax_per_page'] = absint( $args['ajax_per_page'] );
 			}
 
 			if ( isset( $args['current_page'] ) ) {
