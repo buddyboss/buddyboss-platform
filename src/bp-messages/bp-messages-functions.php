@@ -1658,18 +1658,63 @@ function bb_messages_disabled_group_thread_ids_cache_key() {
  * @return array|false Thread IDs, false when nothing is cached.
  */
 function bb_messages_get_cached_disabled_group_thread_ids() {
-	$thread_ids = wp_cache_get( bb_messages_disabled_group_thread_ids_cache_key(), 'bb_messages_disabled_group_threads' );
+	$entry = wp_cache_get( bb_messages_disabled_group_thread_ids_cache_key(), 'bb_messages_disabled_group_threads' );
 
-	if ( false === $thread_ids && ! wp_using_ext_object_cache() ) {
+	if ( false === $entry && ! wp_using_ext_object_cache() ) {
 		// Kept on the root site, with the other options of the messages tables.
-		$thread_ids = bp_get_option( '_bb_messages_disabled_group_thread_ids', false );
+		$entry = bp_get_option( '_bb_messages_disabled_group_thread_ids', false );
 
-		if ( is_array( $thread_ids ) ) {
-			wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), $thread_ids, 'bb_messages_disabled_group_threads' );
+		if ( bb_messages_is_valid_disabled_group_thread_ids_entry( $entry ) ) {
+			wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), $entry, 'bb_messages_disabled_group_threads', bb_messages_disabled_group_thread_ids_ttl() );
 		}
 	}
 
-	return is_array( $thread_ids ) ? $thread_ids : false;
+	return bb_messages_is_valid_disabled_group_thread_ids_entry( $entry ) ? array_map( 'intval', $entry['ids'] ) : false;
+}
+
+/**
+ * How long the cached disabled group threads stay valid, in seconds.
+ *
+ * The list is reset by every event that can change it, so the lifetime only bounds the staleness
+ * left behind by code that does not know the list: a Platform downgrade followed by a re-upgrade
+ * (the released code writes group threads without resetting the list). 0 disables the lifetime.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Seconds, 0 for no lifetime.
+ */
+function bb_messages_disabled_group_thread_ids_ttl() {
+
+	/**
+	 * Filters how long the cached disabled group threads stay valid.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $ttl Seconds. Default one day. 0 for no lifetime.
+	 */
+	return max( 0, (int) apply_filters( 'bb_messages_disabled_group_thread_ids_ttl', DAY_IN_SECONDS ) );
+}
+
+/**
+ * Check whether a stored disabled-group-threads entry is usable: the expected shape and not expired.
+ *
+ * A plain list of IDs (the shape written before the lifetime was added) is treated as a miss, so an
+ * entry written by another Platform version is rebuilt instead of trusted.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $entry Stored value.
+ *
+ * @return bool
+ */
+function bb_messages_is_valid_disabled_group_thread_ids_entry( $entry ) {
+	if ( ! is_array( $entry ) || ! isset( $entry['ids'], $entry['time'] ) || ! is_array( $entry['ids'] ) ) {
+		return false;
+	}
+
+	$ttl = bb_messages_disabled_group_thread_ids_ttl();
+
+	return 0 === $ttl || ( (int) $entry['time'] + $ttl ) > time();
 }
 
 /**
@@ -1682,9 +1727,13 @@ function bb_messages_get_cached_disabled_group_thread_ids() {
  * @return void
  */
 function bb_messages_set_cached_disabled_group_thread_ids( $thread_ids ) {
-	$thread_ids = array_map( 'intval', (array) $thread_ids );
+	// Stored with the time it was built, so a copy left behind by another Platform version expires.
+	$entry = array(
+		'ids'  => array_values( array_map( 'intval', (array) $thread_ids ) ),
+		'time' => time(),
+	);
 
-	wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), $thread_ids, 'bb_messages_disabled_group_threads' );
+	wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), $entry, 'bb_messages_disabled_group_threads', bb_messages_disabled_group_thread_ids_ttl() );
 
 	if ( wp_using_ext_object_cache() ) {
 		return;
@@ -1696,7 +1745,7 @@ function bb_messages_set_cached_disabled_group_thread_ids( $thread_ids ) {
 		switch_to_blog( bp_get_root_blog_id() );
 	}
 
-	update_option( '_bb_messages_disabled_group_thread_ids', $thread_ids, false );
+	update_option( '_bb_messages_disabled_group_thread_ids', $entry, false );
 
 	if ( $switched ) {
 		restore_current_blog();

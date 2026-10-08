@@ -1874,7 +1874,9 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 		$f = $this->fixture();
 		$this->set_group_messages( false );
 		bb_messages_get_disabled_group_thread_ids();
-		$this->assertSame( array( $f['group_thread'] ), bp_get_option( '_bb_messages_disabled_group_thread_ids', false ) );
+		$stored = bp_get_option( '_bb_messages_disabled_group_thread_ids', false );
+		$this->assertSame( array( $f['group_thread'] ), $stored['ids'] );
+		$this->assertGreaterThan( time() - MINUTE_IN_SECONDS, $stored['time'], 'Stored with the time it was built.' );
 
 		wp_cache_flush();
 		$this->assertFalse( bp_disable_group_messages(), 'Reload the setting before counting.' );
@@ -1883,6 +1885,76 @@ class BP_Tests_Messages_Group_Messages_Disabled extends BP_UnitTestCase {
 
 		bb_messages_reset_disabled_group_thread_ids_cache();
 		$this->assertFalse( bp_get_option( '_bb_messages_disabled_group_thread_ids', false ), 'Reset removes the option.' );
+	}
+
+	/**
+	 * D-03-1: a stored list older than its lifetime is rebuilt, not trusted.
+	 *
+	 * Reproduced on 2026-10-08: a FIX-built list survived a Platform downgrade during which the released
+	 * code created a new open group thread without resetting it; after the re-upgrade the thread was
+	 * listed, replyable and readable over REST although the open check refused it.
+	 */
+	public function test_disabled_lookup_cache_expires_after_its_lifetime() {
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+
+		// A list built before the fixture's group thread existed, older than the lifetime.
+		$stale = array(
+			'ids'  => array(),
+			'time' => time() - bb_messages_disabled_group_thread_ids_ttl() - MINUTE_IN_SECONDS,
+		);
+		wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), $stale, 'bb_messages_disabled_group_threads' );
+		if ( ! wp_using_ext_object_cache() ) {
+			bp_update_option( '_bb_messages_disabled_group_thread_ids', $stale );
+		}
+
+		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'An expired entry is a miss.' );
+		$this->assertContains( $f['group_thread'], bb_messages_get_disabled_group_thread_ids(), 'Rebuilt from the tables.' );
+		$this->assertTrue( bb_messages_is_disabled_group_thread( $f['group_thread'] ) );
+
+		// A fresh entry is kept.
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_cached_disabled_group_thread_ids() );
+	}
+
+	/**
+	 * D-03-1: a plain list of IDs (the shape without a build time) is rebuilt, not trusted.
+	 */
+	public function test_disabled_lookup_ignores_a_stored_list_without_build_time() {
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+
+		wp_cache_set( bb_messages_disabled_group_thread_ids_cache_key(), array( 999999 ), 'bb_messages_disabled_group_threads' );
+		if ( ! wp_using_ext_object_cache() ) {
+			bp_update_option( '_bb_messages_disabled_group_thread_ids', array( 999999 ) );
+		}
+
+		$this->assertFalse( bb_messages_get_cached_disabled_group_thread_ids(), 'A plain list is a miss.' );
+		$this->assertSame( array( $f['group_thread'] ), bb_messages_get_disabled_group_thread_ids() );
+		$this->assertFalse( bb_messages_is_disabled_group_thread( 999999 ) );
+	}
+
+	/**
+	 * D-03-1: the lifetime can be turned off.
+	 */
+	public function test_disabled_lookup_lifetime_can_be_disabled_by_filter() {
+		$f = $this->fixture();
+		$this->set_group_messages( false );
+
+		add_filter( 'bb_messages_disabled_group_thread_ids_ttl', '__return_zero' );
+
+		wp_cache_set(
+			bb_messages_disabled_group_thread_ids_cache_key(),
+			array(
+				'ids'  => array( $f['group_thread'] ),
+				'time' => time() - YEAR_IN_SECONDS,
+			),
+			'bb_messages_disabled_group_threads'
+		);
+		$kept = bb_messages_get_cached_disabled_group_thread_ids();
+
+		remove_filter( 'bb_messages_disabled_group_thread_ids_ttl', '__return_zero' );
+
+		$this->assertSame( array( $f['group_thread'] ), $kept, 'No lifetime: an old entry is kept.' );
 	}
 
 	/**
