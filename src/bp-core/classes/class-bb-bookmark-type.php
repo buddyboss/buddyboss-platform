@@ -96,7 +96,7 @@ abstract class BB_Bookmark_Type {
 		$type = sanitize_key( $type );
 
 		if ( empty( $type ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug is required.', 'buddyboss' ), '3.2.0' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug is required.', 'buddyboss-platform' ), '3.2.0' );
 
 			return;
 		}
@@ -106,7 +106,7 @@ abstract class BB_Bookmark_Type {
 		// not error -- it would silently truncate on write and then never match
 		// on read, leaving an invisible, unremovable bookmark.
 		if ( strlen( $type ) > 20 ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug must be 20 characters or fewer.', 'buddyboss' ), '3.2.0' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug must be 20 characters or fewer.', 'buddyboss-platform' ), '3.2.0' );
 
 			return;
 		}
@@ -123,7 +123,7 @@ abstract class BB_Bookmark_Type {
 		);
 
 		if ( empty( $r['items_callback'] ) || ! is_callable( $r['items_callback'] ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'A callable items_callback is required to register a bookmark type.', 'buddyboss' ), '3.2.0' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'A callable items_callback is required to register a bookmark type.', 'buddyboss-platform' ), '3.2.0' );
 
 			return;
 		}

@@ -11,7 +11,7 @@ export const HelpIcon = ({ onClick, contentId }) => {
 		<button
 			className="help-icon"
 			onClick={handleClick}
-			aria-label={__('Help', 'buddyboss')}
+			aria-label={__('Help', 'buddyboss-platform')}
 		>
 			<i className="bb-icons-rl-question"></i>
 		</button>

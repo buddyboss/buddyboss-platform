@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's Request Membership page.
  *
@@ -32,9 +35,9 @@ function groups_screen_group_request_membership() {
 		}
 
 		if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $bp->groups->current_group->id, 'content' => $_POST['group-request-membership-comments'] ) ) ) {
-			bp_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss-platform' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss' ) );
+			bp_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss-platform' ) );
 		}
 		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 	}

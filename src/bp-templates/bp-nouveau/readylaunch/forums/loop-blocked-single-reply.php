@@ -47,7 +47,7 @@ if ( bp_is_active( 'moderation' ) ) {
 			<?php
 			$reply_content = bbp_kses_data( bbp_get_reply_content( $reply_id ) );
 			if ( $check_hidden_content ) {
-				$reply_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+				$reply_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			} elseif ( $is_user_suspended ) {
 				$reply_content = bb_moderation_is_suspended_message( $reply_content, BP_Moderation_Forum_Replies::$moderation_type, $reply_id );
 			} elseif ( $is_user_blocked_by ) {

@@ -97,8 +97,8 @@ class BP_Messages_Notices_Admin {
 
 		$this->screen_id = add_submenu_page(
 			'buddyboss-platform',
-			__( 'Notices', 'buddyboss' ),
-			__( 'Notices', 'buddyboss' ),
+			__( 'Notices', 'buddyboss-platform' ),
+			__( 'Notices', 'buddyboss-platform' ),
 			'manage_options',
 			'bp-notices',
 			array( $this, 'admin_index' )
@@ -187,32 +187,32 @@ class BP_Messages_Notices_Admin {
 		<div class="wrap">
 			<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-				<h1 class="wp-heading-inline"><?php echo esc_html__( 'Site Notices', 'buddyboss' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php echo esc_html__( 'Site Notices', 'buddyboss-platform' ); ?></h1>
 				<hr class="wp-header-end">
 
 			<?php else : ?>
 
-				<h1><?php echo esc_html__( 'Site Notices', 'buddyboss' ); ?></h1>
+				<h1><?php echo esc_html__( 'Site Notices', 'buddyboss-platform' ); ?></h1>
 
 			<?php endif; ?>
 
-			<p class="bp-notice-about"><?php esc_html_e( 'Manage notices shown on the front end of your site to all logged-in members. Use this to quickly notify all members.', 'buddyboss' ); ?></p>
+			<p class="bp-notice-about"><?php esc_html_e( 'Manage notices shown on the front end of your site to all logged-in members. Use this to quickly notify all members.', 'buddyboss-platform' ); ?></p>
 
 			<div class="bp-new-notice-panel">
 
-				<h2 class="bp-new-notice"><?php esc_html_e( 'Add New Notice', 'buddyboss' ); ?></h2>
+				<h2 class="bp-new-notice"><?php esc_html_e( 'Add New Notice', 'buddyboss-platform' ); ?></h2>
 
 				<form action="<?php echo esc_url( wp_nonce_url( $this->url, 'new-notice', 'ns-nonce' ) ); ?>" method="post">
 
 					<div>
-						<label for="bp_notice_subject"><?php esc_html_e( 'Subject', 'buddyboss' ); ?></label>
+						<label for="bp_notice_subject"><?php esc_html_e( 'Subject', 'buddyboss-platform' ); ?></label>
 						<input type="text" class="bp-panel-input" id="bp_notice_subject" name="bp_notice[subject]"/>
 
-						<label for="bp_notice_content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></label>
+						<label for="bp_notice_content"><?php esc_html_e( 'Content', 'buddyboss-platform' ); ?></label>
 						<textarea class="bp-panel-textarea" id="bp_notice_content" name="bp_notice[content]"></textarea>
 					</div>
 
-					<input type="submit" value="<?php esc_attr_e( 'Publish Notice', 'buddyboss' ); ?>" name="bp_notice[send]" class="button button-primary save alignleft">
+					<input type="submit" value="<?php esc_attr_e( 'Publish Notice', 'buddyboss-platform' ); ?>" name="bp_notice[send]" class="button button-primary save alignleft">
 
 				</form>
 
@@ -226,15 +226,15 @@ class BP_Messages_Notices_Admin {
 						<?php
 						if ( isset( $_GET['error'] ) ) {
 							if ( 'create' === $_GET['error'] ) {
-								esc_html_e( 'Notice was not created. Please try again.', 'buddyboss' );
+								esc_html_e( 'Notice was not created. Please try again.', 'buddyboss-platform' );
 							} else {
-								esc_html_e( 'Notice was not updated. Please try again.', 'buddyboss' );
+								esc_html_e( 'Notice was not updated. Please try again.', 'buddyboss-platform' );
 							}
 						} else {
 							if ( 'create' === $_GET['success'] ) {
-								esc_html_e( 'Notice successfully created.', 'buddyboss' );
+								esc_html_e( 'Notice successfully created.', 'buddyboss-platform' );
 							} else {
-								esc_html_e( 'Notice successfully updated.', 'buddyboss' );
+								esc_html_e( 'Notice successfully updated.', 'buddyboss-platform' );
 							}
 						}
 						?>
@@ -244,7 +244,7 @@ class BP_Messages_Notices_Admin {
 
 			<?php endif; ?>
 
-			<h2 class="bp-notices-list"><?php esc_html_e( 'Notices List', 'buddyboss' ); ?></h2>
+			<h2 class="bp-notices-list"><?php esc_html_e( 'Notices List', 'buddyboss-platform' ); ?></h2>
 
 			<?php $this->list_table->display(); ?>
 

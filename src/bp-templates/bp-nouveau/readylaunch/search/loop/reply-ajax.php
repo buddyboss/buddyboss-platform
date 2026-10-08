@@ -37,7 +37,7 @@ $reply_id = get_the_ID();
 		<div class="entry-title item-title">
 			<a href="<?php bbp_reply_url( get_the_ID() ); ?>">
 				<?php bbp_reply_author_display_name( get_the_ID() ); ?>
-				<?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?>
+				<?php esc_html_e( 'replied to a discussion', 'buddyboss-platform' ); ?>
 			</a>
 		</div>
 		<div class="item-desc">

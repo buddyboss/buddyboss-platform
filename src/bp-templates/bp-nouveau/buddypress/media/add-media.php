@@ -8,11 +8,14 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) { ?>
 
 	<div class="bb-media-actions-wrap">
 		<div class="bb-media-actions">
-			<a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
+			<a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?></a>
 		</div>
 	</div>
 

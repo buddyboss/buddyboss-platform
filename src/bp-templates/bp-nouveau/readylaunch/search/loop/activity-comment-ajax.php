@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="item">
 		<h3 class="entry-title item-title">
 			<a href="<?php bp_activity_user_link(); ?>"><?php echo wp_kses_post( bp_core_get_user_displayname( bp_get_activity_user_id() ) ); ?></a>
-			<a href='<?php echo esc_url( bp_get_activity_thread_permalink() ); ?>'><?php esc_html_e( 'replied to a post', 'buddyboss' ); ?></a>
+			<a href='<?php echo esc_url( bp_get_activity_thread_permalink() ); ?>'><?php esc_html_e( 'replied to a post', 'buddyboss-platform' ); ?></a>
 		</h3>
 		<?php if ( bp_activity_has_content() ) : ?>
 			<div class="item-desc">
@@ -43,8 +43,8 @@ defined( 'ABSPATH' ) || exit;
 			$activity_comment_date_recorded = bp_get_activity_date_recorded();
 			printf(
 				'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-				bp_core_get_iso8601_date( $activity_comment_date_recorded ),
-				bp_core_time_since( $activity_comment_date_recorded )
+				esc_html( bp_core_get_iso8601_date( $activity_comment_date_recorded ) ),
+				esc_html( bp_core_time_since( $activity_comment_date_recorded ) )
 			);
 			?>
 		</div>

@@ -183,7 +183,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 	}
 
 	return (
-		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ headerName || __( 'Integration details', 'buddyboss' ) }>
+		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ headerName || __( 'Integration details', 'buddyboss-platform' ) }>
 			<div className="bb-integrations-drawer__overlay" onClick={ onClose } aria-hidden="true" />
 
 			<div className="bb-integrations-drawer__panel" ref={ panelRef }>
@@ -193,7 +193,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 						type="button"
 						className="bb-integrations-drawer__close"
 						onClick={ onClose }
-						aria-label={ __( 'Close', 'buddyboss' ) }
+						aria-label={ __( 'Close', 'buddyboss-platform' ) }
 					>
 						<i className="bb-icons-rl bb-icons-rl-x" aria-hidden="true" />
 					</button>
@@ -207,13 +207,13 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 
 				{ 'error' === status && (
 					<div className="bb-integrations-drawer__state" role="alert">
-						<p>{ __( 'We couldn’t load this integration. Please try again.', 'buddyboss' ) }</p>
+						<p>{ __( 'We couldn’t load this integration. Please try again.', 'buddyboss-platform' ) }</p>
 					</div>
 				) }
 
 				{ 'notfound' === status && (
 					<div className="bb-integrations-drawer__state">
-						<p>{ __( 'This integration is no longer available.', 'buddyboss' ) }</p>
+						<p>{ __( 'This integration is no longer available.', 'buddyboss-platform' ) }</p>
 					</div>
 				) }
 
@@ -244,7 +244,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 										target="_blank"
 										rel="noopener noreferrer"
 									>
-										{ __( 'Learn More', 'buddyboss' ) }
+										{ __( 'Learn More', 'buddyboss-platform' ) }
 										<i className="bb-icons-rl bb-icons-rl-arrow-up-right" aria-hidden="true" />
 									</a>
 								) }
@@ -254,7 +254,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 						{ /* "Works with" compatibility — shown whenever the API returns works_with entries. */ }
 						{ worksWith.length > 0 && (
 							<div className="bb-integrations-drawer__works-with">
-								<span className="bb-integrations-drawer__works-with-label">{ __( 'Works with:', 'buddyboss' ) }</span>
+								<span className="bb-integrations-drawer__works-with-label">{ __( 'Works with:', 'buddyboss-platform' ) }</span>
 								{ worksWith.map( ( req, i ) => (
 									<span key={ req.slug } className="bb-integrations-drawer__works-with-item">
 										{ i > 0 && (
@@ -264,7 +264,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 										<span
 											className={ 'bb-integrations-drawer__works-with-icon bb-integrations-drawer__works-with-icon--' + ( req.met ? 'yes' : 'no' ) }
 											role="img"
-											aria-label={ req.met ? __( 'Compatible', 'buddyboss' ) : __( 'Not compatible', 'buddyboss' ) }
+											aria-label={ req.met ? __( 'Compatible', 'buddyboss-platform' ) : __( 'Not compatible', 'buddyboss-platform' ) }
 										>
 											<i className={ req.met ? 'bb-icons-rl bb-icons-rl-check' : 'bb-icons-rl bb-icons-rl-x' } aria-hidden="true" />
 										</span>

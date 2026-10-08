@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses  bbp_get_forum_post_type() To get the forum post type
  */
 function bbp_forum_post_type() {
-	echo bbp_get_forum_post_type();
+	echo esc_attr( bbp_get_forum_post_type() );
 }
 
 /**
@@ -46,21 +46,21 @@ function bbp_get_forum_post_type_labels() {
 	return apply_filters(
 		'bbp_get_forum_post_type_labels',
 		array(
-			'name'               => __( 'Forums', 'buddyboss' ),
-			'menu_name'          => __( 'All Forums', 'buddyboss' ),
-			'singular_name'      => __( 'Forum', 'buddyboss' ),
-			'all_items'          => __( 'All Forums', 'buddyboss' ),
-			'add_new'            => __( 'New Forum', 'buddyboss' ),
-			'add_new_item'       => __( 'Create New Forum', 'buddyboss' ),
-			'edit'               => __( 'Edit', 'buddyboss' ),
-			'edit_item'          => __( 'Edit Forum', 'buddyboss' ),
-			'new_item'           => __( 'New Forum', 'buddyboss' ),
-			'view'               => __( 'View Forum', 'buddyboss' ),
-			'view_item'          => __( 'View Forum', 'buddyboss' ),
-			'search_items'       => __( 'Search Forums', 'buddyboss' ),
-			'not_found'          => __( 'No forums found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No forums found in trash', 'buddyboss' ),
-			'parent_item_colon'  => __( 'Parent Forum:', 'buddyboss' ),
+			'name'               => __( 'Forums', 'buddyboss-platform' ),
+			'menu_name'          => __( 'All Forums', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Forum', 'buddyboss-platform' ),
+			'all_items'          => __( 'All Forums', 'buddyboss-platform' ),
+			'add_new'            => __( 'New Forum', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'Create New Forum', 'buddyboss-platform' ),
+			'edit'               => __( 'Edit', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Edit Forum', 'buddyboss-platform' ),
+			'new_item'           => __( 'New Forum', 'buddyboss-platform' ),
+			'view'               => __( 'View Forum', 'buddyboss-platform' ),
+			'view_item'          => __( 'View Forum', 'buddyboss-platform' ),
+			'search_items'       => __( 'Search Forums', 'buddyboss-platform' ),
+			'not_found'          => __( 'No forums found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No forums found in trash', 'buddyboss-platform' ),
+			'parent_item_colon'  => __( 'Parent Forum:', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -280,7 +280,7 @@ function bbp_the_forum() {
  * @uses  bbp_get_forum_id() To get the forum id
  */
 function bbp_forum_id( $forum_id = 0 ) {
-	echo bbp_get_forum_id( $forum_id );
+	echo esc_attr( bbp_get_forum_id( $forum_id ) );
 }
 
 /**
@@ -437,7 +437,7 @@ function bbp_get_forum_permalink( $forum_id = 0, $redirect_to = '' ) {
  * @uses  bbp_get_forum_title() To get the forum title
  */
 function bbp_forum_title( $forum_id = 0 ) {
-	echo bbp_get_forum_title( $forum_id );
+	echo esc_html( bbp_get_forum_title( $forum_id ) );
 }
 
 /**
@@ -467,7 +467,7 @@ function bbp_get_forum_title( $forum_id = 0 ) {
  * @param string $title Default text to use as title
  */
 function bbp_forum_archive_title( $title = '' ) {
-	echo bbp_get_forum_archive_title( $title );
+	echo esc_html( bbp_get_forum_archive_title( $title ) );
 }
 
 /**
@@ -516,7 +516,7 @@ function bbp_get_forum_archive_title( $title = '' ) {
  * @uses  bbp_get_forum_content() To get the forum content
  */
 function bbp_forum_content( $forum_id = 0 ) {
-	echo bbp_get_forum_content( $forum_id );
+	echo wp_kses_post( bbp_get_forum_content( $forum_id ) );
 }
 
 /**
@@ -568,7 +568,7 @@ function bbp_forum_row_actions() {
  * @uses  bbp_get_forum_last_active_id() To get the forum's last active id
  */
 function bbp_forum_last_active_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_active_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_active_id( $forum_id ) );
 }
 
 /**
@@ -601,7 +601,7 @@ function bbp_get_forum_last_active_id( $forum_id = 0 ) {
  * @uses  bbp_get_forum_last_active_time() To get the forum freshness
  */
 function bbp_forum_last_active_time( $forum_id = 0 ) {
-	echo bbp_get_forum_last_active_time( $forum_id );
+	echo esc_html( bbp_get_forum_last_active_time( $forum_id ) );
 }
 
 /**
@@ -659,7 +659,7 @@ function bbp_get_forum_last_active_time( $forum_id = 0 ) {
  * @uses  bbp_get_forum_freshness_link() To get the forum freshness link
  */
 function bbp_forum_freshness_link( $forum_id = 0 ) {
-	echo bbp_get_forum_freshness_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_freshness_link( $forum_id ) );
 }
 
 /**
@@ -713,7 +713,7 @@ function bbp_get_forum_freshness_link( $forum_id = 0 ) {
 	if ( ! empty( $time_since ) && ! empty( $link_url ) ) {
 		$anchor = '<a href="' . esc_url( $link_url ) . '" title="' . esc_attr( $title ) . '">' . esc_html( $time_since ) . '</a>';
 	} else {
-		$anchor = esc_html__( 'No Discussions', 'buddyboss' );
+		$anchor = esc_html__( 'No Discussions', 'buddyboss-platform' );
 	}
 
 	return apply_filters( 'bbp_get_forum_freshness_link', $anchor, $forum_id, $time_since, $link_url, $title, $active_id );
@@ -729,7 +729,7 @@ function bbp_get_forum_freshness_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_parent_id() To get the forum's parent ID
  */
 function bbp_forum_parent_id( $forum_id = 0 ) {
-	echo bbp_get_forum_parent_id( $forum_id );
+	echo esc_attr( bbp_get_forum_parent_id( $forum_id ) );
 }
 
 /**
@@ -929,7 +929,7 @@ function bbp_list_forums( $args = '' ) {
 		}
 
 		// Output the list
-		echo apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r );
+		echo wp_kses_post( apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r ) );
 	}
 }
 
@@ -1036,7 +1036,7 @@ function bb_get_list_forums_recursively( $args = array() ) {
 /** Forum Pagination **********************************************************/
 
 function bbp_forum_index_pagination_count() {
-	echo bbp_get_forum_index_pagination_count();
+	echo bbp_get_forum_index_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_index_pagination_count() self-escapes its return value.
 }
 
 /**
@@ -1065,11 +1065,13 @@ function bbp_get_forum_index_pagination_count() {
 
 	// Several forums in a forum index with a single page
 	if ( empty( $to_num ) ) {
-		$retstr = sprintf( _n( 'Viewing %1$s forum', 'Viewing %1$s forums', $total_int, 'buddyboss' ), $total );
+		/* translators: %1$s: total number of forums. */
+		$retstr = sprintf( _n( 'Viewing %1$s forum', 'Viewing %1$s forums', $total_int, 'buddyboss-platform' ), $total );
 
 		// Several forums in a forum index with several pages
 	} else {
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss' ), $bbp->forum_query->post_count, $from_num, $to_num, $total );
+		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of forums. */
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss-platform' ), $bbp->forum_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	}
 
 	// Filter and return
@@ -1084,7 +1086,7 @@ function bbp_get_forum_index_pagination_count() {
  * @uses  bbp_get_forum_index_pagination_links() To get the forum index pagination links
  */
 function bbp_forum_index_pagination_links() {
-	echo bbp_get_forum_index_pagination_links();
+	echo wp_kses_post( bbp_get_forum_index_pagination_links() );
 }
 
 /**
@@ -1116,7 +1118,7 @@ function bbp_get_forum_index_pagination_links() {
  * @uses  bbp_get_forum_subscription_link()
  */
 function bbp_forum_subscription_link( $args = array() ) {
-	echo bbp_get_forum_subscription_link( $args );
+	echo wp_kses_post( bbp_get_forum_subscription_link( $args ) );
 }
 
 /**
@@ -1143,8 +1145,8 @@ function bbp_get_forum_subscription_link( $args = array() ) {
 			'user_id'     => 0,
 			'before'      => '',
 			'after'       => '',
-			'subscribe'   => __( 'Subscribe', 'buddyboss' ),
-			'unsubscribe' => __( 'Unsubscribe', 'buddyboss' ),
+			'subscribe'   => __( 'Subscribe', 'buddyboss-platform' ),
+			'unsubscribe' => __( 'Unsubscribe', 'buddyboss-platform' ),
 		),
 		'get_forum_subscribe_link'
 	);
@@ -1168,7 +1170,7 @@ function bbp_get_forum_subscription_link( $args = array() ) {
  * @uses  bbp_get_forum_report_link()
  */
 function bbp_forum_report_link( $args = array() ) {
-	echo bbp_get_forum_report_link( $args );
+	echo wp_kses_post( bbp_get_forum_report_link( $args ) );
 }
 
 /**
@@ -1216,7 +1218,7 @@ function bbp_get_forum_report_link( $args = array() ) {
  * @uses  bbp_get_forum_last_topic_id() To get the forum's last topic id
  */
 function bbp_forum_last_topic_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_topic_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_topic_id( $forum_id ) );
 }
 
 /**
@@ -1249,7 +1251,7 @@ function bbp_get_forum_last_topic_id( $forum_id = 0 ) {
  * @uses  bbp_get_forum_last_topic_title() To get the forum's last topic's title
  */
 function bbp_forum_last_topic_title( $forum_id = 0 ) {
-	echo bbp_get_forum_last_topic_title( $forum_id );
+	echo esc_html( bbp_get_forum_last_topic_title( $forum_id ) );
 }
 
 /**
@@ -1340,7 +1342,7 @@ function bbp_get_forum_last_topic_author_id( $forum_id = 0 ) {
  *                                               author link
  */
 function bbp_forum_last_topic_author_link( $forum_id = 0 ) {
-	echo bbp_get_forum_last_topic_author_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_last_topic_author_link( $forum_id ) );
 }
 
 /**
@@ -1378,7 +1380,7 @@ function bbp_get_forum_last_topic_author_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_last_reply_id() To get the forum's last reply id
  */
 function bbp_forum_last_reply_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_reply_id( $forum_id ) );
 }
 
 /**
@@ -1414,7 +1416,7 @@ function bbp_get_forum_last_reply_id( $forum_id = 0 ) {
  * @uses bbp_get_forum_last_reply_title() To get the forum's last reply's title
  */
 function bbp_forum_last_reply_title( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_title( $forum_id );
+	echo esc_html( bbp_get_forum_last_reply_title( $forum_id ) );
 }
 
 /**
@@ -1530,7 +1532,7 @@ function bbp_get_forum_last_reply_url( $forum_id = 0 ) {
  *                                             author id
  */
 function bbp_forum_last_reply_author_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_author_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_reply_author_id( $forum_id ) );
 }
 
 /**
@@ -1566,7 +1568,7 @@ function bbp_get_forum_last_reply_author_id( $forum_id = 0 ) {
  *                                               author link
  */
 function bbp_forum_last_reply_author_link( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_author_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_last_reply_author_link( $forum_id ) );
 }
 
 /**
@@ -1605,7 +1607,7 @@ function bbp_get_forum_last_reply_author_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_topics_link() To get the forum topics link
  */
 function bbp_forum_topics_link( $forum_id = 0 ) {
-	echo bbp_get_forum_topics_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_topics_link( $forum_id ) );
 }
 
 /**
@@ -1630,7 +1632,8 @@ function bbp_forum_topics_link( $forum_id = 0 ) {
 function bbp_get_forum_topics_link( $forum_id = 0 ) {
 	$forum    = bbp_get_forum( $forum_id );
 	$forum_id = $forum->ID;
-	$topics   = sprintf( _n( '%s discussion', '%s discussions', bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss' ), bbp_get_forum_topic_count( $forum_id ) );
+	/* translators: %s: number of discussions. */
+	$topics   = sprintf( _n( '%s discussion', '%s discussions', bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss-platform' ), bbp_get_forum_topic_count( $forum_id ) );
 	$retval   = '';
 	$link     = bbp_get_forum_permalink( $forum_id );
 
@@ -1649,7 +1652,8 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
 
 		// Hidden text.
 		$deleted_num = bbp_get_forum_topic_count_hidden( $forum_id, false, false );
-		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
+		/* translators: %s: number of hidden discussions. */
+		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss-platform' ), $deleted_num );
 
 		// Hidden link.
 		$retval .= ! bbp_get_view_all( 'edit_others_topics' )
@@ -1671,7 +1675,7 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_subforum_count() To get the forum's subforum count
  */
 function bbp_forum_subforum_count( $forum_id = 0, $integer = false ) {
-	echo bbp_get_forum_subforum_count( $forum_id, $integer );
+	echo esc_html( bbp_get_forum_subforum_count( $forum_id, $integer ) );
 }
 
 /**
@@ -1708,7 +1712,7 @@ function bbp_get_forum_subforum_count( $forum_id = 0, $integer = false ) {
  * @uses  bbp_get_forum_topic_count() To get the forum topic count
  */
 function bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
-	echo bbp_get_forum_topic_count( $forum_id, $total_count, $integer );
+	echo esc_html( bbp_get_forum_topic_count( $forum_id, $total_count, $integer ) );
 }
 
 /**
@@ -1748,7 +1752,7 @@ function bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $integer
  * @uses  bbp_get_forum_reply_count() To get the forum reply count
  */
 function bbp_forum_reply_count( $forum_id = 0, $total_count = true, $integer = false ) {
-	echo bbp_get_forum_reply_count( $forum_id, $total_count, $integer );
+	echo esc_html( bbp_get_forum_reply_count( $forum_id, $total_count, $integer ) );
 }
 
 /**
@@ -1788,7 +1792,7 @@ function bbp_get_forum_reply_count( $forum_id = 0, $total_count = true, $integer
  * @uses  bbp_get_forum_post_count() To get the forum post count
  */
 function bbp_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
-	echo bbp_get_forum_post_count( $forum_id, $total_count, $integer );
+	echo esc_html( bbp_get_forum_post_count( $forum_id, $total_count, $integer ) );
 }
 
 /**
@@ -1830,7 +1834,7 @@ function bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $integer 
  * @uses  bbp_get_forum_topic_count_hidden() To get the forum hidden topic count
  */
 function bbp_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
-	echo bbp_get_forum_topic_count_hidden( $forum_id, $integer );
+	echo esc_html( bbp_get_forum_topic_count_hidden( $forum_id, $integer ) );
 }
 
 /**
@@ -1866,7 +1870,7 @@ function bbp_get_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
  * @uses  bbp_get_forum_status() To get the forum status
  */
 function bbp_forum_status( $forum_id = 0 ) {
-	echo bbp_get_forum_status( $forum_id );
+	echo esc_attr( bbp_get_forum_status( $forum_id ) );
 }
 
 /**
@@ -1902,7 +1906,7 @@ function bbp_get_forum_status( $forum_id = 0 ) {
  * @uses  bbp_get_forum_visibility() To get the forum visibility
  */
 function bbp_forum_visibility( $forum_id = 0 ) {
-	echo bbp_get_forum_visibility( $forum_id );
+	echo esc_html( bbp_get_forum_visibility( $forum_id ) );
 }
 
 /**
@@ -1934,7 +1938,7 @@ function bbp_get_forum_visibility( $forum_id = 0 ) {
  * @uses  bbp_get_forum_type() To get the forum type
  */
 function bbp_forum_type( $forum_id = 0 ) {
-	echo bbp_get_forum_type( $forum_id );
+	echo esc_attr( bbp_get_forum_type( $forum_id ) );
 }
 
 /**
@@ -2145,7 +2149,7 @@ function bbp_is_forum_hidden( $forum_id = 0, $check_ancestors = true ) {
  * @uses  bbp_get_forum_author() To get the forum author
  */
 function bbp_forum_author_display_name( $forum_id = 0 ) {
-	echo bbp_get_forum_author_display_name( $forum_id );
+	echo esc_html( bbp_get_forum_author_display_name( $forum_id ) );
 }
 
 /**
@@ -2179,7 +2183,7 @@ function bbp_get_forum_author_display_name( $forum_id = 0 ) {
  * @uses  bbp_get_forum_author_id() To get the forum author id
  */
 function bbp_forum_author_id( $forum_id = 0 ) {
-	echo bbp_get_forum_author_id( $forum_id );
+	echo esc_attr( bbp_get_forum_author_id( $forum_id ) );
 }
 
 /**
@@ -2294,7 +2298,7 @@ function bbp_suppress_private_author_link( $author_link, $args ) {
  * @uses  bbp_get_forum_class() To get the row class of the forum
  */
 function bbp_forum_class( $forum_id = 0, $classes = array() ) {
-	echo bbp_get_forum_class( $forum_id, $classes );
+	echo bbp_get_forum_class( $forum_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
 
 /**
@@ -2350,7 +2354,7 @@ function bbp_get_forum_class( $forum_id = 0, $classes = array() ) {
  * @uses  bbp_get_form_forum_title() To get the value of forum title field
  */
 function bbp_form_forum_title() {
-	echo bbp_get_form_forum_title();
+	echo bbp_get_form_forum_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_title() self-escapes its return value.
 }
 
 /**
@@ -2388,7 +2392,7 @@ function bbp_get_form_forum_title() {
  * @uses  bbp_get_form_forum_content() To get value of forum content field
  */
 function bbp_form_forum_content() {
-	echo bbp_get_form_forum_content();
+	echo wp_kses_post( bbp_get_form_forum_content() );
 }
 
 /**
@@ -2426,7 +2430,7 @@ function bbp_get_form_forum_content() {
  * @uses  bbp_get_form_forum_parent() To get the topic's forum id
  */
 function bbp_form_forum_parent() {
-	echo bbp_get_form_forum_parent();
+	echo bbp_get_form_forum_parent(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_parent() returns esc_attr()'d value.
 }
 
 /**
@@ -2465,7 +2469,7 @@ function bbp_get_form_forum_parent() {
  * @uses  bbp_get_form_forum_type() To get the topic's forum id
  */
 function bbp_form_forum_type() {
-	echo bbp_get_form_forum_type();
+	echo bbp_get_form_forum_type(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_type() returns esc_attr()'d value.
 }
 
 /**
@@ -2504,7 +2508,7 @@ function bbp_get_form_forum_type() {
  * @uses  bbp_get_form_forum_visibility() To get the topic's forum id
  */
 function bbp_form_forum_visibility() {
-	echo bbp_get_form_forum_visibility();
+	echo bbp_get_form_forum_visibility(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_visibility() returns esc_attr()'d value.
 }
 
 /**
@@ -2543,7 +2547,7 @@ function bbp_get_form_forum_visibility() {
  * @uses  bbp_get_form_forum_subscribed() To get the subscribed checkbox value
  */
 function bbp_form_forum_subscribed() {
-	echo bbp_get_form_forum_subscribed();
+	echo bbp_get_form_forum_subscribed(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_subscribed() returns checked() attribute markup.
 }
 
 /**
@@ -2599,7 +2603,7 @@ function bbp_get_form_forum_subscribed() {
  * @uses  bbp_get_form_forum_type() To get the topic's forum id
  */
 function bbp_form_forum_type_dropdown( $args = '' ) {
-	echo bbp_get_form_forum_type_dropdown( $args );
+	echo bbp_get_form_forum_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**
@@ -2690,7 +2694,7 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
  * @uses  bbp_get_form_forum_status() To get the topic's forum id
  */
 function bbp_form_forum_status_dropdown( $args = '' ) {
-	echo bbp_get_form_forum_status_dropdown( $args );
+	echo bbp_get_form_forum_status_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**
@@ -2756,7 +2760,7 @@ function bbp_get_form_forum_status_dropdown( $args = '' ) {
 	ob_start();
 	?>
 
-	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tab is built from an (int) cast and is safe attribute markup. ?>>
 
 		<?php foreach ( bbp_get_forum_statuses( $r['forum_id'] ) as $key => $label ) : ?>
 			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
@@ -2780,7 +2784,7 @@ function bbp_get_form_forum_status_dropdown( $args = '' ) {
  * @uses  bbp_get_form_forum_visibility() To get the topic's forum id
  */
 function bbp_form_forum_visibility_dropdown( $args = '' ) {
-	echo bbp_get_form_forum_visibility_dropdown( $args );
+	echo bbp_get_form_forum_visibility_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**
@@ -2875,7 +2879,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
  * @uses  bbp_get_forum_topics_feed_link()
  */
 function bbp_forum_topics_feed_link( $forum_id = 0 ) {
-	echo bbp_get_forum_topics_feed_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_topics_feed_link( $forum_id ) );
 }
 
 /**
@@ -2926,7 +2930,7 @@ function bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
 			);
 		}
 
-		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link topics"><span>' . esc_attr__( 'Discussions', 'buddyboss' ) . '</span></a>';
+		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link topics"><span>' . esc_attr__( 'Discussions', 'buddyboss-platform' ) . '</span></a>';
 	}
 
 	return apply_filters( 'bbp_get_forum_topics_feed_link', $link, $url, $forum_id );
@@ -2942,7 +2946,7 @@ function bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_replies_feed_link()
  */
 function bbp_forum_replies_feed_link( $forum_id = 0 ) {
-	echo bbp_get_forum_replies_feed_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_replies_feed_link( $forum_id ) );
 }
 
 /**
@@ -2995,7 +2999,7 @@ function bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
 			);
 		}
 
-		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link replies"><span>' . esc_html__( 'Replies', 'buddyboss' ) . '</span></a>';
+		$link = '<a href="' . esc_url( $url ) . '" class="bbp-forum-rss-link replies"><span>' . esc_html__( 'Replies', 'buddyboss-platform' ) . '</span></a>';
 	}
 
 	return apply_filters( 'bbp_get_forum_replies_feed_link', $link, $url, $forum_id );
@@ -3052,7 +3056,7 @@ function bbp_get_forum_content_excerpt_view_more( $forum_id = 0, $length = 250, 
 	$template_forum_ids[] = $forum_id;
 
 	if ( empty( $forum_link ) ) {
-		$forum_link = '... <br/> <a href="#single-forum-description-popup-' . esc_attr( $forum_id ) . '" class="bb-more-link show-action-popup button outline">' . esc_html__( 'View more', 'buddyboss' ) . '</a>';
+		$forum_link = '... <br/> <a href="#single-forum-description-popup-' . esc_attr( $forum_id ) . '" class="bb-more-link show-action-popup button outline">' . esc_html__( 'View more', 'buddyboss-platform' ) . '</a>';
 	}
 
 	/**

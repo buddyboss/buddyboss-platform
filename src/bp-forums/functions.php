@@ -874,7 +874,7 @@ function bbp_forum_recursive_group_id( $forum_id ) {
 	return false;
 }
 
-add_action( 'wp_ajax_search_tags', 'bbp_forum_topic_reply_ajax_form_search_tags' );
+add_action( 'wp_ajax_bb_search_tags', 'bbp_forum_topic_reply_ajax_form_search_tags' );
 
 /**
  * Search the tags that already added on forums previously and give the suggestions list.
@@ -886,7 +886,7 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -900,7 +900,7 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 	}
 
 	// Use default nonce.
-	$nonce = $_GET['_wpnonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) );
 	$check = 'search_tag';
 
 	// Nonce check!.
@@ -1036,10 +1036,10 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 			'link_preview'       => bbp_use_autoembed() ? true : false,
 		),
 		'nonces'  => array(
-			'post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
+			'bb_post_topic_reply_draft' => wp_create_nonce( 'post_topic_reply_draft_data' ),
 		),
 		'strings' => array(
-			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss' ),
+			'discardButton' => esc_html__( 'Discard Draft', 'buddyboss-platform' ),
 		),
 	);
 
@@ -1129,7 +1129,7 @@ function bb_forums_link_preview_parse_url() {
 
 	// Check if URL is validated.
 	if ( empty( $url ) || ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
-		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss-platform' ) ) );
 	}
 
 	// Get URL parsed data.
@@ -1137,7 +1137,7 @@ function bb_forums_link_preview_parse_url() {
 
 	// If empty data then send error.
 	if ( empty( $parse_url_data ) ) {
-		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss' ) ) );
+		wp_send_json( array( 'error' => esc_html__( 'There was a problem generating a link preview.', 'buddyboss-platform' ) ) );
 	}
 
 	// send json success.

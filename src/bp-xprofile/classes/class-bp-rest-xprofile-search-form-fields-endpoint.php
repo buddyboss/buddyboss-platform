@@ -163,7 +163,7 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params = array(
 			'form_id' => array(
-				'description'       => __( 'ID of the profile search form.', 'buddyboss' ),
+				'description'       => __( 'ID of the profile search form.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'validate_callback' => 'rest_validate_request_arg',
 			),

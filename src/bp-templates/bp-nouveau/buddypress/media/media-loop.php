@@ -8,13 +8,18 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_before_loop();
 
 // phpcs:ignore WordPress.Security.NonceVerification.Missing
 if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
 	bp_get_template_part( 'media/media-move' );
-	bp_get_template_part( 'video/video-move' );
-	bp_get_template_part( 'video/add-video-thumbnail' );
+	if ( bp_is_active( 'video' ) ) :
+		bp_get_template_part( 'video/video-move' );
+		bp_get_template_part( 'video/add-video-thumbnail' );
+	endif;
 endif;
 
 if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
@@ -34,7 +39,7 @@ if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 	if ( bp_media_has_more_items() ) :
 		?>
 		<li class="load-more">
-			<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 		</li>
 		<?php
 	endif;
@@ -48,7 +53,7 @@ if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
 
 else :
 
-	if ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) {
+	if ( bp_is_active( 'video' ) && ( ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ) {
 		bp_nouveau_user_feedback( 'media-video-loop-none' );
 	} else {
 		bp_nouveau_user_feedback( 'media-loop-none' );

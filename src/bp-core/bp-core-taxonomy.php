@@ -35,7 +35,7 @@ function bp_register_default_taxonomies() {
 		apply_filters(
 			'bp_register_email_tax_type',
 			array(
-				'description'   => __( 'BuddyBoss email types', 'buddyboss' ),
+				'description'   => __( 'BuddyBoss email types', 'buddyboss-platform' ),
 				'labels'        => bp_get_email_tax_type_labels(),
 				'meta_box_cb'   => 'bp_email_tax_type_metabox',
 				'public'        => false,

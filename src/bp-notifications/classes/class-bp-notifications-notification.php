@@ -911,7 +911,7 @@ class BP_Notifications_Notification {
 		$cache_group = ( ! empty( $r['is_new'] ) ) ? 'bp_notifications_unread_count' : 'bp_notifications_read_count';
 		$count       = wp_cache_get( $r['user_id'], $cache_group );
 		if ( false === $count ) {
-			$count = (int) $wpdb->get_var( $sql );
+			$count = (int) $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from $bp->notifications->table_name; $where_sql/$join_sql built via self::get_where_sql()/get_meta_query_sql() which prepare values.
 			wp_cache_set( $r['user_id'], $count, $cache_group );
 		}
 
@@ -1369,6 +1369,6 @@ class BP_Notifications_Notification {
 		$sql = "{$select_sql} {$from_sql} {$where_sql} {$group_sql} {$order_sql}";
 
 		// Return the queried results.
-		return $wpdb->get_results( $sql );
+		return $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $select_sql/$from_sql internal; $where_sql built via self::get_where_sql() which prepares values; $group_sql/$order_sql hardcoded.
 	}
 }

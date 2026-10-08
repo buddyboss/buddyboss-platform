@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the 'Mentions' activity page.
  *

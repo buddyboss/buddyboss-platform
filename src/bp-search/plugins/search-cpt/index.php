@@ -40,7 +40,12 @@ function bp_search_option_cpt_search( $items_to_search ) {
 	if ( ! empty( $cpts ) ) {
 		foreach ( $cpts as $cpt => $cpt_obj ) {
 			$checked = ! empty( $items_to_search ) && in_array( 'cpt-' . $cpt, $items_to_search ) ? ' checked' : '';
-			echo "<label><input type='checkbox' value='cpt-{$cpt}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$cpt_obj->label}</label><br>";
+			printf(
+				'<label><input type="checkbox" value="%1$s" name="bp_search_plugin_options[items-to-search][]" %2$s>%3$s</label><br>',
+				esc_attr( 'cpt-' . $cpt ),
+				esc_attr( trim( $checked ) ),
+				esc_html( $cpt_obj->label )
+			);
 			do_action( 'bp_search_settings_item_' . $cpt, $items_to_search );
 		}
 	}

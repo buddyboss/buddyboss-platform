@@ -37,7 +37,7 @@ export function ListPagination( { currentPage, totalPages, total, onPageChange, 
 			<span className={ className + '__item-count' }>
 				{ sprintf(
 					/* translators: %s: total number of items. */
-					_n( '%s item', '%s items', total, 'buddyboss' ),
+					_n( '%s item', '%s items', total, 'buddyboss-platform' ),
 					total
 				) }
 			</span>

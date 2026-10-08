@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @param bool   $slug
  */
 function bp_search_form_option( $option, $default = '', $slug = false ) {
-	echo bp_search_get_form_option( $option, $default, $slug );
+	echo bp_search_get_form_option( $option, $default, $slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_search_get_form_option() returns an esc_attr'd value.
 }
 
 /**

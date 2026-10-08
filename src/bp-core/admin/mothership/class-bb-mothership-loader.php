@@ -698,7 +698,7 @@ class BB_Mothership_Loader {
 			wp_kses(
 				sprintf(
 					/* translators: %s: URL of the network License page. */
-					__( 'BuddyBoss Platform is now network-activated, so the network shares one license. The license previously activated on a subsite could not be carried over. Please <a href="%s">activate your license</a> for the network.', 'buddyboss' ),
+					__( 'BuddyBoss Platform is now network-activated, so the network shares one license. The license previously activated on a subsite could not be carried over. Please <a href="%s">activate your license</a> for the network.', 'buddyboss-platform' ),
 					esc_url( network_admin_url( 'admin.php?page=' . BB_License_Page::SLUG ) )
 				),
 				array( 'a' => array( 'href' => array() ) )
@@ -1306,7 +1306,7 @@ class BB_Mothership_Loader {
 				}
 
 				// Translators: %s is the response error message.
-				$error_html = esc_html__( 'Migrate License activation failed: %s', 'buddyboss' );
+				$error_html = esc_html__( 'Migrate License activation failed: %s', 'buddyboss-platform' );
 
 				try {
 					$response = $container->get( LicenseActivations::class )->activate( $plugin_id, $license_data['license_key'], $domain );

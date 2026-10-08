@@ -106,7 +106,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => 'true',
 					),
@@ -239,7 +239,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -283,7 +283,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -321,7 +321,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to view the block member.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -368,7 +368,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $item_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_missing_data',
-				__( 'Required field missing.', 'buddyboss' ),
+				__( 'Required field missing.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -378,7 +378,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_moderation_report_exist( $item_id, BP_Moderation_Members::$moderation_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
-				__( 'Already reported this item.', 'buddyboss' ),
+				__( 'Already reported this item.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -389,14 +389,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			array(
 				'content_id'   => $item_id,
 				'content_type' => $type,
-				'note'         => esc_html__( 'Member block', 'buddyboss' ),
+				'note'         => esc_html__( 'Member block', 'buddyboss-platform' ),
 			)
 		);
 
 		if ( empty( $moderation->id ) && empty( $moderation->report_id ) && ! empty( $moderation->errors ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_moderation',
-				__( 'Sorry, something goes wrong please try again.', 'buddyboss' ),
+				__( 'Sorry, something goes wrong please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -442,7 +442,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -480,7 +480,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to block member.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to block member.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -496,7 +496,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! empty( $user->roles ) && in_array( 'administrator', $user->roles, true ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you can not able to block admin users.', 'buddyboss' ),
+				__( 'Sorry, you can not able to block admin users.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -506,7 +506,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && (int) bp_loggedin_user_id() === (int) $item_id ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_item_id',
-				__( 'Sorry, you can not able to block him self.', 'buddyboss' ),
+				__( 'Sorry, you can not able to block him self.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -547,7 +547,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( empty( $moderation->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -565,7 +565,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -575,7 +575,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( true === $moderation->hide_sitewide ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid moderation ID.', 'buddyboss' ),
+				__( 'Invalid moderation ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -592,7 +592,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $moderation_deleted->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_block_error',
-				__( 'Sorry, Something happened wrong', 'buddyboss' ),
+				__( 'Sorry, Something happened wrong', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -633,7 +633,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to unblock member.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to unblock member.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -799,14 +799,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['item_id'] = array(
-			'description'       => __( 'Get the result by reported item.', 'buddyboss' ),
+			'description'       => __( 'Get the result by reported item.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -815,7 +815,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -824,7 +824,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order_by'] = array(
-			'description'       => __( 'Column name to order the results by.', 'buddyboss' ),
+			'description'       => __( 'Column name to order the results by.', 'buddyboss-platform' ),
 			'default'           => 'last_updated',
 			'type'              => 'string',
 			'enum'              => array( 'id', 'item_type', 'item_id', 'last_updated', 'hide_sitewide' ),
@@ -833,7 +833,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -842,7 +842,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -851,7 +851,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['reporters'] = array(
-			'description'       => __( 'Whether to show the reporter ids or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to show the reporter ids or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -859,14 +859,14 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['status'] = array(
-			'description'       => __( 'Whether to show the blocked or suspended. 0-Blocked, 1-Suspended', 'buddyboss' ),
+			'description'       => __( 'Whether to show the blocked or suspended. 0-Blocked, 1-Suspended', 'buddyboss-platform' ),
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['blog_id'] = array(
-			'description'       => __( 'Fetch the data for specific blog ID.', 'buddyboss' ),
+			'description'       => __( 'Fetch the data for specific blog ID.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
@@ -894,26 +894,26 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'            => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Current Site ID.', 'buddyboss' ),
+					'description' => __( 'Current Site ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'item_id'       => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Item ID which needs to be blocked.', 'buddyboss' ),
+					'description'       => __( 'Item ID which needs to be blocked.', 'buddyboss-platform' ),
 					'type'              => 'integer',
 					'sanitize_callback' => 'sanitize_key',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'type'          => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Item type for the block.', 'buddyboss' ),
+					'description'       => __( 'Item type for the block.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'default'           => 'user',
 					'enum'              => (array) ( class_exists( 'BP_Moderation_Members' ) ? BP_Moderation_Members::$moderation_type : 'user' ),
@@ -922,7 +922,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 				'hide_sitewide' => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Whether it is hidden of all or not.', 'buddyboss' ),
+					'description'       => __( 'Whether it is hidden of all or not.', 'buddyboss-platform' ),
 					'type'              => 'boolean',
 					'readonly'          => true,
 					'sanitize_callback' => 'rest_sanitize_boolean',
@@ -930,7 +930,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 				'count'         => array(
 					'context'           => array( 'view', 'edit' ),
-					'description'       => __( 'Number of time item was reported.', 'buddyboss' ),
+					'description'       => __( 'Number of time item was reported.', 'buddyboss-platform' ),
 					'type'              => 'integer',
 					'readonly'          => true,
 					'sanitize_callback' => 'sanitize_key',
@@ -938,7 +938,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				),
 				'reporters'     => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Reported users for the item.', 'buddyboss' ),
+					'description' => __( 'Reported users for the item.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 				),
@@ -967,7 +967,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -981,7 +981,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -995,7 +995,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Whether the activity is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the activity is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1009,7 +1009,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the activity is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the activity is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1023,7 +1023,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Activity report button text.', 'buddyboss' ),
+					'description' => __( 'Activity report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1037,7 +1037,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Activity comment report button text.', 'buddyboss' ),
+					'description' => __( 'Activity comment report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1051,7 +1051,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Activity report type.', 'buddyboss' ),
+					'description' => __( 'Activity report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1065,7 +1065,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_activity_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Activity comment report type.', 'buddyboss' ),
+					'description' => __( 'Activity comment report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1295,7 +1295,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		$content      = $activity->content;
 		$hide_objects = false;
 		if ( $is_hidden ) {
-			$content            = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+			$content            = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			$data['can_report'] = false;
 		} elseif ( $is_user_suspended && 'groups' !== $activity->component ) {
 			$is_suspended_content = bb_moderation_is_suspended_message( $content, $type, $activity->id );
@@ -1373,7 +1373,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_group_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1387,7 +1387,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_group_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the group is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the group is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1401,7 +1401,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_group_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group report button text.', 'buddyboss' ),
+					'description' => __( 'Group report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1415,7 +1415,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_group_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group report type.', 'buddyboss' ),
+					'description' => __( 'Group report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1430,7 +1430,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1444,7 +1444,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1548,7 +1548,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_forum_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1562,7 +1562,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_forum_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the Forum is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the Forum is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1576,7 +1576,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_forum_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Forum report button text.', 'buddyboss' ),
+					'description' => __( 'Forum report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1590,7 +1590,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_forum_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Forum report type.', 'buddyboss' ),
+					'description' => __( 'Forum report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1688,7 +1688,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1702,7 +1702,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the topic is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the topic is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1716,7 +1716,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Topic report button text.', 'buddyboss' ),
+					'description' => __( 'Topic report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1730,7 +1730,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_topic_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Topic report type.', 'buddyboss' ),
+					'description' => __( 'Topic report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1828,7 +1828,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1842,7 +1842,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the reply is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the reply is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -1856,7 +1856,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Reply report button text.', 'buddyboss' ),
+					'description' => __( 'Reply report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1870,7 +1870,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_reply_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Reply report type.', 'buddyboss' ),
+					'description' => __( 'Reply report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -1987,7 +1987,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return $response;
 		}
 
-		$content      = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+		$content      = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 		$hide_objects = false;
 		if ( $is_user_suspended || $is_user_blocked || $is_blocked_by_user || $is_user_inactive ) {
 			$user_displayname = bp_core_get_user_displayname( $reply->post_author );
@@ -2048,7 +2048,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2062,7 +2062,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2076,7 +2076,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_can_user_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2090,7 +2090,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_member_is_user_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the member is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the member is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2258,7 +2258,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2272,7 +2272,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the media is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the media is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2286,7 +2286,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Media report button text.', 'buddyboss' ),
+					'description' => __( 'Media report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2300,7 +2300,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Media report type.', 'buddyboss' ),
+					'description' => __( 'Media report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2320,7 +2320,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2334,7 +2334,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the Video is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the Video is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2348,7 +2348,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Video report button text.', 'buddyboss' ),
+					'description' => __( 'Video report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2362,7 +2362,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_media_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Video report type.', 'buddyboss' ),
+					'description' => __( 'Video report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2488,7 +2488,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2502,7 +2502,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2516,7 +2516,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Document report button text.', 'buddyboss' ),
+					'description' => __( 'Document report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2530,7 +2530,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Document report type.', 'buddyboss' ),
+					'description' => __( 'Document report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2544,7 +2544,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the document is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the document is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2558,7 +2558,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_document_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the document is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the document is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2868,7 +2868,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_can_report' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
+					'description' => __( 'Whether or not user can report or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2882,7 +2882,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_is_reported' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the comment is reported or not.', 'buddyboss' ),
+					'description' => __( 'Whether the comment is reported or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -2896,7 +2896,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_report_button_text' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Blog comment report button text.', 'buddyboss' ),
+					'description' => __( 'Blog comment report button text.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2910,7 +2910,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bp_rest_blog_comment_report_type' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Blog comment report type.', 'buddyboss' ),
+					'description' => __( 'Blog comment report type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -2924,7 +2924,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 				'get_callback' => array( $this, 'bb_rest_blog_comment_can_reply' ),
 				'schema'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can reply or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can reply or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
@@ -3046,7 +3046,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return $response;
 		}
 
-		$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+		$content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 
 		if ( $is_user_suspended || $is_user_blocked || $is_blocked_by_user || $is_user_inactive ) {
 			$data['author_url'] = '';
@@ -3144,7 +3144,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 
 		return new WP_Error(
 			'bp_rest_comment_cannot_create_reply',
-			__( 'Sorry, you are not allowed to reply on this Comment.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to reply on this Comment.', 'buddyboss-platform' ),
 			array( 'status' => 400 )
 		);
 

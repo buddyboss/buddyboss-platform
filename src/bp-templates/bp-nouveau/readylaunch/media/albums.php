@@ -39,7 +39,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 								'<span class="bb-count">%d</span> Album',
 								'<span class="bb-count">%d</span> Albums',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -52,7 +52,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 			if ( ( $bp_is_group && $bp_is_group_albums_support_enabled ) || $bp_is_profile_albums_support_enabled ) {
 				?>
 				<div class="bb-media-actions">
-					<a href="#" id="bb-create-album" class="bb-create-album button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+					<a href="#" id="bb-create-album" class="bb-create-album button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
 				</div>
 				<?php
 			}
@@ -67,7 +67,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 } else {
 	?>
 	<div class="bb-media-actions-wrap album-actions-wrap">
-		<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></h2>
+		<h2 class="bb-title"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></h2>
 	</div>
 	<?php
 }
@@ -95,7 +95,7 @@ if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 		if ( bp_album_has_more_items() ) :
 			?>
 			<li class="load-more">
-				<a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				<a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 			</li>
 			<?php
 		endif;

@@ -133,8 +133,8 @@ class BB_Activity_Topics_Manager {
 			 */
 			'bb_activity_topic_permission_type',
 			array(
-				'anyone'      => __( 'Anyone', 'buddyboss' ),
-				'mods_admins' => __( 'Admins', 'buddyboss' ),
+				'anyone'      => __( 'Anyone', 'buddyboss-platform' ),
+				'mods_admins' => __( 'Admins', 'buddyboss-platform' ),
 			)
 		);
 
@@ -177,11 +177,11 @@ class BB_Activity_Topics_Manager {
 
 		// Validate required fields.
 		if ( empty( $r['activity_id'] ) ) {
-			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss' ) );
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID and Activity ID are required.', 'buddyboss-platform' ) );
 		}
 
 		if ( bb_is_activity_topic_required() && empty( $r['topic_id'] ) ) {
-			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID is required.', 'buddyboss' ) );
+			return new WP_Error( 'bb_activity_topic_relationship_missing_data', __( 'Topic ID is required.', 'buddyboss-platform' ) );
 		}
 
 		/**
@@ -219,7 +219,7 @@ class BB_Activity_Topics_Manager {
 
 			// Handle update errors.
 			if ( false === $updated ) {
-				$error_message = __( 'Failed to update activity-topic relationship.', 'buddyboss' );
+				$error_message = __( 'Failed to update activity-topic relationship.', 'buddyboss-platform' );
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error( 'bb_activity_topic_relationship_db_update_error', $error_message );
 				}
@@ -260,7 +260,7 @@ class BB_Activity_Topics_Manager {
 
 		// Handle insert errors.
 		if ( ! $inserted ) {
-			$error_message = __( 'Failed to add activity-topic relationship.', 'buddyboss' );
+			$error_message = __( 'Failed to add activity-topic relationship.', 'buddyboss-platform' );
 			if ( 'wp_error' === $r['error_type'] ) {
 				return new WP_Error( 'bb_activity_topic_relationship_db_insert_error', $error_message );
 			}
@@ -595,7 +595,7 @@ class BB_Activity_Topics_Manager {
 			'activity' === $args['item_type'] &&
 			! bp_current_user_can( 'administrator' )
 		) {
-			$error_message = __( 'You are not allowed to add a topic.', 'buddyboss' );
+			$error_message = __( 'You are not allowed to add a topic.', 'buddyboss-platform' );
 			if ( 'wp_error' === $args['error_type'] ) {
 				return new WP_Error( 'bb_topic_not_allowed', $error_message );
 			}
@@ -709,7 +709,7 @@ class BB_Activity_Topics_Manager {
 		$strings['activity']['params']['topics']['bb_is_enabled_activity_topics']       = function_exists( 'bb_is_enabled_activity_topics' ) ? bb_is_enabled_activity_topics() : false;
 		$strings['activity']['params']['topics']['bb_is_activity_topic_required']       = function_exists( 'bb_is_activity_topic_required' ) ? bb_is_activity_topic_required() : false;
 		$strings['activity']['params']['topics']['topic_lists']                         = ! empty( $topic_lists ) ? $topic_lists : array();
-		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss' );
+		$strings['activity']['params']['topics']['topic_tooltip_error']                 = esc_html__( 'Please select a topic', 'buddyboss-platform' );
 		$strings['activity']['params']['topics']['is_activity_directory']               = bp_is_activity_directory();
 		return $strings;
 	}
@@ -979,7 +979,7 @@ class BB_Activity_Topics_Manager {
 			<div class="activity-topic-selector">
 				<ul>
 					<li>
-						<a href="<?php echo esc_url( bp_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss' ); ?></a>
+						<a href="<?php echo esc_url( bp_get_activity_directory_permalink() ); ?>"><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></a>
 					</li>
 					<?php
 					foreach ( $topics as $topic ) {
@@ -1032,7 +1032,7 @@ class BB_Activity_Topics_Manager {
 		foreach ( $columns as $key => $value ) {
 			$new_columns[ $key ] = $value;
 			if ( 'comment' === $key ) {
-				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss' );
+				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss-platform' );
 			}
 		}
 
@@ -1079,7 +1079,7 @@ class BB_Activity_Topics_Manager {
 			$component,
 			'activity_topic',
 			array(
-				'label'             => __( 'Topic', 'buddyboss' ),
+				'label'             => __( 'Topic', 'buddyboss-platform' ),
 				'type'              => 'select',
 				'order'             => 40,
 				'context'           => 'normal',
@@ -1093,7 +1093,7 @@ class BB_Activity_Topics_Manager {
 				'get_options'       => function ( $activity ) {
 					$options = array(
 						array(
-							'label' => __( '--- Select a topic ---', 'buddyboss' ),
+							'label' => __( '--- Select a topic ---', 'buddyboss-platform' ),
 							'value' => '',
 						),
 					);

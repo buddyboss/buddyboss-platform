@@ -370,7 +370,7 @@ function bbp_get_theme_package_id( $default = 'default' ) {
  * @param $default bool Optional. Default value 80
  */
 function bbp_title_max_length( $default = 80 ) {
-	echo bbp_get_title_max_length( $default );
+	echo esc_html( bbp_get_title_max_length( $default ) );
 }
 	/**
 	 * Return the maximum length of a title
@@ -391,7 +391,7 @@ function bbp_title_max_length( $default = 80 ) {
  * @param $default int Optional. Default value
  */
 function bbp_group_forums_root_id( $default = 0 ) {
-	echo bbp_get_group_forums_root_id( $default );
+	echo esc_attr( bbp_get_group_forums_root_id( $default ) );
 }
 	/**
 	 * Return the grop forums root parent forum id

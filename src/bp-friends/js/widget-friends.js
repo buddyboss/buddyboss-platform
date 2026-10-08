@@ -27,7 +27,7 @@ function friend_widget_click_handler() {
 			jQuery.post(
 				ajaxurl,
 				{
-					action: 'widget_friends',
+					action: 'bb_widget_friends',
 					'cookie': encodeURIComponent( document.cookie ),
 					'_wpnonce': jQuery( 'input#_wpnonce-friends' ).val(),
 					'max-friends': jQuery( 'input#friends_widget_max' ).val(),

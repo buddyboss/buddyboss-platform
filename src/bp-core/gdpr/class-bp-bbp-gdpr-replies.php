@@ -36,7 +36,7 @@ class BP_Bbp_Gdpr_Replies {
 	 */
 	function register_exporter( $exporters ) {
 		$exporters['bbp-reply'] = array(
-			'exporter_friendly_name' => __( 'Discussion Replies', 'buddyboss' ),
+			'exporter_friendly_name' => __( 'Discussion Replies', 'buddyboss-platform' ),
 			'callback'               => array( $this, 'replies_exporter' ),
 		);
 
@@ -54,7 +54,7 @@ class BP_Bbp_Gdpr_Replies {
 	 */
 	function erase_exporter( $erasers ) {
 		$erasers['bbp-reply'] = array(
-			'eraser_friendly_name' => __( 'Forum Replies', 'buddyboss' ),
+			'eraser_friendly_name' => __( 'Forum Replies', 'buddyboss-platform' ),
 			'callback'             => array( $this, 'replies_eraser' ),
 		);
 
@@ -95,7 +95,7 @@ class BP_Bbp_Gdpr_Replies {
 
 				$group_id = 'bbp-replies';
 
-				$group_label = __( 'Discussion Replies', 'buddyboss' );
+				$group_label = __( 'Discussion Replies', 'buddyboss-platform' );
 
 				$permalink = get_permalink( $reply->ID );
 
@@ -104,30 +104,30 @@ class BP_Bbp_Gdpr_Replies {
 				// Plugins can add as many items in the item data array as they want
 				$data = array(
 					array(
-						'name'  => __( 'Reply Author', 'buddyboss' ),
+						'name'  => __( 'Reply Author', 'buddyboss-platform' ),
 						'value' => $user->display_name,
 					),
 					array(
-						'name'  => __( 'Reply Author Email', 'buddyboss' ),
+						'name'  => __( 'Reply Author Email', 'buddyboss-platform' ),
 						'value' => $user->user_email,
 					),
 					array(
-						'name'  => __( 'Reply Title', 'buddyboss' ),
+						'name'  => __( 'Reply Title', 'buddyboss-platform' ),
 						'value' => ! empty( $parent_title ) ? __(
 							'Reply To: ',
-							'buddyboss'
+							'buddyboss-platform'
 						) . html_entity_decode( $parent_title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '',
 					),
 					array(
-						'name'  => __( 'Reply Content', 'buddyboss' ),
+						'name'  => __( 'Reply Content', 'buddyboss-platform' ),
 						'value' => $reply->post_content,
 					),
 					array(
-						'name'  => __( 'Reply Date', 'buddyboss' ),
+						'name'  => __( 'Reply Date', 'buddyboss-platform' ),
 						'value' => $reply->post_date,
 					),
 					array(
-						'name'  => __( 'Reply URL', 'buddyboss' ),
+						'name'  => __( 'Reply URL', 'buddyboss-platform' ),
 						'value' => $permalink,
 					),
 				);

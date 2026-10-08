@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handles the deleting of a user.
  *
@@ -47,7 +50,8 @@ function bp_settings_action_delete_account() {
 	if ( bp_core_delete_account( bp_displayed_user_id() ) ) {
 
 		// Add feedback after deleting a user.
-		bp_core_add_message( sprintf( __( '%s was successfully deleted.', 'buddyboss' ), $username ), 'success' );
+		/* translators: %s: the deleted user's full name. */
+		bp_core_add_message( sprintf( __( '%s was successfully deleted.', 'buddyboss-platform' ), $username ), 'success' );
 
 		// Redirect to the root domain.
 		bp_core_redirect( bp_get_root_domain() );

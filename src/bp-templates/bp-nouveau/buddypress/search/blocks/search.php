@@ -4,6 +4,10 @@
  *
  * @package BuddyBoss\Search
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->

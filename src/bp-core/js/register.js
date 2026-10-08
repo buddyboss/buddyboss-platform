@@ -287,7 +287,7 @@ jQuery( document ).ready( function() {
 			    url: ajaxurl,
 			    dataType: 'json',
 				async: false,
-			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + '&action=check_email',
+			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + '&action=bb_check_email',
 			    success: function ( response ) {
 			    	if (response.signup_email) {
 				    	var html_serror = '<div class="bp-messages bp-feedback error">';

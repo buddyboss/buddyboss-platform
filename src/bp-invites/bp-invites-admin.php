@@ -26,7 +26,7 @@ function bp_invites_add_admin_menu() {
 		: admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' );
 
 	$submenu['buddyboss-platform'][] = array(
-		__( 'Invites', 'buddyboss' ),
+		__( 'Invites', 'buddyboss-platform' ),
 		'bp_moderate',
 		$settings_url,
 	);
@@ -48,8 +48,8 @@ function bp_invites_add_sub_menu_page_admin_menu() {
 
 		add_submenu_page(
 			'buddyboss-platform',
-			__( 'Invites', 'buddyboss' ),
-			__( 'Invites', 'buddyboss' ),
+			__( 'Invites', 'buddyboss-platform' ),
+			__( 'Invites', 'buddyboss-platform' ),
 			'bp_moderate',
 			$settings_url,
 			''

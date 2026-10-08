@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and process connection requests.
  *
@@ -33,14 +36,14 @@ function friends_action_add_friend() {
 		}
 
 		if ( ! friends_add_friend( bp_loggedin_user_id(), $potential_friend_id ) ) {
-			bp_core_add_message( __( 'Connection could not be requested.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'Connection could not be requested.', 'buddyboss-platform' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Connection requested', 'buddyboss' ) );
+			bp_core_add_message( __( 'Connection requested', 'buddyboss-platform' ) );
 		}
 	} elseif ( 'is_friend' == $friendship_status ) {
-		bp_core_add_message( __( 'You are already connected with this user', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You are already connected with this user', 'buddyboss-platform' ), 'error' );
 	} else {
-		bp_core_add_message( __( 'You already have a pending connection request with this user', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You already have a pending connection request with this user', 'buddyboss-platform' ), 'error' );
 	}
 
 	bp_core_redirect( wp_get_referer() );

@@ -26,7 +26,7 @@ function bb_media_register_documents_panel_fields() {
 		'documents',
 		'documents_settings',
 		array(
-			'title'          => __( 'Documents', 'buddyboss' ),
+			'title'          => __( 'Documents', 'buddyboss-platform' ),
 			'order'          => 10,
 			'help_url'       => '636180',
 			'section_toggle' => 'bb_media_documents_support',
@@ -40,10 +40,10 @@ function bb_media_register_documents_panel_fields() {
 		'documents_settings',
 		array(
 			'name'              => 'bp_media_profile_document_support',
-			'label'             => __( 'Profiles', 'buddyboss' ),
+			'label'             => __( 'Profiles', 'buddyboss-platform' ),
 			'description'       => bp_is_active( 'activity' )
-				? __( 'Allow members to upload documents in profiles and activity posts', 'buddyboss' )
-				: __( 'Allow members to upload documents in profiles', 'buddyboss' ),
+				? __( 'Allow members to upload documents in profiles and activity posts', 'buddyboss-platform' )
+				: __( 'Allow members to upload documents in profiles', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -54,7 +54,7 @@ function bb_media_register_documents_panel_fields() {
 	// FIELD: Groups — document support.
 	if ( bp_is_active( 'groups' ) ) {
 		$group_description = bb_media_get_group_context_description(
-			__( 'Allow members to upload documents in', 'buddyboss' )
+			__( 'Allow members to upload documents in', 'buddyboss-platform' )
 		);
 
 		bb_register_feature_field(
@@ -63,7 +63,7 @@ function bb_media_register_documents_panel_fields() {
 			'documents_settings',
 			array(
 				'name'              => 'bp_media_group_document_support',
-				'label'             => __( 'Groups', 'buddyboss' ),
+				'label'             => __( 'Groups', 'buddyboss-platform' ),
 				'description'       => $group_description,
 				'type'              => 'toggle',
 				'default'           => 0,
@@ -81,8 +81,8 @@ function bb_media_register_documents_panel_fields() {
 			'documents_settings',
 			array(
 				'name'              => 'bp_media_messages_document_support',
-				'label'             => __( 'Messages', 'buddyboss' ),
-				'description'       => __( 'Allow members to upload documents in private messages', 'buddyboss' ),
+				'label'             => __( 'Messages', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to upload documents in private messages', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -99,8 +99,8 @@ function bb_media_register_documents_panel_fields() {
 			'documents_settings',
 			array(
 				'name'              => 'bp_media_forums_document_support',
-				'label'             => __( 'Forums', 'buddyboss' ),
-				'description'       => __( 'Allow members to upload documents in forum discussions and replies', 'buddyboss' ),
+				'label'             => __( 'Forums', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to upload documents in forum discussions and replies', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -119,15 +119,15 @@ function bb_media_register_documents_panel_fields() {
 		'documents_settings',
 		array(
 			'name'              => 'bp_document_allowed_size',
-			'label'             => __( 'Upload Size', 'buddyboss' ),
+			'label'             => __( 'Upload Size', 'buddyboss-platform' ),
 			'description'       => sprintf(
 				/* translators: %d: Server max upload size in MB */
-				__( 'Set max file size for document uploads, in megabytes. Your server\'s maximum upload size is %d MB.', 'buddyboss' ),
+				__( 'Set max file size for document uploads, in megabytes. Your server\'s maximum upload size is %d MB.', 'buddyboss-platform' ),
 				$server_max_mb
 			),
 			'type'              => 'number',
 			'default'           => $server_max_mb,
-			'suffix'            => __( 'MB', 'buddyboss' ),
+			'suffix'            => __( 'MB', 'buddyboss-platform' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_size',
 			'order'             => 50,
 		)
@@ -140,11 +140,11 @@ function bb_media_register_documents_panel_fields() {
 		'documents_settings',
 		array(
 			'name'              => 'bp_document_allowed_per_batch',
-			'label'             => __( 'Upload Limit', 'buddyboss' ),
-			'description'       => __( 'Set max number of documents that can be added to one activity post or document upload.', 'buddyboss' ),
+			'label'             => __( 'Upload Limit', 'buddyboss-platform' ),
+			'description'       => __( 'Set max number of documents that can be added to one activity post or document upload.', 'buddyboss-platform' ),
 			'type'              => 'number',
 			'default'           => 10,
-			'suffix'            => __( 'per batch', 'buddyboss' ),
+			'suffix'            => __( 'per batch', 'buddyboss-platform' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_limit',
 			'order'             => 60,
 		)
@@ -157,10 +157,10 @@ function bb_media_register_documents_panel_fields() {
 		'documents_settings',
 		array(
 			'name'              => 'bp_document_extensions_support',
-			'label'             => __( 'File Extensions', 'buddyboss' ),
-			'description'       => __( 'Manage which file extensions are allowed to be uploaded.', 'buddyboss' ),
+			'label'             => __( 'File Extensions', 'buddyboss-platform' ),
+			'description'       => __( 'Manage which file extensions are allowed to be uploaded.', 'buddyboss-platform' ),
 			'type'              => 'document_extensions',
-			'manage_label'      => __( 'Manage', 'buddyboss' ),
+			'manage_label'      => __( 'Manage', 'buddyboss-platform' ),
 			'manage_icon'       => 'bb-icons-rl bb-icons-rl-gear',
 			'options'           => bb_media_get_document_extension_options(),
 			'extension_data'    => bb_media_get_document_extension_data(),
@@ -226,16 +226,16 @@ function bb_media_get_extension_icon_options() {
 	if ( ! function_exists( 'bp_document_svg_icon_list' ) ) {
 		// Fallback icon set when the document component isn't loaded yet.
 		$fallback_icons = array(
-			'bb-icon-file'       => __( 'File', 'buddyboss' ),
-			'bb-icon-file-zip'   => __( 'Zip', 'buddyboss' ),
-			'bb-icon-file-mp3'   => __( 'Mp3', 'buddyboss' ),
-			'bb-icon-file-html'  => __( 'Html', 'buddyboss' ),
-			'bb-icon-file-psd'   => __( 'Psd', 'buddyboss' ),
-			'bb-icon-file-png'   => __( 'Png', 'buddyboss' ),
-			'bb-icon-file-pptx'  => __( 'Pptx', 'buddyboss' ),
-			'bb-icon-file-xlsx'  => __( 'Xlsx', 'buddyboss' ),
-			'bb-icon-file-txt'   => __( 'Txt', 'buddyboss' ),
-			'bb-icon-file-video' => __( 'Video', 'buddyboss' ),
+			'bb-icon-file'       => __( 'File', 'buddyboss-platform' ),
+			'bb-icon-file-zip'   => __( 'Zip', 'buddyboss-platform' ),
+			'bb-icon-file-mp3'   => __( 'Mp3', 'buddyboss-platform' ),
+			'bb-icon-file-html'  => __( 'Html', 'buddyboss-platform' ),
+			'bb-icon-file-psd'   => __( 'Psd', 'buddyboss-platform' ),
+			'bb-icon-file-png'   => __( 'Png', 'buddyboss-platform' ),
+			'bb-icon-file-pptx'  => __( 'Pptx', 'buddyboss-platform' ),
+			'bb-icon-file-xlsx'  => __( 'Xlsx', 'buddyboss-platform' ),
+			'bb-icon-file-txt'   => __( 'Txt', 'buddyboss-platform' ),
+			'bb-icon-file-video' => __( 'Video', 'buddyboss-platform' ),
 		);
 
 		$options = array();

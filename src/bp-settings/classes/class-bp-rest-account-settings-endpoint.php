@@ -134,7 +134,7 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the account settings.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the account settings.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -251,31 +251,31 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'name'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique name for the setting navigation.', 'buddyboss' ),
+					'description' => __( 'A unique name for the setting navigation.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'slug'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The URL-friendly name for the navigation', 'buddyboss' ),
+					'description' => __( 'The URL-friendly name for the navigation', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'position' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The position of the current navigation item.', 'buddyboss' ),
+					'description' => __( 'The position of the current navigation item.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'children' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Child navigation items.', 'buddyboss' ),
+					'description' => __( 'Child navigation items.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'array',
 				),
 				'link'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique link for the navigation.', 'buddyboss' ),
+					'description' => __( 'A unique link for the navigation.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),

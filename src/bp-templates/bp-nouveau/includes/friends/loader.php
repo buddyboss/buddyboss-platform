@@ -104,12 +104,12 @@ class BP_Nouveau_Friends {
 		$notifications = array(
 			array(
 				'id'       => 'friendship_accepted',
-				'label'    => __( 'Accepted connection requests', 'buddyboss' ),
+				'label'    => __( 'Accepted connection requests', 'buddyboss-platform' ),
 				'position' => 35,
 			),
 			array(
 				'id'       => 'friendship_request',
-				'label'    => __( 'Pending connection requests', 'buddyboss' ),
+				'label'    => __( 'Pending connection requests', 'buddyboss-platform' ),
 				'position' => 45,
 			),
 		);

@@ -23,5 +23,12 @@ function bp_setup_core() {
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php';
 	}
+
+	// Load the S3 image offloader: rewrites local Platform image URLs in the
+	// final HTML output to an external S3 bucket so image bytes are served
+	// from S3/CDN instead of the WordPress host. Cheap when disabled.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/bb-s3-image-offload-loader.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/bb-s3-image-offload-loader.php';
+	}
 }
 add_action( 'bp_loaded', 'bp_setup_core', 0 );

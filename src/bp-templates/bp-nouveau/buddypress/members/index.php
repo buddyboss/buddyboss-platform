@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 
 /**
@@ -56,7 +59,7 @@ do_action( 'bp_before_directory_members_page' );
 								'<span class="bb-count">%d</span> Member',
 								'<span class="bb-count">%d</span> Members',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),

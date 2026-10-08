@@ -54,7 +54,7 @@ export function PluginActionButton( { item, plugins, className, hideUnavailable 
 			// wp.updates rejects with { errorCode, errorMessage }; our AJAX path throws
 			// an Error with .message — accept either so the real reason surfaces.
 			if ( mountedRef.current ) {
-				setError( ( e && ( e.errorMessage || e.message ) ) || __( 'Something went wrong. Please try again.', 'buddyboss' ) );
+				setError( ( e && ( e.errorMessage || e.message ) ) || __( 'Something went wrong. Please try again.', 'buddyboss-platform' ) );
 			}
 		} finally {
 			if ( mountedRef.current ) {
@@ -67,13 +67,13 @@ export function PluginActionButton( { item, plugins, className, hideUnavailable 
 	// URL) → a disabled "Install" (matches Figma); a wp.org slug → the action flow.
 	let primary;
 	if ( ! slug ) {
-		primary = { kind: 'disabled', label: __( 'Install', 'buddyboss' ) };
+		primary = { kind: 'disabled', label: __( 'Install', 'buddyboss-platform' ) };
 	} else if ( ! isInstalled ) {
-		primary = { kind: 'action', label: __( 'Install', 'buddyboss' ), busyLabel: __( 'Installing…', 'buddyboss' ), onClick: () => run( plugins.onInstall ), disabled: ! canInstall };
+		primary = { kind: 'action', label: __( 'Install', 'buddyboss-platform' ), busyLabel: __( 'Installing…', 'buddyboss-platform' ), onClick: () => run( plugins.onInstall ), disabled: ! canInstall };
 	} else if ( ! isActive ) {
-		primary = { kind: 'action', label: __( 'Activate', 'buddyboss' ), busyLabel: __( 'Activating…', 'buddyboss' ), onClick: () => run( plugins.onActivate ), disabled: ! canActivate };
+		primary = { kind: 'action', label: __( 'Activate', 'buddyboss-platform' ), busyLabel: __( 'Activating…', 'buddyboss-platform' ), onClick: () => run( plugins.onActivate ), disabled: ! canActivate };
 	} else {
-		primary = { kind: 'action', label: __( 'Deactivate', 'buddyboss' ), busyLabel: __( 'Deactivating…', 'buddyboss' ), onClick: () => run( plugins.onDeactivate ), disabled: ! canActivate };
+		primary = { kind: 'action', label: __( 'Deactivate', 'buddyboss-platform' ), busyLabel: __( 'Deactivating…', 'buddyboss-platform' ), onClick: () => run( plugins.onDeactivate ), disabled: ! canActivate };
 	}
 
 	// In contexts that shouldn't surface a dead control (the drawer), render nothing

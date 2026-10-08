@@ -837,7 +837,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -862,7 +862,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -871,7 +871,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! current_user_can( $this->config['capability_required'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss' ),
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -889,7 +889,7 @@ abstract class BB_Setup_Wizard_Manager {
 			// Skip progress tracking but still return success.
 			wp_send_json_success(
 				array(
-					'message'  => __( 'Step acknowledged.', 'buddyboss' ),
+					'message'  => __( 'Step acknowledged.', 'buddyboss-platform' ),
 					'step'     => $step,
 					'progress' => $this->get_progress(),
 				)
@@ -901,7 +901,7 @@ abstract class BB_Setup_Wizard_Manager {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Step progress saved successfully.', 'buddyboss' ),
+				'message'  => __( 'Step progress saved successfully.', 'buddyboss-platform' ),
 				'step'     => $step,
 				'progress' => $this->get_progress(),
 			)
@@ -919,7 +919,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -928,7 +928,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! current_user_can( $this->config['capability_required'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss' ),
+					'message' => __( 'You do not have sufficient permissions to perform this action.', 'buddyboss-platform' ),
 				)
 			);
 		}
@@ -948,7 +948,7 @@ abstract class BB_Setup_Wizard_Manager {
 
 		wp_send_json_success(
 			array(
-				'message'     => __( 'Preferences saved successfully.', 'buddyboss' ),
+				'message'     => __( 'Preferences saved successfully.', 'buddyboss-platform' ),
 				'preferences' => $preferences,
 			)
 		);
@@ -965,7 +965,7 @@ abstract class BB_Setup_Wizard_Manager {
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $this->wizard_id . '_wizard_nonce' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Invalid security token.', 'buddyboss' ),
+					'message' => __( 'Invalid security token.', 'buddyboss-platform' ),
 				)
 			);
 		}

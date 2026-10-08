@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Website', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Website', 'buddyboss-platform' );
 
 		$this->set_format( '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS', 'replace' );
 
@@ -87,7 +87,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 		?>
 
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup already escaped via esc_attr() in bp_get_form_field_attributes(). ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 
 		<?php
 	}
@@ -115,10 +115,10 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Website', 'buddyboss' );
+																esc_html_e( 'Website', 'buddyboss-platform' );
 																?>
 		</label>
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup already escaped via esc_attr() in bp_get_form_field_attributes(). ?>>
 
 		<?php
 	}
@@ -185,7 +185,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 	 * @return string URL converted to a link.
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
-		$link      = strip_tags( $field_value );
+		$link      = wp_strip_all_tags( $field_value );
 		$no_scheme = preg_replace( '#^https?://#', '', rtrim( $link, '/' ) );
 		$url_text  = str_replace( $link, $no_scheme, $field_value );
 		return '<a href="' . esc_url( $field_value ) . '" rel="nofollow noopener" target="_blank">' . esc_html( $url_text ) . '</a>';

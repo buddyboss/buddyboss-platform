@@ -7,6 +7,10 @@
  * @since   BuddyBoss 2.1.4
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-empty-single-list">

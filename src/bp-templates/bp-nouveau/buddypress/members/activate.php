@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_activation_hook( 'before', 'page' ); ?>
 
 <div class="page" id="activate-page">
@@ -19,22 +22,22 @@ bp_nouveau_activation_hook( 'before', 'page' ); ?>
 	if ( bp_account_was_activated() ) {
 
 		if ( isset( $_GET['e'] ) ) { ?>
-			<p><?php esc_html_e( 'Your account was activated successfully! Your account details have been sent to you in a separate email.', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'Your account was activated successfully! Your account details have been sent to you in a separate email.', 'buddyboss-platform' ); ?></p>
 		<?php } else { ?>
-			<p><?php esc_html_e( 'Your account was activated successfully! You can now log in with the username and password you provided when you signed up.', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'Your account was activated successfully! You can now log in with the username and password you provided when you signed up.', 'buddyboss-platform' ); ?></p>
 			<?php
 		}
 
 		printf(
 			'<p><a class="button button-primary" href="%1$s">%2$s</a></p>',
 			esc_url( wp_login_url( bp_get_root_domain() ) ),
-			esc_html__( 'Log In', 'buddyboss' )
+			esc_html__( 'Log In', 'buddyboss-platform' )
 		);
 	} else {
 		?>
-		<p><?php esc_html_e( 'Please provide a valid activation key.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Please provide a valid activation key.', 'buddyboss-platform' ); ?></p>
 		<form action="" method="post" class="standard-form" id="activation-form">
-			<label for="key"><?php esc_html_e( 'Activation Key:', 'buddyboss' ); ?></label>
+			<label for="key"><?php esc_html_e( 'Activation Key:', 'buddyboss-platform' ); ?></label>
 			<input type="text" name="key" id="key" value="<?php echo esc_attr( bp_get_current_activation_key() ); ?>" />
 			<?php
 			/**
@@ -45,7 +48,7 @@ bp_nouveau_activation_hook( 'before', 'page' ); ?>
 			do_action( 'bb_before_activate_submit_buttons' );
 			?>
 			<p class="submit">
-				<input type="submit" name="submit" value="<?php esc_attr_e( 'Activate', 'buddyboss' ); ?>" />
+				<input type="submit" name="submit" value="<?php esc_attr_e( 'Activate', 'buddyboss-platform' ); ?>" />
 			</p>
 		</form>
 		<?php

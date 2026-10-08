@@ -131,7 +131,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 				if ( ! current_user_can( 'level_10' ) ) {
 					// get all hidden groups where i am a member of
 					$hidden_groups_sql = $wpdb->prepare( "SELECT DISTINCT gm.group_id FROM {$bp->groups->table_name_members} gm JOIN {$bp->groups->table_name} g ON gm.group_id = g.id WHERE gm.user_id = %d AND gm.is_confirmed = 1 AND gm.is_banned = 0 AND g.status='hidden' ", bp_loggedin_user_id() );
-					$hidden_groups_ids = $wpdb->get_col( $hidden_groups_sql );
+					$hidden_groups_ids = $wpdb->get_col( $hidden_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $hidden_groups_sql is $wpdb->prepare()'d above (user_id as %d; $bp table names).
 
 					$hidden_groups_condition = '';
 					if ( ! empty( $hidden_groups_ids ) ) {
@@ -162,7 +162,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
-			$sql = $wpdb->prepare( $sql, $query_placeholder );
+			$sql = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql template uses %s placeholders bound here to $query_placeholder (esc_like()'d terms); table names from $bp.
 
 			return apply_filters(
 				'Bp_Search_Groups_sql',

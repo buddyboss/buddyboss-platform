@@ -338,11 +338,11 @@ function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
 
 	if ( null !== $unconfigured ) {
 		if ( 'Two_Factor_Backup_Codes' === get_class( $unconfigured ) ) {
-			$message = __( 'Generate your recovery codes before saving, so you can still sign in if you lose access to your device.', 'buddyboss' );
+			$message = __( 'Generate your recovery codes before saving, so you can still sign in if you lose access to your device.', 'buddyboss-platform' );
 		} else {
 			$message = sprintf(
 				/* translators: %s: recovery method name, e.g. "Recovery Codes". */
-				__( 'Finish setting up %s before saving, so you can still sign in if you lose access to your device.', 'buddyboss' ),
+				__( 'Finish setting up %s before saving, so you can still sign in if you lose access to your device.', 'buddyboss-platform' ),
 				wp_strip_all_tags( $unconfigured->get_label() )
 			);
 		}
@@ -352,7 +352,7 @@ function bb_two_factor_check_recovery_method( $user_id, $provider_ids ) {
 
 	return new WP_Error(
 		'bb_two_factor_recovery_required',
-		__( 'Set up and enable a recovery method, such as Recovery Codes, before turning on a two-factor method, so you can still sign in if you lose access to your device.', 'buddyboss' )
+		__( 'Set up and enable a recovery method, such as Recovery Codes, before turning on a two-factor method, so you can still sign in if you lose access to your device.', 'buddyboss-platform' )
 	);
 }
 
@@ -449,7 +449,7 @@ function bb_two_factor_filter_plugin_strings( $translation, $text, $domain ) {
 
 	// The wp-admin note points at the Application Passwords fields "above", which the Security tab does not have.
 	if ( 'Authentication for REST API and XML-RPC must use application passwords (defined above) instead of your regular password.' === $text ) {
-		return __( 'Authentication for the REST API and XML-RPC must use an application password instead of your regular password.', 'buddyboss' );
+		return __( 'Authentication for the REST API and XML-RPC must use an application password instead of your regular password.', 'buddyboss-platform' );
 	}
 
 	return $translation;
@@ -523,7 +523,7 @@ function bb_two_factor_render_section() {
 		return;
 	}
 	?>
-	<p class="info security-info"><?php esc_html_e( 'Add a second step to your sign-in so a stolen password is not enough to reach your account.', 'buddyboss' ); ?></p>
+	<p class="info security-info"><?php esc_html_e( 'Add a second step to your sign-in so a stolen password is not enough to reach your account.', 'buddyboss-platform' ); ?></p>
 
 	<form action="<?php echo esc_url( bb_two_factor_get_settings_url() ); ?>" method="post" class="standard-form bb-two-factor-form" id="settings-form">
 

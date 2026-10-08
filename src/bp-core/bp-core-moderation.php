@@ -133,7 +133,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 			if ( 'bool' === $error_type ) {
 				return false;
 			} else {
-				return new WP_Error( 'bp_moderation_too_many_links', __( 'You have posted too many links', 'buddyboss' ) );
+				return new WP_Error( 'bp_moderation_too_many_links', __( 'You have posted too many links', 'buddyboss-platform' ) );
 			}
 		}
 	}
@@ -174,7 +174,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 					if ( 'bool' === $error_type ) {
 						return false;
 					} else {
-						return new WP_Error( 'bp_moderation_word_match', __( 'You have posted an inappropriate word.', 'buddyboss' ) );
+						return new WP_Error( 'bp_moderation_word_match', __( 'You have posted an inappropriate word.', 'buddyboss-platform' ) );
 					}
 				}
 			}
@@ -292,7 +292,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 				if ( 'bool' === $error_type ) {
 					return false;
 				} else {
-					return new WP_Error( 'bp_moderation_blacklist_match', __( 'You have posted an inappropriate word.', 'buddyboss' ) );
+					return new WP_Error( 'bp_moderation_blacklist_match', __( 'You have posted an inappropriate word.', 'buddyboss-platform' ) );
 				}
 			}
 		}
@@ -310,7 +310,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
  * @return string IP address.
  */
 function bp_core_current_user_ip() {
-	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', $_SERVER['REMOTE_ADDR'] );
+	$retval = preg_replace( '/[^0-9a-fA-F:., ]/', '', isset( $_SERVER['REMOTE_ADDR'] ) ? wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '' );
 
 	/**
 	 * Filters the current user's IP address.
@@ -333,7 +333,7 @@ function bp_core_current_user_ua() {
 
 	// Sanity check the user agent.
 	if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		$retval = substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 );
+		$retval = substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 254 );
 	} else {
 		$retval = '';
 	}

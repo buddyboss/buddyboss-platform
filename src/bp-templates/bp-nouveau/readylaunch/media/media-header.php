@@ -40,7 +40,7 @@ if (
 				bp_nouveau_group_hook( 'before', 'media_content' );
 			} else {
 				?>
-				<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
+				<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss-platform' ); ?></h2>
 				<?php
 			}
 		} elseif ( $is_my_profile ) {

@@ -6958,7 +6958,7 @@ window.bp = window.bp || {};
 					}
 					if ( data_extension == 'js' ) { // mode not needed for javascript file.
 						/* jshint ignore:start */
-						var myCodeMirror = CodeMirror(
+						var myCodeMirror = wp.CodeMirror(
 							$this[ 0 ],
 							{
 								value: $this.find( '.document-text-file-data-hidden' ).val(),
@@ -6971,7 +6971,7 @@ window.bp = window.bp || {};
 						/* jshint ignore:end */
 					} else {
 						/* jshint ignore:start */
-						var myCodeMirror = CodeMirror(
+						var myCodeMirror = wp.CodeMirror(
 							$this[ 0 ],
 							{
 								value: $this.find( '.document-text-file-data-hidden' ).val(),

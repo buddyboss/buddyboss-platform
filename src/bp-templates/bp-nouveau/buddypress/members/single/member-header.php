@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 remove_filter( 'bp_get_add_follow_button', 'bb_bp_get_add_follow_button' );
 
 if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifications() && ! bp_is_user_profile_edit() && ! bp_is_user_change_avatar() && ! bp_is_user_change_cover_image() ) :
@@ -69,7 +72,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 
 				if ( $bp_is_my_profile && ! bp_disable_avatar_uploads() ) {
 					?>
-					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss' ); ?>">
+					<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Change Profile Photo', 'buddyboss-platform' ); ?>">
 						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
@@ -219,7 +222,7 @@ endif;
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss-platform' ); ?></span></h4>
 						<a class="bb-close-remove-connection bb-model-close-button" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
@@ -229,15 +232,15 @@ endif;
 							<?php
 							echo sprintf(
 								/* translators: %s: The member name with HTML tags. */
-								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
+								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss-platform' ),
 								'<span class="bb-user-name"></span>'
 							);
 							?>
 						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+						<a class="bb-close-remove-connection bb-close-action-popup" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

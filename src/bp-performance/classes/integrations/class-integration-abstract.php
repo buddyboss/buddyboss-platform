@@ -427,7 +427,7 @@ abstract class Integration_Abstract {
 				echo wp_json_encode(
 					array(
 						'code'    => 'cache_invalid_user',
-						'message' => __( 'Sorry, something went wrong. Please try again later.', 'buddyboss' ),
+						'message' => __( 'Sorry, something went wrong. Please try again later.', 'buddyboss-platform' ),
 						'data'    => array(
 							'status' => 500,
 						),

@@ -249,7 +249,7 @@ class Friend extends BuddypressCommand {
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', wp_list_pluck( $friends, 'friend_user_id' ) ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', wp_list_pluck( $friends, 'friend_user_id' ) ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $friends );
 		} else {

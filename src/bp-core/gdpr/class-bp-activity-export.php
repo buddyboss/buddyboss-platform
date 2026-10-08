@@ -29,7 +29,7 @@ final class BP_Activity_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Activity_Export();
-			$instance->setup( 'bp_activity', __( 'Activities', 'buddyboss' ) );
+			$instance->setup( 'bp_activity', __( 'Activities', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -59,15 +59,15 @@ final class BP_Activity_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_activities';
-			$group_label = __( 'Activities & Comments', 'buddyboss' );
+			$group_label = __( 'Activities & Comments', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			$activity_type = __( 'Profile Update', 'buddyboss' );
+			$activity_type = __( 'Profile Update', 'buddyboss-platform' );
 
 			if ( 'groups' === $item->component ) {
-				$activity_type = __( 'Group Update', 'buddyboss' );
+				$activity_type = __( 'Group Update', 'buddyboss-platform' );
 			} elseif ( 'activity_comment' === $item->type ) {
-				$activity_type = __( 'Comment', 'buddyboss' );
+				$activity_type = __( 'Comment', 'buddyboss-platform' );
 
 			}
 
@@ -77,23 +77,23 @@ final class BP_Activity_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Activity Action', 'buddyboss' ),
+					'name'  => __( 'Activity Action', 'buddyboss-platform' ),
 					'value' => wp_strip_all_tags( $item->action ),
 				),
 				array(
-					'name'  => __( 'Activity Content', 'buddyboss' ),
+					'name'  => __( 'Activity Content', 'buddyboss-platform' ),
 					'value' => $item->content,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_recorded,
 				),
 				array(
-					'name'  => __( 'Activity Type', 'buddyboss' ),
+					'name'  => __( 'Activity Type', 'buddyboss-platform' ),
 					'value' => $activity_type,
 				),
 				array(
-					'name'  => __( 'Activity URL', 'buddyboss' ),
+					'name'  => __( 'Activity URL', 'buddyboss-platform' ),
 					'value' => $permalink,
 				),
 			);
@@ -171,16 +171,16 @@ final class BP_Activity_Export extends BP_Export {
 
 		$query_where = "item.user_id=%d AND item.type IN ('activity_update','activity_comment') && is_spam=0";
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$offset = ( absint( $page ) - 1 ) * absint( $this->items_per_batch );
+		$limit  = 'LIMIT ' . absint( $this->items_per_batch ) . ' OFFSET ' . absint( $offset );
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID );
+		$query       = $wpdb->prepare( $query, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from bp_core_get_table_prefix(); $query_where is hardcoded with %d; $limit is absint-built.
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
+		$query_count = $wpdb->prepare( $query_count, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from bp_core_get_table_prefix(); $query_where is hardcoded with %d.
 
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		$count = (int) $wpdb->get_var( $query_count ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is $wpdb->prepare()'d above.
+		$items = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above.
 
 		return array(
 			'total'  => $count,

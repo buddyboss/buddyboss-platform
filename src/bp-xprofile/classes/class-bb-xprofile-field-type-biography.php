@@ -33,8 +33,8 @@ class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Bio', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Bio', 'buddyboss-platform' );
 
 		// WordPress renders Biographical Info as a plain textarea, so match it.
 		$this->supports_richtext = false;

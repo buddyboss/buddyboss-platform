@@ -36,7 +36,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'title',
 		array(
-			'label'             => __( 'Title', 'buddyboss' ),
+			'label'             => __( 'Title', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -56,7 +56,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'slug',
 		array(
-			'label'             => __( 'Slug (Optional)', 'buddyboss' ),
+			'label'             => __( 'Slug (Optional)', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 15,
@@ -76,8 +76,8 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'content',
 		array(
-			'label'             => __( 'Description', 'buddyboss' ),
-			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens.', 'buddyboss' ),
+			'label'             => __( 'Description', 'buddyboss-platform' ),
+			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens.', 'buddyboss-platform' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 20,
@@ -85,7 +85,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 			'get_extra_data'    => function ( $post ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
 				return array(
 					'description_link' => array(
-						'text' => __( 'Learn about email tokens.', 'buddyboss' ),
+						'text' => __( 'Learn about email tokens.', 'buddyboss-platform' ),
 						'url'  => admin_url( 'admin.php?page=bp-help&article=62844' ),
 					),
 				);
@@ -105,8 +105,8 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'excerpt',
 		array(
-			'label'             => __( 'Plain Text Email Content (Optional)', 'buddyboss' ),
-			'description'       => __( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss' ),
+			'label'             => __( 'Plain Text Email Content (Optional)', 'buddyboss-platform' ),
+			'description'       => __( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-platform' ),
 			'type'              => 'textarea',
 			'tab'               => 'details',
 			'order'             => 30,
@@ -128,8 +128,8 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'email_type',
 		array(
-			'label'             => __( 'Situation', 'buddyboss' ),
-			'description'       => __( 'Choose when this email will be sent.', 'buddyboss' ),
+			'label'             => __( 'Situation', 'buddyboss-platform' ),
+			'description'       => __( 'Choose when this email will be sent.', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 50,
@@ -167,7 +167,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'status',
 		array(
-			'label'             => __( 'Status', 'buddyboss' ),
+			'label'             => __( 'Status', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -189,15 +189,15 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 			'get_options'       => function ( $post ) {
 				return array(
 					array(
-						'label' => __( 'Draft', 'buddyboss' ),
+						'label' => __( 'Draft', 'buddyboss-platform' ),
 						'value' => 'draft',
 					),
 					array(
-						'label' => __( 'Pending Review', 'buddyboss' ),
+						'label' => __( 'Pending Review', 'buddyboss-platform' ),
 						'value' => 'pending',
 					),
 					array(
-						'label' => __( 'Published', 'buddyboss' ),
+						'label' => __( 'Published', 'buddyboss-platform' ),
 						'value' => 'publish',
 					),
 				);
@@ -216,7 +216,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'visibility',
 		array(
-			'label'             => __( 'Visibility', 'buddyboss' ),
+			'label'             => __( 'Visibility', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -234,15 +234,15 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 			'get_options'       => function ( $post ) {
 				return array(
 					array(
-						'label' => __( 'Public', 'buddyboss' ),
+						'label' => __( 'Public', 'buddyboss-platform' ),
 						'value' => 'public',
 					),
 					array(
-						'label' => __( 'Private', 'buddyboss' ),
+						'label' => __( 'Private', 'buddyboss-platform' ),
 						'value' => 'private',
 					),
 					array(
-						'label' => __( 'Password Protected', 'buddyboss' ),
+						'label' => __( 'Password Protected', 'buddyboss-platform' ),
 						'value' => 'password',
 					),
 				);
@@ -263,7 +263,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'password',
 		array(
-			'label'             => __( 'Password', 'buddyboss' ),
+			'label'             => __( 'Password', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -288,7 +288,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'publish_mode',
 		array(
-			'label'             => __( 'Publish', 'buddyboss' ),
+			'label'             => __( 'Publish', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -301,11 +301,11 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 				return array(
 					array(
 						'value' => 'immediately',
-						'label' => __( 'Immediately', 'buddyboss' ),
+						'label' => __( 'Immediately', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'schedule',
-						'label' => __( 'Schedule', 'buddyboss' ),
+						'label' => __( 'Schedule', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -320,7 +320,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'schedule_date',
 		array(
-			'label'             => __( 'Date', 'buddyboss' ),
+			'label'             => __( 'Date', 'buddyboss-platform' ),
 			'type'              => 'date',
 			'tab'               => 'details',
 			'context'           => 'after',
@@ -348,7 +348,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		$component,
 		'schedule_time',
 		array(
-			'label'             => __( 'Time', 'buddyboss' ),
+			'label'             => __( 'Time', 'buddyboss-platform' ),
 			'type'              => 'time',
 			'tab'               => 'details',
 			'context'           => 'after',

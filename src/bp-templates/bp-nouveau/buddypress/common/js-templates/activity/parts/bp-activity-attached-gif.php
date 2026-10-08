@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-attached-gif">
 	<# if ( ! _.isUndefined( data.gif_data.images ) ) { #>

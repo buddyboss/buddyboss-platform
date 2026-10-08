@@ -26,7 +26,7 @@ if ( ! empty( $link_embed ) ) {
 	$link_url = $link_embed;
 }
 /* translators: %s: user display name for post title */
-$activity_popup_title        = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+$activity_popup_title        = sprintf( esc_html__( '%s\'s post', 'buddyboss-platform' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
 $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Activity_Readylaunch::instance() : false;
 ?>
 	<li class="<?php bp_activity_css_class(); ?>" id="bb-rl-activity-<?php echo esc_attr( $activity_id ); ?>" data-bp-activity-id="<?php echo esc_attr( $activity_id ); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php bp_nouveau_edit_activity_data(); ?>" data-link-preview='<?php echo esc_attr( $link_preview_string ); ?>' data-link-url='<?php echo empty( $link_url ) ? '' : esc_url( $link_url ); ?>' data-activity-popup-title='<?php echo empty( $activity_popup_title ) ? '' : esc_html( $activity_popup_title ); ?>'>
@@ -34,14 +34,14 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 		<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
 		<div class="bb-rl-pin-action">
-			<span class="bb-rl-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
+			<span class="bb-rl-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl-push-pin"></i>
 			</span>
 			<?php
 			$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
 			if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) ) {
 				?>
-				<span class="bb-rl-mute-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Turned off notifications', 'buddyboss' ); ?>">
+				<span class="bb-rl-mute-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Turned off notifications', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl-bell-slash"></i>
 				</span>
 				<?php

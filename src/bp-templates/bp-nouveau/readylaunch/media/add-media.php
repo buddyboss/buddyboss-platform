@@ -32,7 +32,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() &
 							'<span class="bb-count">%s</span> Photo',
 							'<span class="bb-count">%s</span> Photos',
 							bp_core_number_format( $count ),
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						array( 'span' => array( 'class' => true ) )
 					),
@@ -44,7 +44,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() &
 			</div>
 		</h2>
 		<div class="bb-media-actions">
-			<a href="#" id="bp-add-media" class="bb-add-media button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
+			<a href="#" id="bp-add-media" class="bb-add-media button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?></a>
 		</div>
 	</div>
 
@@ -54,7 +54,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() &
 } else {
 	?>
 	<div class="bb-media-actions-wrap">
-		<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
+		<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss-platform' ); ?></h2>
 	</div>
 	<?php
 }

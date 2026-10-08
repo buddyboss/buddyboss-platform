@@ -5,6 +5,10 @@
  * @package BuddyBoss\Core
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 /**
  * Retrieve sitewide activity
  *

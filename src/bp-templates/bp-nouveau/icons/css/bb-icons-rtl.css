@@ -6,72 +6,48 @@
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-lined.eot?1753964645');
-  src: url('../fonts/round-lined.eot?1753964645#iefix') format('embedded-opentype'),
-            url('../fonts/round-lined.woff2?1753964645') format('woff2'),
-            url('../fonts/round-lined.woff?1753964645') format('woff'),
-            url('../fonts/round-lined.ttf?1753964645') format('truetype'),
-            url('../fonts/round-lined.svg?1753964645#round-lined') format('svg');
+  
+  src: url('../fonts/round-lined.woff2?1753964645') format('woff2');
   font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/round-filled.eot?1753964645');
-  src: url('../fonts/round-filled.eot?1753964645#iefix') format('embedded-opentype'),
-            url('../fonts/round-filled.woff2?1753964645') format('woff2'),
-            url('../fonts/round-filled.woff?1753964645') format('woff'),
-            url('../fonts/round-filled.ttf?1753964645') format('truetype'),
-            url('../fonts/round-filled.svg?1753964645#round-lined') format('svg');
+  
+  src: url('../fonts/round-filled.woff2?1753964645') format('woff2');
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/filled.eot?1753964645');
-  src: url('../fonts/filled.eot?1753964645#iefix') format('embedded-opentype'),
-            url('../fonts/filled.woff2?1753964645') format('woff2'),
-            url('../fonts/filled.woff?1753964645') format('woff'),
-            url('../fonts/filled.ttf?1753964645') format('truetype'),
-            url('../fonts/filled.svg?1753964645#round-lined') format('svg');
+  
+  src: url('../fonts/filled.woff2?1753964645') format('woff2');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/lined.eot?1753964645');
-  src: url('../fonts/lined.eot?1753964645#iefix') format('embedded-opentype'),
-            url('../fonts/lined.woff2?1753964645') format('woff2'),
-            url('../fonts/lined.woff?1753964645') format('woff'),
-            url('../fonts/lined.ttf?1753964645') format('truetype'),
-            url('../fonts/lined.svg?1753964645#round-lined') format('svg');
+  
+  src: url('../fonts/lined.woff2?1753964645') format('woff2');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-lined.eot?1753964645');
-  src: url('../fonts/box-lined.eot?1753964645#iefix') format('embedded-opentype'),
-            url('../fonts/box-lined.woff2?1753964645') format('woff2'),
-            url('../fonts/box-lined.woff?1753964645') format('woff'),
-            url('../fonts/box-lined.ttf?1753964645') format('truetype'),
-            url('../fonts/box-lined.svg?1753964645#round-lined') format('svg');
+  
+  src: url('../fonts/box-lined.woff2?1753964645') format('woff2');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'bb-icons';
-  src: url('../fonts/box-filled.eot?1753964645');
-  src: url('../fonts/box-filled.eot?1753964645#iefix') format('embedded-opentype'),
-            url('../fonts/box-filled.woff2?1753964645') format('woff2'),
-            url('../fonts/box-filled.woff?1753964645') format('woff'),
-            url('../fonts/box-filled.ttf?1753964645') format('truetype'),
-            url('../fonts/box-filled.svg?1753964645#round-lined') format('svg');
+  
+  src: url('../fonts/box-filled.woff2?1753964645') format('woff2');
   font-weight: 600;
   font-style: normal;
 }
@@ -102,6 +78,17 @@
   -moz-osx-font-smoothing: grayscale;
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+/* Default icon variant weight. Without this, a plain `.bb-icon-*` (no variant
+   suffix) inherits font-weight from its parent; WordPress 7.0 sets
+   `.components-button { font-weight: 499 }`, which made icons inside buttons
+   resolve to the box-lined (500) face. Pin the default to the lined (400)
+   variant here; the variant classes below have equal specificity and come
+   later, so they still override. */
+[class^="bb-icon-"],
+[class*=" bb-icon-"] {
+  font-weight: 400;
 }
 
 .bb-icon-rl,

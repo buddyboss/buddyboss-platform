@@ -65,7 +65,7 @@ function bb_blog_get_version_compat_notice_field( $name, $order ) {
 		'notice_type'       => 'warning',
 		'description'       => sprintf(
 			/* translators: %s: required BuddyBoss Platform Pro version, e.g. 3.1.0. */
-			__( 'Blog Bookmarking and Subscriptions require BuddyBoss Platform Pro %s or later. Please update BuddyBoss Platform Pro to use these features.', 'buddyboss' ),
+			__( 'Blog Bookmarking and Subscriptions require BuddyBoss Platform Pro %s or later. Please update BuddyBoss Platform Pro to use these features.', 'buddyboss-platform' ),
 			function_exists( 'bb_pro_blog_version' ) ? bb_pro_blog_version() : '3.1.0'
 		),
 		'sanitize_callback' => '__return_empty_string',
@@ -87,7 +87,7 @@ function bb_blogging_register_admin_settings() {
 		'blogging',
 		'blog_settings',
 		array(
-			'title'      => __( 'Blog Settings', 'buddyboss' ),
+			'title'      => __( 'Blog Settings', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -109,7 +109,7 @@ function bb_blogging_register_admin_settings() {
 		'blog_settings',
 		'post_settings',
 		array(
-			'title'    => __( 'Post Settings', 'buddyboss' ),
+			'title'    => __( 'Post Settings', 'buddyboss-platform' ),
 			'help_url' => '648796',
 			'order'    => 10,
 		)
@@ -137,9 +137,9 @@ function bb_blogging_register_admin_settings() {
 		'post_settings',
 		array(
 			'name'        => 'bb_blog_enable_bookmarking',
-			'label'       => __( 'Bookmarking', 'buddyboss' ),
+			'label'       => __( 'Bookmarking', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Allow users to bookmark blog posts', 'buddyboss' ),
+			'description' => __( 'Allow users to bookmark blog posts', 'buddyboss-platform' ),
 			'default'     => 0,
 			'pro_only'    => true,
 			'disabled'    => $bb_blog_pro_outdated,
@@ -154,9 +154,9 @@ function bb_blogging_register_admin_settings() {
 		'post_settings',
 		array(
 			'name'        => 'bb_blog_enable_subscriptions',
-			'label'       => __( 'Subscriptions', 'buddyboss' ),
+			'label'       => __( 'Subscriptions', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Allow users to subscribe to blog post categories', 'buddyboss' ),
+			'description' => __( 'Allow users to subscribe to blog post categories', 'buddyboss-platform' ),
 			'default'     => 0,
 			'pro_only'    => true,
 			'disabled'    => $bb_blog_pro_outdated,
@@ -170,7 +170,7 @@ function bb_blogging_register_admin_settings() {
 		'blog_settings',
 		'page_settings',
 		array(
-			'title'    => __( 'Page Settings', 'buddyboss' ),
+			'title'    => __( 'Page Settings', 'buddyboss-platform' ),
 			'help_url' => '648801',
 			'order'    => 20,
 		)
@@ -190,7 +190,7 @@ function bb_blogging_register_admin_settings() {
 				'label'             => '',
 				'type'              => 'notice',
 				'notice_type'       => 'info',
-				'description'       => __( 'The Blog Page Settings are only available when the BuddyBoss Theme or ReadyLaunch is selected.', 'buddyboss' ),
+				'description'       => __( 'The Blog Page Settings are only available when the BuddyBoss Theme or ReadyLaunch is selected.', 'buddyboss-platform' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 5,
 			)
@@ -216,11 +216,11 @@ function bb_blogging_register_admin_settings() {
 		);
 
 	$bb_blog_social_labels = array(
-		'facebook' => __( 'Facebook', 'buddyboss' ),
-		'linkedin' => __( 'Linkedin', 'buddyboss' ),
-		'x'        => __( 'X', 'buddyboss' ),
-		'whatsapp' => __( 'Whatsapp', 'buddyboss' ),
-		'email'    => __( 'Email', 'buddyboss' ),
+		'facebook' => __( 'Facebook', 'buddyboss-platform' ),
+		'linkedin' => __( 'Linkedin', 'buddyboss-platform' ),
+		'x'        => __( 'X', 'buddyboss-platform' ),
+		'whatsapp' => __( 'Whatsapp', 'buddyboss-platform' ),
+		'email'    => __( 'Email', 'buddyboss-platform' ),
 	);
 
 	$bb_blog_social_options = array();
@@ -237,7 +237,7 @@ function bb_blogging_register_admin_settings() {
 		'page_settings',
 		array(
 			'name'              => 'bb_blog_social_links',
-			'label'             => __( 'Social Links', 'buddyboss' ),
+			'label'             => __( 'Social Links', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
 			'options'           => $bb_blog_social_options,
 			'default'           => $bb_blog_social_defaults,
@@ -255,9 +255,9 @@ function bb_blogging_register_admin_settings() {
 		'page_settings',
 		array(
 			'name'        => 'bb_blog_related_posts',
-			'label'       => __( 'Related Posts', 'buddyboss' ),
+			'label'       => __( 'Related Posts', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Enable related posts at the bottom of blog posts', 'buddyboss' ),
+			'description' => __( 'Enable related posts at the bottom of blog posts', 'buddyboss-platform' ),
 			'default'     => 1,
 			'disabled'    => ! $bb_blog_page_settings_available,
 			'order'       => 20,
@@ -271,9 +271,9 @@ function bb_blogging_register_admin_settings() {
 		'page_settings',
 		array(
 			'name'        => 'bb_blog_author_bio',
-			'label'       => __( 'Author Bio', 'buddyboss' ),
+			'label'       => __( 'Author Bio', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Enable the Author Bio box at the bottom of blog posts', 'buddyboss' ),
+			'description' => __( 'Enable the Author Bio box at the bottom of blog posts', 'buddyboss-platform' ),
 			'default'     => 1,
 			'disabled'    => ! $bb_blog_page_settings_available,
 			'order'       => 30,
@@ -291,7 +291,7 @@ function bb_blogging_register_admin_settings() {
 			'blogging',
 			'member_blogs',
 			array(
-				'title' => __( 'Member Blogs', 'buddyboss' ),
+				'title' => __( 'Member Blogs', 'buddyboss-platform' ),
 				'icon'  => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-newspaper',
@@ -305,7 +305,7 @@ function bb_blogging_register_admin_settings() {
 			'member_blogs',
 			'member_blogs',
 			array(
-				'title' => __( 'Member Blogs', 'buddyboss' ),
+				'title' => __( 'Member Blogs', 'buddyboss-platform' ),
 				'order' => 10,
 			)
 		);
@@ -331,9 +331,9 @@ function bb_blogging_register_admin_settings() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-newspaper',
-				'empty_state_title'       => __( 'Member Blogging', 'buddyboss' ),
-				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
-				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
+				'empty_state_title'       => __( 'Member Blogging', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Upgrade to Scale', 'buddyboss-platform' ),
 				// Fallback only. With `upgrade_from_catalog` on, the AJAX formatter
 				// replaces this with the campaign-tagged URL from the field-upgrades
 				// catalog when it holds an entry for this panel, so marketing can retarget

@@ -130,7 +130,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => false,
 		),
 		'bp-select2'                    => array(
-			'file'         => "{$url}vendor/select2.min.js",
+			'file'         => "{$url}vendor/select2{$min}.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
@@ -213,15 +213,15 @@ function bp_core_register_common_scripts() {
 	 */
 	$bp_select2 = array(
 		'i18n' => array(
-			'errorLoading'     => esc_js( __( 'The results could not be loaded.', 'buddyboss' ) ),
-			'inputTooLong'     => esc_js( __( 'Please delete %% character', 'buddyboss' ) ),
-			'inputTooShort'    => esc_js( __( 'Please enter %% or more characters', 'buddyboss' ) ),
-			'loadingMore'      => esc_js( __( 'Loading more results…', 'buddyboss' ) ),
-			'maximumSelected'  => esc_js( __( 'You can only select %% item', 'buddyboss' ) ),
-			'noResults'        => esc_js( __( 'No results found', 'buddyboss' ) ),
-			'searching'        => esc_js( __( 'Searching…', 'buddyboss' ) ),
-			'removeAllItems'   => esc_js( __( 'Remove all items', 'buddyboss' ) ),
-			'msginputTooShort' => esc_js( __( 'Start typing to find members', 'buddyboss' ) ),
+			'errorLoading'     => esc_js( __( 'The results could not be loaded.', 'buddyboss-platform' ) ),
+			'inputTooLong'     => esc_js( __( 'Please delete %% character', 'buddyboss-platform' ) ),
+			'inputTooShort'    => esc_js( __( 'Please enter %% or more characters', 'buddyboss-platform' ) ),
+			'loadingMore'      => esc_js( __( 'Loading more results…', 'buddyboss-platform' ) ),
+			'maximumSelected'  => esc_js( __( 'You can only select %% item', 'buddyboss-platform' ) ),
+			'noResults'        => esc_js( __( 'No results found', 'buddyboss-platform' ) ),
+			'searching'        => esc_js( __( 'Searching…', 'buddyboss-platform' ) ),
+			'removeAllItems'   => esc_js( __( 'Remove all items', 'buddyboss-platform' ) ),
+			'msginputTooShort' => esc_js( __( 'Start typing to find members', 'buddyboss-platform' ) ),
 		),
 	);
 
@@ -231,17 +231,17 @@ function bp_core_register_common_scripts() {
 	 * Translate EmojineArea
 	 */
 	$bp_emojionearea = array(
-		'recent'            => __( 'Recent', 'buddyboss' ),
-		'smileys_people'    => __( 'Smileys & People', 'buddyboss' ),
-		'animals_nature'    => __( 'Animals & Nature', 'buddyboss' ),
-		'food_drink'        => __( 'Food & Drink', 'buddyboss' ),
-		'activity'          => __( 'Activity', 'buddyboss' ),
-		'travel_places'     => __( 'Travel & Places', 'buddyboss' ),
-		'objects'           => __( 'Objects', 'buddyboss' ),
-		'symbols'           => __( 'Symbols', 'buddyboss' ),
-		'flags'             => __( 'Flags', 'buddyboss' ),
-		'tones'             => __( 'Diversity', 'buddyboss' ),
-		'searchPlaceholder' => __( 'Search', 'buddyboss' ),
+		'recent'            => __( 'Recent', 'buddyboss-platform' ),
+		'smileys_people'    => __( 'Smileys & People', 'buddyboss-platform' ),
+		'animals_nature'    => __( 'Animals & Nature', 'buddyboss-platform' ),
+		'food_drink'        => __( 'Food & Drink', 'buddyboss-platform' ),
+		'activity'          => __( 'Activity', 'buddyboss-platform' ),
+		'travel_places'     => __( 'Travel & Places', 'buddyboss-platform' ),
+		'objects'           => __( 'Objects', 'buddyboss-platform' ),
+		'symbols'           => __( 'Symbols', 'buddyboss-platform' ),
+		'flags'             => __( 'Flags', 'buddyboss-platform' ),
+		'tones'             => __( 'Diversity', 'buddyboss-platform' ),
+		'searchPlaceholder' => __( 'Search', 'buddyboss-platform' ),
 	);
 
 	wp_localize_script( 'emojionearea', 'bp_emojionearea', $bp_emojionearea );
@@ -253,17 +253,17 @@ function bp_core_register_common_scripts() {
 		'bp-media-dropzone',
 		'bp_media_dropzone',
 		array(
-			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
-			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
-			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
-			'dictFileTooBig'               => __( "Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.", 'buddyboss' ),
-			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
-			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
-			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),
-			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss' ),
-			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss' ),
-			'dictRemoveFile'               => __( "Remove file", 'buddyboss' ),
-			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss' ),
+			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss-platform' ),
+			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss-platform' ),
+			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss-platform' ),
+			'dictFileTooBig'               => __( "Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.", 'buddyboss-platform' ),
+			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss-platform' ),
+			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss-platform' ),
+			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss-platform' ),
+			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss-platform' ),
+			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss-platform' ),
+			'dictRemoveFile'               => __( "Remove file", 'buddyboss-platform' ),
+			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss-platform' ),
 		)
 	);
 }
@@ -365,7 +365,7 @@ function bp_core_confirmation_js() {
 		'bp-confirm',
 		'BP_Confirm',
 		array(
-			'are_you_sure' => __( 'Are you sure?', 'buddyboss' ),
+			'are_you_sure' => __( 'Are you sure?', 'buddyboss-platform' ),
 		)
 	);
 
@@ -416,8 +416,15 @@ add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
 function bp_core_add_jquery_cropper() {
 	wp_enqueue_style( 'jcrop' );
 	wp_enqueue_script( 'jcrop', array( 'jquery' ) );
-	add_action( 'wp_head', 'bp_core_add_cropper_inline_js' );
-	add_action( 'wp_head', 'bp_core_add_cropper_inline_css' );
+
+	/*
+	 * Attach the cropper's inline JS/CSS to the enqueued `jcrop` handles instead
+	 * of printing raw <script>/<style> tags in wp_head. This function runs on
+	 * `wp_print_scripts`, which fires before the head items are printed, so
+	 * wp_add_inline_script()/wp_add_inline_style() still attach to `jcrop` in time.
+	 */
+	bp_core_add_cropper_inline_js();
+	bp_core_add_cropper_inline_css();
 }
 
 /**
@@ -485,43 +492,50 @@ function bp_core_add_cropper_inline_js() {
 		$crop_bottom = $image[1] - $crop_top;
 	}
 
-	?>
-
-	<script>
-		jQuery(window).load( function(){
-			jQuery('#avatar-to-crop').Jcrop({
+	$inline_js = sprintf(
+		'jQuery(window).load( function(){
+			jQuery(\'#avatar-to-crop\').Jcrop({
 				onChange: showPreview,
 				onSelect: updateCoords,
-				aspectRatio: <?php echo (int) $aspect_ratio; ?>,
-				setSelect: [ <?php echo (int) $crop_left; ?>, <?php echo (int) $crop_top; ?>, <?php echo (int) $crop_right; ?>, <?php echo (int) $crop_bottom; ?> ]
+				aspectRatio: %1$d,
+				setSelect: [ %2$d, %3$d, %4$d, %5$d ]
 			});
 		});
 
 		function updateCoords(c) {
-			jQuery('#x').val(c.x);
-			jQuery('#y').val(c.y);
-			jQuery('#w').val(c.w);
-			jQuery('#h').val(c.h);
+			jQuery(\'#x\').val(c.x);
+			jQuery(\'#y\').val(c.y);
+			jQuery(\'#w\').val(c.w);
+			jQuery(\'#h\').val(c.h);
 		}
 
 		function showPreview(coords) {
 			if ( parseInt(coords.w) > 0 ) {
-				var fw = <?php echo (int) $full_width; ?>;
-				var fh = <?php echo (int) $full_height; ?>;
+				var fw = %6$d;
+				var fh = %7$d;
 				var rx = fw / coords.w;
 				var ry = fh / coords.h;
 
-				jQuery( '#avatar-crop-preview' ).css({
-					width: Math.round(rx * <?php echo (int) $image[0]; ?>) + 'px',
-					height: Math.round(ry * <?php echo (int) $image[1]; ?>) + 'px',
-					marginLeft: '-' + Math.round(rx * coords.x) + 'px',
-					marginTop: '-' + Math.round(ry * coords.y) + 'px'
+				jQuery( \'#avatar-crop-preview\' ).css({
+					width: Math.round(rx * %8$d) + \'px\',
+					height: Math.round(ry * %9$d) + \'px\',
+					marginLeft: \'-\' + Math.round(rx * coords.x) + \'px\',
+					marginTop: \'-\' + Math.round(ry * coords.y) + \'px\'
 				});
 			}
-		}
-	</script>
+		}',
+		(int) $aspect_ratio,
+		(int) $crop_left,
+		(int) $crop_top,
+		(int) $crop_right,
+		(int) $crop_bottom,
+		(int) $full_width,
+		(int) $full_height,
+		(int) $image[0],
+		(int) $image[1]
+	);
 
-	<?php
+	wp_add_inline_script( 'jcrop', $inline_js );
 }
 
 /**
@@ -530,20 +544,20 @@ function bp_core_add_cropper_inline_js() {
  * @since BuddyPress 1.1.0
  */
 function bp_core_add_cropper_inline_css() {
-	?>
-
-	<style>
-		.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
-		#avatar-crop-pane { width: <?php echo bp_core_avatar_full_width(); ?>px; height: <?php echo bp_core_avatar_full_height(); ?>px; overflow: hidden; }
+	$inline_css = sprintf(
+		'.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
+		#avatar-crop-pane { width: %1$spx; height: %2$spx; overflow: hidden; }
 		#avatar-crop-submit { margin: 20px 0; }
 		.jcrop-holder img,
 		#avatar-crop-pane img,
 		#avatar-upload-form img,
 		#create-group-form img,
-		#group-settings-form img { border: none !important; max-width: none !important; }
-	</style>
+		#group-settings-form img { border: none !important; max-width: none !important; }',
+		esc_html( bp_core_avatar_full_width() ),
+		esc_html( bp_core_avatar_full_height() )
+	);
 
-	<?php
+	wp_add_inline_style( 'jcrop', $inline_css );
 }
 
 /**
@@ -552,11 +566,16 @@ function bp_core_add_cropper_inline_css() {
  * @since BuddyPress 1.1.0
  */
 function bp_core_add_ajax_url_js() {
-	?>
-
-	<script>var ajaxurl = '<?php echo bp_core_ajax_url(); ?>';</script>
-
-	<?php
+	/*
+	 * Left as an inline <script> deliberately: this defines the global `ajaxurl`
+	 * JS variable on every front-end page (via wp_head) for themes/plugins that
+	 * rely on it, mirroring how WordPress core exposes `ajaxurl` in wp-admin.
+	 * There is no single script handle enqueued on every front-end page to
+	 * attach it to; binding it to a BP-specific handle (e.g. bp-nouveau) would
+	 * drop `ajaxurl` on non-BuddyPress pages and break theme AJAX. The value is
+	 * escaped with esc_url(). See also the localized `ajaxurl` in bp_core_get_js_strings().
+	 */
+	wp_print_inline_script_tag( "var ajaxurl = '" . esc_url( bp_core_ajax_url() ) . "';" );
 }
 add_action( 'wp_head', 'bp_core_add_ajax_url_js' );
 
@@ -707,6 +726,10 @@ function bp_add_cover_image_inline_css( $return = false ) {
 		if ( ! empty( $inline_css ) ) {
 
 			// Used to get the css when Ajax setting the cover photo.
+			// This <style> string is NOT printed server-side: it is returned in an
+			// AJAX response and injected into the DOM by JS when the cover photo is
+			// changed without a page reload. The normal (non-AJAX) request path below
+			// uses wp_add_inline_style() on the enqueued theme handle.
 			if ( true === $return ) {
 				return array(
 					'css_rules' => '<style>' . "\n" . $inline_css . "\n" . '</style>',
@@ -760,29 +783,30 @@ function bp_core_enqueue_livestamp() {
 				array(
 					'relativeTime' => array(
 						/* Translators: %s is the relative time (eg: in a few seconds). */
-						'future' => __( 'in %s', 'buddyboss' ),
+						'future' => __( 'in %s', 'buddyboss-platform' ),
 						/* translators: %s: the human time diff. */
-						'past'   => __( '%s ago', 'buddyboss' ),
-						's'      => __( 'second', 'buddyboss' ),
-						'ss'     => __( '%d seconds', 'buddyboss' ),
-						'm'      => __( 'a minute', 'buddyboss' ),
+						'past'   => __( '%s ago', 'buddyboss-platform' ),
+						's'      => __( 'second', 'buddyboss-platform' ),
+						/* Translators: %d is the amount of seconds. */
+						'ss'     => __( '%d seconds', 'buddyboss-platform' ),
+						'm'      => __( 'a minute', 'buddyboss-platform' ),
 						/* Translators: %d is the amount of minutes. */
-						'mm'     => __( '%d minutes', 'buddyboss' ),
-						'h'      => __( 'an hour', 'buddyboss' ),
+						'mm'     => __( '%d minutes', 'buddyboss-platform' ),
+						'h'      => __( 'an hour', 'buddyboss-platform' ),
 						/* Translators: %d is the amount of hours. */
-						'hh'     => __( '%d hours', 'buddyboss' ),
-						'd'      => __( 'a day', 'buddyboss' ),
+						'hh'     => __( '%d hours', 'buddyboss-platform' ),
+						'd'      => __( 'a day', 'buddyboss-platform' ),
 						/* Translators: %d is the amount of days. */
-						'dd'     => __( '%d days', 'buddyboss' ),
-						'w'      => __( 'a week', 'buddyboss' ),
+						'dd'     => __( '%d days', 'buddyboss-platform' ),
+						'w'      => __( 'a week', 'buddyboss-platform' ),
 						/* Translators: %d is the amount of weeks. */
-						'ww'     => __( '%d weeks', 'buddyboss' ),
-						'M'      => __( 'a month', 'buddyboss' ),
+						'ww'     => __( '%d weeks', 'buddyboss-platform' ),
+						'M'      => __( 'a month', 'buddyboss-platform' ),
 						/* Translators: %d is the amount of months. */
-						'MM'     => __( '%d months', 'buddyboss' ),
-						'y'      => __( 'a year', 'buddyboss' ),
+						'MM'     => __( '%d months', 'buddyboss-platform' ),
+						'y'      => __( 'a year', 'buddyboss-platform' ),
 						/* Translators: %d is the amount of years. */
-						'yy'     => __( '%d years', 'buddyboss' ),
+						'yy'     => __( '%d years', 'buddyboss-platform' ),
 					),
 				)
 			)
@@ -808,23 +832,24 @@ function bp_core_enqueue_livestamp() {
 				MINUTE_IN_SECONDS,
 				1,
 			),
-			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
-			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) ),
-			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
-			'second_text'       => __( 'a second', 'buddyboss' ),
-			'seconds_text'      => __( 'seconds', 'buddyboss' ),
-			'minute_text'       => __( 'a minute', 'buddyboss' ),
-			'minutes_text'      => __( 'minutes', 'buddyboss' ),
-			'hour_text'         => __( 'an hour', 'buddyboss' ),
-			'hours_text'        => __( 'hours', 'buddyboss' ),
-			'day_text'          => __( 'a day', 'buddyboss' ),
-			'days_text'         => __( 'days', 'buddyboss' ),
-			'week_text'         => __( 'a week', 'buddyboss' ),
-			'weeks_text'        => __( 'weeks', 'buddyboss' ),
-			'month_text'        => __( 'a month', 'buddyboss' ),
-			'months_text'       => __( 'months', 'buddyboss' ),
-			'year_text'         => __( 'a year', 'buddyboss' ),
-			'years_text'        => __( 'years', 'buddyboss' ),
+			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss-platform' ) ),
+			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss-platform' ) ),
+			/* translators: %s: the human time diff. */
+			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss-platform' ) ),
+			'second_text'       => __( 'a second', 'buddyboss-platform' ),
+			'seconds_text'      => __( 'seconds', 'buddyboss-platform' ),
+			'minute_text'       => __( 'a minute', 'buddyboss-platform' ),
+			'minutes_text'      => __( 'minutes', 'buddyboss-platform' ),
+			'hour_text'         => __( 'an hour', 'buddyboss-platform' ),
+			'hours_text'        => __( 'hours', 'buddyboss-platform' ),
+			'day_text'          => __( 'a day', 'buddyboss-platform' ),
+			'days_text'         => __( 'days', 'buddyboss-platform' ),
+			'week_text'         => __( 'a week', 'buddyboss-platform' ),
+			'weeks_text'        => __( 'weeks', 'buddyboss-platform' ),
+			'month_text'        => __( 'a month', 'buddyboss-platform' ),
+			'months_text'       => __( 'months', 'buddyboss-platform' ),
+			'year_text'         => __( 'a year', 'buddyboss-platform' ),
+			'years_text'        => __( 'years', 'buddyboss-platform' ),
 		)
 	);
 
@@ -851,7 +876,8 @@ function bp_core_add_jquery_mask() {
 
 	wp_enqueue_script( 'jquery-mask' );
 
-	add_action( 'wp_footer', 'bp_core_add_jquery_mask_inline_js' );
+	// Attach the telephone-mask inline JS to the enqueued jquery-mask handle.
+	bp_core_add_jquery_mask_inline_js();
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
 
@@ -861,23 +887,19 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
  * @since BuddyBoss 1.0.0
  */
 function bp_core_add_jquery_mask_inline_js() {
-	?>
+	$inline_js = 'jQuery(document).ready(function(){
+		jQuery(".field_type_telephone").each(function(){
+			var $this = jQuery(this),
+				field_id = $this.find(\'.input_mask_details\').data(\'field_id\'),
+				pmask = $this.find(\'.input_mask_details\').data(\'val\');
 
-	<script>
-		jQuery(document).ready(function(){
-			jQuery(".field_type_telephone").each(function(){
-				var $this = jQuery(this),
-					field_id = $this.find('.input_mask_details').data('field_id'),
-					pmask = $this.find('.input_mask_details').data('val');
-
-				if ( field_id && pmask ) {
-					jQuery( '#' + field_id ).mask( pmask ).bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
-				}
-			});
+			if ( field_id && pmask ) {
+				jQuery( \'#\' + field_id ).mask( pmask ).bind(\'keypress\', function(e){if(e.which == 13){jQuery(this).blur();} } );
+			}
 		});
-	</script>
+	});';
 
-	<?php
+	wp_add_inline_script( 'jquery-mask', $inline_js );
 }
 
 /**
@@ -895,9 +917,9 @@ function bp_core_register_page_js() {
 			'ajaxurl'        => bp_core_ajax_url(),
 			'field_id'       => 'field_' . bp_get_xprofile_member_type_field_id(),
 			'nonce'          => wp_create_nonce( 'bp-core-register-page-js' ),
-			'mismatch_email' => __( 'Mismatch', 'buddyboss' ),
-			'valid_email'    => __( 'Enter valid email', 'buddyboss' ),
-			'required_field' => __( 'This is a required field.', 'buddyboss' ),
+			'mismatch_email' => __( 'Mismatch', 'buddyboss-platform' ),
+			'valid_email'    => __( 'Enter valid email', 'buddyboss-platform' ),
+			'required_field' => __( 'This is a required field.', 'buddyboss-platform' ),
 		);
 
 		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );

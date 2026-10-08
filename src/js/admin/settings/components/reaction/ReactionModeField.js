@@ -198,7 +198,7 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 										type="button"
 										onClick={ () => onProBadgeClick( field ) }
 										className="bb-pro-badge__play-link"
-										aria-label={ __( 'Learn more', 'buddyboss' ) }
+										aria-label={ __( 'Learn more', 'buddyboss-platform' ) }
 									>
 										<i className={ field.pro_notice.link_icon || 'bb-icons-rl bb-icons-rl-play' } />
 									</button>
@@ -208,7 +208,7 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 										target="_blank"
 										rel="noopener noreferrer"
 										className="bb-pro-badge__play-link"
-										aria-label={__('Learn more about PRO', 'buddyboss')}
+										aria-label={__('Learn more about PRO', 'buddyboss-platform')}
 									>
 										<i className={field.pro_notice.link_icon || ''} />
 									</a>
@@ -242,7 +242,7 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 								</span>
 								<DropdownMenu
 									icon={<i className="bb-icons-rl-dots-three"></i>}
-									label={__('More options', 'buddyboss')}
+									label={__('More options', 'buddyboss-platform')}
 									className="bb_emotions_actions"
 								>
 									{({ onClose }) => (
@@ -255,7 +255,7 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 													handleEditClick(reaction);
 												}}
 											>
-												{__('Edit', 'buddyboss')}
+												{__('Edit', 'buddyboss-platform')}
 											</MenuItem>
 											<MenuItem
 												icon={<BBIcon name="trash" />}
@@ -265,7 +265,7 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 													handleDeleteClick(reaction);
 												}}
 											>
-												{__('Delete', 'buddyboss')}
+												{__('Delete', 'buddyboss-platform')}
 											</MenuItem>
 										</MenuGroup>
 									)}
@@ -289,8 +289,8 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 						<div key={`add-${i}`} className="bb_emotions_item bb_emotions_item_action">
 							<button
 								className="bb_emotions_add_new"
-								aria-label={__('Add New Emotion', 'buddyboss')}
-								data-bp-tooltip={__('Add new', 'buddyboss')}
+								aria-label={__('Add New Emotion', 'buddyboss-platform')}
+								data-bp-tooltip={__('Add new', 'buddyboss-platform')}
 								data-bp-tooltip-pos="up"
 								onClick={() => {/* Handle via existing JS */}}
 							>

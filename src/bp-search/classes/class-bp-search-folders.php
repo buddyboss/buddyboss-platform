@@ -116,18 +116,24 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			$sql['from'] = apply_filters( 'bp_document_search_join_sql_folder', $sql['from'] );
 
 			$where_conditions   = array( '1=1' );
+			$privacy_in         = "'" . implode( "','", array_map( 'esc_sql', $privacy ) ) . "'";
+			$user_groups_in     = ( isset( $user_groups ) && ! empty( $user_groups ) ) ? implode( ',', array_map( 'absint', $user_groups ) ) : '';
+			$friends_in         = ( bp_is_active( 'friends' ) && ! empty( $friends ) ) ? implode( ',', array_map( 'absint', $friends ) ) : '';
+			$loggedin_user_id   = (int) bp_loggedin_user_id();
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $privacy_in is esc_sql'd hardcoded tokens; $user_groups_in/$friends_in are absint'd ID lists; $loggedin_user_id is cast int; $search_term is %s-bound.
 			$where_conditions[] = $wpdb->prepare(
 				"(
                     f.title LIKE %s AND
                     (
-                        f.privacy IN ( '" . implode( "','", $privacy ) . "' ) " .
-				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( f.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND f.privacy = 'grouponly' )" : '' ) .
-				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( f.user_id IN ( '" . implode( "','", $friends ) . "' ) AND f.privacy = 'friends' )" : '' ) .
-				( is_user_logged_in() ? " OR ( f.user_id = '" . bp_loggedin_user_id() . "' AND f.privacy = 'onlyme' )" : '' ) .
+                        f.privacy IN ( " . $privacy_in . ' ) ' .
+				( ! empty( $user_groups_in ) ? ' OR ( f.group_id IN ( ' . $user_groups_in . " ) AND f.privacy = 'grouponly' )" : '' ) .
+				( ! empty( $friends_in ) ? ' OR ( f.user_id IN ( ' . $friends_in . " ) AND f.privacy = 'friends' )" : '' ) .
+				( is_user_logged_in() ? ' OR ( f.user_id = ' . $loggedin_user_id . " AND f.privacy = 'onlyme' )" : '' ) .
 				')
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 			/**
 			 * Filters the MySQL WHERE conditions for the folder Search query.

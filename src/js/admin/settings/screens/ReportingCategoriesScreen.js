@@ -85,7 +85,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 			.catch( function ( err ) {
 				if ( ! err || 'AbortError' !== err.name ) {
 					setIsLoading( false );
-					setToast( { status: 'error', message: __( 'Failed to load reporting categories.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Failed to load reporting categories.', 'buddyboss-platform' ) } );
 				}
 			} );
 	}, [] );
@@ -145,13 +145,13 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 							return cat.id !== termId;
 						} );
 					} );
-					setToast( { status: 'success', message: __( 'Category deleted.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Category deleted.', 'buddyboss-platform' ) } );
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete category.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete category.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function () {
-				setToast( { status: 'error', message: __( 'Failed to delete category.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to delete category.', 'buddyboss-platform' ) } );
 			} );
 	}, [ deleteConfirmId ] );
 
@@ -173,7 +173,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 		setIsModalOpen( false );
 		setEditingCategory( null );
 		loadCategories();
-		setToast( { status: 'success', message: __( 'Category saved.', 'buddyboss' ) } );
+		setToast( { status: 'success', message: __( 'Category saved.', 'buddyboss-platform' ) } );
 	}, [ loadCategories ] );
 
 	// Handle modal close.
@@ -188,7 +188,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 			<div className="bb-admin-feature-settings__section">
 				<div className="bb-admin-feature-settings__section-header">
 					<h3 className="bb-admin-feature-settings__section-title">
-						{ __( 'Reporting Categories', 'buddyboss' ) }
+						{ __( 'Reporting Categories', 'buddyboss-platform' ) }
 					</h3>
 					<div className="bb-admin-reporting-categories__header-actions">
 						<button
@@ -196,7 +196,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 							onClick={ handleAddNew }
 						>
 							<i className="bb-icons-rl bb-icons-rl-plus"></i>
-							{ __( 'Add New Category', 'buddyboss' ) }
+							{ __( 'Add New Category', 'buddyboss-platform' ) }
 						</button>
 						{ helpUrl && (
 							<HelpIcon
@@ -238,7 +238,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 													onClick={ function () {
 														setOpenMenuId( cat.id === openMenuId ? null : cat.id );
 													} }
-													aria-label={ __( 'Actions', 'buddyboss' ) }
+													aria-label={ __( 'Actions', 'buddyboss-platform' ) }
 													aria-haspopup="true"
 													aria-expanded={ cat.id === openMenuId ? 'true' : 'false' }
 												>
@@ -254,7 +254,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-															{ __( 'Edit', 'buddyboss' ) }
+															{ __( 'Edit', 'buddyboss-platform' ) }
 														</button>
 														<button
 															className="bb-admin-reporting-categories__menu-item bb-admin-reporting-categories__menu-item--danger"
@@ -264,7 +264,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-trash"></i>
-															{ __( 'Delete', 'buddyboss' ) }
+															{ __( 'Delete', 'buddyboss-platform' ) }
 														</button>
 													</div>
 												) }
@@ -276,7 +276,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 						</ul>
 					) : (
 						<div className="bb-admin-reporting-categories__empty">
-							<p>{ __( 'No reporting categories found. Click "Add New Category" to create one.', 'buddyboss' ) }</p>
+							<p>{ __( 'No reporting categories found. Click "Add New Category" to create one.', 'buddyboss-platform' ) }</p>
 						</div>
 					) }
 				</div>
@@ -294,10 +294,10 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 			{/* Delete Confirmation Modal */}
 			<ConfirmToggleModal
 				isOpen={ null !== deleteConfirmId }
-				title={ __( 'Delete Category', 'buddyboss' ) }
-				message={ __( 'Are you sure you want to delete this reporting category?', 'buddyboss' ) }
-				confirmLabel={ __( 'Delete', 'buddyboss' ) }
-				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				title={ __( 'Delete Category', 'buddyboss-platform' ) }
+				message={ __( 'Are you sure you want to delete this reporting category?', 'buddyboss-platform' ) }
+				confirmLabel={ __( 'Delete', 'buddyboss-platform' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss-platform' ) }
 				isDestructive={ true }
 				onConfirm={ performDelete }
 				onCancel={ function () {

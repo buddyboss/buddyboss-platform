@@ -55,8 +55,8 @@ function bp_nouveau_moderation_localize_scripts( $params = array() ) {
 
 	//initialize moderation vars because it is used globally
 	$params['moderation'] = array(
-		'unblock_user_msg' => esc_html__( 'Are you sure you want to unblock this member?', 'buddyboss' ),
-		'no_user_msg' => esc_html__( 'No blocked members found.', 'buddyboss' ),
+		'unblock_user_msg' => esc_html__( 'Are you sure you want to unblock this member?', 'buddyboss-platform' ),
+		'no_user_msg' => esc_html__( 'No blocked members found.', 'buddyboss-platform' ),
 	);
 
 	return $params;

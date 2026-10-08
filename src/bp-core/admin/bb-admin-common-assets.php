@@ -46,13 +46,24 @@ function bb_register_admin_common_assets() {
 		true
 	);
 
-	if ( file_exists( $build_dir . '/styles/common.css' ) ) {
+	// The shipped zip carries only the minified CSS (the unminified `common.css`
+	// is stripped from the build), so register the `.min.css` regardless of
+	// SCRIPT_DEBUG — the same convention as the Settings 2.0 admin stylesheet.
+	// Checking/registering the unminified file here instead left the handle
+	// unregistered on a shipped build, so consumers that guard on
+	// wp_style_is( 'bb-admin-common-style', 'registered' ) silently dropped the
+	// shared header/common styles and the admin design broke.
+	if ( file_exists( $build_dir . '/styles/common.min.css' ) ) {
 		wp_register_style(
 			'bb-admin-common-style',
-			$build_url . '/styles/common.css',
+			$build_url . '/styles/common.min.css',
 			array(),
 			$asset['version']
 		);
+
+		// RTL sites load `common-rtl.min.css` (matches the build output naming).
+		wp_style_add_data( 'bb-admin-common-style', 'rtl', 'replace' );
+		wp_style_add_data( 'bb-admin-common-style', 'suffix', '.min' );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'bb_register_admin_common_assets', 1 );

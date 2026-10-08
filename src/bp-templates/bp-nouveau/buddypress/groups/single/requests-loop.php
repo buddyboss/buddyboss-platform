@@ -8,10 +8,13 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bp_group_has_membership_requests( bp_ajax_querystring( 'membership_requests' ) ) ) {
 	?>
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Manage Membership Requests', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Manage Membership Requests', 'buddyboss-platform' ); ?>
 	</h2>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>

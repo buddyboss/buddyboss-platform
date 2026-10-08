@@ -68,7 +68,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 	var handleSave = function () {
 		var trimmedName = name.trim();
 		if ( ! trimmedName ) {
-			setError( __( 'Topic name is required.', 'buddyboss' ) );
+			setError( __( 'Topic name is required.', 'buddyboss-platform' ) );
 			return;
 		}
 		setError( '' );
@@ -81,7 +81,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 
 	return (
 		<Modal
-			title={ isEditing ? __( 'Edit Topic', 'buddyboss' ) : __( 'Add New Topic', 'buddyboss' ) }
+			title={ isEditing ? __( 'Edit Topic', 'buddyboss-platform' ) : __( 'Add New Topic', 'buddyboss-platform' ) }
 			onRequestClose={ onClose }
 			className="bb-topic-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -89,7 +89,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 			<div className="bb-topic-modal__body">
 				<div className='bb-admin-settings-modal__row--separator'>
 					<TextControl
-						label={ __( 'Topic Name', 'buddyboss' ) }
+						label={ __( 'Topic Name', 'buddyboss-platform' ) }
 						value={ name }
 						onChange={ function ( val ) {
 							setName( val );
@@ -97,7 +97,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 								setError( '' );
 							}
 						} }
-						placeholder={ __( 'Enter topic name', 'buddyboss' ) }
+						placeholder={ __( 'Enter topic name', 'buddyboss-platform' ) }
 						__nextHasNoMarginBottom
 					/>
 					{ error && (
@@ -107,13 +107,13 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 
 				<div className="bb-topic-modal__permission">
 					<label className="bb-topic-modal__permission-label">
-						{ __( 'Posting Permissions', 'buddyboss' ) }
+						{ __( 'Posting Permissions', 'buddyboss-platform' ) }
 					</label>
 					<RadioControl
 						selected={ permission }
 						options={ [
-							{ label: __( 'Anyone', 'buddyboss' ), value: 'anyone' },
-							{ label: __( 'Admins', 'buddyboss' ), value: 'mods_admins' },
+							{ label: __( 'Anyone', 'buddyboss-platform' ), value: 'anyone' },
+							{ label: __( 'Admins', 'buddyboss-platform' ), value: 'mods_admins' },
 						] }
 						onChange={ setPermission }
 					/>
@@ -126,7 +126,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -134,7 +134,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 					isBusy={ isSaving }
 					disabled={ isSaving }
 				>
-					{ isEditing ? __( 'Save', 'buddyboss' ) : __( 'Add Topic', 'buddyboss' ) }
+					{ isEditing ? __( 'Save', 'buddyboss-platform' ) : __( 'Add Topic', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

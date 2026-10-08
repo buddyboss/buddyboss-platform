@@ -52,7 +52,7 @@ if ( $is_memberpress_inner ) {
 <div id="secondary" class="<?php echo esc_attr( $panel_classes ); ?>" role="complementary">
 	<?php
 	if ( $is_memberpress_inner ) {
-		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post );
+		echo memberpress\courses\helpers\Courses::get_classroom_sidebar( $post ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Full sidebar markup rendered by MemberPress Courses template (contains nav/form controls); wp_kses_post would strip them.
 	}
 
 	if ( BB_Readylaunch::bb_is_group_admin() ) {
@@ -133,7 +133,7 @@ if ( $is_memberpress_inner ) {
 			?>
 			<div class="bb-rl-left-panel-widget">
 				<div class="bb-rl-list">
-					<h2><?php esc_html_e( 'Links', 'buddyboss' ); ?></h2>
+					<h2><?php esc_html_e( 'Links', 'buddyboss-platform' ); ?></h2>
 					<ul class="bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu">
 					<?php
 					foreach ( $custom_links as $link_item ) {

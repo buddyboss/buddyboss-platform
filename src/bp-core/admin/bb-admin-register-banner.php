@@ -190,9 +190,9 @@ function bb_admin_register_banner_enqueue() {
 			'markAction' => 'bb_register_banner_mark_registered',
 			'markNonce'  => wp_create_nonce( 'bb_register_banner_mark_registered' ),
 			'i18n'       => array(
-				'requiredFields' => __( 'Please fill in all fields.', 'buddyboss' ),
-				'invalidEmail'   => __( 'Please enter a valid email address.', 'buddyboss' ),
-				'genericError'   => __( 'Something went wrong. Please try again.', 'buddyboss' ),
+				'requiredFields' => __( 'Please fill in all fields.', 'buddyboss-platform' ),
+				'invalidEmail'   => __( 'Please enter a valid email address.', 'buddyboss-platform' ),
+				'genericError'   => __( 'Something went wrong. Please try again.', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -239,11 +239,11 @@ function bb_admin_render_register_banner() {
  */
 function bb_admin_register_banner_ajax_mark_registered() {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( array( 'message' => __( 'You are not allowed to do this.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'You are not allowed to do this.', 'buddyboss-platform' ) ), 403 );
 	}
 
 	if ( ! check_ajax_referer( 'bb_register_banner_mark_registered', 'nonce', false ) ) {
-		wp_send_json_error( array( 'message' => __( 'Security check failed.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Security check failed.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	update_option( 'bb_register_banner_registered', 1 );

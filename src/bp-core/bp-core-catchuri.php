@@ -66,13 +66,15 @@ function bp_core_set_uri_globals() {
 		unset( $bp->pages->{$bp->blogs->id} );
 	}
 
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
 	// Ajax or not?
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $request_uri, 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
 	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) {
-		$path = esc_url( $_REQUEST['_wp_http_referer'] );
+		$path = esc_url( sanitize_text_field( wp_unslash( $_REQUEST['_wp_http_referer'] ) ) );
 	} else {
-		$path = esc_url( $_SERVER['REQUEST_URI'] );
+		$path = esc_url( $request_uri );
 	}
 
 	/**
@@ -369,7 +371,7 @@ function bp_core_set_uri_globals() {
 			// If the displayed user is marked as a spammer, 404 (unless logged-in user is a super admin).
 			if ( bp_displayed_user_id() && bp_is_user_spammer( bp_displayed_user_id() ) ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					bp_core_add_message( __( 'This user has been marked as a spammer. Only site admins can view this profile.', 'buddyboss' ), 'warning' );
+					bp_core_add_message( __( 'This user has been marked as a spammer. Only site admins can view this profile.', 'buddyboss-platform' ), 'warning' );
 				} else {
 					bp_do_404();
 					return;
@@ -379,7 +381,7 @@ function bp_core_set_uri_globals() {
 			// If the displayed user is marked as a pending, 404 (unless logged-in user is a super admin).
 			if ( bp_displayed_user_id() && ! bp_is_user_active( bp_displayed_user_id() ) ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					bp_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss' ), 'warning' );
+					bp_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss-platform' ), 'warning' );
 				} else {
 					$bp->displayed_user->id = 0;
 					$bp->current_component = '';
@@ -698,14 +700,14 @@ function bp_core_no_access( $args = '' ) {
 
 	// Build the redirect URL.
 	$redirect_url  = is_ssl() ? 'https://' : 'http://';
-	$redirect_url .= $_SERVER['HTTP_HOST'] ?? '';
-	$redirect_url .= $_SERVER['REQUEST_URI'] ?? '';
+	$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+	$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
 	$defaults = array(
 		'mode'     => 2,                    // 1 = $root, 2 = wp-login.php.
 		'redirect' => $redirect_url,        // the URL you get redirected to when a user successfully logs in.
 		'root'     => bp_get_root_domain(), // the landing page you get redirected to when a user doesn't have access.
-		'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+		'message'  => __( 'Please login to access this website.', 'buddyboss-platform' ),
 	);
 
 	$r = bp_parse_args( $args, $defaults );
@@ -813,9 +815,9 @@ function bp_core_no_access_wp_login_error( $errors ) {
 	}
 
 	if ( isset( $_REQUEST['redirect_from'] ) && 'private_group' === $_REQUEST['redirect_from'] ) {
-		$bp_error_message = __( 'Please login to access this group.', 'buddyboss' );
+		$bp_error_message = __( 'Please login to access this group.', 'buddyboss-platform' );
 	} else {
-		$bp_error_message = __( 'Please login to access this website.', 'buddyboss' );
+		$bp_error_message = __( 'Please login to access this website.', 'buddyboss-platform' );
 	}
 
 	/**
@@ -1052,7 +1054,8 @@ function bp_get_requested_url() {
 
 	if ( empty( $bp->canonical_stack['requested_url'] ) ) {
 		$bp->canonical_stack['requested_url']  = is_ssl() ? 'https://' : 'http://';
-		$bp->canonical_stack['requested_url'] .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$bp->canonical_stack['requested_url'] .= isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$bp->canonical_stack['requested_url'] .= isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 	}
 
 	/**
@@ -1257,7 +1260,7 @@ function bp_private_network_template_redirect() {
 			$request_url = home_url( add_query_arg( array(), $wp->request ) );
 
 			// Actual URL like https://example.com?abc=1.
-			$actual_url         = home_url( add_query_arg( array( $_GET ), $wp->request ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$actual_url         = home_url( add_query_arg( array( rawurlencode_deep( map_deep( wp_unslash( $_GET ), 'sanitize_text_field' ) ) ), $wp->request ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$explode_actual_url = explode( '?', $actual_url );
 
 			// Actual URL with slash like https://example.com/?abc=1.
@@ -1357,7 +1360,7 @@ function bp_private_network_template_redirect() {
 										'mode'     => 2,
 										'redirect' => $redirect_url,
 										'root'     => bp_get_root_domain(),
-										'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+										'message'  => __( 'Please login to access this website.', 'buddyboss-platform' ),
 									);
 
 									bp_core_no_access( $defaults );
@@ -1371,7 +1374,7 @@ function bp_private_network_template_redirect() {
 								'mode'     => 2,
 								'redirect' => $redirect_url,
 								'root'     => bp_get_root_domain(),
-								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
 							);
 
 							bp_core_no_access( $defaults );
@@ -1385,7 +1388,7 @@ function bp_private_network_template_redirect() {
 							'mode'     => 2,
 							'redirect' => $redirect_url,
 							'root'     => bp_get_root_domain(),
-							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
 						);
 
 						bp_core_no_access( $defaults );
@@ -1403,7 +1406,7 @@ function bp_private_network_template_redirect() {
 									'mode'     => 2,
 									'redirect' => $redirect_url,
 									'root'     => bp_get_root_domain(),
-									'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+									'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
 								);
 
 								bp_core_no_access( $defaults );
@@ -1418,7 +1421,7 @@ function bp_private_network_template_redirect() {
 							'mode'     => 2,
 							'redirect' => $redirect_url,
 							'root'     => bp_get_root_domain(),
-							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
 						);
 
 						bp_core_no_access( $defaults );
@@ -1438,7 +1441,7 @@ function bp_private_network_template_redirect() {
 								'mode'     => 2,
 								'redirect' => $redirect_url,
 								'root'     => bp_get_root_domain(),
-								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
 							);
 
 							bp_core_no_access( $defaults );
@@ -1456,7 +1459,7 @@ function bp_private_network_template_redirect() {
 						// the URL you get redirected to when a user successfully logs in.
 						'root'     => bp_get_root_domain(),
 						// the landing page you get redirected to when a user doesn't have access.
-						'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+						'message'  => __( 'You must log in to access the page you requested.', 'buddyboss-platform' ),
 					);
 
 					bp_core_no_access( $defaults );
@@ -1611,7 +1614,7 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 		$page_title       = ( $privacy ) ? get_the_title( $privacy ) : '';
 		$get_privacy      = get_post( $privacy );
 		$get_content      = apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
-		$link            .= ' ' . __( 'and', 'buddyboss' ) . ' ';
+		$link            .= ' ' . __( 'and', 'buddyboss-platform' ) . ' ';
 		$link            .= sprintf(
 			'<a class="privacy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
 			'#privacy-modal',

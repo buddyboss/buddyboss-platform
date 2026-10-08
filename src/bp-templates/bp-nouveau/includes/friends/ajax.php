@@ -67,7 +67,7 @@ function bp_nouveau_ajax_addremove_friend() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -126,7 +126,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'No member found by that ID.', 'buddyboss' )
+					esc_html__( 'No member found by that ID.', 'buddyboss-platform' )
 				),
 			);
 		}
@@ -140,7 +140,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'There was a problem accepting that request. Please try again.', 'buddyboss' )
+					esc_html__( 'There was a problem accepting that request. Please try again.', 'buddyboss-platform' )
 				),
 			);
 
@@ -150,7 +150,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback'     => sprintf(
 					'<div class="bp-feedback success">%s</div>',
-					esc_html__( 'Connection accepted.', 'buddyboss' )
+					esc_html__( 'Connection accepted.', 'buddyboss-platform' )
 				),
 				'type'         => 'success',
 				'is_user'      => true,
@@ -166,7 +166,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback error">%s</div>',
-					esc_html__( 'There was a problem rejecting that request. Please try again.', 'buddyboss' )
+					esc_html__( 'There was a problem rejecting that request. Please try again.', 'buddyboss-platform' )
 				),
 			);
 		} else {
@@ -175,7 +175,7 @@ function bp_nouveau_ajax_addremove_friend() {
 			$response = array(
 				'feedback'     => sprintf(
 					'<div class="bp-feedback success">%s</div>',
-					esc_html__( 'Connection rejected.', 'buddyboss' )
+					esc_html__( 'Connection rejected.', 'buddyboss-platform' )
 				),
 				'type'         => 'success',
 				'is_user'      => true,
@@ -188,7 +188,7 @@ function bp_nouveau_ajax_addremove_friend() {
 		if ( ! friends_remove_friend( bp_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Connection could not be cancelled.', 'buddyboss' )
+				esc_html__( 'Connection could not be cancelled.', 'buddyboss-platform' )
 			);
 
 			$type = 'error';
@@ -208,7 +208,7 @@ function bp_nouveau_ajax_addremove_friend() {
 				$response = array(
 					'feedback'     => sprintf(
 						'<div class="bp-feedback success">%s</div>',
-						esc_html__( 'Connection removed.', 'buddyboss' )
+						esc_html__( 'Connection removed.', 'buddyboss-platform' )
 					),
 					'type'         => 'success',
 					'is_user'      => $is_user,
@@ -225,7 +225,7 @@ function bp_nouveau_ajax_addremove_friend() {
 		if ( ! friends_add_friend( bp_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Connection could not be requested.', 'buddyboss' )
+				esc_html__( 'Connection could not be requested.', 'buddyboss-platform' )
 			);
 
 			$type = 'error';
@@ -259,7 +259,7 @@ function bp_nouveau_ajax_addremove_friend() {
 		} else {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Connection request could not be cancelled.', 'buddyboss' )
+				esc_html__( 'Connection request could not be cancelled.', 'buddyboss-platform' )
 			);
 			$type                 = 'error';
 		}
@@ -268,7 +268,7 @@ function bp_nouveau_ajax_addremove_friend() {
 	} else {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Request Pending', 'buddyboss' )
+			esc_html__( 'Request Pending', 'buddyboss-platform' )
 		);
 		$type                 = 'error';
 

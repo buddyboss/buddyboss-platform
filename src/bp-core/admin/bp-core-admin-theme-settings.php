@@ -95,8 +95,10 @@ if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
 			'.rapydapps.cloud',
 		);
 
+		$server_name = isset( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) : '';
+
 		foreach ( $whitelist_domain as $domain ) {
-			if ( false !== strpos( $_SERVER['SERVER_NAME'], $domain ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			if ( false !== strpos( $server_name, $domain ) ) {
 				return false;
 			}
 		}

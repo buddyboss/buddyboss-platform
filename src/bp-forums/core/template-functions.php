@@ -417,7 +417,7 @@ function bbp_buffer_template_part( $slug, $name = null, $echo = true ) {
 
 	// Echo or return the output buffer contents.
 	if ( true === $echo ) {
-		echo $output;
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $output is fully-rendered template HTML captured via ob_get_clean(); the template parts escape their own output.
 	} else {
 		return $output;
 	}

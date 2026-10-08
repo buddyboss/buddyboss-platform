@@ -26,13 +26,13 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		// Set up optional widget args.
 		$widget_ops = array(
 				'classname'   => 'widget_bp_profile_completion_widget widget buddypress',
-				'description' => __( 'Show Logged in user Profile Completion Progress.', 'buddyboss' ),
+				'description' => __( 'Show Logged in user Profile Completion Progress.', 'buddyboss-platform' ),
 		);
 
 		// Set up the widget.
 		parent::__construct(
 				false,
-				__( '(BB) Profile Completion', 'buddyboss' ),
+				__( '(BB) Profile Completion', 'buddyboss-platform' ),
 				$widget_ops
 		);
 
@@ -73,12 +73,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		/* Widget Template */
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		// Widget Title
-		echo $args['before_title'];
-		echo $instance['title'];
-		echo $args['after_title'];
+		echo wp_kses_post( $args['before_title'] );
+		echo esc_html( $instance['title'] );
+		echo wp_kses_post( $args['after_title'] );
 
 		// Widget Content
 
@@ -95,7 +95,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		 */
 		do_action( 'xprofile_profile_completion_widget' );
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 	}
 
@@ -125,7 +125,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$instance = bp_parse_args(
 				(array) $instance,
 				array(
-						'title' => __( 'Complete Your Profile', 'buddyboss' ),
+						'title' => __( 'Complete Your Profile', 'buddyboss-platform' ),
 				)
 		);
 
@@ -138,20 +138,20 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		// Show Options only when Profile Photo and Cover option enabled in the Profile Settings.
 		if ( ! $is_profile_photo_disabled ) {
-			$photos_enabled_arr['profile_photo'] = __( 'Profile Photo', 'buddyboss' );
+			$photos_enabled_arr['profile_photo'] = __( 'Profile Photo', 'buddyboss-platform' );
 		}
 		if ( ! $is_cover_photo_disabled ) {
-			$photos_enabled_arr['cover_photo'] = __( 'Cover Photo', 'buddyboss' );
+			$photos_enabled_arr['cover_photo'] = __( 'Cover Photo', 'buddyboss-platform' );
 		}
 
-		$widget_enabled_arr['hide_widget'] = __( 'Hide widget once progress hits 100%', 'buddyboss' );
+		$widget_enabled_arr['hide_widget'] = __( 'Hide widget once progress hits 100%', 'buddyboss-platform' );
 
 		/* Widget Form HTML */ ?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>"/>
 		</p>        <p>
-			<label><?php esc_html_e( 'Profile field sets:', 'buddyboss' ); ?></label>
+			<label><?php esc_html_e( 'Profile field sets:', 'buddyboss-platform' ); ?></label>
 
 		<ul>
 			<?php
@@ -173,7 +173,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		<?php if ( ! empty( $photos_enabled_arr ) ) : ?>
 			<p>
-				<label><?php esc_html_e( 'Profile photos:', 'buddyboss' ); ?></label>
+				<label><?php esc_html_e( 'Profile photos:', 'buddyboss-platform' ); ?></label>
 
 			<ul>
 				<?php foreach ( $photos_enabled_arr as $photos_value => $photos_label ) : ?>
@@ -193,7 +193,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		<?php if ( ! empty( $widget_enabled_arr ) ) : ?>
 			<p>
-				<label><?php esc_html_e( 'Options:', 'buddyboss' ); ?></label>
+				<label><?php esc_html_e( 'Options:', 'buddyboss-platform' ); ?></label>
 
 			<ul>
 				<?php foreach ( $widget_enabled_arr as $option_value => $option_label ) : ?>
@@ -221,7 +221,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<small><?php esc_html_e( 'Note: This widget is only displayed if a member is logged in.', 'buddyboss' ); ?></small>
+			<small><?php esc_html_e( 'Note: This widget is only displayed if a member is logged in.', 'buddyboss-platform' ); ?></small>
 		</p>
 
 		<?php

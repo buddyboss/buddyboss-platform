@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle deleting single notifications.
  *
@@ -21,9 +24,9 @@ function bp_notifications_action_delete() {
 	}
 
 	// Get the action.
-	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
-	$nonce  = ! empty( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '';
-	$id     = ! empty( $_GET['notification_id'] ) ? $_GET['notification_id'] : '';
+	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+	$nonce  = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+	$id     = ! empty( $_GET['notification_id'] ) ? absint( $_GET['notification_id'] ) : 0;
 
 	// Bail if no action or no ID.
 	if ( ( 'delete' !== $action ) || empty( $id ) || empty( $nonce ) ) {
@@ -32,9 +35,9 @@ function bp_notifications_action_delete() {
 
 	// Check the nonce and delete the notification.
 	if ( bp_verify_nonce_request( 'bp_notification_delete_' . $id ) && bp_notifications_delete_notification( $id ) ) {
-		bp_core_add_message( __( 'Notification successfully deleted.', 'buddyboss' ) );
+		bp_core_add_message( __( 'Notification successfully deleted.', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect.

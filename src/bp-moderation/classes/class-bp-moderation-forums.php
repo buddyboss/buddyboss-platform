@@ -113,7 +113,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Standalone Forums', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Standalone Forums', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -234,7 +234,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return esc_html__( 'Report Forum', 'buddyboss' );
+		return esc_html__( 'Report Forum', 'buddyboss-platform' );
 	}
 
 	/**
@@ -248,7 +248,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return esc_html__( 'Forum', 'buddyboss' );
+		return esc_html__( 'Forum', 'buddyboss-platform' );
 	}
 
 	/**

@@ -4,11 +4,14 @@
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
- * Author URI:  https://buddyboss.com/
+ * Author URI:  https://buddyboss.com/website-platform/
  * Version:     3.6.0
- * Text Domain: buddyboss
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
+ * Text Domain: buddyboss-platform
  * Domain Path: /languages/
- * License:     GPLv2 or later (license.txt)
+ * License:     GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 /**
@@ -33,7 +36,17 @@ if ( ! defined( 'BP_PLATFORM_API' ) ) {
 	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
 
-// Load translation files.
+/*
+ * Load translation files.
+ *
+ * First hooked to plugins_loaded: component setup runs during plugins_loaded and
+ * translates strings (component names, nav labels) before init fires. Loading the
+ * text domain here keeps those strings translated and prevents WP 6.7+ "translation
+ * loading triggered too early" just-in-time notices. This is a custom dual-domain
+ * loader (merges legacy "buddyboss" .mo files into the "buddyboss-platform" domain) —
+ * the load_plugin_textdomain() call inside it is only a bundled-path fallback for
+ * installs without language-pack translations.
+ */
 add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
 
 // The plugins_loaded-priority-0 load above runs before multilingual plugins
@@ -229,9 +242,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			}
 		}
 
+		$bb_request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
 		if ( is_network_admin()
-			 || strpos( $_SERVER['REQUEST_URI'], $plugins_path ) !== false
-			 || strpos( $_SERVER['REQUEST_URI'], $ajax_path ) !== false
+			 || strpos( $bb_request_uri, $plugins_path ) !== false
+			 || strpos( $bb_request_uri, $ajax_path ) !== false
 		) {
 
 			/**
@@ -348,11 +363,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		?>
 
 		<div id="message" class="error notice">
-			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss' ); ?></strong>
+			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss-platform' ); ?></strong>
 			</p>
 			<?php /* translators: 1: current PHP version, 2: required PHP version */ ?>
-			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?></p>
-			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss' ); ?></p>
+			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss-platform' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?></p>
+			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss-platform' ); ?></p>
 		</div>
 
 		<?php
@@ -434,12 +449,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable BuddyPress message.
 		if ( $is_bp_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", esc_url( $bp_plugins_url ), esc_html__( 'deactivate', 'buddyboss-platform' ) );
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
+				<?php /* translators: %s: deactivate link for the BuddyPress plugin. */ ?>
+				<p><?php echo wp_kses_post( sprintf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -448,12 +464,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable bbPress message.
 		if ( $is_bb_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", esc_url( $bp_plugins_url ), esc_html__( 'deactivate', 'buddyboss-platform' ) );
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
+				<?php /* translators: %s: deactivate link for the bbPress plugin. */ ?>
+				<p><?php echo wp_kses_post( sprintf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -461,15 +478,15 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		if ( ! empty( $bp_incompatible_plugins ) ) {
 			$incompatible_plugins_list_messages = array(
-				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss-platform' ),
+				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss-platform' ),
 			);
 			foreach ( $bp_incompatible_plugins as $incompatible_plugin_key ) {
 				?>
 				<div id="message" class="error notice">
-					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
 					<?php
-					printf( '<p>%s</p>', $incompatible_plugins_list_messages[ $incompatible_plugin_key ] );
+					printf( '<p>%s</p>', esc_html( $incompatible_plugins_list_messages[ $incompatible_plugin_key ] ) );
 					?>
 				</div>
 				<?php
@@ -493,6 +510,10 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 * @since BuddyBoss 3.5.0 Reloads the catalog when the locale has changed since the last
 	 *                              load, so late locale resolution (WPML/Polylang) and mid-request
 	 *                              switch_to_locale() calls translate correctly.
+	 * @since BuddyBoss [BBVERSION] Text domain renamed from "buddyboss" to "buddyboss-platform"
+	 *                             (matches the plugin slug for wp.org Plugin Check). Legacy
+	 *                             "buddyboss-{locale}.mo" files are merged into the new domain so
+	 *                             existing customer translations keep working with no per-string overhead.
 	 *
 	 * @return bool True when load_textdomain() reported success for the authoritative
 	 *              location. That may be a real file on disk, or a catalog served by an
@@ -517,7 +538,9 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		static $loaded_locale   = null;
 		static $path_registered = false;
 
-		$domain = 'buddyboss';
+		$domain     = 'buddyboss-platform'; // New text domain — matches the plugin slug.
+		$old_domain = 'buddyboss';           // Legacy domain — existing customer .mo/.po files are keyed to this.
+
 		// determine_locale(): unlike get_locale(), it resolves the user's admin
 		// language in wp-admin — matching core's own plugin-catalog resolution
 		// and this function's load_plugin_textdomain() fallback (WP < 5.0
@@ -586,6 +609,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		if ( $locale_key !== $loaded_locale || ! is_textdomain_loaded( $domain ) ) {
 			$loaded_locale   = $locale_key;
 			$mofile_custom   = sprintf( '%s-%s.mo', $domain, $locale );
+			$mofile_legacy   = sprintf( '%s-%s.mo', $old_domain, $locale );
 			$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
 			$plugin_dir      = $plugin_dir_path;
 			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
@@ -596,6 +620,8 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			 * Filters the locations to load language files from.
 			 *
 			 * @since BuddyBoss 2.7.90
+			 * @since BuddyBoss [BBVERSION] Added the legacy "buddyboss" directory so existing
+			 *                             customer translation files continue to resolve.
 			 *
 			 * @param array $value Array of directories to check for language files in.
 			 */
@@ -603,6 +629,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 				'buddyboss_locale_locations',
 				array(
 					trailingslashit( WP_LANG_DIR . '/' . $domain ),
+					trailingslashit( WP_LANG_DIR . '/' . $old_domain ),
 					trailingslashit( WP_LANG_DIR ),
 					trailingslashit( WP_LANG_DIR . '/plugins' ),
 					trailingslashit( $plugin_dir . '/languages' ),
@@ -625,6 +652,21 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 					$found_mofile = $location . $mofile_custom;
 					$found_dir    = $location;
 					$found_index  = $index;
+					break;
+				}
+			}
+
+			// Same probe for the legacy "buddyboss-{locale}" catalog (the bundled
+			// languages/ files and existing customer translations still use that name).
+			// It is merged INTO the new domain below, after the new-domain catalog, so
+			// new-domain entries win and legacy entries only backfill.
+			$phpfile_legacy      = substr( $mofile_legacy, 0, -3 ) . '.l10n.php';
+			$found_legacy_mofile = '';
+			$found_legacy_index  = -1;
+			foreach ( $locations as $index => $location ) {
+				if ( is_readable( $location . $mofile_legacy ) || is_readable( $location . $phpfile_legacy ) ) {
+					$found_legacy_mofile = $location . $mofile_legacy;
+					$found_legacy_index  = $index;
 					break;
 				}
 			}
@@ -678,7 +720,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// re-parse. That matters on pre-WP 6.5, which has no translation-file
 			// cache — a cron switching locale per recipient across hundreds of
 			// emails would otherwise re-parse the catalog on every switch.
-			// Remaining gap: a catalog in WP_LANG_DIR/buddyboss/ or WP_LANG_DIR
+			// Remaining gap: a catalog in WP_LANG_DIR/buddyboss-platform/ or WP_LANG_DIR
 			// root (both higher precedence, neither known to core) still forces the
 			// full reload on each switch.
 			//
@@ -712,6 +754,10 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 				// the request locale, whatever core reloaded is NOT the file the probe
 				// matched. The fast path may not be trusted in that case.
 				&& $locale === $request_locale
+				// Core's JIT only knows the new domain's file name; it never merges
+				// the legacy "buddyboss" catalog, so its reload is incomplete
+				// whenever one exists.
+				&& '' === $found_legacy_mofile
 			) {
 				return false;
 			}
@@ -743,91 +789,112 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// WPML String Translation serving from wp-content/languages/wpml) there is
 			// nothing to promote, and clearing would risk dropping a layer that a
 			// third party will not re-add.
-			if ( '' !== $found_mofile && class_exists( 'WP_Translation_Controller' ) ) {
+			if ( ( '' !== $found_mofile || '' !== $found_legacy_mofile ) && class_exists( 'WP_Translation_Controller' ) ) {
 				WP_Translation_Controller::get_instance()->unload_textdomain( $domain, $request_locale );
 			}
 
-			// Loco Translate keeps its edits in a mirror of WP_LANG_DIR at
-			// wp-content/languages/loco, and injects them by REWRITING a path we
-			// pass to load_textdomain(): Loco_hooks_LoadHelper::filter_load_translation_file()
-			// maps WP_LANG_DIR/... and a plugin's own languages/ dir onto
-			// LOCO_LANG_DIR/... . But the only place its UI ever SAVES a plugin
-			// catalog is LOCO_LANG_DIR/plugins/ (Loco_package_Plugin::getSystemTargets),
-			// which is reachable only from locations 3 and 4 below. A catalog in
-			// WP_LANG_DIR/buddyboss/ or WP_LANG_DIR root ends the walk before those,
-			// so a site that has both would silently ignore every Loco edit.
-			//
-			// Offer it first and let the walk below layer the base catalog
-			// underneath: the WP 6.5+ controller appends files and resolves
-			// first-match-wins, so a translation Loco overrides wins while every
-			// string it does not carry still falls through to the base catalog
-			// (a Loco custom PO is frequently a partial sync).
-			//
-			// Deliberately outside $locations: it must never set $found_mofile or
-			// terminate the walk, and a site filter must not be able to drop it.
-			// The return value is ignored for the same reason. Loco passes a path
-			// already under LOCO_LANG_DIR straight through, so this cannot recurse.
-			// The constant is defined only when Loco is active, and a site may
-			// define it empty to switch Loco's loader off — hence the truthy check.
-			if ( defined( 'LOCO_LANG_DIR' ) && LOCO_LANG_DIR ) {
-				load_textdomain( $domain, trailingslashit( LOCO_LANG_DIR ) . 'plugins/' . $mofile_custom, $request_locale );
+			// Two passes over the same locations: the new "buddyboss-platform" catalog
+			// first, then the legacy "buddyboss" one merged into the same domain. Both
+			// the WP 6.5+ controller (first-match-wins across appended files) and the
+			// pre-6.5 MO merge keep entries already loaded, so the new domain wins and
+			// legacy translations only fill its gaps. Legacy files are intentionally
+			// NOT renamed.
+			$catalogs   = array(
+				array( $mofile_custom, $found_mofile, $found_index ),
+				array( $mofile_legacy, $found_legacy_mofile, $found_legacy_index ),
+			);
+			$loaded_any = false;
+			foreach ( $catalogs as $catalog ) {
+				list( $catalog_mofile, $catalog_found, $catalog_found_index ) = $catalog;
+
+				// Loco Translate keeps its edits in a mirror of WP_LANG_DIR at
+				// wp-content/languages/loco, and injects them by REWRITING a path we
+				// pass to load_textdomain(): Loco_hooks_LoadHelper::filter_load_translation_file()
+				// maps WP_LANG_DIR/... and a plugin's own languages/ dir onto
+				// LOCO_LANG_DIR/... . But the only place its UI ever SAVES a plugin
+				// catalog is LOCO_LANG_DIR/plugins/ (Loco_package_Plugin::getSystemTargets),
+				// which is reachable only from the WP_LANG_DIR/plugins and bundled
+				// languages/ locations below. A catalog in WP_LANG_DIR/buddyboss-platform/,
+				// WP_LANG_DIR/buddyboss/ or WP_LANG_DIR root ends the walk before those,
+				// so a site that has both would silently ignore every Loco edit.
+				//
+				// Offer it first and let the walk below layer the base catalog
+				// underneath: the WP 6.5+ controller appends files and resolves
+				// first-match-wins, so a translation Loco overrides wins while every
+				// string it does not carry still falls through to the base catalog
+				// (a Loco custom PO is frequently a partial sync).
+				//
+				// Deliberately outside $locations: it must never set $found_mofile or
+				// terminate the walk, and a site filter must not be able to drop it.
+				// The return value is ignored for the same reason. Loco passes a path
+				// already under LOCO_LANG_DIR straight through, so this cannot recurse.
+				// The constant is defined only when Loco is active, and a site may
+				// define it empty to switch Loco's loader off — hence the truthy check.
+				if ( defined( 'LOCO_LANG_DIR' ) && LOCO_LANG_DIR ) {
+					load_textdomain( $domain, trailingslashit( LOCO_LANG_DIR ) . 'plugins/' . $catalog_mofile, $request_locale );
+				}
+
+				// Attempt each location in precedence order — unconditionally, even
+				// when the probe above found nothing readable on disk.
+				// load_textdomain() is an extension point, not just a file read: it
+				// fires `pre_load_textdomain`, `override_load_textdomain`,
+				// `load_textdomain_mofile` and `load_translation_file`, which third
+				// parties use to serve a catalog for a path that does not exist.
+				// Loco Translate maps each attempted path under WP_LANG_DIR to its
+				// wp-content/languages/loco/ equivalent and returns that mapped path
+				// when the original is missing; WPML String Translation layers its
+				// custom MOs from wp-content/languages/wpml/. Neither directory is one
+				// of the probed locations, so gating the loop on the probe would
+				// silently drop every such translation. The probe's only job is the
+				// change_locale fast path above.
+				//
+				// Trying each location (rather than just the one the probe matched)
+				// also keeps the legacy semantics: an unreadable or corrupt file at a
+				// higher-precedence location must not mask a valid catalog at a later
+				// one.
+				foreach ( $locations as $index => $location ) {
+					$mofile = $location . $catalog_mofile;
+
+					// $request_locale, NOT $locale, is what the catalog is registered
+					// under. load_textdomain() calls
+					// WP_Translation_Controller::set_locale() with this value BEFORE it
+					// inspects any file, and that controller is a process-wide singleton
+					// shared by every text domain: handing it a plugin_locale-filtered
+					// value that differs from the request locale would repoint lookups
+					// for core's own `default` domain too and blank out the whole page.
+					// Registering under the request locale is also what makes the catalog
+					// findable, since that is the locale every later lookup uses.
+					//
+					// Passing it explicitly rather than letting core call
+					// determine_locale() itself preserves the plugins_loaded deferral
+					// documented above.
+					$loaded = load_textdomain( $domain, $mofile, $request_locale );
+
+					// A truthy return is NOT proof that this location's catalog loaded:
+					// `override_load_textdomain` / `pre_load_textdomain` listeners answer
+					// true for paths that do not exist, and the WP 6.5+ translation
+					// controller reports success for a file already registered earlier in
+					// the request. Stopping on the first truthy return therefore skipped
+					// the location that really held the catalog — on repeat locale
+					// switches that silently dropped the translations entirely.
+					//
+					// So: keep going until the probe's own position is reached, which
+					// lets every higher-precedence override listener layer on top first
+					// (they win anyway — the controller resolves first-match-wins). Then
+					// stop. Compare positions rather than paths, so a genuine load at the
+					// probe's position or later still terminates the walk even if the
+					// path was rewritten by a `load_textdomain_mofile` filter. When
+					// nothing exists on disk anywhere, the first truthy return wins —
+					// that is the override-served case.
+					if ( $loaded && ( '' === $catalog_found || $index >= $catalog_found_index ) ) {
+						$loaded_any = true;
+						break;
+					}
+				}
 			}
 
-			// Attempt each location in precedence order — unconditionally, even
-			// when the probe above found nothing readable on disk.
-			// load_textdomain() is an extension point, not just a file read: it
-			// fires `pre_load_textdomain`, `override_load_textdomain`,
-			// `load_textdomain_mofile` and `load_translation_file`, which third
-			// parties use to serve a catalog for a path that does not exist.
-			// Loco Translate maps each attempted path under WP_LANG_DIR to its
-			// wp-content/languages/loco/ equivalent and returns that mapped path
-			// when the original is missing; WPML String Translation layers its
-			// custom MOs from wp-content/languages/wpml/. Neither directory is one
-			// of the probed locations, so gating the loop on the probe would
-			// silently drop every such translation. The probe's only job is the
-			// change_locale fast path above.
-			//
-			// Trying each location (rather than just the one the probe matched)
-			// also keeps the legacy semantics: an unreadable or corrupt file at a
-			// higher-precedence location must not mask a valid catalog at a later
-			// one.
-			foreach ( $locations as $index => $location ) {
-				$mofile = $location . $mofile_custom;
-
-				// $request_locale, NOT $locale, is what the catalog is registered
-				// under. load_textdomain() calls
-				// WP_Translation_Controller::set_locale() with this value BEFORE it
-				// inspects any file, and that controller is a process-wide singleton
-				// shared by every text domain: handing it a plugin_locale-filtered
-				// value that differs from the request locale would repoint lookups
-				// for core's own `default` domain too and blank out the whole page.
-				// Registering under the request locale is also what makes the catalog
-				// findable, since that is the locale every later lookup uses.
-				//
-				// Passing it explicitly rather than letting core call
-				// determine_locale() itself preserves the plugins_loaded deferral
-				// documented above.
-				$loaded = load_textdomain( $domain, $mofile, $request_locale );
-
-				// A truthy return is NOT proof that this location's catalog loaded:
-				// `override_load_textdomain` / `pre_load_textdomain` listeners answer
-				// true for paths that do not exist, and the WP 6.5+ translation
-				// controller reports success for a file already registered earlier in
-				// the request. Stopping on the first truthy return therefore skipped
-				// the location that really held the catalog — on repeat locale
-				// switches that silently dropped the translations entirely.
-				//
-				// So: keep going until the probe's own position is reached, which
-				// lets every higher-precedence override listener layer on top first
-				// (they win anyway — the controller resolves first-match-wins). Then
-				// stop. Compare positions rather than paths, so a genuine load at the
-				// probe's position or later still terminates the walk even if the
-				// path was rewritten by a `load_textdomain_mofile` filter. When
-				// nothing exists on disk anywhere, the first truthy return wins —
-				// that is the override-served case.
-				if ( $loaded && ( '' === $found_mofile || $index >= $found_index ) ) {
-					return true;
-				}
+			if ( $loaded_any ) {
+				return true;
 			}
 
 			// Nothing loaded. Hand the bundled directory to core's JIT loader as a

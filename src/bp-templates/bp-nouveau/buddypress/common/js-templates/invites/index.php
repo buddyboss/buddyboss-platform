@@ -8,25 +8,29 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <?php if ( bp_is_group_create() ) : ?>
 
 	<h3 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Invite Members', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Invite Members', 'buddyboss-platform' ); ?>
 	</h3>
 
 <?php else : ?>
 
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Invite Members', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Invite Members', 'buddyboss-platform' ); ?>
 	</h2>
 
 <?php endif; ?>
 
 <div id="group-invites-container">
 
-	<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group invitations menu', 'buddyboss' ); ?>"></nav>
+	<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group invitations menu', 'buddyboss-platform' ); ?>"></nav>
 
 	<div class="group-invites-column">
 		<div class="subnav-filters group-subnav-filters bp-invites-filters"></div>

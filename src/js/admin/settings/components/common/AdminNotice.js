@@ -47,7 +47,7 @@ export function AdminNotice( { notice, onDismiss, autoDismiss } ) {
 			<button
 				className="bb-admin-notice--dismiss"
 				onClick={ onDismiss }
-				aria-label={ __( 'Dismiss notice', 'buddyboss' ) }
+				aria-label={ __( 'Dismiss notice', 'buddyboss-platform' ) }
 			>
 				<i className="bb-icons-rl bb-icons-rl-x"></i>
 			</button>

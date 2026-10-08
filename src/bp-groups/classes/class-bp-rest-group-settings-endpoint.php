@@ -67,11 +67,11 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id'  => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 					'nav' => array(
-						'description'       => __( 'Navigation item slug.', 'buddyboss' ),
+						'description'       => __( 'Navigation item slug.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => $this->nav,
@@ -119,7 +119,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		if ( empty( $group->id ) ) {
 			return new WP_Error(
 				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
+				__( 'Invalid group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -155,7 +155,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		if ( empty( $fields ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_group_setting_nav',
-				__( 'Sorry, you are not allowed to see the group settings options.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to see the group settings options.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -197,7 +197,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -209,7 +209,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -217,7 +217,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			} elseif ( ! $this->groups_endpoint->can_see( $group ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to see the group settings.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -333,7 +333,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -345,7 +345,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -354,7 +354,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			} elseif ( ! $this->groups_endpoint->can_user_delete_or_update( $group ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to update the group settings.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -389,12 +389,12 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$key  = 'update_item';
 			$args = array(
 				'id'     => array(
-					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'required'    => true,
 				),
 				'nav'    => array(
-					'description'       => __( 'Navigation item slug.', 'buddyboss' ),
+					'description'       => __( 'Navigation item slug.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'enum'              => $this->nav,
@@ -403,7 +403,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'fields' => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The list of fields Objects to update with name and value of the field.', 'buddyboss' ),
+					'description' => __( 'The list of fields Objects to update with name and value of the field.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'required'    => true,
 				),
@@ -472,7 +472,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'label'       => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Label for the setting.', 'buddyboss' ),
+					'description' => __( 'Label for the setting.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -481,31 +481,31 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 				),
 				'name'        => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Setting field name.', 'buddyboss' ),
+					'description' => __( 'Setting field name.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'description' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Setting field description.', 'buddyboss' ),
+					'description' => __( 'Setting field description.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'type'        => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Field type for the setting.', 'buddyboss' ),
+					'description' => __( 'Field type for the setting.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'value'       => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Selected value for the setting.', 'buddyboss' ),
+					'description' => __( 'Selected value for the setting.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'options'     => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Available options for the setting.', 'buddyboss' ),
+					'description' => __( 'Available options for the setting.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
@@ -533,7 +533,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		buddypress()->groups->current_group = $group;
 
 		$fields[] = array(
-			'label'       => esc_html__( 'Group Name (required)', 'buddyboss' ),
+			'label'       => esc_html__( 'Group Name (required)', 'buddyboss-platform' ),
 			'name'        => 'group-name',
 			'description' => '',
 			'field'       => 'text',
@@ -542,7 +542,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		);
 
 		$fields[] = array(
-			'label'       => esc_html__( 'Group Description', 'buddyboss' ),
+			'label'       => esc_html__( 'Group Description', 'buddyboss-platform' ),
 			'name'        => 'group-desc',
 			'description' => '',
 			'field'       => 'textarea',
@@ -564,14 +564,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			! function_exists( 'bb_enabled_legacy_email_preference' )
 		) {
 			$checked = 0;
-			$label   = esc_html__( 'Notify group members of these changes via email', 'buddyboss' );
+			$label   = esc_html__( 'Notify group members of these changes via email', 'buddyboss-platform' );
 
 			if (
 				function_exists( 'bb_enabled_legacy_email_preference' ) &&
 				! bb_enabled_legacy_email_preference() &&
 				bb_get_modern_notification_admin_settings_is_enabled( 'bb_groups_details_updated', 'groups' )
 			) {
-				$label   = esc_html__( 'Notify group members of these changes', 'buddyboss' );
+				$label   = esc_html__( 'Notify group members of these changes', 'buddyboss-platform' );
 				$checked = 1;
 			}
 
@@ -607,39 +607,39 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		buddypress()->groups->current_group = groups_get_group( $group_id );
 
 		$fields[] = array(
-			'label'       => esc_html__( 'Privacy Options', 'buddyboss' ),
+			'label'       => esc_html__( 'Privacy Options', 'buddyboss-platform' ),
 			'name'        => 'group-status',
 			'description' => '',
 			'field'       => 'radio',
 			'value'       => bp_get_new_group_status(),
 			'options'     => array(
 				array(
-					'label'             => esc_html__( 'This is a public group', 'buddyboss' ),
+					'label'             => esc_html__( 'This is a public group', 'buddyboss-platform' ),
 					'value'             => 'public',
 					'description'       => '<ul id="public-group-description">' .
-											'<li>' . esc_html__( 'Any site member can join this group.', 'buddyboss' ) . '</li>' .
-											'<li>' . esc_html__( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ) . '</li>' .
-											'<li>' . esc_html__( 'Group content and activity will be visible to any site member.', 'buddyboss' ) . '</li>' .
+											'<li>' . esc_html__( 'Any site member can join this group.', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . esc_html__( 'This group will be listed in the groups directory and in search results.', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . esc_html__( 'Group content and activity will be visible to any site member.', 'buddyboss-platform' ) . '</li>' .
 										'</ul>',
 					'is_default_option' => 'public' === bp_get_new_group_status() || ! bp_get_new_group_status(),
 				),
 				array(
-					'label'             => esc_html__( 'This is a private group', 'buddyboss' ),
+					'label'             => esc_html__( 'This is a private group', 'buddyboss-platform' ),
 					'value'             => 'private',
 					'description'       => '<ul id="public-group-description">' .
-											'<li>' . esc_html__( 'Only people who request membership and are accepted can join the group.', 'buddyboss' ) . '</li>' .
-											'<li>' . esc_html__( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ) . '</li>' .
-											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ) . '</li>' .
+											'<li>' . esc_html__( 'Only people who request membership and are accepted can join the group.', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . esc_html__( 'This group will be listed in the groups directory and in search results.', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss-platform' ) . '</li>' .
 										'</ul>',
 					'is_default_option' => 'private' === bp_get_new_group_status(),
 				),
 				array(
-					'label'             => esc_html__( 'This is a hidden group', 'buddyboss' ),
+					'label'             => esc_html__( 'This is a hidden group', 'buddyboss-platform' ),
 					'value'             => 'hidden',
 					'description'       => '<ul id="public-group-description">' .
-											'<li>' . esc_html__( 'Only people who are invited can join the group.', 'buddyboss' ) . '</li>' .
-											'<li>' . esc_html__( 'This group will not be listed in the groups directory or search results', 'buddyboss' ) . '</li>' .
-											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ) . '</li>' .
+											'<li>' . esc_html__( 'Only people who are invited can join the group.', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . esc_html__( 'This group will not be listed in the groups directory or search results', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . esc_html__( 'Group content and activity will only be visible to members of the group.', 'buddyboss-platform' ) . '</li>' .
 										'</ul>',
 					'is_default_option' => 'hidden' === bp_get_new_group_status(),
 				),
@@ -647,26 +647,26 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		);
 
 		$fields[] = array(
-			'label'       => esc_html__( 'Group Invitations', 'buddyboss' ),
+			'label'       => esc_html__( 'Group Invitations', 'buddyboss-platform' ),
 			'name'        => 'group-invite-status',
-			'description' => esc_html__( 'Which members of this group are allowed to invite others?', 'buddyboss' ),
+			'description' => esc_html__( 'Which members of this group are allowed to invite others?', 'buddyboss-platform' ),
 			'field'       => 'radio',
 			'value'       => bp_group_get_invite_status( $group_id ),
 			'options'     => array(
 				array(
-					'label'             => esc_html__( 'All group members', 'buddyboss' ),
+					'label'             => esc_html__( 'All group members', 'buddyboss-platform' ),
 					'value'             => 'members',
 					'description'       => '',
 					'is_default_option' => 'members' === bp_group_get_invite_status( $group_id ),
 				),
 				array(
-					'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+					'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss-platform' ),
 					'value'             => 'mods',
 					'description'       => '',
 					'is_default_option' => 'mods' === bp_group_get_invite_status( $group_id ),
 				),
 				array(
-					'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+					'label'             => esc_html__( 'Organizers only', 'buddyboss-platform' ),
 					'value'             => 'admins',
 					'description'       => '',
 					'is_default_option' => 'admins' === bp_group_get_invite_status( $group_id ),
@@ -676,26 +676,26 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		if ( bp_is_active( 'activity' ) ) {
 			$fields[] = array(
-				'label'       => esc_html__( 'Activity Feeds', 'buddyboss' ),
+				'label'       => esc_html__( 'Activity Feeds', 'buddyboss-platform' ),
 				'name'        => 'group-activity-feed-status',
-				'description' => esc_html__( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss-platform' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_activity_feed_status( $group_id ),
 				'options'     => array(
 					array(
-						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'label'             => esc_html__( 'All group members', 'buddyboss-platform' ),
 						'value'             => 'members',
 						'description'       => '',
 						'is_default_option' => 'members' === bp_group_get_activity_feed_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss-platform' ),
 						'value'             => 'mods',
 						'description'       => '',
 						'is_default_option' => 'mods' === bp_group_get_activity_feed_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers only', 'buddyboss-platform' ),
 						'value'             => 'admins',
 						'description'       => '',
 						'is_default_option' => 'admins' === bp_group_get_activity_feed_status( $group_id ),
@@ -706,26 +706,26 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
 			$fields[] = array(
-				'label'       => esc_html__( 'Group Photos', 'buddyboss' ),
+				'label'       => esc_html__( 'Group Photos', 'buddyboss-platform' ),
 				'name'        => 'group-media-status',
-				'description' => esc_html__( 'Which members of this group are allowed to upload photos?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to upload photos?', 'buddyboss-platform' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_media_status( $group_id ),
 				'options'     => array(
 					array(
-						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'label'             => esc_html__( 'All group members', 'buddyboss-platform' ),
 						'value'             => 'members',
 						'description'       => '',
 						'is_default_option' => 'members' === bp_group_get_media_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss-platform' ),
 						'value'             => 'mods',
 						'description'       => '',
 						'is_default_option' => 'mods' === bp_group_get_media_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers only', 'buddyboss-platform' ),
 						'value'             => 'admins',
 						'description'       => '',
 						'is_default_option' => 'admins' === bp_group_get_media_status( $group_id ),
@@ -736,26 +736,26 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
 			$fields[] = array(
-				'label'       => esc_html__( 'Group Albums', 'buddyboss' ),
+				'label'       => esc_html__( 'Group Albums', 'buddyboss-platform' ),
 				'name'        => 'group-album-status',
-				'description' => esc_html__( 'Which members of this group are allowed to create albums?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to create albums?', 'buddyboss-platform' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_album_status( $group_id ),
 				'options'     => array(
 					array(
-						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'label'             => esc_html__( 'All group members', 'buddyboss-platform' ),
 						'value'             => 'members',
 						'description'       => '',
 						'is_default_option' => 'members' === bp_group_get_album_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss-platform' ),
 						'value'             => 'mods',
 						'description'       => '',
 						'is_default_option' => 'mods' === bp_group_get_album_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers only', 'buddyboss-platform' ),
 						'value'             => 'admins',
 						'description'       => '',
 						'is_default_option' => 'admins' === bp_group_get_album_status( $group_id ),
@@ -766,26 +766,26 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
 			$fields[] = array(
-				'label'       => esc_html__( 'Group Documents', 'buddyboss' ),
+				'label'       => esc_html__( 'Group Documents', 'buddyboss-platform' ),
 				'name'        => 'group-document-status',
-				'description' => esc_html__( 'Which members of this group are allowed to upload documents?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to upload documents?', 'buddyboss-platform' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_document_status( $group_id ),
 				'options'     => array(
 					array(
-						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'label'             => esc_html__( 'All group members', 'buddyboss-platform' ),
 						'value'             => 'members',
 						'description'       => '',
 						'is_default_option' => 'members' === bp_group_get_document_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss-platform' ),
 						'value'             => 'mods',
 						'description'       => '',
 						'is_default_option' => 'mods' === bp_group_get_document_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers only', 'buddyboss-platform' ),
 						'value'             => 'admins',
 						'description'       => '',
 						'is_default_option' => 'admins' === bp_group_get_document_status( $group_id ),
@@ -796,26 +796,26 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
 			$fields[] = array(
-				'label'       => esc_html__( 'Group Videos', 'buddyboss' ),
+				'label'       => esc_html__( 'Group Videos', 'buddyboss-platform' ),
 				'name'        => 'group-video-status',
-				'description' => esc_html__( 'Which members of this group are allowed to upload videos?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to upload videos?', 'buddyboss-platform' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_video_status( $group_id ),
 				'options'     => array(
 					array(
-						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'label'             => esc_html__( 'All group members', 'buddyboss-platform' ),
 						'value'             => 'members',
 						'description'       => '',
 						'is_default_option' => 'members' === bp_group_get_video_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss-platform' ),
 						'value'             => 'mods',
 						'description'       => '',
 						'is_default_option' => 'mods' === bp_group_get_video_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers only', 'buddyboss-platform' ),
 						'value'             => 'admins',
 						'description'       => '',
 						'is_default_option' => 'admins' === bp_group_get_video_status( $group_id ),
@@ -826,26 +826,26 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		if ( bp_is_active( 'messages' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 			$fields[] = array(
-				'label'       => esc_html__( 'Group Messages', 'buddyboss' ),
+				'label'       => esc_html__( 'Group Messages', 'buddyboss-platform' ),
 				'name'        => 'group-message-status',
-				'description' => esc_html__( 'Which members of this group are allowed to send group messages?', 'buddyboss' ),
+				'description' => esc_html__( 'Which members of this group are allowed to send group messages?', 'buddyboss-platform' ),
 				'field'       => 'radio',
 				'value'       => bp_group_get_message_status( $group_id ),
 				'options'     => array(
 					array(
-						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'label'             => esc_html__( 'All group members', 'buddyboss-platform' ),
 						'value'             => 'members',
 						'description'       => '',
 						'is_default_option' => 'members' === bp_group_get_message_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss-platform' ),
 						'value'             => 'mods',
 						'description'       => '',
 						'is_default_option' => 'mods' === bp_group_get_message_status( $group_id ),
 					),
 					array(
-						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'label'             => esc_html__( 'Organizers only', 'buddyboss-platform' ),
 						'value'             => 'admins',
 						'description'       => '',
 						'is_default_option' => 'admins' === bp_group_get_message_status( $group_id ),
@@ -881,16 +881,16 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		if ( $group_types ) {
 			$current_types    = bp_groups_get_group_type( $group_id, false );
 			$group_type_field = array(
-				'label'       => esc_html__( 'Group Type', 'buddyboss' ),
+				'label'       => esc_html__( 'Group Type', 'buddyboss-platform' ),
 				'name'        => 'group-types',
-				'description' => esc_html__( 'What type of group is this? (optional)', 'buddyboss' ),
+				'description' => esc_html__( 'What type of group is this? (optional)', 'buddyboss-platform' ),
 				'field'       => 'select',
 				'value'       => ( ! empty( $current_types ) ? current( $current_types ) : '' ),
 				'options'     => array(),
 			);
 
 			$group_hierarchies['options'][] = array(
-				'label'             => __( 'Select Group Type', 'buddyboss' ),
+				'label'             => __( 'Select Group Type', 'buddyboss-platform' ),
 				'value'             => '',
 				'description'       => '',
 				'is_default_option' => '',
@@ -968,9 +968,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$possible_parent_groups  = bp_get_possible_parent_groups();
 
 			$group_hierarchies = array(
-				'label'       => esc_html__( 'Group Parent', 'buddyboss' ),
+				'label'       => esc_html__( 'Group Parent', 'buddyboss-platform' ),
 				'name'        => 'bp-groups-parent',
-				'description' => esc_html__( 'Which group should be the parent of this group? (optional)', 'buddyboss' ),
+				'description' => esc_html__( 'Which group should be the parent of this group? (optional)', 'buddyboss-platform' ),
 				'field'       => 'select',
 				'value'       => $current_parent_group_id,
 				'options'     => array(),
@@ -978,7 +978,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 			if ( $possible_parent_groups ) {
 				$group_hierarchies['options'][] = array(
-					'label'             => __( 'Select Parent', 'buddyboss' ),
+					'label'             => __( 'Select Parent', 'buddyboss-platform' ),
 					'value'             => 0,
 					'description'       => '',
 					'is_default_option' => empty( $current_parent_group_id ) || 0 === $current_parent_group_id,
@@ -1037,9 +1037,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 				'parent_id'      => false,
 			)
 		) ) {
-			$error = __( 'There was an error updating group details. Please try again.', 'buddyboss' );
+			$error = __( 'There was an error updating group details. Please try again.', 'buddyboss-platform' );
 		} else {
-			$notice = __( 'Group details were successfully updated.', 'buddyboss' );
+			$notice = __( 'Group details were successfully updated.', 'buddyboss-platform' );
 		}
 
 		/**
@@ -1182,9 +1182,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$enable_forum = ( isset( $group->enable_forum ) ? $group->enable_forum : false );
 
 		if ( true === $validate_error || ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
-			$error = __( 'There was an error updating group settings. Please try again.', 'buddyboss' );
+			$error = __( 'There was an error updating group settings. Please try again.', 'buddyboss-platform' );
 		} else {
-			$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
+			$notice = __( 'Group settings were successfully updated.', 'buddyboss-platform' );
 		}
 
 		return array(
@@ -1208,7 +1208,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_is_group_forums_active' ) || ! bbp_is_group_forums_active() ) {
 			return new WP_Error(
 				'bp_rest_invalid_group_setting_nav',
-				__( 'Sorry, you are not allowed to see the forum group settings options.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to see the forum group settings options.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1226,18 +1226,18 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$checked = bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( $group_id );
 
 		$fields[] = array(
-			'label'       => esc_html__( 'Group Forum Settings', 'buddyboss' ),
+			'label'       => esc_html__( 'Group Forum Settings', 'buddyboss-platform' ),
 			'name'        => '',
-			'description' => esc_html__( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss' ),
+			'description' => esc_html__( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss-platform' ),
 			'field'       => 'heading',
 			'value'       => '',
 			'options'     => array(),
 		);
 
 		$fields[] = array(
-			'label'       => esc_html__( 'Yes. I want this group to have a discussion forum.', 'buddyboss' ),
+			'label'       => esc_html__( 'Yes. I want this group to have a discussion forum.', 'buddyboss-platform' ),
 			'name'        => 'bbp-edit-group-forum',
-			'description' => esc_html__( 'Saying no will not delete existing forum content.', 'buddyboss' ),
+			'description' => esc_html__( 'Saying no will not delete existing forum content.', 'buddyboss-platform' ),
 			'field'       => 'checkbox',
 			'value'       => $checked,
 			'options'     => array(),
@@ -1263,7 +1263,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_is_group_forums_active' ) || ! bbp_is_group_forums_active() || ! class_exists( 'BBP_Forums_Group_Extension' ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_group_setting_nav',
-				__( 'Sorry, you are not allowed to update the forum group settings options.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to update the forum group settings options.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1406,7 +1406,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$group_forum_extention->new_forum( $new_forum_args );
 		}
 
-		$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
+		$notice = __( 'Group settings were successfully updated.', 'buddyboss-platform' );
 
 		return array(
 			'error'  => '',
@@ -1442,7 +1442,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		if ( empty( $fields ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_group_setting_nav',
-				__( 'Sorry, you are not allowed to see the courses group settings options.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to see the courses group settings options.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1491,7 +1491,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		return new WP_Error(
 			'bp_rest_invalid_group_setting_nav',
-			__( 'Sorry, you are not allowed to update the courses group settings options.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to update the courses group settings options.', 'buddyboss-platform' ),
 			array(
 				'status' => 400,
 			)

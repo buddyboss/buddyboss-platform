@@ -5,6 +5,10 @@
  * @deprecated BuddyBoss 2.4.90
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 /**
  * Background job to repair user profile slug.
  *

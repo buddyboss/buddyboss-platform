@@ -401,7 +401,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				}
 				setIsLoading(false);
 				setInitialLoad(false);
-				setToast({ status: 'error', message: __('Failed to load settings. Please refresh.', 'buddyboss') });
+				setToast({ status: 'error', message: __('Failed to load settings. Please refresh.', 'buddyboss-platform') });
 			});
 
 		return () => controller.abort();
@@ -567,7 +567,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					if ( err && 'AbortError' === err.name ) {
 						return;
 					}
-					setToast({ status: 'error', message: __('Failed to refresh settings. Please try again.', 'buddyboss') });
+					setToast({ status: 'error', message: __('Failed to refresh settings. Please try again.', 'buddyboss-platform') });
 				});
 		};
 
@@ -784,12 +784,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			// error isn't misread as belonging to the feature the admin is now
 			// looking at.
 			var buildErrorToast = function ( baseMessage ) {
-				var message = baseMessage || __('Something went wrong. Please try again.', 'buddyboss');
+				var message = baseMessage || __('Something went wrong. Please try again.', 'buddyboss-platform');
 				if ( featureId !== channel.apply.displayedFeatureIdRef.current ) {
 					var cached = getCachedFeatureData( featureId );
 					message = sprintf(
 						/* translators: 1: feature name, 2: underlying error message. */
-						__('Failed to save "%1$s" settings — %2$s', 'buddyboss'),
+						__('Failed to save "%1$s" settings — %2$s', 'buddyboss-platform'),
 						( cached && cached.label ) || featureId,
 						message
 					);
@@ -933,7 +933,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						apply.setToast({
 							status: 'success',
-							message: __('Settings saved.', 'buddyboss'),
+							message: __('Settings saved.', 'buddyboss-platform'),
 						});
 
 						// Work out what the admin has edited SINCE this request was
@@ -1107,7 +1107,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			return;
 		}
 
-		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss-platform') });
 
 		// Collect child fields that depend on this field via parent_field.
 		var childNames = [];
@@ -1189,7 +1189,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			const content = await fetchHelpContent(contentId);
 			setHelpContent(content);
 		} catch (error) {
-			setHelpError(__('Failed to load help content. Please try again later.', 'buddyboss'));
+			setHelpError(__('Failed to load help content. Please try again later.', 'buddyboss-platform'));
 			clearHelpContentCache(contentId);
 		} finally {
 			setHelpLoading(false);
@@ -1263,8 +1263,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	if (!feature) {
 		return (
 			<div className="bb-admin-feature-settings bb-admin-not-found">
-				<h2>{__('Feature not found', 'buddyboss')}</h2>
-				<p>{__('The requested feature could not be found.', 'buddyboss')}</p>
+				<h2>{__('Feature not found', 'buddyboss-platform')}</h2>
+				<p>{__('The requested feature could not be found.', 'buddyboss-platform')}</p>
 			</div>
 		);
 	}
@@ -1533,30 +1533,30 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													{ feature && feature.label
 														? sprintf(
 															/* translators: %s: feature label being activated. */
-															__( 'Activating %s… this should only take a moment.', 'buddyboss' ),
+															__( 'Activating %s… this should only take a moment.', 'buddyboss-platform' ),
 															feature.label
 														)
-														: __( 'Activating feature… this should only take a moment.', 'buddyboss' )
+														: __( 'Activating feature… this should only take a moment.', 'buddyboss-platform' )
 													}
 												</p>
 											</>
 										) : (
 											<>
 												<p>
-													{ __( 'Couldn\'t load settings. The feature may not be fully active yet.', 'buddyboss' ) }
+													{ __( 'Couldn\'t load settings. The feature may not be fully active yet.', 'buddyboss-platform' ) }
 												</p>
 												<Button
 													variant="secondary"
 													onClick={handleEmptyPanelsManualRetry}
 												>
-													{ __( 'Try again', 'buddyboss' ) }
+													{ __( 'Try again', 'buddyboss-platform' ) }
 												</Button>
 											</>
 										) }
 									</div>
 								) : (
 									<div className="bb-admin-feature-settings__no-section">
-										<p>{__('Please select a panel from the sidebar.', 'buddyboss')}</p>
+										<p>{__('Please select a panel from the sidebar.', 'buddyboss-platform')}</p>
 									</div>
 								)
 							)}
@@ -1583,12 +1583,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			<HelpSliderModal
 				isOpen={isHelpOpen}
 				onClose={handleHelpClose}
-				title={( helpContent && helpContent.title ) || __('Help', 'buddyboss')}
+				title={( helpContent && helpContent.title ) || __('Help', 'buddyboss-platform')}
 			>
 				{isHelpLoading ? (
 					<div className="help-content-loading">
 						<Spinner />
-						<p>{__('Loading help content...', 'buddyboss')}</p>
+						<p>{__('Loading help content...', 'buddyboss-platform')}</p>
 					</div>
 				) : helpError ? (
 					<div className="help-content-error">
@@ -1602,7 +1602,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 									width="100%"
 									height="315"
 									src={`https://www.youtube.com/embed/${helpContent.videoId}`}
-									title={__('Video tutorial', 'buddyboss')}
+									title={__('Video tutorial', 'buddyboss-platform')}
 									frameBorder="0"
 									allowFullScreen
 								></iframe>
@@ -1622,14 +1622,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							return heroSrc ? (
 								<img
 									src={ heroSrc }
-									alt={__('Help content illustration', 'buddyboss')}
+									alt={__('Help content illustration', 'buddyboss-platform')}
 									style={{ width: '100%', borderRadius: 8, marginBottom: 16 }}
 								/>
 							) : null;
 						} )() }
 					</>
 				) : (
-					<p>{__('No help content available.', 'buddyboss')}</p>
+					<p>{__('No help content available.', 'buddyboss-platform')}</p>
 				)}
 			</HelpSliderModal>
 

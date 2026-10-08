@@ -8,6 +8,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 if ( bb_enable_content_counts() && 'videos' === bp_current_action() ) {
 	?>
@@ -22,7 +25,7 @@ if ( bb_enable_content_counts() && 'videos' === bp_current_action() ) {
 						'<span class="bb-count">%d</span> Video',
 						'<span class="bb-count">%d</span> Videos',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					array( 'span' => array( 'class' => true ) )
 				),
@@ -61,7 +64,7 @@ if ( bb_enable_content_counts() && 'videos' === bp_current_action() ) {
 				bp_get_template_part( 'video/add-video' );
 			} else {
 				?>
-				<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
+				<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss-platform' ); ?></h2>
 				<?php
 			}
 

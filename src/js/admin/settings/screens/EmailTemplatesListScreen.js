@@ -41,9 +41,9 @@ import { EmailMissingModal } from '../components/emails/EmailMissingModal';
  * @type {Array}
  */
 var sortOptions = [
-	{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
-	{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
-	{ label: __( 'Last Modified', 'buddyboss' ), value: 'last_modified' },
+	{ label: __( 'Newest', 'buddyboss-platform' ), value: 'newest' },
+	{ label: __( 'Oldest', 'buddyboss-platform' ), value: 'oldest' },
+	{ label: __( 'Last Modified', 'buddyboss-platform' ), value: 'last_modified' },
 ];
 
 /**
@@ -402,13 +402,13 @@ export default function EmailTemplatesListScreen( props ) {
 				} else {
 					setToast( {
 						status: 'error',
-						message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+						message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
 					} );
 				}
 			} )
 			.catch( function() {
 				setBulkProcessing( false );
-				setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss-platform' ) } );
 			} );
 	}, [ bulkAction, selectedIds, bulkProcessing, page, sort, search, fetchTemplates ] );
 
@@ -418,9 +418,9 @@ export default function EmailTemplatesListScreen( props ) {
 
 	// Build bulk action options for the dropdown — Edit + Delete per Figma.
 	var bulkActionOptions = [
-		{ label: __( 'Bulk actions', 'buddyboss' ), value: '' },
-		{ label: __( 'Edit', 'buddyboss' ), value: 'bulk_edit' },
-		{ label: __( 'Delete', 'buddyboss' ), value: 'delete' },
+		{ label: __( 'Bulk actions', 'buddyboss-platform' ), value: '' },
+		{ label: __( 'Edit', 'buddyboss-platform' ), value: 'bulk_edit' },
+		{ label: __( 'Delete', 'buddyboss-platform' ), value: 'delete' },
 	];
 
 	// Derive custom column keys from server-provided columns (third-party plugins like WPML).
@@ -435,7 +435,7 @@ export default function EmailTemplatesListScreen( props ) {
 			{/* Header */}
 			<div className="bb-email-templates-list__header">
 				<h2 className="bb-email-templates-list__title">
-					{ __( 'Email Templates', 'buddyboss' ) }
+					{ __( 'Email Templates', 'buddyboss-platform' ) }
 				</h2>
 				<a
 					href="themes.php?page=bp-emails-customizer-redirect"
@@ -444,7 +444,7 @@ export default function EmailTemplatesListScreen( props ) {
 					rel="noopener noreferrer"
 				>
 					<i className="bb-icons-rl bb-icons-rl-gear" />
-					{ __( 'Customize Layout', 'buddyboss' ) }
+					{ __( 'Customize Layout', 'buddyboss-platform' ) }
 				</a>
 				<Button
 					className="bb-email-templates-list__create-btn is-primary"
@@ -454,7 +454,7 @@ export default function EmailTemplatesListScreen( props ) {
 					} }
 				>
 					<i className="bb-icons-rl bb-icons-rl-plus" />
-					{ __( 'Add New Email', 'buddyboss' ) }
+					{ __( 'Add New Email', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 
@@ -466,7 +466,7 @@ export default function EmailTemplatesListScreen( props ) {
 						<span>
 							{ sprintf(
 								/* translators: %d: number of missing emails */
-								__( 'Email Missing (%d)', 'buddyboss' ),
+								__( 'Email Missing (%d)', 'buddyboss-platform' ),
 								missingCount
 							) }
 						</span>
@@ -479,7 +479,7 @@ export default function EmailTemplatesListScreen( props ) {
 							setMissingModalOpen( true );
 						} }
 					>
-						{ __( 'Add Missing Email', 'buddyboss' ) }
+						{ __( 'Add Missing Email', 'buddyboss-platform' ) }
 						<i className="bb-icons-rl-plus"></i>
 					</a>
 				</div>
@@ -501,7 +501,7 @@ export default function EmailTemplatesListScreen( props ) {
 							onClick={ handleBulkApply }
 							disabled={ ! bulkAction || 0 === selectedIds.length || bulkProcessing }
 						>
-							{ __( 'Apply', 'buddyboss' ) }
+							{ __( 'Apply', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</div>
@@ -512,11 +512,11 @@ export default function EmailTemplatesListScreen( props ) {
 						<SelectControl
 							value={ filter }
 							options={ views ? [
-								{ label: sprintf( __( 'All (%d)', 'buddyboss' ), views.all || 0 ), value: 'all' },
-								{ label: sprintf( __( 'Published (%d)', 'buddyboss' ), views.publish || 0 ), value: 'publish' },
-								{ label: sprintf( __( 'Draft (%d)', 'buddyboss' ), views.draft || 0 ), value: 'draft' },
+								{ label: sprintf( __( 'All (%d)', 'buddyboss-platform' ), views.all || 0 ), value: 'all' },
+								{ label: sprintf( __( 'Published (%d)', 'buddyboss-platform' ), views.publish || 0 ), value: 'publish' },
+								{ label: sprintf( __( 'Draft (%d)', 'buddyboss-platform' ), views.draft || 0 ), value: 'draft' },
 							] : [
-								{ label: sprintf( __( 'All (%d)', 'buddyboss' ), total ), value: 'all' },
+								{ label: sprintf( __( 'All (%d)', 'buddyboss-platform' ), total ), value: 'all' },
 							] }
 							onChange={ handleFilterChange }
 							__nextHasNoMarginBottom
@@ -538,7 +538,7 @@ export default function EmailTemplatesListScreen( props ) {
 						<input
 							type="text"
 							className="bb-email-templates-list__search-input bb-admin-list-search__input"
-							placeholder={ __( 'Search emails', 'buddyboss' ) }
+							placeholder={ __( 'Search emails', 'buddyboss-platform' ) }
 							value={ searchInput }
 							onChange={ handleSearchChange }
 						/>
@@ -555,8 +555,8 @@ export default function EmailTemplatesListScreen( props ) {
 				) : 0 === items.length ? (
 					<div className="bb-email-templates-list__empty bb-admin-list-table__empty">
 						{ search
-							? __( 'No email templates found matching your search.', 'buddyboss' )
-							: __( 'No email templates found.', 'buddyboss' )
+							? __( 'No email templates found matching your search.', 'buddyboss-platform' )
+							: __( 'No email templates found.', 'buddyboss-platform' )
 						}
 					</div>
 				) : (
@@ -571,7 +571,7 @@ export default function EmailTemplatesListScreen( props ) {
 									/>
 								</th>
 								<th className="bb-email-templates-list__th--title">
-									{ __( 'Title', 'buddyboss' ) }
+									{ __( 'Title', 'buddyboss-platform' ) }
 								</th>
 								{ customColumnKeys.map( function( key ) {
 									return (
@@ -581,10 +581,10 @@ export default function EmailTemplatesListScreen( props ) {
 									);
 								} ) }
 								<th className="bb-email-templates-list__th--description">
-									{ __( 'Situations', 'buddyboss' ) }
+									{ __( 'Situations', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-email-templates-list__th--date">
-									{ __( 'Published', 'buddyboss' ) }
+									{ __( 'Published', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-email-templates-list__th--actions"></th>
 							</tr>
@@ -644,7 +644,7 @@ export default function EmailTemplatesListScreen( props ) {
 										<td className="bb-email-templates-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss' ) }
+												label={ __( 'More options', 'buddyboss-platform' ) }
 											>
 												{ function( { onClose } ) {
 													return (
@@ -657,7 +657,7 @@ export default function EmailTemplatesListScreen( props ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'Preview', 'buddyboss' ) }
+																	{ __( 'Preview', 'buddyboss-platform' ) }
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
@@ -669,7 +669,7 @@ export default function EmailTemplatesListScreen( props ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
-																{ __( 'Edit', 'buddyboss' ) }
+																{ __( 'Edit', 'buddyboss-platform' ) }
 															</MenuItem>
 															<MenuItem
 																isDestructive
@@ -680,7 +680,7 @@ export default function EmailTemplatesListScreen( props ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																{ __( 'Delete', 'buddyboss' ) }
+																{ __( 'Delete', 'buddyboss-platform' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -731,7 +731,7 @@ export default function EmailTemplatesListScreen( props ) {
 					setEditEmailId( 0 );
 					isFirstLoad.current = true;
 					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
-					setToast( { status: 'success', message: __( 'Email template saved.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Email template saved.', 'buddyboss-platform' ) } );
 				} }
 			/>
 
@@ -750,18 +750,18 @@ export default function EmailTemplatesListScreen( props ) {
 					setBulkAction( '' );
 					isFirstLoad.current = true;
 					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
-					setToast( { status: 'success', message: __( 'Email templates updated.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Email templates updated.', 'buddyboss-platform' ) } );
 				} }
 			/>
 
 			{/* Single Delete Confirmation Modal */}
 			<DeleteConfirmModal
 				isOpen={ !! deleteItem }
-				singleTitle={ __( 'Delete email template?', 'buddyboss' ) }
+				singleTitle={ __( 'Delete email template?', 'buddyboss-platform' ) }
 				items={ deleteItem ? [ { id: deleteItem.id, title: deleteItem.title } ] : [] }
-				warningText={ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss' ) }
-				description={ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss' ) }
-				confirmLabel={ __( 'I understand that this deletes the email template.', 'buddyboss' ) }
+				warningText={ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss-platform' ) }
+				description={ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss-platform' ) }
+				confirmLabel={ __( 'I understand that this deletes the email template.', 'buddyboss-platform' ) }
 				confirmChecked={ deleteConfirmChecked }
 				onConfirmChange={ setDeleteConfirmChecked }
 				onConfirm={ function () {
@@ -782,13 +782,13 @@ export default function EmailTemplatesListScreen( props ) {
 							} else {
 								setToast( {
 									status: 'error',
-									message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+									message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
 								} );
 							}
 						} )
 						.catch( function () {
 							setBulkProcessing( false );
-							setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss' ) } );
+							setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss-platform' ) } );
 						} );
 				} }
 				onClose={ function () { setDeleteItem( null ); setDeleteConfirmChecked( false ); } }

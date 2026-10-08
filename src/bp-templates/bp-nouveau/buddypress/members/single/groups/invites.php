@@ -7,9 +7,13 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
-<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss-platform' ); ?></h2>
 <?php
 bp_nouveau_group_hook( 'before', 'invites_content' );
 
@@ -41,16 +45,19 @@ if ( bp_has_groups( 'type=invites&user_id=' . $bp_displayed_user_id ) ) {
 							if ( ! empty( $inviter ) ) : ?>
 								<span class="small">
 								<?php
-								printf(
-									__( 'Invited by %1$s &middot; %2$s.', 'buddyboss' ),
+								echo wp_kses_post(
 									sprintf(
-										'<a href="%s">%s</a>',
-										$inviter['url'],
-										$inviter['name']
-									),
-									sprintf(
-										'<span class="last-activity">%s</span>',
-										bp_core_time_since( $inviter['date_modified'] )
+										/* translators: 1: inviter profile link, 2: time since the invitation. */
+										__( 'Invited by %1$s &middot; %2$s.', 'buddyboss-platform' ),
+										sprintf(
+											'<a href="%s">%s</a>',
+											esc_url( $inviter['url'] ),
+											esc_html( $inviter['name'] )
+										),
+										sprintf(
+											'<span class="last-activity">%s</span>',
+											esc_html( bp_core_time_since( $inviter['date_modified'] ) )
+										)
 									)
 								);
 								?>
@@ -59,7 +66,7 @@ if ( bp_has_groups( 'type=invites&user_id=' . $bp_displayed_user_id ) ) {
 						</p>
 
 						<p class="desc">
-							<?php echo bp_groups_get_invite_messsage_for_user( $bp_displayed_user_id, $bp_get_group_id ); ?>
+							<?php echo wp_kses_post( bp_groups_get_invite_messsage_for_user( $bp_displayed_user_id, $bp_get_group_id ) ); ?>
 						</p>
 						<?php
 						bp_nouveau_group_hook( '', 'invites_item' );

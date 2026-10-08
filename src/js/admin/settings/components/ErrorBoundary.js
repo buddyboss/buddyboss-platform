@@ -48,8 +48,8 @@ export class ErrorBoundary extends Component {
 			return (
 				<div className="bb-admin-error-boundary">
 					<div className="bb-admin-error-boundary__content">
-						<h2>{__('Something went wrong', 'buddyboss')}</h2>
-						<p>{__('An error occurred while loading the settings. Please try refreshing the page.', 'buddyboss')}</p>
+						<h2>{__('Something went wrong', 'buddyboss-platform')}</h2>
+						<p>{__('An error occurred while loading the settings. Please try refreshing the page.', 'buddyboss-platform')}</p>
 						{this.state.error && window.bbAdminData?.debug && (
 							<pre className="bb-admin-error-boundary__details">
 								{this.state.error.toString()}
@@ -61,14 +61,14 @@ export class ErrorBoundary extends Component {
 								className="button button-primary"
 								onClick={this.handleRetry}
 							>
-								{__('Try Again', 'buddyboss')}
+								{__('Try Again', 'buddyboss-platform')}
 							</button>
 							<button
 								type="button"
 								className="button"
 								onClick={() => window.location.reload()}
 							>
-								{__('Reload Page', 'buddyboss')}
+								{__('Reload Page', 'buddyboss-platform')}
 							</button>
 						</div>
 					</div>

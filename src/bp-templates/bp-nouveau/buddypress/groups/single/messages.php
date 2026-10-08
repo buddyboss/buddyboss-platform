@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_get_template_part( 'groups/single/parts/messages-subnav' );
 ?>
 	<div id="group-messages-container">

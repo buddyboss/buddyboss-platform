@@ -39,7 +39,7 @@ class BB_Two_Factor_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'two-factor',
-			__( 'Two-Factor Authentication', 'buddyboss' ),
+			__( 'Two-Factor Authentication', 'buddyboss-platform' ),
 			'two-factor',
 			array(
 				'required_plugin' => bb_two_factor_plugin_basename(),

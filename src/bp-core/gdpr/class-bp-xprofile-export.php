@@ -26,7 +26,7 @@ final class BP_Xprofile_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Xprofile_Export();
-			$instance->setup( 'bp_xprofile', __( 'User Profile Information', 'buddyboss' ) );
+			$instance->setup( 'bp_xprofile', __( 'User Profile Information', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -77,24 +77,24 @@ final class BP_Xprofile_Export extends BP_Export {
 		}
 
 		if ( empty( $avatar ) || ! $avatar ) {
-			$avatar = __( 'N/A', 'buddyboss' );
+			$avatar = __( 'N/A', 'buddyboss-platform' );
 		}
 		if ( empty( $cover_photo ) || ! $cover_photo ) {
-			$cover_photo = __( 'N/A', 'buddyboss' );
+			$cover_photo = __( 'N/A', 'buddyboss-platform' );
 		}
 
 		$data[] = array(
-			'name'  => __( 'Avatar', 'buddyboss' ),
+			'name'  => __( 'Avatar', 'buddyboss-platform' ),
 			'value' => $avatar,
 		);
 		$data[] = array(
-			'name'  => __( 'Cover Photo', 'buddyboss' ),
+			'name'  => __( 'Cover Photo', 'buddyboss-platform' ),
 			'value' => $cover_photo,
 		);
 
 		$export_items[] = array(
 			'group_id'    => "{$this->exporter_name}-cover-avatar",
-			'group_label' => __( 'User Profile - Avatar & Cover Photos', 'buddyboss' ),
+			'group_label' => __( 'User Profile - Avatar & Cover Photos', 'buddyboss-platform' ),
 			'item_id'     => "{$this->exporter_name}-assets-{$user->ID}",
 			'data'        => $data,
 		);
@@ -108,7 +108,8 @@ final class BP_Xprofile_Export extends BP_Export {
 		foreach ( $data_items['items'] as $xgroup => $items ) {
 
 			$group_id    = $xgroup;
-			$group_label = __( "User Profile - {$xgroup}", 'buddyboss' );
+			// translators: %s: the XProfile field group name.
+			$group_label = sprintf( __( 'User Profile - %s', 'buddyboss-platform' ), $xgroup );
 			$item_id     = "{$this->exporter_name}-{$group_id}";
 
 			$data = array();
@@ -116,7 +117,7 @@ final class BP_Xprofile_Export extends BP_Export {
 			foreach ( $items as $item ) {
 				$val = trim( $item['value'] );
 				if ( empty( $val ) ) {
-					$val = __( 'N/A', 'buddyboss' );
+					$val = __( 'N/A', 'buddyboss-platform' );
 				}
 				$data[] = array(
 					'name'  => $item['name'],
@@ -209,7 +210,7 @@ final class BP_Xprofile_Export extends BP_Export {
 
 		foreach ( $xprofile_groups as $xgroup ) {
 
-			$fields = $wpdb->get_results(
+			$fields = $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from $bp->profile->global_tables; group_id is %d-prepared below.
 				$wpdb->prepare(
 					"SELECT *FROM {$field_table} WHERE group_id=%d AND parent_id=0",
 					$xgroup->id

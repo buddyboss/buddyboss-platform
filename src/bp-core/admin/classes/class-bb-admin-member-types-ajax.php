@@ -109,7 +109,7 @@ class BB_Admin_Member_Types_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() above.
@@ -375,7 +375,7 @@ class BB_Admin_Member_Types_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -384,7 +384,7 @@ class BB_Admin_Member_Types_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile type name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile type name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate visibility against allowlist.
@@ -419,7 +419,7 @@ class BB_Admin_Member_Types_Ajax {
 		);
 
 		if ( is_wp_error( $post_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to create profile type. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create profile type. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Generate type key from post_name (slug), same as legacy bp_save_member_type_post_metabox_data().
@@ -449,7 +449,7 @@ class BB_Admin_Member_Types_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Profile type created successfully.', 'buddyboss' ),
+				'message' => __( 'Profile type created successfully.', 'buddyboss-platform' ),
 				'id'      => $post_id,
 			)
 		);
@@ -466,7 +466,7 @@ class BB_Admin_Member_Types_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -476,13 +476,13 @@ class BB_Admin_Member_Types_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
 		if ( ! $post || bp_get_member_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Update title and/or visibility if provided.
@@ -529,7 +529,7 @@ class BB_Admin_Member_Types_Ajax {
 		if ( $needs_update ) {
 			$result = wp_update_post( $update_args, true );
 			if ( is_wp_error( $result ) ) {
-				wp_send_json_error( array( 'message' => __( 'Failed to update profile type. Please try again.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Failed to update profile type. Please try again.', 'buddyboss-platform' ) ) );
 			}
 		}
 
@@ -543,7 +543,7 @@ class BB_Admin_Member_Types_Ajax {
 		do_action( 'bb_member_type_after_save', $type_id );
 
 		$response = array(
-			'message' => __( 'Profile type updated successfully.', 'buddyboss' ),
+			'message' => __( 'Profile type updated successfully.', 'buddyboss-platform' ),
 			'id'      => $type_id,
 		);
 
@@ -561,7 +561,7 @@ class BB_Admin_Member_Types_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -569,13 +569,13 @@ class BB_Admin_Member_Types_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
 		if ( ! $post || bp_get_member_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid profile type.', 'buddyboss-platform' ) ) );
 		}
 
 		// wp_delete_post triggers before_delete_post which calls bp_delete_member_type()
@@ -583,7 +583,7 @@ class BB_Admin_Member_Types_Ajax {
 		$result = wp_delete_post( $type_id, true );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete profile type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete profile type.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -596,7 +596,7 @@ class BB_Admin_Member_Types_Ajax {
 		do_action( 'bb_member_type_after_delete', $type_id );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Profile type deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Profile type deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -825,7 +825,7 @@ class BB_Admin_Member_Types_Ajax {
 			if ( true === $bp_prevent_data_update ) {
 				if ( is_array( $old_wp_roles ) && in_array( 'administrator', $old_wp_roles, true ) ) {
 					if ( ! in_array( $current_user_role, $wp_roles, true ) ) {
-						$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type and then you can come back to update the associated WordPress role.', 'buddyboss' );
+						$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type and then you can come back to update the associated WordPress role.', 'buddyboss-platform' );
 
 						/**
 						 * Filters the admin error message when a user attempts to change a role

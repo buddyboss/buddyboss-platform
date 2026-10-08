@@ -25,7 +25,7 @@ class BB_License_Page {
 	 * @return string
 	 */
 	public static function pageTitle(): string {
-		return esc_html__( 'BuddyBoss License Activation', 'buddyboss' );
+		return esc_html__( 'BuddyBoss License Activation', 'buddyboss-platform' );
 	}
 
 	/**
@@ -41,7 +41,7 @@ class BB_License_Page {
 		return add_submenu_page(
 			$parent_slug,
 			self::pageTitle(),
-			esc_html__( 'License Activation', 'buddyboss' ),
+			esc_html__( 'License Activation', 'buddyboss-platform' ),
 			$capability,
 			self::SLUG,
 			array(
@@ -55,7 +55,8 @@ class BB_License_Page {
 	 * Renders the page.
 	 */
 	public static function render(): void {
-		wp_enqueue_style( 'bb-mothership-admin', buddypress()->plugin_url . 'bp-core/admin/css/mothership.css', array(), buddypress()->version );
+		$min = bp_core_get_minified_asset_suffix();
+		wp_enqueue_style( 'bb-mothership-admin', buddypress()->plugin_url . "bp-core/admin/css/mothership{$min}.css", array(), buddypress()->version );
 
 		include_once __DIR__ . '/views/admin.php';
 	}

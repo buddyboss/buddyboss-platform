@@ -78,6 +78,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * Validates the URL to determine if the activity item is valid.
 	 *
 	 * @since BuddyPress 2.6.0
+	 * @since BuddyBoss [BBVERSION] Added privacy validation so non-public activities are no longer resolvable via oEmbed.
 	 *
 	 * @param  string $url The URL to check.
 	 * @return int|bool Activity ID on success; boolean false on failure.
@@ -112,8 +113,29 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			// Check if activity item still exists.
 			$activity = new BP_Activity_Activity( $activity_id );
 
-			// Okay, we're good to go!
 			if ( ! empty( $activity->component ) && 0 === (int) $activity->is_spam ) {
+
+				// Bail if the current user cannot read this activity (group access, moderation).
+				if ( ! bp_activity_user_can_read( $activity ) ) {
+					return false;
+				}
+
+				// Bail if the activity privacy level (onlyme, friends, loggedin) forbids viewing.
+				if (
+					function_exists( 'bb_validate_activity_privacy' ) &&
+					is_wp_error(
+						bb_validate_activity_privacy(
+							array(
+								'activity_id'     => $activity_id,
+								'validate_action' => 'view_activity',
+							)
+						)
+					)
+				) {
+					return false;
+				}
+
+				// Okay, we're good to go!
 				return $activity_id;
 			}
 		}
@@ -134,7 +156,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 
 		return array(
 			'content'      => $activity->content,
-			'title'        => __( 'Activity', 'buddyboss' ),
+			'title'        => __( 'Activity', 'buddyboss-platform' ),
 			'author_name'  => bp_core_get_user_displayname( $activity->user_id ),
 			'author_url'   => bp_core_get_user_domain( $activity->user_id ),
 
@@ -191,7 +213,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return string
 	 */
 	protected function set_iframe_title( $item_id ) {
-		return __( 'Embedded Activity Item', 'buddyboss' );
+		return __( 'Embedded Activity Item', 'buddyboss-platform' );
 	}
 
 	/**
@@ -309,16 +331,19 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			<a href="<?php bp_activity_thread_permalink(); ?>">
 				<span class="dashicons dashicons-admin-comments"></span>
 				<?php
-				printf(
-					_n(
-						/* translators: accessibility text */
-						'%s <span class="screen-reader-text">Comment</span>',
-						/* translators: accessibility text */
-						'%s <span class="screen-reader-text">Comments</span>',
-						$count,
-						'buddyboss'
-					),
-					bp_core_number_format( $count )
+				echo wp_kses_post(
+					sprintf(
+						/* translators: %s: number of comments. */
+						_n(
+							/* translators: accessibility text */
+							'%s <span class="screen-reader-text">Comment</span>',
+							/* translators: accessibility text */
+							'%s <span class="screen-reader-text">Comments</span>',
+							$count,
+							'buddyboss-platform'
+						),
+						esc_html( bp_core_number_format( $count ) )
+					)
 				);
 				?>
 			</a>

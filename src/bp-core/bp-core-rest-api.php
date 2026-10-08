@@ -86,7 +86,7 @@ function bp_rest_api_register_request_script() {
 		array(
 			'root'            => esc_url_raw( get_rest_url() ),
 			'nonce'           => wp_create_nonce( 'wp_rest' ),
-			'unexpectedError' => __( 'An unexpected error occured. Please try again.', 'buddyboss' ),
+			'unexpectedError' => __( 'An unexpected error occured. Please try again.', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -246,7 +246,7 @@ function bp_rest_validate_member_types( $value ) {
 				'bp_rest_invalid_member_type',
 				sprintf(
 				/* translators: %1$s and %2$s is replaced with the registered type(s) */
-					__( 'The member type you provided, %1$s, is not one of %2$s.', 'buddyboss' ),
+					__( 'The member type you provided, %1$s, is not one of %2$s.', 'buddyboss-platform' ),
 					$type,
 					implode( ', ', $registered_types )
 				)
@@ -295,7 +295,7 @@ function bp_rest_validate_group_types( $value ) {
 				'bp_rest_invalid_group_type',
 				sprintf(
 				/* translators: %1$s and %2$s is replaced with the registered types */
-					__( 'The group type you provided, %1$s, is not one of %2$s.', 'buddyboss' ),
+					__( 'The group type you provided, %1$s, is not one of %2$s.', 'buddyboss-platform' ),
 					$type,
 					implode( ', ', $registered_types )
 				)

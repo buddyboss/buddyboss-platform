@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle editing of sitewide notices.
  *
@@ -51,24 +54,24 @@ function bp_messages_action_edit_notice() {
 		case 'deactivate':
 			$success  = $notice->deactivate();
 			$feedback = true === $success
-				? __( 'Notice deactivated successfully.', 'buddyboss' )
-				: __( 'There was a problem deactivating that notice.', 'buddyboss' );
+				? __( 'Notice deactivated successfully.', 'buddyboss-platform' )
+				: __( 'There was a problem deactivating that notice.', 'buddyboss-platform' );
 			break;
 
 		// Activate.
 		case 'activate':
 			$success  = $notice->activate();
 			$feedback = true === $success
-				? __( 'Notice activated successfully.', 'buddyboss' )
-				: __( 'There was a problem activating that notice.', 'buddyboss' );
+				? __( 'Notice activated successfully.', 'buddyboss-platform' )
+				: __( 'There was a problem activating that notice.', 'buddyboss-platform' );
 			break;
 
 		// Delete.
 		case 'delete':
 			$success  = $notice->delete();
 			$feedback = true === $success
-				? __( 'Notice deleted successfully.', 'buddyboss' )
-				: __( 'There was a problem deleting that notice.', 'buddyboss' );
+				? __( 'Notice deleted successfully.', 'buddyboss-platform' )
+				: __( 'There was a problem deleting that notice.', 'buddyboss-platform' );
 			break;
 	}
 

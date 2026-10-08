@@ -112,7 +112,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Groups', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Groups', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -220,7 +220,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return esc_html__( 'Report Group', 'buddyboss' );
+		return esc_html__( 'Report Group', 'buddyboss-platform' );
 	}
 
 	/**
@@ -234,7 +234,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return esc_html__( 'Group', 'buddyboss' );
+		return esc_html__( 'Group', 'buddyboss-platform' );
 	}
 
 	/**

@@ -374,7 +374,7 @@ function bp_buffer_template_part( $slug, $name = null, $echo = true, $args = arr
 
 	// Echo or return the output buffer contents.
 	if ( true === $echo ) {
-		echo $output;
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $output is buffered template HTML from ob_get_clean(); already escaped within the template parts, escaping here would corrupt markup.
 	} else {
 		return $output;
 	}

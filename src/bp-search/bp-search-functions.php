@@ -307,7 +307,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 							}
 
 							// $link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
-							echo $link_html;
+							echo wp_kses_post( $link_html );
 						}
 						?>
 						<?php if ( $use_bootstrap ) : ?>
@@ -341,7 +341,10 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 	?>
 	<div class="pag-count bottom">
 		<div class="pag-data">
-			<?php printf( __( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss' ), $from_num, min( $total_items, $to_num ), $total_items ); ?>
+			<?php
+			/* translators: 1: starting result number, 2: ending result number, 3: total number of results. */
+			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
+			?>
 		</div>
 	</div>
 	<?php
@@ -358,26 +361,26 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 function bp_search_items() {
 
 	$items = array(
-		'posts'          => __( 'Blog Posts', 'buddyboss' ),
-		'pages'          => __( 'Pages', 'buddyboss' ),
-		'posts_comments' => __( 'Post Comments', 'buddyboss' ),
-		'members'        => __( 'Members', 'buddyboss' ),
+		'posts'          => __( 'Blog Posts', 'buddyboss-platform' ),
+		'pages'          => __( 'Pages', 'buddyboss-platform' ),
+		'posts_comments' => __( 'Post Comments', 'buddyboss-platform' ),
+		'members'        => __( 'Members', 'buddyboss-platform' ),
 	);
 
 	// forums?
 
-	$items['forum'] = __( 'Forums', 'buddyboss' );
-	$items['topic'] = __( 'Forum Discussions', 'buddyboss' );
-	$items['reply'] = __( 'Forum Replies', 'buddyboss' );
+	$items['forum'] = __( 'Forums', 'buddyboss-platform' );
+	$items['topic'] = __( 'Forum Discussions', 'buddyboss-platform' );
+	$items['reply'] = __( 'Forum Replies', 'buddyboss-platform' );
 
 	// other buddypress components
 	$bp_components = array(
-		'groups'   => __( 'Groups', 'buddyboss' ),
-		'activity' => __( 'Activity', 'buddyboss' ),
-		'messages' => __( 'Messages', 'buddyboss' ),
+		'groups'   => __( 'Groups', 'buddyboss-platform' ),
+		'activity' => __( 'Activity', 'buddyboss-platform' ),
+		'messages' => __( 'Messages', 'buddyboss-platform' ),
 		/*
 		 should we search notifications as well?
-		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
+		'notifications'	=> __( 'Notifications', 'buddyboss-platform' ), */
 	);
 
 	// only the active ones please!
@@ -386,7 +389,7 @@ function bp_search_items() {
 			$items[ $component ] = $label;
 
 			if ( 'activity' === $component ) {
-				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss' );
+				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss-platform' );
 			}
 		}
 	}
@@ -504,10 +507,10 @@ function bp_search_body_class( $wp_classes ) {
  */
 function bp_get_search_user_fields() {
 	return array(
-		'user_meta'    => __( 'User Meta', 'buddyboss' ),
-		'display_name' => __( 'Display Name', 'buddyboss' ),
-		'user_email'   => __( 'User Email', 'buddyboss' ),
-		'user_login'   => __( 'Username', 'buddyboss' ),
+		'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
+		'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+		'user_email'   => __( 'User Email', 'buddyboss-platform' ),
+		'user_login'   => __( 'Username', 'buddyboss-platform' ),
 	);
 }
 
@@ -577,9 +580,10 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 		$hidden_filters = bps_get_hidden_filters();
 
 		$cookie  = apply_filters( 'bps_cookie_name', 'bps_request' );
-		$request = isset( $_REQUEST['bps_form'] ) ? $_REQUEST : array();
+		$request = isset( $_REQUEST['bps_form'] ) ? map_deep( wp_unslash( $_REQUEST ), 'sanitize_text_field' ) : array();
 		if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
-			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $request );
+			$request = map_deep( $request, 'sanitize_text_field' );
 		}
 
 		switch ( $type ) {
@@ -612,10 +616,10 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 	}
 
 	function bps_current_page() {
-		$current = defined( 'DOING_AJAX' ) ? parse_url(
-			$_SERVER['HTTP_REFERER'],
+		$current = defined( 'DOING_AJAX' ) ? wp_parse_url(
+			isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
 			PHP_URL_PATH
-		) : parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		) : wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 		return apply_filters( 'bps_current_page', $current );        // published interface, 20190324
 	}
@@ -637,7 +641,8 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 			$data = isset( $bps_directory_data ) ? $bps_directory_data : array();
 		} elseif ( isset( $_COOKIE[ $cookie ] ) ) {
 			$current = bps_current_page();
-			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $data );
+			parse_str( wp_unslash( $_COOKIE[ $cookie ] ), $data );
+			$data = map_deep( $data, 'sanitize_text_field' );
 			if ( $data['page'] != $current ) {
 				$data = array();
 			}
@@ -813,7 +818,7 @@ function bb_search_get_search_stopwords() {
 		_x(
 			'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
 			'Comma-separated list of search stopwords in your language',
-			'buddyboss'
+			'buddyboss-platform'
 		)
 	);
 

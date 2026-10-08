@@ -167,7 +167,7 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -202,79 +202,79 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'can_create_activity'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create activity or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create activity or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_group'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create group or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create group or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_join_group'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can join the group or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can join the group or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_media'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the media or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the media or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_forum_media'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the media into forums or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the media into forums or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_message_media'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the media into messages or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the media into messages or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_document'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the document or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the document or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_forum_document'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the document into forums or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the document into forums or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_message_document' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the document into messages or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the document into messages or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_video'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the video or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the video or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_forum_video'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the video into forums or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the video into forums or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_message_video'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the video into messages or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the video into messages or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_create_poll'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the user can create the poll into activity or not.', 'buddyboss' ),
+					'description' => __( 'Whether the user can create the poll into activity or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

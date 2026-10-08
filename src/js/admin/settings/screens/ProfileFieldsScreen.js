@@ -150,7 +150,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			.catch( function ( error ) {
 				if ( 'AbortError' !== error.name ) {
 					setIsLoading( false );
-					setToast( { status: 'error', message: error.message || __( 'Failed to load profile fields.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: error.message || __( 'Failed to load profile fields.', 'buddyboss-platform' ) } );
 				}
 			} );
 	}, [] );
@@ -231,17 +231,17 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		deleteProfileField( fieldId, { signal: deleteAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: response.data.message || __( 'Field deleted.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: response.data.message || __( 'Field deleted.', 'buddyboss-platform' ) } );
 					loadFieldGroups();
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete field.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete field.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function ( error ) {
 				if ( 'AbortError' === error.name ) {
 					return;
 				}
-				setToast( { status: 'error', message: error.message || __( 'Failed to delete field.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: error.message || __( 'Failed to delete field.', 'buddyboss-platform' ) } );
 			} );
 	}
 
@@ -291,19 +291,19 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 
 		// Show a sticky "saving" toast while the request is in flight; it's
 		// replaced by the success or error toast once the request settles.
-		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss' ) } );
+		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss-platform' ) } );
 
 		reorderProfileFields( payload, { signal: reorderAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function ( error ) {
 				if ( error && 'AbortError' === error.name ) {
 					return;
 				}
-				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss-platform' ) } );
 				loadFieldGroups();
 			} );
 	}
@@ -332,13 +332,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		var field = sourceGroup && sourceGroup.fields ? sourceGroup.fields[ fieldIdx ] : null;
 
 		if ( ! sourceGroup || ! targetGroup || ! field ) {
-			return __( 'This field can’t be moved here.', 'buddyboss' );
+			return __( 'This field can’t be moved here.', 'buddyboss-platform' );
 		}
 		if ( ! field.can_delete || field.is_default_field ) {
-			return __( 'This field is required by the platform and can’t be moved to another field set.', 'buddyboss' );
+			return __( 'This field is required by the platform and can’t be moved to another field set.', 'buddyboss-platform' );
 		}
 		if ( sourceGroup.is_repeater || targetGroup.is_repeater ) {
-			return __( 'Fields can’t be moved into or out of a repeater field set.', 'buddyboss' );
+			return __( 'Fields can’t be moved into or out of a repeater field set.', 'buddyboss-platform' );
 		}
 		return null;
 	}
@@ -597,7 +597,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	 */
 	function renderFieldBadgeText( field ) {
 		if ( field.is_required ) {
-			return <span className="bb-pf-badge-text">{ __( 'required', 'buddyboss' ) }</span>;
+			return <span className="bb-pf-badge-text">{ __( 'required', 'buddyboss-platform' ) }</span>;
 		}
 		return null;
 	}
@@ -620,7 +620,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		var badges = [];
 		if ( field.is_signup ) {
 			badges.push(
-				<span key="signup" className="bb-pf-badge bb-pf-badge--signup">{ __( 'Signup', 'buddyboss' ) }</span>
+				<span key="signup" className="bb-pf-badge bb-pf-badge--signup">{ __( 'Signup', 'buddyboss-platform' ) }</span>
 			);
 		}
 		if ( 'none' === field.member_type_mode ) {
@@ -630,7 +630,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			// profile type assigned yet" instead of its actual meaning
 			// ("only users who don't have a profile type").
 			badges.push(
-				<span key="member-types-none" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'No Profile Type Users', 'buddyboss' ) }</span>
+				<span key="member-types-none" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'No Profile Type Users', 'buddyboss-platform' ) }</span>
 			);
 		} else if ( 'all' === field.member_type_mode ) {
 			// Explicit "All Profile Types" badge so the list communicates
@@ -638,7 +638,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			// to a freshly-created field that's never had its visibility
 			// configured — the badge removes that ambiguity.
 			badges.push(
-				<span key="member-types-all" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'All Profile Types', 'buddyboss' ) }</span>
+				<span key="member-types-all" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'All Profile Types', 'buddyboss-platform' ) }</span>
 			);
 		} else if ( field.member_types && field.member_types.length > 0 ) {
 			var typeLabels = field.member_types.map( function ( typeKey ) {
@@ -683,7 +683,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		return (
 			<div className="bb-settings-panel-content bb-pf-loading">
 				<Spinner />
-				<p>{ __( 'Loading profile fields...', 'buddyboss' ) }</p>
+				<p>{ __( 'Loading profile fields...', 'buddyboss-platform' ) }</p>
 			</div>
 		);
 	}
@@ -704,7 +704,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 
 			{/* Top banner. */}
 			<div className="bb-pf-banner">
-				<p>{ __( 'Select the fields you wish to display on your registration page.', 'buddyboss' ) }</p>
+				<p>{ __( 'Select the fields you wish to display on your registration page.', 'buddyboss-platform' ) }</p>
 				<a
 					href="#signup-fields"
 					className="bb-pf-banner__select-link"
@@ -716,7 +716,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 						}
 					} }
 				>
-					{ __( 'Select', 'buddyboss' ) }
+					{ __( 'Select', 'buddyboss-platform' ) }
 					<i className="bb-icons-rl bb-icons-rl-arrow-right" aria-hidden="true"></i>
 				</a>
 			</div>
@@ -747,14 +747,14 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 							<div className="bb-pf-fieldset-header-left">
 								<span
 									className="bb-pf-drag-handle"
-									aria-label={ __( 'Drag to reorder field set', 'buddyboss' ) }
+									aria-label={ __( 'Drag to reorder field set', 'buddyboss-platform' ) }
 								>
 									<i className="bb-icons-rl-list" />
 								</span>
 								<h3>{ decodeEntities( group.name ) }</h3>
 								{ group.is_repeater && (
 									<span className="bb-pf-badge bb-pf-badge--repeater">
-										{ __( 'Repeater', 'buddyboss' ) }
+										{ __( 'Repeater', 'buddyboss-platform' ) }
 									</span>
 								) }
 							</div>
@@ -768,7 +768,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 								>
 									<i className="bb-icons-rl bb-icons-rl-note-pencil" />
 									{ ' ' }
-									{ __( 'Edit Field Set', 'buddyboss' ) }
+									{ __( 'Edit Field Set', 'buddyboss-platform' ) }
 								</Button>
 
 								<button
@@ -804,7 +804,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 												<div className="bb-pf-field-left">
 													<span
 														className="bb-pf-drag-handle"
-														aria-label={ __( 'Drag to reorder field', 'buddyboss' ) }
+														aria-label={ __( 'Drag to reorder field', 'buddyboss-platform' ) }
 													>
 														<i className="bb-icons-rl-list" />
 													</span>
@@ -826,7 +826,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 															e.stopPropagation();
 															setOpenMenuId( openMenuId === field.id ? null : field.id );
 														} }
-														aria-label={ __( 'Actions', 'buddyboss' ) }
+														aria-label={ __( 'Actions', 'buddyboss-platform' ) }
 														aria-haspopup="true"
 														aria-expanded={ field.id === openMenuId ? 'true' : 'false' }
 													>
@@ -844,7 +844,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 															>
 																<span className="components-menu-item__item">
 																	<i className="bb-icons-rl bb-icons-rl-note-pencil" />
-																	{ ' ' + __( 'Edit', 'buddyboss' ) }
+																	{ ' ' + __( 'Edit', 'buddyboss-platform' ) }
 																</span>
 															</button>
 															{ field.can_delete && (
@@ -858,7 +858,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 																>
 																	<span className="components-menu-item__item">
 																		<i className="bb-icons-rl bb-icons-rl-trash" />
-																		{ ' ' + __( 'Delete', 'buddyboss' ) }
+																		{ ' ' + __( 'Delete', 'buddyboss-platform' ) }
 																	</span>
 																</button>
 															) }
@@ -870,7 +870,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 									} )
 									: (
 										<p className="bb-pf-no-fields">
-											{ __( 'No fields in this field set.', 'buddyboss' ) }
+											{ __( 'No fields in this field set.', 'buddyboss-platform' ) }
 										</p>
 									)
 								}
@@ -884,7 +884,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 									} }
 								>
 									<i className="bb-icons-rl bb-icons-rl-plus" />
-									{ ' ' + __( 'Add New Field', 'buddyboss' ) }
+									{ ' ' + __( 'Add New Field', 'buddyboss-platform' ) }
 								</Button>
 							</div>
 						) }
@@ -902,7 +902,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				} }
 			>
 				<i className="bb-icons-rl bb-icons-rl-plus" />
-				{ ' ' + __( 'Add New Field Set', 'buddyboss' ) }
+				{ ' ' + __( 'Add New Field Set', 'buddyboss-platform' ) }
 			</Button>
 
 			{/* Field Set Modal (Add/Edit). */}
@@ -958,13 +958,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			{/* Delete field confirmation. */}
 			<ConfirmToggleModal
 				isOpen={ null !== deleteFieldData }
-				title={ __( 'Delete Field', 'buddyboss' ) }
+				title={ __( 'Delete Field', 'buddyboss-platform' ) }
 				message={ deleteFieldData
-					? sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.name ) )
+					? sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss-platform' ), decodeEntities( deleteFieldData.name ) )
 					: ''
 				}
-				confirmLabel={ __( 'Delete', 'buddyboss' ) }
-				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				confirmLabel={ __( 'Delete', 'buddyboss-platform' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss-platform' ) }
 				isDestructive={ true }
 				onConfirm={ function () { handleDeleteField( deleteFieldData.id ); } }
 				onCancel={ function () { setDeleteFieldData( null ); } }

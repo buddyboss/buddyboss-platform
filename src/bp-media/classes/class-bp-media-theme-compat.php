@@ -165,7 +165,7 @@ class BP_Media_Theme_Compat {
 		bp_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $media_page_id ) ? $media_page_id : 0,
-				'post_title'     => __( 'Photos', 'buddyboss' ),
+				'post_title'     => __( 'Photos', 'buddyboss-platform' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',

@@ -142,7 +142,7 @@ class BB_Messages_Readylaunch {
 
 				$participant = array(
 					'id'            => $recipient->user_id,
-					'name'          => $is_current_user ? esc_html__( 'You', 'buddyboss' ) : bp_core_get_user_displayname( $recipient->user_id ),
+					'name'          => $is_current_user ? esc_html__( 'You', 'buddyboss-platform' ) : bp_core_get_user_displayname( $recipient->user_id ),
 					'avatar'        => bp_core_fetch_avatar(
 						array(
 							'item_id' => $recipient->user_id,
@@ -285,7 +285,7 @@ class BB_Messages_Readylaunch {
 			}
 		}
 
-		$document_component = bp_is_active( 'media' ) &&
+		$document_component = bp_is_active( 'document' ) &&
 		(
 			(
 				$group_id &&
@@ -405,7 +405,7 @@ class BB_Messages_Readylaunch {
 			if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 				wp_send_json_error(
 					array(
-						'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
+						'feedback' => __( 'Unauthorized request.', 'buddyboss-platform' ),
 						'type'     => 'error',
 					)
 				);

@@ -49,8 +49,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$this->forum_id = false;
 
 			// Component Name
-			$this->name          = __( 'Forum', 'buddyboss' );
-			$this->nav_item_name = __( 'Discussions', 'buddyboss' );
+			$this->name          = __( 'Forum', 'buddyboss-platform' );
+			$this->nav_item_name = __( 'Discussions', 'buddyboss-platform' );
 
 			// Component slugs (hardcoded to match Forums 1.x functionality)
 			$this->slug       = urlencode( get_option( '_bbp_forum_slug', 'forum' ) );
@@ -304,16 +304,16 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Should box be checked already?
 			$checked = is_admin() ? bp_group_is_forum_enabled( $group ) : bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( bp_get_group_id() ); ?>
 
-			<h4 class="bb-section-title"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></h4>
+			<h4 class="bb-section-title"><?php esc_html_e( 'Group Forum Settings', 'buddyboss-platform' ); ?></h4>
 
 			<fieldset>
-				<legend class="screen-reader-text"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></legend>
+				<legend class="screen-reader-text"><?php esc_html_e( 'Group Forum Settings', 'buddyboss-platform' ); ?></legend>
 
 				<?php
 				if ( ! is_admin() ) {
 					$group_forum_info = bbp_is_user_keymaster() ? sprintf(
 					/* translators: Link to wp-admin edit group */
-						__( 'As an administrator, you can %s in the settings.', 'buddyboss' ),
+						__( 'As an administrator, you can %s in the settings.', 'buddyboss-platform' ),
 						sprintf(
 							'<a href="%1$s">%2$s</a>',
 							esc_url(
@@ -326,9 +326,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 									bp_get_admin_url( 'admin.php' )
 								)
 							),
-							__( 'change the forum connected to this group', 'buddyboss' )
+							__( 'change the forum connected to this group', 'buddyboss-platform' )
 						)
-					) : __( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' );
+					) : __( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss-platform' );
 					?>
 					<aside class="bp-feedback bp-feedback-v2 bp-messages bp-template-notice info">
 						<span class="bp-icon" aria-hidden="true"></span>
@@ -336,12 +336,12 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					</aside>
 				<?php } ?>
 
-				<p class="bb-section-info"><?php esc_html_e( 'Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss' ); ?></p>
+				<p class="bb-section-info"><?php esc_html_e( 'Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss-platform' ); ?></p>
 
 				<div class="field-group">
 					<p class="checkbox bp-checkbox-wrap bp-group-option-enable">
 						<input type="checkbox" name="bbp-edit-group-forum" id="bbp-edit-group-forum" class="bs-styled-checkbox" value="1"<?php checked( $checked ); ?> />
-						<label for="bbp-edit-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
+						<label for="bbp-edit-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss-platform' ); ?></label>
 					</p>
 				</div>
 
@@ -349,13 +349,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					<div id='bb_group_forum_list' style="<?php echo $checked ? '' : 'display:none'; ?>">
 						<hr class="bb-sep-line" />
 						<div class="field-group">
-							<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
-							<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
+							<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss-platform' ); ?></h4>
+							<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss-platform' ); ?></p>
 							<?php
 							bbp_dropdown(
 								array(
 									'select_id'          => 'bbp_group_forum_id',
-									'show_none'          => __( '(No Forum)', 'buddyboss' ),
+									'show_none'          => __( '(No Forum)', 'buddyboss-platform' ),
 									'selected'           => $forum_id,
 									'disable_categories' => false,
 									'disabled_walker'    => false,
@@ -368,7 +368,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 				<?php if ( ! is_admin() ) : ?>
 					<br />
-					<input type="submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
+					<input type="submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss-platform' ); ?>" />
 				<?php endif; ?>
 
 			</fieldset>
@@ -404,7 +404,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 				// Theme-side Nonce check
 			} elseif ( ! bbp_verify_nonce_request( 'groups_edit_save_' . $this->slug ) ) {
-				bbp_add_error( 'bbp_edit_group_forum_screen_save', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+				bbp_add_error( 'bbp_edit_group_forum_screen_save', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
 				return;
 			}
 
@@ -565,7 +565,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Redirect after save when not in admin
 			if ( ! is_admin() ) {
-				bp_core_add_message( __( 'Group Forum details were successfully updated.', 'buddyboss' ) );
+				bp_core_add_message( __( 'Group Forum details were successfully updated.', 'buddyboss-platform' ) );
 				bp_core_redirect( trailingslashit( bp_get_group_permalink( buddypress()->groups->current_group ) . '/admin/' . $this->slug ) );
 			}
 		}
@@ -614,13 +614,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			$checked = bp_get_new_group_enable_forum() || groups_get_groupmeta( $group_id, 'forum_id' );
 			?>
 
-		<h4><?php esc_html_e( 'Group Forum', 'buddyboss' ); ?></h4>
+		<h4><?php esc_html_e( 'Group Forum', 'buddyboss-platform' ); ?></h4>
 
-		<p><?php esc_html_e( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss-platform' ); ?></p>
 
 		<p class="checkbox bp-checkbox-wrap">
 			<input type="checkbox" name="bbp-create-group-forum" id="bbp-create-group-forum" class="bs-styled-checkbox" value="1"<?php checked( $checked ); ?> />
-			<label for="bbp-create-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
+			<label for="bbp-create-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss-platform' ); ?></label>
 		</p>
 
 			<?php
@@ -635,7 +635,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 			// Nonce check
 			if ( ! bbp_verify_nonce_request( 'groups_create_save_' . $this->slug ) ) {
-				bbp_add_error( 'bbp_create_group_forum_screen_save', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+				bbp_add_error( 'bbp_create_group_forum_screen_save', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
 				return;
 			}
 
@@ -933,7 +933,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 						<div class="info bp-feedback">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php esc_html_e( 'This group does not currently have a forum.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'This group does not currently have a forum.', 'buddyboss-platform' ); ?></p>
 						</div>
 
 							<?php
@@ -1214,7 +1214,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			?>
 
 		<p>
-			<label for="bbp_forum_id"><?php esc_html_e( 'Forum:', 'buddyboss' ); ?></label><br />
+			<label for="bbp_forum_id"><?php esc_html_e( 'Forum:', 'buddyboss-platform' ); ?></label><br />
 				<?php
 				bbp_dropdown(
 					array(
@@ -1876,7 +1876,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Child forums are not allowed to associate with any groups.
 			if ( ! empty( $forum->post_parent ) ) {
 				if ( $show_error ) {
-					bp_core_add_message( __( 'Child forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
+					bp_core_add_message( __( 'Child forums are not allowed to associate with any groups.', 'buddyboss-platform' ), 'error' );
 				}
 
 				return false;
@@ -1885,7 +1885,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Category type forums are not allowed to associate with any groups.
 			if ( 'category' === $forum_type ) {
 				if ( $show_error ) {
-					bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups.', 'buddyboss' ), 'error' );
+					bp_core_add_message( __( 'Category type forums are not allowed to associate with any groups.', 'buddyboss-platform' ), 'error' );
 				}
 
 				return false;
@@ -1894,7 +1894,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Do not allow the same Forum to be associated with more than one Group.
 			if ( ! empty( $forum_groups ) && ! in_array( $group_id, $forum_groups, true ) ) {
 				if ( $show_error ) {
-					bp_core_add_message( __( 'This forum is already associated with other groups.', 'buddyboss' ), 'error' );
+					bp_core_add_message( __( 'This forum is already associated with other groups.', 'buddyboss-platform' ), 'error' );
 				}
 
 				return false;

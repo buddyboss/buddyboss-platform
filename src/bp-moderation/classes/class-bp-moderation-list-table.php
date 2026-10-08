@@ -93,9 +93,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
 		if ( 'reported-content' === $current_tab ) {
-			esc_html_e( 'No reported content found.', 'buddyboss' );
+			esc_html_e( 'No reported content found.', 'buddyboss-platform' );
 		} else {
-			esc_html_e( 'No blocked members found.', 'buddyboss' );
+			esc_html_e( 'No blocked members found.', 'buddyboss-platform' );
 		}
 	}
 
@@ -212,7 +212,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		<h2 class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
-			esc_html_e( 'Moderation Request list', 'buddyboss' );
+			esc_html_e( 'Moderation Request list', 'buddyboss-platform' );
 			?>
 		</h2>
 
@@ -280,16 +280,16 @@ class BP_Moderation_List_Table extends WP_List_Table {
 					if ( ! empty( $content_types ) ) {
 						?>
 						<div class="alignleft actions">
-							<label for="content-type-filter" class="screen-reader-text"><?php esc_html_e( 'Filter by content type', 'buddyboss' ); ?></label>
+							<label for="content-type-filter" class="screen-reader-text"><?php esc_html_e( 'Filter by content type', 'buddyboss-platform' ); ?></label>
 							<select name="content_type" id="content-type-filter">
-								<option value=""><?php esc_html_e( 'All Content Types', 'buddyboss' ); ?></option>
+								<option value=""><?php esc_html_e( 'All Content Types', 'buddyboss-platform' ); ?></option>
 								<?php foreach ( $content_types as $type_key => $type_label ) : ?>
 									<option value="<?php echo esc_attr( $type_key ); ?>" <?php selected( $selected_type, $type_key ); ?>>
 										<?php echo esc_html( $type_label ); ?>
 									</option>
 								<?php endforeach; ?>
 							</select>
-							<input type="submit" name="filter_action" class="button" value="<?php esc_attr_e( 'Filter', 'buddyboss' ); ?>">
+							<input type="submit" name="filter_action" class="button" value="<?php esc_attr_e( 'Filter', 'buddyboss-platform' ); ?>">
 						</div>
 						<?php
 					}
@@ -320,18 +320,18 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		if ( 'reported-content' === $current_tab ) {
 			$columns = array(
 				'cb'            => '<input name type="checkbox" />',
-				'content_type'  => esc_html__( 'Content', 'buddyboss' ),
-				'content_owner' => esc_html__( 'Owner', 'buddyboss' ),
-				'reported'      => esc_html__( 'Reports', 'buddyboss' ),
-				'is_hidden'     => esc_html__( 'Hidden', 'buddyboss' ),
+				'content_type'  => esc_html__( 'Content', 'buddyboss-platform' ),
+				'content_owner' => esc_html__( 'Owner', 'buddyboss-platform' ),
+				'reported'      => esc_html__( 'Reports', 'buddyboss-platform' ),
+				'is_hidden'     => esc_html__( 'Hidden', 'buddyboss-platform' ),
 			);
 		} else {
 			$columns = array(
 				'cb'           => '<input name type="checkbox" />',
-				'member'       => esc_html__( 'Member', 'buddyboss' ),
-				'blocked'      => esc_html__( 'Blocks', 'buddyboss' ),
-				'count_report' => esc_html__( 'Reports', 'buddyboss' ),
-				'suspend'      => esc_html__( 'Suspended', 'buddyboss' ),
+				'member'       => esc_html__( 'Member', 'buddyboss-platform' ),
+				'blocked'      => esc_html__( 'Blocks', 'buddyboss-platform' ),
+				'count_report' => esc_html__( 'Reports', 'buddyboss-platform' ),
+				'suspend'      => esc_html__( 'Suspended', 'buddyboss-platform' ),
 			);
 		}
 
@@ -378,33 +378,33 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			array(
 				'blocked-members'  => array(
 					'all'       => array(
-						'name' => esc_html__( 'All', 'buddyboss' ),
+						'name' => esc_html__( 'All', 'buddyboss-platform' ),
 						'link' => $blocked_members_url_base,
 					),
 					'blocked'   => array(
-						'name' => esc_html__( 'Blocked', 'buddyboss' ),
+						'name' => esc_html__( 'Blocked', 'buddyboss-platform' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'blocked' ), $blocked_members_url_base ),
 					),
 					'reported'  => array(
-						'name' => esc_html__( 'Reported', 'buddyboss' ),
+						'name' => esc_html__( 'Reported', 'buddyboss-platform' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'reported' ), $blocked_members_url_base ),
 					),
 					'suspended' => array(
-						'name' => esc_html__( 'Suspended', 'buddyboss' ),
+						'name' => esc_html__( 'Suspended', 'buddyboss-platform' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'suspended' ), $blocked_members_url_base ),
 					),
 				),
 				'reported-content' => array(
 					'all'    => array(
-						'name' => esc_html__( 'All', 'buddyboss' ),
+						'name' => esc_html__( 'All', 'buddyboss-platform' ),
 						'link' => $reported_content_url_base,
 					),
 					'active' => array(
-						'name' => esc_html__( 'Unhidden', 'buddyboss' ),
+						'name' => esc_html__( 'Unhidden', 'buddyboss-platform' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'active' ), $reported_content_url_base ),
 					),
 					'hidden' => array(
-						'name' => esc_html__( 'Hidden', 'buddyboss' ),
+						'name' => esc_html__( 'Hidden', 'buddyboss-platform' ),
 						'link' => add_query_arg( array( 'moderation_status' => 'hidden' ), $reported_content_url_base ),
 					),
 				),
@@ -433,7 +433,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 							<?php
 							printf(
 								// translators: Count.
-								wp_kses_post( __( '%1$s <span class="count">(%2$s)</span>', 'buddyboss' ) ),
+								wp_kses_post( __( '%1$s <span class="count">(%2$s)</span>', 'buddyboss-platform' ) ),
 								esc_html( $moderation_view['name'] ),
 								esc_html( bp_core_number_format( $record_count ) )
 							);
@@ -481,7 +481,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 							<?php
 							printf(
 								// translators: Count.
-								wp_kses_post( __( '%1$s <span class="count">(%2$s)</span>', 'buddyboss' ) ),
+								wp_kses_post( __( '%1$s <span class="count">(%2$s)</span>', 'buddyboss-platform' ) ),
 								esc_html( $moderation_view['name'] ),
 								esc_html( bp_core_number_format( $record_count ) )
 							);
@@ -516,21 +516,21 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		if ( 'reported-content' === $current_tab ) {
 			if ( 'active' === $this->view ) {
-				$actions['bulk_hide'] = __( 'Hide', 'buddyboss' );
+				$actions['bulk_hide'] = __( 'Hide', 'buddyboss-platform' );
 			} elseif ( 'hidden' === $this->view ) {
-				$actions['bulk_unhide'] = __( 'Unhide', 'buddyboss' );
+				$actions['bulk_unhide'] = __( 'Unhide', 'buddyboss-platform' );
 			} else {
-				$actions['bulk_hide']   = __( 'Hide', 'buddyboss' );
-				$actions['bulk_unhide'] = __( 'Unhide', 'buddyboss' );
+				$actions['bulk_hide']   = __( 'Hide', 'buddyboss-platform' );
+				$actions['bulk_unhide'] = __( 'Unhide', 'buddyboss-platform' );
 			}
 		} else {
 			if ( 'suspended' === $this->view ) {
-				$actions['bulk_unhide'] = __( 'Unsuspend', 'buddyboss' );
+				$actions['bulk_unhide'] = __( 'Unsuspend', 'buddyboss-platform' );
 			} elseif ( 'unsuspended' === $this->view ) {
-				$actions['bulk_hide'] = __( 'Suspend', 'buddyboss' );
+				$actions['bulk_hide'] = __( 'Suspend', 'buddyboss-platform' );
 			} else {
-				$actions['bulk_hide']   = __( 'Suspend', 'buddyboss' );
-				$actions['bulk_unhide'] = __( 'Unsuspend', 'buddyboss' );
+				$actions['bulk_hide']   = __( 'Suspend', 'buddyboss-platform' );
+				$actions['bulk_unhide'] = __( 'Unsuspend', 'buddyboss-platform' );
 			}
 		}
 
@@ -588,7 +588,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_cb( $item ) {
 		/* translators: accessibility text */
-		printf( '<label class="screen-reader-text" for="mid-%1$d">' . __( 'Select moderation item %1$d', 'buddyboss' ) . '</label><input type="checkbox" name="mid[]" value="%1$d" id="mid-%1$d" />', $item['id'] ); // phpcs:ignore
+		printf( '<label class="screen-reader-text" for="mid-%1$d">' . __( 'Select moderation item %1$d', 'buddyboss-platform' ) . '</label><input type="checkbox" name="mid[]" value="%1$d" id="mid-%1$d" />', $item['id'] ); // phpcs:ignore
 	}
 
 	/**
@@ -626,7 +626,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		$action_type  = ( 1 === (int) $item['hide_sitewide'] ) ? 'unhide' : 'hide';
-		$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
+		$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss-platform' ) : esc_html__( 'Hide Content', 'buddyboss-platform' );
 		$user_id      = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
 		$class        = ( BP_Moderation_Members::$moderation_type === $item['item_type'] ) ? 'bp-hide-user' : 'bp-hide-request';
 
@@ -634,8 +634,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$actions['view_report'] = sprintf(
 			'<a href="%s" title="%s"> %s </a>',
 			esc_url( $view_url ),
-			esc_attr__( 'View', 'buddyboss' ),
-			esc_html__( 'View Report', 'buddyboss' )
+			esc_attr__( 'View', 'buddyboss-platform' ),
+			esc_html__( 'View Report', 'buddyboss-platform' )
 		);
 
 		$view_content_url = bp_moderation_get_permalink( $item['item_id'], $item['item_type'] );
@@ -643,8 +643,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$actions['view_content'] = sprintf(
 				'<a href="%s" title="%s"> %s </a>',
 				esc_url( $view_content_url ),
-				esc_attr__( 'View', 'buddyboss' ),
-				esc_html__( 'View Content', 'buddyboss' )
+				esc_attr__( 'View', 'buddyboss-platform' ),
+				esc_html__( 'View Content', 'buddyboss-platform' )
 			);
 		}
 
@@ -664,7 +664,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		if ( ! is_array( $user_id ) && ! in_array( $user_id, $admins, true ) ) {
 
 			$user_action_type  = ( bp_moderation_is_user_suspended( $user_id ) ) ? 'unsuspend' : 'suspend';
-			$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss' ) : esc_html__( 'Suspend Owner', 'buddyboss' );
+			$user_action_label = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Owner', 'buddyboss-platform' ) : esc_html__( 'Suspend Owner', 'buddyboss-platform' );
 
 			$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
 			$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
@@ -678,7 +678,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
 				esc_attr( $user_action_type ),
 				esc_attr( $user_action_label ),
-				! empty( $meta_value ) ? 'data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '',
+				! empty( $meta_value ) ? 'data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-platform' ) . '"' : '',
 				esc_html( $user_action_label )
 			);
 		}
@@ -715,7 +715,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		$user_action_type = ( 1 === (int) $item['hide_sitewide'] ) ? 'unsuspend' : 'suspend';
-		$action_label     = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
+		$action_label     = ( 'unsuspend' === $user_action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss-platform' ) : esc_html__( 'Suspend Member', 'buddyboss-platform' );
 
 		// Build actions URL.
 		$view_url = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
@@ -724,7 +724,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$meta_key   = 'unsuspend' === $user_action_type ? 'suspend' : 'unsuspend';
 		$meta_value = bb_suspend_get_meta( $suspend_id, $meta_key );
 
-		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Report', 'buddyboss' ) );
+		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss-platform' ), esc_html__( 'View Report', 'buddyboss-platform' ) );
 		$actions['suspend']     = sprintf(
 			'<a href="" class="bp-block-user %s" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s" data-bp-tooltip-pos="up" %s>%s</a>',
 			( ! empty( $meta_value ) ? ' disabled' : '' ),
@@ -732,7 +732,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ),
 			esc_attr( $user_action_type ),
 			esc_attr( $action_label ),
-			! empty( $meta_value ) ? 'data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss' ) . '"' : '',
+			! empty( $meta_value ) ? 'data-bp-tooltip="' . esc_attr__( 'The background process is currently in the queue. Please refresh the page after a short while', 'buddyboss-platform' ) . '"' : '',
 			esc_html( $action_label )
 		);
 		printf( '<strong><a target="_blank" href="%s">%s %s</a></strong> %s', esc_url( BP_Moderation_Members::get_permalink( $item['item_id'] ) ), get_avatar( $item['item_id'], '32' ), esc_html( bp_core_get_userlink( $item['item_id'], true ) ), wp_kses_post( $this->row_actions( $actions ) ) );

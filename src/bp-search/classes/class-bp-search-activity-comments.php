@@ -158,7 +158,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
 			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- search_term is %s-prepared; IN() lists are hardcoded privacy strings and DB-derived integer group/friend/user IDs (not request input); tables from $bp->activity->table_name.
 
 			return apply_filters(
 				'Bp_Search_Activity_Comment_sql',

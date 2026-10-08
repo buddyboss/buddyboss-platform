@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="downloads" class="mpcs-section mpcs-resource-section">
 		<div class="mpcs-section-header-static">
 			<div class="mpcs-section-title">
-				<span class="mpcs-section-title-text"><?php echo esc_html__( 'Quizzes', 'buddyboss' ); ?></span>
+				<span class="mpcs-section-title-text"><?php echo esc_html__( 'Quizzes', 'buddyboss-platform' ); ?></span>
 			</div>
 		</div> <!-- mpcs-section-header -->
 		<div class="mpcs-lessons" style="display: block;">
@@ -21,11 +21,11 @@ defined( 'ABSPATH' ) || exit;
 			<table class="mp-table">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Title', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Grade', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Bonus', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Date', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Action', 'buddyboss' ); ?></th>
+						<th><?php esc_html_e( 'Title', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Grade', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Bonus', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Date', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Action', 'buddyboss-platform' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -40,14 +40,14 @@ defined( 'ABSPATH' ) || exit;
 							<td>
 								<div class="flex">
 									<?php if ( $row->allow_retakes ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank" aria-label="<?php esc_attr_e( 'Retake', 'buddyboss' ); ?>">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank" aria-label="<?php esc_attr_e( 'Retake', 'buddyboss-platform' ); ?>">
 											<div class="mpcs-lesson-button">
-												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
+												<span title="<?php esc_html_e( 'Retake', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
 											</div>
 										</a>
 									<?php } ?>
 									<?php if ( ! empty( $row->feedback ) ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank" aria-label="<?php esc_attr_e( 'Feedback', 'buddyboss' ); ?>">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank" aria-label="<?php esc_attr_e( 'Feedback', 'buddyboss-platform' ); ?>">
 											<div class="mpcs-lesson-button">
 												<span title="<?php echo esc_attr( esc_html( $row->feedback ) ); ?>">
 													<i class="bb-icons-rl-chat-teardrop-text"></i>
@@ -70,18 +70,18 @@ defined( 'ABSPATH' ) || exit;
 	<div id="links" class="mpcs-section mpcs-resource-section">
 		<div class="mpcs-section-header-static">
 			<div class="mpcs-section-title">
-				<span class="mpcs-section-title-text"><?php echo esc_html__( 'Assignments', 'buddyboss' ); ?></span>
+				<span class="mpcs-section-title-text"><?php echo esc_html__( 'Assignments', 'buddyboss-platform' ); ?></span>
 			</div>
 		</div> <!-- mpcs-section-header -->
 		<div class="mpcs-lessons" style="display: block;">
 			<table class="mp-table">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Title', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Grade', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Bonus', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Date', 'buddyboss' ); ?></th>
-						<th><?php esc_html_e( 'Action', 'buddyboss' ); ?></th>
+						<th><?php esc_html_e( 'Title', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Grade', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Bonus', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Date', 'buddyboss-platform' ); ?></th>
+						<th><?php esc_html_e( 'Action', 'buddyboss-platform' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -96,14 +96,14 @@ defined( 'ABSPATH' ) || exit;
 							<td>
 								<div class="flex">
 									<?php if ( $row->allow_retakes ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank" aria-label="<?php esc_attr_e( 'Retake', 'buddyboss' ); ?>">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link" target="_blank" aria-label="<?php esc_attr_e( 'Retake', 'buddyboss-platform' ); ?>">
 											<div class="mpcs-lesson-button">
-												<span title="<?php esc_html_e( 'Retake', 'buddyboss' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
+												<span title="<?php esc_html_e( 'Retake', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-arrow-counter-clockwise"></i></span>
 											</div>
 										</a>
 									<?php } ?>
 									<?php if ( ! empty( $row->feedback ) ) { ?>
-										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank" aria-label="<?php esc_attr_e( 'Feedback', 'buddyboss' ); ?>">
+										<a href="<?php echo esc_url( $row->url ); ?>" class="mpcs-lesson-row-link mpcs-lesson-button-feedback" target="_blank" aria-label="<?php esc_attr_e( 'Feedback', 'buddyboss-platform' ); ?>">
 											<div class="mpcs-lesson-button">
 												<span title="<?php echo esc_attr( esc_html( $row->feedback ) ); ?>">
 													<i class="bb-icons-rl-chat-teardrop-text"></i>
@@ -133,5 +133,5 @@ defined( 'ABSPATH' ) || exit;
 <?php
 // No content available.
 if ( empty( $quizzes ) && empty( $assignments ) && empty( $resources->custom ) && empty( $resources->custom[0]->content ) ) {
-	echo '<p class="bb-rl-mpcs-no-content">' . esc_html__( 'No content available.', 'buddyboss' ) . '</p>';
+	echo '<p class="bb-rl-mpcs-no-content">' . esc_html__( 'No content available.', 'buddyboss-platform' ) . '</p>';
 }

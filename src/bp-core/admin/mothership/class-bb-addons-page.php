@@ -25,7 +25,7 @@ class BB_Addons_Page {
 	 * @return string
 	 */
 	public static function pageTitle(): string {
-		return esc_html__( 'BuddyBoss License Add-ons', 'buddyboss' );
+		return esc_html__( 'BuddyBoss License Add-ons', 'buddyboss-platform' );
 	}
 
 	/**
@@ -41,7 +41,7 @@ class BB_Addons_Page {
 		return add_submenu_page(
 			$parent_slug,
 			self::pageTitle(),
-			esc_html__( 'Add-ons', 'buddyboss' ),
+			esc_html__( 'Add-ons', 'buddyboss-platform' ),
 			$capability,
 			self::SLUG,
 			array(

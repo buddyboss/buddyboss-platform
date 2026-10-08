@@ -8,6 +8,9 @@
  * @package BuddyBoss\Capabilities
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Return topic capabilities
  *

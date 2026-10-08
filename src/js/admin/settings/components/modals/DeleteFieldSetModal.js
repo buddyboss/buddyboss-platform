@@ -57,25 +57,25 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 				if ( response.success ) {
 					setToast( {
 						status: 'success',
-						message: response.data.message || __( 'Field set deleted.', 'buddyboss' ),
+						message: response.data.message || __( 'Field set deleted.', 'buddyboss-platform' ),
 					} );
 					onDeleted();
 				} else {
 					setToast( {
 						status: 'error',
-						message: ( response.data && response.data.message ) || __( 'Failed to delete field set.', 'buddyboss' ),
+						message: ( response.data && response.data.message ) || __( 'Failed to delete field set.', 'buddyboss-platform' ),
 					} );
 				}
 			} )
 			.catch( function ( error ) {
 				setIsDeleting( false );
-				setToast( { status: 'error', message: error.message || __( 'Failed to delete field set.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: error.message || __( 'Failed to delete field set.', 'buddyboss-platform' ) } );
 			} );
 	}
 
 	return (
 		<Modal
-			title={ __( 'Delete field set?', 'buddyboss' ) }
+			title={ __( 'Delete field set?', 'buddyboss-platform' ) }
 			onRequestClose={ onClose }
 			className="bb-pf-delete-fieldset-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -85,15 +85,15 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 					<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
 					<div className="bb-admin-delete__warning-text">
 						<span className="bb-admin-delete__warning-title">
-							{ __( 'Warning', 'buddyboss' ) }
+							{ __( 'Warning', 'buddyboss-platform' ) }
 						</span>
 						<span className="bb-admin-delete__warning-desc">
-							{ __( 'This permanently deletes the field set and all the fields within it. This action cannot be undone.', 'buddyboss' ) }
+							{ __( 'This permanently deletes the field set and all the fields within it. This action cannot be undone.', 'buddyboss-platform' ) }
 						</span>
 					</div>
 				</div>
 				<CheckboxControl
-					label={ __( 'I understand this deletes the field set and all its fields.', 'buddyboss' ) }
+					label={ __( 'I understand this deletes the field set and all its fields.', 'buddyboss-platform' ) }
 					checked={ isConfirmed }
 					onChange={ setIsConfirmed }
 					__nextHasNoMarginBottom
@@ -106,7 +106,7 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 					onClick={ onClose }
 					disabled={ isDeleting }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					onClick={ handleDelete }
@@ -114,7 +114,7 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 					disabled={ ! isConfirmed || isDeleting }
 					className="bb-admin-button-danger"
 				>
-					{ __( 'Delete Field Set', 'buddyboss' ) }
+					{ __( 'Delete Field Set', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

@@ -7,11 +7,15 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div id="item-actions" class="group-item-actions">
 
 	<?php if ( bp_enable_group_hierarchies() ) : ?>
-		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></h2>
+		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parent', 'buddyboss-platform' ); ?></h2>
 		<?php bp_group_list_parents(); ?>
 	<?php endif; ?>
 
@@ -22,12 +26,12 @@
 			<h2 class="bp-screen-reader-text">
 				<?php
 				/* translators: Group %s */
-				printf( esc_html__( 'Group %s', 'buddyboss' ), esc_attr( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) );
+				printf( esc_html__( 'Group %s', 'buddyboss-platform' ), esc_attr( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) );
 				?>
 			</h2>
 
 			<dl class="moderators-lists">
-				<dt class="moderators-title"><?php esc_html_e( 'Organized by', 'buddyboss' ); ?></dt>
+				<dt class="moderators-title"><?php esc_html_e( 'Organized by', 'buddyboss-platform' ); ?></dt>
 				<dd class="user-list admins"><?php bp_group_list_admins(); ?>
 					<?php bp_nouveau_group_hook( 'after', 'menu_admins' ); ?>
 				</dd>

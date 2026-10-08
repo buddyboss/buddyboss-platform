@@ -22,13 +22,13 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		// Set up optional widget args
 		$widget_ops = array(
 			'classname'   => 'widget_bp_follow_follower_widget widget buddypress',
-			'description' => __( 'A list of member avatars that are following the logged-in user.', 'buddyboss' ),
+			'description' => __( 'A list of member avatars that are following the logged-in user.', 'buddyboss-platform' ),
 		);
 
 		// Set up the widget
 		parent::__construct(
 			false,
-			__( '(BB) Members Following Me', 'buddyboss' ),
+			__( '(BB) Members Following Me', 'buddyboss-platform' ),
 			$widget_ops
 		);
 	}
@@ -74,8 +74,9 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
-			? __( "My Followers", 'buddyboss' )
-			: sprintf( __( "%s's Followers", 'buddyboss' ), $this->get_user_display_name( $id ) )
+			? __( "My Followers", 'buddyboss-platform' )
+			/* translators: %s: member display name. */
+			: sprintf( __( "%s's Followers", 'buddyboss-platform' ), $this->get_user_display_name( $id ) )
 		);
 
 		if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
@@ -109,11 +110,13 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		) ) {
 			do_action( 'bp_before_follower_widget' );
 
-			echo $args['before_widget'];
-			echo $args['before_title']
-			   . $title
-			   . $follower_count
-			   . $args['after_title'];
+			echo wp_kses_post( $args['before_widget'] );
+			echo wp_kses_post(
+				$args['before_title']
+				. $title
+				. $follower_count
+				. $args['after_title']
+			);
 			?>
 
 			<div class="avatar-block">
@@ -127,10 +130,10 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 				<?php endwhile; ?>
 			</div>
 			<?php if ( $follower_count_number > $instance['max_users'] && $show_more ) { ?>
-				<div class="more-block more-followers"><a href="<?php bp_members_directory_permalink(); ?>#followers" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+				<div class="more-block more-followers"><a href="<?php bp_members_directory_permalink(); ?>#followers" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
-			<?php echo $args['after_widget']; ?>
+			<?php echo wp_kses_post( $args['after_widget'] ); ?>
 
 			<?php do_action( 'bp_after_follower_widget' ); ?>
 
@@ -160,8 +163,8 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		);
 		?>
 
-		<p><label for="bp-follow-widget-users-max"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
-		<p><small><?php _e( 'Note: This widget is only displayed if a member is followed by other members.', 'buddyboss' ); ?></small></p>
+		<p><label for="bp-follow-widget-users-max"><?php esc_html_e( 'Max members to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
+		<p><small><?php esc_html_e( 'Note: This widget is only displayed if a member is followed by other members.', 'buddyboss-platform' ); ?></small></p>
 
 		<?php
 	}

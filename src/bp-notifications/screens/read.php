@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and route the 'read' notifications screen.
  *
@@ -45,9 +48,9 @@ function bp_notifications_action_mark_unread() {
 	}
 
 	// Get the action.
-	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
-	$nonce  = ! empty( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '';
-	$id     = ! empty( $_GET['notification_id'] ) ? $_GET['notification_id'] : '';
+	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+	$nonce  = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+	$id     = ! empty( $_GET['notification_id'] ) ? absint( $_GET['notification_id'] ) : 0;
 
 	// Bail if no action or no ID.
 	if ( ( 'unread' !== $action ) || empty( $id ) || empty( $nonce ) ) {
@@ -56,9 +59,9 @@ function bp_notifications_action_mark_unread() {
 
 	// Check the nonce and mark the notification.
 	if ( bp_verify_nonce_request( 'bp_notification_mark_unread_' . $id ) && bp_notifications_mark_notification( $id, true ) ) {
-		bp_core_add_message( __( 'Notification successfully marked unread.', 'buddyboss' ) );
+		bp_core_add_message( __( 'Notification successfully marked unread.', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect.

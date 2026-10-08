@@ -202,7 +202,7 @@ export function FlaggedMembersScreen() {
 			} )
 			.catch( function () {
 				setActionInProgress( null );
-				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
 			} );
 	}, [ bulkAction, selectedIds, page, search, statusFilter, fetchMembers ] );
 
@@ -213,13 +213,13 @@ export function FlaggedMembersScreen() {
 		}
 
 		var confirmMessage = 'suspend' === bulkAction
-			? __( 'Are you sure you want to suspend the selected members? They will be logged out and their content will be hidden. Please allow a few minutes for this process to complete.', 'buddyboss' )
-			: __( 'Are you sure you want to unsuspend the selected members? They will be allowed to login again and their content will be visible. Please allow a few minutes for this process to complete.', 'buddyboss' );
+			? __( 'Are you sure you want to suspend the selected members? They will be logged out and their content will be hidden. Please allow a few minutes for this process to complete.', 'buddyboss-platform' )
+			: __( 'Are you sure you want to unsuspend the selected members? They will be allowed to login again and their content will be visible. Please allow a few minutes for this process to complete.', 'buddyboss-platform' );
 
 		setConfirmModal( {
-			title: 'suspend' === bulkAction ? __( 'Suspend Members', 'buddyboss' ) : __( 'Unsuspend Members', 'buddyboss' ),
+			title: 'suspend' === bulkAction ? __( 'Suspend Members', 'buddyboss-platform' ) : __( 'Unsuspend Members', 'buddyboss-platform' ),
 			message: confirmMessage,
-			confirmLabel: 'suspend' === bulkAction ? __( 'Suspend', 'buddyboss' ) : __( 'Unsuspend', 'buddyboss' ),
+			confirmLabel: 'suspend' === bulkAction ? __( 'Suspend', 'buddyboss-platform' ) : __( 'Unsuspend', 'buddyboss-platform' ),
 			onConfirm: executeBulkAction,
 		} );
 	}, [ bulkAction, selectedIds, executeBulkAction ] );
@@ -231,13 +231,13 @@ export function FlaggedMembersScreen() {
 		}
 
 		var confirmMessage = ( 'suspend' === action )
-			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
-			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
+			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' )
+			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' );
 
 		setConfirmModal( {
-			title: 'suspend' === action ? __( 'Suspend Member', 'buddyboss' ) : __( 'Unsuspend Member', 'buddyboss' ),
+			title: 'suspend' === action ? __( 'Suspend Member', 'buddyboss-platform' ) : __( 'Unsuspend Member', 'buddyboss-platform' ),
 			message: confirmMessage,
-			confirmLabel: 'suspend' === action ? __( 'Suspend', 'buddyboss' ) : __( 'Unsuspend', 'buddyboss' ),
+			confirmLabel: 'suspend' === action ? __( 'Suspend', 'buddyboss-platform' ) : __( 'Unsuspend', 'buddyboss-platform' ),
 			onConfirm: function () {
 				setConfirmModal( null );
 				setActionInProgress( member.user_id );
@@ -260,7 +260,7 @@ export function FlaggedMembersScreen() {
 					} )
 					.catch( function () {
 						setActionInProgress( null );
-						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
 					} );
 			},
 		} );
@@ -291,7 +291,7 @@ export function FlaggedMembersScreen() {
 				{/* Title */}
 				<div className="bb-admin-flagged-members__title-bar">
 					<h2 className="bb-admin-flagged-members__title">
-						{ __( 'Flagged Members', 'buddyboss' ) }
+						{ __( 'Flagged Members', 'buddyboss-platform' ) }
 					</h2>
 				</div>
 
@@ -304,9 +304,9 @@ export function FlaggedMembersScreen() {
 								<SelectControl
 									value={ bulkAction }
 									options={ [
-										{ label: __( 'Bulk actions', 'buddyboss' ), value: '' },
-										{ label: __( 'Suspend', 'buddyboss' ), value: 'suspend' },
-										{ label: __( 'Unsuspend', 'buddyboss' ), value: 'unsuspend' },
+										{ label: __( 'Bulk actions', 'buddyboss-platform' ), value: '' },
+										{ label: __( 'Suspend', 'buddyboss-platform' ), value: 'suspend' },
+										{ label: __( 'Unsuspend', 'buddyboss-platform' ), value: 'unsuspend' },
 									] }
 									onChange={ setBulkAction }
 									disabled={ ! hasBulkSelection }
@@ -318,7 +318,7 @@ export function FlaggedMembersScreen() {
 									disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
 									className="bb-admin-flagged-members__bulk-apply"
 								>
-									{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
+									{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss-platform' ) }
 								</Button>
 							</div>
 						</div>
@@ -326,9 +326,9 @@ export function FlaggedMembersScreen() {
 							<SelectControl
 								value={ statusFilter }
 								options={ [
-									{ label: __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')', value: '' },
-									{ label: __( 'Suspended', 'buddyboss' ) + ' (' + statusCounts.suspended + ')', value: 'suspended' },
-									{ label: __( 'Active', 'buddyboss' ) + ' (' + statusCounts.active + ')', value: 'active' },
+									{ label: __( 'All', 'buddyboss-platform' ) + ' (' + statusCounts.all + ')', value: '' },
+									{ label: __( 'Suspended', 'buddyboss-platform' ) + ' (' + statusCounts.suspended + ')', value: 'suspended' },
+									{ label: __( 'Active', 'buddyboss-platform' ) + ' (' + statusCounts.active + ')', value: 'active' },
 								] }
 								onChange={ handleStatusFilterChange }
 								className="bb-admin-flagged-members__status-select"
@@ -339,7 +339,7 @@ export function FlaggedMembersScreen() {
 									<input
 										type="text"
 										className="bb-admin-flagged-members__search-input"
-										placeholder={ __( 'Search members', 'buddyboss' ) }
+										placeholder={ __( 'Search members', 'buddyboss-platform' ) }
 										value={ search }
 										onChange={ function ( e ) { setSearch( e.target.value ); } }
 									/>
@@ -359,7 +359,7 @@ export function FlaggedMembersScreen() {
 							</div>
 						) : 0 === members.length ? (
 							<div className="bb-admin-flagged-members__empty bb-admin-list-table__empty">
-								<p>{ __( 'No flagged members found.', 'buddyboss' ) }</p>
+								<p>{ __( 'No flagged members found.', 'buddyboss-platform' ) }</p>
 							</div>
 						) : (
 							<table className="bb-admin-flagged-members__table bb-admin-list-table">
@@ -373,16 +373,16 @@ export function FlaggedMembersScreen() {
 											/>
 										</th>
 										<th className="bb-admin-flagged-members__th--member">
-											{ __( 'Member', 'buddyboss' ) }
+											{ __( 'Member', 'buddyboss-platform' ) }
 										</th>
 										<th className="bb-admin-flagged-members__th--blocks">
-											{ __( 'Blocks', 'buddyboss' ) }
+											{ __( 'Blocks', 'buddyboss-platform' ) }
 										</th>
 										<th className="bb-admin-flagged-members__th--reports">
-											{ __( 'Reports', 'buddyboss' ) }
+											{ __( 'Reports', 'buddyboss-platform' ) }
 										</th>
 										<th className="bb-admin-flagged-members__th--status">
-											{ __( 'Status', 'buddyboss' ) }
+											{ __( 'Status', 'buddyboss-platform' ) }
 										</th>
 										<th className="bb-admin-flagged-members__th--actions">&nbsp;</th>
 									</tr>
@@ -433,7 +433,7 @@ export function FlaggedMembersScreen() {
 												<td className="bb-admin-flagged-members__td--status">
 													{ member.is_suspended && (
 														<span className="bb-admin-flagged-members__suspended-badge">
-															{ __( 'Suspended', 'buddyboss' ) }
+															{ __( 'Suspended', 'buddyboss-platform' ) }
 														</span>
 													) }
 												</td>
@@ -443,7 +443,7 @@ export function FlaggedMembersScreen() {
 													) : (
 														<DropdownMenu
 															icon={ <i className="bb-icons-rl bb-icons-rl-dots-three"></i> }
-															label={ __( 'More options', 'buddyboss' ) }
+															label={ __( 'More options', 'buddyboss-platform' ) }
 														>
 															{ function ( { onClose } ) {
 																return (
@@ -454,16 +454,16 @@ export function FlaggedMembersScreen() {
 																			} }
 																		>
 																			<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																			{ __( 'View Report', 'buddyboss' ) }
+																			{ __( 'View Report', 'buddyboss-platform' ) }
 																		</MenuItem>
 																		{ ! member.is_admin && (
 																			member.suspend_in_progress ? (
 																				<MenuItem
 																					disabled
-																					aria-label={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss' ) }
+																					aria-label={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss-platform' ) }
 																				>
 																					<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
-																					{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
+																					{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss-platform' ) : __( 'Suspend Member', 'buddyboss-platform' ) }
 																				</MenuItem>
 																			) : (
 																				<MenuItem
@@ -476,7 +476,7 @@ export function FlaggedMembersScreen() {
 																					} }
 																				>
 																					<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
-																					{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
+																					{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss-platform' ) : __( 'Suspend Member', 'buddyboss-platform' ) }
 																				</MenuItem>
 																			)
 																		) }
@@ -498,7 +498,7 @@ export function FlaggedMembersScreen() {
 					{ ! isLoading && total > 0 && (
 						<div className="bb-admin-flagged-members__footer">
 							<span className="bb-admin-flagged-members__item-count">
-								{ total } { total === 1 ? __( 'item', 'buddyboss' ) : __( 'items', 'buddyboss' ) }
+								{ total } { total === 1 ? __( 'item', 'buddyboss-platform' ) : __( 'items', 'buddyboss-platform' ) }
 							</span>
 
 							{ totalPages > 1 && (
@@ -561,7 +561,7 @@ export function FlaggedMembersScreen() {
 								setConfirmModal( null );
 							} }
 						>
-							{ __( 'Cancel', 'buddyboss' ) }
+							{ __( 'Cancel', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</Modal>

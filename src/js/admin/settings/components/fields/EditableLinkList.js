@@ -50,9 +50,9 @@ function newLinkId() {
 export function EditableLinkList( { value, onChange, disabled, config } ) {
 	var safeValue        = Array.isArray( value ) ? value : [];
 	var mergedConfig     = config || {};
-	var addLabel         = mergedConfig.add_label || __( 'Add New Link', 'buddyboss' );
-	var modalTitleAdd    = mergedConfig.modal_title_add || __( 'Add Link', 'buddyboss' );
-	var modalTitleEdit   = mergedConfig.modal_title_edit || __( 'Edit Link', 'buddyboss' );
+	var addLabel         = mergedConfig.add_label || __( 'Add New Link', 'buddyboss-platform' );
+	var modalTitleAdd    = mergedConfig.modal_title_add || __( 'Add Link', 'buddyboss-platform' );
+	var modalTitleEdit   = mergedConfig.modal_title_edit || __( 'Edit Link', 'buddyboss-platform' );
 
 	var modalState = useState( null ); // null | { mode: 'add'|'edit', id, title, url }
 	var modal      = modalState[0];
@@ -160,7 +160,7 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 															<span
 																className="bb-admin-editable-link-list__handle"
 																{ ...providedDrag.dragHandleProps }
-																aria-label={ __( 'Drag to reorder', 'buddyboss' ) }
+																aria-label={ __( 'Drag to reorder', 'buddyboss-platform' ) }
 															>
 																<i className="bb-icons-rl bb-icons-rl-list" aria-hidden="true"></i>
 															</span>
@@ -179,7 +179,7 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 																				openEditModal( link );
 																			} }
 																			disabled={ disabled }
-																			aria-label={ __( 'Edit link', 'buddyboss' ) }
+																			aria-label={ __( 'Edit link', 'buddyboss-platform' ) }
 																		>
 																			<i className="bb-icons-rl bb-icons-rl-note-pencil" aria-hidden="true"></i>
 																		</button>
@@ -190,7 +190,7 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 																				handleDelete( link.id );
 																			} }
 																			disabled={ disabled }
-																			aria-label={ __( 'Delete link', 'buddyboss' ) }
+																			aria-label={ __( 'Delete link', 'buddyboss-platform' ) }
 																		>
 																			<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
 																		</button>
@@ -236,31 +236,31 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 				>
 					<div className="bb-admin-editable-link-list-modal__body bb-admin-settings-modal__body">
 						<TextControl
-							label={ __( 'Title', 'buddyboss' ) }
+							label={ __( 'Title', 'buddyboss-platform' ) }
 							value={ modal.title }
 							onChange={ function ( newTitle ) {
 								setModal( Object.assign( {}, modal, { title: newTitle } ) );
 							} }
-							placeholder={ __( 'Enter title', 'buddyboss' ) }
+							placeholder={ __( 'Enter title', 'buddyboss-platform' ) }
 							__nextHasNoMarginBottom
 						/>
 						<TextControl
-							label={ __( 'URL', 'buddyboss' ) }
+							label={ __( 'URL', 'buddyboss-platform' ) }
 							type="url"
 							value={ modal.url }
 							onChange={ function ( newUrl ) {
 								setModal( Object.assign( {}, modal, { url: newUrl } ) );
 							} }
-							placeholder={ __( 'Enter URL', 'buddyboss' ) }
+							placeholder={ __( 'Enter URL', 'buddyboss-platform' ) }
 							__nextHasNoMarginBottom
 						/>
 					</div>
 					<div className="bb-admin-editable-link-list__modal-actions bb-admin-settings-modal__footer">
 						<Button variant="secondary" onClick={ closeModal }>
-							{ __( 'Cancel', 'buddyboss' ) }
+							{ __( 'Cancel', 'buddyboss-platform' ) }
 						</Button>
 						<Button variant="primary" onClick={ handleSave } disabled={ ! canSubmit }>
-							{ 'add' === modal.mode ? __( 'Add Link', 'buddyboss' ) : __( 'Save', 'buddyboss' ) }
+							{ 'add' === modal.mode ? __( 'Add Link', 'buddyboss-platform' ) : __( 'Save', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</Modal>

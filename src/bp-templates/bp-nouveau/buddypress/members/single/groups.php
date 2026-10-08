@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 
 if ( bp_is_my_profile() ) {
@@ -36,7 +39,7 @@ if ( bb_enable_content_counts() ) {
 									'<span class="bb-count">%d</span> Invite',
 									'<span class="bb-count">%d</span> Invites',
 									$count,
-									'buddyboss'
+									'buddyboss-platform'
 								),
 								array( 'span' => array( 'class' => true ) )
 							),
@@ -50,7 +53,7 @@ if ( bb_enable_content_counts() ) {
 									'<span class="bb-count">%d</span> Group',
 									'<span class="bb-count">%d</span> Groups',
 									$count,
-									'buddyboss'
+									'buddyboss-platform'
 								),
 								array( 'span' => array( 'class' => true ) )
 							),

@@ -773,8 +773,8 @@ window.bp = window.bp || {};
 				}
 
 				var draft_data = {
-					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
-					action: 'post_topic_reply_draft',
+					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.bb_post_topic_reply_draft,
+					action: 'bb_post_topic_reply_draft',
 					draft_topic_reply: this.topic_reply_draft
 				};
 
@@ -792,8 +792,8 @@ window.bp = window.bp || {};
 
 				// If current screen is not edit screen then send request.
 				var formData = new FormData();
-				formData.append( '_wpnonce_post_topic_reply_draft', BP_Nouveau.forums.nonces.post_topic_reply_draft );
-				formData.append( 'action', 'post_topic_reply_draft' );
+				formData.append( '_wpnonce_post_topic_reply_draft', BP_Nouveau.forums.nonces.bb_post_topic_reply_draft );
+				formData.append( 'action', 'bb_post_topic_reply_draft' );
 				formData.append( 'draft_topic_reply', JSON.stringify( this.topic_reply_draft ) );
 
 				if ( is_send_all_data ) {

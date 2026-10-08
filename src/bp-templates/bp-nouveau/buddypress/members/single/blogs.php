@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_get_template_part( 'members/single/parts/item-subnav' );
 bp_get_template_part( 'common/search-and-filters-bar' );
 

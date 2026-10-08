@@ -90,12 +90,12 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	public function no_items() {
 		$tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
-			esc_html_e( 'This member has not been reported by any members.', 'buddyboss' );
+			esc_html_e( 'This member has not been reported by any members.', 'buddyboss-platform' );
 		} else {
 			if ( 'blocked' === $this->view ) {
-				esc_html_e( 'This member has not been blocked by any members.', 'buddyboss' );
+				esc_html_e( 'This member has not been blocked by any members.', 'buddyboss-platform' );
 			} else {
-				esc_html_e( 'This member has not been reported by any members.', 'buddyboss' );
+				esc_html_e( 'This member has not been reported by any members.', 'buddyboss-platform' );
 			}
 		}
 	}
@@ -161,7 +161,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		<h2 class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
-			esc_html_e( 'Moderation Request list', 'buddyboss' );
+			esc_html_e( 'Moderation Request list', 'buddyboss-platform' );
 			?>
 		</h2>
 
@@ -204,21 +204,21 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		$tab = bb_filter_input_string( INPUT_GET, 'tab' );
 		if ( ! empty( $tab ) && 'reported-content' === $tab ) {
 			$columns = array(
-				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
-				'category' => esc_html__( 'Category', 'buddyboss' ),
-				'date'     => esc_html__( 'Date Reported', 'buddyboss' ),
+				'reporter' => esc_html__( 'Reporter', 'buddyboss-platform' ),
+				'category' => esc_html__( 'Category', 'buddyboss-platform' ),
+				'date'     => esc_html__( 'Date Reported', 'buddyboss-platform' ),
 			);
 		} else {
 			if ( 'blocked' === $this->view ) {
 				$columns = array(
-					'reporter' => esc_html__( 'Member', 'buddyboss' ),
-					'date'     => esc_html__( 'Date Blocked', 'buddyboss' ),
+					'reporter' => esc_html__( 'Member', 'buddyboss-platform' ),
+					'date'     => esc_html__( 'Date Blocked', 'buddyboss-platform' ),
 				);
 			} else {
 				$columns = array(
-					'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
-					'category' => esc_html__( 'Category', 'buddyboss' ),
-					'date'     => esc_html__( 'Date Reported', 'buddyboss' ),
+					'reporter' => esc_html__( 'Reporter', 'buddyboss-platform' ),
+					'category' => esc_html__( 'Category', 'buddyboss-platform' ),
+					'date'     => esc_html__( 'Date Reported', 'buddyboss-platform' ),
 				);
 			}
 		}
@@ -271,7 +271,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function column_category( $item = array() ) {
 		$term_data        = get_term( $item['category_id'] );
-		$term_name        = ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) ) ? $term_data->name : esc_html__( 'Other', 'buddyboss' );
+		$term_name        = ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) ) ? $term_data->name : esc_html__( 'Other', 'buddyboss-platform' );
 		$term_description = ( ! is_wp_error( $term_data ) && ! empty( $term_data->description ) ) ? $term_data->description : $item['content'];
 		printf( '<strong class="bp-cat-name">%s</strong><p class="description">%s</p>', esc_html( $term_name ), wp_kses_post( $term_description ) );
 	}

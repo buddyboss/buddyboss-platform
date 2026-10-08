@@ -209,7 +209,7 @@ if ( ! bp_is_user_messages() && ! bp_is_user_settings() && ! bp_is_user_notifica
 							bp_get_template_part( 'common/more-options-view' );
 							$template_part_content = ob_get_clean();
 
-							$output = sprintf( '<a href="#" class="bb-rl-more_options_action bb_more_options_action" aria-label="%1$s"><i class="bb-icons-rl-dots-three"></i></a><div class="bb-rl-more_options_list bb_more_options_list bb_more_dropdown bb-rl-more_dropdown"> %2$s %3$s</div><div class="bb-rl-more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
+							$output = sprintf( '<a href="#" class="bb-rl-more_options_action bb_more_options_action" aria-label="%1$s"><i class="bb-icons-rl-dots-three"></i></a><div class="bb-rl-more_options_list bb_more_options_list bb_more_dropdown bb-rl-more_dropdown"> %2$s %3$s</div><div class="bb-rl-more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss-platform' ), $template_part_content, $output );
 
 							bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 						}
@@ -231,7 +231,7 @@ endif;
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php echo esc_html__( 'Remove Connection', 'buddyboss-platform' ); ?></span></h4>
 						<a class="bb-close-remove-connection bb-model-close-button" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
@@ -241,15 +241,15 @@ endif;
 							<?php
 							printf(
 								/* translators: %s: The member name with HTML tags. */
-								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss' ),
+								esc_html__( 'Are you sure you want to remove %s from your connections?', 'buddyboss-platform' ),
 								'<span class="bb-user-name"></span>'
 							);
 							?>
 						</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss' ); ?></a>
+						<a class="bb-close-remove-connection bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button push-right bb-confirm-remove-connection bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php echo esc_html__( 'Confirm', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

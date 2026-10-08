@@ -57,7 +57,7 @@ export const Toast = ({ status, message, onDismiss, showIcon = true }) => {
 				<Button
 					onClick={onDismiss}
 					className="bb-toast__dismiss"
-					aria-label={__('Dismiss', 'buddyboss')}
+					aria-label={__('Dismiss', 'buddyboss-platform')}
 					icon={<i className="bb-icons-rl-x" />}
 				/>
 			)}

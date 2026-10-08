@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 				<span class="middot">&middot;</span>
 				<span class="item-meta-details group-details">
 					<?php
-					esc_html_e( 'Last active ', 'buddyboss' );
+					esc_html_e( 'Last active ', 'buddyboss-platform' );
 					bp_group_last_active();
 					?>
 				</span>

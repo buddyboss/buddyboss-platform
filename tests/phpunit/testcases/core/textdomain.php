@@ -14,6 +14,20 @@
 class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 	/**
+	 * Text domain the loader registers catalogs under.
+	 *
+	 * @var string
+	 */
+	const DOMAIN = 'buddyboss-platform';
+
+	/**
+	 * Legacy text domain whose catalogs are merged into DOMAIN.
+	 *
+	 * @var string
+	 */
+	const LEGACY_DOMAIN = 'buddyboss';
+
+	/**
 	 * Base directory holding the generated .mo fixtures for one test.
 	 *
 	 * @var string
@@ -50,13 +64,13 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		wp_mkdir_p( $this->fixture_base );
 
 		// Start every test from a known state: nothing loaded for the domain.
-		unload_textdomain( 'buddyboss', true );
+		unload_textdomain( self::DOMAIN, true );
 
 		// A plain (non-reloadable) unload_textdomain() in an earlier test sets
 		// this flag, and _load_textdomain_just_in_time() short-circuits on it for
 		// the rest of the process — which would silently disable core's own JIT
 		// reload in later tests. Clear it so each test starts from clean core state.
-		unset( $GLOBALS['l10n_unloaded']['buddyboss'] );
+		unset( $GLOBALS['l10n_unloaded'][self::DOMAIN] );
 
 		$this->orig_registry = isset( $GLOBALS['wp_textdomain_registry'] ) ? $GLOBALS['wp_textdomain_registry'] : null;
 	}
@@ -70,7 +84,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		remove_all_filters( 'load_translation_file' );
 		remove_all_filters( 'locale' );
 
-		unload_textdomain( 'buddyboss', true );
+		unload_textdomain( self::DOMAIN, true );
 
 		foreach ( $this->lang_dir_files as $file ) {
 			if ( file_exists( $file ) ) {
@@ -126,14 +140,16 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Write a buddyboss-{locale}.mo catalog into a directory.
+	 * Write a {domain}-{locale}.mo catalog into a directory.
 	 *
-	 * @param string $dir    Trailing-slashed directory.
-	 * @param string $locale Locale.
-	 * @param array  $pairs  msgid => msgstr map.
+	 * @param string $dir         Trailing-slashed directory.
+	 * @param string $locale      Locale.
+	 * @param array  $pairs       msgid => msgstr map.
+	 * @param string $file_domain Domain used in the file name. Defaults to DOMAIN;
+	 *                            pass LEGACY_DOMAIN for a legacy "buddyboss-{locale}.mo".
 	 * @return string Absolute path to the written .mo file.
 	 */
-	protected function make_catalog( $dir, $locale, array $pairs ) {
+	protected function make_catalog( $dir, $locale, array $pairs, $file_domain = self::DOMAIN ) {
 		$mo = new MO();
 		$mo->set_header( 'Project-Id-Version', 'buddyboss-tests' );
 		$mo->set_header( 'Plural-Forms', 'nplurals=2; plural=n != 1;' );
@@ -149,7 +165,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			);
 		}
 
-		$path = $dir . 'buddyboss-' . $locale . '.mo';
+		$path = $dir . $file_domain . '-' . $locale . '.mo';
 		$this->assertTrue( $mo->export_to_file( $path ), 'Failed to write the .mo fixture.' );
 
 		return $path;
@@ -214,7 +230,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		add_filter(
 			'override_load_textdomain',
 			function ( $override, $domain, $mofile ) use ( $claimed ) {
-				if ( 'buddyboss' === $domain && 0 === strpos( $mofile, $claimed ) ) {
+				if ( self::DOMAIN === $domain && 0 === strpos( $mofile, $claimed ) ) {
 					return true;
 				}
 
@@ -228,7 +244,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'BB_OVERRIDE_OK',
-			__( 'BB_OVERRIDE_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_OVERRIDE_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'The loop stopped at a location an override merely claimed, so the real catalog never loaded.'
 		);
 	}
@@ -252,7 +268,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		add_filter(
 			'override_load_textdomain',
 			function ( $override, $domain, $mofile ) use ( &$seen ) {
-				if ( 'buddyboss' === $domain ) {
+				if ( self::DOMAIN === $domain ) {
 					$seen[] = $mofile;
 				}
 
@@ -268,7 +284,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			$seen,
 			'load_textdomain() was skipped because no file was readable, removing the override extension point.'
 		);
-		$this->assertContains( $empty . 'buddyboss-' . $locale . '.mo', $seen );
+		$this->assertContains( $empty . self::DOMAIN . '-' . $locale . '.mo', $seen );
 	}
 
 	/**
@@ -289,7 +305,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'BB_FROM_HIGH',
-			__( 'BB_PRECEDENCE_MSG', 'buddyboss' ) // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_PRECEDENCE_MSG', self::DOMAIN ) // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 		);
 	}
 
@@ -316,13 +332,13 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		);
 
 		bp_core_load_buddypress_textdomain();
-		$this->assertSame( 'BB_FIRST', __( 'BB_LOCALE_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+		$this->assertSame( 'BB_FIRST', __( 'BB_LOCALE_MSG', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		$current = $second;
 		bp_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_SECOND',
-			__( 'BB_LOCALE_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_LOCALE_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'The loader did not reload after the locale changed.'
 		);
 	}
@@ -345,16 +361,16 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		$this->set_locations( array( $dir ) );
 
 		bp_core_load_buddypress_textdomain();
-		$this->assertSame( 'BB_UNLOAD_OK', __( 'BB_UNLOAD_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+		$this->assertSame( 'BB_UNLOAD_OK', __( 'BB_UNLOAD_MSG', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		// Same locale, but someone else dropped the catalog.
-		unload_textdomain( 'buddyboss' );
-		$this->assertFalse( is_textdomain_loaded( 'buddyboss' ) );
+		unload_textdomain( self::DOMAIN );
+		$this->assertFalse( is_textdomain_loaded( self::DOMAIN ) );
 
 		bp_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_UNLOAD_OK',
-			__( 'BB_UNLOAD_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_UNLOAD_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'The loader did not self-heal after an external unload_textdomain().'
 		);
 	}
@@ -383,14 +399,14 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		$this->set_locations( array( $this->make_dir( 'fastpath-empty' ) ) );
 
 		// Stand in for core's switcher having already reloaded the domain.
-		load_textdomain( 'buddyboss', $mofile, $locale );
-		$this->assertTrue( is_textdomain_loaded( 'buddyboss' ) );
+		load_textdomain( self::DOMAIN, $mofile, $locale );
+		$this->assertTrue( is_textdomain_loaded( self::DOMAIN ) );
 
 		$loads = 0;
 		add_filter(
 			'load_textdomain_mofile',
 			function ( $file, $domain ) use ( &$loads ) {
-				if ( 'buddyboss' === $domain ) {
+				if ( self::DOMAIN === $domain ) {
 					$loads++;
 				}
 
@@ -407,7 +423,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 			$loads,
 			'The change_locale fast path did not skip the redundant reload.'
 		);
-		$this->assertSame( 'BB_FAST_OK', __( 'BB_FAST_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+		$this->assertSame( 'BB_FAST_OK', __( 'BB_FAST_MSG', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 	}
 
 	/**
@@ -428,7 +444,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		add_filter(
 			'plugin_locale',
 			function ( $locale, $domain ) use ( $filtered ) {
-				return 'buddyboss' === $domain ? $filtered : $locale;
+				return self::DOMAIN === $domain ? $filtered : $locale;
 			},
 			10,
 			2
@@ -438,7 +454,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'BB_PLUGIN_LOCALE_OK',
-			__( 'BB_PLUGIN_LOCALE_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_PLUGIN_LOCALE_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'plugin_locale was not applied when resolving the catalog locale.'
 		);
 	}
@@ -476,7 +492,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		add_filter(
 			'plugin_locale',
 			function ( $locale, $domain ) use ( $filtered_locale ) {
-				return 'buddyboss' === $domain ? $filtered_locale : $locale;
+				return self::DOMAIN === $domain ? $filtered_locale : $locale;
 			},
 			10,
 			2
@@ -487,7 +503,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		add_filter(
 			'pre_load_textdomain',
 			function ( $loaded, $domain, $mofile, $passed_locale ) use ( &$locales, &$mofiles ) {
-				if ( 'buddyboss' === $domain ) {
+				if ( self::DOMAIN === $domain ) {
 					$locales[] = $passed_locale;
 					$mofiles[] = basename( $mofile );
 				}
@@ -511,12 +527,12 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		// File name: chosen by plugin_locale.
 		$this->assertContains(
-			'buddyboss-' . $filtered_locale . '.mo',
+			self::DOMAIN . '-' . $filtered_locale . '.mo',
 			$mofiles,
 			'plugin_locale was not used to build the catalog file name.'
 		);
 		$this->assertNotContains(
-			'buddyboss-' . $request_locale . '.mo',
+			self::DOMAIN . '-' . $request_locale . '.mo',
 			$mofiles,
 			'The catalog file name ignored plugin_locale.'
 		);
@@ -537,19 +553,19 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		$this->set_locations( array( $dir ) );
 
 		bp_core_load_buddypress_textdomain();
-		$this->assertSame( 'BB_SWITCH_EN', __( 'BB_SWITCH_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+		$this->assertSame( 'BB_SWITCH_EN', __( 'BB_SWITCH_MSG', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		$this->assertTrue( switch_to_locale( 'es_ES' ), 'switch_to_locale() refused the locale.' );
 		$this->assertSame(
 			'BB_SWITCH_ES',
-			__( 'BB_SWITCH_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_SWITCH_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'The catalog was not reloaded for the switched-to locale.'
 		);
 
 		restore_previous_locale();
 		$this->assertSame(
 			'BB_SWITCH_EN',
-			__( 'BB_SWITCH_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_SWITCH_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'The catalog was not restored after restore_previous_locale().'
 		);
 	}
@@ -586,16 +602,16 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		$GLOBALS['wp_textdomain_registry'] = new WP_Textdomain_Registry();
 
 		bp_core_load_buddypress_textdomain();
-		$this->assertSame( 'BB_FASTSAFE_EN', __( 'BB_FASTSAFE_MSG', 'buddyboss' ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+		$this->assertSame( 'BB_FASTSAFE_EN', __( 'BB_FASTSAFE_MSG', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 
 		// Capture the state our priority-0 listener will see.
 		$state = array();
 		add_action(
 			'change_locale',
 			function () use ( &$state ) {
-				$state['loaded']   = is_textdomain_loaded( 'buddyboss' );
+				$state['loaded']   = is_textdomain_loaded( self::DOMAIN );
 				$state['resolved'] = determine_locale();
-				$state['string']   = __( 'BB_FASTSAFE_MSG', 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+				$state['string']   = __( 'BB_FASTSAFE_MSG', self::DOMAIN ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			},
 			-1
 		);
@@ -616,7 +632,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		// Still correct after our listener ran and chose to skip.
 		$this->assertSame(
 			'BB_FASTSAFE_ES',
-			__( 'BB_FASTSAFE_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_FASTSAFE_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'The fast path skipped the reload and left the previous locale loaded.'
 		);
 
@@ -682,7 +698,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		bp_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_OCL_FIRST',
-			__( 'BB_OCL_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_OCL_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'Positive control: the first locale never loaded.'
 		);
 
@@ -691,7 +707,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'BB_OCL_SECOND',
-			__( 'BB_OCL_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_OCL_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'A locale change outside change_locale did not reload the catalog.'
 		);
 	}
@@ -710,14 +726,14 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		bp_core_load_buddypress_textdomain();
 		$this->assertSame(
 			'BB_MEMO_OK',
-			__( 'BB_MEMO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_MEMO_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'Positive control: the first pass never loaded the catalog.'
 		);
 
 		$counter      = new stdClass();
 		$counter->hit = 0;
 		$listener     = function ( $loaded_domain ) use ( $counter ) {
-			if ( 'buddyboss' === $loaded_domain ) {
+			if ( self::DOMAIN === $loaded_domain ) {
 				++$counter->hit;
 			}
 		};
@@ -754,14 +770,14 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		// Positive control: nothing is readable where the loader will look.
 		$this->assertFalse(
-			is_readable( $probed . 'buddyboss-' . $locale . '.mo' ),
+			is_readable( $probed . self::DOMAIN . '-' . $locale . '.mo' ),
 			'Positive control: the probed location unexpectedly holds a catalog.'
 		);
 
 		add_filter(
 			'load_translation_file',
 			function ( $path, $loaded_domain ) use ( $file ) {
-				return 'buddyboss' === $loaded_domain ? $file : $path;
+				return self::DOMAIN === $loaded_domain ? $file : $path;
 			},
 			10,
 			2
@@ -771,7 +787,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'BB_OVSRV_OK',
-			__( 'BB_OVSRV_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_OVSRV_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'A filter-served catalog was dropped: the load walk must offer every location to load_textdomain().'
 		);
 	}
@@ -799,7 +815,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		add_filter(
 			'plugin_locale',
 			function ( $plugin_locale, $filtered_domain ) {
-				return 'buddyboss' === $filtered_domain ? 'zz_CTRLALT' : $plugin_locale;
+				return self::DOMAIN === $filtered_domain ? 'zz_CTRLALT' : $plugin_locale;
 			},
 			10,
 			2
@@ -816,7 +832,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		// The filter still selects the catalog FILE, so the translation resolves.
 		$this->assertSame(
 			'BB_CTRL_OK',
-			__( 'BB_CTRL_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_CTRL_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'plugin_locale must still choose which catalog file is loaded.'
 		);
 	}
@@ -841,10 +857,10 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		// Something else — core's JIT, or a translation plugin — already loaded the
 		// LOWER-precedence catalog for this locale.
-		load_textdomain( 'buddyboss', $low_file, $locale );
+		load_textdomain( self::DOMAIN, $low_file, $locale );
 		$this->assertSame(
 			'BB_PROMO_LOW',
-			__( 'BB_PROMO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_PROMO_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'Positive control: the lower-precedence catalog never loaded.'
 		);
 
@@ -853,7 +869,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'BB_PROMO_HIGH',
-			__( 'BB_PROMO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_PROMO_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'The reload did not promote the higher-precedence catalog over the one already loaded.'
 		);
 	}
@@ -876,7 +892,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		bp_core_load_buddypress_textdomain();
 
 		$third_party = WP_CONTENT_DIR . '/zz-third-party-languages';
-		$GLOBALS['wp_textdomain_registry']->set_custom_path( 'buddyboss', $third_party );
+		$GLOBALS['wp_textdomain_registry']->set_custom_path( self::DOMAIN, $third_party );
 
 		// A later pass — init:0, change_locale, a WPML/Polylang switch.
 		$this->force_locale( 'zz_CPATH2' );
@@ -888,7 +904,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			$third_party,
-			isset( $paths['buddyboss'] ) ? $paths['buddyboss'] : '',
+			isset( $paths[self::DOMAIN] ) ? $paths[self::DOMAIN] : '',
 			'A reload overwrote the custom languages path registered by a third party.'
 		);
 	}
@@ -933,7 +949,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		// Positive control: the base catalog really is the one the walk would find.
 		$this->assertTrue(
-			is_readable( $base . 'buddyboss-' . $locale . '.mo' ),
+			is_readable( $base . self::DOMAIN . '-' . $locale . '.mo' ),
 			'Positive control: the base catalog was not written.'
 		);
 
@@ -941,7 +957,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		$this->assertSame(
 			'BB_FROM_LOCO',
-			__( 'BB_LOCO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_LOCO_MSG', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'A Loco Translate customisation was ignored in favour of a higher-precedence catalog.'
 		);
 
@@ -949,8 +965,141 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		// layered underneath rather than replacing it.
 		$this->assertSame(
 			'BB_BASE_ONLY',
-			__( 'BB_LOCO_ONLY_BASE', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			__( 'BB_LOCO_ONLY_BASE', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
 			'Loading the Loco catalog dropped strings that only the base catalog carries.'
+		);
+	}
+
+	/* Legacy "buddyboss" catalogs ******************************************/
+
+	/**
+	 * A legacy buddyboss-{locale}.mo is merged into the new domain: the
+	 * new-domain catalog wins where both translate a string, and the legacy
+	 * catalog fills every string the new one does not carry.
+	 */
+	public function test_legacy_catalog_backfills_the_new_domain() {
+		$locale = 'zz_LGB';
+		$dir    = $this->make_dir( 'legacy-backfill' );
+
+		$this->make_catalog( $dir, $locale, array( 'BB_LEGACY_BOTH' => 'BB_FROM_NEW' ) );
+		$this->make_catalog(
+			$dir,
+			$locale,
+			array(
+				'BB_LEGACY_BOTH' => 'BB_FROM_LEGACY',
+				'BB_LEGACY_ONLY' => 'BB_LEGACY_OK',
+			),
+			self::LEGACY_DOMAIN
+		);
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $dir ) );
+
+		bp_core_load_buddypress_textdomain();
+
+		$this->assertSame( 'BB_FROM_NEW', __( 'BB_LEGACY_BOTH', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+		$this->assertSame( 'BB_LEGACY_OK', __( 'BB_LEGACY_ONLY', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+	}
+
+	/**
+	 * A site with only legacy translations (every existing customer install, and
+	 * the bundled languages/ files) must still be translated.
+	 */
+	public function test_legacy_catalog_alone_is_loaded() {
+		$locale = 'zz_LGA';
+		$dir    = $this->make_dir( 'legacy-alone' );
+
+		$this->make_catalog( $dir, $locale, array( 'BB_LEGACY_ALONE' => 'BB_LEGACY_ALONE_OK' ), self::LEGACY_DOMAIN );
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $dir ) );
+
+		$this->assertTrue( bp_core_load_buddypress_textdomain() );
+		$this->assertSame( 'BB_LEGACY_ALONE_OK', __( 'BB_LEGACY_ALONE', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+	}
+
+	/**
+	 * A legacy catalog in a higher-precedence location still loses to the
+	 * new-domain catalog for strings both translate: domain beats location.
+	 */
+	public function test_new_domain_wins_over_a_higher_precedence_legacy_catalog() {
+		$locale = 'zz_LGP';
+		$high   = $this->make_dir( 'legacy-high' );
+		$low    = $this->make_dir( 'new-low' );
+
+		$this->make_catalog( $high, $locale, array( 'BB_LEGACY_PREC' => 'BB_FROM_LEGACY_HIGH' ), self::LEGACY_DOMAIN );
+		$this->make_catalog( $low, $locale, array( 'BB_LEGACY_PREC' => 'BB_FROM_NEW_LOW' ) );
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $high, $low ) );
+
+		bp_core_load_buddypress_textdomain();
+
+		$this->assertSame( 'BB_FROM_NEW_LOW', __( 'BB_LEGACY_PREC', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+	}
+
+	/**
+	 * Legacy catalogs are re-merged after a locale change, not only on the
+	 * first load of the request.
+	 */
+	public function test_legacy_catalog_reloads_when_the_locale_changes() {
+		$first  = 'zz_LG1';
+		$second = 'zz_LG2';
+		$dir    = $this->make_dir( 'legacy-locale' );
+
+		$this->make_catalog( $dir, $first, array( 'BB_LEGACY_LC' => 'BB_LEGACY_FIRST' ), self::LEGACY_DOMAIN );
+		$this->make_catalog( $dir, $second, array( 'BB_LEGACY_LC' => 'BB_LEGACY_SECOND' ), self::LEGACY_DOMAIN );
+
+		$this->set_locations( array( $dir ) );
+
+		$this->force_locale( $first );
+		bp_core_load_buddypress_textdomain();
+		$this->assertSame( 'BB_LEGACY_FIRST', __( 'BB_LEGACY_LC', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+
+		remove_all_filters( 'locale' );
+		$this->force_locale( $second );
+		bp_core_load_buddypress_textdomain();
+		$this->assertSame( 'BB_LEGACY_SECOND', __( 'BB_LEGACY_LC', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+	}
+
+	/**
+	 * Core's change_locale JIT reload only knows the new domain's file name and
+	 * never performs the legacy merge, so the fast path must not trust it while
+	 * a legacy catalog exists — otherwise every legacy-only string would revert
+	 * to English on each switch_to_locale().
+	 */
+	public function test_change_locale_fast_path_is_skipped_when_a_legacy_catalog_exists() {
+		$plugins_dir = trailingslashit( WP_LANG_DIR . '/plugins' );
+		wp_mkdir_p( $plugins_dir );
+		if ( ! wp_is_writable( $plugins_dir ) ) {
+			$this->markTestSkipped( 'WP_LANG_DIR/plugins is not writable in this environment.' );
+		}
+
+		$locale = 'zz_LGF';
+
+		// The new-domain catalog lives where core's registry serves it from, so the
+		// new-domain probe alone would accept core's reload as the best available:
+		// only the legacy guard stops the fast path here.
+		$mofile                 = $this->make_catalog( $plugins_dir, $locale, array( 'BB_LEGACY_FAST' => 'BB_LEGACY_FAST_NEW' ) );
+		$this->lang_dir_files[] = $mofile;
+
+		$dir = $this->make_dir( 'legacy-fastpath' );
+		$this->make_catalog( $dir, $locale, array( 'BB_LEGACY_FAST_ONLY' => 'BB_LEGACY_FAST_OK' ), self::LEGACY_DOMAIN );
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $dir, $plugins_dir ) );
+
+		// Stand in for core's switcher having reloaded only the new-domain file.
+		load_textdomain( self::DOMAIN, $mofile, $locale );
+		$this->assertTrue( is_textdomain_loaded( self::DOMAIN ) );
+
+		do_action( 'change_locale', $locale );
+
+		$this->assertSame( 'BB_LEGACY_FAST_NEW', __( 'BB_LEGACY_FAST', self::DOMAIN ) ); // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+		$this->assertSame(
+			'BB_LEGACY_FAST_OK',
+			__( 'BB_LEGACY_FAST_ONLY', self::DOMAIN ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'The change_locale fast path skipped the legacy merge.'
 		);
 	}
 }

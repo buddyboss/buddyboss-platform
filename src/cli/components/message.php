@@ -290,7 +290,7 @@ class Message extends BuddypressCommand {
 		$messages = $inbox->threads[0]->messages;
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', wp_list_pluck( $messages, 'id' ) ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', wp_list_pluck( $messages, 'id' ) ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $messages );
 		} else {

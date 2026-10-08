@@ -86,7 +86,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) {
 				<?php
 				printf(
 					/* translators: %d: number of remaining notifications */
-					esc_html( _n( 'View More (%d)', 'View More (%d)', $total_notification_count - ( $current_page * $notifications_per_page ), 'buddyboss' ) ),
+					esc_html( _n( 'View More (%d)', 'View More (%d)', $total_notification_count - ( $current_page * $notifications_per_page ), 'buddyboss-platform' ) ),
 					esc_html( number_format_i18n( $total_notification_count - ( $current_page * $notifications_per_page ) ) )
 				);
 				?>

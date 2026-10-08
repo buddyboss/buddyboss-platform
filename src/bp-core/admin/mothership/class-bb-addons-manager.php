@@ -100,7 +100,7 @@ class BB_Addons_Manager extends AddonsManager {
 		// Mothership never booted (stale vendor / failed provider boot) — say so instead of
 		// fataling the add-ons screen.
 		if ( null === $plugin ) {
-			return '<div class="notice notice-error"><p>' . esc_html__( 'Add-ons are unavailable because the licensing library failed to load. Please contact support.', 'buddyboss' ) . '</p></div>';
+			return '<div class="notice notice-error"><p>' . esc_html__( 'Add-ons are unavailable because the licensing library failed to load. Please contact support.', 'buddyboss-platform' ) . '</p></div>';
 		}
 
 		// "Refresh Add-ons" must also re-validate the license, not just drop the add-ons
@@ -120,17 +120,17 @@ class BB_Addons_Manager extends AddonsManager {
 
 		// Check if license is activated before making API calls.
 		if ( ! $plugin->getLicenseActivationStatus() ) {
-			return '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'Please activate your license to access add-ons.', 'buddyboss' ) . '</p></div>';
+			return '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'Please activate your license to access add-ons.', 'buddyboss-platform' ) . '</p></div>';
 		}
 
 		if ( ! $plugin->getLicenseKey() ) {
-			return '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Please enter your license key to access add-ons.', 'buddyboss' ) . '</p></div>';
+			return '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Please enter your license key to access add-ons.', 'buddyboss-platform' ) . '</p></div>';
 		}
 
 		$addons_manager = self::addons_manager();
 
 		if ( null === $addons_manager ) {
-			return '<div class="notice notice-error"><p>' . esc_html__( 'Add-ons are unavailable because the licensing library failed to load. Please contact support.', 'buddyboss' ) . '</p></div>';
+			return '<div class="notice notice-error"><p>' . esc_html__( 'Add-ons are unavailable because the licensing library failed to load. Please contact support.', 'buddyboss-platform' ) . '</p></div>';
 		}
 
 		// Refresh the add-ons if the button is clicked (nonce verified above).
@@ -636,26 +636,26 @@ class BB_Addons_Manager extends AddonsManager {
 		}
 
 		if ( ! current_user_can( 'manage_network_plugins' ) || ( 'install' === $action && ! current_user_can( 'install_plugins' ) ) ) {
-			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to manage network add-ons.', 'buddyboss' ) ) );
+			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to manage network add-ons.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( 'activate' === $action ) {
 			$result = $main_file ? activate_plugin( $main_file, '', true ) : false;
 
 			if ( null !== $result ) {
-				wp_send_json_error( new \WP_Error( 'activation_failed', esc_html__( 'The add-on could not be network activated.', 'buddyboss' ) ) );
+				wp_send_json_error( new \WP_Error( 'activation_failed', esc_html__( 'The add-on could not be network activated.', 'buddyboss-platform' ) ) );
 			}
 
-			wp_send_json_success( esc_html__( 'Plugin network activated.', 'buddyboss' ) );
+			wp_send_json_success( esc_html__( 'Plugin network activated.', 'buddyboss-platform' ) );
 		}
 
 		if ( 'deactivate' === $action ) {
 			if ( ! $main_file ) {
-				wp_send_json_error( new \WP_Error( 'deactivation_failed', esc_html__( 'The add-on could not be deactivated.', 'buddyboss' ) ) );
+				wp_send_json_error( new \WP_Error( 'deactivation_failed', esc_html__( 'The add-on could not be deactivated.', 'buddyboss-platform' ) ) );
 			}
 
 			deactivate_plugins( $main_file, false, true );
-			wp_send_json_success( esc_html__( 'Plugin network deactivated.', 'buddyboss' ) );
+			wp_send_json_success( esc_html__( 'Plugin network deactivated.', 'buddyboss-platform' ) );
 		}
 
 		$this->network_install_addon( $product );
@@ -675,12 +675,12 @@ class BB_Addons_Manager extends AddonsManager {
 		set_current_screen();
 		$creds = request_filesystem_credentials( network_admin_url( 'admin.php' ), '', false, false, null );
 		if ( false === $creds || ! \WP_Filesystem( $creds ) ) {
-			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to install add-ons.', 'buddyboss' ) ) );
+			wp_send_json_error( new \WP_Error( 'insufficient_permissions', esc_html__( 'Sorry, you do not have permission to install add-ons.', 'buddyboss-platform' ) ) );
 		}
 
 		$addon_url = $product->version->url ?? '';
 		if ( ! self::container()->get( Util::class )->isAllowedDownloadUrl( $addon_url ) ) {
-			wp_send_json_error( new \WP_Error( 'invalid_addon_url', esc_html__( 'Invalid add-on URL.', 'buddyboss' ) ) );
+			wp_send_json_error( new \WP_Error( 'invalid_addon_url', esc_html__( 'Invalid add-on URL.', 'buddyboss-platform' ) ) );
 		}
 
 		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -690,7 +690,7 @@ class BB_Addons_Manager extends AddonsManager {
 		$installer = new \Plugin_Upgrader( new AddonInstallSkin() );
 		$installed = $installer->install( $addon_url );
 		if ( ! $installed || is_wp_error( $installed ) ) {
-			wp_send_json_error( new \WP_Error( 'addon_install_failed', esc_html__( 'The add-on was not installed successfully.', 'buddyboss' ) ) );
+			wp_send_json_error( new \WP_Error( 'addon_install_failed', esc_html__( 'The add-on was not installed successfully.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_cache_flush();
@@ -700,7 +700,7 @@ class BB_Addons_Manager extends AddonsManager {
 
 		wp_send_json_success(
 			array(
-				'message'   => $activated ? esc_html__( 'Plugin installed and network activated.', 'buddyboss' ) : esc_html__( 'Plugin installed.', 'buddyboss' ),
+				'message'   => $activated ? esc_html__( 'Plugin installed and network activated.', 'buddyboss-platform' ) : esc_html__( 'Plugin installed.', 'buddyboss-platform' ),
 				'activated' => $activated,
 			)
 		);
@@ -732,9 +732,9 @@ class BB_Addons_Manager extends AddonsManager {
 				! is_plugin_active_for_network( $product->main_file )
 			) {
 				$product->status      = 'inactive';
-				$product->statusLabel = esc_html__( 'Inactive', 'buddyboss' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$product->statusLabel = esc_html__( 'Inactive', 'buddyboss-platform' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				$product->iconClass   = 'dashicons dashicons-yes-alt'; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				$product->buttonLabel = esc_html__( 'Activate', 'buddyboss' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$product->buttonLabel = esc_html__( 'Activate', 'buddyboss-platform' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			}
 		}
 

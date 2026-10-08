@@ -417,9 +417,9 @@ function bb_email_digest_placeholder_state() {
  */
 function bb_email_digest_upgrade_modal_payload() {
 	return array(
-		'label'       => __( 'Email Digest', 'buddyboss' ),
-		'title'       => __( 'Simplify Email Notifications', 'buddyboss' ),
-		'description' => __( 'Combine multiple community notifications into one organized daily or weekly email while keeping in-app notifications unchanged.', 'buddyboss' ),
+		'label'       => __( 'Email Digest', 'buddyboss-platform' ),
+		'title'       => __( 'Simplify Email Notifications', 'buddyboss-platform' ),
+		'description' => __( 'Combine multiple community notifications into one organized daily or weekly email while keeping in-app notifications unchanged.', 'buddyboss-platform' ),
 		'tier'        => 'start',
 		'url'         => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 		// Platform's own copy of the hero, at the design's native 600x337. The add-on
@@ -459,7 +459,7 @@ function bb_admin_settings_register_email_digest_placeholder() {
 		'emails',
 		'email_digest',
 		array(
-			'title' => __( 'Email Digest', 'buddyboss' ),
+			'title' => __( 'Email Digest', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple',
@@ -472,16 +472,16 @@ function bb_admin_settings_register_email_digest_placeholder() {
 	// pill. Every other state is a single centred card, and a description above one would
 	// be a second, competing explanation of the same blocker.
 	$section_args = array(
-		'title'    => __( 'Email Digest', 'buddyboss' ),
+		'title'    => __( 'Email Digest', 'buddyboss-platform' ),
 		'order'    => 10,
 		'help_url' => '659636',
 	);
 
 	if ( $locked ) {
-		$section_args['description'] = __( 'Group several notification emails into one daily or weekly email instead of sending each one separately. You choose which notifications can be grouped. Each member chooses daily, weekly, or no digest in their own notification settings.', 'buddyboss' );
+		$section_args['description'] = __( 'Group several notification emails into one daily or weekly email instead of sending each one separately. You choose which notifications can be grouped. Each member chooses daily, weekly, or no digest in their own notification settings.', 'buddyboss-platform' );
 		$section_args['pro_notice']  = array(
 			'show'       => true,
-			'badge_text' => __( 'UPGRADE START', 'buddyboss' ),
+			'badge_text' => __( 'UPGRADE START', 'buddyboss-platform' ),
 			'badge_icon' => 'bb-icons-rl-crown-simple',
 			'link_url'   => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 			'modal'      => bb_email_digest_upgrade_modal_payload(),
@@ -539,13 +539,13 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 			// wins — but it is kept as the destination if the action is ever filtered
 			// away, so the card degrades to a working link rather than dead text.
 			$card = array(
-				'empty_state_title'       => __( 'Add-on Not Active', 'buddyboss' ),
-				'empty_state_description' => __( 'Email Digest is included in your plan. Activate the BuddyBoss Add-ons plugin to configure it.', 'buddyboss' ),
-				'button_label'            => __( 'Activate', 'buddyboss' ),
+				'empty_state_title'       => __( 'Add-on Not Active', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Email Digest is included in your plan. Activate the BuddyBoss Add-ons plugin to configure it.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Activate', 'buddyboss-platform' ),
 				'button_url'              => admin_url( 'plugins.php' ),
 				'addon_action'            => isset( $addon_actions['activate'] ) ? $addon_actions['activate'] : null,
 				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
-				'addon_busy_label'        => __( 'Activating…', 'buddyboss' ),
+				'addon_busy_label'        => __( 'Activating…', 'buddyboss-platform' ),
 			);
 			break;
 
@@ -561,14 +561,14 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 			// re-decides it lazily, on the AJAX path that only this panel triggers, and
 			// replaces the button when there is nothing newer to install.
 			$card = array(
-				'empty_state_title'       => __( 'Update Required', 'buddyboss' ),
-				'empty_state_description' => __( 'Email Digest is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the add-on to continue.', 'buddyboss' ),
-				'button_label'            => __( 'Update Add-on', 'buddyboss' ),
+				'empty_state_title'       => __( 'Update Required', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Email Digest is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the add-on to continue.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Update Add-on', 'buddyboss-platform' ),
 				'button_url'              => admin_url( 'update-core.php' ),
 				'addon_action'            => 'bb_email_digest_update_addon',
 				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
 				'addon_nonce_key'         => 'ajaxNonce',
-				'addon_busy_label'        => __( 'Updating…', 'buddyboss' ),
+				'addon_busy_label'        => __( 'Updating…', 'buddyboss-platform' ),
 			);
 			break;
 
@@ -582,13 +582,13 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 			// URL with, and reaching this state already means the plan includes the
 			// digest, so that requirement costs nothing here.
 			$card = array(
-				'empty_state_title'       => __( 'Add-on Not Installed', 'buddyboss' ),
-				'empty_state_description' => __( 'Email Digest is included in your plan. Install the BuddyBoss Add-ons plugin to configure it.', 'buddyboss' ),
-				'button_label'            => __( 'Install & Activate', 'buddyboss' ),
+				'empty_state_title'       => __( 'Add-on Not Installed', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Email Digest is included in your plan. Install the BuddyBoss Add-ons plugin to configure it.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Install & Activate', 'buddyboss-platform' ),
 				'button_url'              => admin_url( 'plugins.php' ),
 				'addon_action'            => isset( $addon_actions['install'] ) ? $addon_actions['install'] : null,
 				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
-				'addon_busy_label'        => __( 'Installing…', 'buddyboss' ),
+				'addon_busy_label'        => __( 'Installing…', 'buddyboss-platform' ),
 			);
 			break;
 
@@ -598,9 +598,9 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 			// activation is the only honest next step — naming a plan here would be a
 			// guess, and guessing wrong sends a paying customer to buy what they hold.
 			$card = array(
-				'empty_state_title'       => __( 'License Activation Required', 'buddyboss' ),
-				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter. Activate your license to unlock Email Digest.', 'buddyboss' ),
-				'button_label'            => __( 'Activate License', 'buddyboss' ),
+				'empty_state_title'       => __( 'License Activation Required', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter. Activate your license to unlock Email Digest.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Activate License', 'buddyboss-platform' ),
 				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
 			);
 			break;
@@ -650,7 +650,7 @@ function bb_admin_settings_register_email_digest_signpost() {
 		'notifications',
 		'email_digest_link',
 		array(
-			'title'        => __( 'Email Digest', 'buddyboss' ),
+			'title'        => __( 'Email Digest', 'buddyboss-platform' ),
 			'icon'         => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple',
@@ -696,9 +696,9 @@ function bb_email_digest_soften_stale_update_card( $field_data, $field, $feature
 		return $field_data;
 	}
 
-	$field_data['empty_state_title']       = __( 'Not Available in This Version', 'buddyboss' );
-	$field_data['empty_state_description'] = __( 'Email Digest is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Check for a plugin update.', 'buddyboss' );
-	$field_data['button_label']            = __( 'Go to Updates', 'buddyboss' );
+	$field_data['empty_state_title']       = __( 'Not Available in This Version', 'buddyboss-platform' );
+	$field_data['empty_state_description'] = __( 'Email Digest is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Check for a plugin update.', 'buddyboss-platform' );
+	$field_data['button_label']            = __( 'Go to Updates', 'buddyboss-platform' );
 	// The WordPress updates screen rather than the add-ons screen: this state is reached
 	// when no newer build is known, and that answer comes from an update check that may
 	// simply be stale. "Check again" there re-runs it, which is the one action on this
@@ -736,7 +736,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_email_digest_soften_stale
  */
 function bb_email_digest_ajax_update_addon() {
 	if ( ! current_user_can( 'update_plugins' ) || ! current_user_can( 'activate_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -748,7 +748,7 @@ function bb_email_digest_ajax_update_addon() {
 	$plugin_file = bb_email_digest_addon_plugin_file();
 
 	if ( ! file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
-		wp_send_json_error( array( 'message' => __( 'The BuddyBoss Add-ons plugin is not installed.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'The BuddyBoss Add-ons plugin is not installed.', 'buddyboss-platform' ) ) );
 	}
 
 	$installed = bb_email_digest_addon_installed_version();
@@ -757,7 +757,7 @@ function bb_email_digest_ajax_update_addon() {
 	if ( '' === $latest['url'] ) {
 		wp_send_json_error(
 			array(
-				'message'     => __( 'The BuddyBoss Add-ons plugin is not available under your current license.', 'buddyboss' ),
+				'message'     => __( 'The BuddyBoss Add-ons plugin is not available under your current license.', 'buddyboss-platform' ),
 				'license_url' => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
 			)
 		);
@@ -772,7 +772,7 @@ function bb_email_digest_ajax_update_addon() {
 			array(
 				'message' => sprintf(
 					/* translators: %s: installed plugin version. */
-					__( 'The BuddyBoss Add-ons plugin is already up to date (version %s). Email Digest is not included in this version.', 'buddyboss' ),
+					__( 'The BuddyBoss Add-ons plugin is already up to date (version %s). Email Digest is not included in this version.', 'buddyboss-platform' ),
 					$installed
 				),
 			)
@@ -791,7 +791,7 @@ function bb_email_digest_ajax_update_addon() {
 		}
 		wp_send_json_error(
 			array(
-				'message' => __( 'Plugin update failed. Please try again.', 'buddyboss' ),
+				'message' => __( 'Plugin update failed. Please try again.', 'buddyboss-platform' ),
 				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $detail : '',
 			)
 		);
@@ -810,7 +810,7 @@ function bb_email_digest_ajax_update_addon() {
 			}
 			wp_send_json_error(
 				array(
-					'message' => __( 'Plugin updated but activation failed. Please activate it from the Plugins screen.', 'buddyboss' ),
+					'message' => __( 'Plugin updated but activation failed. Please activate it from the Plugins screen.', 'buddyboss-platform' ),
 					'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $activate->get_error_message() : '',
 				)
 			);
@@ -879,15 +879,15 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'        => '_bb_email_digest_placeholder_enabled',
-			'label'       => __( 'Email Digest', 'buddyboss' ),
+			'label'       => __( 'Email Digest', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Enable Email Digest', 'buddyboss' ),
-			'help_text'   => __( 'Group several notification emails into one daily or weekly email instead of sending each one separately. You choose which notifications can be grouped. Each member chooses daily, weekly, or no digest in their own notification settings.', 'buddyboss' ),
+			'description' => __( 'Enable Email Digest', 'buddyboss-platform' ),
+			'help_text'   => __( 'Group several notification emails into one daily or weekly email instead of sending each one separately. You choose which notifications can be grouped. Each member chooses daily, weekly, or no digest in their own notification settings.', 'buddyboss-platform' ),
 			'default'     => 0,
 			'order'       => 10,
 			'pro_notice'  => array(
 				'show'       => true,
-				'badge_text' => __( 'START', 'buddyboss' ),
+				'badge_text' => __( 'START', 'buddyboss-platform' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_icon'  => 'bb-icons-rl bb-icons-rl-play',
 				'link_url'   => 'https://www.buddyboss.com/pricing/',
@@ -900,17 +900,17 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'      => '_bb_email_digest_placeholder_frequency',
-			'label'     => __( 'Default Frequency', 'buddyboss' ),
+			'label'     => __( 'Default Frequency', 'buddyboss-platform' ),
 			'type'      => 'select',
-			'help_text' => __( 'New members start on this schedule. Existing members keep getting instant emails until they choose daily or weekly. Members can change their choice any time in their notification settings.', 'buddyboss' ),
+			'help_text' => __( 'New members start on this schedule. Existing members keep getting instant emails until they choose daily or weekly. Members can change their choice any time in their notification settings.', 'buddyboss-platform' ),
 			'default'   => 'daily',
 			'options'   => array(
 				array(
-					'label' => __( 'Daily', 'buddyboss' ),
+					'label' => __( 'Daily', 'buddyboss-platform' ),
 					'value' => 'daily',
 				),
 				array(
-					'label' => __( 'Weekly', 'buddyboss' ),
+					'label' => __( 'Weekly', 'buddyboss-platform' ),
 					'value' => 'weekly',
 				),
 			),
@@ -923,13 +923,13 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$day_options = array();
 	foreach (
 		array(
-			__( 'Sunday', 'buddyboss' ),
-			__( 'Monday', 'buddyboss' ),
-			__( 'Tuesday', 'buddyboss' ),
-			__( 'Wednesday', 'buddyboss' ),
-			__( 'Thursday', 'buddyboss' ),
-			__( 'Friday', 'buddyboss' ),
-			__( 'Saturday', 'buddyboss' ),
+			__( 'Sunday', 'buddyboss-platform' ),
+			__( 'Monday', 'buddyboss-platform' ),
+			__( 'Tuesday', 'buddyboss-platform' ),
+			__( 'Wednesday', 'buddyboss-platform' ),
+			__( 'Thursday', 'buddyboss-platform' ),
+			__( 'Friday', 'buddyboss-platform' ),
+			__( 'Saturday', 'buddyboss-platform' ),
 		) as $index => $day_label
 	) {
 		$day_options[] = array(
@@ -941,9 +941,9 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'      => '_bb_email_digest_placeholder_send_day',
-			'label'     => __( 'Send Schedule', 'buddyboss' ),
+			'label'     => __( 'Send Schedule', 'buddyboss-platform' ),
 			'type'      => 'select',
-			'help_text' => __( 'The day weekly digests go out. Daily digests are not affected.', 'buddyboss' ),
+			'help_text' => __( 'The day weekly digests go out. Daily digests are not affected.', 'buddyboss-platform' ),
 			'default'   => '1',
 			'options'   => $day_options,
 			'order'     => 30,
@@ -965,9 +965,9 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'      => '_bb_email_digest_placeholder_send_time',
-			'label'     => __( 'Send Schedule', 'buddyboss' ),
+			'label'     => __( 'Send Schedule', 'buddyboss-platform' ),
 			'type'      => 'select',
-			'help_text' => __( 'The time digests start going out, in your site\'s timezone. They are sent in batches, so on a large site some members get theirs a little later.', 'buddyboss' ),
+			'help_text' => __( 'The time digests start going out, in your site\'s timezone. They are sent in batches, so on a large site some members get theirs a little later.', 'buddyboss-platform' ),
 			'default'   => '09:00',
 			'options'   => $time_options,
 			'order'     => 40,
@@ -979,10 +979,10 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'        => '_bb_email_digest_placeholder_source_groups',
-			'label'       => __( 'Group Updates', 'buddyboss' ),
+			'label'       => __( 'Group Updates', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Include group updates in the digest', 'buddyboss' ),
-			'help_text'   => __( 'New posts in groups the member is subscribed to, and changes to group details. Turn this off to send these emails immediately instead.', 'buddyboss' ),
+			'description' => __( 'Include group updates in the digest', 'buddyboss-platform' ),
+			'help_text'   => __( 'New posts in groups the member is subscribed to, and changes to group details. Turn this off to send these emails immediately instead.', 'buddyboss-platform' ),
 			'default'     => 0,
 			'order'       => 50,
 		)
@@ -991,10 +991,10 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'        => '_bb_email_digest_placeholder_source_social',
-			'label'       => __( 'Social', 'buddyboss' ),
+			'label'       => __( 'Social', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Include social notifications in the digest', 'buddyboss' ),
-			'help_text'   => __( 'Mentions, comments and replies on posts, new posts from people the member follows, and new followers. Turn this off to send these emails immediately instead.', 'buddyboss' ),
+			'description' => __( 'Include social notifications in the digest', 'buddyboss-platform' ),
+			'help_text'   => __( 'Mentions, comments and replies on posts, new posts from people the member follows, and new followers. Turn this off to send these emails immediately instead.', 'buddyboss-platform' ),
 			'default'     => 0,
 			'order'       => 60,
 		)
@@ -1003,10 +1003,10 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'        => '_bb_email_digest_placeholder_source_messages',
-			'label'       => __( 'Private Messages', 'buddyboss' ),
+			'label'       => __( 'Private Messages', 'buddyboss-platform' ),
 			'type'        => 'toggle',
-			'description' => __( 'Include private messages in the digest', 'buddyboss' ),
-			'help_text'   => __( 'Unread private messages and group messages. Members will not hear about a new message until their next digest. Turn this off to send these emails immediately instead.', 'buddyboss' ),
+			'description' => __( 'Include private messages in the digest', 'buddyboss-platform' ),
+			'help_text'   => __( 'Unread private messages and group messages. Members will not hear about a new message until their next digest. Turn this off to send these emails immediately instead.', 'buddyboss-platform' ),
 			'default'     => 0,
 			'order'       => 70,
 		)
@@ -1016,10 +1016,10 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'        => '_bb_email_digest_placeholder_intro',
-			'label'       => __( 'Digest Heading', 'buddyboss' ),
+			'label'       => __( 'Digest Heading', 'buddyboss-platform' ),
 			'type'        => 'textarea',
-			'placeholder' => __( 'Add a heading and a short intro for your digest emails', 'buddyboss' ),
-			'help_text'   => __( 'A short welcome message shown at the top of every digest, above the list of notifications. Leave it empty to show no introduction.', 'buddyboss' ),
+			'placeholder' => __( 'Add a heading and a short intro for your digest emails', 'buddyboss-platform' ),
+			'help_text'   => __( 'A short welcome message shown at the top of every digest, above the list of notifications. Leave it empty to show no introduction.', 'buddyboss-platform' ),
 			'default'     => '',
 			'order'       => 80,
 			'group'       => array( 'key' => 'digest_heading' ),
@@ -1043,11 +1043,11 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	$register(
 		array(
 			'name'         => '_bb_email_digest_placeholder_test',
-			'label'        => __( 'Test Digest', 'buddyboss' ),
+			'label'        => __( 'Test Digest', 'buddyboss-platform' ),
 			'type'         => 'manage_link',
-			'description'  => __( 'Sends a preview digest to your own email address, built from the notifications you have waiting. This does not affect members and does not clear your waiting notifications.', 'buddyboss' ),
+			'description'  => __( 'Sends a preview digest to your own email address, built from the notifications you have waiting. This does not affect members and does not clear your waiting notifications.', 'buddyboss-platform' ),
 			'manage_url'   => '',
-			'manage_label' => __( 'Send Test Digest', 'buddyboss' ),
+			'manage_label' => __( 'Send Test Digest', 'buddyboss-platform' ),
 			'manage_icon'  => 'bb-icons-rl bb-icons-rl-paper-plane-tilt',
 			'order'        => 110,
 		)

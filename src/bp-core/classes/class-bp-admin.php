@@ -341,8 +341,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss' ),
-				__( '', 'buddyboss' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''
@@ -367,8 +367,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'BuddyBoss Settings', 'buddyboss' ),
-				__( 'Settings', 'buddyboss' ),
+				__( 'BuddyBoss Settings', 'buddyboss-platform' ),
+				__( 'Settings', 'buddyboss-platform' ),
 				$this->capability,
 				'bb-settings',
 				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
@@ -410,7 +410,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					$this->settings_page,
 					'bp_core_admin_backpat_menu',
 					'none',
-					3
+					58.9
 				);
 			}
 		}
@@ -447,13 +447,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$this->settings_page,
 				'bp_core_admin_backpat_menu',
 				'none',
-				3
+				58.9
 			);
 
 			$hooks[] = add_submenu_page(
 				'bp-general-settings',
-				__( 'BuddyBoss Help', 'buddyboss' ),
-				__( 'Help', 'buddyboss' ),
+				__( 'BuddyBoss Help', 'buddyboss-platform' ),
+				__( 'Help', 'buddyboss-platform' ),
 				$this->capability,
 				'bp-general-settings',
 				'bp_core_admin_backpat_page'
@@ -462,8 +462,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Add the Separator.
 			// $hooks[] = add_submenu_page(
 			// $this->settings_page,
-			// __( '', 'buddyboss' ),
-			// __( '', 'buddyboss' ),
+			// __( '', 'buddyboss-platform' ),
+			// __( '', 'buddyboss-platform' ),
 			// $this->capability,
 			// 'bp-plugin-separator-notice',
 			// ''
@@ -472,8 +472,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Add the option pages.
 			$hooks[] = add_submenu_page(
 				$this->child_settings_page,
-				__( 'BuddyPress Settings', 'buddyboss' ),
-				__( 'BuddyPress', 'buddyboss' ),
+				__( 'BuddyPress Settings', 'buddyboss-platform' ),
+				__( 'BuddyPress', 'buddyboss-platform' ),
 				$this->capability,
 				'admin.php?page=bb-settings'
 			);
@@ -497,8 +497,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'BuddyBoss Settings', 'buddyboss' ),
-				__( 'Settings', 'buddyboss' ),
+				__( 'BuddyBoss Settings', 'buddyboss-platform' ),
+				__( 'Settings', 'buddyboss-platform' ),
 				$this->capability,
 				'bb-settings',
 				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
@@ -517,8 +517,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// at render time, by which point bb-admin-integrations-page.php is loaded.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'BuddyBoss Integrations', 'buddyboss' ),
-				__( 'Integrations', 'buddyboss' ),
+				__( 'BuddyBoss Integrations', 'buddyboss-platform' ),
+				__( 'Integrations', 'buddyboss-platform' ),
 				$this->capability,
 				'bb-integrations',
 				'bb_admin_integrations_page'
@@ -535,8 +535,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// are redirected server-side by `bb_redirect_legacy_help_page()`.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'Help', 'buddyboss' ),
-				__( 'Help', 'buddyboss' ),
+				__( 'Help', 'buddyboss-platform' ),
+				__( 'Help', 'buddyboss-platform' ),
 				$this->capability,
 				'admin.php?page=bb-settings&tab=help',
 				''
@@ -544,8 +544,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss' ),
-				__( '', 'buddyboss' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''
@@ -613,7 +613,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'',                                                // menu_title (empty so screen readers skip it).
 				$this->capability,                                  // capability.
 				'bb-settings',                                       // menu_slug — drives the parent's href.
-				__( 'BuddyBoss Settings', 'buddyboss' ),            // page_title — keeps <title> intact when this row matches first.
+				__( 'BuddyBoss Settings', 'buddyboss-platform' ),            // page_title — keeps <title> intact when this row matches first.
 				'bb-default-page-link hidden',                      // 5th element: classes on the rendered <li>.
 			);
 			array_unshift( $submenu['buddyboss-platform'], $bb_default_row );
@@ -648,8 +648,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Appearance > Emails.
 			$hooks[] = add_theme_page(
-				__( 'Emails', 'buddyboss' ),
-				__( 'Emails', 'buddyboss' ),
+				__( 'Emails', 'buddyboss-platform' ),
+				__( 'Emails', 'buddyboss-platform' ),
 				$this->capability,
 				'bp-emails-customizer-redirect',
 				'bp_email_redirect_to_customizer'
@@ -659,8 +659,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$email_url = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
 				$hooks[]   = add_submenu_page(
 					'buddyboss-platform',
-					__( 'Emails', 'buddyboss' ),
-					__( 'Emails', 'buddyboss' ),
+					__( 'Emails', 'buddyboss-platform' ),
+					__( 'Emails', 'buddyboss-platform' ),
 					'bp_moderate',
 					$email_url,
 					''
@@ -679,8 +679,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				// Add our screen.
 				$hook = add_submenu_page(
 					'buddyboss-platform',
-					__( 'Emails', 'buddyboss' ),
-					__( 'Emails', 'buddyboss' ),
+					__( 'Emails', 'buddyboss-platform' ),
+					__( 'Emails', 'buddyboss-platform' ),
 					'bp_moderate',
 					$email_url,
 					''
@@ -736,9 +736,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			return array_merge(
 				$links,
 				array(
-					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bb-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
-					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>',
-					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss' ) . '</a>',
+					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bb-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss-platform' ) . '</a>',
+					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss-platform' ) . '</a>',
+					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss-platform' ) . '</a>',
 				)
 			);
 		}
@@ -788,8 +788,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					array(
 						'ajax_url'           => admin_url( 'admin-ajax.php' ),
 						'bb_help_url'        => $bp_help_base_url,
-						'bb_help_title'      => esc_html__( 'Docs', 'buddyboss' ),
-						'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+						'bb_help_title'      => esc_html__( 'Docs', 'buddyboss-platform' ),
+						'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -1662,12 +1662,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$release_url  = $this->bb_get_release_notes_page_url( $linked_version );
 				$release_text = sprintf(
 					/* translators: %s: version number. */
-					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss-platform' ),
 					$linked_version
 				);
 			} else {
 				$release_url  = $this->bb_get_release_notes_page_url();
-				$release_text = __( 'View all release notes on buddyboss.com', 'buddyboss' );
+				$release_text = __( 'View all release notes on buddyboss.com', 'buddyboss-platform' );
 			}
 
 			$information = array(
@@ -1714,7 +1714,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'homepage'      => 'https://buddyboss.com/',
 				'last_updated'  => $this->bb_get_plugin_last_updated( $plugin_file, $update ),
 				'sections'      => array(
-					'description' => '<p>' . esc_html__( 'The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!', 'buddyboss' ) . '</p>',
+					'description' => '<p>' . esc_html__( 'The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!', 'buddyboss-platform' ) . '</p>',
 					'changelog'   => $this->bb_build_changelog_section( $changelog, $release_url, $release_text, $state ),
 				),
 				'download_link' => $this->bb_get_plugin_download_link( $package ),
@@ -1864,15 +1864,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 				switch ( (string) $state ) {
 					case 'empty':
-						$notice = esc_html__( 'No release notes have been published for this version yet.', 'buddyboss' );
+						$notice = esc_html__( 'No release notes have been published for this version yet.', 'buddyboss-platform' );
 						break;
 					case 'locked':
-						$notice = esc_html__( 'The release notes are still loading. Reload this window in a moment to see them.', 'buddyboss' );
+						$notice = esc_html__( 'The release notes are still loading. Reload this window in a moment to see them.', 'buddyboss-platform' );
 						break;
 					case 'skipped':
 						break;
 					default:
-						$notice = esc_html__( 'The release notes for this version could not be loaded right now.', 'buddyboss' );
+						$notice = esc_html__( 'The release notes for this version could not be loaded right now.', 'buddyboss-platform' );
 						break;
 				}
 
@@ -1893,7 +1893,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s<span class="screen-reader-text"> %3$s</span></a></p>',
 				esc_url( $url ),
 				esc_html( (string) $link_text ),
-				esc_html__( '(opens in a new tab)', 'buddyboss' )
+				esc_html__( '(opens in a new tab)', 'buddyboss-platform' )
 			);
 
 			return $section;
@@ -3108,7 +3108,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					$link,
 					sprintf(
 						/* translators: %s: version number. */
-						__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+						__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss-platform' ),
 						$linked_version
 					),
 					$state
@@ -3122,7 +3122,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Plain text both ways: bb_build_changelog_section() escapes it.
 			$link_text = '' !== (string) $link_text
 				? (string) $link_text
-				: __( 'Visit the plugin website for release information', 'buddyboss' );
+				: __( 'Visit the plugin website for release information', 'buddyboss-platform' );
 
 			return $this->bb_build_changelog_section( $notes, $link_url, $link_text, $state );
 		}
@@ -3487,14 +3487,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$release_url  = $release_link;
 				$release_text = sprintf(
 					/* translators: %s: version number. */
-					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss-platform' ),
 					$linked_version
 				);
 			} else {
 				$release_url  = '' !== $term
 					? $this->bb_get_addon_release_archive_url( $term )
 					: $plugin_uri;
-				$release_text = __( 'Visit the plugin website for release information', 'buddyboss' );
+				$release_text = __( 'Visit the plugin website for release information', 'buddyboss-platform' );
 			}
 
 			$information = array(
@@ -3688,7 +3688,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		protected function bb_get_known_buddyboss_themes() {
 			$themes = array(
 				'buddyboss-theme' => array(
-					'name'      => __( 'BuddyBoss Theme', 'buddyboss' ),
+					'name'      => __( 'BuddyBoss Theme', 'buddyboss-platform' ),
 					'rest_base' => 'releases-theme',
 					'page_base' => 'https://buddyboss.com/resources/buddyboss-theme-releases/',
 				),
@@ -3801,7 +3801,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function bb_render_theme_changelog() {
 			if ( ! current_user_can( 'update_themes' ) ) {
 				wp_die(
-					esc_html__( 'Sorry, you are not allowed to view theme release notes.', 'buddyboss' ),
+					esc_html__( 'Sorry, you are not allowed to view theme release notes.', 'buddyboss-platform' ),
 					'',
 					array( 'response' => 403 )
 				);
@@ -3820,7 +3820,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// so this cannot be turned into a fetcher for arbitrary feeds.
 			if ( ! isset( $themes[ $stylesheet ] ) ) {
 				wp_die(
-					esc_html__( 'Release notes are not available for this theme.', 'buddyboss' ),
+					esc_html__( 'Release notes are not available for this theme.', 'buddyboss-platform' ),
 					'',
 					array( 'response' => 404 )
 				);
@@ -3842,12 +3842,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$page_url  = $this->bb_get_release_notes_page_url( $linked_version, $theme['page_base'] );
 				$link_text = sprintf(
 					/* translators: %s: version number. */
-					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss-platform' ),
 					$linked_version
 				);
 			} else {
 				$page_url  = $this->bb_get_release_notes_page_url( '', $theme['page_base'] );
-				$link_text = __( 'View all release notes on buddyboss.com', 'buddyboss' );
+				$link_text = __( 'View all release notes on buddyboss.com', 'buddyboss-platform' );
 			}
 
 			$installed = wp_get_theme( $stylesheet );
@@ -3870,7 +3870,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 */
 			set_current_screen( 'themes' );
 
-			iframe_header( __( 'Theme Release Notes', 'buddyboss' ) );
+			iframe_header( __( 'Theme Release Notes', 'buddyboss-platform' ) );
 			?>
 			<div class="bb-theme-changelog" style="padding: 10px 20px 20px;">
 				<h2 style="margin-top: 0;"><?php echo esc_html( $heading ); ?></h2>

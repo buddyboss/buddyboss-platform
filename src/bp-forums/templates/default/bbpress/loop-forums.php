@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <?php do_action( 'bbp_template_before_forums_loop' ); ?>
@@ -15,10 +18,10 @@
 	<li class="bbp-header">
 
 		<ul class="forum-titles">
-			<li class="bbp-forum-info"><?php _e( 'Forum', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-topic-count"><?php _e( 'Discussions', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-reply-count"><?php bbp_show_lead_topic() ? _e( 'Replies', 'buddyboss' ) : _e( 'Posts', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-freshness"><?php _e( 'Last Post', 'buddyboss' ); ?></li>
+			<li class="bbp-forum-info"><?php esc_html_e( 'Forum', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-topic-count"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-reply-count"><?php bbp_show_lead_topic() ? esc_html_e( 'Replies', 'buddyboss-platform' ) : esc_html_e( 'Posts', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-freshness"><?php esc_html_e( 'Last Post', 'buddyboss-platform' ); ?></li>
 		</ul>
 
 	</li><!-- .bbp-header -->

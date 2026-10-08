@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_before_loop();
 
 if ( bp_has_blogs( bp_ajax_querystring( 'blogs' ) ) ) :

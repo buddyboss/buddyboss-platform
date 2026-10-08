@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 			$stats             = bbp_get_statistics();
 			$total_discussions = isset( $stats['topic_count_int'] ) ? $stats['topic_count_int'] : 0;
 			?>
-			<h2><?php esc_html_e( 'Discussions', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_discussions ); ?></span></h2>
+			<h2><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?> <span class="bb-rl-heading-count"><?php echo esc_html( $total_discussions ); ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
 								$forum_title = $forum_page->post_title;
 							} else {
 								$forum_url   = get_post_type_archive_link( bbp_get_forum_post_type() );
-								$forum_title = esc_html__( 'Forums', 'buddyboss' );
+								$forum_title = esc_html__( 'Forums', 'buddyboss-platform' );
 							}
 							if ( ! empty( $forum_url ) && ! empty( $forum_title ) ) {
 								echo '<option value="' . esc_url( $forum_url ) . '">' . esc_html( $forum_title ) . '</option>';
@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
 							$discussion_url = get_post_type_archive_link( bbp_get_topic_post_type() );
 							?>
 
-							<option value="<?php echo esc_url( $discussion_url ); ?>" <?php selected( is_post_type_archive( bbp_get_topic_post_type() ) ); ?>><?php esc_html_e( 'Discussions', 'buddyboss' ); ?></option>
+							<option value="<?php echo esc_url( $discussion_url ); ?>" <?php selected( is_post_type_archive( bbp_get_topic_post_type() ) ); ?>><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></option>
 						</select>
 					</div>
 				</div>

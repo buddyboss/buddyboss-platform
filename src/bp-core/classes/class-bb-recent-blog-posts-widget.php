@@ -25,8 +25,8 @@ class BB_Recent_Blog_Posts_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'bb_recent_blog_posts_widget',
-			esc_html__( 'Recent Blog Posts', 'buddyboss' ),
-			array( 'description' => esc_html__( 'Displays recent blog posts.', 'buddyboss' ) )
+			esc_html__( 'Recent Blog Posts', 'buddyboss-platform' ),
+			array( 'description' => esc_html__( 'Displays recent blog posts.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -56,12 +56,12 @@ class BB_Recent_Blog_Posts_Widget extends WP_Widget {
 			$blogs_dir_url = function_exists( 'bp_get_blogs_directory_permalink' ) ? bp_get_blogs_directory_permalink() : '';
 			?>
 			<div class="widget-header">
-				<h2 class="widget-title"><?php esc_html_e( 'Recent blog posts', 'buddyboss' ); ?></h2>
+				<h2 class="widget-title"><?php esc_html_e( 'Recent blog posts', 'buddyboss-platform' ); ?></h2>
 				<?php
 				if ( ! empty( $blogs_dir_url ) ) {
 					?>
 					<a href="<?php echo esc_url( $blogs_dir_url ); ?>" class="widget-link">
-						<?php esc_html_e( 'See all', 'buddyboss' ); ?>
+						<?php esc_html_e( 'See all', 'buddyboss-platform' ); ?>
 					</a>
 					<?php
 				}
@@ -89,7 +89,7 @@ class BB_Recent_Blog_Posts_Widget extends WP_Widget {
 						</a>
 					</div>
 					<div class="<?php echo esc_attr( $class_prefix . 'recent-post-date' ); ?>">
-						<?php echo esc_html( human_time_diff( get_the_time( 'U', $post['ID'] ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'buddyboss' ) ); ?>
+						<?php echo esc_html( human_time_diff( get_the_time( 'U', $post['ID'] ), current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'buddyboss-platform' ) ); ?>
 					</div>
 				</div>
 				<?php

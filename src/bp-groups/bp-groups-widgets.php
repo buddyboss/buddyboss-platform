@@ -76,11 +76,13 @@ function groups_ajax_widget_groups_list() {
 						<span class="activity">
 						<?php
 						if ( 'newest' == $type ) {
-							printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() );
+							/* translators: %s: human-readable time since the group was created. */
+							printf( esc_html__( 'created %s', 'buddyboss-platform' ), esc_html( bp_get_group_date_created() ) );
 						} elseif ( 'popular' == $type ) {
 							bp_group_member_count();
 						} else {
-							printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
+							/* translators: %s: human-readable time since the group was last active. */
+							printf( esc_html__( 'active %s', 'buddyboss-platform' ), esc_html( bp_get_group_last_active() ) );
 						}
 						?>
 						</span>
@@ -90,11 +92,11 @@ function groups_ajax_widget_groups_list() {
 		<?php endwhile; ?>
 
 		<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
-		<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $_POST['max_groups'] ); ?>" />
+		<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( isset( $_POST['max_groups'] ) ? absint( $_POST['max_groups'] ) : 0 ); ?>" />
 
 	<?php else : ?>
 
-		<?php echo '-1[[SPLIT]]<li>' . __( 'No groups matched the current filter.', 'buddyboss' ); ?>
+		<?php echo '-1[[SPLIT]]<li>' . esc_html__( 'No groups matched the current filter.', 'buddyboss-platform' ); ?>
 
 		<?php
 	endif;

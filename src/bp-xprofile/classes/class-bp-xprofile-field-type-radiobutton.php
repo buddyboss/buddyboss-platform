@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Radio Buttons', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Radio Buttons', 'buddyboss-platform' );
 
 		$this->supports_options = true;
 
@@ -90,7 +90,7 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 				?>
 
 				<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bp_get_the_profile_field_input_name() ); ?>' );">
-					<?php esc_html_e( 'Clear', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?>
 				</a>
 
 			<?php endif; ?>
@@ -164,7 +164,7 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 		printf(
 			'<div id="%1$s" class="input-options radio-button-options">%2$s</div>',
 			esc_attr( 'field_' . $this->field_obj->id ),
-			$html
+			$html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- radio markup pre-escaped per option (esc_attr/esc_html); contains <input> which wp_kses_post would strip.
 		);
 	}
 
@@ -186,7 +186,7 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 		?>
 
 		<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bp_get_the_profile_field_input_name() ); ?>' );">
-			<?php esc_html_e( 'Clear', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?>
 		</a>
 
 		<?php

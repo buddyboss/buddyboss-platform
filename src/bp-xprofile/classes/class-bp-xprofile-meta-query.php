@@ -280,6 +280,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 				case 'IN':
 				case 'NOT IN':
 					$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $meta_value ) ), 1 ) . ')';
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $meta_compare_string contains only generated %s placeholders; $meta_value bound as args.
 					$where               = $wpdb->prepare( $meta_compare_string, $meta_value );
 					break;
 
@@ -333,6 +334,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 				case 'IN':
 				case 'NOT IN':
 					$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $object_type ) ), 1 ) . ')';
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $meta_compare_string contains only generated %s placeholders; $object_type bound as args.
 					$object_where        = $wpdb->prepare( $meta_compare_string, $object_type );
 					break;
 

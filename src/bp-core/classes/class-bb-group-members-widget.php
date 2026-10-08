@@ -24,8 +24,8 @@ class BB_Group_Members_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'bb_group_members_widget',
-			esc_html__( 'Group Members', 'buddyboss' ),
-			array( 'description' => esc_html__( 'Displays group members with tabs.', 'buddyboss' ) )
+			esc_html__( 'Group Members', 'buddyboss-platform' ),
+			array( 'description' => esc_html__( 'Displays group members with tabs.', 'buddyboss-platform' ) )
 		);
 
 		add_action( 'wp_ajax_widget_groups_members_list', array( $this, 'groups_ajax_widget_groups_members_list' ) );
@@ -59,9 +59,9 @@ class BB_Group_Members_Widget extends WP_Widget {
 		if ( bp_group_has_members( $group_args ) ) {
 			?>
 			<div class="widget-header">
-				<h2 class="widget-title"><?php esc_html_e( 'Group members', 'buddyboss' ); ?></h2>
+				<h2 class="widget-title"><?php esc_html_e( 'Group members', 'buddyboss-platform' ); ?></h2>
 				<a href="<?php echo esc_url( bp_get_group_permalink() ); ?>" class="widget-link">
-					<?php esc_html_e( 'See all', 'buddyboss' ); ?>
+					<?php esc_html_e( 'See all', 'buddyboss-platform' ); ?>
 				</a>
 			</div>
 			<div class="bb-rl-group-members-list-options item-options" id="bb-rl-groups-members-list-options">
@@ -86,7 +86,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 						)
 					);
 					?>
-					"><?php esc_html_e( 'Active', 'buddyboss' ); ?>
+					"><?php esc_html_e( 'Active', 'buddyboss-platform' ); ?>
 				</a>
 				<a href="#" id="bb-rl-newest-groups-members"
 					<?php
@@ -109,7 +109,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 						)
 					);
 					?>
-					"><?php esc_html_e( 'New', 'buddyboss' ); ?>
+					"><?php esc_html_e( 'New', 'buddyboss-platform' ); ?>
 				</a>
 				<a href="#" id="bb-rl-popular-groups-members"
 					<?php
@@ -132,7 +132,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 						)
 					);
 					?>
-					"><?php esc_html_e( 'Popular', 'buddyboss' ); ?>
+					"><?php esc_html_e( 'Popular', 'buddyboss-platform' ); ?>
 				</a>	
 			</div>
 			<ul id="bb-rl-group-members-list" class="item-list bb-rl-group-members-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
@@ -163,7 +163,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 		} else {
 			?>
 			<div class="widget-error">
-				<?php esc_html_e( 'There are no members to display.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'There are no members to display.', 'buddyboss-platform' ); ?>
 			</div>
 			<?php
 		}

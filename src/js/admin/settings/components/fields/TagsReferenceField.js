@@ -38,7 +38,7 @@ export function TagsReferenceField( { field } ) {
 		return null;
 	}
 
-	var heading = field.heading || __( 'Available Tags:', 'buddyboss' );
+	var heading = field.heading || __( 'Available Tags:', 'buddyboss-platform' );
 
 	return (
 		<div className="bb-admin-tags-reference" role="note">

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Check profile type enable?
 $is_member_type_enabled = bp_member_type_enable_disable();
 
@@ -43,7 +46,7 @@ if ( ! empty( $member_types ) ) {
 			</label>
 			<div class="select-wrap">
 				<select id="member-type-order-by" data-bp-member-type-filter="members">
-					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
+					<option value=""><?php esc_html_e( 'All Types', 'buddyboss-platform' ); ?></option><?php
 					foreach ( $member_types as $member_type_id ) {
 						$type_name        = bp_get_member_type_key( $member_type_id );
 						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );

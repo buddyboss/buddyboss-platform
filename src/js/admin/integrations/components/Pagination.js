@@ -72,7 +72,7 @@ export function Pagination( { page, totalPages, total, onChange } ) {
 			<span className="bb-integrations__item-count">
 				{ sprintf(
 					/* translators: %s: total number of integrations. */
-					_n( '%s item', '%s items', total, 'buddyboss' ),
+					_n( '%s item', '%s items', total, 'buddyboss-platform' ),
 					total
 				) }
 			</span>
@@ -84,8 +84,8 @@ export function Pagination( { page, totalPages, total, onChange } ) {
 						disabled={ page <= 1 }
 						onClick={ () => onChange( Math.max( 1, page - 1 ) ) }
 						className={ p + '__pagination-btn ' + p + '__pagination-btn--previous' }
-						label={ __( 'Previous page', 'buddyboss' ) }
-						aria-label={ __( 'Previous page', 'buddyboss' ) }
+						label={ __( 'Previous page', 'buddyboss-platform' ) }
+						aria-label={ __( 'Previous page', 'buddyboss-platform' ) }
 					>
 						&lsaquo;
 					</Button>
@@ -113,8 +113,8 @@ export function Pagination( { page, totalPages, total, onChange } ) {
 						disabled={ page >= totalPages }
 						onClick={ () => onChange( Math.min( totalPages, page + 1 ) ) }
 						className={ p + '__pagination-btn ' + p + '__pagination-btn--next' }
-						label={ __( 'Next page', 'buddyboss' ) }
-						aria-label={ __( 'Next page', 'buddyboss' ) }
+						label={ __( 'Next page', 'buddyboss-platform' ) }
+						aria-label={ __( 'Next page', 'buddyboss-platform' ) }
 					>
 						&rsaquo;
 					</Button>

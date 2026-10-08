@@ -75,7 +75,7 @@ function bp_activity_embed_add_inline_styles() {
 	$css = file_get_contents( $css['file'] );
 	$css = wp_kses( $css, array( "\'", '\"' ) );
 
-	printf( '<style>%s</style>', $css );
+	printf( '<style>%s</style>', $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $css is read from a bundled CSS file and sanitized via wp_kses() above.
 }
 add_action( 'embed_head', 'bp_activity_embed_add_inline_styles', 20 );
 
@@ -122,7 +122,7 @@ function bp_activity_embed_has_activity( $activity_id = 0 ) {
  * @since BuddyPress 2.6.0
  */
 function bp_activity_embed_excerpt( $content = '' ) {
-	echo bp_activity_get_embed_excerpt( $content );
+	echo wp_kses_post( bp_activity_get_embed_excerpt( $content ) );
 }
 
 	/**
@@ -261,9 +261,7 @@ function bp_activity_embed_media() {
 				 * @link    http://ionicons.com/
 				 * @license MIT
 				 */
-				$play_icon = <<<EOD
-<svg id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M405.2,232.9L126.8,67.2c-3.4-2-6.9-3.2-10.9-3.2c-10.9,0-19.8,9-19.8,20H96v344h0.1c0,11,8.9,20,19.8,20  c4.1,0,7.5-1.4,11.2-3.4l278.1-165.5c6.6-5.5,10.8-13.8,10.8-23.1C416,246.7,411.8,238.5,405.2,232.9z"/></svg>
-EOD;
+				$play_icon = '<svg id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M405.2,232.9L126.8,67.2c-3.4-2-6.9-3.2-10.9-3.2c-10.9,0-19.8,9-19.8,20H96v344h0.1c0,11,8.9,20,19.8,20  c4.1,0,7.5-1.4,11.2-3.4l278.1-165.5c6.6-5.5,10.8-13.8,10.8-23.1C416,246.7,411.8,238.5,405.2,232.9z"/></svg>';
 
 				$play_icon = sprintf( '<a rel="nofollow" class="play-btn" href="%1$s" onclick="top.location.href=\'%1$s\'">%2$s</a>', esc_url( $url ), $play_icon );
 			}
@@ -289,10 +287,11 @@ EOD;
 			// Show author info.
 			if ( isset( $oembed->provider_name ) && isset( $oembed->author_name ) ) {
 				/* translators: By [oEmbed author] on [oEmbed provider]. eg. By BuddyPress on YouTube. */
-				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss' ), $oembed->author_name, $oembed->provider_name );
+				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss-platform' ), $oembed->author_name, $oembed->provider_name );
 
 			} elseif ( isset( $oembed->provider_name ) ) {
-				$anchor_text = sprintf( __( 'View on %s', 'buddyboss' ), $oembed->provider_name );
+				/* translators: %s: oEmbed provider name. */
+				$anchor_text = sprintf( __( 'View on %s', 'buddyboss-platform' ), $oembed->provider_name );
 			}
 
 			if ( true === isset( $anchor_text ) ) {
@@ -318,8 +317,8 @@ EOD;
 			printf(
 				'<div class="bp-activity-embed-display-media %s" style="max-width:%spx">%s</div>',
 				$thumb_width < $float_width ? 'two-col' : 'one-col',
-				$thumb_width < $float_width ? $width : $thumb_width,
-				$content
+				esc_attr( $thumb_width < $float_width ? $width : $thumb_width ),
+				wp_kses_post( $content )
 			);
 		}
 
@@ -340,7 +339,7 @@ EOD;
 			printf(
 				'<video controls preload="metadata"><source src="%1$s"><p>%2$s</p></video>',
 				esc_url( $media['videos'][0]['url'] ),
-				esc_html__( 'Your browser does not support HTML5 video', 'buddyboss' )
+				esc_html__( 'Your browser does not support HTML5 video', 'buddyboss-platform' )
 			);
 
 			// No video? Try audio. HTML5-only.
@@ -348,7 +347,7 @@ EOD;
 			printf(
 				'<audio controls preload="metadata"><source src="%1$s"><p>%2$s</p></audio>',
 				esc_url( $media['audio'][0]['url'] ),
-				esc_html__( 'Your browser does not support HTML5 audio', 'buddyboss' )
+				esc_html__( 'Your browser does not support HTML5 audio', 'buddyboss-platform' )
 			);
 		}
 	}

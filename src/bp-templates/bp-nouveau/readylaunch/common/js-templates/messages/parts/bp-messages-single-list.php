@@ -5,6 +5,10 @@
  * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <script type="text/html" id="tmpl-bp-messages-single-list">
@@ -164,7 +168,7 @@
 							<div class="bb-rl-activity-media-elem bb-rl-document-activity " data-id="">
 								<# if ( data.document[i].id ) { #>
 									<div class="bb-rl-document-description-wrap">
-										<a href="{{data.document[i].url}}" class="bb-rl-entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}" aria-label="<?php esc_attr_e( 'Open document', 'buddyboss' ); ?>">
+										<a href="{{data.document[i].url}}" class="bb-rl-entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}" aria-label="<?php esc_attr_e( 'Open document', 'buddyboss-platform' ); ?>">
 											<i class="{{data.document[i].svg_icon}}" ></i>
 										</a>
 										<a href="{{data.document[i].url}}"
@@ -222,7 +226,7 @@
 								<video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted>
 									<source src="{{data.gif.video_url}}" type="video/mp4">
 								</video>
-								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
+								<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss-platform' ); ?>">
 									<span class="bb-icon-bl bb-icon-play"></span>
 								</a>
 								<span class="gif-icon"></span>

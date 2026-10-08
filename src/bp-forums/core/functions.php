@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses bbp_get_version() To get the Forums version
  */
 function bbp_version() {
-	echo bbp_get_version();
+	echo esc_html( bbp_get_version() );
 }
 	/**
 	 * Return the Forums version
@@ -37,7 +37,7 @@ function bbp_get_version() {
  * @uses bbp_get_version() To get the Forums version
  */
 function bbp_db_version() {
-	echo bbp_get_db_version();
+	echo esc_html( bbp_get_db_version() );
 }
 	/**
 	 * Return the Forums database version
@@ -56,7 +56,7 @@ function bbp_get_db_version() {
  * @uses bbp_get_version() To get the current Forums version
  */
 function bbp_db_version_raw() {
-	echo bbp_get_db_version_raw();
+	echo esc_html( bbp_get_db_version_raw() );
 }
 	/**
 	 * Return the Forums database version directly from the database
@@ -766,7 +766,7 @@ function bbp_delete_rewrite_rules() {
  * @return bool
  */
 function bbp_is_post_request() {
-	return (bool) ( 'POST' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
+	return (bool) ( 'POST' === strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) );
 }
 
 /**
@@ -776,7 +776,7 @@ function bbp_is_post_request() {
  * @return bool
  */
 function bbp_is_get_request() {
-	return (bool) ( 'GET' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
+	return (bool) ( 'GET' === strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) );
 }
 
 /**

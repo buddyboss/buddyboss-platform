@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( empty( get_query_var( 'bb-video-thumb-preview' ) ) && empty( get_query_var( 'id1' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
@@ -86,7 +89,7 @@ if (
 		header( "Content-Type: $type" );
 		header( 'Cache-Control: max-age=2592000, public' );
 		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 2592000 ) . ' GMT' );
-		readfile( "$output_file_src" );
+		readfile( "$output_file_src" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- streams raw binary video/thumbnail file for download; WP_Filesystem offers no streaming equivalent.
 	} else {
 		echo '// Silence is golden.';
 		exit();

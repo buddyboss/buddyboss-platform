@@ -23,8 +23,8 @@ require_once __DIR__ . '/bb-two-factor-functions.php';
 bb_register_integration(
 	'two-factor',
 	array(
-		'label'                   => __( 'Two-Factor Authentication', 'buddyboss' ),
-		'description'             => __( 'Add a second layer of login security with authenticator apps, email codes, or one-time recovery codes.', 'buddyboss' ),
+		'label'                   => __( 'Two-Factor Authentication', 'buddyboss-platform' ),
+		'description'             => __( 'Add a second layer of login security with authenticator apps, email codes, or one-time recovery codes.', 'buddyboss-platform' ),
 		'icon'                    => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-shield-check',
@@ -47,8 +47,8 @@ bb_register_integration(
 		'is_available_callback'   => 'bb_two_factor_is_supported',
 		'is_active_callback'      => 'bb_two_factor_feature_is_on',
 
-		'confirm_off_title'       => __( 'Hide two-factor settings from members?', 'buddyboss' ),
-		'confirm_off_message'     => __( 'The Security tab will be removed from the Account page, so members can no longer set up or change two-factor authentication from the front end. Anyone who already turned it on is still asked for a second factor when they sign in, and their authenticator apps and recovery codes are untouched.', 'buddyboss' ),
+		'confirm_off_title'       => __( 'Hide two-factor settings from members?', 'buddyboss-platform' ),
+		'confirm_off_message'     => __( 'The Security tab will be removed from the Account page, so members can no longer set up or change two-factor authentication from the front end. Anyone who already turned it on is still asked for a second factor when they sign in, and their authenticator apps and recovery codes are untouched.', 'buddyboss-platform' ),
 		'confirm_off_destructive' => true,
 	)
 );

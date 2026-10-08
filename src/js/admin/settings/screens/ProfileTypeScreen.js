@@ -198,7 +198,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 			.catch( function ( err ) {
 				if ( 'AbortError' !== err.name ) {
 					setIsLoading( false );
-					setToast( { status: 'error', message: __( 'Failed to load profile types.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Failed to load profile types.', 'buddyboss-platform' ) } );
 				}
 			} );
 	}, [ currentPage, perPage ] );
@@ -262,7 +262,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 		savePlatformSetting( optionName, newValue ? 1 : 0 )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss-platform' ) } );
 
 					// Refetch types when re-enabling — the list may be stale/empty
 					// from when the feature was disabled and the component remounted.
@@ -276,7 +276,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 					} else {
 						setDisplayOnProfile( prevValue );
 					}
-					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function () {
@@ -286,7 +286,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				} else {
 					setDisplayOnProfile( prevValue );
 				}
-				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 			} );
 	}, [ enableProfileTypes, displayOnProfile ] );
 
@@ -298,15 +298,15 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 		savePlatformSetting( 'bp-member-type-default-on-registration', newValue )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss-platform' ) } );
 				} else {
 					setDefaultProfileType( prevDefault );
-					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function () {
 				setDefaultProfileType( prevDefault );
-				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 			} );
 	}, [ defaultProfileType ] );
 
@@ -343,16 +343,16 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 						// Same effect, different trigger — see refetchTick definition.
 						setRefetchTick( function ( t ) { return t + 1; } );
 					}
-					setToast( { status: 'success', message: __( 'Profile type deleted.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Profile type deleted.', 'buddyboss-platform' ) } );
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete profile type.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete profile type.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function ( err ) {
 				if ( 'AbortError' === err.name ) {
 					return;
 				}
-				setToast( { status: 'error', message: __( 'Failed to delete profile type.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to delete profile type.', 'buddyboss-platform' ) } );
 			} );
 	}, [ deleteConfirmId, memberTypes, currentPage ] );
 
@@ -373,7 +373,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	var handleModalSave = useCallback( function () {
 		setIsModalOpen( false );
 		setEditingType( null );
-		setToast( { status: 'success', message: __( 'Profile type saved.', 'buddyboss' ) } );
+		setToast( { status: 'success', message: __( 'Profile type saved.', 'buddyboss-platform' ) } );
 		setRefetchTick( function ( t ) { return t + 1; } );
 	}, [] );
 
@@ -392,7 +392,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	// The summary ships `id`, `post_title`, `key`, `plural_label` — everything
 	// this dropdown needs — independent of pagination.
 	var defaultTypeOptions = useMemo( function () {
-		var options = [ { label: __( 'Select', 'buddyboss' ), value: '' } ];
+		var options = [ { label: __( 'Select', 'buddyboss-platform' ), value: '' } ];
 		allMemberTypesSummary.forEach( function ( type ) {
 			if ( type.key ) {
 				options.push( {
@@ -414,15 +414,15 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	 */
 	function getVisibilityBadge( type ) {
 		if ( 'private' === type.visibility ) {
-			return { icon: 'bb-icons-rl-lock', label: __( 'Private', 'buddyboss' ), modifier: ' bb-admin-profile-types__list-item-visibility-badge--private' };
+			return { icon: 'bb-icons-rl-lock', label: __( 'Private', 'buddyboss-platform' ), modifier: ' bb-admin-profile-types__list-item-visibility-badge--private' };
 		}
 		if ( 'draft' === type.visibility ) {
-			return { icon: 'bb-icons-rl-file-text', label: __( 'Draft', 'buddyboss' ), modifier: ' bb-admin-profile-types__list-item-visibility-badge--draft' };
+			return { icon: 'bb-icons-rl-file-text', label: __( 'Draft', 'buddyboss-platform' ), modifier: ' bb-admin-profile-types__list-item-visibility-badge--draft' };
 		}
 		if ( 'password_protected' === type.visibility ) {
-			return { icon: 'bb-icons-rl-lock-key', label: __( 'Password Protected', 'buddyboss' ), modifier: ' bb-admin-profile-types__list-item-visibility-badge--password' };
+			return { icon: 'bb-icons-rl-lock-key', label: __( 'Password Protected', 'buddyboss-platform' ), modifier: ' bb-admin-profile-types__list-item-visibility-badge--password' };
 		}
-		return { icon: 'bb-icons-rl-globe-simple', label: __( 'Public', 'buddyboss' ), modifier: '' };
+		return { icon: 'bb-icons-rl-globe-simple', label: __( 'Public', 'buddyboss-platform' ), modifier: '' };
 	}
 
 	return (
@@ -432,7 +432,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				<div className="bb-admin-feature-settings__section-header">
 					<div className="bb-admin-feature-settings__section-header-left">
 						<h3 className="bb-admin-feature-settings__section-title">
-							{ getSectionTitle( feature, activePanelId, 'profile_types_settings' ) || __( 'Profile Type Settings', 'buddyboss' ) }
+							{ getSectionTitle( feature, activePanelId, 'profile_types_settings' ) || __( 'Profile Type Settings', 'buddyboss-platform' ) }
 						</h3>
 					</div>
 					<div className="bb-admin-feature-settings__section-header-right">
@@ -451,13 +451,13 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 						<div className="bb-admin-settings-form">
 							<div className="bb-admin-settings-form__field">
 								<div className="bb-admin-settings-form__field-label">
-									{ getFieldLabel( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Profile Types', 'buddyboss' ) }
+									{ getFieldLabel( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Profile Types', 'buddyboss-platform' ) }
 								</div>
 								<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
 									<div className="bb-admin-settings-form__field-input-wrapper">
 										<div className="bb-admin-settings-form__toggle-wrapper">
 											<ToggleControl
-													label={ getFieldDescription( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Enable profile types', 'buddyboss' ) }
+													label={ getFieldDescription( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Enable profile types', 'buddyboss-platform' ) }
 													checked={ enableProfileTypes }
 													onChange={ function ( val ) {
 														handleSettingChange( 'bp-member-type-enable-disable', val );
@@ -477,13 +477,13 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 								<>
 									<div className="bb-admin-settings-form__field">
 										<div className="bb-admin-settings-form__field-label">
-											{ getFieldLabel( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display Profile Types', 'buddyboss' ) }
+											{ getFieldLabel( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display Profile Types', 'buddyboss-platform' ) }
 										</div>
 										<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
 											<div className="bb-admin-settings-form__field-input-wrapper">
 												<div className="bb-admin-settings-form__toggle-wrapper">
 													<ToggleControl
-														label={ getFieldDescription( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display profile type on member profiles', 'buddyboss' ) }
+														label={ getFieldDescription( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display profile type on member profiles', 'buddyboss-platform' ) }
 														checked={ displayOnProfile }
 														onChange={ function ( val ) {
 															handleSettingChange( 'bp-member-type-display-on-profile', val );
@@ -502,7 +502,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 
 									<div className="bb-admin-settings-form__field">
 										<div className="bb-admin-settings-form__field-label">
-											{ getFieldLabel( feature, activePanelId, 'bp-member-type-default-on-registration' ) || __( 'Default Profile Type', 'buddyboss' ) }
+											{ getFieldLabel( feature, activePanelId, 'bp-member-type-default-on-registration' ) || __( 'Default Profile Type', 'buddyboss-platform' ) }
 										</div>
 										<div className="bb-admin-settings-form__field-content">
 											<div className="bb-admin-settings-form__field-input-wrapper">
@@ -534,7 +534,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				<div className="bb-admin-feature-settings__section-header">
 					<div className="bb-admin-feature-settings__section-header-left">
 						<h3 className="bb-admin-feature-settings__section-title">
-							{ __( 'Profile Types', 'buddyboss' ) }
+							{ __( 'Profile Types', 'buddyboss-platform' ) }
 						</h3>
 					</div>
 					<div className="bb-admin-feature-settings__section-header-right">
@@ -543,7 +543,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 							onClick={ handleAddNewType }
 						>
 							<i className="bb-icons-rl bb-icons-rl-plus"></i>
-							{ __( 'Add New Profile Type', 'buddyboss' ) }
+							{ __( 'Add New Profile Type', 'buddyboss-platform' ) }
 						</button>
 					</div>
 				</div>
@@ -554,7 +554,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 						<ul className="bb-admin-profile-types__list">
 							{ memberTypes.map( function ( type ) {
 								var badge = getVisibilityBadge( type );
-								var countText = sprintf( _n( '%d member', '%d members', type.members_count, 'buddyboss' ), type.members_count );
+								var countText = sprintf( _n( '%d member', '%d members', type.members_count, 'buddyboss-platform' ), type.members_count );
 
 								return (
 									<li key={ type.id } className="bb-admin-profile-types__list-item">
@@ -615,7 +615,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 													onClick={ function () {
 														setOpenMenuId( openMenuId === type.id ? null : type.id );
 													} }
-													aria-label={ __( 'Actions', 'buddyboss' ) }
+													aria-label={ __( 'Actions', 'buddyboss-platform' ) }
 													aria-haspopup="true"
 													aria-expanded={ type.id === openMenuId ? 'true' : 'false' }
 												>
@@ -631,7 +631,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-															{ __( 'Edit', 'buddyboss' ) }
+															{ __( 'Edit', 'buddyboss-platform' ) }
 														</button>
 														<button
 															className="bb-admin-profile-types__menu-item bb-admin-profile-types__menu-item--danger"
@@ -641,7 +641,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-trash"></i>
-															{ __( 'Delete', 'buddyboss' ) }
+															{ __( 'Delete', 'buddyboss-platform' ) }
 														</button>
 													</div>
 												) }
@@ -653,7 +653,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 						</ul>
 					) : (
 						<div className="bb-admin-profile-types__empty">
-							<p>{ __( 'No profile types found. Click "Add New Profile Type" to create one.', 'buddyboss' ) }</p>
+							<p>{ __( 'No profile types found. Click "Add New Profile Type" to create one.', 'buddyboss-platform' ) }</p>
 						</div>
 					) }
 
@@ -682,10 +682,10 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 			{/* Delete Confirmation Modal */}
 			<ConfirmToggleModal
 				isOpen={ null !== deleteConfirmId }
-				title={ __( 'Delete Profile Type', 'buddyboss' ) }
-				message={ __( 'Are you sure you want to delete this profile type?', 'buddyboss' ) }
-				confirmLabel={ __( 'Delete', 'buddyboss' ) }
-				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				title={ __( 'Delete Profile Type', 'buddyboss-platform' ) }
+				message={ __( 'Are you sure you want to delete this profile type?', 'buddyboss-platform' ) }
+				confirmLabel={ __( 'Delete', 'buddyboss-platform' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss-platform' ) }
 				isDestructive={ true }
 				onConfirm={ performDelete }
 				onCancel={ function () {

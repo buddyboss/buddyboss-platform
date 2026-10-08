@@ -7,5 +7,9 @@
  * @since   BuddyBoss 2.5.80
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="gif-media-search-dropdown gif-media-search-dropdown-standalone"></div>

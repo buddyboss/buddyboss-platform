@@ -88,7 +88,7 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading }
 	 */
 	var handleSave = function () {
 		if ( ! name.trim() ) {
-			setError( __( 'Tag name is required.', 'buddyboss' ) );
+			setError( __( 'Tag name is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -120,14 +120,14 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading }
 					onSaved( response.data );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to save tag.', 'buddyboss' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to save tag.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
 		} );
 	};
 
@@ -154,8 +154,8 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading }
 	};
 
 	var modalTitle = (editTag || isLoading)
-		? __( 'Edit Tag', 'buddyboss' )
-		: __( 'Add New Tag', 'buddyboss' );
+		? __( 'Edit Tag', 'buddyboss-platform' )
+		: __( 'Add New Tag', 'buddyboss-platform' );
 
 	return (
 		<Modal
@@ -176,26 +176,26 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading }
 						) }
 
 						<TextControl
-							label={ __( 'Name', 'buddyboss' ) }
+							label={ __( 'Name', 'buddyboss-platform' ) }
 							value={ name }
 							onChange={ setName }
-							help={ __( 'This name is how it appears on your site.', 'buddyboss' ) }
+							help={ __( 'This name is how it appears on your site.', 'buddyboss-platform' ) }
 							__nextHasNoMarginBottom
 						/>
 
 						<TextControl
-							label={ __( 'Slug', 'buddyboss' ) }
+							label={ __( 'Slug', 'buddyboss-platform' ) }
 							value={ slug }
 							onChange={ setSlug }
-							help={ __( 'The "slug" is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.', 'buddyboss' ) }
+							help={ __( 'The "slug" is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.', 'buddyboss-platform' ) }
 							__nextHasNoMarginBottom
 						/>
 
 						<TextareaControl
-							label={ __( 'Description (Optional)', 'buddyboss' ) }
+							label={ __( 'Description (Optional)', 'buddyboss-platform' ) }
 							value={ description }
 							onChange={ setDescription }
-							placeholder={ __( 'Enter description', 'buddyboss' ) }
+							placeholder={ __( 'Enter description', 'buddyboss-platform' ) }
 							__nextHasNoMarginBottom
 						/>
 					</div>
@@ -206,7 +206,7 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading }
 							onClick={ handleClose }
 							disabled={ isSaving }
 						>
-							{ __( 'Cancel', 'buddyboss' ) }
+							{ __( 'Cancel', 'buddyboss-platform' ) }
 						</Button>
 						<Button
 							variant="primary"
@@ -214,7 +214,7 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading }
 							isBusy={ isSaving }
 							disabled={ isSaving || ! name.trim() }
 						>
-							{ __( 'Save', 'buddyboss' ) }
+							{ __( 'Save', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</>

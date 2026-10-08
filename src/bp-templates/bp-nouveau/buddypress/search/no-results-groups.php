@@ -9,4 +9,7 @@
  * @version 1.0.0
  */
 
-esc_html_e( 'No groups found!', 'buddyboss' );
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+esc_html_e( 'No groups found!', 'buddyboss-platform' );

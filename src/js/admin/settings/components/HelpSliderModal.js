@@ -47,14 +47,14 @@ export const HelpSliderModal = ({ isOpen, onClose, children, title }) => {
 			<div className="bb-rl-help-modal" onClick={(e) => e.stopPropagation()}>
 				<div className="bb-rl-help-modal-header">
 					<h2>{title}</h2>
-					<button className="bb-rl-help-modal-close" onClick={onClose} aria-label={__('Close', 'buddyboss')}>
+					<button className="bb-rl-help-modal-close" onClick={onClose} aria-label={__('Close', 'buddyboss-platform')}>
 						<span>&times;</span>
 					</button>
 				</div>
 				<div className="bb-rl-help-modal-content">
 					{toc.length > 0 && (
 						<nav className="bb-rl-help-modal-toc">
-							<h3>{__('Contents', 'buddyboss')}</h3>
+							<h3>{__('Contents', 'buddyboss-platform')}</h3>
 							<ol>
 								{toc.map(({ text, anchor }) => (
 									<li key={anchor}>

@@ -10,6 +10,10 @@
  * @param array $component_names
  * @return array
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function bbp_filter_notifications_get_registered_components( $component_names = array() ) {
 
 	// Force $component_names to be an array
@@ -59,16 +63,19 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			),
 			'bbp_mark_topic_' . $topic_id
 		);
-		$title_attr  = __( 'Discussion Replies', 'buddyboss' );
+		$title_attr  = __( 'Discussion Replies', 'buddyboss-platform' );
 
 		if ( (int) $total_items > 1 ) {
-			$text   = sprintf( __( 'You have %d new replies', 'buddyboss' ), (int) $total_items );
+			/* translators: %d: total number of new replies. */
+			$text   = sprintf( __( 'You have %d new replies', 'buddyboss-platform' ), (int) $total_items );
 			$filter = 'bbp_multiple_new_subscription_notification';
 		} else {
 			if ( ! empty( $secondary_item_id ) ) {
-				$text = sprintf( __( 'You have %d new reply to %2$s from %3$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
+				/* translators: 1: total number of new replies, 2: topic title, 3: user display name. */
+				$text = sprintf( __( 'You have %1$d new reply to %2$s from %3$s', 'buddyboss-platform' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
-				$text = sprintf( __( 'You have %1$d new reply to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
+				/* translators: 1: total number of new replies, 2: topic title. */
+				$text = sprintf( __( 'You have %1$d new reply to %2$s', 'buddyboss-platform' ), (int) $total_items, $topic_title );
 			}
 			$filter = 'bbp_single_new_subscription_notification';
 		}
@@ -117,17 +124,20 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			'bbp_mark_topic_' . $topic_id
 		);
 
-		$title_attr = esc_html__( 'Discussion started', 'buddyboss' );
+		$title_attr = esc_html__( 'Discussion started', 'buddyboss-platform' );
 
 		if ( (int) $total_items > 1 ) {
-			$text   = sprintf( __( 'You have %d new discussion', 'buddyboss' ), (int) $total_items );
+			/* translators: %d: total number of new discussions. */
+			$text   = sprintf( __( 'You have %d new discussion', 'buddyboss-platform' ), (int) $total_items );
 			$filter = 'bbp_multiple_new_discussion_subscription_notification';
 		} else {
 
 			if ( ! empty( $secondary_item_id ) ) {
-				$text = sprintf( __( '%1$s started a discussion: "%2$s"', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ), $topic_title );
+				/* translators: 1: user display name, 2: discussion title. */
+				$text = sprintf( __( '%1$s started a discussion: "%2$s"', 'buddyboss-platform' ), bp_core_get_user_displayname( $secondary_item_id ), $topic_title );
 			} else {
-				$text = sprintf( __( 'You have a new discussion: "%s"', 'buddyboss' ), $topic_title );
+				/* translators: %s: discussion title. */
+				$text = sprintf( __( 'You have a new discussion: "%s"', 'buddyboss-platform' ), $topic_title );
 			}
 
 			$filter = 'bbp_single_new_discussion_subscription_notification';
@@ -181,16 +191,19 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			),
 			'bbp_mark_topic_' . $topic_id
 		);
-		$title_attr  = __( 'Discussion Mentions', 'buddyboss' );
+		$title_attr  = __( 'Discussion Mentions', 'buddyboss-platform' );
 
 		if ( (int) $total_items > 1 ) {
-			$text   = sprintf( __( 'You have %d new mentions', 'buddyboss' ), (int) $total_items );
+			/* translators: %d: total number of new mentions. */
+			$text   = sprintf( __( 'You have %d new mentions', 'buddyboss-platform' ), (int) $total_items );
 			$filter = 'bbp_multiple_new_subscription_notification';
 		} else {
 			if ( ! empty( $secondary_item_id ) ) {
-				$text = sprintf( __( '%3$s mentioned you in %2$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
+				/* translators: 2: topic title, 3: user display name. */
+				$text = sprintf( __( '%3$s mentioned you in %2$s', 'buddyboss-platform' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
-				$text = sprintf( __( 'You have %1$d new mention to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
+				/* translators: 1: total number of new mentions, 2: topic title. */
+				$text = sprintf( __( 'You have %1$d new mention to %2$s', 'buddyboss-platform' ), (int) $total_items, $topic_title );
 			}
 			$filter = 'bbp_single_new_subscription_notification';
 		}
@@ -459,7 +472,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 					'notification_type' => $email_type,
 				);
 
-				$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
+				$notification_type_html = esc_html__( 'discussion', 'buddyboss-platform' );
 
 				$email_args = array(
 					'tokens' => array(
@@ -472,7 +485,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $reply_content,
 						'author_id'         => $author_id,
-						'reply_text'        => esc_html__( 'View Reply', 'buddyboss' ),
+						'reply_text'        => esc_html__( 'View Reply', 'buddyboss-platform' ),
 						'title_text'        => $title_text,
 						'forum_id'          => $forum_id,
 						'topic_id'          => $topic_id,
@@ -618,7 +631,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 					'notification_type' => $email_type,
 				);
 
-				$notification_type_html = esc_html__( 'discussion', 'buddyboss' );
+				$notification_type_html = esc_html__( 'discussion', 'buddyboss-platform' );
 
 				$email_args = array(
 					'tokens' => array(
@@ -631,7 +644,7 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $topic_content,
 						'author_id'         => $author_id,
-						'reply_text'        => esc_html__( 'View Discussion', 'buddyboss' ),
+						'reply_text'        => esc_html__( 'View Discussion', 'buddyboss-platform' ),
 						'title_text'        => $title_text,
 						'forum_id'          => $forum_id,
 						'topic_id'          => $topic_id,
@@ -673,11 +686,11 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 
 	// Check nonce.
 	if ( ! bbp_verify_nonce_request( 'bbp_mark_topic_' . $topic_id ) ) {
-		bbp_add_error( 'bbp_notification_topic_id', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+		bbp_add_error( 'bbp_notification_topic_id', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
 
 		// Check current user's ability to edit the user.
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
-		bbp_add_error( 'bbp_notification_permissions', __( '<strong>ERROR</strong>: You do not have permission to mark notifications for that user.', 'buddyboss' ) );
+		bbp_add_error( 'bbp_notification_permissions', __( '<strong>ERROR</strong>: You do not have permission to mark notifications for that user.', 'buddyboss-platform' ) );
 	}
 
 	// Bail if we have errors.

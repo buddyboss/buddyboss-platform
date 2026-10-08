@@ -5,9 +5,7 @@
 @font-face {
   font-family: "bb-icons-rl";
   src:
-    url("../fonts/bb-icons-Thin.woff2") format("woff2"),
-    url("../fonts/bb-icons-Thin.woff") format("woff"),
-    url("../fonts/bb-icons-Thin.ttf") format("truetype");
+    url("../fonts/bb-icons-Thin.woff2") format("woff2");
   font-weight: 200;
   font-style: normal;
   font-display: block;
@@ -16,9 +14,7 @@
 @font-face {
   font-family: "bb-icons-rl";
   src:
-    url("../fonts/bb-icons-Light.woff2") format("woff2"),
-    url("../fonts/bb-icons-Light.woff") format("woff"),
-    url("../fonts/bb-icons-Light.ttf") format("truetype");
+    url("../fonts/bb-icons-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: block;
@@ -27,9 +23,7 @@
 @font-face {
   font-family: "bb-icons-rl";
   src:
-    url("../fonts/bb-icons.woff2") format("woff2"),
-    url("../fonts/bb-icons.woff") format("woff"),
-    url("../fonts/bb-icons.ttf") format("truetype");
+    url("../fonts/bb-icons.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: block;
@@ -38,9 +32,7 @@
 @font-face {
   font-family: "bb-icons-rl";
   src:
-    url("../fonts/bb-icons-Fill.woff2") format("woff2"),
-    url("../fonts/bb-icons-Fill.woff") format("woff"),
-    url("../fonts/bb-icons-Fill.ttf") format("truetype");
+    url("../fonts/bb-icons-Fill.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: block;
@@ -49,9 +41,7 @@
 @font-face {
   font-family: "bb-icons-rl";
   src:
-    url("../fonts/bb-icons-Duotone.woff2") format("woff2"),
-    url("../fonts/bb-icons-Duotone.woff") format("woff"),
-    url("../fonts/bb-icons-Duotone.ttf") format("truetype");
+    url("../fonts/bb-icons-Duotone.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: block;
@@ -60,9 +50,7 @@
 @font-face {
   font-family: "bb-icons-rl";
   src:
-    url("../fonts/bb-icons-Bold.woff2") format("woff2"),
-    url("../fonts/bb-icons-Bold.woff") format("woff"),
-    url("../fonts/bb-icons-Bold.ttf") format("truetype");
+    url("../fonts/bb-icons-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: block;

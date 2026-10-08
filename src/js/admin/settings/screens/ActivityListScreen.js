@@ -211,7 +211,7 @@ export function ActivityListScreen( { onNavigate } ) {
 			setIsLoading( false );
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to load activities. Please try again.', 'buddyboss' ),
+				message: __( 'Failed to load activities. Please try again.', 'buddyboss-platform' ),
 			} );
 		} );
 	}, [ currentPage, perPage, searchQuery, actionFilter, filter ] );
@@ -286,10 +286,10 @@ export function ActivityListScreen( { onNavigate } ) {
 					fetchActivities();
 				}
 			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function () {
-			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -306,7 +306,7 @@ export function ActivityListScreen( { onNavigate } ) {
 
 		if ( 'delete' === action ) {
 			setDeleteConfirm( {
-				message: __( 'Are you sure you want to delete the selected activities?', 'buddyboss' ),
+				message: __( 'Are you sure you want to delete the selected activities?', 'buddyboss-platform' ),
 				onConfirm: function () {
 					setDeleteConfirm( null );
 					performAction( action, selectedIds );
@@ -327,7 +327,7 @@ export function ActivityListScreen( { onNavigate } ) {
 	var handleSingleAction = function ( action, activity ) {
 		if ( 'delete' === action ) {
 			setDeleteConfirm( {
-				message: __( 'Are you sure you want to delete this activity?', 'buddyboss' ),
+				message: __( 'Are you sure you want to delete this activity?', 'buddyboss-platform' ),
 				onConfirm: function () {
 					setDeleteConfirm( null );
 					performAction( action, activity.id );
@@ -355,11 +355,11 @@ export function ActivityListScreen( { onNavigate } ) {
 					setActivityActions( response.data.activity_actions );
 				}
 			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to load activity.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to load activity.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function () {
 			setIsEditLoading( false );
-			setNotice( { type: 'error', message: __( 'An error occurred while loading the activity.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred while loading the activity.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -377,11 +377,11 @@ export function ActivityListScreen( { onNavigate } ) {
 				setEditActivity( null );
 				fetchActivities();
 			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save activity.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save activity.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
-			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -399,11 +399,11 @@ export function ActivityListScreen( { onNavigate } ) {
 				setCommentActivity( null );
 				fetchActivities();
 			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to post comment.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to post comment.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function () {
 			setIsCommentSaving( false );
-			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -426,7 +426,7 @@ export function ActivityListScreen( { onNavigate } ) {
 	};
 
 	// Build action type options for select.
-	var actionOptions = [ { label: __( 'All Actions', 'buddyboss' ), value: '' } ];
+	var actionOptions = [ { label: __( 'All Actions', 'buddyboss-platform' ), value: '' } ];
 	Object.keys( activityActions ).forEach( function ( key ) {
 		actionOptions.push( { label: activityActions[ key ], value: key } );
 	} );
@@ -444,7 +444,7 @@ export function ActivityListScreen( { onNavigate } ) {
 		} );
 	} else {
 		// Fallback before first API response.
-		filterOptions.push( { label: __( 'All', 'buddyboss' ), value: 'all' } );
+		filterOptions.push( { label: __( 'All', 'buddyboss-platform' ), value: 'all' } );
 	}
 
 	var allSelected = activities.length > 0 && selectedIds.length === activities.length;
@@ -456,7 +456,7 @@ export function ActivityListScreen( { onNavigate } ) {
 
 			{ /* Header */ }
 			<div className="bb-activity-list__header">
-				<h2 className="bb-activity-list__title">{ __( 'Activities', 'buddyboss' ) }</h2>
+				<h2 className="bb-activity-list__title">{ __( 'Activities', 'buddyboss-platform' ) }</h2>
 			</div>
 
 			{ /* Toolbar */ }
@@ -470,7 +470,7 @@ export function ActivityListScreen( { onNavigate } ) {
 				isBulkProcessing={ false }
 				searchInput={ searchInput }
 				onSearchChange={ handleSearchChange }
-				searchPlaceholder={ __( 'Search activities', 'buddyboss' ) }
+				searchPlaceholder={ __( 'Search activities', 'buddyboss-platform' ) }
 			>
 				<SelectControl
 					value={ filter }
@@ -486,7 +486,7 @@ export function ActivityListScreen( { onNavigate } ) {
 							handleActionFilterChange( e.target.value );
 						} }
 					>
-						<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
+						<option value="">{ __( 'All Actions', 'buddyboss-platform' ) }</option>
 						{ activityActionsGrouped.map( function ( group, idx ) {
 							return (
 								<optgroup key={ idx } label={ group.label }>
@@ -512,7 +512,7 @@ export function ActivityListScreen( { onNavigate } ) {
 					</div>
 				) : 0 === activities.length ? (
 					<div className="bb-admin-list-table__empty">
-						<p>{ __( 'No activities found.', 'buddyboss' ) }</p>
+						<p>{ __( 'No activities found.', 'buddyboss-platform' ) }</p>
 					</div>
 				) : (
 					<table className="bb-activity-list__table bb-admin-list-table">
@@ -526,10 +526,10 @@ export function ActivityListScreen( { onNavigate } ) {
 									/>
 								</th>
 								<th className="bb-activity-list__th--author">
-									{ __( 'Author', 'buddyboss' ) }
+									{ __( 'Author', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-activity-list__th--activity">
-									{ __( 'Activity', 'buddyboss' ) }
+									{ __( 'Activity', 'buddyboss-platform' ) }
 								</th>
 								{ /* Custom columns from bp_activity_list_table_get_columns filter */ }
 								{ Object.keys( columns ).filter( function ( key ) {
@@ -542,7 +542,7 @@ export function ActivityListScreen( { onNavigate } ) {
 									);
 								} ) }
 								<th className="bb-activity-list__th--date">
-									{ __( 'Submitted', 'buddyboss' ) }
+									{ __( 'Submitted', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-activity-list__th--actions">&nbsp;</th>
 							</tr>
@@ -580,12 +580,12 @@ export function ActivityListScreen( { onNavigate } ) {
 														href={ safeUrl( activity.author?.profile_url || '#' ) }
 														className="bb-activity-list__author-name"
 													>
-														{ activity.author?.name || __( 'Unknown', 'buddyboss' ) }
+														{ activity.author?.name || __( 'Unknown', 'buddyboss-platform' ) }
 													</a>
 													{ isSpam && (
 														<span className="bb-activity-list__spam-badge">
 															<i className="bb-icons-rl bb-icons-rl-flag"></i>
-															{ __( 'Spam', 'buddyboss' ) }
+															{ __( 'Spam', 'buddyboss-platform' ) }
 														</span>
 													) }
 												</span>
@@ -624,7 +624,7 @@ export function ActivityListScreen( { onNavigate } ) {
 										<td className="bb-activity-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss' ) }
+												label={ __( 'More options', 'buddyboss-platform' ) }
 											>
 												{ function ( { onClose } ) {
 													return (
@@ -645,7 +645,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'View Activity', 'buddyboss' ) }
+																	{ __( 'View Activity', 'buddyboss-platform' ) }
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
@@ -656,7 +656,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-																{ __( 'Edit', 'buddyboss' ) }
+																{ __( 'Edit', 'buddyboss-platform' ) }
 															</MenuItem>
 															{ isSpam ? (
 																<MenuItem
@@ -666,7 +666,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-flag"></i>
-																	{ __( 'Not Spam', 'buddyboss' ) }
+																	{ __( 'Not Spam', 'buddyboss-platform' ) }
 																</MenuItem>
 															) : (
 																<MenuItem
@@ -676,7 +676,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-flag"></i>
-																	{ __( 'Spam', 'buddyboss' ) }
+																	{ __( 'Spam', 'buddyboss-platform' ) }
 																</MenuItem>
 															) }
 															{ activity.can_comment && ! isSpam && (
@@ -687,7 +687,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-chat-text"></i>
-																	{ __( 'Comment', 'buddyboss' ) }
+																	{ __( 'Comment', 'buddyboss-platform' ) }
 																</MenuItem>
 															) }
 															<MenuItem
@@ -698,7 +698,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																{ __( 'Delete', 'buddyboss' ) }
+																{ __( 'Delete', 'buddyboss-platform' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -757,7 +757,7 @@ export function ActivityListScreen( { onNavigate } ) {
 			{ /* Delete Confirmation Modal */ }
 			{ deleteConfirm && (
 				<Modal
-					title={ __( 'Confirm Delete', 'buddyboss' ) }
+					title={ __( 'Confirm Delete', 'buddyboss-platform' ) }
 					onRequestClose={ function () {
 						setDeleteConfirm( null );
 					} }
@@ -772,7 +772,7 @@ export function ActivityListScreen( { onNavigate } ) {
 							isDestructive
 							onClick={ deleteConfirm.onConfirm }
 						>
-							{ __( 'Delete', 'buddyboss' ) }
+							{ __( 'Delete', 'buddyboss-platform' ) }
 						</Button>
 						<Button
 							variant="secondary"
@@ -780,7 +780,7 @@ export function ActivityListScreen( { onNavigate } ) {
 								setDeleteConfirm( null );
 							} }
 						>
-							{ __( 'Cancel', 'buddyboss' ) }
+							{ __( 'Cancel', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</Modal>

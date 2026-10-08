@@ -20,9 +20,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	<?php
 	bp_get_template_part( 'members/single/parts/item-subnav' );
 	bp_get_template_part( 'document/theatre' );
-	bp_get_template_part( 'video/theatre' );
+	if ( bp_is_active( 'video' ) ) {
+		bp_get_template_part( 'video/theatre' );
+	}
 	bp_get_template_part( 'media/theatre' );
-	bp_get_template_part( 'video/add-video-thumbnail' );
+	if ( bp_is_active( 'video' ) ) {
+		bp_get_template_part( 'video/add-video-thumbnail' );
+	}
 
 	switch ( bp_current_action() ) :
 

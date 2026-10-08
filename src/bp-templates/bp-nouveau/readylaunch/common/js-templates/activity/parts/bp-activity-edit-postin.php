@@ -16,10 +16,10 @@ defined( 'ABSPATH' ) || exit;
 	<div id="bb-rl-whats-new-post-in-box">
 		<select disabled id="bb-rl-whats-new-post-in">
 			<# if ( data.object !== 'user' ) { #>
-			<option><?php esc_html_e( 'Post in: Group', 'buddyboss' ); ?></option>
+			<option><?php esc_html_e( 'Post in: Group', 'buddyboss-platform' ); ?></option>
 			<# } #>
 			<# if ( data.object === 'user' ) { #>
-			<option><?php esc_html_e( 'Post in: Profile', 'buddyboss' ); ?></option>
+			<option><?php esc_html_e( 'Post in: Profile', 'buddyboss-platform' ); ?></option>
 			<# } #>
 		</select>
 

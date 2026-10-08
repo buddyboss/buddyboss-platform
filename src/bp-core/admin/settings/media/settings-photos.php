@@ -26,7 +26,7 @@ function bb_media_register_photos_panel_fields() {
 		'photos',
 		'photos_settings',
 		array(
-			'title'          => __( 'Photos', 'buddyboss' ),
+			'title'          => __( 'Photos', 'buddyboss-platform' ),
 			'order'          => 10,
 			'help_url'       => '636176',
 			'section_toggle' => 'bb_media_photos_support',
@@ -40,10 +40,10 @@ function bb_media_register_photos_panel_fields() {
 		'photos_settings',
 		array(
 			'name'              => 'bp_media_profile_media_support',
-			'label'             => __( 'Profiles', 'buddyboss' ),
+			'label'             => __( 'Profiles', 'buddyboss-platform' ),
 			'description'       => bp_is_active( 'activity' )
-				? __( 'Allow members to upload photos in profiles and activity posts', 'buddyboss' )
-				: __( 'Allow members to upload photos in profiles', 'buddyboss' ),
+				? __( 'Allow members to upload photos in profiles and activity posts', 'buddyboss-platform' )
+				: __( 'Allow members to upload photos in profiles', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
@@ -59,7 +59,7 @@ function bb_media_register_photos_panel_fields() {
 		array(
 			'name'              => 'bp_media_profile_albums_support',
 			'label'             => '',
-			'description'       => __( 'Enable albums in profiles', 'buddyboss' ),
+			'description'       => __( 'Enable albums in profiles', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 1,
 			'sanitize_callback' => 'absint',
@@ -71,7 +71,7 @@ function bb_media_register_photos_panel_fields() {
 	// FIELD: Groups — photos support (conditional on groups component).
 	if ( bp_is_active( 'groups' ) ) {
 		$group_description = bb_media_get_group_context_description(
-			__( 'Allow members to upload photos in', 'buddyboss' )
+			__( 'Allow members to upload photos in', 'buddyboss-platform' )
 		);
 
 		bb_register_feature_field(
@@ -80,7 +80,7 @@ function bb_media_register_photos_panel_fields() {
 			'photos_settings',
 			array(
 				'name'              => 'bp_media_group_media_support',
-				'label'             => __( 'Groups', 'buddyboss' ),
+				'label'             => __( 'Groups', 'buddyboss-platform' ),
 				'description'       => $group_description,
 				'type'              => 'toggle',
 				'default'           => 1,
@@ -97,7 +97,7 @@ function bb_media_register_photos_panel_fields() {
 			array(
 				'name'              => 'bp_media_group_albums_support',
 				'label'             => '',
-				'description'       => __( 'Enable albums in groups', 'buddyboss' ),
+				'description'       => __( 'Enable albums in groups', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => 1,
 				'sanitize_callback' => 'absint',
@@ -115,8 +115,8 @@ function bb_media_register_photos_panel_fields() {
 			'photos_settings',
 			array(
 				'name'              => 'bp_media_messages_media_support',
-				'label'             => __( 'Messages', 'buddyboss' ),
-				'description'       => __( 'Allow members to upload photos in private messages', 'buddyboss' ),
+				'label'             => __( 'Messages', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to upload photos in private messages', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -133,8 +133,8 @@ function bb_media_register_photos_panel_fields() {
 			'photos_settings',
 			array(
 				'name'              => 'bp_media_forums_media_support',
-				'label'             => __( 'Forums', 'buddyboss' ),
-				'description'       => __( 'Allow members to upload photos in forum discussions and replies', 'buddyboss' ),
+				'label'             => __( 'Forums', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to upload photos in forum discussions and replies', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -153,15 +153,15 @@ function bb_media_register_photos_panel_fields() {
 		'photos_settings',
 		array(
 			'name'              => 'bp_media_allowed_size',
-			'label'             => __( 'Upload Size', 'buddyboss' ),
+			'label'             => __( 'Upload Size', 'buddyboss-platform' ),
 			'description'       => sprintf(
 				/* translators: %d: Server max upload size in MB */
-				__( 'Set max file size for photo uploads, in megabytes. Your server\'s maximum upload size is %d MB.', 'buddyboss' ),
+				__( 'Set max file size for photo uploads, in megabytes. Your server\'s maximum upload size is %d MB.', 'buddyboss-platform' ),
 				$server_max_mb
 			),
 			'type'              => 'number',
 			'default'           => $server_max_mb,
-			'suffix'            => __( 'MB', 'buddyboss' ),
+			'suffix'            => __( 'MB', 'buddyboss-platform' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_size',
 			'order'             => 70,
 		)
@@ -174,11 +174,11 @@ function bb_media_register_photos_panel_fields() {
 		'photos_settings',
 		array(
 			'name'              => 'bp_media_allowed_per_batch',
-			'label'             => __( 'Upload Limit', 'buddyboss' ),
-			'description'       => __( 'Set max number of images that can be added to one activity post or photo upload.', 'buddyboss' ),
+			'label'             => __( 'Upload Limit', 'buddyboss-platform' ),
+			'description'       => __( 'Set max number of images that can be added to one activity post or photo upload.', 'buddyboss-platform' ),
 			'type'              => 'number',
 			'default'           => 10,
-			'suffix'            => __( 'per batch', 'buddyboss' ),
+			'suffix'            => __( 'per batch', 'buddyboss-platform' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_limit',
 			'order'             => 80,
 		)

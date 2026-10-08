@@ -70,7 +70,7 @@ export function ColorPickerField( { value, onChange, fallback = '#3E34FF', disab
 				className="bb-admin-settings-color-picker__button"
 				onClick={ togglePicker }
 				aria-expanded={ isOpen }
-				aria-label={ __( 'Select color', 'buddyboss' ) }
+				aria-label={ __( 'Select color', 'buddyboss-platform' ) }
 				disabled={ disabled }
 			>
 				<span className="bb-admin-settings-color-picker__swatch">
@@ -96,7 +96,7 @@ export function ColorPickerField( { value, onChange, fallback = '#3E34FF', disab
 								className="bb-admin-settings-color-picker__apply"
 								onClick={ applyColor }
 							>
-								{ __( 'Apply', 'buddyboss' ) }
+								{ __( 'Apply', 'buddyboss-platform' ) }
 							</Button>
 						</div>
 					</div>

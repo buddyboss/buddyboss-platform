@@ -34,7 +34,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'name',
 		array(
-			'label'             => __( 'Forum Name', 'buddyboss' ),
+			'label'             => __( 'Forum Name', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -54,7 +54,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'slug',
 		array(
-			'label'             => __( 'Permalink', 'buddyboss' ),
+			'label'             => __( 'Permalink', 'buddyboss-platform' ),
 			'type'              => 'permalink',
 			'tab'               => 'details',
 			'order'             => 20,
@@ -91,7 +91,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'description',
 		array(
-			'label'             => __( 'Forum Description (Optional)', 'buddyboss' ),
+			'label'             => __( 'Forum Description (Optional)', 'buddyboss-platform' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 30,
@@ -111,7 +111,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_type',
 		array(
-			'label'             => __( 'Type', 'buddyboss' ),
+			'label'             => __( 'Type', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 40,
@@ -127,11 +127,11 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'forum',
-						'label' => __( 'Forum', 'buddyboss' ),
+						'label' => __( 'Forum', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'category',
-						'label' => __( 'Category', 'buddyboss' ),
+						'label' => __( 'Category', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -146,7 +146,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_status',
 		array(
-			'label'             => __( 'Status', 'buddyboss' ),
+			'label'             => __( 'Status', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 42,
@@ -162,11 +162,11 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'open',
-						'label' => __( 'Open', 'buddyboss' ),
+						'label' => __( 'Open', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'closed',
-						'label' => __( 'Closed', 'buddyboss' ),
+						'label' => __( 'Closed', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -183,7 +183,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'visibility',
 		array(
-			'label'             => __( 'Visibility', 'buddyboss' ),
+			'label'             => __( 'Visibility', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 44,
@@ -199,15 +199,15 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'publish',
-						'label' => __( 'Public', 'buddyboss' ),
+						'label' => __( 'Public', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'private',
-						'label' => __( 'Private', 'buddyboss' ),
+						'label' => __( 'Private', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'hidden',
-						'label' => __( 'Hidden', 'buddyboss' ),
+						'label' => __( 'Hidden', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -226,10 +226,10 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'parent_id',
 		array(
-			'label'             => __( 'Parent Forum', 'buddyboss' ),
+			'label'             => __( 'Parent Forum', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_forum_autocomplete',
-			'placeholder'       => __( 'None', 'buddyboss' ),
+			'placeholder'       => __( 'None', 'buddyboss-platform' ),
 			'tab'               => 'details',
 			'order'             => 60,
 			'layout'            => 'half',
@@ -256,7 +256,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'order',
 		array(
-			'label'             => __( 'Order', 'buddyboss' ),
+			'label'             => __( 'Order', 'buddyboss-platform' ),
 			'type'              => 'number',
 			'tab'               => 'details',
 			'order'             => 70,

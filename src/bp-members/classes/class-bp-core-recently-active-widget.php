@@ -22,8 +22,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
-		$name        = __( '(BB) Recently Active Members', 'buddyboss' );
-		$description = __( 'Profile photos of recently active members', 'buddyboss' );
+		$name        = __( '(BB) Recently Active Members', 'buddyboss-platform' );
+		$description = __( 'Profile photos of recently active members', 'buddyboss-platform' );
 		parent::__construct(
 			false,
 			$name,
@@ -63,10 +63,10 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
 
-		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-spin6"></i></a>';
+		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss-platform' ) . '"><i class="bb-icon-spin6"></i></a>';
 
-		echo $args['before_widget'];
-		echo $args['before_title'] . $title . $refresh_recent_users . $args['after_title'];
+		echo wp_kses_post( $args['before_widget'] );
+		echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $refresh_recent_users ) . wp_kses_post( $args['after_title'] );
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -83,7 +83,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		$old_members_template = $members_template;
 
 		?>
-		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
+		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
 			<?php if ( bp_has_members( $members_args ) ) : ?>
 
 				<div class="avatar-block">
@@ -103,20 +103,20 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 				</div>
 				<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : esc_attr( 'bp-hide' ); ?>">
 					<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
-						<?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i>
+						<?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i>
 					</a>
 				</div>
 
 			<?php else : ?>
 
 				<div class="widget-error">
-					<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
+					<?php esc_html_e( 'There are no recently active members', 'buddyboss-platform' ); ?>
 				</div>
 
 			<?php endif; ?>
 		</div>
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Restore the global.
 		$members_template = $old_members_template;
@@ -133,8 +133,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance                = $old_instance;
-		$instance['title']       = strip_tags( $new_instance['title'] );
-		$instance['max_members'] = strip_tags( $new_instance['max_members'] );
+		$instance['title']       = wp_strip_all_tags( $new_instance['title'] );
+		$instance['max_members'] = wp_strip_all_tags( $new_instance['max_members'] );
 
 		return $instance;
 	}
@@ -151,20 +151,20 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 
 		// Get widget settings.
 		$settings    = $this->parse_settings( $instance );
-		$title       = strip_tags( $settings['title'] );
-		$max_members = strip_tags( $settings['max_members'] );
+		$title       = wp_strip_all_tags( $settings['title'] );
+		$max_members = wp_strip_all_tags( $settings['max_members'] );
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
-				<?php esc_html_e( 'Title:', 'buddyboss' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
+				<?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
-				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>">
+				<?php esc_html_e( 'Max members to show:', 'buddyboss-platform' ); ?>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
@@ -184,7 +184,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		return bp_parse_args(
 			$instance,
 			array(
-				'title'       => __( 'Recently Active Members', 'buddyboss' ),
+				'title'       => __( 'Recently Active Members', 'buddyboss-platform' ),
 				'max_members' => 10,
 			),
 			'recently_active_members_widget_settings'
@@ -241,12 +241,12 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 			<?php endwhile; ?>
 
 		</div>
-		<div class="more-block <?php echo ( $members_template->total_member_count > $number ) ? '' : esc_attr( 'bp-hide' ); ?>"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+		<div class="more-block <?php echo ( $members_template->total_member_count > $number ) ? '' : esc_attr( 'bp-hide' ); ?>"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 	<?php else : ?>
 
 		<div class="widget-error">
-			<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
+			<?php esc_html_e( 'There are no recently active members', 'buddyboss-platform' ); ?>
 		</div>
 
 	<?php endif; ?>

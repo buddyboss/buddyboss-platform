@@ -28,14 +28,14 @@ $bb_blog_show_status = 'member-posts' === $bb_blog_card_context && $bb_blog_is_o
 $bb_blog_show_menu   = 'member-posts' === $bb_blog_card_context;
 
 $bb_blog_status_labels = array(
-	'publish' => __( 'Published', 'buddyboss' ),
-	'pending' => __( 'In Review', 'buddyboss' ),
-	'draft'   => __( 'Draft', 'buddyboss' ),
-	'future'  => __( 'Scheduled', 'buddyboss' ),
+	'publish' => __( 'Published', 'buddyboss-platform' ),
+	'pending' => __( 'In Review', 'buddyboss-platform' ),
+	'draft'   => __( 'Draft', 'buddyboss-platform' ),
+	'future'  => __( 'Scheduled', 'buddyboss-platform' ),
 );
 
 if ( '' === trim( (string) $bb_blog_author_name ) ) {
-	$bb_blog_author_name = __( 'Unknown Member', 'buddyboss' );
+	$bb_blog_author_name = __( 'Unknown Member', 'buddyboss-platform' );
 }
 ?>
 <article class="bb-member-blog__item" id="post-<?php the_ID(); ?>">
@@ -59,7 +59,7 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 				<h3 class="bb-member-blog__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 				<?php if ( $bb_blog_show_menu ) : ?>
 					<div class="bb-member-blog__menu bb_more_options">
-						<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
+						<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
 							<i class="bb-icon-f bb-icon-ellipsis-h" aria-hidden="true"></i>
 						</a>
 						<ul class="bb_more_options_list">
@@ -67,7 +67,7 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 							/** This filter is documented in bp-templates/bp-nouveau/readylaunch/blog/loop-post.php */
 							if ( apply_filters( 'bb_blog_card_show_view_post_menu_item', true, get_the_ID() ) ) :
 								?>
-								<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
+								<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss-platform' ); ?></a></li>
 								<?php
 							endif;
 							/** This action is documented in bp-templates/bp-nouveau/readylaunch/blog/loop-post.php */

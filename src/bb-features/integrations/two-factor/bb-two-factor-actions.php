@@ -44,7 +44,7 @@ function bb_two_factor_setup_nav() {
 
 	bp_core_new_subnav_item(
 		array(
-			'name'            => __( 'Security', 'buddyboss' ),
+			'name'            => __( 'Security', 'buddyboss-platform' ),
 			'slug'            => 'security',
 			'parent_url'      => trailingslashit( $user_domain . $slug ),
 			'parent_slug'     => $slug,
@@ -105,7 +105,7 @@ function bb_two_factor_settings_save() {
 
 	// Own profile only: the save always writes the logged-in member's two-factor.
 	if ( ! bp_is_my_profile() ) {
-		bp_core_add_message( __( 'You cannot manage two-factor authentication for another account.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You cannot manage two-factor authentication for another account.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $redirect );
 	}
 
@@ -113,7 +113,7 @@ function bb_two_factor_settings_save() {
 	$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
 
 	if ( ! wp_verify_nonce( $nonce, 'bb_two_factor_settings' ) ) {
-		bp_core_add_message( __( 'There was a problem saving your settings. Please try again.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was a problem saving your settings. Please try again.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $redirect );
 	}
 
@@ -122,7 +122,7 @@ function bb_two_factor_settings_save() {
 	// carries that nonce, so the nonce check would otherwise answer first with a
 	// misleading "session expired" for a member who only needs to revalidate.
 	if ( ! bb_two_factor_current_user_can_manage( 'save' ) ) {
-		bp_core_add_message( __( 'For your security, confirm it is you before changing these settings.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'For your security, confirm it is you before changing these settings.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $redirect );
 	}
 
@@ -130,7 +130,7 @@ function bb_two_factor_settings_save() {
 	$plugin_nonce = isset( $_POST['_nonce_user_two_factor_options'] ) ? sanitize_text_field( wp_unslash( $_POST['_nonce_user_two_factor_options'] ) ) : '';
 
 	if ( ! wp_verify_nonce( $plugin_nonce, 'user_two_factor_options' ) ) {
-		bp_core_add_message( __( 'Your session expired before the change could be saved. Please try again.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'Your session expired before the change could be saved. Please try again.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $redirect );
 	}
 
@@ -161,7 +161,7 @@ function bb_two_factor_settings_save() {
 			bp_core_add_message( wp_strip_all_tags( $message ), 'error' );
 		}
 	} else {
-		bp_core_add_message( __( 'Your security settings have been saved.', 'buddyboss' ) );
+		bp_core_add_message( __( 'Your security settings have been saved.', 'buddyboss-platform' ) );
 	}
 
 	bp_core_redirect( $redirect );
@@ -174,7 +174,7 @@ add_action( 'bp_actions', 'bb_two_factor_settings_save' );
  * @since BuddyBoss 3.6.0
  */
 function bb_two_factor_template_title() {
-	esc_html_e( 'Security', 'buddyboss' );
+	esc_html_e( 'Security', 'buddyboss-platform' );
 }
 
 /**

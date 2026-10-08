@@ -112,7 +112,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -293,7 +293,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $button_text;
 		}
 
-		$button_text = esc_html__( 'Report Comment', 'buddyboss' );
+		$button_text = esc_html__( 'Report Comment', 'buddyboss-platform' );
 
 		return $button_text;
 	}
@@ -315,7 +315,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $content_type;
 		}
 
-		$content_type = esc_html__( 'Comment', 'buddyboss' );
+		$content_type = esc_html__( 'Comment', 'buddyboss-platform' );
 
 		return $content_type;
 	}
@@ -365,9 +365,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$sql           = "{$sql['select']} {$sql['where']}";
 		if ( ! empty( $search_term ) ) {
 			$query_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql               = $wpdb->prepare( $sql, $query_placeholder );
+			$sql               = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql holds a %s placeholder for the esc_like'd search term, prepared here.
 		}
-		$results          = $wpdb->get_results( $sql );
+		$results          = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names from $bp->activity; $where_conditions are prepared moderation fragments; $search_term is esc_like'd + %s-prepared.
 		$blocked_item_ids = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $ac_id ) {

@@ -31,7 +31,7 @@ function bb_groups_register_headers_panel_fields() {
 		'group_headers',
 		'group_headers',
 		array(
-			'title'       => __( 'Group Headers', 'buddyboss' ),
+			'title'       => __( 'Group Headers', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636138',
@@ -51,19 +51,19 @@ function bb_groups_register_headers_panel_fields() {
 		'group_headers',
 		array(
 			'name'              => 'bb-group-header-style',
-			'label'             => __( 'Header Style', 'buddyboss' ),
+			'label'             => __( 'Header Style', 'buddyboss-platform' ),
 			'type'              => 'image_radio',
-			'description'       => __( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ),
+			'description'       => __( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss-platform' ),
 			'default'           => function_exists( 'bb_get_group_header_style' ) ? bb_get_group_header_style() : 'left',
 			'sanitize_callback' => 'bb_groups_sanitize_header_style',
 			'options'           => array(
 				array(
-					'label' => is_rtl() ? __( 'Right', 'buddyboss' ) : __( 'Left', 'buddyboss' ),
+					'label' => is_rtl() ? __( 'Right', 'buddyboss-platform' ) : __( 'Left', 'buddyboss-platform' ),
 					'value' => 'left',
 					'image' => 'header-left-group',
 				),
 				array(
-					'label' => __( 'Centered', 'buddyboss' ),
+					'label' => __( 'Centered', 'buddyboss-platform' ),
 					'value' => 'centered',
 					'image' => 'header-centered-group',
 				),
@@ -80,30 +80,30 @@ function bb_groups_register_headers_panel_fields() {
 		'group_headers',
 		array(
 			'name'              => 'bb-group-headers-elements',
-			'label'             => __( 'Elements', 'buddyboss' ),
+			'label'             => __( 'Elements', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which elements to show in your group headers.', 'buddyboss' ),
+			'description'       => __( 'Select which elements to show in your group headers.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_groups_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Group Type', 'buddyboss' ),
+					'label' => __( 'Group Type', 'buddyboss-platform' ),
 					'value' => 'group-type',
 				),
 				array(
-					'label' => __( 'Last Activity', 'buddyboss' ),
+					'label' => __( 'Last Activity', 'buddyboss-platform' ),
 					'value' => 'group-activity',
 				),
 				array(
-					'label' => __( 'Group Description', 'buddyboss' ),
+					'label' => __( 'Group Description', 'buddyboss-platform' ),
 					'value' => 'group-description',
 				),
 				array(
-					'label' => __( 'Group Organizers', 'buddyboss' ),
+					'label' => __( 'Group Organizers', 'buddyboss-platform' ),
 					'value' => 'group-organizers',
 				),
 				array(
-					'label' => __( 'Group Privacy', 'buddyboss' ),
+					'label' => __( 'Group Privacy', 'buddyboss-platform' ),
 					'value' => 'group-privacy',
 				),
 			),

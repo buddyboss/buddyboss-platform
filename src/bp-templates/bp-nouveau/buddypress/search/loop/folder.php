@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $folder_link             = bp_get_folder_folder_link();
 $folder_id               = bp_get_folder_folder_id();
 $document_folder_privacy = bp_get_document_folder_privacy();
@@ -26,13 +29,13 @@ $document_folder_privacy = bp_get_document_folder_privacy();
 
 				<div class="media-folder_details">
 					<a class="media-folder_name " href="<?php echo esc_url( $folder_link ); ?>">
-						<span><?php echo bp_get_folder_folder_title(); ?></span>
+						<span><?php echo esc_html( bp_get_folder_folder_title() ); ?></span>
 					</a>
 				</div>
 
 				<div class="media-folder_modified">
 					<div class="media-folder_details__bottom">
-						<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?><a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_document_folder_user_id() ); ?>"><?php bp_folder_author(); ?></a></span>
+						<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss-platform' ); ?><a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_document_folder_user_id() ); ?>"><?php bp_folder_author(); ?></a></span>
 						<span class="middot">·</span>
 						<span class="media-folder_date"><?php bp_document_folder_date(); ?></span>
 					</div>
@@ -47,14 +50,14 @@ $document_folder_privacy = bp_get_document_folder_privacy();
 								?>
 								<span class="middot">·</span>
 								<span>
-									<?php echo $document_folder_privacy; ?>
+									<?php echo esc_html( $document_folder_privacy ); ?>
 								</span>
 								<?php
 							} else {
 								?>
 								<span class="middot">·</span>
 								<span id="privacy-<?php echo esc_attr( $folder_id ); ?>">
-									<?php echo $document_folder_privacy; ?>
+									<?php echo esc_html( $document_folder_privacy ); ?>
 								</span>
 								<?php
 							}
@@ -62,7 +65,7 @@ $document_folder_privacy = bp_get_document_folder_privacy();
 							?>
 							<span class="middot">·</span>
 							<span>
-								<?php echo $document_folder_privacy; ?>
+								<?php echo esc_html( $document_folder_privacy ); ?>
 							</span>
 							<?php
 						}

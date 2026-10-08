@@ -45,11 +45,11 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 		<p>
 			<?php
 			if ( $single_album ) {
-				esc_html_e( 'No photos or videos found', 'buddyboss' );
+				esc_html_e( 'No photos or videos found', 'buddyboss-platform' );
 			} elseif ( $album_dir ) {
-				esc_html_e( 'No albums found', 'buddyboss' );
+				esc_html_e( 'No albums found', 'buddyboss-platform' );
 			} else {
-				esc_html_e( 'No photos found', 'buddyboss' );
+				esc_html_e( 'No photos found', 'buddyboss-platform' );
 			}
 			?>
 		</p>
@@ -57,11 +57,11 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 	<p class="bb-rl-media-none-description">
 		<?php
 		if ( $single_album ) {
-			esc_html_e( 'It looks like there aren\'t any photos or videos in this album.', 'buddyboss' );
+			esc_html_e( 'It looks like there aren\'t any photos or videos in this album.', 'buddyboss-platform' );
 		} elseif ( $album_dir ) {
-			esc_html_e( 'It looks like there aren\'t any albums in this directory.', 'buddyboss' );
+			esc_html_e( 'It looks like there aren\'t any albums in this directory.', 'buddyboss-platform' );
 		} else {
-			esc_html_e( 'It looks like there aren\'t any photos in this directory.', 'buddyboss' );
+			esc_html_e( 'It looks like there aren\'t any photos in this directory.', 'buddyboss-platform' );
 		}
 		?>
 	</p>
@@ -72,10 +72,10 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 		<div class="bb-media-actions-wrap">
 			<div class="bb-media-actions bb-rl-media-none-actions">
 				<?php if ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
-					<a href="#" id="bp-add-media" class="bb-album-add-photos button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></a>
+					<a href="#" id="bp-add-media" class="bb-album-add-photos button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?></a>
 				<?php endif; ?>
 				<?php if ( bp_is_active( 'video' ) && ( ( bp_is_profile_video_support_enabled() && bp_is_user() ) || ( bp_is_group_video_support_enabled() && bp_is_group() ) ) && ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() && is_user_logged_in() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) : ?>
-					<a href="#" id="bp-add-video" class="bb-album-add-videos button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-video"></i> <?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+					<a href="#" id="bp-add-video" class="bb-album-add-videos button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-video"></i> <?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -98,7 +98,7 @@ if ( function_exists( 'bp_is_single_album' ) && bp_is_single_album() ) {
 	) {
 		?>
 		<div class="bb-media-actions bb-rl-media-none-actions">
-			<a href="#" id="bb-create-album" class="bb-create-album button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+			<a href="#" id="bb-create-album" class="bb-create-album button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-images"></i> <?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
 		</div>
 		<?php
 		bp_get_template_part( 'media/create-album' );

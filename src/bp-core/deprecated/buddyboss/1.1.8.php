@@ -140,7 +140,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
 		'on'     => 'ON tt.term_id = t.term_id',
 		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
 	);
-	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- WHERE clause is prepared above; SELECT/ON fragments are static.
 
 	restore_current_blog();
 
@@ -177,7 +177,7 @@ function bp_get_group_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+			$unique = wp_rand(pow(10, $digits-1), pow(10, $digits)-1);
 			$key = $key.$unique;
 		}
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
@@ -229,16 +229,16 @@ function bp_get_group_type_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_group_type_post_type_labels', array(
-		'add_new_item'          => __( 'New Group Type', 'buddyboss' ),
-		'all_items'             => __( 'Group Types', 'buddyboss' ),
-		'edit_item'             => __( 'Edit Group Type', 'buddyboss' ),
-		'menu_name'             => __( 'Social Groups', 'buddyboss' ),
-		'name'                  => __( 'Group Types', 'buddyboss' ),
-		'new_item'              => __( 'New Group Type', 'buddyboss' ),
-		'not_found'             => __( 'No Group Types found', 'buddyboss' ),
-		'not_found_in_trash'    => __( 'No Group Types found in trash', 'buddyboss' ),
-		'search_items'          => __( 'Search Group Types', 'buddyboss' ),
-		'singular_name'         => __( 'Group Type', 'buddyboss' ),
+		'add_new_item'          => __( 'New Group Type', 'buddyboss-platform' ),
+		'all_items'             => __( 'Group Types', 'buddyboss-platform' ),
+		'edit_item'             => __( 'Edit Group Type', 'buddyboss-platform' ),
+		'menu_name'             => __( 'Social Groups', 'buddyboss-platform' ),
+		'name'                  => __( 'Group Types', 'buddyboss-platform' ),
+		'new_item'              => __( 'New Group Type', 'buddyboss-platform' ),
+		'not_found'             => __( 'No Group Types found', 'buddyboss-platform' ),
+		'not_found_in_trash'    => __( 'No Group Types found in trash', 'buddyboss-platform' ),
+		'search_items'          => __( 'Search Group Types', 'buddyboss-platform' ),
+		'singular_name'         => __( 'Group Type', 'buddyboss-platform' ),
 	) );
 }
 
@@ -274,7 +274,7 @@ function bp_group_type_post_type() {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_group_type_post_type' );
 
-	echo bp_get_group_type_post_type();
+	echo esc_html( bp_get_group_type_post_type() );
 }
 
 /**
@@ -336,7 +336,7 @@ function bp_member_type_type_id( $type_name ) {
 	global $wpdb;
 	$type_name = strtolower($type_name);
 	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
-	$type_id = $wpdb->get_col( "SELECT t.term_id FROM {$wpdb->terms} t INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
+	$type_id = $wpdb->get_col( $wpdb->prepare( "SELECT t.term_id FROM {$wpdb->terms} t INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id WHERE t.slug = %s AND tt.taxonomy = 'bp_member_type'", $type_name ) );
 	return ! isset( $type_id[ 0 ] ) ? '' : $type_id[ 0 ];
 }
 
@@ -359,11 +359,11 @@ function bp_active_member_type_by_type( $type_id ) {
 	if ( empty ( $type_id ) ) {
 		return $member_ids;
 	}
-	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+	$get_user_ids = $wpdb->get_col( $wpdb->prepare( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d", $type_id ) );
 	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
 		foreach ( $get_user_ids as $single ) {
 			$table = bp_core_get_table_prefix() . 'bp_activity';
-			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$table} a WHERE a.user_id = " . $single );
+			$member_activity = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} a WHERE a.user_id = %d", $single ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table is built from bp_core_get_table_prefix(), not user input.
 			if ( $member_activity > 0 ) {
 				$member_ids[] = $single;
 			}

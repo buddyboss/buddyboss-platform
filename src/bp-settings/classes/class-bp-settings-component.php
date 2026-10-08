@@ -142,7 +142,7 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add the settings navigation item.
 		$main_nav = array(
-			'name'                    => __( 'Account', 'buddyboss' ),
+			'name'                    => __( 'Account', 'buddyboss-platform' ),
 			'slug'                    => $slug,
 			'position'                => 21,
 			'show_for_displayed_user' => $access,
@@ -152,7 +152,7 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add General Settings nav item.
 		$sub_nav[] = array(
-			'name'            => __( 'Login Information', 'buddyboss' ),
+			'name'            => __( 'Login Information', 'buddyboss-platform' ),
 			'slug'            => 'general',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -185,7 +185,7 @@ class BP_Settings_Component extends BP_Component {
 
 			$sub_nav[] = array_merge(
 				array(
-					'name'       => __( 'Preferences', 'buddyboss' ),
+					'name'       => __( 'Preferences', 'buddyboss-platform' ),
 					'parent_url' => $settings_link,
 					'slug'       => 'notifications',
 					'position'   => 1,
@@ -195,7 +195,7 @@ class BP_Settings_Component extends BP_Component {
 
 			$sub_nav[] = array_merge(
 				array(
-					'name'       => __( 'Subscriptions', 'buddyboss' ),
+					'name'       => __( 'Subscriptions', 'buddyboss-platform' ),
 					'parent_url' => trailingslashit( $settings_link . 'notifications' ),
 					'slug'       => 'subscriptions',
 					'position'   => 2,
@@ -205,7 +205,7 @@ class BP_Settings_Component extends BP_Component {
 		}
 
 		$sub_nav[] = array(
-			'name'            => __( 'Export Data', 'buddyboss' ),
+			'name'            => __( 'Export Data', 'buddyboss-platform' ),
 			'slug'            => 'export',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -216,7 +216,7 @@ class BP_Settings_Component extends BP_Component {
 
 		if( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ){
 			$sub_nav[] = array(
-				'name'            => __( 'Blocked Members', 'buddyboss' ),
+				'name'            => __( 'Blocked Members', 'buddyboss-platform' ),
 				'slug'            => 'blocked-members',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
@@ -229,7 +229,7 @@ class BP_Settings_Component extends BP_Component {
 		// Add Spam Account nav item.
 		if ( bp_current_user_can( 'bp_moderate' ) ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Capabilities', 'buddyboss' ),
+				'name'            => __( 'Capabilities', 'buddyboss-platform' ),
 				'slug'            => 'capabilities',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
@@ -242,7 +242,7 @@ class BP_Settings_Component extends BP_Component {
 		// Add Delete Account nav item.
 		if ( ( ! bp_disable_account_deletion() && bp_is_my_profile() ) || bp_current_user_can( 'delete_users' ) ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Delete Account', 'buddyboss' ),
+				'name'            => __( 'Delete Account', 'buddyboss-platform' ),
 				'slug'            => 'delete-account',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
@@ -274,7 +274,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Account', 'buddyboss' ),
+				'title'  => __( 'Account', 'buddyboss-platform' ),
 				'href'   => $settings_link,
 			);
 
@@ -282,7 +282,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-general',
-				'title'    => __( 'Login Information', 'buddyboss' ),
+				'title'    => __( 'Login Information', 'buddyboss-platform' ),
 				'href'     => $settings_link,
 				'position' => 10,
 			);
@@ -302,7 +302,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-export',
-				'title'    => __( 'Export Data', 'buddyboss' ),
+				'title'    => __( 'Export Data', 'buddyboss-platform' ),
 				'href'     => trailingslashit( $settings_link . 'export/' ),
 				'position' => 50,
 			);
@@ -312,7 +312,7 @@ class BP_Settings_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-delete-account',
-					'title'    => __( 'Delete Account', 'buddyboss' ),
+					'title'    => __( 'Delete Account', 'buddyboss-platform' ),
 					'href'     => trailingslashit( $settings_link . 'delete-account' ),
 					'position' => 90,
 				);
@@ -323,7 +323,7 @@ class BP_Settings_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-blocked-members',
-					'title'    => __( 'Blocked Members', 'buddyboss' ),
+					'title'    => __( 'Blocked Members', 'buddyboss-platform' ),
 					'href'     => trailingslashit( $settings_link . 'blocked-members/' ),
 					'position' => 31,
 				);

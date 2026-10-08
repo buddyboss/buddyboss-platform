@@ -161,7 +161,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 *
 		 * @param string $id   Unique ID. Letters, numbers, and underscores only.
 		 * @param string $name Unique name. This should be a translatable name, eg.
-		 *                     __( 'Groups', 'buddyboss' ).
+		 *                     __( 'Groups', 'buddyboss-platform' ).
 		 * @param string $path The file path for the component's files. Used by {@link BP_Component::includes()}.
 		 * @param array  $params {
 		 *     Additional parameters used by the component.

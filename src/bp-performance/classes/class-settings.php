@@ -162,7 +162,7 @@ class Settings {
 			add_action(
 				'admin_notices',
 				function () {
-					echo '<div class="notice notice-success"><p>' . esc_html__( 'Cache Purge Successfully', 'buddyboss' ) . '</p></div>';
+					echo '<div class="notice notice-success"><p>' . esc_html__( 'Cache Purge Successfully', 'buddyboss-platform' ) . '</p></div>';
 				}
 			);
 		}

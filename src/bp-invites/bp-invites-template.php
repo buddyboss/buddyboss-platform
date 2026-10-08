@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_invites_slug() {
-	echo bp_get_invites_slug();
+	echo esc_attr( bp_get_invites_slug() );
 }
 	/**
 	 * Return the invites component slug.
@@ -42,7 +42,7 @@ function bp_get_invites_slug() {
  * @since BuddyBoss 1.0.0
  */
 function bp_invites_root_slug() {
-	echo bp_get_invites_root_slug();
+	echo esc_attr( bp_get_invites_root_slug() );
 }
 	/**
 	 * Return the invites component root slug.

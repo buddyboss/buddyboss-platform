@@ -59,7 +59,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the blog.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the blog.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -86,7 +86,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		if ( empty( $this->blog->admin_user_id ) ) {
 			return new WP_Error(
 				'bp_rest_blog_avatar_get_item_user_failed',
-				__( 'There was a problem confirming the blog\'s user admin is valid.', 'buddyboss' ),
+				__( 'There was a problem confirming the blog\'s user admin is valid.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -115,7 +115,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		if ( ! $avatar->full && ! $avatar->thumb ) {
 			return new WP_Error(
 				'bp_rest_attachments_blog_avatar_no_image',
-				__( 'Sorry, there was a problem fetching the blog avatar.', 'buddyboss' ),
+				__( 'Sorry, there was a problem fetching the blog avatar.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -159,7 +159,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! is_object( $this->blog ) ) {
 			$retval = new WP_Error(
 				'bp_rest_blog_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
+				__( 'Invalid group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -169,7 +169,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! buddypress()->avatar->show_avatars ) {
 			$retval = new WP_Error(
 				'bp_rest_attachments_blog_avatar_disabled',
-				__( 'Sorry, blog avatar is disabled.', 'buddyboss' ),
+				__( 'Sorry, blog avatar is disabled.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -234,14 +234,14 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'full'  => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Full size of the image file.', 'buddyboss' ),
+					'description' => __( 'Full size of the image file.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'readonly'    => true,
 				),
 				'thumb' => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Thumb size of the image file.', 'buddyboss' ),
+					'description' => __( 'Thumb size of the image file.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'readonly'    => true,
@@ -272,7 +272,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		unset( $params['search'], $params['page'], $params['per_page'] );
 
 		$params['html'] = array(
-			'description'       => __( 'Whether to return an <img> HTML element, vs a raw URL to an avatar.', 'buddyboss' ),
+			'description'       => __( 'Whether to return an <img> HTML element, vs a raw URL to an avatar.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -280,7 +280,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['alt'] = array(
-			'description'       => __( 'The alt attribute for the <img> element.', 'buddyboss' ),
+			'description'       => __( 'The alt attribute for the <img> element.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -288,7 +288,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['no_user_gravatar'] = array(
-			'description'       => __( 'Whether to disable the default Gravatar Admin user fallback.', 'buddyboss' ),
+			'description'       => __( 'Whether to disable the default Gravatar Admin user fallback.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',

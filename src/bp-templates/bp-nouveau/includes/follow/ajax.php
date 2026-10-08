@@ -49,7 +49,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -101,7 +101,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 				array(
 					'feedback' => sprintf(
 						'<div class="bp-feedback error">%s</div>',
-						esc_html__( 'No member found with that ID.', 'buddyboss' )
+						esc_html__( 'No member found with that ID.', 'buddyboss-platform' )
 					),
 				)
 			);
@@ -126,7 +126,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'There was a problem when trying to unfollow this user.', 'buddyboss' )
+				esc_html__( 'There was a problem when trying to unfollow this user.', 'buddyboss-platform' )
 			);
 
 			wp_send_json_error( $response );
@@ -176,7 +176,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'There was a problem when trying to follow this user.', 'buddyboss' )
+				esc_html__( 'There was a problem when trying to follow this user.', 'buddyboss-platform' )
 			);
 
 			wp_send_json_error( $response );
@@ -217,7 +217,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 	} else {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Request Pending', 'buddyboss' )
+			esc_html__( 'Request Pending', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );

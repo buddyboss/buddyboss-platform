@@ -32,7 +32,7 @@ function bb_notifications_register_types_panel_fields() {
 			'notification_types',
 			'notification_types_legacy',
 			array(
-				'title'    => __( 'Notification Types', 'buddyboss' ),
+				'title'    => __( 'Notification Types', 'buddyboss-platform' ),
 				'order'    => 10,
 				'help_url' => '636146',
 			)
@@ -46,7 +46,7 @@ function bb_notifications_register_types_panel_fields() {
 				'name'              => '_bb_notification_types_legacy_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'description'       => __( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss' ),
+				'description'       => __( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss-platform' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
 			)
@@ -63,8 +63,8 @@ function bb_notifications_register_types_panel_fields() {
 		'notification_types',
 		'notification_types',
 		array(
-			'title'       => __( 'Notification Types', 'buddyboss' ),
-			'description' => __( 'Choose which notifications are sent for site actions. Disabled notifications won\'t be generated. Members can manage them in Notification Preferences (email, web, app).', 'buddyboss' ),
+			'title'       => __( 'Notification Types', 'buddyboss-platform' ),
+			'description' => __( 'Choose which notifications are sent for site actions. Disabled notifications won\'t be generated. Members can manage them in Notification Preferences (email, web, app).', 'buddyboss-platform' ),
 			'order'       => 10,
 			'help_url'    => '636146',
 		)
@@ -104,8 +104,8 @@ function bb_notifications_register_types_panel_fields() {
 			'notice_type'       => 'plain',
 			'description'       => sprintf(
 				/* translators: %s: Tutorial link. */
-				__( 'You can register your own notification types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' ),
-				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank" rel="noopener noreferrer">' . __( 'this tutorial', 'buddyboss' ) . '</a>'
+				__( 'You can register your own notification types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss-platform' ),
+				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank" rel="noopener noreferrer">' . __( 'this tutorial', 'buddyboss-platform' ) . '</a>'
 			),
 			'sanitize_callback' => '__return_empty_string',
 			'full_width'        => true,

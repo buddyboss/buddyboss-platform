@@ -528,7 +528,7 @@ function bbp_get_blocked_role() {
  * @deprecated since version 2.2
  */
 function bbp_add_roles() {
-	_doing_it_wrong( 'bbp_add_roles', __( 'Editable forum roles no longer exist.', 'buddyboss' ), '2.2' );
+	_doing_it_wrong( 'bbp_add_roles', esc_html__( 'Editable forum roles no longer exist.', 'buddyboss-platform' ), '2.2' );
 }
 
 /**
@@ -607,6 +607,6 @@ function bbp_restore_caps_from_wp_roles() {
 
 	return array(
 		'status'  => 1,
-		'message' => __( 'Complete!', 'buddyboss' ),
+		'message' => __( 'Complete!', 'buddyboss-platform' ),
 	);
 }

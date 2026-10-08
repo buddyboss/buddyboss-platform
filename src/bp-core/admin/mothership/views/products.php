@@ -42,11 +42,11 @@ wp_add_inline_style(
 			<input type="submit"
 				class="button button-secondary"
 				name="submit-button-mosh-refresh-addon"
-				value="<?php esc_attr_e( 'Refresh Add-ons', 'buddyboss' ); ?>"
+				value="<?php esc_attr_e( 'Refresh Add-ons', 'buddyboss-platform' ); ?>"
 			>
 			<input type="search"
 				id="mosh-products-search"
-				placeholder="<?php esc_attr_e( 'Search add-ons', 'buddyboss' ); ?>"
+				placeholder="<?php esc_attr_e( 'Search add-ons', 'buddyboss-platform' ); ?>"
 			>
 		</form>
 	</h3>
@@ -59,8 +59,8 @@ wp_add_inline_style(
 						<?php if ( $product->updateAvailable ) : ?>
 						<div class="update-message notice inline notice-warning notice-alt mosh-product-update-message">
 							<p>
-								<?php esc_html_e( 'New version available.', 'buddyboss' ); ?>
-								<button class="button-link mosh-product-update-button" type="button"><?php esc_html_e( 'Update now', 'buddyboss' ); ?></button>
+								<?php esc_html_e( 'New version available.', 'buddyboss-platform' ); ?>
+								<button class="button-link mosh-product-update-button" type="button"><?php esc_html_e( 'Update now', 'buddyboss-platform' ); ?></button>
 							</p>
 						</div>
 						<?php endif; ?>
@@ -120,7 +120,7 @@ wp_add_inline_style(
 									<?php
 									printf(
 										// Translators: %s: add-on status label.
-										esc_html__( 'Status: %s', 'buddyboss' ),
+										esc_html__( 'Status: %s', 'buddyboss-platform' ),
 										sprintf( '<span class="mosh-product-status-label">%s</span>', esc_html( $product->statusLabel ) )
 									);
 									?>
@@ -154,8 +154,8 @@ wp_add_inline_style(
 			</div>
 		</div>
 	<?php else : ?>
-		<h3><?php esc_html_e( 'No Add-ons found for your License Key.', 'buddyboss' ); ?></h3>
-		<p><?php esc_html_e( 'If you were expecting add-ons here, use the "Refresh Add-ons" button above to try again.', 'buddyboss' ); ?></p>
+		<h3><?php esc_html_e( 'No Add-ons found for your License Key.', 'buddyboss-platform' ); ?></h3>
+		<p><?php esc_html_e( 'If you were expecting add-ons here, use the "Refresh Add-ons" button above to try again.', 'buddyboss-platform' ); ?></p>
 	<?php endif; ?>
 
 	<?php
@@ -187,7 +187,7 @@ wp_add_inline_style(
 	}
 	?>
 	<?php if ( ! empty( $bb_dependency_children ) ) : ?>
-		<script>
+		<?php ob_start(); ?>
 			// The bundled addons.js updates only the acted-on card in place, so a
 			// child add-on's dependency-disabled button doesn't follow its parent
 			// being (de)activated. Watch for success messages and, when the acted
@@ -285,6 +285,11 @@ wp_add_inline_style(
 				} );
 				observer.observe( container, { childList: true, subtree: true } );
 			} )();
-		</script>
+		<?php
+		// Ride along with the vendor addons.js handle enqueued by
+		// AddonsManager::enqueueAssets() (footer script), instead of printing
+		// a raw inline <script> block mid-page.
+		wp_add_inline_script( 'mosh-addons-js', ob_get_clean() );
+		?>
 	<?php endif; ?>
 </div>

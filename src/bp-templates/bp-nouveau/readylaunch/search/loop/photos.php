@@ -57,7 +57,7 @@ $media_visibility = bp_get_media_visibility();
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
+							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss-platform' ); ?>
 							<a href="<?php echo esc_url( $media_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_media_user_id() ); ?>"><?php bp_media_author(); ?></a></span>
 							<?php
 						}
@@ -75,7 +75,7 @@ $media_visibility = bp_get_media_visibility();
 							if ( $group_id > 0 ) {
 								?>
 								<span class="middot">&middot;</span>
-								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss-platform' ); ?>">
 									<?php echo esc_html( $media_visibility ); ?>
 								</span>
 								<?php

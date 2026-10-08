@@ -79,7 +79,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the user.', 'buddyboss' ),
+						'description' => __( 'Unique identifier for the user.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -105,7 +105,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'args'                => array(
 						'id' => array(
 							'required'    => true,
-							'description' => __( 'A unique numeric ID for the Member.', 'buddyboss' ),
+							'description' => __( 'A unique numeric ID for the Member.', 'buddyboss-platform' ),
 							'type'        => 'integer',
 						),
 					),
@@ -141,11 +141,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 						'force'    => array(
 							'type'        => 'boolean',
 							'default'     => false,
-							'description' => __( 'Required to be true, as users do not support trashing.', 'buddyboss' ),
+							'description' => __( 'Required to be true, as users do not support trashing.', 'buddyboss-platform' ),
 						),
 						'reassign' => array(
 							'type'              => 'integer',
-							'description'       => __( 'Reassign the deleted user\'s posts and links to this user ID.', 'buddyboss' ),
+							'description'       => __( 'Reassign the deleted user\'s posts and links to this user ID.', 'buddyboss-platform' ),
 							'required'          => true,
 							'sanitize_callback' => array( $this, 'check_reassign' ),
 						),
@@ -364,7 +364,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -396,7 +396,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -408,7 +408,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( true === $retval && ! $user instanceof WP_User ) {
 			$retval = new WP_Error(
 				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
+				__( 'Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -420,7 +420,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		} elseif ( true === $retval && 'edit' === $request['context'] && ! current_user_can( 'list_users' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to view members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -449,7 +449,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to view members.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -481,7 +481,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function update_item_permissions_check( $request ) {
 		$error  = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -494,7 +494,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( ! $user instanceof WP_User ) {
 			$retval = new WP_Error(
 				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
+				__( 'Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -515,7 +515,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			} elseif ( ! $this->can_manage_member( $user, $action ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to view members.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -562,7 +562,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( empty( $user_id ) ) {
 			return new WP_Error(
 				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
+				__( 'Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -574,7 +574,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( ! $user instanceof WP_User ) {
 			return new WP_Error(
 				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
+				__( 'Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -620,7 +620,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -636,7 +636,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			if ( bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_user_cannot_delete',
-					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -644,7 +644,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			} elseif ( function_exists( 'bp_disable_account_deletion' ) && bp_disable_account_deletion() ) {
 				$retval = new WP_Error(
 					'bp_rest_user_cannot_delete',
-					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this user.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -677,7 +677,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		return new WP_Error(
 			'bp_rest_invalid_method',
 			/* translators: %s: transport method name */
-			sprintf( __( '\'%s\' Transport Method not implemented.', 'buddyboss' ), $request->get_method() ),
+			sprintf( __( '\'%s\' Transport Method not implemented.', 'buddyboss-platform' ), $request->get_method() ),
 			array(
 				'status' => 405,
 			)
@@ -698,7 +698,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		return new WP_Error(
 			'bp_rest_invalid_method',
 			/* translators: %s: transport method name */
-			sprintf( __( '\'%s\' Transport method not implemented.', 'buddyboss' ), $request->get_method() ),
+			sprintf( __( '\'%s\' Transport method not implemented.', 'buddyboss-platform' ), $request->get_method() ),
 			array(
 				'status' => 405,
 			)
@@ -1163,7 +1163,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				}
 			}
 		} else {
-			$data = array( __( 'No extended profile data available as the component is inactive', 'buddyboss' ) );
+			$data = array( __( 'No extended profile data available as the component is inactive', 'buddyboss-platform' ) );
 		}
 
 		return $data;
@@ -1204,7 +1204,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		if ( ! isset( $object->data ) ) {
 			return new WP_Error(
 				'invalid_user',
-				__( 'The data for the user was not found.', 'buddyboss' )
+				__( 'The data for the user was not found.', 'buddyboss-platform' )
 			);
 		}
 
@@ -1228,7 +1228,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		// Add member type args.
 		$member_type_args = array(
-			'description'       => __( 'Set type(s) for a member.', 'buddyboss' ),
+			'description'       => __( 'Set type(s) for a member.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => bp_get_member_types(),
 			'context'           => array( 'edit' ),
@@ -1247,7 +1247,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			// But we absolutely need the email.
 			$args['email'] = array(
-				'description' => __( 'The email address for the member.', 'buddyboss' ),
+				'description' => __( 'The email address for the member.', 'buddyboss-platform' ),
 				'type'        => 'string',
 				'format'      => 'email',
 				'context'     => array( 'edit' ),
@@ -1293,13 +1293,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'                 => array(
-					'description' => __( 'A unique numeric ID for the Member.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Member.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'name'               => array(
-					'description' => __( 'Display name for the member, assembled from the name fields the current user may see: a part withheld by profile field visibility or by the site-wide display name format is left out, and the member\'s nickname - then their user_nicename - is returned where no permitted part holds a value. Nothing is withheld from the current user returns the stored display name untouched. On write, a value identical to the redacted form just served to the current user is ignored, so that reading a member and sending the object back cannot truncate the stored name - the response then carries an X-BP-Ignored-Fields: name header. Any other value is saved.', 'buddyboss' ),
+					'description' => __( 'Display name for the member, assembled from the name fields the current user may see: a part withheld by profile field visibility or by the site-wide display name format is left out, and the member\'s nickname - then their user_nicename - is returned where no permitted part holds a value. Nothing is withheld from the current user returns the stored display name untouched. On write, a value identical to the redacted form just served to the current user is ignored, so that reading a member and sending the object back cannot truncate the stored name - the response then carries an X-BP-Ignored-Fields: name header. Any other value is saved.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -1307,7 +1307,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					),
 				),
 				'mention_name'       => array(
-					'description' => __( 'The name used for that user in @-mentions.', 'buddyboss' ),
+					'description' => __( 'The name used for that user in @-mentions.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -1315,14 +1315,14 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					),
 				),
 				'link'               => array(
-					'description' => __( 'Profile URL of the member.', 'buddyboss' ),
+					'description' => __( 'Profile URL of the member.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'user_login'         => array(
-					'description' => __( 'An alphanumeric identifier for the Member.', 'buddyboss' ),
+					'description' => __( 'An alphanumeric identifier for the Member.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
@@ -1331,20 +1331,20 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					),
 				),
 				'member_types'       => array(
-					'description' => __( 'Member types associated with the member.', 'buddyboss' ),
+					'description' => __( 'Member types associated with the member.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'registered_date'    => array(
-					'description' => __( 'Registration date for the member.', 'buddyboss' ),
+					'description' => __( 'Registration date for the member.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'password'           => array(
-					'description' => __( 'Password for the member (never included).', 'buddyboss' ),
+					'description' => __( 'Password for the member (never included).', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array(), // Password is never displayed.
 					'required'    => true,
@@ -1353,7 +1353,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					),
 				),
 				'roles'              => array(
-					'description' => __( 'Roles assigned to the member.', 'buddyboss' ),
+					'description' => __( 'Roles assigned to the member.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'context'     => array( 'edit' ),
 					'items'       => array(
@@ -1361,92 +1361,92 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					),
 				),
 				'capabilities'       => array(
-					'description' => __( 'All capabilities assigned to the user.', 'buddyboss' ),
+					'description' => __( 'All capabilities assigned to the user.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'edit' ),
 					'readonly'    => true,
 				),
 				'extra_capabilities' => array(
-					'description' => __( 'Any extra capabilities assigned to the user.', 'buddyboss' ),
+					'description' => __( 'Any extra capabilities assigned to the user.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'edit' ),
 					'readonly'    => true,
 				),
 				'profile_name'       => array(
-					'description' => __( 'Display name for the member based on the privacy setting.', 'buddyboss' ),
+					'description' => __( 'Display name for the member based on the privacy setting.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'last_activity'      => array(
-					'description' => __( 'Last Active time for the member.', 'buddyboss' ),
+					'description' => __( 'Last Active time for the member.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'is_online'          => array(
-					'description' => __( 'Whether the member is currently online.', 'buddyboss' ),
+					'description' => __( 'Whether the member is currently online.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'xprofile'           => array(
-					'description' => __( 'Member XProfile groups and its fields.', 'buddyboss' ),
+					'description' => __( 'Member XProfile groups and its fields.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'followers'          => array(
-					'description' => __( 'Followers counts for the current user.', 'buddyboss' ),
+					'description' => __( 'Followers counts for the current user.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'following'          => array(
-					'description' => __( 'Followings counts for the current user.', 'buddyboss' ),
+					'description' => __( 'Followings counts for the current user.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'friendship_status'  => array(
-					'description' => __( 'Friendship relation with, current, logged in user.', 'buddyboss' ),
+					'description' => __( 'Friendship relation with, current, logged in user.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 					'enum'        => array( 'is_friends', 'not_friends', 'pending', 'awaiting_response' ),
 				),
 				'friendship_id'      => array(
-					'description' => __( 'A unique numeric ID for the friendship.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the friendship.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'create_friendship'  => array(
-					'description' => __( 'Logged in user can create friendship with current user.', 'buddyboss' ),
+					'description' => __( 'Logged in user can create friendship with current user.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'is_following'       => array(
-					'description' => __( 'Check if a user is following or not.', 'buddyboss' ),
+					'description' => __( 'Check if a user is following or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'is_wp_admin'        => array(
-					'description' => __( 'Whether the member is an administrator.', 'buddyboss' ),
+					'description' => __( 'Whether the member is an administrator.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'can_follow'         => array(
-					'description' => __( 'Check if a user can follow or not.', 'buddyboss' ),
+					'description' => __( 'Check if a user can follow or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'can_send_message'   => array(
-					'description' => __( 'Logged in user can send message or not.', 'buddyboss' ),
+					'description' => __( 'Logged in user can send message or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
@@ -1460,7 +1460,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['full'] = array(
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
@@ -1468,20 +1468,20 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			$avatar_properties['thumb'] = array(
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 				'context'     => array( 'embed', 'view', 'edit' ),
 			);
 
 			$avatar_properties['is_default'] = array(
-				'description' => __( 'Whether the member has a default avatar or not.', 'buddyboss' ),
+				'description' => __( 'Whether the member has a default avatar or not.', 'buddyboss-platform' ),
 				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 			);
 
 			$schema['properties']['avatar_urls'] = array(
-				'description' => __( 'Avatar URLs for the member.', 'buddyboss' ),
+				'description' => __( 'Avatar URLs for the member.', 'buddyboss-platform' ),
 				'type'        => 'object',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
@@ -1490,14 +1490,14 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		$schema['properties']['cover_url'] = array(
-			'description' => __( 'Cover images URL for the member.', 'buddyboss' ),
+			'description' => __( 'Cover images URL for the member.', 'buddyboss-platform' ),
 			'type'        => 'string',
 			'context'     => array( 'embed', 'view', 'edit' ),
 			'readonly'    => true,
 		);
 
 		$schema['properties']['cover_is_default'] = array(
-			'description' => __( 'Whether to check member has default cover image or not.', 'buddyboss' ),
+			'description' => __( 'Whether to check member has default cover image or not.', 'buddyboss-platform' ),
 			'type'        => 'boolean',
 			'context'     => array( 'embed', 'view', 'edit' ),
 			'readonly'    => true,
@@ -1529,7 +1529,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),
+			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss-platform' ),
 			'default'           => 'newest',
 			'type'              => 'string',
 			'enum'              => array( 'active', 'newest', 'alphabetical', 'random', 'online', 'popular', 'include' ),
@@ -1538,7 +1538,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit results to friends of a user.', 'buddyboss' ),
+			'description'       => __( 'Limit results to friends of a user.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1546,7 +1546,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['user_ids'] = array(
-			'description'       => __( 'Pass IDs of users to limit result set.', 'buddyboss' ),
+			'description'       => __( 'Pass IDs of users to limit result set.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1555,7 +1555,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1564,7 +1564,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1573,7 +1573,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['member_type'] = array(
-			'description'       => __( 'Limit results set to certain type(s).', 'buddyboss' ),
+			'description'       => __( 'Limit results set to certain type(s).', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
@@ -1582,7 +1582,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['xprofile'] = array(
-			'description'       => __( 'Limit results set to a certain xProfile field.', 'buddyboss' ),
+			'description'       => __( 'Limit results set to a certain xProfile field.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -1590,13 +1590,13 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['bp_ps_search'] = array(
-			'description' => __( 'Profile Search form field data(s).', 'buddyboss' ),
+			'description' => __( 'Profile Search form field data(s).', 'buddyboss-platform' ),
 			'default'     => array(),
 			'type'        => 'object',
 		);
 
 		$params['scope'] = array(
-			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'default'           => 'all',
 			'enum'              => array( 'all', 'personal', 'following', 'followers' ),
@@ -1992,7 +1992,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		// Backwards compatibility for anyone forcing a 'true' active_format.
 		if ( true === $r['active_format'] ) {
 			/* translators: last active format. */
-			$r['active_format'] = __( 'active %s', 'buddyboss' );
+			$r['active_format'] = __( 'active %s', 'buddyboss-platform' );
 		}
 
 		// Member has logged in at least one time.
@@ -2000,7 +2000,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			// We do not want relative time, so return now.
 			// @todo Should the 'bp_member_last_active' filter be applied here?
 			if ( ! $r['relative'] ) {
-				return ( empty( $last_active ) ? __( 'Not recently active', 'buddyboss' ) : bp_rest_prepare_date_response( $last_active ) );
+				return ( empty( $last_active ) ? __( 'Not recently active', 'buddyboss-platform' ) : bp_rest_prepare_date_response( $last_active ) );
 			}
 
 			// Backwards compatibility for pre 1.5 'ago' strings.
@@ -2010,7 +2010,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			// Member has never logged in or been active.
 		} else {
-			$last_activity = __( 'Never active', 'buddyboss' );
+			$last_activity = __( 'Never active', 'buddyboss-platform' );
 		}
 
 		/**

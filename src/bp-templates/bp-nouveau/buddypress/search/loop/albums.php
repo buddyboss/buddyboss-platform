@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $media_album_template;
 $albums_link = bp_get_album_link();
 ?>
@@ -39,7 +42,7 @@ $albums_link = bp_get_album_link();
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
 						<span class="media-album_author">
-							<?php esc_html_e( 'By ', 'buddyboss' ); ?>
+							<?php esc_html_e( 'By ', 'buddyboss-platform' ); ?>
 							<a href="<?php echo esc_url( $albums_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_album_user_id() ); ?>"><?php bp_album_author(); ?></a>
 						</span>
 						<span class="middot">&middot;</span>
@@ -52,20 +55,20 @@ $albums_link = bp_get_album_link();
 					<?php
 					printf(
 					// translators: Photos count.
-						esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ) ),
+						esc_html( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss-platform' ) ),
 						esc_attr( bp_core_number_format( $media_album_template->album->media['total'] ) )
 					);
 					?>
 				</span>
 				<?php
-				if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) {
+				if ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) {
 					?>
 					<span class="middot">&middot;</span>
 					<span class="media-photo_count">
 						<?php
 						printf(
 						// translators: Photos count.
-							esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ) ),
+							esc_html( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss-platform' ) ),
 							esc_attr( bp_core_number_format( $media_album_template->album->media['total_video'] ) )
 						);
 						?>
@@ -82,7 +85,7 @@ $albums_link = bp_get_album_link();
 							if ( $group_id > 0 ) {
 								?>
 								<span class="middot">&middot;</span>
-								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss-platform' ); ?>">
 									<?php bp_album_visibility(); ?>
 								</span>
 								<?php

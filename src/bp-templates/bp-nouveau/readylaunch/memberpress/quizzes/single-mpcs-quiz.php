@@ -9,6 +9,9 @@
  * @package BuddyBoss\MemberpressLMS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use memberpress\quizzes\models;
 use memberpress\quizzes\helpers;
 use memberpress\courses;

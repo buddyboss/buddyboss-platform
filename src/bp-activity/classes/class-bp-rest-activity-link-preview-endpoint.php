@@ -37,7 +37,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'url' => array(
-						'description' => __( 'URL for the generate link preview.', 'buddyboss' ),
+						'description' => __( 'URL for the generate link preview.', 'buddyboss-platform' ),
 						'type'        => 'string',
 						'required'    => true,
 					),
@@ -81,7 +81,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( ! wp_http_validate_url( $url ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_url',
-				__( 'Sorry, URL is not valid.', 'buddyboss' ),
+				__( 'Sorry, URL is not valid.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -113,7 +113,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			if ( empty( $parse_url_data ) ) {
 				return new WP_Error(
 					'bp_rest_unknown_error',
-					__( 'There was a problem generating a link preview.', 'buddyboss' ),
+					__( 'There was a problem generating a link preview.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -171,7 +171,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to generate link preview in the activity.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to generate link preview in the activity.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -181,7 +181,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! bp_is_active( 'activity' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
-				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
+				__( 'Sorry, Activity component was not enabled.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -191,7 +191,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && function_exists( 'bp_is_activity_link_preview_active' ) && true !== bp_is_activity_link_preview_active() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Link Previews is disabled.', 'buddyboss' ),
+				__( 'Sorry, Link Previews is disabled.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -224,19 +224,19 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'title'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Title for the link preview.', 'buddyboss' ),
+					'description' => __( 'Title for the link preview.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'description'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Description or HTML to generate the link preview.', 'buddyboss' ),
+					'description' => __( 'Description or HTML to generate the link preview.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'images'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Image URLs for the preview.', 'buddyboss' ),
+					'description' => __( 'Image URLs for the preview.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 					'items'       => array(
@@ -245,13 +245,13 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 				),
 				'error'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'If any errors to retrieving a the preview data.', 'buddyboss' ),
+					'description' => __( 'If any errors to retrieving a the preview data.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'wp_embed'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the URL is wp embed or not.', 'buddyboss' ),
+					'description' => __( 'Whether the URL is wp embed or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

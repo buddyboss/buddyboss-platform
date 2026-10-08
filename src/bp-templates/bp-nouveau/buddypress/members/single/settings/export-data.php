@@ -7,10 +7,14 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <h2 class="screen-heading data-export-screen">
-	<?php esc_html_e( 'Request an export of your data', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Request an export of your data', 'buddyboss-platform' ); ?>
 </h2>
 
 <?php bp_nouveau_user_feedback( 'member-data-export' ); ?>

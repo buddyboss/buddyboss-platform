@@ -24,7 +24,7 @@ bb_register_side_panel(
 	'recaptcha',
 	'recaptcha_settings',
 	array(
-		'title'      => __( 'reCAPTCHA Settings', 'buddyboss' ),
+		'title'      => __( 'reCAPTCHA Settings', 'buddyboss-platform' ),
 		'icon'       => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-gear',
@@ -48,11 +48,11 @@ bb_register_side_panel(
 // =========================================================================
 
 $status      = 'warning';
-$status_text = __( 'Not Connected', 'buddyboss' );
+$status_text = __( 'Not Connected', 'buddyboss-platform' );
 $verified    = bb_recaptcha_connection_status();
 if ( ! empty( $verified ) && 'connected' === $verified ) {
 	$status      = 'success';
-	$status_text = __( 'Connected', 'buddyboss' );
+	$status_text = __( 'Connected', 'buddyboss-platform' );
 }
 
 bb_register_feature_section(
@@ -60,11 +60,11 @@ bb_register_feature_section(
 	'recaptcha_settings',
 	'recaptcha_connection',
 	array(
-		'title'       => __( 'reCAPTCHA', 'buddyboss' ),
+		'title'       => __( 'reCAPTCHA', 'buddyboss-platform' ),
 		'description' => sprintf(
 			/* translators: %s: reCAPTCHA API keys link. */
-			__( 'Connect Google reCAPTCHA to protect your website from fraud, spam, and abuse. Enter your %s to connect your site.', 'buddyboss' ),
-			'<a href="https://www.google.com/recaptcha/admin" target="_blank">' . esc_html__( 'reCAPTCHA API keys', 'buddyboss' ) . '</a>'
+			__( 'Connect Google reCAPTCHA to protect your website from fraud, spam, and abuse. Enter your %s to connect your site.', 'buddyboss-platform' ),
+			'<a href="https://www.google.com/recaptcha/admin" target="_blank">' . esc_html__( 'reCAPTCHA API keys', 'buddyboss-platform' ) . '</a>'
 		),
 		'order'       => 10,
 		'help_url'    => '636204',
@@ -89,19 +89,19 @@ bb_register_feature_field(
 	'recaptcha_connection',
 	array(
 		'name'                => 'bb_recaptcha_version',
-		'label'               => __( 'Versions', 'buddyboss' ),
+		'label'               => __( 'Versions', 'buddyboss-platform' ),
 		'type'                => 'select',
 		'options'             => array(
 			array(
-				'label' => __( 'reCAPTCHA v3 (Recommended)', 'buddyboss' ),
+				'label' => __( 'reCAPTCHA v3 (Recommended)', 'buddyboss-platform' ),
 				'value' => 'recaptcha_v3',
 			),
 			array(
-				'label' => __( 'reCAPTCHA v2 (Checkbox)', 'buddyboss' ),
+				'label' => __( 'reCAPTCHA v2 (Checkbox)', 'buddyboss-platform' ),
 				'value' => 'recaptcha_v2_checkbox',
 			),
 			array(
-				'label' => __( 'reCAPTCHA v2 (Invisible Badge)', 'buddyboss' ),
+				'label' => __( 'reCAPTCHA v2 (Invisible Badge)', 'buddyboss-platform' ),
 				'value' => 'recaptcha_v2_invisible',
 			),
 		),
@@ -120,7 +120,7 @@ bb_register_feature_field(
 	'recaptcha_connection',
 	array(
 		'name'              => 'bb_recaptcha_api_keys',
-		'label'             => __( 'API Keys', 'buddyboss' ),
+		'label'             => __( 'API Keys', 'buddyboss-platform' ),
 		'type'              => 'hidden',
 		'default'           => '',
 		'sanitize_callback' => '__return_empty_string',
@@ -135,7 +135,7 @@ bb_register_feature_field(
 	'recaptcha_connection',
 	array(
 		'name'              => 'bb_recaptcha_site_key',
-		'label'             => __( 'Site Key', 'buddyboss' ),
+		'label'             => __( 'Site Key', 'buddyboss-platform' ),
 		'type'              => 'password',
 		'default'           => bb_recaptcha_site_key(),
 		'placeholder'       => '',
@@ -152,7 +152,7 @@ bb_register_feature_field(
 	'recaptcha_connection',
 	array(
 		'name'              => 'bb_recaptcha_secret_key',
-		'label'             => __( 'Secret Key', 'buddyboss' ),
+		'label'             => __( 'Secret Key', 'buddyboss-platform' ),
 		'type'              => 'password',
 		'default'           => bb_recaptcha_secret_key(),
 		'placeholder'       => '',
@@ -171,7 +171,7 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_verify',
 		'label'             => '',
 		'type'              => 'bb_verify_popup',
-		'button_label'      => __( 'Verify', 'buddyboss' ),
+		'button_label'      => __( 'Verify', 'buddyboss-platform' ),
 		'ajax_action'       => 'bb_recaptcha_verify_settings_2',
 		// API Keys are credential fields — persisted by the verify AJAX
 		// handler, never by per-field auto-save. Version is intentionally
@@ -184,8 +184,8 @@ bb_register_feature_field(
 		),
 		'is_connected'      => ( 'connected' === $verified ),
 		'verify_config'     => array(
-			'modal_title'     => __( 'Verify reCAPTCHA', 'buddyboss' ),
-			'loading_message' => __( 'Verifying reCAPTCHA token', 'buddyboss' ),
+			'modal_title'     => __( 'Verify reCAPTCHA', 'buddyboss-platform' ),
+			'loading_message' => __( 'Verifying reCAPTCHA token', 'buddyboss-platform' ),
 		),
 		'default'           => '',
 		'sanitize_callback' => '__return_empty_string',
@@ -206,8 +206,8 @@ bb_register_feature_field(
 		'notice_type'       => 'plain',
 		'description'       => sprintf(
 			/* translators: %s: Admin Console link. */
-			__( 'Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust settings if necessary to maintain security.', 'buddyboss' ),
-			'<a href="https://www.google.com/recaptcha/admin" target="_blank">' . esc_html__( 'Admin Console', 'buddyboss' ) . '</a>'
+			__( 'Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust settings if necessary to maintain security.', 'buddyboss-platform' ),
+			'<a href="https://www.google.com/recaptcha/admin" target="_blank">' . esc_html__( 'Admin Console', 'buddyboss-platform' ) . '</a>'
 		),
 		'sanitize_callback' => '__return_empty_string',
 		'order'             => 50,
@@ -223,7 +223,7 @@ bb_register_feature_section(
 	'recaptcha_settings',
 	'recaptcha_general',
 	array(
-		'title'       => __( 'reCAPTCHA Settings', 'buddyboss' ),
+		'title'       => __( 'reCAPTCHA Settings', 'buddyboss-platform' ),
 		'description' => '',
 		'order'       => 20,
 		'help_url'    => '636206',
@@ -262,10 +262,10 @@ bb_register_feature_field(
 	'recaptcha_general',
 	array(
 		'name'              => 'bb_recaptcha_score_threshold',
-		'label'             => __( 'Score Threshold', 'buddyboss' ),
+		'label'             => __( 'Score Threshold', 'buddyboss-platform' ),
 		'type'              => 'number',
 		'default'           => (string) bb_recaptcha_score_threshold(),
-		'description'       => __( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 0.0 and 1.0 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss' ),
+		'description'       => __( 'reCAPTCHA v3 provides a score for every request seamlessly, without causing user friction. Input a risk score between 0.0 and 1.0 in the field above to evaluate the probability of being identified as a bot.', 'buddyboss-platform' ),
 		'sanitize_callback' => 'bb_recaptcha_sanitize_score_threshold',
 		'order'             => 10,
 		'step'              => '0.1',
@@ -297,14 +297,14 @@ bb_register_feature_field(
 	'recaptcha_general',
 	array(
 		'name'              => 'bb_recaptcha_enabled_for',
-		'label'             => __( 'Enabled for', 'buddyboss' ),
+		'label'             => __( 'Enabled for', 'buddyboss-platform' ),
 		'type'              => 'toggle_list',
 		'options'           => $enabled_options,
 		'default'           => $enabled_default,
 		'description'       => sprintf(
 			/* translators: %s: Enable Registration link. */
-			__( 'Select the pages to include in the reCAPTCHA submission. Make sure to %s if both registration and account activation are disabled.', 'buddyboss' ),
-			'<a href="' . esc_url( admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss' ) . '</a>'
+			__( 'Select the pages to include in the reCAPTCHA submission. Make sure to %s if both registration and account activation are disabled.', 'buddyboss-platform' ),
+			'<a href="' . esc_url( admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss-platform' ) . '</a>'
 		),
 		'sanitize_callback' => 'bb_recaptcha_sanitize_enabled_for',
 		'order'             => 20,
@@ -380,11 +380,11 @@ bb_register_feature_field(
 	'recaptcha_general',
 	array(
 		'name'              => 'bb_recaptcha_language_code',
-		'label'             => __( 'Language Code', 'buddyboss' ),
+		'label'             => __( 'Language Code', 'buddyboss-platform' ),
 		'type'              => 'select',
 		'options'           => $language_options,
 		'default'           => bb_recaptcha_setting( 'language_code', 'en' ),
-		'description'       => __( 'Select a language for reCAPTCHA when it is displayed.', 'buddyboss' ),
+		'description'       => __( 'Select a language for reCAPTCHA when it is displayed.', 'buddyboss-platform' ),
 		'sanitize_callback' => 'sanitize_text_field',
 		'order'             => 40,
 	)
@@ -397,11 +397,11 @@ bb_register_feature_field(
 	'recaptcha_general',
 	array(
 		'name'              => 'bb_recaptcha_conflict_mode',
-		'label'             => __( 'No-Conflict Mode', 'buddyboss' ),
+		'label'             => __( 'No-Conflict Mode', 'buddyboss-platform' ),
 		'type'              => 'toggle',
 		'default'           => bb_recaptcha_conflict_mode() ? 1 : 0,
-		'description'       => __( 'Allow no-conflict mode to prevent compatibility conflicts', 'buddyboss' ),
-		'help_text'         => __( 'When checked, other instances of reCAPTCHA are forcefully removed to prevent conflicts. Only enable this option if your site is experiencing compatibility issues or if instructed to do so by support.', 'buddyboss' ),
+		'description'       => __( 'Allow no-conflict mode to prevent compatibility conflicts', 'buddyboss-platform' ),
+		'help_text'         => __( 'When checked, other instances of reCAPTCHA are forcefully removed to prevent conflicts. Only enable this option if your site is experiencing compatibility issues or if instructed to do so by support.', 'buddyboss-platform' ),
 		'sanitize_callback' => 'absint',
 		'order'             => 50,
 	)
@@ -414,11 +414,11 @@ bb_register_feature_field(
 	'recaptcha_general',
 	array(
 		'name'              => 'bb_recaptcha_exclude_ip',
-		'label'             => __( 'Exclude by IP', 'buddyboss' ),
+		'label'             => __( 'Exclude by IP', 'buddyboss-platform' ),
 		'type'              => 'textarea',
 		'default'           => bb_recaptcha_setting( 'exclude_ip', '' ),
-		'placeholder'       => __( 'Enter IP addresses', 'buddyboss' ),
-		'description'       => __( 'Enter the IP addresses that you want to skip from captcha submission. Enter one IP per line.', 'buddyboss' ),
+		'placeholder'       => __( 'Enter IP addresses', 'buddyboss-platform' ),
+		'description'       => __( 'Enter the IP addresses that you want to skip from captcha submission. Enter one IP per line.', 'buddyboss-platform' ),
 		'sanitize_callback' => 'sanitize_textarea_field',
 		'order'             => 60,
 	)
@@ -433,7 +433,7 @@ bb_register_feature_section(
 	'recaptcha_settings',
 	'recaptcha_design',
 	array(
-		'title'       => __( 'reCAPTCHA Design', 'buddyboss' ),
+		'title'       => __( 'reCAPTCHA Design', 'buddyboss-platform' ),
 		'description' => '',
 		'order'       => 30,
 		'help_url'    => '636208',
@@ -469,16 +469,16 @@ bb_register_feature_field(
 	'recaptcha_design',
 	array(
 		'name'              => 'bb_recaptcha_theme',
-		'label'             => __( 'Theme', 'buddyboss' ),
+		'label'             => __( 'Theme', 'buddyboss-platform' ),
 		'type'              => 'image_radio',
 		'options'           => array(
 			array(
-				'label' => __( 'Light', 'buddyboss' ),
+				'label' => __( 'Light', 'buddyboss-platform' ),
 				'value' => 'light',
 				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-light.png' ),
 			),
 			array(
-				'label' => __( 'Dark', 'buddyboss' ),
+				'label' => __( 'Dark', 'buddyboss-platform' ),
 				'value' => 'dark',
 				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-dark.png' ),
 			),
@@ -500,16 +500,16 @@ bb_register_feature_field(
 	'recaptcha_design',
 	array(
 		'name'              => 'bb_recaptcha_size',
-		'label'             => __( 'Size', 'buddyboss' ),
+		'label'             => __( 'Size', 'buddyboss-platform' ),
 		'type'              => 'image_radio',
 		'options'           => array(
 			array(
-				'label' => __( 'Normal', 'buddyboss' ),
+				'label' => __( 'Normal', 'buddyboss-platform' ),
 				'value' => 'normal',
 				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-light.png' ),
 			),
 			array(
-				'label' => __( 'Compact', 'buddyboss' ),
+				'label' => __( 'Compact', 'buddyboss-platform' ),
 				'value' => 'compact',
 				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-light-compact.png' ),
 			),
@@ -531,21 +531,21 @@ bb_register_feature_field(
 	'recaptcha_design',
 	array(
 		'name'              => 'bb_recaptcha_badge_position',
-		'label'             => __( 'Badge Position', 'buddyboss' ),
+		'label'             => __( 'Badge Position', 'buddyboss-platform' ),
 		'type'              => 'image_radio',
 		'options'           => array(
 			array(
-				'label' => __( 'Bottom Right', 'buddyboss' ),
+				'label' => __( 'Bottom Right', 'buddyboss-platform' ),
 				'value' => 'bottomright',
 				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-bottom-right.png' ),
 			),
 			array(
-				'label' => __( 'Bottom Left', 'buddyboss' ),
+				'label' => __( 'Bottom Left', 'buddyboss-platform' ),
 				'value' => 'bottomleft',
 				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-bottom-left.png' ),
 			),
 			array(
-				'label' => __( 'Inline', 'buddyboss' ),
+				'label' => __( 'Inline', 'buddyboss-platform' ),
 				'value' => 'inline',
 				'image' => bb_recaptcha_integration_url( 'assets/images/reCAPTCHA-inline.png' ),
 			),

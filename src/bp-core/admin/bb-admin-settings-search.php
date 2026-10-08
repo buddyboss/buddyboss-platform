@@ -49,8 +49,8 @@ function bb_admin_settings_register_search_feature() {
 	bb_register_feature(
 		'search',
 		array(
-			'label'              => __( 'Network Search', 'buddyboss' ),
-			'description'        => __( 'Allow members to search the entire site, and manage what media and post types can be found in the sites network search.', 'buddyboss' ),
+			'label'              => __( 'Network Search', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to search the entire site, and manage what media and post types can be found in the sites network search.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass',
@@ -87,7 +87,7 @@ function bb_admin_settings_register_search_feature() {
 		'search',
 		'network_search',
 		array(
-			'title'      => __( 'Network Search', 'buddyboss' ),
+			'title'      => __( 'Network Search', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-magnifying-glass',
@@ -102,7 +102,7 @@ function bb_admin_settings_register_search_feature() {
 		'search',
 		'pages_posts',
 		array(
-			'title' => __( 'Pages and Posts Search', 'buddyboss' ),
+			'title' => __( 'Pages and Posts Search', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-file-magnifying-glass',
@@ -116,7 +116,7 @@ function bb_admin_settings_register_search_feature() {
 		'search',
 		'autocomplete',
 		array(
-			'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
+			'title'    => __( 'Autocomplete Settings', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-spinner-gap',

@@ -678,7 +678,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 	// The trigger no longer accepts typing (search lives inside the dropdown
 	// per the design contract), so we render the current selection verbatim
 	// and fall back to the placeholder when nothing is selected.
-	var triggerLabel = selectedLabel || placeholder || __( 'Select…', 'buddyboss' );
+	var triggerLabel = selectedLabel || placeholder || __( 'Select…', 'buddyboss-platform' );
 
 	return (
 		<div
@@ -728,7 +728,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 							value={ search }
 							onChange={ handleSearchChange }
 							onKeyDown={ handleKeyDown }
-							placeholder={ __( 'Search…', 'buddyboss' ) }
+							placeholder={ __( 'Search…', 'buddyboss-platform' ) }
 							autoComplete="off"
 							aria-controls={ idsRef.current.listbox }
 							aria-activedescendant={ activeIndex >= 0 && activeIndex < displayResults.length
@@ -751,7 +751,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 							aria-live="polite"
 						>
 							<Spinner />
-							<span className="screen-reader-text">{ __( 'Loading results', 'buddyboss' ) }</span>
+							<span className="screen-reader-text">{ __( 'Loading results', 'buddyboss-platform' ) }</span>
 						</div>
 					) }
 
@@ -762,8 +762,8 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 							aria-live="polite"
 						>
 							{ search
-								? __( 'No results found.', 'buddyboss' )
-								: __( 'No options available.', 'buddyboss' )
+								? __( 'No results found.', 'buddyboss-platform' )
+								: __( 'No options available.', 'buddyboss-platform' )
 							}
 						</div>
 					) }
@@ -819,8 +819,8 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 								disabled={ isLoadingMore }
 							>
 								{ isLoadingMore
-									? __( 'Loading…', 'buddyboss' )
-									: __( 'Load more', 'buddyboss' )
+									? __( 'Loading…', 'buddyboss-platform' )
+									: __( 'Load more', 'buddyboss-platform' )
 								}
 							</button>
 						</div>

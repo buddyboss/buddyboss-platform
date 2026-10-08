@@ -94,7 +94,7 @@ function member_widget_click_handler() {
 			jQuery.post(
 				ajaxurl,
 				{
-					action: 'widget_members',
+					action: 'bb_widget_members',
 					'cookie': encodeURIComponent( document.cookie ),
 					'_wpnonce': jQuery( 'input#_wpnonce-members' ).val(),
 					'max-members': jQuery( 'input#members_widget_max' ).val(),

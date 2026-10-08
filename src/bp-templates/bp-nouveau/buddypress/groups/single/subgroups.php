@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 
 bp_nouveau_before_groups_directory_content();
@@ -29,7 +32,7 @@ if ( 'subgroups' === bp_current_action() && bb_enable_content_counts() ) {
 						'<span class="bb-count">%d</span> Group',
 						'<span class="bb-count">%d</span> Groups',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					array( 'span' => array( 'class' => true ) )
 				),

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $media_template;
 
 $move_id                  = '';
@@ -26,6 +29,9 @@ $media_parent_activity_id = bp_get_media_parent_activity_id();
 $bp_media_privacy         = bp_get_media_privacy();
 $bp_media_album_id        = bp_get_media_album_id();
 
+if ( 'video' === $media_template->media->type && ! bp_is_active( 'video' ) ) {
+	return;
+}
 
 if ( 'video' === $media_template->media->type ) {
 	$download_url  = bp_video_download_link( $attachment_id, $bp_media_id );
@@ -65,7 +71,7 @@ if ( 'video' === $media_template->media->type ) {
 				$report_btn = bp_video_get_report_link( array( 'id' => $bp_media_id ) );
 				if ( $can_edit || $report_btn ) {
 					?>
-					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+					<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
 						<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 					</a>
 					<div class="video-action_list item-action_list bb_more_dropdown">
@@ -83,15 +89,15 @@ if ( 'video' === $media_template->media->type ) {
 										data-video-id="<?php echo esc_attr( $bp_media_id ); ?>"
 										class="ac-video-thumbnail-edit"
 									>
-										<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
+										<?php esc_html_e( 'Change Thumbnail', 'buddyboss-platform' ); ?>
 									</a>
 								</li>
 								<?php
 							}
 							if ( $is_comment_vid ) {
 								?>
-								<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+								<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-platform' ); ?>">
+									<a href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 								</li>
 								<?php
 							} elseif ( $can_move ) {
@@ -107,7 +113,7 @@ if ( 'video' === $media_template->media->type ) {
 										id="<?php echo esc_attr( $move_id ); ?>"
 										class="ac-video-move"
 									>
-										<?php esc_html_e( 'Move', 'buddyboss' ); ?>
+										<?php esc_html_e( 'Move', 'buddyboss-platform' ); ?>
 									</a>
 								</li>
 								<?php
@@ -125,7 +131,7 @@ if ( 'video' === $media_template->media->type ) {
 										data-type="video"
 										href="#"
 									>
-										<?php esc_html_e( 'Delete', 'buddyboss' ); ?>
+										<?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?>
 									</a>
 								</li>
 								<?php
@@ -195,7 +201,7 @@ if ( 'video' === $media_template->media->type ) {
 					<label
 						class="bp-tooltip"
 						data-bp-tooltip-pos="up"
-						data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>"
+						data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss-platform' ); ?>"
 						for="bb-media-<?php echo esc_attr( $bp_media_id ); ?>"
 					>
 						<span class="bb-icon-rl bb-icon-check"></span>
@@ -232,7 +238,7 @@ if ( 'video' === $media_template->media->type ) {
 			$report_btn = bp_media_get_report_link( array( 'id' => $bp_media_id ) );
 			if ( $can_move || $report_btn || $can_delete ) {
 				?>
-				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="media-action_list bb_more_dropdown">
@@ -241,8 +247,8 @@ if ( 'video' === $media_template->media->type ) {
 						<?php
 						if ( $is_comment_pic ) {
 							?>
-							<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-								<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							<li class="move_file move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Photo inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-platform' ); ?>">
+								<a href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 							</li>
 							<?php
 						} elseif ( $can_move ) {
@@ -258,7 +264,7 @@ if ( 'video' === $media_template->media->type ) {
 									id="<?php echo esc_attr( $move_id ); ?>"
 									class="ac-media-move"
 								>
-									<?php esc_html_e( 'Move', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Move', 'buddyboss-platform' ); ?>
 								</a>
 							</li>
 							<?php
@@ -267,7 +273,7 @@ if ( 'video' === $media_template->media->type ) {
 						if ( $report_btn ) {
 							?>
 							<li class="report_file">
-								<?php echo $report_btn; ?>
+								<?php echo wp_kses_post( $report_btn ); ?>
 							</li>
 							<?php
 						}
@@ -285,7 +291,7 @@ if ( 'video' === $media_template->media->type ) {
 									data-type="media"
 									href="#"
 								>
-									<?php esc_html_e( 'Delete', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?>
 								</a>
 							</li>
 							<?php
@@ -307,7 +313,7 @@ if ( 'video' === $media_template->media->type ) {
 			data-group-id="<?php echo esc_attr( $group_id ); ?>"
 			data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 			data-can-edit="<?php echo esc_attr( bp_media_user_can_edit( $bp_media_id ) ); ?>"
-			aria-label="<?php esc_attr_e( 'Open image in media theatre', 'buddyboss' ); ?>"
+			aria-label="<?php esc_attr_e( 'Open image in media theatre', 'buddyboss-platform' ); ?>"
 			href="#">
 			<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bb_media_photos_directory_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
@@ -336,7 +342,7 @@ if ( 'video' === $media_template->media->type ) {
 				<label
 					class="bp-tooltip"
 					data-bp-tooltip-pos="up"
-					data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>"
+					data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss-platform' ); ?>"
 					for="bb-media-<?php echo esc_attr( $bp_media_id ); ?>">
 					<span class="bb-icon-rl bb-icon-check"></span>
 				</label>

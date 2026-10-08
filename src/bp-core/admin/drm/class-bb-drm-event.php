@@ -398,6 +398,7 @@ class BB_DRM_Event {
 		$table_name = self::get_table_name();
 		$query      = "SELECT * FROM {$table_name}";
 
+		$order_by = self::sanitize_order_by( $order_by );
 		if ( ! empty( $order_by ) ) {
 			$query .= " ORDER BY {$order_by}";
 		}
@@ -406,7 +407,7 @@ class BB_DRM_Event {
 			$query .= $wpdb->prepare( ' LIMIT %d', $limit );
 		}
 
-		$results = $wpdb->get_results( $query );
+		$results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table internal; $order_by whitelisted via sanitize_order_by(); limit %d-prepared.
 		$events  = array();
 
 		foreach ( $results as $result ) {
@@ -435,6 +436,7 @@ class BB_DRM_Event {
 			$event
 		);
 
+		$order_by = self::sanitize_order_by( $order_by );
 		if ( ! empty( $order_by ) ) {
 			$query .= " ORDER BY {$order_by}";
 		}
@@ -443,7 +445,7 @@ class BB_DRM_Event {
 			$query .= $wpdb->prepare( ' LIMIT %d', $limit );
 		}
 
-		$results = $wpdb->get_results( $query );
+		$results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table internal; event %s-prepared; $order_by whitelisted via sanitize_order_by(); limit %d-prepared.
 		$events  = array();
 
 		foreach ( $results as $result ) {
@@ -451,6 +453,42 @@ class BB_DRM_Event {
 		}
 
 		return $events;
+	}
+
+	/**
+	 * Sanitize an ORDER BY clause against the event table's columns.
+	 *
+	 * Only allows "<column> [ASC|DESC]" (optionally comma-separated). Any
+	 * value that does not match the whitelist is dropped, preventing SQL
+	 * injection through an interpolated ORDER BY clause.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $order_by Raw ORDER BY clause.
+	 * @return string Safe ORDER BY clause, or empty string when invalid.
+	 */
+	protected static function sanitize_order_by( $order_by ) {
+		$order_by = trim( (string) $order_by );
+		if ( '' === $order_by ) {
+			return '';
+		}
+
+		$allowed_columns = array( 'id', 'event', 'evt_id', 'evt_id_type', 'created_at' );
+
+		$safe_parts = array();
+		foreach ( explode( ',', $order_by ) as $part ) {
+			$tokens = preg_split( '/\s+/', trim( $part ) );
+			if ( empty( $tokens[0] ) || ! in_array( strtolower( $tokens[0] ), $allowed_columns, true ) ) {
+				continue;
+			}
+
+			$column    = strtolower( $tokens[0] );
+			$direction = ( isset( $tokens[1] ) && 'asc' === strtolower( $tokens[1] ) ) ? 'ASC' : 'DESC';
+
+			$safe_parts[] = $column . ' ' . $direction;
+		}
+
+		return implode( ', ', $safe_parts );
 	}
 
 	/**

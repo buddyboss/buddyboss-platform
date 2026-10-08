@@ -7,6 +7,9 @@
 
 namespace BuddyBoss\Performance;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 	/**
@@ -248,7 +251,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 		public function bp_mu_setup_and_load_plugin_file() {
 			// If mu-plugin directory not exists then create automatically.
 			if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
-				mkdir( WPMU_PLUGIN_DIR, 0755 );
+				wp_mkdir_p( WPMU_PLUGIN_DIR );
 			}
 
 			$mu_plugins             = get_mu_plugins();
@@ -331,12 +334,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$notice = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'API Caching cannot be automatically installed on your server. To enable caching, you need to manually install the "BuddyBoss API Caching" plugin in your', 'buddyboss' ),
+				__( 'API Caching cannot be automatically installed on your server. To enable caching, you need to manually install the "BuddyBoss API Caching" plugin in your', 'buddyboss-platform' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
-				__( 'must-use plugins', 'buddyboss' ),
+				__( 'must-use plugins', 'buddyboss-platform' ),
 				$download_path,
-				__( 'Download the plugin', 'buddyboss' ),
-				__( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss' )
+				__( 'Download the plugin', 'buddyboss-platform' ),
+				__( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss-platform' )
 			);
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -357,12 +360,12 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$notice = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'API Caching could not be automatically updated on your server. To enable caching, you need to manually update the "BuddyBoss API Caching" plugin in your', 'buddyboss' ),
+				__( 'API Caching could not be automatically updated on your server. To enable caching, you need to manually update the "BuddyBoss API Caching" plugin in your', 'buddyboss-platform' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
-				__( 'must-use plugins', 'buddyboss' ),
+				__( 'must-use plugins', 'buddyboss-platform' ),
 				$download_path,
-				__( 'Download v1.0.1', 'buddyboss' ),
-				__( 'and then upload the plugin manually into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss' )
+				__( 'Download v1.0.1', 'buddyboss-platform' ),
+				__( 'and then upload the plugin manually into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss-platform' )
 			);
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

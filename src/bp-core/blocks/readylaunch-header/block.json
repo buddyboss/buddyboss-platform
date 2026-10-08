@@ -1,6 +1,6 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 2,
+  "apiVersion": 3,
   "name": "buddyboss/readylaunch-header",
   "title": "BB ReadyLaunch Header",
   "category": "buddyboss",
@@ -13,7 +13,7 @@
     "BB",
     "Navigation"
   ],
-  "textdomain": "buddyboss",
+  "textdomain": "buddyboss-platform",
   "attributes": {
     "showSearch": {
       "type": "boolean",

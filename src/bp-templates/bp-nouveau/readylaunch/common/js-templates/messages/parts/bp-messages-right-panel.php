@@ -18,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
 <script type="text/html" id="tmpl-bp-messages-right-panel">
 	<div class="bb-rl-right-panel_message_header">
 		<h3 class="bb-rl-right-panel_title">
-			<?php esc_html_e( 'About', 'buddyboss' ); ?>
+			<?php esc_html_e( 'About', 'buddyboss-platform' ); ?>
 		</h3>
-		<a href="#" class="message_action__close_info" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
+		<a href="#" class="message_action__close_info" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</a>
 	</div>
@@ -144,7 +144,7 @@ defined( 'ABSPATH' ) || exit;
 		<!-- Tab navigation -->
 		<div class="bb-rl-message-right-tabs">
 			<button class="bb-rl-tab-item active" data-tab="participants">
-				<?php esc_html_e( 'Participants', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Participants', 'buddyboss-platform' ); ?>
 			</button>
 			<#
 			var mediaComponentActive = <?php echo wp_json_encode( bp_is_active( 'media' ) ); ?>;
@@ -176,7 +176,7 @@ defined( 'ABSPATH' ) || exit;
 				)
 			) { #>
 				<button class="bb-rl-tab-item" data-tab="media">
-				<?php esc_html_e( 'Media', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Media', 'buddyboss-platform' ); ?>
 				</button>
 			<# }
 			var filesActive            = <?php echo wp_json_encode( bp_is_active( 'media' ) && function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() ); ?>;
@@ -197,7 +197,7 @@ defined( 'ABSPATH' ) || exit;
 				)
 			) { #>
 				<button class="bb-rl-tab-item" data-tab="files">
-					<?php esc_html_e( 'Files', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Files', 'buddyboss-platform' ); ?>
 				</button>
 			<# } #>
 		</div>
@@ -285,7 +285,7 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		<# }); #>
 	<# } else { #>
-		<div class="bb-rl-no-content"><?php esc_html_e( 'No media found in this conversation.', 'buddyboss' ); ?></div>
+		<div class="bb-rl-no-content"><?php esc_html_e( 'No media found in this conversation.', 'buddyboss-platform' ); ?></div>
 	<# } #>
 </script>
 
@@ -326,6 +326,6 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		<# }); #>
 	<# } else { #>
-		<div class="bb-rl-no-content"><?php esc_html_e( 'No files found in this conversation.', 'buddyboss' ); ?></div>
+		<div class="bb-rl-no-content"><?php esc_html_e( 'No files found in this conversation.', 'buddyboss-platform' ); ?></div>
 	<# } #>
 </script>

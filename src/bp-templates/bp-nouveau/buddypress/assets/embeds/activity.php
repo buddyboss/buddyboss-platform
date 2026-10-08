@@ -3,6 +3,9 @@
  * @version 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bp_activity_embed_has_activity( bp_current_action() ) ) :
 	while ( bp_activities() ) :
 		bp_the_activity();

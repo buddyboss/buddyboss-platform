@@ -24,9 +24,9 @@ import { __ } from '@wordpress/i18n';
  * @type {Array}
  */
 var conditionOptions = [
-	{ value: '', label: __( 'Select Condition', 'buddyboss' ) },
-	{ value: 'always_allow', label: __( 'Always Allow', 'buddyboss' ) },
-	{ value: 'never_allow', label: __( 'Never Allow', 'buddyboss' ) },
+	{ value: '', label: __( 'Select Condition', 'buddyboss-platform' ) },
+	{ value: 'always_allow', label: __( 'Always Allow', 'buddyboss-platform' ) },
+	{ value: 'never_allow', label: __( 'Never Allow', 'buddyboss-platform' ) },
 ];
 
 /**
@@ -163,7 +163,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 									onChange={ function( val ) {
 										updateRow( index, 'address', val );
 									} }
-									placeholder={ __( 'Email address', 'buddyboss' ) }
+									placeholder={ __( 'Email address', 'buddyboss-platform' ) }
 									disabled={ disabled }
 									__nextHasNoMarginBottom
 								/>
@@ -186,7 +186,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 									removeRow( index );
 								} }
 								disabled={ disabled }
-								aria-label={ __( 'Remove Rule', 'buddyboss' ) }
+								aria-label={ __( 'Remove Rule', 'buddyboss-platform' ) }
 							>
 								<i className="bb-icons-rl bb-icons-rl-x" />
 							</button>
@@ -201,7 +201,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 				disabled={ disabled }
 			>
 				<i className="bb-icons-rl-plus"></i>
-				{ __( 'Add Email', 'buddyboss' ) }
+				{ __( 'Add Email', 'buddyboss-platform' ) }
 			</Button>
 		</div>
 	);

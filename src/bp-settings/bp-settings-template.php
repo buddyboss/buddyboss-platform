@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 function bp_settings_slug() {
-	echo bp_get_settings_slug();
+	echo esc_attr( bp_get_settings_slug() );
 }
 	/**
 	 * Return the settings component slug.
@@ -42,7 +42,7 @@ function bp_get_settings_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_settings_root_slug() {
-	echo bp_get_settings_root_slug();
+	echo esc_attr( bp_get_settings_root_slug() );
 }
 	/**
 	 * Return the settings component root slug.
@@ -86,16 +86,20 @@ function bp_settings_pending_email_notice() {
 		<p>
 		<?php
 		printf(
-			__( 'There is a pending change of your email address to %s.', 'buddyboss' ),
+			/* translators: %s: the new pending email address. */
+			esc_html__( 'There is a pending change of your email address to %s.', 'buddyboss-platform' ),
 			'<strong>' . esc_html( $pending_email['newemail'] ) . '</strong>'
 		);
 		?>
 		<br />
 		<?php
-		printf(
-			__( 'Check your email (%1$s) for the verification link, or <a href="%2$s">cancel the pending change</a>.', 'buddyboss' ),
-			'<strong>' . esc_html( bp_get_displayed_user_email() ) . '</strong>',
-			esc_url( wp_nonce_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/?dismiss_email_change=1', 'bp_dismiss_email_change' ) )
+		echo wp_kses_post(
+			sprintf(
+				/* translators: 1: the current email address, 2: URL to cancel the pending email change. */
+				__( 'Check your email (%1$s) for the verification link, or <a href="%2$s">cancel the pending change</a>.', 'buddyboss-platform' ),
+				'<strong>' . esc_html( bp_get_displayed_user_email() ) . '</strong>',
+				esc_url( wp_nonce_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/?dismiss_email_change=1', 'bp_dismiss_email_change' ) )
+			)
 		);
 		?>
 		</p>

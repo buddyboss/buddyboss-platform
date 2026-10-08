@@ -7,6 +7,10 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 bp_get_template_part( 'groups/single/parts/members-subnav' );
 $enable_count = bb_enable_content_counts();
@@ -24,7 +28,7 @@ if ( $enable_count ) {
 							'<span class="bb-count">%d</span> Member',
 							'<span class="bb-count">%d</span> Members',
 							$count,
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						array( 'span' => array( 'class' => true ) )
 					),

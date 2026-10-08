@@ -31,8 +31,8 @@ function bb_admin_settings_register_forums_feature() {
 	bb_register_feature(
 		'forums',
 		array(
-			'label'              => __( 'Forum Discussions', 'buddyboss' ),
-			'description'        => __( 'Allow members to hold discussions in Q&A-style forums, which can operate independently or be linked to social groups.', 'buddyboss' ),
+			'label'              => __( 'Forum Discussions', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to hold discussions in Q&A-style forums, which can operate independently or be linked to social groups.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats-circle',
@@ -77,7 +77,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'forum_settings',
 		array(
-			'title'      => __( 'Forum Settings', 'buddyboss' ),
+			'title'      => __( 'Forum Settings', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -101,7 +101,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'forum_features',
 		array(
-			'title'      => __( 'Forum Features', 'buddyboss' ),
+			'title'      => __( 'Forum Features', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats-teardrop',
@@ -125,7 +125,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'forum_directories',
 		array(
-			'title'      => __( 'Forum Directories', 'buddyboss' ),
+			'title'      => __( 'Forum Directories', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
@@ -149,7 +149,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'forum_permalinks',
 		array(
-			'title'      => __( 'Permalinks', 'buddyboss' ),
+			'title'      => __( 'Permalinks', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-pencil-simple',
@@ -173,7 +173,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'all_forums',
 		array(
-			'title'      => __( 'Forums', 'buddyboss' ),
+			'title'      => __( 'Forums', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chat-text',
@@ -189,7 +189,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'discussions',
 		array(
-			'title'      => __( 'Discussions', 'buddyboss' ),
+			'title'      => __( 'Discussions', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats',
@@ -205,7 +205,7 @@ function bb_admin_settings_register_forums_feature() {
 			'forums',
 			'discussion_tags',
 			array(
-				'title'      => __( 'Discussion Tags', 'buddyboss' ),
+				'title'      => __( 'Discussion Tags', 'buddyboss-platform' ),
 				'icon'       => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-tag',
@@ -221,7 +221,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'replies',
 		array(
-			'title'      => __( 'Replies', 'buddyboss' ),
+			'title'      => __( 'Replies', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrow-bend-up-left',

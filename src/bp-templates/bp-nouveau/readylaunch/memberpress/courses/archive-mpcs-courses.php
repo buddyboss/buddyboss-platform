@@ -9,6 +9,9 @@
  * @package BuddyBoss\MemberpressLMS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use memberpress\courses\models;
 use memberpress\courses\helpers;
 use memberpress\courses\lib;
@@ -46,7 +49,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					the_post_thumbnail( apply_filters( 'mpcs_course_thumbnail_size', 'mpcs-course-thumbnail' ), array( 'class' => 'img-responsive' ) );
 				else :
 					?>
-					<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+					<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss-platform' ); ?>">
 				<?php endif; ?>
 			</a>
 		</div>
@@ -75,19 +78,19 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 						?>
 						<a href="<?php echo esc_url( $author_url ); ?>" class="item-avatar bb-rl-author-avatar">
 							<?php
-							echo bp_core_fetch_avatar(
+							echo wp_kses_post( bp_core_fetch_avatar(
 								array(
 									'item_id' => $user_id,
 									'html' => true,
 								)
-							);
+							) );
 							?>
 						</a>
 						<span class="bb-rl-author-name">
 							<?php
 							$author_name = bp_core_get_user_displayname( $user_id );
 							// translators: %s is the author name.
-							printf( esc_html__( 'By %s', 'buddyboss' ), '<a href="' . esc_url( $author_url ) . '">' . esc_html( $author_name ) . '</a>' );
+							printf( esc_html__( 'By %s', 'buddyboss-platform' ), '<a href="' . esc_url( $author_url ) . '">' . esc_html( $author_name ) . '</a>' );
 							?>
 						</span>
 					</div>
@@ -106,7 +109,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					<div class="mpcs-progress-wrap">
 						<div class="mpcs-progress-data">
 							<strong class="mpcs-progress-lessons"><?php echo esc_html( $completed_lessons . '/' . $total_lessons ); ?></strong>
-							<span class="mpcs-progress-per"><strong><?php echo esc_html( $progress . '%' ); ?></strong> <?php esc_html_e( ' Complete', 'buddyboss' ); ?></span>
+							<span class="mpcs-progress-per"><strong><?php echo esc_html( $progress . '%' ); ?></strong> <?php esc_html_e( ' Complete', 'buddyboss-platform' ); ?></span>
 						</div>
 						<div class="mpcs-progress-bar">
 							<div class="mpcs-progress-bar-inner" style="width: <?php echo esc_attr( $progress ); ?>%;"></div>
@@ -117,14 +120,14 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					if ( false !== $next_lesson && is_object( $next_lesson ) ) {
 						?>
 						<a href="<?php echo esc_url( get_permalink( $next_lesson->ID ) ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
-							<?php esc_html_e( 'Continue Course', 'buddyboss' ); ?><i class="bb-icons-rl-caret-right"></i>
+							<?php esc_html_e( 'Continue Course', 'buddyboss-platform' ); ?><i class="bb-icons-rl-caret-right"></i>
 						</a>
 						<?php
 					}
 					?>
 				<?php else : ?>
 					<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
-						<?php esc_html_e( 'View Course', 'buddyboss' ); ?>
+						<?php esc_html_e( 'View Course', 'buddyboss-platform' ); ?>
 						<i class="bb-icons-rl-caret-right"></i>
 					</a>
 				<?php endif; ?>
@@ -136,7 +139,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 			<?php
 			$course_update_date = BB_Readylaunch_Memberpress_Courses_Helper::bb_rl_mpcs_get_course_update_date( $course->ID, get_option( 'date_format' ) );
 			// translators: %s is the updated date.
-			printf( esc_html__( 'Updated: %s', 'buddyboss' ), esc_html( $course_update_date ) );
+			printf( esc_html__( 'Updated: %s', 'buddyboss-platform' ), esc_html( $course_update_date ) );
 			?>
 		</div>
 		<div class="bb-rl-course-popup-meta">
@@ -144,25 +147,25 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 			$total_lessons = $course->number_of_lessons();
 			?>
 			<span class="bb-rl-course-meta-tag"><?php echo esc_html( $total_lessons ); ?></span>
-			<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Lessons', 'buddyboss' ); ?></span>
+			<span class="bb-rl-course-meta-tag"><?php esc_html_e( 'Lessons', 'buddyboss-platform' ); ?></span>
 		</div>
 		<div class="bb-rl-course-popup-caption">
 			<?php the_excerpt(); ?>
 		</div>
 		<div class="bb-rl-course-author">
-			<h4><?php esc_html_e( 'Instructor', 'buddyboss' ); ?></h4>
+			<h4><?php esc_html_e( 'Instructor', 'buddyboss-platform' ); ?></h4>
 			<?php
 			$author_id   = get_the_author_meta( 'ID' );
 			$author_name = bp_core_get_user_displayname( $user_id );
 			?>
 			<span class="bb-rl-author-avatar">
 				<?php
-				echo bp_core_fetch_avatar(
+				echo wp_kses_post( bp_core_fetch_avatar(
 					array(
 						'item_id' => $user_id,
 						'html' => true,
 					)
-				);
+				) );
 				?>
 			</span>
 			<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>
@@ -175,14 +178,14 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 					?>
 					<a href="<?php echo esc_url( get_permalink( $next_lesson->ID ) ); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 						<i class="bb-icons-rl-play"></i>
-						<?php esc_html_e( 'Continue', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Continue', 'buddyboss-platform' ); ?>
 					</a>
 					<?php
 				} else {
 					?>
 					<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 						<i class="bb-icons-rl-play"></i>
-						<?php esc_html_e( 'Continue', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Continue', 'buddyboss-platform' ); ?>
 					</a>
 					<?php
 				}
@@ -190,7 +193,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 				?>
 				<a href="<?php the_permalink(); ?>" class="bb-rl-course-link bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 					<i class="bb-icons-rl-play"></i>
-					<?php esc_html_e( 'View Course', 'buddyboss' ); ?>
+					<?php esc_html_e( 'View Course', 'buddyboss-platform' ); ?>
 				</a>
 			<?php endif; ?>
 		</div>

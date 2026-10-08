@@ -43,7 +43,7 @@ class BP_Bbp_Gdpr_Forums {
 	 */
 	function register_exporter( $exporters ) {
 		$exporters['bbp-forum'] = array(
-			'exporter_friendly_name' => __( 'Forums', 'buddyboss' ),
+			'exporter_friendly_name' => __( 'Forums', 'buddyboss-platform' ),
 			'callback'               => array( $this, 'forums_exporter' ),
 		);
 
@@ -61,7 +61,7 @@ class BP_Bbp_Gdpr_Forums {
 	 */
 	function erase_exporter( $erasers ) {
 		$erasers['bbp-forum'] = array(
-			'eraser_friendly_name' => __( 'Forums', 'buddyboss' ),
+			'eraser_friendly_name' => __( 'Forums', 'buddyboss-platform' ),
 			'callback'             => array( $this, 'forums_eraser' ),
 		);
 
@@ -102,34 +102,34 @@ class BP_Bbp_Gdpr_Forums {
 
 				$group_id = 'bbp-forums';
 
-				$group_label = __( 'Forums', 'buddyboss' );
+				$group_label = __( 'Forums', 'buddyboss-platform' );
 
 				$permalink = get_permalink( $forum->ID );
 
 				// Plugins can add as many items in the item data array as they want
 				$data = array(
 					array(
-						'name'  => __( 'Forum Author', 'buddyboss' ),
+						'name'  => __( 'Forum Author', 'buddyboss-platform' ),
 						'value' => $user->display_name,
 					),
 					array(
-						'name'  => __( 'Forum Author Email', 'buddyboss' ),
+						'name'  => __( 'Forum Author Email', 'buddyboss-platform' ),
 						'value' => $user->user_email,
 					),
 					array(
-						'name'  => __( 'Forum Title', 'buddyboss' ),
+						'name'  => __( 'Forum Title', 'buddyboss-platform' ),
 						'value' => $forum->post_title,
 					),
 					array(
-						'name'  => __( 'Forum Content', 'buddyboss' ),
+						'name'  => __( 'Forum Content', 'buddyboss-platform' ),
 						'value' => $forum->post_content,
 					),
 					array(
-						'name'  => __( 'Forum Date', 'buddyboss' ),
+						'name'  => __( 'Forum Date', 'buddyboss-platform' ),
 						'value' => $forum->post_date,
 					),
 					array(
-						'name'  => __( 'Forum URL', 'buddyboss' ),
+						'name'  => __( 'Forum URL', 'buddyboss-platform' ),
 						'value' => $permalink,
 					),
 				);

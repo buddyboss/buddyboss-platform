@@ -155,15 +155,16 @@ abstract class BP_Attachment {
 		 * Custom errors will start at 9 code
 		 */
 		$upload_errors = array(
-			0 => __( 'The file was uploaded successfully', 'buddyboss' ),
-			1 => __( 'The uploaded file exceeds the maximum allowed file size for this site', 'buddyboss' ),
-			2 => sprintf( __( 'The uploaded file exceeds the maximum allowed file size of: %s', 'buddyboss' ), size_format( $this->original_max_filesize ) ),
-			3 => __( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-			4 => __( 'No file was uploaded.', 'buddyboss' ),
+			0 => __( 'The file was uploaded successfully', 'buddyboss-platform' ),
+			1 => __( 'The uploaded file exceeds the maximum allowed file size for this site', 'buddyboss-platform' ),
+			/* translators: %s: maximum allowed file size. */
+			2 => sprintf( __( 'The uploaded file exceeds the maximum allowed file size of: %s', 'buddyboss-platform' ), size_format( $this->original_max_filesize ) ),
+			3 => __( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
+			4 => __( 'No file was uploaded.', 'buddyboss-platform' ),
 			5 => '',
-			6 => __( 'Missing a temporary folder.', 'buddyboss' ),
-			7 => __( 'Failed to write file to disk.', 'buddyboss' ),
-			8 => __( 'File upload stopped by extension.', 'buddyboss' ),
+			6 => __( 'Missing a temporary folder.', 'buddyboss-platform' ),
+			7 => __( 'Failed to write file to disk.', 'buddyboss-platform' ),
+			8 => __( 'File upload stopped by extension.', 'buddyboss-platform' ),
 		);
 
 		if ( ! array_intersect_key( $upload_errors, (array) $param ) ) {
@@ -286,8 +287,11 @@ abstract class BP_Attachment {
 	 * @return string
 	 */
 	public function sanitize_utf8_filename( $retval ) {
+		// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
+		$is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval );
+
 		// PHP 5.4+ or with PECL intl 2.0+
-		if ( function_exists( 'transliterator_transliterate' ) && seems_utf8( $retval ) ) {
+		if ( function_exists( 'transliterator_transliterate' ) && $is_valid_utf8 ) {
 			$retval = transliterator_transliterate( 'Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove', $retval );
 
 			// Older.
@@ -298,7 +302,9 @@ abstract class BP_Attachment {
 			$new_retval = wp_check_invalid_utf8( $retval, true );
 
 			// Still here? use iconv().
-			if ( empty( $new_retval ) && function_exists( 'iconv' ) && seems_utf8( $retval ) ) {
+			// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
+			$is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval );
+			if ( empty( $new_retval ) && function_exists( 'iconv' ) && $is_valid_utf8 ) {
 				$retval = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $retval );
 			} else {
 				$retval = $new_retval;
@@ -463,12 +469,12 @@ abstract class BP_Attachment {
 		);
 
 		if ( empty( $r['original_file'] ) || ! file_exists( $r['original_file'] ) ) {
-			$wp_error->add( 'crop_error', __( 'Cropping the file failed: missing source file.', 'buddyboss' ) );
+			$wp_error->add( 'crop_error', __( 'Cropping the file failed: missing source file.', 'buddyboss-platform' ) );
 			return $wp_error;
 		}
 
 		// Check image file pathes.
-		$path_error = __( 'Cropping the file failed: the file path is not allowed.', 'buddyboss' );
+		$path_error = __( 'Cropping the file failed: the file path is not allowed.', 'buddyboss-platform' );
 
 		// Make sure it's coming from an uploaded file.
 		if ( false === strpos( $r['original_file'], $this->upload_path ) ) {
@@ -490,13 +496,13 @@ abstract class BP_Attachment {
 		$check_types = array(
 			'src_file' => array(
 				'file'  => $r['original_file'],
-				'error' => __( 'source file', 'buddyboss' ),
+				'error' => __( 'source file', 'buddyboss-platform' ),
 			),
 		);
 		if ( ! empty( $r['dst_file'] ) ) {
 			$check_types['dst_file'] = array(
 				'file'  => $r['dst_file'],
-				'error' => __( 'destination file', 'buddyboss' ),
+				'error' => __( 'destination file', 'buddyboss-platform' ),
 			);
 		}
 
@@ -518,7 +524,8 @@ abstract class BP_Attachment {
 			$ext      = $is_image['ext'];
 
 			if ( empty( $ext ) || empty( $supported_image_types[ $ext ] ) ) {
-				$wp_error->add( 'crop_error', sprintf( __( 'Cropping the file failed: %s is not a supported image file.', 'buddyboss' ), $file['error'] ) );
+				/* translators: %s: file label (source file or destination file). */
+				$wp_error->add( 'crop_error', sprintf( __( 'Cropping the file failed: %s is not a supported image file.', 'buddyboss-platform' ), $file['error'] ) );
 				return $wp_error;
 			}
 		}
@@ -551,8 +558,8 @@ abstract class BP_Attachment {
 			'file_data_name'    => $this->file_input,
 			'max_file_size'     => $this->original_max_filesize,
 			'feedback_messages' => array(
-				1 => __( 'Sorry, uploading the file failed.', 'buddyboss' ),
-				2 => __( 'File successfully uploaded.', 'buddyboss' ),
+				1 => __( 'Sorry, uploading the file failed.', 'buddyboss-platform' ),
+				2 => __( 'File successfully uploaded.', 'buddyboss-platform' ),
 			),
 		);
 
@@ -654,7 +661,7 @@ abstract class BP_Attachment {
 
 		if ( is_wp_error( $editor ) ) {
 			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
-				return new WP_Error( 'image_no_editor', esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
+				return new WP_Error( 'image_no_editor', esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-platform' ) );
 			}
 
 			return $editor;

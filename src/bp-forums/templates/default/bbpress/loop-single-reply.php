@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="post-<?php bbp_reply_id(); ?>" class="bbp-reply-header">
@@ -17,7 +20,7 @@
 		<?php if ( bbp_is_single_user_replies() ) : ?>
 
 			<span class="bbp-header">
-				<?php _e( 'in reply to: ', 'buddyboss' ); ?>
+				<?php esc_html_e( 'in reply to: ', 'buddyboss-platform' ); ?>
 				<a class="bbp-topic-permalink" href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a>
 			</span>
 
