@@ -138,6 +138,32 @@ class BP_Tests_Messages_Avatars extends BP_UnitTestCase {
 		$this->assertSame( $expected, $this->avatar_ids( $thread_id, $sender ) );
 	}
 
+	/**
+	 * The avatar helper itself must not load the full recipient list.
+	 *
+	 * On a cold cache get_messages() loads the full list through is_thread_recipient(), so the messages
+	 * cache is warmed first and the full-list key removed; the helper then has to work from the recipient
+	 * page and the total alone. This test fails when the helper reads get_recipients_for_thread() again.
+	 */
+	public function test_avatars_do_not_load_full_recipient_list() {
+		$sender  = self::factory()->user->create();
+		$members = self::factory()->user->create_many( 30 );
+
+		$thread_id = $this->create_thread( $sender, $members );
+
+		wp_cache_flush();
+		$this->set_current_user( $sender );
+
+		// Warm the messages cache, then drop the full recipient list.
+		BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
+		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
+
+		$avatars = bp_messages_get_avatars( $thread_id, $sender );
+
+		$this->assertCount( 2, $avatars );
+		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' ), 'bp_messages_get_avatars() must not load the full recipient list.' );
+	}
+
 	public function test_recipients_filter_is_still_applied() {
 		$sender  = self::factory()->user->create();
 		$members = self::factory()->user->create_many( 15 );

@@ -134,6 +134,13 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 		$this->assertSame( $thread_id, (int) BP_Messages_Message::get_existing_thread( array( $u3, $u2 ), $u1 ) );
 	}
 
+	/**
+	 * The lookup result for two users is their one-to-one thread even when a larger thread holds both.
+	 *
+	 * This proves the result only: the final `HAVING recipient_list` already drops the large thread, so
+	 * the assertion holds on the release query too. The query shape (the large thread never reaching
+	 * GROUP_CONCAT) is covered by test_existing_thread_lookup_does_not_group_large_threads().
+	 */
 	public function test_existing_thread_skips_large_thread_the_sender_belongs_to() {
 		$sender  = self::factory()->user->create();
 		$partner = self::factory()->user->create();
@@ -147,6 +154,88 @@ class BP_Tests_Messages_Existing_Threads extends BP_UnitTestCase {
 
 		$threads = BP_Messages_Message::get_existing_threads( array( $partner ), $sender, true );
 		$this->assertSame( array( $one_to_one ), array_map( 'intval', wp_list_pluck( $threads, 'thread_id' ) ) );
+	}
+
+	/**
+	 * Captured FROM / WHERE of the lookup query, filled by the capture filters below.
+	 *
+	 * @var array
+	 */
+	protected $captured_lookup_sql = array();
+
+	/**
+	 * Capture the WHERE clause of the exact-recipient lookup (only when having_sql is set).
+	 *
+	 * @param string $where_sql WHERE clause.
+	 * @param array  $r         Query arguments.
+	 *
+	 * @return string
+	 */
+	public function capture_lookup_where( $where_sql, $r ) {
+		if ( ! empty( $r['having_sql'] ) ) {
+			$this->captured_lookup_sql['where'] = $where_sql;
+		}
+
+		return $where_sql;
+	}
+
+	/**
+	 * Capture the FROM / JOIN clause of the exact-recipient lookup (only when having_sql is set).
+	 *
+	 * @param string $from_sql FROM clause.
+	 * @param array  $r        Query arguments.
+	 *
+	 * @return string
+	 */
+	public function capture_lookup_from( $from_sql, $r ) {
+		if ( ! empty( $r['having_sql'] ) ) {
+			$this->captured_lookup_sql['from'] = $from_sql;
+		}
+
+		return $from_sql;
+	}
+
+	/**
+	 * A large thread the sender belongs to must never reach the GROUP_CONCAT / HAVING step.
+	 *
+	 * The release prefilter kept every thread that held any of the users, so a 23,467-recipient thread
+	 * was joined to its messages before HAVING dropped it (36-145 s on the customer data, PROD-9747).
+	 * The fix narrows the prefilter to threads whose recipient set is exactly the requested one. This
+	 * test fails when the prefilter is reverted to the release shape.
+	 */
+	public function test_existing_thread_lookup_does_not_group_large_threads() {
+		global $wpdb;
+
+		$sender  = self::factory()->user->create();
+		$partner = self::factory()->user->create();
+		$others  = self::factory()->user->create_many( 25 );
+
+		$large      = $this->create_thread( $sender, array_merge( array( $partner ), $others ) );
+		$one_to_one = $this->create_thread( $sender, array( $partner ) );
+
+		$this->captured_lookup_sql = array();
+		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'capture_lookup_where' ), 999, 2 );
+		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'capture_lookup_from' ), 999, 2 );
+
+		$threads = BP_Messages_Message::get_existing_threads( array( $partner ), $sender, true );
+
+		remove_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'capture_lookup_where' ), 999 );
+		remove_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'capture_lookup_from' ), 999 );
+
+		// The result is unchanged.
+		$this->assertSame( array( $one_to_one ), array_map( 'intval', wp_list_pluck( $threads, 'thread_id' ) ) );
+
+		$this->assertArrayHasKey( 'from', $this->captured_lookup_sql, 'The lookup query was not captured.' );
+		$this->assertArrayHasKey( 'where', $this->captured_lookup_sql, 'The lookup query was not captured.' );
+
+		// The threads that reach GROUP_CONCAT / HAVING are those left by the prefilter.
+		$grouped = array_map(
+			'intval',
+			$wpdb->get_col( "SELECT DISTINCT m.thread_id {$this->captured_lookup_sql['from']} {$this->captured_lookup_sql['where']}" ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		);
+
+		$this->assertContains( $one_to_one, $grouped );
+		$this->assertNotContains( $large, $grouped, 'The large thread must not reach GROUP_CONCAT / HAVING.' );
 	}
 
 	/**
