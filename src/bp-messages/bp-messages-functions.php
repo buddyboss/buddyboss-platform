@@ -1940,6 +1940,7 @@ function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $use
  * Send digest email into background.
  *
  * @since BuddyBoss 2.1.4
+ * @since BuddyBoss [BBVERSION] Derives each recipient's email type from their own unread count.
  *
  * @param array $recipient_messages Message array.
  * @param int   $thread_id          ID of the thread.
@@ -1988,6 +1989,9 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 		$group_id = 0;
 	}
 
+	// The thread-level digest type. Each recipient's email type is derived from it below.
+	$digest_email_type = $email_type;
+
 	$message_slug = bp_get_messages_slug();
 
 	static $moderation = array();
@@ -2028,6 +2032,11 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 			continue;
 		}
 
+		// Type this recipient's email by their own unread count. $email_type is shared
+		// across the loop, so a single-message recipient must not leave the single type
+		// in place for a later recipient who has several unread messages — that turned
+		// their digest into a one-message email and dropped the rest.
+		$email_type = $digest_email_type;
 		if ( 1 === count( $messages ) ) {
 			if ( ! empty( $group_id ) ) {
 				$email_type = 'group-message-email';

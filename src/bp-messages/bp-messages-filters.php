@@ -1092,12 +1092,77 @@ function bb_schedule_event_on_update_notification_settings() {
 add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
 
 /**
+ * Re-create the delayed message email event when it is missing.
+ *
+ * With delayed emails on, new-message emails are only sent by this event, so a site
+ * without it sends none. Saving the Settings 2.0 Messages panel from 3.0.0 until [BBVERSION] removed
+ * the event without re-adding it, and nothing repaired it on upgrade. This checks on every
+ * load and schedules the event only when none exists, so an existing schedule is never
+ * changed. Only the root blog, where the delay settings live, gets the event.
+ *
+ * Runs on `bp_init` priority 11: the BuddyBoss cron intervals are registered on `bp_init`
+ * priority 10, and wp_schedule_event() rejects an unknown recurrence. The event is scheduled
+ * directly rather than through bp_core_schedule_cron(), so the BP_Core_Cron singleton is not
+ * built earlier than on release, which would start scheduling unrelated declared crons.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_messages_maybe_schedule_digest_email_notifications() {
+
+	// The settings live on the root blog and the save paths only (un)schedule there. On a
+	// network-activated multisite, an event on a subsite would process the same global
+	// messages and never be removed when the delay is turned off.
+	if ( ! bp_is_root_blog() ) {
+		return;
+	}
+
+	// A legacy settings save schedules or removes the event itself in this request
+	// (bb_schedule_event_on_update_notification_settings()), and the option still holds
+	// the old value until that save runs — so leave this request to it.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( isset( $_POST['time_delay_email_notification'] ) ) {
+		return;
+	}
+
+	if ( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'bb_check_delay_email_notification' ) || ! bb_check_delay_email_notification() ) {
+		return;
+	}
+
+	$schedule = bb_get_delay_notification_time_by_minutes( bb_get_delay_email_notifications_time() );
+	if ( empty( $schedule['schedule_key'] ) ) {
+		return;
+	}
+
+	// The same per-hook veto BP_Core_Cron::schedule() applies to declared crons.
+	if ( ! apply_filters( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', true ) ) {
+		return;
+	}
+
+	wp_schedule_event( time(), $schedule['schedule_key'], 'bb_digest_email_notifications_hook' );
+}
+add_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications', 11 );
+
+/**
  * Prepare the email notification content.
  *
  * @since BuddyBoss 2.1.4
+ * @since BuddyBoss [BBVERSION] Sends nothing while delayed emails are not in effect.
  */
 function bb_digest_message_email_notifications() {
 	global $wpdb;
+
+	// The digest only replaces the immediate new-message emails while delayed emails are in
+	// effect — the check messages_notification_new_message() and the group senders use to
+	// stand down. Otherwise (legacy preferences, delay off, Notifications component off) the
+	// immediate email has already been sent, and an event left scheduled would send it again.
+	if ( ! function_exists( 'bb_check_delay_email_notification' ) || ! bb_check_delay_email_notification() ) {
+		return;
+	}
+
 	$bp_prefix = bp_core_get_table_prefix();
 
 	// Get all defined time.
