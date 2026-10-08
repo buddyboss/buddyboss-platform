@@ -861,10 +861,12 @@ function bp_core_get_js_strings_callback( $params ) {
 	if ( is_user_logged_in() ) {
 		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
 			array(
-				'fields'      => 'ids',
-				'user_id'     => bp_loggedin_user_id(),
-				'is_hidden'   => true,
-				'thread_type' => 'archived',
+				'fields'                         => 'ids',
+				'user_id'                        => bp_loggedin_user_id(),
+				'is_hidden'                      => true,
+				'thread_type'                    => 'archived',
+				// Same rule as the archived list, so the flag does not count threads the list hides.
+				'exclude_disabled_group_threads' => true,
 			)
 		);
 
@@ -981,6 +983,36 @@ function bb_messages_validate_groups_thread( $thread_id ) {
 }
 
 add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' );
+
+/**
+ * Hide group threads from the message lists while "Group Messages" is disabled.
+ *
+ * The header dropdown, the Messages sidebar and the inbox screens load their threads with the
+ * 'messages' query string, so only those lists change; other callers of the thread query keep
+ * group threads (existing-thread lookup on send, user deletion, attachment access checks).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|array $querystring        Query string for the current request.
+ * @param string       $querystring_object Object the query string is used for.
+ *
+ * @return string|array
+ */
+function bb_messages_exclude_disabled_group_threads_querystring( $querystring, $querystring_object ) {
+	if ( 'messages' !== $querystring_object || ! function_exists( 'bp_disable_group_messages' ) || true === bp_disable_group_messages() ) {
+		return $querystring;
+	}
+
+	if ( is_array( $querystring ) ) {
+		$querystring['exclude_disabled_group_threads'] = true;
+	} else {
+		$querystring .= '&exclude_disabled_group_threads=1';
+	}
+
+	return $querystring;
+}
+
+add_filter( 'bp_ajax_querystring', 'bb_messages_exclude_disabled_group_threads_querystring', 20, 2 );
 
 /**
  * Display the html for the notification preferences actions.

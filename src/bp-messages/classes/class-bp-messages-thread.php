@@ -880,6 +880,8 @@ class BP_Messages_Thread {
 	 * @type int    $page         The page number to get. Defaults to null.
 	 * @type string $search_terms The search term to use. Defaults to ''.
 	 * @type array  $meta_query   Meta query arguments. See WP_Meta_Query for more details.
+	 * @type bool   $exclude_disabled_group_threads Exclude the group threads that cannot be opened while
+	 *                                "Group Messages" is disabled. Defaults to false. @since BuddyBoss [BBVERSION]
 	 * }
 	 * @return array|bool Array on success. Boolean false on failure.
 	 */
@@ -1159,6 +1161,14 @@ class BP_Messages_Thread {
 			$where_sql .= ' AND ' . implode( ' AND ', $additional_where );
 		}
 
+		// Hide whole group threads from the lists while "Group Messages" is disabled; the open check refuses them.
+		if ( ! empty( $r['exclude_disabled_group_threads'] ) ) {
+			$disabled_group_thread_ids = bb_messages_get_disabled_group_thread_ids();
+			if ( ! empty( $disabled_group_thread_ids ) ) {
+				$where_sql .= ' AND r.thread_id NOT IN (' . implode( ',', array_map( 'intval', $disabled_group_thread_ids ) ) . ')';
+			}
+		}
+
 		// Process meta query into SQL.
 		$meta_query = self::get_meta_query_sql( $r['meta_query'] );
 		if ( ! empty( $meta_query['join'] ) ) {
@@ -1178,10 +1188,14 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['having_sql'] ) ) {
 			if ( strpos( $r['having_sql'], 'HAVING recipient_list' ) !== false ) {
 				preg_match_all( '!\d+!', $r['having_sql'], $matches );
-				$recipient_list = array_filter( array_unique( bp_array_flatten( $matches ) ) );
+				$recipient_list = array_filter( array_unique( array_map( 'intval', bp_array_flatten( $matches ) ) ) );
 				if ( ! empty( $recipient_list ) ) {
-					$recipient_list = implode( ',', array_unique( $recipient_list ) );
-					$where_sql     .= " AND m.thread_id IN ( SELECT DISTINCT thread_id from {$bp->messages->table_name_recipients} where user_id in ({$recipient_list}) ) ";
+					$recipient_count = count( $recipient_list );
+					$recipient_list  = implode( ',', $recipient_list );
+
+					// Keep only threads whose recipients are exactly these users, using the recipients table alone.
+					// Joining every recipient of a very large thread to its messages for GROUP_CONCAT takes minutes.
+					$where_sql .= " AND m.thread_id IN ( SELECT thread_id FROM ( SELECT thread_id FROM {$bp->messages->table_name_recipients} WHERE thread_id IN ( SELECT thread_id FROM {$bp->messages->table_name_recipients} WHERE user_id IN ({$recipient_list}) ) GROUP BY thread_id HAVING COUNT( DISTINCT user_id ) = {$recipient_count} AND COUNT( DISTINCT CASE WHEN user_id IN ({$recipient_list}) THEN user_id END ) = {$recipient_count} ) AS bb_matched_threads ) ";
 				}
 			}
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';

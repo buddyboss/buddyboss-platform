@@ -671,6 +671,7 @@ window.bp = window.bp || {};
 					data: {
 						action: $this.hasClass( 'view_other_members' ) ? 'messages_left_join_members_list' : 'messages_moderated_recipient_list',
 						post_data: postData,
+						nonce: bbRlNonces.messages,
 					},
 					beforeSend: function () {
 						$( '#message-members-list #members_list' ).empty().removeClass( 'is_not_empty' );
@@ -730,6 +731,7 @@ window.bp = window.bp || {};
 				data: {
 					action: 'messages_recipient_list_for_blocks',
 					post_data: postData,
+					nonce: bbRlNonces.messages,
 				},
 				beforeSend: function () {
 					$( '#load_more_rl' ).addClass( 'loading' );
@@ -982,6 +984,7 @@ window.bp = window.bp || {};
 					data: {
 						action: 'messages_moderated_recipient_list',
 						post_data: postData,
+						nonce: bbRlNonces.messages,
 					},
 					beforeSend: function () {
 						if ( $( '.mass-block-member' ).length > 0 || $( '.mass-report-member' ).length > 0 ) {
@@ -1467,6 +1470,22 @@ window.bp = window.bp || {};
 				);
 
 				self.createCookie( 'bb-thread-unarchive', '', -1 );
+			}
+
+			var group_messages_disabled = self.readCookie( 'bb-group-messages-disabled' );
+			if ( group_messages_disabled ) {
+				jQuery( document ).trigger(
+					'bb_trigger_toast_message',
+					[
+						'',
+						group_messages_disabled,
+						'warning',
+						null,
+						true
+					]
+				);
+
+				self.createCookie( 'bb-group-messages-disabled', '', -1 );
 			}
 
 			// Show detail page in mobile after un-archived thread.
@@ -5685,6 +5704,22 @@ window.bp = window.bp || {};
 
 			messagesFetchError: function( collection, response ) {
 				var loadMore;
+
+				// Group messages are disabled: refresh the page and show the reason as a toast, like a deleted conversation (PROD-3077).
+				if ( response && response.group_messages_disabled ) {
+					bp.Nouveau.Messages.createCookie( 'bb-group-messages-disabled', response.feedback, 5 );
+
+					// Back to the list the conversation was opened from.
+					var group_messages_disabled_url = 'archived' === bp.Nouveau.Messages.threadType ? bbRlMessageArchivedUrl : bbRlMessageUrl;
+
+					if ( 'undefined' !== typeof group_messages_disabled_url && '' !== group_messages_disabled_url ) {
+						window.location.href = group_messages_disabled_url;
+					} else {
+						window.location.reload();
+					}
+					return;
+				}
+
 				if ( ! response.messages ) {
 					collection.hasMore = false;
 				}

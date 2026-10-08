@@ -36,6 +36,8 @@ defined( 'ABSPATH' ) || exit;
  *                                Default: 'mpage'.
  *     @type array  $meta_query   Meta query arguments. Only applicable if $box is
  *                                not 'notices'. See WP_Meta_Query more details.
+ *     @type bool   $exclude_disabled_group_threads Exclude the group threads that cannot be opened while
+ *                                "Group Messages" is disabled. Default: false. @since BuddyBoss [BBVERSION]
  * }
  * @return bool True if there are threads to display, otherwise false.
  */
