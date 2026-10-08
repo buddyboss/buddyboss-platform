@@ -50,6 +50,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		remove_filter( 'bb_enable_legacy_notification_preference', '__return_true' );
 		remove_filter( 'bp_get_root_blog_id', array( $this, 'other_root_blog_id' ) );
 		remove_filter( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', array( $this, 'veto_digest_event' ) );
+		remove_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
+		remove_action( 'bp_send_email', array( $this, 'capture_email' ), 10 );
 		parent::tearDown();
 	}
 
@@ -127,7 +129,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	}
 
 	/**
-	 * Repair — a site that lost the event (e.g. a Settings 2.0 save on 3.0.0–3.5.0) gets it back
+	 * Repair — a site that lost the event (e.g. a Settings 2.0 save from 3.0.0 until [BBVERSION]) gets it back
 	 * on the next load, with the saved interval.
 	 */
 	public function test_missing_digest_event_is_recreated_on_load() {
@@ -160,8 +162,8 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	}
 
 	/**
-	 * Repair — no event when delayed emails are off: the digest callback does not check the
-	 * setting, so an event here would send duplicates of the immediate emails.
+	 * Repair — no event when delayed emails are off: the immediate emails are sent then, so a
+	 * digest event has nothing to deliver.
 	 */
 	public function test_no_digest_event_on_load_when_delay_is_disabled() {
 		bp_update_option( 'delay_email_notification', 0 );
@@ -279,5 +281,96 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->run_load_time_schedule();
 
 		$this->assertFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) );
+	}
+
+	/**
+	 * Settings 2.0 save — no event while delayed emails are not in effect, even though the
+	 * stored option is on. The immediate message emails stand down only when
+	 * bb_check_delay_email_notification() is true (it is false, or undefined, with the
+	 * Notifications component off), so an event here would email every message twice.
+	 */
+	public function test_settings_2_0_save_does_not_schedule_when_delay_is_not_in_effect() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'time_delay_email_notification', 15 );
+
+		// Positive control: the same save schedules while delay is in effect.
+		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 1 ) );
+		$this->assertNotFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ), 'precondition: the save schedules while delay is in effect' );
+
+		add_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
+		$this->assertFalse( bb_check_delay_email_notification(), 'precondition: delay is not in effect' );
+
+		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'delay_email_notification' => 1 ) );
+
+		$this->assertFalse( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) );
+	}
+
+	/**
+	 * Emails captured on the `bp_send_email` action.
+	 *
+	 * @var array
+	 */
+	protected $sent = array();
+
+	/**
+	 * Capture an email handed to `bp_send_email`.
+	 *
+	 * @param BP_Email $email      Email object.
+	 * @param string   $email_type Email type.
+	 * @param mixed    $to         Recipient.
+	 */
+	public function capture_email( $email, $email_type, $to ) {
+		$this->sent[] = array( $email_type, $to instanceof WP_User ? (int) $to->ID : (int) $to );
+	}
+
+	/**
+	 * Digest producer — an event left scheduled from any source (a component toggle, a 2.x
+	 * install, a third-party scheduler) must not email messages whose immediate email already
+	 * went out because delayed emails are not in effect.
+	 */
+	public function test_digest_sends_nothing_when_delay_is_not_in_effect() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'time_delay_email_notification', 15 );
+
+		$sender    = self::factory()->user->create();
+		$recipient = self::factory()->user->create();
+
+		$this->sent = array();
+		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
+
+		// While the delay is in effect the send is suppressed and the message waits for the digest.
+		messages_new_message(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $recipient ),
+				'subject'    => 'S',
+				'content'    => 'one',
+			)
+		);
+		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
+
+		// Positive control: the digest delivers it.
+		bb_digest_message_email_notifications();
+		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'precondition: the digest emails the waiting message' );
+
+		// Delay is no longer in effect, so the next message is emailed at once.
+		add_filter( 'bb_delay_email_notifications_enabled', '__return_false' );
+		$this->sent = array();
+		$thread_id  = messages_new_message(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $recipient ),
+				'subject'    => 'S',
+				'content'    => 'two',
+			)
+		);
+		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'precondition: the immediate email went out' );
+		$message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+
+		$this->sent = array();
+		bb_digest_message_email_notifications();
+
+		$this->assertSame( array(), $this->sent, 'the digest must not email it a second time' );
+		$this->assertEmpty( bp_messages_get_meta( $message_id, 'bb_sent_digest_email' ), 'the message is left untouched' );
 	}
 }

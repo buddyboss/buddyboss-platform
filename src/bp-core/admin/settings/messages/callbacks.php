@@ -45,6 +45,7 @@ function bb_messages_sanitize_delay_time( $value ) {
  *
  * @since BuddyBoss 3.0.0
  * @since BuddyBoss [BBVERSION] Schedules the event directly; bp_core_schedule_cron() cannot schedule after `bp_init`.
+ *                               Schedules only while delayed emails are in effect (bb_check_delay_email_notification()).
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings (JSON decoded).
@@ -75,9 +76,11 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 		wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
 	}
 
-	// Re-schedule the cron event if delay is enabled.
-	$is_enabled = (bool) bp_get_option( 'delay_email_notification', 1 );
-	if ( $is_enabled ) {
+	// Re-schedule the cron event only while delayed emails are in effect — the same check the
+	// immediate message emails use to stand down (it is false, or undefined, when the
+	// Notifications component is off). Otherwise those emails still go out at once and the
+	// digest would send every message a second time.
+	if ( function_exists( 'bb_check_delay_email_notification' ) && bb_check_delay_email_notification() ) {
 		$new_time     = absint( bp_get_option( 'time_delay_email_notification', 15 ) );
 		$new_schedule = bb_get_delay_notification_time_by_minutes( $new_time );
 
