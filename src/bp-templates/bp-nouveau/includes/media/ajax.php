@@ -1293,7 +1293,7 @@ function bp_nouveau_ajax_media_description_save() {
 
 	$attachment = get_post( $attachment_id );
 
-	if ( empty( $attachment ) && ( 'attachment' !== $attachment->post_type ) ) {
+	if ( empty( $attachment ) || 'attachment' !== $attachment->post_type ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
@@ -1307,39 +1307,51 @@ function bp_nouveau_ajax_media_description_save() {
 	$video_id    = get_post_meta( $attachment_id, 'bp_video_id', true );
 	$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
 
+	// Items created before the attachment meta existed: resolve the owning item from its table.
+	if ( empty( $media_id ) && empty( $video_id ) && empty( $document_id ) ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		if ( ! empty( $bp->media->table_name ) ) {
+			$owner_row = $wpdb->get_row( $wpdb->prepare( "SELECT id, type FROM {$bp->media->table_name} WHERE attachment_id = %d LIMIT 1", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			if ( ! empty( $owner_row->id ) ) {
+				if ( 'video' === $owner_row->type ) {
+					$video_id = (int) $owner_row->id;
+				} else {
+					$media_id = (int) $owner_row->id;
+				}
+			}
+		}
+
+		if ( empty( $media_id ) && empty( $video_id ) && bp_is_active( 'document' ) && ! empty( $bp->document->table_name ) ) {
+			$document_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE attachment_id = %d LIMIT 1", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		}
+	}
+
+	// The attachment must belong to an existing media, video or document item the user can edit.
+	$can_edit           = false;
+	$permission_message = esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' );
+
 	if ( ! empty( $media_id ) ) {
-		$media = new BP_Media( $media_id );
+		$media    = new BP_Media( $media_id );
+		$can_edit = ! empty( $media->id ) && (int) $media->attachment_id === (int) $attachment_id && bp_media_user_can_edit( $media );
+	} elseif ( ! empty( $video_id ) && class_exists( 'BP_Video' ) ) {
+		$video              = new BP_Video( $video_id );
+		$can_edit           = ! empty( $video->id ) && (int) $video->attachment_id === (int) $attachment_id && bp_video_user_can_edit( $video );
+		$permission_message = esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' );
+	} elseif ( ! empty( $document_id ) && class_exists( 'BP_Document' ) ) {
+		$document           = new BP_Document( $document_id );
+		$can_edit           = ! empty( $document->id ) && (int) $document->attachment_id === (int) $attachment_id && bp_document_user_can_edit( $document );
+		$permission_message = esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' );
+	}
 
-		if ( ! empty( $media->id ) && ! bp_media_user_can_edit( $media ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' )
-			);
+	if ( ! $can_edit ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			$permission_message
+		);
 
-			wp_send_json_error( $response );
-		}
-	} elseif ( ! empty( $video_id ) ) {
-		$video = new BP_Video( $video_id );
-
-		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' )
-			);
-
-			wp_send_json_error( $response );
-		}
-	} elseif ( ! empty( $document_id ) ) {
-		$document = new BP_Document( $document_id );
-
-		if ( ! empty( $document->id ) && ! bp_document_user_can_edit( $document ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' )
-			);
-
-			wp_send_json_error( $response );
-		}
+		wp_send_json_error( $response );
 	}
 
 	// Added backward compatibility.

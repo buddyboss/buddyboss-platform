@@ -620,6 +620,15 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
+			} elseif ( ! bb_invites_user_can_revoke( $invite->ID ) ) {
+				// Only the inviter (or a moderator) may revoke an invite.
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss' ),
+					array(
+						'status' => 403,
+					)
+				);
 			}
 		}
 

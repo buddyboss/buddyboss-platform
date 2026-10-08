@@ -449,7 +449,8 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $remove_media_data ) ) {
 					foreach ( $remove_media_data as $media_attachment ) {
-						if ( ! empty( $media_attachment['id'] ) && 0 < (int) $media_attachment['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $media_attachment['id'] ) && 0 < (int) $media_attachment['id'] && bb_user_can_manage_draft_attachment( $media_attachment['id'], true ) ) {
 							wp_delete_attachment( $media_attachment['id'], true );
 						}
 					}
@@ -462,7 +463,8 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $remove_document_data ) ) {
 					foreach ( $remove_document_data as $document_attachment ) {
-						if ( ! empty( $document_attachment['id'] ) && 0 < (int) $document_attachment['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $document_attachment['id'] ) && 0 < (int) $document_attachment['id'] && bb_user_can_manage_draft_attachment( $document_attachment['id'], true ) ) {
 							wp_delete_attachment( $document_attachment['id'], true );
 						}
 					}
@@ -475,7 +477,8 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $remove_video_data ) ) {
 					foreach ( $remove_video_data as $video_attachment ) {
-						if ( ! empty( $video_attachment['id'] ) && 0 < (int) $video_attachment['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $video_attachment['id'] ) && 0 < (int) $video_attachment['id'] && bb_user_can_manage_draft_attachment( $video_attachment['id'], true ) ) {
 							wp_delete_attachment( $video_attachment['id'], true );
 						}
 					}
@@ -497,7 +500,7 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $new_media_data ) ) {
 					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
-						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+						if ( ! isset( $new_media_attachment['bb_media_draft'] ) && ! empty( $new_media_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_media_attachment['id'] ) ) {
 							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
 							update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
 						}
@@ -513,7 +516,7 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $new_document_data ) ) {
 					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
-						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+						if ( ! isset( $new_document_attachment['bb_media_draft'] ) && ! empty( $new_document_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_document_attachment['id'] ) ) {
 							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
 							update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
 						}
@@ -529,7 +532,7 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $new_video_data ) ) {
 					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
-						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+						if ( ! isset( $new_video_attachment['bb_media_draft'] ) && ! empty( $new_video_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_video_attachment['id'] ) ) {
 							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
 							update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
 						}

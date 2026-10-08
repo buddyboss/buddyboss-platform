@@ -735,8 +735,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$thread_id = (int) $request->get_param( 'id' );
 			$sender_id = (int) $request->get_param( 'sender_id' );
 
-			// It's an existing thread.
-			if ( $thread_id ) {
+			// Members can only send as themselves; only community moderators may send on behalf of another user.
+			if ( 0 !== $sender_id && bp_loggedin_user_id() !== $sender_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to send a message as another member.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( $thread_id ) {
+				// It's an existing thread.
 				$sender_id = ( 0 !== $sender_id ? $sender_id : bp_loggedin_user_id() );
 
 				if (
@@ -1002,7 +1011,19 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( is_user_logged_in() ) {
-			$retval = true;
+			$retval  = true;
+			$user_id = (int) $request->get_param( 'user_id' );
+
+			// Members can only search their own conversations.
+			if ( 0 !== $user_id && bp_loggedin_user_id() !== $user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -1299,8 +1320,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$previous = $this->prepare_item_for_response( $thread, $request );
 
 		$user_id = bp_loggedin_user_id();
-		if ( ! empty( $request['user_id'] ) ) {
-			$user_id = $request['user_id'];
+
+		// Honour a different user_id only for community moderators.
+		if ( ! empty( $request['user_id'] ) && ( (int) $request['user_id'] === $user_id || bp_current_user_can( 'bp_moderate' ) ) ) {
+			$user_id = (int) $request['user_id'];
 		}
 
 		// Check the user is one of the recipients.
@@ -1414,14 +1437,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 */
 	public function delete_item_permissions_check( $request ) {
 
-		$retval  = $this->get_item_permissions_check( $request );
-		$user_id = bp_loggedin_user_id();
+		$retval = $this->get_item_permissions_check( $request );
 
-		if ( ! empty( $request['user_id'] ) ) {
-			$user_id = $request['user_id'];
-		}
-
-		if ( true === $retval && ! bp_user_can( $user_id, 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) ) ) {
+		// Deleting a thread removes it for every participant: check the caller's own capability,
+		// never that of a client-supplied user_id.
+		if ( true === $retval && ! bp_current_user_can( 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to delete this thread messages.', 'buddyboss' ),

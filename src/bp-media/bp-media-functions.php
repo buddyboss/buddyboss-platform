@@ -3634,7 +3634,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
 
 				if ( 0 < $receiver_id ) {
-					$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+					$attachment_url = $attachment_url . '/' . bb_media_preview_receiver_segment( $receiver_id, $media_id, $attachment_id );
 				}
 			}
 		}

@@ -1317,7 +1317,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
 				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
-					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_media_attachment['bb_media_draft'] ) && ! empty( $new_media_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_media_attachment['id'] ) ) {
 						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1327,7 +1327,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
 				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
-					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_document_attachment['bb_media_draft'] ) && ! empty( $new_document_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_document_attachment['id'] ) ) {
 						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1337,7 +1337,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
 				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
-					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_video_attachment['bb_media_draft'] ) && ! empty( $new_video_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_video_attachment['id'] ) ) {
 						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1368,8 +1368,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 							)
 						);
 					}
-					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
-					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					if ( bb_user_can_manage_draft_attachment( $attachment_id ) ) {
+						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+						update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					}
 				}
 			}
 
@@ -1387,7 +1389,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the medias.
 				if ( ! empty( $medias ) ) {
 					foreach ( $medias as $media ) {
-						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] && bb_user_can_manage_draft_attachment( $media['id'], true ) ) {
 							wp_delete_attachment( $media['id'], true );
 						}
 					}
@@ -1396,7 +1399,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the documents.
 				if ( ! empty( $documents ) ) {
 					foreach ( $documents as $document ) {
-						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] && bb_user_can_manage_draft_attachment( $document['id'], true ) ) {
 							wp_delete_attachment( $document['id'], true );
 						}
 					}
@@ -1405,7 +1409,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the videos.
 				if ( ! empty( $videos ) ) {
 					foreach ( $videos as $video ) {
-						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] && bb_user_can_manage_draft_attachment( $video['id'], true ) ) {
 							wp_delete_attachment( $video['id'], true );
 						}
 					}
@@ -1419,7 +1424,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				true === (bool) $draft_activity['allow_delete_post_feature_image']
 			) {
 				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
-				if ( 0 < (int) $attachment_id ) {
+				if ( 0 < (int) $attachment_id && bb_user_can_manage_draft_attachment( $attachment_id, true ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}
