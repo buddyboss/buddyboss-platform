@@ -4892,7 +4892,7 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in groups or not.
-						if ( bbRlVideo.group_video === false ) {
+						if ( _.isUndefined( bbRlVideo ) || bbRlVideo.group_video === false ) {
 							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 								Backbone.trigger( 'activity_video_close' );
@@ -4933,7 +4933,7 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in profile or not.
-						if ( bbRlVideo.profile_video === false ) {
+						if ( _.isUndefined( bbRlVideo ) || bbRlVideo.profile_video === false ) {
 							if ( 'undefined' === typeof bp.Nouveau.Activity.postForm.dropzone || null === bp.Nouveau.Activity.postForm.dropzone || 'activity-post-video-uploader' === bp.Nouveau.Activity.postForm.dropzone.element.id ) {
 								$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 								Backbone.trigger( 'activity_video_close' );
@@ -6681,7 +6681,7 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in groups or not.
-						if ( bbRlVideo.group_video === false ) {
+						if ( _.isUndefined( bbRlVideo ) || bbRlVideo.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							Backbone.trigger( 'activity_video_close' );
 						} else {
@@ -6715,7 +6715,7 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in groups or not.
-						if ( bbRlVideo.profile_video === false ) {
+						if ( _.isUndefined( bbRlVideo ) || bbRlVideo.profile_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							Backbone.trigger( 'activity_video_close' );
 						} else {
@@ -6759,7 +6759,7 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in groups or not.
-						if ( bbRlVideo.group_video === false ) {
+						if ( _.isUndefined( bbRlVideo ) || bbRlVideo.group_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							$( '#whats-new-attachments .dropzone.video-dropzone' ).removeClass( 'open dz-clickable' ).addClass( 'closed' );
 						} else {
@@ -6794,7 +6794,7 @@ window.bp = window.bp || {};
 						}
 
 						// check video is enable in groups or not.
-						if ( bbRlVideo.profile_video === false ) {
+						if ( _.isUndefined( bbRlVideo ) || bbRlVideo.profile_video === false ) {
 							$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 							$( '#whats-new-attachments .dropzone.video-dropzone' ).removeClass( 'open dz-clickable' ).addClass( 'closed' );
 						} else {
