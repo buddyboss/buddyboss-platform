@@ -251,7 +251,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$default['perm'] = 'readable';
 		}
 
-		$tag = sanitize_title( $request->get_param( 'tag' ) );
+		$tag = sanitize_title( $request->get_param( 'tag' ) ?? '' );
 
 		if ( bbp_allow_topic_tags() && ! empty( $tag ) ) {
 			$default['term']     = bbp_get_topic_tag_slug( $tag );
