@@ -2680,6 +2680,10 @@ function bp_media_download_link( $attachment_id, $media_id ) {
  */
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		// Private Website: send guests to login before any file is streamed.
+		bb_private_network_restrict_download( 'photo' );
+
 		if ( 'folder' !== $_GET['media_type'] ) {
 
 			// Remove action to remove meta query for forums while download check.

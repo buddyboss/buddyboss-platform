@@ -6230,6 +6230,106 @@ function bb_restricate_rss_feed() {
 }
 
 /**
+ * Check whether Private Website blocks the current file download for a guest.
+ *
+ * Document, folder, photo and video downloads are streamed on `init` and exit
+ * before bp_private_network_template_redirect() runs on `template_redirect`,
+ * so they need their own check.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return bool True if the download must be blocked, otherwise false.
+ */
+function bb_is_private_network_download_restricted( $type = '' ) {
+
+	// The option stores 1 for a public site, so false means Private Website is on.
+	if ( is_user_logged_in() || bp_enable_private_network() ) {
+		return false;
+	}
+
+	$restricted = true;
+
+	// Same bypass as bp_private_network_template_redirect() for internal sharing with a valid JWT.
+	foreach ( bb_get_all_headers() as $key => $value ) {
+		if ( 'bb-preview-token' === strtolower( $key ) ) {
+			if ( ! empty( $value ) && bb_validate_jwt( $value ) ) {
+				$restricted = false;
+			}
+			break;
+		}
+	}
+
+	// Same escape hatch as bp_private_network_template_redirect().
+	if ( $restricted && apply_filters( 'bp_private_network_pre_check', false ) ) {
+		$restricted = false;
+	}
+
+	// Keep a download public when its exact URL is listed in "Public Website Content".
+	$public_content = bp_enable_private_network_public_content();
+	if (
+		$restricted
+		&& '' !== $public_content
+		&& ! empty( $_SERVER['HTTP_HOST'] )
+		&& ! empty( $_SERVER['REQUEST_URI'] )
+	) {
+		$current_url = untrailingslashit(
+			( is_ssl() ? 'https://' : 'http://' )
+			. sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) )
+			. esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) )
+		);
+
+		foreach ( preg_split( "/\r\n|\n|\r/", $public_content ) as $public_url ) {
+			$public_url = untrailingslashit( trim( $public_url ) );
+			if (
+				'' !== $public_url
+				&& false !== filter_var( $public_url, FILTER_VALIDATE_URL )
+				&& $current_url === $public_url
+			) {
+				$restricted = false;
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Filters whether Private Website blocks a guest file download.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $restricted Whether the download is blocked.
+	 * @param string $type       Download type: 'document', 'folder', 'photo' or 'video'.
+	 */
+	return (bool) apply_filters( 'bb_is_private_network_download_restricted', $restricted, $type );
+}
+
+/**
+ * Send a guest to the login page when Private Website blocks a file download.
+ *
+ * After login, the member returns to the same download URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return void
+ */
+function bb_private_network_restrict_download( $type = '' ) {
+	if ( ! bb_is_private_network_download_restricted( $type ) ) {
+		return;
+	}
+
+	bp_core_no_access(
+		array(
+			'mode'    => 2,
+			'message' => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+		)
+	);
+	exit();
+}
+
+/**
  * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
  *
  * @since BuddyBoss 1.8.6
