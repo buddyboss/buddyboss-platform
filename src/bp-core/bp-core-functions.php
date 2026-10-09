@@ -6239,6 +6239,8 @@ function bb_restricate_rss_feed() {
  * The `bp_private_network_pre_check` filter is not applied here. Its callbacks are
  * written for page requests (The Events Calendar returns true for any URL with
  * ?ical=1), so downloads use the `bb_is_private_network_download_restricted` filter.
+ * The public Content list is page-level and intentionally not applied; site owners 
+ * can use the new filter instead.
  *
  * @since BuddyBoss [BBVERSION]
  *
