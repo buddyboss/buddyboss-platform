@@ -11779,6 +11779,36 @@ if ( ! function_exists( 'bb_video_get_thumbnail_editable_video' ) ) {
 	}
 }
 
+if ( ! function_exists( 'bb_video_is_trusted_thumbnail' ) ) {
+	/**
+	 * Whether an attachment may be served as a thumbnail (poster) of a video.
+	 *
+	 * A stored poster is trusted only when it is one of the video's auto-generated
+	 * previews, was uploaded by the video owner, or came through the video thumbnail
+	 * uploader. Thumbnail meta pointing at any other attachment is never served.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Video $video         Video object.
+	 * @param int      $attachment_id Thumbnail attachment ID.
+	 *
+	 * @return bool
+	 */
+	function bb_video_is_trusted_thumbnail( $video, $attachment_id ) {
+		$attachment_id = absint( $attachment_id );
+
+		if ( empty( $video->id ) || empty( $attachment_id ) || 'attachment' !== get_post_type( $attachment_id ) ) {
+			return false;
+		}
+
+		$auto_generated = function_exists( 'bb_video_get_auto_generated_preview_ids' ) ? array_map( 'absint', (array) bb_video_get_auto_generated_preview_ids( $video->attachment_id ) ) : array();
+
+		return in_array( $attachment_id, $auto_generated, true ) ||
+			(int) get_post_field( 'post_author', $attachment_id ) === (int) $video->user_id ||
+			(bool) get_post_meta( $attachment_id, 'bp_video_thumbnail_upload', true );
+	}
+}
+
 if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
 	/**
 	 * Check whether an attachment may be used, or deleted, as a thumbnail of a video.
@@ -11902,4 +11932,112 @@ function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = fals
 	 * @param int  $user_id       User ID.
 	 */
 	return (bool) apply_filters( 'bb_user_can_manage_draft_attachment', $can_manage, $attachment_id, $for_delete, $user_id );
+}
+
+if ( ! function_exists( 'bb_user_can_adopt_attachment' ) ) {
+	/**
+	 * Check whether a user may wrap an attachment in a new media, video or document item.
+	 *
+	 * Save handlers (AJAX, forum, message and REST) receive attachment IDs from the client.
+	 * A new item may only wrap the user's own upload that went through the BuddyBoss
+	 * uploader and is not yet bound to a media, video or document item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $attachment_id Attachment ID from the request.
+	 * @param int $user_id       User ID. Default the logged-in user.
+	 *
+	 * @return bool
+	 */
+	function bb_user_can_adopt_attachment( $attachment_id, $user_id = 0 ) {
+		$attachment_id = is_numeric( $attachment_id ) ? absint( $attachment_id ) : 0;
+		$user_id       = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_adopt     = false;
+
+		if (
+			! empty( $attachment_id ) &&
+			! empty( $user_id ) &&
+			'attachment' === get_post_type( $attachment_id ) &&
+			(int) get_post_field( 'post_author', $attachment_id ) === $user_id &&
+			(
+				get_post_meta( $attachment_id, 'bp_media_upload', true ) ||
+				get_post_meta( $attachment_id, 'bp_video_upload', true ) ||
+				get_post_meta( $attachment_id, 'bp_document_upload', true )
+			)
+		) {
+			$can_adopt = true;
+
+			foreach ( array( 'bp_media_id', 'bp_video_id', 'bp_document_id' ) as $meta_key ) {
+				if ( get_post_meta( $attachment_id, $meta_key, true ) ) {
+					$can_adopt = false;
+					break;
+				}
+			}
+		}
+
+		/**
+		 * Filters whether a user may wrap an attachment in a new media, video or document item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool $can_adopt     Whether the user may use the attachment.
+		 * @param int  $attachment_id Attachment ID.
+		 * @param int  $user_id       User ID.
+		 */
+		return (bool) apply_filters( 'bb_user_can_adopt_attachment', $can_adopt, $attachment_id, $user_id );
+	}
+}
+
+if ( ! function_exists( 'bb_media_sanitize_gif_url' ) ) {
+	/**
+	 * Sanitize a GIF still or mp4 value before it is stored.
+	 *
+	 * GIF values come from Giphy and are always http(s) URLs. Anything else, such as an
+	 * integer that the delete-time handlers would treat as an attachment ID, is dropped.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value GIF value from the request.
+	 *
+	 * @return string Sanitized URL, or an empty string when the value is not an http(s) URL.
+	 */
+	function bb_media_sanitize_gif_url( $value ) {
+		if ( ! is_string( $value ) || ! preg_match( '#^https?://#i', $value ) ) {
+			return '';
+		}
+
+		return esc_url_raw( $value, array( 'http', 'https' ) );
+	}
+}
+
+if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
+	/**
+	 * Delete a legacy GIF attachment stored as an integer in `_gif_data`.
+	 *
+	 * Old releases downloaded GIFs into the media library and stored the attachment ID.
+	 * Only such an integer ID is deleted, and only when the attachment was uploaded by the
+	 * author of the activity or post that holds the GIF.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value     The `still` or `mp4` value from `_gif_data`.
+	 * @param int   $author_id User ID of the activity or post author.
+	 *
+	 * @return bool True when the attachment was deleted.
+	 */
+	function bb_media_delete_legacy_gif_attachment( $value, $author_id ) {
+		$author_id = absint( $author_id );
+
+		if (
+			! is_int( $value ) ||
+			$value <= 0 ||
+			empty( $author_id ) ||
+			'attachment' !== get_post_type( $value ) ||
+			(int) get_post_field( 'post_author', $value ) !== $author_id
+		) {
+			return false;
+		}
+
+		return (bool) wp_delete_attachment( $value, true );
+	}
 }

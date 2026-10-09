@@ -605,6 +605,11 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 				}
 			}
 
+			// Only the user's own unsaved upload can become a new document.
+			if ( ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+				continue;
+			}
+
 			if ( 0 === $reply_id && bbp_get_reply_post_type() === get_post_type( $post_id ) ) {
 				$reply_id = $post_id;
 				$topic_id = bbp_get_reply_topic_id( $reply_id );
@@ -788,10 +793,16 @@ function bp_document_attach_document_to_message( &$message ) {
 
 				if ( ! empty( $document_id ) ) {
 
+					// Attach already created media.
+					$document = new BP_Document( $document_id );
+
+					// Only the sender's own document can be attached to the message.
+					if ( empty( $document->id ) || ! in_array( (int) $document->user_id, array( (int) $message->sender_id, bp_loggedin_user_id() ), true ) ) {
+						continue;
+					}
+
 					$document_ids[] = $document_id;
 
-					// Attach already created media.
-					$document             = new BP_Document( $document_id );
 					$document->privacy    = 'message';
 					$document->message_id = $message->id;
 					$document->save();

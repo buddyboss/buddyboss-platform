@@ -670,6 +670,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 					continue;
 				}
 
+				// Only the user's own unsaved upload can become a new media.
+				if ( ! bb_user_can_adopt_attachment( $media['id'] ) ) {
+					continue;
+				}
+
 				$media_id = bp_media_add(
 					array(
 						'attachment_id' => $media['id'],

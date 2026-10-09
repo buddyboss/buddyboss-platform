@@ -457,13 +457,14 @@ function bp_media_delete_activity_gif( $activities ) {
 			$activity_id  = $activity->id;
 			$activity_gif = bp_activity_get_meta( $activity_id, '_gif_data', true );
 
-			if ( ! empty( $activity_gif ) ) {
-				if ( ! empty( $activity_gif['still'] ) && is_int( $activity_gif['still'] ) ) {
-					wp_delete_attachment( (int) $activity_gif['still'], true );
+			// Only legacy GIF attachments uploaded by the activity author are deleted.
+			if ( ! empty( $activity_gif ) && is_array( $activity_gif ) ) {
+				if ( ! empty( $activity_gif['still'] ) ) {
+					bb_media_delete_legacy_gif_attachment( $activity_gif['still'], $activity->user_id );
 				}
 
-				if ( ! empty( $activity_gif['mp4'] ) && is_int( $activity_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $activity_gif['mp4'], true );
+				if ( ! empty( $activity_gif['mp4'] ) ) {
+					bb_media_delete_legacy_gif_attachment( $activity_gif['mp4'], $activity->user_id );
 				}
 			}
 		}
@@ -580,6 +581,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 					$media_ids[] = $attached_media_id;
 					continue;
 				}
+			}
+
+			// Only the user's own unsaved upload can become a new media.
+			if ( ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+				continue;
 			}
 
 			$media_id = bp_media_add(
@@ -811,8 +817,9 @@ function bp_media_forums_save_gif_data( $post_id ) {
 			return;
 		}
 
-		$still = $gif_data['images']['480w_still']['url'];
-		$mp4   = $gif_data['images']['original_mp4']['mp4'];
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = bb_media_sanitize_gif_url( $gif_data['images']['480w_still']['url'] );
+		$mp4   = bb_media_sanitize_gif_url( $gif_data['images']['original_mp4']['mp4'] );
 
 		$gdata = array(
 			'still' => $still,
@@ -884,10 +891,16 @@ function bp_media_attach_media_to_message( &$message ) {
 				$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
 
 				if ( ! empty( $media_id ) ) {
+					// Attach already created media.
+					$media = new BP_Media( $media_id );
+
+					// Only the sender's own media can be attached to the message.
+					if ( empty( $media->id ) || ! in_array( (int) $media->user_id, array( (int) $message->sender_id, bp_loggedin_user_id() ), true ) ) {
+						continue;
+					}
+
 					$media_ids[] = $media_id;
 
-					// Attach already created media.
-					$media             = new BP_Media( $media_id );
 					$media->privacy    = 'message';
 					$media->message_id = $message->id;
 					$media->save();
@@ -1240,9 +1253,15 @@ function bp_media_activity_save_gif_data( $activity ) {
 
 	// if edit activity then delete attachment and clear activity meta.
 	if ( $is_delete_gif ) {
-		if ( ! empty( $gif_old_data ) ) {
-			wp_delete_attachment( $gif_old_data['still'], true );
-			wp_delete_attachment( $gif_old_data['mp4'], true );
+		// Only legacy GIF attachments uploaded by the activity author are deleted.
+		if ( ! empty( $gif_old_data ) && is_array( $gif_old_data ) ) {
+			if ( ! empty( $gif_old_data['still'] ) ) {
+				bb_media_delete_legacy_gif_attachment( $gif_old_data['still'], $activity->user_id );
+			}
+
+			if ( ! empty( $gif_old_data['mp4'] ) ) {
+				bb_media_delete_legacy_gif_attachment( $gif_old_data['mp4'], $activity->user_id );
+			}
 		}
 
 		bp_activity_delete_meta( $activity->id, '_gif_data' );
@@ -1250,8 +1269,9 @@ function bp_media_activity_save_gif_data( $activity ) {
 	}
 
 	if ( ! empty( $gif_data ) && ! isset( $gif_data['bp_gif_current_data'] ) ) {
-		$still = $gif_data['images']['480w_still']['url'];
-		$mp4   = $gif_data['images']['original_mp4']['mp4'];
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = bb_media_sanitize_gif_url( $gif_data['images']['480w_still']['url'] );
+		$mp4   = bb_media_sanitize_gif_url( $gif_data['images']['original_mp4']['mp4'] );
 
 		bp_activity_update_meta(
 			$activity->id,

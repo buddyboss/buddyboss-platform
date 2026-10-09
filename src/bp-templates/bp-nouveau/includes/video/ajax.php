@@ -1552,12 +1552,18 @@ function bp_nouveau_ajax_video_get_video_description() {
 		wp_send_json_error( $response );
 	}
 
+	$video = new BP_Video( $video_id );
+
+	// The description is read from the attachment, so it must be this video's own attachment.
+	if ( empty( $video->id ) || (int) $video->attachment_id !== (int) $attachment_id ) {
+		wp_send_json_error( $response );
+	}
+
+	$video_privacy    = bb_media_user_can_access( $video_id, 'video', $attachment_id );
 	$content          = get_post_field( 'post_content', $attachment_id );
-	$video_privacy    = bb_media_user_can_access( $video_id, 'video' );
 	$can_download_btn = true === (bool) $video_privacy['can_download'];
 	$can_edit_btn     = true === (bool) $video_privacy['can_edit'];
 	$can_view         = true === (bool) $video_privacy['can_view'];
-	$video            = new BP_Video( $video_id );
 	$user_domain      = bp_core_get_user_domain( $video->user_id );
 	$display_name     = bp_core_get_user_displayname( $video->user_id );
 	$time_since       = bp_core_time_since( $video->date_created );

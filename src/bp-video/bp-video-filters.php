@@ -526,6 +526,15 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 				}
 			}
 
+			// Only the user's own unsaved upload can become a new video.
+			if ( ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+				continue;
+			}
+
+			// The attachment ID is used in file paths, so keep the validated integer.
+			$attachment_id = absint( $attachment_id );
+			$video['id']   = $attachment_id;
+
 			$video_id = bp_video_add(
 				array(
 					'attachment_id' => $attachment_id,
@@ -721,10 +730,16 @@ function bp_video_attach_video_to_message( &$message ) {
 
 				// Get media_id from the attachment ID.
 				$video_media_id = get_post_meta( $attachment_id, 'bp_video_id', true );
-				$video_ids[]    = $video_media_id;
 
 				// Attach already created media.
-				$video             = new BP_Video( $video_media_id );
+				$video = new BP_Video( $video_media_id );
+
+				// Only the sender's own video can be attached to the message.
+				if ( empty( $video_media_id ) || empty( $video->id ) || ! in_array( (int) $video->user_id, array( (int) $message->sender_id, bp_loggedin_user_id() ), true ) ) {
+					continue;
+				}
+
+				$video_ids[]       = $video_media_id;
 				$video->privacy    = 'message';
 				$video->message_id = $message->id;
 				$video->save();
@@ -732,7 +747,7 @@ function bp_video_attach_video_to_message( &$message ) {
 				if ( ! empty( $attachment['js_preview'] ) ) {
 					$video_array               = json_decode( json_encode( $video ), true );
 					$video_array['js_preview'] = $attachment['js_preview'];
-					$video_array['id']         = $attachment_id;
+					$video_array['id']         = (int) $video->attachment_id;
 					bp_video_preview_image_by_js( $video_array );
 				}
 

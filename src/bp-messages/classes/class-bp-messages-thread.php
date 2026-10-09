@@ -449,17 +449,23 @@ class BP_Messages_Thread {
 	 */
 	public static function get_messages( $thread_id = 0, $before = null, $perpage = 10 ) {
 		$thread_id = (int) $thread_id;
+
+		/*
+		 * If the current user isn't a recipient, return an empty array.
+		 *
+		 * The check runs on every call, before the cache is read: the cache key is
+		 * shared by all users, so a cache hit must not skip it. Denials are not
+		 * cached, so they cannot blank the thread for its real recipients.
+		 */
+		if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			return array();
+		}
+
 		$cache_key = "{$thread_id}{$before}{$perpage}";
 		$messages  = wp_cache_get( $cache_key, 'bp_messages_threads' );
 
-		if ( false === $messages || ! is_array( $messages ) || static::$noCache ) {
-			// if current user isn't the recpient, then return empty array.
-			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
-
-				return array();
-			}
-
+		// An empty cached array may be a denial cached by an older version, so treat it as a miss.
+		if ( false === $messages || ! is_array( $messages ) || empty( $messages ) || static::$noCache ) {
 			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00';
 
 			if ( ! $before ) {

@@ -54,7 +54,11 @@ if (
 			! empty( $preview_thumbs['custom_image'] ) ? absint( $preview_thumbs['custom_image'] ) : 0,
 		);
 
-		$can_view = in_array( $attachment_id, array_filter( $video_thumb_ids ), true ) || bb_video_is_valid_thumbnail_for_video( $preview_video, $attachment_id );
+		// A stored poster is trusted only when it is an auto-generated preview of this video,
+		// was uploaded by the video owner, or came through the video thumbnail uploader.
+		$is_stored_poster = in_array( $attachment_id, array_filter( $video_thumb_ids ), true ) && bb_video_is_trusted_thumbnail( $preview_video, $attachment_id );
+
+		$can_view = $is_stored_poster || bb_video_is_valid_thumbnail_for_video( $preview_video, $attachment_id );
 	}
 
 	if ( $can_view ) {

@@ -670,6 +670,11 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 					continue;
 				}
 
+				// Only the user's own unsaved upload can become a new document.
+				if ( ! bb_user_can_adopt_attachment( $document['id'] ) ) {
+					continue;
+				}
+
 				$file      = get_attached_file( $document['id'] );
 				$file_type = wp_check_filetype( $file );
 				$file_name = basename( $file );

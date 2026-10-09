@@ -3031,6 +3031,11 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					}
 				}
 
+				// Only the user's own unsaved upload can become a new document (fail closed without the Platform helper).
+				if ( ! function_exists( 'bb_user_can_adopt_attachment' ) || ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+					continue;
+				}
+
 				if ( 0 === $reply_id && bbp_get_reply_post_type() === get_post_type( $post_id ) ) {
 					$reply_id = $post_id;
 					$topic_id = bbp_get_reply_topic_id( $reply_id );

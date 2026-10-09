@@ -865,6 +865,14 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 					continue;
 				}
 
+				// Only the user's own unsaved upload can become a new video.
+				if ( ! bb_user_can_adopt_attachment( $video['id'] ) ) {
+					continue;
+				}
+
+				// The attachment ID is used in file paths below, so keep the validated integer.
+				$video['id'] = absint( $video['id'] );
+
 				$video_id = bp_video_add(
 					array(
 						'attachment_id' => $video['id'],
@@ -4569,6 +4577,11 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 
 	// Return if no video found.
 	if ( empty( $video ) || empty( $attachment_id ) || empty( $size ) ) {
+		return;
+	}
+
+	// Public symlinks bypass the preview route checks: only link the video's own thumbnails.
+	if ( bb_enable_symlinks() && function_exists( 'bb_video_is_trusted_thumbnail' ) && ! bb_video_is_trusted_thumbnail( $video, $attachment_id ) ) {
 		return;
 	}
 

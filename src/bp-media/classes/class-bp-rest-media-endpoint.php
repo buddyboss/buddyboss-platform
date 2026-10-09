@@ -2699,8 +2699,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$still = $object['url'];
-		$mp4   = $object['mp4'];
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = ( isset( $object['url'] ) && is_string( $object['url'] ) && preg_match( '#^https?://#i', $object['url'] ) ) ? esc_url_raw( $object['url'], array( 'http', 'https' ) ) : '';
+		$mp4   = ( isset( $object['mp4'] ) && is_string( $object['mp4'] ) && preg_match( '#^https?://#i', $object['mp4'] ) ) ? esc_url_raw( $object['mp4'], array( 'http', 'https' ) ) : '';
 
 		if (
 			(
@@ -3116,6 +3117,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					}
 				}
 
+				// Only the user's own unsaved upload can become a new media (fail closed without the Platform helper).
+				if ( ! function_exists( 'bb_user_can_adopt_attachment' ) || ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+					continue;
+				}
+
 				// extract the nice title name.
 				$title = get_the_title( $attachment_id );
 
@@ -3231,6 +3237,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$still   = ( ! empty( $object ) && array_key_exists( 'url', $object ) ) ? $object['url'] : '';
 		$mp4     = ( ! empty( $object ) && array_key_exists( 'mp4', $object ) ) ? $object['mp4'] : '';
 		$post_id = $value->ID;
+
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = ( is_string( $still ) && preg_match( '#^https?://#i', $still ) ) ? esc_url_raw( $still, array( 'http', 'https' ) ) : '';
+		$mp4   = ( is_string( $mp4 ) && preg_match( '#^https?://#i', $mp4 ) ) ? esc_url_raw( $mp4, array( 'http', 'https' ) ) : '';
 
 		// Get current forum ID.
 		if ( 'reply' === $value->post_type ) {
@@ -3537,6 +3547,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$still      = ( ! empty( $object ) && array_key_exists( 'url', $object ) ) ? $object['url'] : '';
 		$mp4        = ( ! empty( $object ) && array_key_exists( 'mp4', $object ) ) ? $object['mp4'] : '';
 		$message_id = $value->id;
+
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = ( is_string( $still ) && preg_match( '#^https?://#i', $still ) ) ? esc_url_raw( $still, array( 'http', 'https' ) ) : '';
+		$mp4   = ( is_string( $mp4 ) && preg_match( '#^https?://#i', $mp4 ) ) ? esc_url_raw( $mp4, array( 'http', 'https' ) ) : '';
 
 		$thread_id = $value->thread_id;
 

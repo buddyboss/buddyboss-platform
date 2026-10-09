@@ -2338,6 +2338,11 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					}
 				}
 
+				// Only the user's own unsaved upload can become a new video (fail closed without the Platform helper).
+				if ( ! function_exists( 'bb_user_can_adopt_attachment' ) || ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+					continue;
+				}
+
 				// extract the nice title name.
 				$title = get_the_title( $attachment_id );
 
