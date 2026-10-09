@@ -464,6 +464,25 @@ function bb_restricate_rss_feed_callback() {
 add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
 
 /**
+ * Restrict RSS feeds once WordPress has parsed the request.
+ *
+ * The `init` check in bb_restricate_rss_feed_callback() runs before the query is parsed, so it can only
+ * recognise a feed from its URL and misses feed URLs such as `/members/rss2`. This catches every
+ * feed WordPress is about to serve. It runs before `bp_template_redirect`, whose Private Website
+ * redirect leaves feeds to this setting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_restricate_rss_feed_template_redirect() {
+	if ( is_user_logged_in() || ! is_feed() || true !== bp_enable_private_rss_feeds() ) {
+		return;
+	}
+
+	bb_restricate_rss_feed( true );
+}
+add_action( 'template_redirect', 'bb_restricate_rss_feed_template_redirect', 1 );
+
+/**
  * Function will remove REST APIs endpoint.
  *
  * @since BuddyBoss 1.8.6

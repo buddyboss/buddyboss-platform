@@ -6153,11 +6153,53 @@ function bb_check_server_disabled_symlink() {
 }
 
 /**
+ * Whether the current request is a non-feed request type that the RSS feed restriction must leave alone.
+ *
+ * Decided from how the request is being served, never from the URL text, so a query
+ * parameter such as `?x=wp-json` cannot exempt a feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True for cron, AJAX, wp-login.php and REST API requests.
+ */
+function bb_is_rss_feed_restriction_exempt_request() {
+	if ( wp_doing_cron() || wp_doing_ajax() ) {
+		return true;
+	}
+
+	// The login page must stay reachable (e.g. `redirect_to=/feed/`) or the login redirect loops.
+	// SCRIPT_NAME is the script actually executed; $pagenow is not used as it is derived from PHP_SELF, which includes PATH_INFO.
+	$script_name = isset( $_SERVER['SCRIPT_NAME'] ) ? wp_basename( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) : '';
+	if ( 'wp-login.php' === $script_name ) {
+		return true;
+	}
+
+	// REST requests are answered by rest_api_loaded() before any feed renders and have their own "Private REST APIs" setting.
+	if ( ! empty( $_GET['rest_route'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return true;
+	}
+
+	if ( ! get_option( 'permalink_structure' ) || empty( $_SERVER['REQUEST_URI'] ) ) {
+		return false;
+	}
+
+	$request_path = (string) wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
+	$rest_path    = (string) wp_parse_url( get_rest_url(), PHP_URL_PATH );
+
+	return '' !== $rest_path && 0 === strpos( trailingslashit( $request_path ), trailingslashit( $rest_path ) );
+}
+
+/**
  * Function will restrict RSS feed.
  *
  * @since BuddyBoss 1.8.6
+ * @since BuddyBoss [BBVERSION] Added the `$is_feed` parameter. Exempt requests are detected from the
+ *                              request type instead of the URL text.
+ *
+ * @param bool $is_feed Optional. Whether the parsed main query has already identified a feed request,
+ *                      in which case the URL is not inspected. Default false.
  */
-function bb_restricate_rss_feed() {
+function bb_restricate_rss_feed( $is_feed = false ) {
 	if (
 		empty( $_SERVER['HTTP_HOST'] ) ||
 		empty( $_SERVER['REQUEST_URI'] )
@@ -6167,18 +6209,14 @@ function bb_restricate_rss_feed() {
 
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if (
+		! $is_feed &&
 		strpos( $actual_link, '/feed/' ) === false &&
 		strpos( $actual_link, 'feed=' ) === false
 	) { // if permalink has ? then need to check with feed=.
 		return;
 	}
 
-	if (
-		strpos( $actual_link, 'wp-cron.php' ) === false &&
-		strpos( $actual_link, 'wp-login.php' ) === false &&
-		strpos( $actual_link, 'admin-ajax.php' ) === false &&
-		strpos( $actual_link, 'wp-json' ) === false
-	) {
+	if ( $is_feed || ! bb_is_rss_feed_restriction_exempt_request() ) {
 		$request_url      = untrailingslashit( $actual_link );
 		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
 		if ( '' !== $exclude_rss_feed ) {
