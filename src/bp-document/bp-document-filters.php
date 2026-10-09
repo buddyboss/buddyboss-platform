@@ -950,6 +950,9 @@ function bp_document_download_url_file() {
 		$_GET['document_file'] = $document_file_id;
 		$_GET['document_type'] = $document_type;
 
+		// Private Website: send guests to login before any file is streamed.
+		bb_private_network_restrict_download( $document_type );
+
 		// Remove action to remove meta query for forums while download check.
 		remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 

@@ -6230,6 +6230,68 @@ function bb_restricate_rss_feed() {
 }
 
 /**
+ * Check whether Private Website blocks the current file download for a guest.
+ *
+ * Document, folder, photo and video downloads are streamed on `init` and exit
+ * before bp_private_network_template_redirect() runs on `template_redirect`,
+ * so they need their own check.
+ *
+ * The `bp_private_network_pre_check` filter is not applied here. Its callbacks are
+ * written for page requests (The Events Calendar returns true for any URL with
+ * ?ical=1), so downloads use the `bb_is_private_network_download_restricted` filter.
+ * The public Content list is page-level and intentionally not applied; site owners
+ * can use the new filter instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return bool True if the download must be blocked, otherwise false.
+ */
+function bb_is_private_network_download_restricted( $type = '' ) {
+
+	// The option stores 1 for a public site, so false means Private Website is on.
+	if ( is_user_logged_in() || bp_enable_private_network() ) {
+		return false;
+	}
+
+	/**
+	 * Filters whether Private Website blocks a guest file download.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $restricted Whether the download is blocked. Default true.
+	 * @param string $type       Download type: 'document', 'folder', 'photo' or 'video'.
+	 */
+	return (bool) apply_filters( 'bb_is_private_network_download_restricted', true, $type );
+}
+
+/**
+ * Send a guest to the login page when Private Website blocks a file download.
+ *
+ * After login, the member returns to the same download URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return void
+ */
+function bb_private_network_restrict_download( $type = '' ) {
+	if ( ! bb_is_private_network_download_restricted( $type ) ) {
+		return;
+	}
+
+	bp_core_no_access(
+		array(
+			'mode'    => 2,
+			'message' => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+		)
+	);
+	exit();
+}
+
+/**
  * Function will remove all endpoints as well as exclude specific endpoints which added in admin side.
  *
  * @since BuddyBoss 1.8.6

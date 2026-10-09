@@ -2459,6 +2459,10 @@ function bp_video_download_url_file() {
 	$can_download_btn    = false;
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		// Private Website: send guests to login before any file is streamed.
+		bb_private_network_restrict_download( 'video' );
+
 		if ( 'album' !== $video_type ) {
 
 			// Remove action to remove meta query for forums while download check.
