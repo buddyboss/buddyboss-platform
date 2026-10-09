@@ -2082,7 +2082,10 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			'rendered' => bbp_get_reply_content( $reply->ID ),
 		);
 
-		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+		// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+		if ( function_exists( 'bp_media_forums_embed_gif' ) ) {
+			add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+		}
 		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
 		add_filter( 'bbp_get_reply_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 ); // Restore link preview.

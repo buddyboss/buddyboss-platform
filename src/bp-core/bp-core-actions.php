@@ -158,21 +158,31 @@ add_action(
 	function() {
 		$component = bp_get_option( 'bp-active-components' );
 
-		// Set the "Document" component active/inactive based on the media components.
-		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
-			$component['document'] = '1';
-			bp_update_option( 'bp-active-components', $component );
-		} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-			unset( $component['document'] );
-			bp_update_option( 'bp-active-components', $component );
+		if ( ! is_array( $component ) ) {
+			return;
 		}
 
-		// Set the "Video" component active/inactive based on the media components.
-		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
-			$component['video'] = '1';
-			bp_update_option( 'bp-active-components', $component );
-		} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
-			unset( $component['video'] );
+		/*
+		 * Keep the "Document" and "Video" components in step with "Media".
+		 *
+		 * Both need Media, so they are switched off with it. They are only
+		 * switched back on when their code is available — the components now
+		 * ship in the BuddyBoss Add-ons plugin, and adding one that cannot load
+		 * would just be scrubbed again by BP_Core on the next request. Media may
+		 * be stored as '1' (legacy) or 1 (Settings 2.0), so test truthiness.
+		 */
+		$updated = false;
+		foreach ( array( 'document', 'video' ) as $media_child ) {
+			if ( ! empty( $component['media'] ) && empty( $component[ $media_child ] ) && bb_is_component_directory_available( $media_child ) ) {
+				$component[ $media_child ] = '1';
+				$updated                   = true;
+			} elseif ( isset( $component[ $media_child ] ) && empty( $component['media'] ) ) {
+				unset( $component[ $media_child ] );
+				$updated = true;
+			}
+		}
+
+		if ( $updated ) {
 			bp_update_option( 'bp-active-components', $component );
 		}
 	},

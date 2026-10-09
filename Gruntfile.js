@@ -305,8 +305,11 @@ module.exports = function (grunt) {
 					'**/bp-groups/**',
 					'**/bp-invites/**',
 					'**/bp-media/**',
-					'**/bp-document/**',
-					'**/bp-video/**',
+					// bp-document / bp-video are NOT imported: the components
+					// moved from Platform to the buddyboss-addons plugin, which
+					// ships their REST controllers. Re-importing them here would
+					// silently recreate the directories we deleted (same
+					// rationale as the LearnDash exclusion below, PROD-9792).
 					'**/bp-members/**',
 					'**/bp-messages/**',
 					'**/bp-moderation/**',

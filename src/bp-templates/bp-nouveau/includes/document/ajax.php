@@ -684,7 +684,14 @@ function bp_nouveau_ajax_document_document_save() {
 		 * request - otherwise a client can send group_id=0 to skip the group check above while
 		 * still routing the document into a folder of a group they do not belong to.
 		 */
-		if ( empty( $destination_folder->id ) || ! bb_document_user_can_add_to_folder( $destination_folder ) ) {
+		// bb_document_user_can_add_to_folder() ships with BuddyBoss Add-ons 1.2.1+; older
+		// Add-ons builds only provide the stricter edit check.
+		$can_add_to_folder = ! empty( $destination_folder->id ) && (
+			function_exists( 'bb_document_user_can_add_to_folder' )
+				? bb_document_user_can_add_to_folder( $destination_folder )
+				: bp_folder_user_can_edit( $destination_folder )
+		);
+		if ( ! $can_add_to_folder ) {
 			$response['feedback'] = esc_html__( 'You don\'t have permission to upload into this folder.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
@@ -1001,7 +1008,10 @@ function bp_nouveau_ajax_document_move() {
 
 	if ( (int) $folder_id > 0 ) {
 		// Moving into a folder is a contribute action, not an edit of the folder.
-		$has_access = bb_document_user_can_add_to_folder( $folder_id );
+		// bb_document_user_can_add_to_folder() ships with BuddyBoss Add-ons 1.2.1+.
+		$has_access = function_exists( 'bb_document_user_can_add_to_folder' )
+			? bb_document_user_can_add_to_folder( $folder_id )
+			: bp_folder_user_can_edit( $folder_id );
 		if ( ! $has_access ) {
 			$response['feedback'] = esc_html__( 'You don\'t have permission to move this document.', 'buddyboss' );
 			wp_send_json_error( $response );

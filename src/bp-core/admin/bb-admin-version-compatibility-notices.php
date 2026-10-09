@@ -47,6 +47,13 @@ function bb_platform_3_required_addons() {
 			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			'version' => '3.0.0',
 		),
+		// 1.2.1 is the first Add-ons build whose document module defines
+		// bb_document_user_can_add_to_folder(), which Platform's document
+		// AJAX and REST paths prefer.
+		'buddyboss-addons/buddyboss-addons.php'               => array(
+			'name'    => __( 'BuddyBoss Add-ons', 'buddyboss' ),
+			'version' => '1.2.1',
+		),
 		'buddyboss-gamification/buddyboss-gamification.php'   => array(
 			'name'    => __( 'BuddyBoss Gamification', 'buddyboss' ),
 			'version' => '2.0.0',

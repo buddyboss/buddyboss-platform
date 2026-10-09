@@ -2515,22 +2515,47 @@ function bp_core_get_minified_asset_suffix() {
  * Check whether a component's directory is present in this build.
  *
  * Optional components can be stripped from a distribution (e.g. the video and
- * document components removed from the free package). This checks for the
- * component's loader file on disk.
+ * document components moved to the BuddyBoss Add-ons plugin). This checks for
+ * the component's loader file on disk, and lets a provider plugin claim the
+ * component through the `bb_component_directory_available` filter.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $component Component ID (e.g. 'video', 'document').
- * @return bool True when the component's loader file exists.
+ * @return bool True when the component's code is available to load.
  */
 function bb_is_component_directory_available( $component ) {
 	static $available = array();
 
-	if ( ! isset( $available[ $component ] ) ) {
-		$available[ $component ] = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+	if ( isset( $available[ $component ] ) ) {
+		return $available[ $component ];
 	}
 
-	return $available[ $component ];
+	$exists = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+	/**
+	 * Filters whether a component's code is available to load.
+	 *
+	 * By default this reflects whether the component's loader file exists
+	 * inside the Platform build. An external plugin that provides a
+	 * component (e.g. BuddyBoss Add-ons supplying video/document) returns
+	 * true for its component so the availability scrub keeps it active
+	 * and the admin UI keeps offering the toggle.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $exists    Whether the component's loader file exists in this build.
+	 * @param string $component Component ID (e.g. 'video', 'document').
+	 */
+	$is_available = (bool) apply_filters( 'bb_component_directory_available', $exists, $component );
+
+	// Providers register their claims on `bp_loaded`, so only memoise once it
+	// has finished — an earlier call must not freeze a premature `false`.
+	if ( did_action( 'bp_loaded' ) && ! doing_action( 'bp_loaded' ) ) {
+		$available[ $component ] = $is_available;
+	}
+
+	return $is_available;
 }
 
 /**
