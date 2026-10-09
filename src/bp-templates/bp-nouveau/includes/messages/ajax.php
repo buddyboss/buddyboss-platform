@@ -1064,7 +1064,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+			if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
 				$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
 
 				if ( ! empty( $video_ids ) ) {
@@ -2651,7 +2651,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if (
-			bp_is_active( 'media' ) &&
+			bp_is_active( 'document' ) &&
 			(
 				(
 					$group_id &&

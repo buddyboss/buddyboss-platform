@@ -190,9 +190,6 @@ add_filter( 'the_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
-add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
@@ -436,7 +433,10 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
 		}
 	}
 
-	add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+	if ( function_exists( 'bp_media_activity_save_gif_data' ) ) {
+		add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	}
 }
 
 /**
@@ -1381,7 +1381,6 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 }
 add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorites_scope', 10, 2 );
 
-
 /**
  * Set up activity arguments for use with the 'favorites' scope.
  *
@@ -1808,7 +1807,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 					$attachment_id = BP_Media::get_activity_attachment_id( $activity->id );
 					if ( ! empty( $attachment_id ) ) {
 						$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
-					} else {
+					} elseif ( bp_is_active( 'video' ) ) {
 						$attachment_id = BP_Video::get_activity_attachment_id( $activity->id );
 						if ( ! empty( $attachment_id ) ) {
 							$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
@@ -2304,6 +2303,12 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
  */
 function bp_activity_document_add( $document ) {
 	global $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
+
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bb_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bb_document_get_published_status' ) ) {
+		return;
+	}
 
 	// Check the current action is edit activity comment.
 	if (
@@ -3063,6 +3068,12 @@ add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_featur
  */
 function bp_activity_video_add( $video ) {
 	global $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
+
+	// The video component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bb_video_* call fatals.
+	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bb_video_get_published_status' ) ) {
+		return;
+	}
 
 	// Check the current action is edit activity comment.
 	if (
@@ -3899,15 +3910,6 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	}
 
 	return $activity_comment_data;
-}
-
-/**
- * Add template for gifpicker.
- *
- * @since BuddyBoss 2.5.80
- */
-function bb_gifpicker_add_popup_template() {
-	bp_get_template_part( 'activity/gifpicker-popup' );
 }
 
 /**

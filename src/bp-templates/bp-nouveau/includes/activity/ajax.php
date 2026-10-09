@@ -565,9 +565,17 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		// Video and Document ship in the BuddyBoss Add-ons plugin; only re-add when loaded.
+		if ( function_exists( 'bp_video_activity_append_video' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
+		}
+		if ( function_exists( 'bp_document_activity_append_document' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
+		}
+		// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+		if ( function_exists( 'bp_media_activity_append_gif' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		}
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */

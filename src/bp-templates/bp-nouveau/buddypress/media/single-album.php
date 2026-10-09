@@ -117,7 +117,9 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 					<?php
 					bp_get_template_part( 'media/uploader' );
-					bp_get_template_part( 'video/uploader' );
+					if ( bp_is_active( 'video' ) ) {
+						bp_get_template_part( 'video/uploader' );
+					}
 				endif;
 
 				if ( $can_delete ) {

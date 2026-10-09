@@ -5,9 +5,11 @@
  * Registers the Media feature in the Feature Registry and loads
  * all Media settings (side panels, sections, fields).
  *
- * Media is a "super-feature" that wraps three legacy components:
- * bp-media (photos), bp-video (videos), and bp-document (documents).
- * When Media is disabled, all three components are disabled.
+ * The Media feature maps to the bp-media (photos) component only. The
+ * bp-video (videos) and bp-document (documents) components are managed
+ * independently — they are not activated or deactivated by the Media
+ * toggle, and their settings panels are only registered when the
+ * corresponding component is active and present in the build.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -45,7 +47,7 @@ function bb_admin_settings_register_media_feature() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'media' );
 			},
-			'components'         => array( 'media', 'video', 'document' ),
+			'components'         => array( 'media' ),
 			'settings_route'     => '/settings/media',
 			'order'              => 110,
 		)
@@ -60,12 +62,18 @@ function bb_admin_settings_register_media_feature() {
 	// Load settings sub-files only when media is active.
 	require_once __DIR__ . '/settings/media/callbacks.php';
 	require_once __DIR__ . '/settings/media/settings-photos.php';
-	require_once __DIR__ . '/settings/media/settings-videos.php';
-	require_once __DIR__ . '/settings/media/settings-documents.php';
 	require_once __DIR__ . '/settings/media/settings-emoji.php';
-	require_once __DIR__ . '/settings/media/settings-gifs.php';
 	require_once __DIR__ . '/settings/media/settings-security.php';
 	require_once __DIR__ . '/settings/media/settings-access-controls.php';
+
+	// Videos and Documents are independent components (paid-only); only load
+	// their settings panels when the component is active in this build.
+	if ( bp_is_active( 'video' ) ) {
+		require_once __DIR__ . '/settings/media/settings-videos.php';
+	}
+	if ( bp_is_active( 'document' ) ) {
+		require_once __DIR__ . '/settings/media/settings-documents.php';
+	}
 
 	// =========================================================================
 	// SIDE PANELS
@@ -95,51 +103,71 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
-	// Side Panel 2: Videos.
-	bb_register_side_panel(
-		'media',
-		'videos',
-		array(
-			'title'    => __( 'Videos', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-video-camera',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 124807,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 20,
-		)
-	);
+	// Side Panel 2: Videos (only when the video component is active).
+	if ( bp_is_active( 'video' ) ) {
+		bb_register_side_panel(
+			'media',
+			'videos',
+			array(
+				'title'    => __( 'Videos', 'buddyboss' ),
+				'icon'     => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-video-camera',
+				),
+				'help_url' => bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 124807,
+						),
+						'admin.php'
+					)
+				),
+				'order'    => 20,
+			)
+		);
+	} else {
+		bb_media_register_addons_upsell_panel(
+			'videos',
+			__( 'Videos', 'buddyboss' ),
+			'bb-icons-rl bb-icons-rl-video-camera',
+			__( 'Let members upload and share videos on their profiles, in groups, messages and forums. Available with the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans.', 'buddyboss' ),
+			20
+		);
+	}
 
-	// Side Panel 3: Documents.
-	bb_register_side_panel(
-		'media',
-		'documents',
-		array(
-			'title'    => __( 'Documents', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-file-text',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 87466,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 30,
-		)
-	);
+	// Side Panel 3: Documents (only when the document component is active).
+	if ( bp_is_active( 'document' ) ) {
+		bb_register_side_panel(
+			'media',
+			'documents',
+			array(
+				'title'    => __( 'Documents', 'buddyboss' ),
+				'icon'     => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-file-text',
+				),
+				'help_url' => bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 87466,
+						),
+						'admin.php'
+					)
+				),
+				'order'    => 30,
+			)
+		);
+	} else {
+		bb_media_register_addons_upsell_panel(
+			'documents',
+			__( 'Documents', 'buddyboss' ),
+			'bb-icons-rl bb-icons-rl-file-text',
+			__( 'Let members upload, organize and share documents and folders on their profiles, in groups, messages and forums. Available with the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans.', 'buddyboss' ),
+			30
+		);
+	}
 
 	// Side Panel 4: Emoji.
 	bb_register_side_panel(
@@ -164,28 +192,18 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
-	// Side Panel 5: Animated GIFs.
-	bb_register_side_panel(
-		'media',
-		'animated_gifs',
-		array(
-			'title'    => __( 'Animated GIFs', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-gif',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62829,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 50,
-		)
-	);
+	// Side Panel 5: Animated GIFs. The GIPHY feature ships in the BuddyBoss Add-ons
+	// plugin, which registers the real panel on `bb_after_register_features`. When no
+	// GIF provider is loaded, show an upsell instead so the feature stays discoverable.
+	if ( ! bb_giphy_provider_available() ) {
+		bb_media_register_addons_upsell_panel(
+			'animated_gifs',
+			__( 'Animated GIFs', 'buddyboss' ),
+			'bb-icons-rl bb-icons-rl-gif',
+			__( 'Let members search and post animated GIFs from GIPHY in activity posts, comments, messages and forums. Available with the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans.', 'buddyboss' ),
+			50
+		);
+	}
 
 	// Side Panel 6: Security & Performance.
 	bb_register_side_panel(
@@ -254,17 +272,18 @@ function bb_admin_settings_register_media_feature() {
 	// Panel 1: Photos.
 	bb_media_register_photos_panel_fields();
 
-	// Panel 2: Videos.
-	bb_media_register_videos_panel_fields();
+	// Panel 2: Videos (only when the video component is active).
+	if ( bp_is_active( 'video' ) && function_exists( 'bb_media_register_videos_panel_fields' ) ) {
+		bb_media_register_videos_panel_fields();
+	}
 
-	// Panel 3: Documents.
-	bb_media_register_documents_panel_fields();
+	// Panel 3: Documents (only when the document component is active).
+	if ( bp_is_active( 'document' ) && function_exists( 'bb_media_register_documents_panel_fields' ) ) {
+		bb_media_register_documents_panel_fields();
+	}
 
 	// Panel 4: Emoji.
 	bb_media_register_emoji_panel_fields();
-
-	// Panel 5: Animated GIFs.
-	bb_media_register_gifs_panel_fields();
 
 	// Panel 6: Security & Performance.
 	bb_media_register_security_panel_fields();
@@ -282,3 +301,90 @@ function bb_admin_settings_register_media_feature() {
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_media_feature', 20 );
+
+/**
+ * Register a Media side panel that advertises a feature from the BuddyBoss Add-ons plugin.
+ *
+ * Videos, Documents and Animated GIFs ship in the BuddyBoss Add-ons plugin.
+ * When the feature is not available on this site, the panel still appears so
+ * admins can discover it, showing an "Upgrade" empty state instead of
+ * settings. The real panel replaces it as soon as the feature is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $panel_id     Side panel ID ('videos', 'documents' or 'animated_gifs').
+ * @param string $title        Panel title.
+ * @param string $icon_class   Icon font class.
+ * @param string $description  Empty state description.
+ * @param int    $order        Panel order.
+ * @param string $button_label Optional. Button label. Default 'Upgrade'.
+ *
+ * @return void
+ */
+function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, $description, $order, $button_label = '' ) {
+	bb_register_side_panel(
+		'media',
+		$panel_id,
+		array(
+			'title' => $title,
+			'icon'  => array(
+				'type'  => 'font',
+				'class' => $icon_class,
+			),
+			'order' => $order,
+		)
+	);
+
+	bb_register_feature_section(
+		'media',
+		$panel_id,
+		$panel_id,
+		array(
+			'title' => $title,
+			'order' => 10,
+		)
+	);
+
+	bb_register_feature_field(
+		'media',
+		$panel_id,
+		$panel_id,
+		array(
+			'name'                    => 'bb_media_' . $panel_id . '_addons_upsell',
+			'label'                   => '',
+			'type'                    => 'empty_state',
+			'icon'                    => $icon_class,
+			'empty_state_title'       => $title,
+			'empty_state_description' => $description,
+			'button_label'            => '' !== $button_label ? $button_label : __( 'Upgrade', 'buddyboss' ),
+			// Fallback only: with `upgrade_from_catalog` on, the AJAX formatter swaps in the
+			// campaign-tagged URL from the field-upgrades catalog when it has an entry.
+			'button_url'              => bb_media_get_addons_upgrade_url( $panel_id ),
+			'upgrade_from_catalog'    => true,
+			'button_target'           => '_blank',
+			'sanitize_callback'       => '__return_empty_string',
+			'order'                   => 10,
+		)
+	);
+}
+
+/**
+ * Get the pricing URL for a Media settings upsell panel.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
+ *
+ * @return string
+ */
+function bb_media_get_addons_upgrade_url( $panel_id ) {
+	return add_query_arg(
+		array(
+			'utm_source'   => 'product',
+			'utm_medium'   => 'platform-plugin',
+			'utm_campaign' => 'moved-media-features',
+			'utm_content'  => 'settings-' . sanitize_key( $panel_id ),
+		),
+		'https://www.buddyboss.com/pricing/'
+	);
+}

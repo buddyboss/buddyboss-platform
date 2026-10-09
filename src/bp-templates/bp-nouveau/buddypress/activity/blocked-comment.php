@@ -94,15 +94,26 @@ if ( bp_is_active( 'moderation' ) ) {
 						if ( true === $hide_media && bp_is_active( 'media' ) ) {
 							remove_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
 							remove_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
-							remove_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
-							remove_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							if ( bp_is_active( 'video' ) ) {
+								remove_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
+							}
+							if ( bp_is_active( 'document' ) ) {
+								remove_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							}
 						}
 						do_action( 'bp_activity_after_comment_content', $activity_comment_id );
 						if ( true === $hide_media && bp_is_active( 'media' ) ) {
 							add_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
-							add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
-							add_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
-							add_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+							if ( function_exists( 'bp_media_comment_embed_gif' ) ) {
+								add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
+							}
+							if ( bp_is_active( 'video' ) ) {
+								add_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
+							}
+							if ( bp_is_active( 'document' ) ) {
+								add_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							}
 						}
 						?>
 

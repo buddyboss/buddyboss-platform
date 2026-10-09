@@ -55,6 +55,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
+== Upgrade Notice ==
+
+= [BBVERSION] =
+Important: Videos, Documents and Animated GIFs (GIPHY) have moved to the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans. Your existing videos, documents and GIFs are kept, but they will be hidden from members until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
+
 == Changelog ==
 
 = 3.6.0 =

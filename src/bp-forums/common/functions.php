@@ -2694,7 +2694,7 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$video_ids_array = array_map( 'intval', $video_ids_array );
 
 		if ( ! empty( $video_ids_array ) ) {
-			if ( bp_is_active( 'media' ) ) {
+			if ( bp_is_active( 'video' ) ) {
 				foreach ( $video_ids_array as $video_id ) {
 					bp_video_delete( array( 'id' => $video_id ) );
 				}
@@ -2757,7 +2757,7 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$document_ids_array = array_map( 'intval', $document_ids_array );
 
 		if ( ! empty( $document_ids_array ) ) {
-			if ( bp_is_active( 'media' ) ) {
+			if ( bp_is_active( 'document' ) ) {
 				foreach ( $document_ids_array as $document_id ) {
 					bp_document_delete( array( 'id' => $document_id ) );
 				}

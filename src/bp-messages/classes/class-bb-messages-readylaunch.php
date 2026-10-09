@@ -285,7 +285,7 @@ class BB_Messages_Readylaunch {
 			}
 		}
 
-		$document_component = bp_is_active( 'media' ) &&
+		$document_component = bp_is_active( 'document' ) &&
 		(
 			(
 				$group_id &&
