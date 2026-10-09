@@ -915,6 +915,31 @@ window.bp = window.bp || {};
 						1000
 					);
 				}
+			).fail(
+				function ( jqXHR, textStatus ) {
+					// A newer request replaced this one; it manages the loaders.
+					if ( 'abort' === textStatus ) {
+						return;
+					}
+
+					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
+					$( '.bb-subnav-filters-container .subnav-filters-modal ul li' ).removeClass( 'loading' );
+					$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+					// Only set when the loader was shown at a custom place.
+					( component_targets || [] ).forEach(
+						function ( target ) {
+							target.removeClass( 'loading' );
+						}
+					);
+
+					// Show the server's message (e.g. Private Website refusing a logged-out visitor) instead of an endless placeholder.
+					var response = jqXHR.responseJSON;
+					if ( response && response.data && response.data.message && 'append' !== data.method ) {
+						var feedback = $( '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p></p></aside>' );
+						feedback.find( 'p' ).text( response.data.message );
+						$( data.target ).html( feedback );
+					}
+				}
 			);
 		},
 

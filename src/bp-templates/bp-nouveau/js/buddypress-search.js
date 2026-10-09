@@ -58,6 +58,10 @@ jQuery(document).ready(function($) {
 								success: function(data) {
 									BP_SEARCH.cache[ term ] = data;
 									response(data);
+								},
+								error: function() {
+									// Close the "Loading suggestions" item, e.g. when Private Website refuses a guest.
+									response( [] );
 								}
 							});
 						},
@@ -167,6 +171,10 @@ jQuery(document).ready(function($) {
 									success: function ( data ) {
 										BP_SEARCH.cache[ term ] = data;
 										response( data );
+									},
+									error: function () {
+										// Close the "Loading suggestions" item, e.g. when Private Website refuses a guest.
+										response( [] );
 									}
 								} );
 							},

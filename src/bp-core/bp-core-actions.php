@@ -115,6 +115,8 @@ add_action( 'bp_template_redirect', 'bp_screens', 6 );
 add_action( 'bp_template_redirect', 'bp_post_request', 10 );
 add_action( 'bp_template_redirect', 'bp_get_request', 10 );
 add_action( 'bp_template_redirect', 'bp_private_network_template_redirect', 10 );
+add_action( 'admin_init', 'bb_private_network_register_guest_ajax_restriction', 1 );
+add_filter( 'heartbeat_nopriv_received', 'bb_private_network_restrict_guest_heartbeat', 999 );
 
 /**
  * Add the BuddyPress functions file and the Theme Compat Default features.
