@@ -268,9 +268,22 @@ class BP_Core extends BP_Component {
 			}
 		}
 
+		/**
+		 * Filters the optional components whose code moved out of Platform.
+		 *
+		 * Only these are checked by the availability scrub. Components added by
+		 * third parties through `bp_optional_components` keep their own loading
+		 * and are never deactivated here.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string[] $components Component IDs provided by BuddyBoss Add-ons.
+		 */
+		$moved_components = (array) apply_filters( 'bb_moved_optional_components', array( 'video', 'document' ) );
+
 		$unavailable_components = array();
 		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
-			if ( ! in_array( $component, $bp->optional_components, true ) ) {
+			if ( ! in_array( $component, $bp->optional_components, true ) || ! in_array( $component, $moved_components, true ) ) {
 				continue;
 			}
 
@@ -283,6 +296,16 @@ class BP_Core extends BP_Component {
 				$unavailable_components[] = $component;
 				unset( $bp->active_components[ $component ] );
 			}
+		}
+
+		/*
+		 * Video and Document need Media. When Media is off, keep them out of the
+		 * runtime list so a provider (BuddyBoss Add-ons) never boots them without
+		 * bp-media loaded. The stored option is cleaned up by the `bp_init` media
+		 * sync in bp-core-actions.php; nothing is written here.
+		 */
+		if ( empty( $bp->active_components['media'] ) ) {
+			unset( $bp->active_components['video'], $bp->active_components['document'] );
 		}
 
 		if ( empty( $unavailable_components ) ) {
