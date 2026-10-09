@@ -6236,6 +6236,10 @@ function bb_restricate_rss_feed() {
  * before bp_private_network_template_redirect() runs on `template_redirect`,
  * so they need their own check.
  *
+ * The `bp_private_network_pre_check` filter is not applied here. Its callbacks are
+ * written for page requests (The Events Calendar returns true for any URL with
+ * ?ical=1), so downloads use the `bb_is_private_network_download_restricted` filter.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
@@ -6249,59 +6253,15 @@ function bb_is_private_network_download_restricted( $type = '' ) {
 		return false;
 	}
 
-	$restricted = true;
-
-	// Same bypass as bp_private_network_template_redirect() for internal sharing with a valid JWT.
-	foreach ( bb_get_all_headers() as $key => $value ) {
-		if ( 'bb-preview-token' === strtolower( $key ) ) {
-			if ( ! empty( $value ) && bb_validate_jwt( $value ) ) {
-				$restricted = false;
-			}
-			break;
-		}
-	}
-
-	// Same escape hatch as bp_private_network_template_redirect().
-	if ( $restricted && apply_filters( 'bp_private_network_pre_check', false ) ) {
-		$restricted = false;
-	}
-
-	// Keep a download public when its exact URL is listed in "Public Website Content".
-	$public_content = bp_enable_private_network_public_content();
-	if (
-		$restricted
-		&& '' !== $public_content
-		&& ! empty( $_SERVER['HTTP_HOST'] )
-		&& ! empty( $_SERVER['REQUEST_URI'] )
-	) {
-		$current_url = untrailingslashit(
-			( is_ssl() ? 'https://' : 'http://' )
-			. sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) )
-			. esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) )
-		);
-
-		foreach ( preg_split( "/\r\n|\n|\r/", $public_content ) as $public_url ) {
-			$public_url = untrailingslashit( trim( $public_url ) );
-			if (
-				'' !== $public_url
-				&& false !== filter_var( $public_url, FILTER_VALIDATE_URL )
-				&& $current_url === $public_url
-			) {
-				$restricted = false;
-				break;
-			}
-		}
-	}
-
 	/**
 	 * Filters whether Private Website blocks a guest file download.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool   $restricted Whether the download is blocked.
+	 * @param bool   $restricted Whether the download is blocked. Default true.
 	 * @param string $type       Download type: 'document', 'folder', 'photo' or 'video'.
 	 */
-	return (bool) apply_filters( 'bb_is_private_network_download_restricted', $restricted, $type );
+	return (bool) apply_filters( 'bb_is_private_network_download_restricted', true, $type );
 }
 
 /**
