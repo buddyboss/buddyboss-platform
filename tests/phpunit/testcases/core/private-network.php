@@ -418,6 +418,63 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Public RSS Feeds allowlist used by the allowlist tests.
+	 *
+	 * @var string
+	 */
+	protected $rss_allowlist = '';
+
+	public function rss_allowlist() {
+		return $this->rss_allowlist;
+	}
+
+	public function data_allowlist_requests() {
+		$home = 'http://' . WP_TESTS_DOMAIN;
+
+		return array(
+			// Query-string tricks (PROD-10602 C3) — must stay private.
+			'entry in a query arg on the site feed'   => array( '/news-feed/feed/', '/?feed=rss2&x=/news-feed/feed', false, true ),
+			'entry in a query arg on a forum feed'    => array( '/news-feed/feed/', '/forums/feed/?x=/news-feed/feed', false, true ),
+			'entry in a query arg, template path'     => array( '/news-feed/feed/', '/members/rss2?x=/news-feed/feed', true, true ),
+			'encoded entry in a query arg'            => array( '/news-feed/feed/', '/?feed=rss2&x=%2Fnews-feed%2Ffeed', false, true ),
+			'full-URL entry plus extra arg'           => array( $home . '/?feed=rss2', '/?feed=rss2&x=1', false, true ),
+			// Real allowlist matches — must stay public.
+			'allowlisted feed'                        => array( '/news-feed/feed/', '/news-feed/feed/', false, false ),
+			'allowlisted feed with its own query arg' => array( '/news-feed/feed/', '/news-feed/feed/?paged=2', false, false ),
+			'sub-path of an allowlisted entry'        => array( '/news-feed/feed/', '/news-feed/feed/atom/', false, false ),
+			'single-segment fragment'                 => array( '/feed/', '/comments/feed/', false, false ),
+			'full-URL entry, exact'                   => array( $home . '/?feed=rss2', '/?feed=rss2', false, false ),
+			'host entry without a scheme'             => array( WP_TESTS_DOMAIN . '/feed/', '/feed/', false, false ),
+		);
+	}
+
+	/**
+	 * @dataProvider data_allowlist_requests
+	 *
+	 * @param string $allowlist   Public RSS Feeds entry.
+	 * @param string $request_uri Request path and query.
+	 * @param bool   $is_feed     Whether the caller already identified a feed (template/forum path).
+	 * @param bool   $blocked     Expected outcome.
+	 */
+	public function test_rss_allowlist_matches_path_not_query_string( $allowlist, $request_uri, $is_feed, $blocked ) {
+		$this->set_permalink_structure( '/%postname%/' );
+		$this->set_request( $request_uri );
+		$this->rss_allowlist = $allowlist;
+		add_filter( 'bb_enable_private_rss_feeds_public_content', array( $this, 'rss_allowlist' ) );
+
+		$this->assertSame(
+			$blocked,
+			$this->is_blocked(
+				function () use ( $is_feed ) {
+					bb_restricate_rss_feed( $is_feed );
+				}
+			)
+		);
+
+		remove_filter( 'bb_enable_private_rss_feeds_public_content', array( $this, 'rss_allowlist' ) );
+	}
+
 	public function test_forum_check_runs_before_the_bbpress_feed_trap() {
 		$this->require_forums();
 		$this->assertSame( 9, has_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request' ) );

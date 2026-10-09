@@ -6194,7 +6194,8 @@ function bb_is_rss_feed_restriction_exempt_request() {
  *
  * @since BuddyBoss 1.8.6
  * @since BuddyBoss [BBVERSION] Added the `$is_feed` parameter. Exempt requests are detected from the
- *                              request type instead of the URL text.
+ *                              request type instead of the URL text, and relative Public RSS Feeds
+ *                              entries are matched without the query string.
  *
  * @param bool $is_feed Optional. Whether the parsed main query has already identified a feed request,
  *                      in which case the URL is not inspected. Default false.
@@ -6219,6 +6220,11 @@ function bb_restricate_rss_feed( $is_feed = false ) {
 	if ( $is_feed || ! bb_is_rss_feed_restriction_exempt_request() ) {
 		$request_url      = untrailingslashit( $actual_link );
 		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
+
+		// Relative entries (URI fragments) are matched without the query string, like the Public Website
+		// Content list, so a parameter that merely contains an allowed fragment cannot make a feed public.
+		$request_url_without_query = untrailingslashit( explode( '?', $actual_link, 2 )[0] );
+		$request_path              = (string) wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
 			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
@@ -6231,8 +6237,8 @@ function bb_restricate_rss_feed( $is_feed = false ) {
 					// Check if strict match.
 					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 						return;
-					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
-						$fragments = explode( '/', $request_url );
+					} elseif ( false === $check_is_full_url && ! empty( $request_url_without_query ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url_without_query, $un_trailing_slash_it_url ) !== false ) {
+						$fragments = explode( '/', $request_url_without_query );
 						// Allow to view if fragment matched.
 						foreach ( $fragments as $fragment ) {
 							if ( $fragment === trim( $url, '/' ) ) {
@@ -6240,12 +6246,12 @@ function bb_restricate_rss_feed( $is_feed = false ) {
 							}
 						}
 						// Allow to view if fragment matched with the trailing slash.
-						$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+						$is_matched_fragment = substr( $request_path, 0, strrpos( $request_path, '/' ) );
 						if ( $is_matched_fragment === $url ) {
 							return;
 						}
 						// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
-						if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+						if ( strpos( trailingslashit( $request_url_without_query ), trailingslashit( $un_trailing_slash_it_url ) ) !== false ) {
 							return;
 						}
 						// Check URL is fully matched without remove trailing slash.
