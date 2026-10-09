@@ -320,4 +320,107 @@ class BB_Tests_Core_Private_Network extends BP_UnitTestCase {
 		$this->assertSame( 1, has_action( 'template_redirect', 'bb_restricate_rss_feed_template_redirect' ) );
 		$this->assertGreaterThan( 1, has_action( 'template_redirect', 'bp_template_redirect' ) );
 	}
+
+	/**
+	 * Skip when the Forums component is not loaded.
+	 */
+	protected function require_forums() {
+		if ( ! function_exists( 'bbp_get_forum_post_type' ) ) {
+			$this->markTestSkipped( 'Forums component is not active.' );
+		}
+	}
+
+	public function data_forum_feed_query_vars() {
+		return array(
+			'forums feed'               => array( array( 'post_type' => 'forum', 'feed' => 'feed' ), '/forums/feed/' ),
+			'forums feed + rest_route'  => array( array( 'post_type' => 'forum', 'feed' => 'feed', 'rest_route' => '/' ), '/forums/feed/?rest_route=/' ),
+			'path-only forums rss2'     => array( array( 'post_type' => 'forum', 'feed' => 'rss2' ), '/forums/rss2/' ),
+			'topics feed via rest_route' => array( array( 'post_type' => 'topic', 'feed' => 'rss2', 'rest_route' => '/' ), '/?rest_route=/&post_type=topic&feed=rss2' ),
+			'replies feed'              => array( array( 'post_type' => array( 'reply' ), 'feed' => 'atom' ), '/?post_type=reply&feed=atom' ),
+			'empty feed value'          => array( array( 'post_type' => 'forum', 'feed' => '' ), '/?post_type=forum&feed=' ),
+			'forum view feed'           => array( array( 'bbp_view' => 'popular', 'feed' => 'rss2' ), '/forums/view/popular/feed/' ),
+		);
+	}
+
+	/**
+	 * @dataProvider data_forum_feed_query_vars
+	 *
+	 * @param array  $query_vars  Parsed request query vars.
+	 * @param string $request_uri Matching request URI.
+	 */
+	public function test_forum_feeds_are_restricted_before_bbpress_prints_them( $query_vars, $request_uri ) {
+		$this->require_forums();
+		if ( isset( $query_vars['bbp_view'] ) ) {
+			// The provider uses a placeholder key; map it to the real view rewrite id.
+			$view = $query_vars['bbp_view'];
+			unset( $query_vars['bbp_view'] );
+			$query_vars[ bbp_get_view_rewrite_id() ] = $view;
+		}
+		$this->set_request( $request_uri );
+		$this->enable_private_rss_feeds();
+
+		$this->assertTrue(
+			$this->is_blocked(
+				function () use ( $query_vars ) {
+					bb_restricate_rss_feed_forums_request( $query_vars );
+				}
+			)
+		);
+	}
+
+	public function data_requests_the_forum_check_leaves_alone() {
+		return array(
+			'REST request with a feed arg' => array( array( 'rest_route' => '/wp/v2/posts', 'feed' => 'rss2' ), '/wp-json/wp/v2/posts?feed=rss2' ),
+			'site feed (template path)'    => array( array( 'feed' => 'rss2' ), '/?feed=rss2' ),
+			'posts feed'                   => array( array( 'post_type' => 'post', 'feed' => 'rss2' ), '/?post_type=post&feed=rss2' ),
+			'forum page, not a feed'       => array( array( 'post_type' => 'forum' ), '/forums/' ),
+		);
+	}
+
+	/**
+	 * @dataProvider data_requests_the_forum_check_leaves_alone
+	 *
+	 * @param array  $query_vars  Parsed request query vars.
+	 * @param string $request_uri Matching request URI.
+	 */
+	public function test_forum_check_leaves_other_requests_alone( $query_vars, $request_uri ) {
+		$this->require_forums();
+		$this->set_request( $request_uri );
+		$this->enable_private_rss_feeds();
+
+		$this->assertSame( $query_vars, bb_restricate_rss_feed_forums_request( $query_vars ) );
+	}
+
+	public function test_forum_feeds_stay_public_when_rss_feeds_are_public_or_member_is_logged_in() {
+		$this->require_forums();
+		$query_vars = array( 'post_type' => 'forum', 'feed' => 'feed', 'rest_route' => '/' );
+		$this->set_request( '/forums/feed/?rest_route=/' );
+
+		$this->assertSame( $query_vars, bb_restricate_rss_feed_forums_request( $query_vars ), 'Private RSS Feeds off.' );
+
+		$this->enable_private_rss_feeds();
+		$this->set_current_user( self::factory()->user->create() );
+		$this->assertSame( $query_vars, bb_restricate_rss_feed_forums_request( $query_vars ), 'Logged-in member.' );
+	}
+
+	public function test_forum_check_honours_public_rss_feeds_allowlist() {
+		$this->require_forums();
+		$this->set_request( '/sample-feed-page/rss2' );
+		$this->enable_private_rss_feeds();
+		add_filter( 'bb_enable_private_rss_feeds_public_content', array( $this, 'public_rss_feeds' ) );
+
+		$this->assertFalse(
+			$this->is_blocked(
+				function () {
+					bb_restricate_rss_feed_forums_request( array( 'post_type' => 'forum', 'feed' => 'rss2' ) );
+				}
+			)
+		);
+	}
+
+	public function test_forum_check_runs_before_the_bbpress_feed_trap() {
+		$this->require_forums();
+		$this->assertSame( 9, has_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request' ) );
+		$this->assertSame( 10, has_filter( 'bbp_request', 'bbp_request_feed_trap' ) );
+	}
 }
