@@ -464,6 +464,66 @@ function bb_restricate_rss_feed_callback() {
 add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
 
 /**
+ * Restrict RSS feeds once WordPress has parsed the request.
+ *
+ * The `init` check in bb_restricate_rss_feed_callback() runs before the query is parsed, so it can only
+ * recognise a feed from its URL and misses feed URLs such as `/members/rss2`. This catches every
+ * feed WordPress serves through its template loader. It runs before `bp_template_redirect`, whose
+ * Private Website redirect leaves feeds to this setting. Forum feeds are printed earlier and are
+ * restricted by bb_restricate_rss_feed_forums_request().
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_restricate_rss_feed_template_redirect() {
+	if ( is_user_logged_in() || ! is_feed() || true !== bp_enable_private_rss_feeds() ) {
+		return;
+	}
+
+	bb_restricate_rss_feed( true );
+}
+add_action( 'template_redirect', 'bb_restricate_rss_feed_template_redirect', 1 );
+
+/**
+ * Restrict forum feeds, which are printed while WordPress is still parsing the request.
+ *
+ * Forum, topic, reply and view feeds are output by bbp_request_feed_trap() on the `request`
+ * filter, before REST routing and before `template_redirect`. The `init` check exempts REST
+ * requests and cannot see feed URLs such as `/forums/rss2/`, and the `template_redirect`
+ * check never runs, so these feeds are checked here, just before the trap and on the same
+ * conditions it uses to decide whether it will print a feed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $query_vars Request query variables.
+ *
+ * @return array
+ */
+function bb_restricate_rss_feed_forums_request( $query_vars ) {
+	if (
+		! isset( $query_vars['feed'] ) ||
+		is_user_logged_in() ||
+		true !== bp_enable_private_rss_feeds() ||
+		! function_exists( 'bbp_get_forum_post_type' )
+	) {
+		return $query_vars;
+	}
+
+	$is_forum_feed = ! empty( $query_vars[ bbp_get_view_rewrite_id() ] );
+
+	if ( ! $is_forum_feed && isset( $query_vars['post_type'] ) ) {
+		$forum_post_types = array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+		$is_forum_feed    = (bool) array_intersect( $forum_post_types, (array) $query_vars['post_type'] );
+	}
+
+	if ( $is_forum_feed ) {
+		bb_restricate_rss_feed( true );
+	}
+
+	return $query_vars;
+}
+add_filter( 'bbp_request', 'bb_restricate_rss_feed_forums_request', 9 );
+
+/**
  * Function will remove REST APIs endpoint.
  *
  * @since BuddyBoss 1.8.6
