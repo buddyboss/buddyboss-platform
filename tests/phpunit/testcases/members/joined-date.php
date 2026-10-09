@@ -119,6 +119,28 @@ class BB_Tests_Members_Joined_Date extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The ReadyLaunch members loop template itself wires the formatter so the card gets the real date.
+	 */
+	public function test_rl_members_loop_template_renders_registered_day() {
+		$u = $this->create_user_registered_on( '2025-04-21 10:00:00' );
+		bp_update_user_last_activity( $u, bp_core_current_time() );
+
+		$querystring = function () use ( $u ) {
+			return 'include=' . $u;
+		};
+		add_filter( 'bp_ajax_querystring', $querystring, 999 );
+
+		ob_start();
+		require buddypress()->plugin_dir . 'bp-templates/bp-nouveau/readylaunch/members/members-loop.php';
+		$output = ob_get_clean();
+
+		remove_filter( 'bp_ajax_querystring', $querystring, 999 );
+
+		$this->assertStringContainsString( 'Joined 21 Apr 2025', $output );
+		$this->assertFalse( has_filter( 'bb_get_member_joined_date', 'BB_Readylaunch::bb_rl_modify_member_joined_date' ) );
+	}
+
+	/**
 	 * The user ID is passed to listeners of the filter.
 	 */
 	public function test_filter_receives_user_id() {
