@@ -17,6 +17,7 @@ import { Toast, useAutoDismissToast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ProfileTypeModal } from '../components/modals/ProfileTypeModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
+import { ListPagination } from '../components/common/ListPagination';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
 
 /**
@@ -82,6 +83,42 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	var publishedPages = publishedPagesState[ 0 ];
 	var setPublishedPages = publishedPagesState[ 1 ];
 
+	// Pagination state. `total` is the server-reported count across all pages;
+	// `currentPage` is 1-based; `perPage` is fixed per screen (matches the
+	// 25 default the server clamps to). `allMemberTypesSummary` mirrors the
+	// server's slim {id, post_title} list — feeds the create/edit modal's
+	// Email Invites checkbox grid so it shows every type, not just the page
+	// currently rendered in the list.
+	var totalState = useState( 0 );
+	var total = totalState[ 0 ];
+	var setTotal = totalState[ 1 ];
+
+	var currentPageState = useState( 1 );
+	var currentPage = currentPageState[ 0 ];
+	var setCurrentPage = currentPageState[ 1 ];
+
+	var perPageState = useState( 25 );
+	var perPage = perPageState[ 0 ];
+
+	var allMemberTypesSummaryState = useState( [] );
+	var allMemberTypesSummary = allMemberTypesSummaryState[ 0 ];
+	var setAllMemberTypesSummary = allMemberTypesSummaryState[ 1 ];
+
+	// First-load gate — the meta payload (group_types, wp_roles,
+	// published_pages, member_types_summary) only changes on a true page
+	// reload, not when the user pages through the list. We send
+	// `include_meta=1` only on the first fetch in this component instance.
+	var hasMetaRef = useRef( false );
+
+	// Refetch trigger — bumped to re-fire the load effect (and pick up its
+	// fresh AbortController) after operations like save/delete that don't
+	// change `currentPage`. Without this, calling `loadMemberTypes()`
+	// directly from a handler would skip the effect's abort cleanup and
+	// orphan the in-flight promise if the user navigates away mid-fetch.
+	var refetchTickState = useState( 0 );
+	var refetchTick = refetchTickState[ 0 ];
+	var setRefetchTick = refetchTickState[ 1 ];
+
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
@@ -93,6 +130,11 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 
 	// AbortController ref for save/delete operations.
 	var actionAbortRef = useRef( null );
+
+	// Derived: total pages for the pagination control. Math.ceil to handle
+	// partial last page; falls back to 0 when total is 0 so ListPagination
+	// auto-hides.
+	var totalPages = perPage > 0 ? Math.ceil( total / perPage ) : 0;
 
 	// Load platform settings.
 	useEffect( function () {
@@ -108,7 +150,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				setSettingsLoading( false );
 			} )
 			.catch( function ( err ) {
-				if ( 'AbortError' !== err.name ) {
+				if ( ! err || 'AbortError' !== err.name ) {
 					setSettingsLoading( false );
 				}
 			} );
@@ -116,16 +158,40 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 		return function () { controller.abort(); };
 	}, [] );
 
-	// Load member types.
+	// Load member types — paginated. The first call in this component
+	// instance fetches the heavy meta payload (group_types, wp_roles,
+	// published_pages, member_types_summary); subsequent fetches skip it
+	// (server reads `include_meta=0`) since pagination + delete/save
+	// refetches don't need to re-pull data that hasn't changed.
 	var loadMemberTypes = useCallback( function ( options ) {
 		setIsLoading( true );
-		getMemberTypes( options )
+		var params = {
+			page:         currentPage,
+			per_page:     perPage,
+			include_meta: hasMetaRef.current ? 0 : 1,
+		};
+		getMemberTypes( params, options )
 			.then( function ( response ) {
 				if ( response.success && response.data ) {
 					setMemberTypes( response.data.member_types || [] );
-					setGroupTypes( response.data.group_types || [] );
-					setWpRoles( response.data.wp_roles || [] );
-					setPublishedPages( response.data.published_pages || [] );
+					setTotal( response.data.total || 0 );
+
+					// Meta payload — only present when we asked for it. Cache
+					// it in component state so subsequent paginated requests
+					// can run with `include_meta=0`.
+					if ( response.data.group_types ) {
+						setGroupTypes( response.data.group_types );
+					}
+					if ( response.data.wp_roles ) {
+						setWpRoles( response.data.wp_roles );
+					}
+					if ( response.data.published_pages ) {
+						setPublishedPages( response.data.published_pages );
+					}
+					if ( response.data.member_types_summary ) {
+						setAllMemberTypesSummary( response.data.member_types_summary );
+					}
+					hasMetaRef.current = true;
 				}
 				setIsLoading( false );
 			} )
@@ -135,7 +201,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 					setToast( { status: 'error', message: __( 'Failed to load profile types.', 'buddyboss' ) } );
 				}
 			} );
-	}, [] );
+	}, [ currentPage, perPage ] );
 
 	useEffect( function () {
 		var controller = new AbortController();
@@ -146,7 +212,10 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				actionAbortRef.current.abort();
 			}
 		};
-	}, [ loadMemberTypes ] );
+		// `refetchTick` intentionally in deps — handlers bump it to re-run
+		// this effect (and get its abortable cleanup) instead of calling
+		// `loadMemberTypes()` directly.
+	}, [ loadMemberTypes, refetchTick ] );
 
 	// Close menu on outside click or Escape key.
 	useEffect( function () {
@@ -198,7 +267,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 					// Refetch types when re-enabling — the list may be stale/empty
 					// from when the feature was disabled and the component remounted.
 					if ( isProfileTypeSetting && newValue ) {
-						loadMemberTypes();
+						setRefetchTick( function ( t ) { return t + 1; } );
 					}
 				} else {
 					// Rollback only the setting that failed.
@@ -219,7 +288,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				}
 				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 			} );
-	}, [ enableProfileTypes, displayOnProfile, loadMemberTypes ] );
+	}, [ enableProfileTypes, displayOnProfile ] );
 
 	// Handle default profile type select change.
 	var handleDefaultTypeChange = useCallback( function ( newValue ) {
@@ -260,11 +329,20 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 		deleteMemberType( typeId, { signal: actionAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setMemberTypes( function ( prev ) {
-						return prev.filter( function ( t ) {
-							return t.id !== typeId;
-						} );
-					} );
+					// With pagination, a local filter would leave the page
+					// looking partial (4 items on page 1 of 5 instead of
+					// pulling the first item from page 2 forward). Refetch
+					// the current page — and if we just deleted the last
+					// item on a non-first page, drop back one page so the
+					// user isn't stranded on an empty view.
+					var isLastItemOnPage = memberTypes.length === 1 && currentPage > 1;
+					if ( isLastItemOnPage ) {
+						// Page-change triggers the load effect (which owns the AbortController).
+						setCurrentPage( currentPage - 1 );
+					} else {
+						// Same effect, different trigger — see refetchTick definition.
+						setRefetchTick( function ( t ) { return t + 1; } );
+					}
 					setToast( { status: 'success', message: __( 'Profile type deleted.', 'buddyboss' ) } );
 				} else {
 					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete profile type.', 'buddyboss' ) } );
@@ -276,7 +354,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				}
 				setToast( { status: 'error', message: __( 'Failed to delete profile type.', 'buddyboss' ) } );
 			} );
-	}, [ deleteConfirmId ] );
+	}, [ deleteConfirmId, memberTypes, currentPage ] );
 
 	// Handle edit.
 	var handleEdit = useCallback( function ( memberType ) {
@@ -296,8 +374,8 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 		setIsModalOpen( false );
 		setEditingType( null );
 		setToast( { status: 'success', message: __( 'Profile type saved.', 'buddyboss' ) } );
-		loadMemberTypes();
-	}, [ loadMemberTypes ] );
+		setRefetchTick( function ( t ) { return t + 1; } );
+	}, [] );
 
 	// Handle modal close.
 	var handleModalClose = useCallback( function () {
@@ -306,9 +384,16 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	}, [] );
 
 	// Build default type options for the select (memoized to avoid rebuilding on unrelated state changes).
+	// IMPORTANT: source is `allMemberTypesSummary` (the slim full registry shipped
+	// in the include_meta payload), NOT `memberTypes` (the paginated 25-per-page
+	// state). Iterating `memberTypes` here would silently exclude every type that
+	// isn't on the currently-visible page on sites with > per_page profile types
+	// — the dropdown options would change as the admin pages through the list.
+	// The summary ships `id`, `post_title`, `key`, `plural_label` — everything
+	// this dropdown needs — independent of pagination.
 	var defaultTypeOptions = useMemo( function () {
 		var options = [ { label: __( 'Select', 'buddyboss' ), value: '' } ];
-		memberTypes.forEach( function ( type ) {
+		allMemberTypesSummary.forEach( function ( type ) {
 			if ( type.key ) {
 				options.push( {
 					label: decodeEntities( type.plural_label || type.post_title ),
@@ -317,7 +402,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 			}
 		} );
 		return options;
-	}, [ memberTypes ] );
+	}, [ allMemberTypesSummary ] );
 
 	/**
 	 * Get visibility badge info for a member type.
@@ -571,6 +656,14 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 							<p>{ __( 'No profile types found. Click "Add New Profile Type" to create one.', 'buddyboss' ) }</p>
 						</div>
 					) }
+
+					<ListPagination
+						currentPage={ currentPage }
+						totalPages={ totalPages }
+						total={ total }
+						onPageChange={ function ( page ) { setCurrentPage( page ); } }
+						className="bb-admin-profile-types"
+					/>
 				</div>
 			</div> }
 
@@ -580,7 +673,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				onClose={ handleModalClose }
 				onSave={ handleModalSave }
 				memberType={ editingType }
-				allMemberTypes={ memberTypes }
+				allMemberTypes={ allMemberTypesSummary }
 				groupTypes={ groupTypes }
 				wpRoles={ wpRoles }
 				publishedPages={ publishedPages }

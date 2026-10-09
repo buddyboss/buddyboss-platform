@@ -1112,16 +1112,108 @@ function bp_activity_edit_times( $time = null ) {
 }
 
 /**
+ * Durations the activity/comment edit settings accept.
+ *
+ * `-1` means "forever"; the rest come from bp_activity_edit_times(). This lives here rather
+ * than in the admin settings callbacks because the edit duration is read on the front end,
+ * where the admin files are not loaded.
+ *
+ * @since BuddyBoss 3.0.0
+ * @since BuddyBoss 3.5.1 Moved here from the admin settings callbacks so the front end can read it.
+ *
+ * @return array Allowed integer values.
+ */
+function bb_activity_get_allowed_edit_times() {
+	// Deliberately not memoised: bp_activity_edit_times() is filterable and the first read can
+	// happen before every filter is registered (field registration runs on bb_register_features).
+	$allowed = array( -1 );
+	foreach ( bp_activity_edit_times() as $time ) {
+		$allowed[] = intval( $time['value'] );
+	}
+
+	return $allowed;
+}
+
+/**
+ * Resolve an edit duration to one the settings control can actually represent.
+ *
+ * The duration is chosen from a <select> offering a fixed set of values, and HTML has no
+ * "no match" state: given a value matching no <option>, the browser silently selects the
+ * first one. So a stored value outside the allowed set does not read as unset, it reads as
+ * whichever option happens to be first — and `(int) ''` is 0, which
+ * bp_activity_user_can_edit() treats as a zero-second window, i.e. editing switched off.
+ *
+ * The write path already coerces out-of-range values to the default via
+ * bb_activity_sanitize_edit_time(); this applies the same rule on read, so installs whose
+ * stored value is already invalid (migrations, partial saves, direct database edits) behave
+ * as documented instead of silently disabling the feature.
+ *
+ * @since BuddyBoss 3.5.1
+ *
+ * @param mixed $value   Stored value.
+ * @param mixed $default Value to fall back to. Must itself be an allowed duration, otherwise 600
+ *                       (10 minutes) is used. Default 600.
+ *
+ * @return int A duration from bb_activity_get_allowed_edit_times().
+ */
+function bb_activity_normalize_edit_time( $value, $default = 600 ) {
+	$allowed = bb_activity_get_allowed_edit_times();
+
+	if ( is_numeric( $value ) && in_array( intval( $value ), $allowed, true ) ) {
+		return intval( $value );
+	}
+
+	// The fallback has to be representable too, or the return contract above is broken.
+	if ( is_numeric( $default ) && in_array( intval( $default ), $allowed, true ) ) {
+		return intval( $default );
+	}
+
+	return 600;
+}
+
+/**
+ * Resolve an activity comment threading depth to a level the settings control can represent.
+ *
+ * The depth <select> offers 1-4. As with the edit duration, a stored value outside that range
+ * does not read as unset — it renders as whichever <option> comes first — so the same rule has
+ * to apply on read as on write, or the screen reports a depth the front end does not use.
+ *
+ * Lives here rather than in the admin settings callbacks because the depth is read on the front
+ * end, where the admin files are not loaded.
+ *
+ * @since BuddyBoss 3.5.1
+ *
+ * @param mixed $value Stored value.
+ *
+ * @return int A depth between 1 and 4. Anything else resolves to 3.
+ */
+function bb_activity_normalize_comment_threading_depth( $value ) {
+	$value = absint( $value );
+
+	if ( $value < 1 || $value > 4 ) {
+		return 3;
+	}
+
+	return $value;
+}
+
+/**
  * Get BuddyBoss Activity Time option.
  *
- * @param bool $default when option not found, function will return $default value.
- *
- * @return mixed|void
+ * The stored value is normalised with bb_activity_normalize_edit_time(): anything outside
+ * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
  *
  * @since BuddyBoss 1.5.0
+ * @since BuddyBoss 3.5.1 The return value is normalised to an allowed duration.
+ *
+ * @param mixed $default Value used when the option row is absent. Honoured only if it is an allowed duration.
+ *
+ * @return int Edit duration in seconds, or -1 for no limit.
  */
 function bp_get_activity_edit_time( $default = false ) {
-	return apply_filters( 'bp_get_activity_edit_time', bp_get_option( '_bp_activity_edit_time', $default ) );
+	$edit_time = bb_activity_normalize_edit_time( bp_get_option( '_bp_activity_edit_time', $default ) );
+
+	return apply_filters( 'bp_get_activity_edit_time', $edit_time );
 }
 
 /**
@@ -2461,14 +2553,20 @@ function bb_is_activity_comment_edit_enabled( $default = false ) {
 /**
  * Get BuddyBoss activity comment Time option.
  *
+ * The stored value is normalised with bb_activity_normalize_edit_time(): anything outside
+ * bb_activity_get_allowed_edit_times(), including an empty row, resolves to 600 (10 minutes).
+ *
  * @since BuddyBoss 2.4.40
+ * @since BuddyBoss 3.5.1 The return value is normalised to an allowed duration.
  *
- * @param bool $default when option not found, function will return $default value.
+ * @param mixed $default Value used when the option row is absent. Honoured only if it is an allowed duration.
  *
- * @return mixed|void
+ * @return int Edit duration in seconds, or -1 for no limit.
  */
 function bb_get_activity_comment_edit_time( $default = false ) {
-	return apply_filters( 'bb_get_activity_comment_edit_time', bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+	$edit_time = bb_activity_normalize_edit_time( bp_get_option( '_bb_activity_comment_edit_time', $default ) );
+
+	return apply_filters( 'bb_get_activity_comment_edit_time', $edit_time );
 }
 
 /**
@@ -2500,6 +2598,48 @@ function bb_feed_excluded_post_types() {
  */
 function bb_is_active_activity_pinned_posts( $default = false ) {
 
+	$enabled = (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default );
+
+	if ( $enabled ) {
+		/*
+		 * Pinned Posts moved out of the free Platform into the BuddyBoss Addons
+		 * plugin. The stored `_bb_enable_activity_pinned_posts` option can remain
+		 * enabled from before that move, so the feature is only truly ACTIVE when
+		 * the add-on is present AND licensed — otherwise the pin controls, the
+		 * REST support and the add-on's own pin logic must all treat it as off.
+		 *
+		 * Two independent signals so the gate is load-order safe:
+		 *   - the add-on's licensed-provider check (grace-period aware — the same
+		 *     signal the add-on's own module loaders use), or
+		 *   - the add-on's pin mutation function actually being loaded, EXCLUDING
+		 *     Platform's own no-op shim. Platform defines a deprecation shim under
+		 *     that same name from `bp_init:1` (so un-updated external callers
+		 *     degrade instead of fatalling), which means a bare `function_exists()`
+		 *     would report a provider on a site that has none. The shim advertises
+		 *     itself via `bb_activity_pin_unpin_post_is_stub()`, so testing for its
+		 *     absence keeps this term honest.
+		 *
+		 * LIMITATION: the licence check proves the add-on plugin is active and
+		 * entitled, NOT that the Pinned Posts MODULE finished loading (it has its
+		 * own guards — activity component active, dormancy marker, module present).
+		 * If the module is dormant on a licensed site, this reports the feature
+		 * active while no real pin implementation exists; the REST route then
+		 * answers a structured 501 (never a fatal) and no pin UI renders.
+		 * The licence term is only needed for the early `bb_register_features`
+		 * call, before the module loads at bp_include:20.
+		 */
+		$provider_available =
+			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| (
+				function_exists( 'bb_activity_pin_unpin_post' )
+				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' )
+			);
+
+		if ( ! $provider_available ) {
+			$enabled = false;
+		}
+	}
+
 	/**
 	 * Filters whether activity pinned posts are enabled.
 	 *
@@ -2507,7 +2647,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 	 *
 	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', $enabled );
 }
 
 /**
@@ -2695,9 +2835,39 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if ( ! class_exists( 'BB_Reactions' ) && 'emotions' === $mode ) {
-		$mode = 'likes';
-		bp_update_option( 'bb_reaction_mode', $mode );
+
+	if ( 'emotions' === $mode ) {
+		// "Emotions" requires the Pro emotion layer, provided by either BuddyBoss
+		// Platform Pro (legacy) or the BuddyBoss Addons plugin. Detect provider
+		// availability in a load-order-independent way: the BB_Reactions class is
+		// loaded late (bb_after_register_features), so a bare class_exists() check
+		// run during earlier hooks (e.g. bb_register_features) would spuriously
+		// report the layer missing.
+		//
+		// IMPORTANT: only fall back for DISPLAY — never persist the downgrade.
+		// Writing 'likes' back from this getter silently corrupted a valid saved
+		// 'emotions' setting on every request where the provider had not booted
+		// yet (and, on addon-only sites, permanently), which made the Reactions
+		// mode appear un-saveable.
+		//
+		// The third branch is gated on bp_register_reaction() — a marker defined
+		// only by a legacy Pro build that still ships the emotion layer itself.
+		// A licensed Pro post-PROD-10191 no longer provides reactions (that moved
+		// to the add-on), so bbp_pro_is_license_valid() alone must not be treated
+		// as proof of a provider; without this gate a new-Pro + no-add-on +
+		// licensed site would report emotions "available" with nothing behind it.
+		$emotion_layer_available =
+			class_exists( 'BB_Reactions' )
+			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| (
+				function_exists( 'bp_register_reaction' )
+				&& function_exists( 'bbp_pro_is_license_valid' )
+				&& bbp_pro_is_license_valid()
+			);
+
+		if ( ! $emotion_layer_available ) {
+			$mode = 'likes';
+		}
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );

@@ -9,6 +9,11 @@ import { createRoot } from '@wordpress/element';
 import { App } from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
+// Register the Tools panel custom field types (Repair Platform + Activation
+// Required CTA fallbacks for Sample Data + Migration Tools). Side-effect-only
+// import: the file registers `addFilter` handlers on `bb_admin_settings_custom_field`.
+import './components/tools';
+
 // Initialize the React app.
 const container = document.getElementById( 'bb-admin-settings' );
 if ( container ) {

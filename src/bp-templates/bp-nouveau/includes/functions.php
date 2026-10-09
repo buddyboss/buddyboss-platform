@@ -197,7 +197,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	// Single activity.
-	if ( bp_is_single_activity() ) {
+	if ( 'activity' === $object && bp_is_single_activity() ) {
 		$qs = array(
 			'display_comments=threaded',
 			'show_hidden=true',

@@ -9,7 +9,8 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useMemo, useCallback, useRef } from '@wordpress/element';
+import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from '@wordpress/element';
+import { splitFieldsByMetaboxGroup } from '../../utils/format';
 import {
 	Modal,
 	Button,
@@ -233,9 +234,8 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 			);
 		}
 
-		var grouped = groupFieldsWithLayout( tabFields );
-
-		return grouped.map( function ( item, idx ) {
+		// Render one grouped layout item (row of half/third fields, or single).
+		var renderItem = function ( item, idx ) {
 			if ( 'row' === item.type ) {
 				return (
 					<div key={ 'row-' + idx } className="bb-admin-meta-field__row">
@@ -265,6 +265,38 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					} }
 					itemId={ group.id }
 				/>
+			);
+		};
+
+		// Split this tab's fields into runs by source metabox so a bridged
+		// third-party metabox (e.g. a child-theme box) renders inside a
+		// bordered section headed by its title — parity with the Forums modal.
+		var segments = splitFieldsByMetaboxGroup( tabFields );
+
+		return segments.map( function ( segment, segIdx ) {
+			var grouped = groupFieldsWithLayout( segment.fields );
+
+			if ( ! segment.group ) {
+				return (
+					<Fragment key={ 'seg-flat-' + segIdx }>
+						{ grouped.map( function ( item, idx ) {
+							return renderItem( item, idx );
+						} ) }
+					</Fragment>
+				);
+			}
+
+			return (
+				<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+					{ segment.label && (
+						<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+					) }
+					<div className="bb-admin-meta-field__group-fields">
+						{ grouped.map( function ( item, idx ) {
+							return renderItem( item, idx );
+						} ) }
+					</div>
+				</div>
 			);
 		} );
 	};

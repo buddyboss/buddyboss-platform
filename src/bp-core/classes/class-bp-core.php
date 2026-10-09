@@ -233,6 +233,7 @@ class BP_Core extends BP_Component {
 				'buddyboss-app',
 				'pusher',
 				'recaptcha',
+				'two-factor',
 				'compatibility',
 			)
 		);

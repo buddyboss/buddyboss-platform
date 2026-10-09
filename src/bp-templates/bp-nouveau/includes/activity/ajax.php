@@ -86,12 +86,6 @@ add_action(
 				),
 			),
 			array(
-				'activity_update_pinned_post' => array(
-					'function' => 'bb_nouveau_ajax_activity_update_pinned_post',
-					'nopriv'   => true,
-				),
-			),
-			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
@@ -331,6 +325,87 @@ function bp_nouveau_ajax_delete_activity() {
 		wp_send_json_error( $response );
 	}
 
+	// Capture the album context of this activity's media/videos before deletion,
+	// so a single-album view can refresh its empty-state after the activity (and
+	// its cascade-deleted items) is removed (e.g. deleting the last photo or
+	// video from the theater opened on the album view). The attached ids are
+	// read from activity meta first (usually primed) so the media/video tables
+	// are only queried for the ~1% of deletes that actually carry attachments.
+	$activity_album_id     = 0;
+	$activity_album_group  = 0;
+	$deleted_media_ids     = array();
+	$deleted_video_ids     = array();
+	if ( empty( $_POST['is_comment'] ) && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+		$attached_media_meta = bp_is_active( 'media' ) ? bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
+		$attached_video_meta = bp_is_active( 'video' ) ? bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
+
+		// Batch uploads attach each item to its own child activity, which carries
+		// only the bp_media_activity/bp_video_activity marker - never the plural
+		// ids meta - so the marker must also open the capture path.
+		$is_media_activity = '' !== (string) $attached_media_meta
+			|| ( bp_is_active( 'media' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) );
+		$is_video_activity = '' !== (string) $attached_video_meta
+			|| ( bp_is_active( 'video' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) );
+
+		// The row lookups below serve two consumers: the album context (only used
+		// by the two single-album screens) and the fallback ids for marker-only
+		// child activities. Skip them when neither applies - i.e. the common feed
+		// delete, whose ids already came from the plural meta.
+		$in_single_album_view = bp_is_single_album() || bp_is_single_video_album();
+
+		if ( $is_media_activity && class_exists( 'BP_Media' ) ) {
+			if ( '' !== (string) $attached_media_meta ) {
+				$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
+			}
+			if ( $in_single_album_view || empty( $deleted_media_ids ) ) {
+				$activity_media = BP_Media::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_media['medias'] ) ) {
+					$first_media          = current( $activity_media['medias'] );
+					$activity_album_id    = (int) $first_media->album_id;
+					$activity_album_group = (int) $first_media->group_id;
+
+					// A marker-only child activity owns exactly one media row.
+					if ( empty( $deleted_media_ids ) ) {
+						$deleted_media_ids = array( (int) $first_media->id );
+					}
+				}
+			}
+		}
+
+		// Photos and videos live in separate tables; a video-only activity finds
+		// no BP_Media rows, so fall back to the video table for the album context.
+		if ( $is_video_activity && class_exists( 'BP_Video' ) ) {
+			if ( '' !== (string) $attached_video_meta ) {
+				$deleted_video_ids = array_map( 'intval', array_filter( explode( ',', $attached_video_meta ) ) );
+			}
+			if ( ( $in_single_album_view && empty( $activity_album_id ) ) || empty( $deleted_video_ids ) ) {
+				$activity_video = BP_Video::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_video['videos'] ) ) {
+					$first_video = current( $activity_video['videos'] );
+					if ( empty( $activity_album_id ) ) {
+						$activity_album_id    = (int) $first_video->album_id;
+						$activity_album_group = (int) $first_video->group_id;
+					}
+
+					// A marker-only child activity owns exactly one video row.
+					if ( empty( $deleted_video_ids ) ) {
+						$deleted_video_ids = array( (int) $first_video->id );
+					}
+				}
+			}
+		}
+	}
+
 	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
@@ -384,6 +459,50 @@ function bp_nouveau_ajax_delete_activity() {
 		$response['activity']           = $activity_html;
 		$response['parent_activity_id'] = $parent_activity_id;
 	}
+
+	// Refresh the single-album empty-state when this activity's media/videos
+	// emptied the album. The theater delete on the album view removes the whole
+	// activity via this handler, so the album grid needs the album-scoped
+	// empty-state (the media/video delete handlers cannot see this path). The
+	// deleted ids let the client clear every tile of a multi-item activity -
+	// the server cascade-deletes them all, not just the one open in the theater.
+	if ( ! empty( $deleted_media_ids ) || ! empty( $deleted_video_ids ) ) {
+		// Always returned: directory and other non-album grids use these to clear
+		// every tile of a multi-item activity, whatever page the delete came from.
+		$response['deleted_media_ids'] = $deleted_media_ids;
+		$response['deleted_video_ids'] = $deleted_video_ids;
+	}
+
+	if ( ! empty( $activity_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
+		// Counts and empty-state markup are only consumed by the two single-album
+		// screens, so skip their queries/render when the delete came from anywhere
+		// else (feed, directories) - under admin-ajax these route checks resolve
+		// from the referer, i.e. the page the delete request originated on.
+		// bp_is_single_video_album() is also true on the media album screen
+		// (bp_is_video_component() returns true for the media component), so the
+		// video-album branch must additionally rule out the media album route.
+		$in_video_album = bp_is_single_video_album() && ! bp_is_single_album();
+		if ( $in_video_album || bp_is_single_album() ) {
+			$album_counts                  = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
+			$response['album_id']          = $activity_album_id;
+			$response['album_total_count'] = (int) $album_counts['album_total_count'];
+			$response['album_media_count'] = (int) $album_counts['album_media_count'];
+			$response['album_video_count'] = (int) $album_counts['album_video_count'];
+
+			// The standalone video album screen only lists videos, so it is "empty"
+			// when no videos remain even if the mixed album still holds photos; the
+			// unified media album screen is empty only when everything is gone.
+			$response['album_empty_html'] = '';
+			if ( $in_video_album ) {
+				if ( 0 === (int) $album_counts['album_video_count'] && function_exists( 'bb_nouveau_video_get_album_empty_state' ) ) {
+					$response['album_empty_html'] = bb_nouveau_video_get_album_empty_state();
+				}
+			} elseif ( 0 === (int) $album_counts['album_total_count'] ) {
+				$response['album_empty_html'] = bb_nouveau_media_get_album_empty_state();
+			}
+		}
+	}
+
 	wp_send_json_success( $response );
 }
 
@@ -785,7 +904,19 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
+	if ( isset( $_POST['post_title'] ) ) {
+		$post_title = sanitize_text_field( wp_unslash( $_POST['post_title'] ) );
+	} elseif ( isset( $_POST['whats-new-title'] ) ) {
+		// Backward compatibility: older/cached scripts (and some third-party forms) submit the raw "whats-new-title" field instead of "post_title".
+		$post_title = sanitize_text_field( wp_unslash( $_POST['whats-new-title'] ) );
+	} else {
+		$post_title = '';
+	}
+
+	// On edit, an explicit "cleared" flag forces an empty title so it is not reinserted from the stored value.
+	if ( ! empty( $_POST['id'] ) && ! empty( $_POST['post_title_cleared'] ) ) {
+		$post_title = '';
+	}
 	$validation = bb_validate_activity_post_title( $post_title );
 	if ( ! $validation['valid'] ) {
 		wp_send_json_error(
@@ -1016,6 +1147,10 @@ function bp_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
 		}
 
+		// A cleared title is already an empty string here (see the post_title_cleared handling above), and
+		// bp_activity_post_update()/bp_activity_add() persist it verbatim with no stored-title fallback, so the
+		// non-group path needs no explicit post_title_cleared flag. If a stored-title fallback is ever added there
+		// (as groups_record_activity() has), propagate 'post_title_cleared' into $post_array like the group path below.
 		$post_array = array(
 			'id'         => $activity_id,
 			'post_title' => $post_title,
@@ -1060,6 +1195,10 @@ function bp_nouveau_ajax_post_update() {
 				'content'    => $_POST['content'],
 				'group_id'   => $item_id,
 			);
+
+			if ( ! empty( $_POST['post_title_cleared'] ) ) {
+				$post_array['post_title_cleared'] = true;
+			}
 
 			if ( $is_scheduled ) {
 				$post_array['recorded_time'] = $schedule_date_time;
@@ -1107,13 +1246,26 @@ function bp_nouveau_ajax_post_update() {
 	// Delete draft activity.
 	delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
 
+	$activity_args = array(
+		'include'     => $activity_id,
+		'show_hidden' => $is_private,
+	);
+
+	/*
+	 * In ReadyLaunch, activity comments are displayed only inside the activity modal
+	 * (or on the single activity screen), never inline in the feed. The feed loop
+	 * enforces this with 'display_comments=false' (see readylaunch/activity/activity-loop.php).
+	 *
+	 * Mirror that here so a re-rendered (newly posted or edited) activity injected back
+	 * into the stream stays consistent and doesn't render a comment thread whose reply
+	 * form is absent in this context, which would leave the "Comment"/"Reply" buttons dead.
+	 */
+	if ( bb_is_readylaunch_enabled() && ! bp_is_single_activity() ) {
+		$activity_args['display_comments'] = false;
+	}
+
 	ob_start();
-	if ( bp_has_activities(
-		array(
-			'include'     => $activity_id,
-			'show_hidden' => $is_private,
-		)
-	) ) {
+	if ( bp_has_activities( $activity_args ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
@@ -1410,72 +1562,6 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error();
-	}
-}
-
-/**
- * Update activity pinned post.
- *
- * @since BuddyBoss 2.4.60
- *
- * @return void
- */
-function bb_nouveau_ajax_activity_update_pinned_post() {
-	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-	);
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! is_user_logged_in() ) {
-		wp_send_json_error( $response );
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['pin_action'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! in_array( $_POST['pin_action'], array( 'pin', 'unpin' ), true ) ) {
-		wp_send_json_error( $response );
-	}
-
-	$args = array(
-		'action'      => $_POST['pin_action'],
-		'activity_id' => (int) $_POST['id'],
-		'retval'      => 'string',
-	);
-
-	$retval = bb_activity_pin_unpin_post( $args );
-
-	if ( ! empty( $retval ) ) {
-		if ( 'unpinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been removed', 'buddyboss' );
-		} elseif ( 'pinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
-		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'You are not allowed to pin or unpin this post', 'buddyboss' );
-		} elseif ( 'pin_updated' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
-		}
-
-		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );
-	}
-
-	if ( ! empty( $retval ) && in_array( $retval, array( 'unpinned', 'pinned', 'pin_updated' ), true ) ) {
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error( $response );
 	}
 }
 

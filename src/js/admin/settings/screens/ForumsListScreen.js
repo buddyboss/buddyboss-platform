@@ -19,7 +19,7 @@ import {
 } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } from '../utils/ajax';
+import { getForums, getForum, saveForum, forumBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
@@ -28,10 +28,11 @@ import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { useListScreenState } from '../hooks/useListScreenState';
-import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
+import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
+import { useMediaFrame } from '../hooks/useMediaFrame';
 
 /**
  * Sort options for the forums list dropdown (static, never changes).
@@ -1001,28 +1002,12 @@ function ForumEditModal( props ) {
 	var removeImage = removeImageState[ 0 ];
 	var setRemoveImage = removeImageState[ 1 ];
 
-	var isUploadingState = useState( false );
-	var isUploading = isUploadingState[ 0 ];
-	var setIsUploading = isUploadingState[ 1 ];
-
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
-	var fileInputRef = useRef( null );
-	var uploadAbortRef = useRef( null );
-
-	// Track mounted state.
-	var isMountedRef = useRef( true );
-	useEffect( function () {
-		isMountedRef.current = true;
-		return function () {
-			isMountedRef.current = false;
-			if ( uploadAbortRef.current ) {
-				uploadAbortRef.current.abort();
-			}
-		};
-	}, [] );
+	// Shared WordPress media frame opener (handles frame reuse + unmount teardown).
+	var openMediaFrame = useMediaFrame();
 
 	// Initialize registered values from forum data.
 	useEffect( function () {
@@ -1086,70 +1071,27 @@ function ForumEditModal( props ) {
 	}, [ forum ] );
 
 	/**
-	 * Trigger hidden file input for image selection.
+	 * Open the WordPress Media Library to select or upload the feature image.
+	 *
+	 * Replaces the previous direct-upload flow: selecting an existing Library
+	 * item reuses its attachment (no duplicate), and uploads made inside the
+	 * media frame route through WordPress core. Clears the pending-removal flag
+	 * so the picked attachment persists on save. Frame behaviour is centralized
+	 * in the shared useMediaFrame hook (mirrors WP's native "Featured image").
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	var triggerFileInput = function () {
-		if ( fileInputRef.current ) {
-			fileInputRef.current.value = '';
-			fileInputRef.current.click();
-		}
-	};
-
-	/**
-	 * Handle file selection and upload via AJAX.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Event} e File input change event.
-	 */
-	var handleFileSelect = function ( e ) {
-		var file = e.target.files && e.target.files[ 0 ];
-		if ( ! file ) {
-			return;
-		}
-
-		var allowedTypes = [ 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ];
-		if ( -1 === allowedTypes.indexOf( file.type ) ) {
-			setError( __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) );
-			return;
-		}
-
-		if ( file.size > 10 * 1024 * 1024 ) {
-			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss' ) );
-			return;
-		}
-
-		if ( uploadAbortRef.current ) {
-			uploadAbortRef.current.abort();
-		}
-		uploadAbortRef.current = new AbortController();
-
-		setIsUploading( true );
-		setError( '' );
-
-		uploadForumImage( file, uploadAbortRef.current.signal ).then( function ( response ) {
-			if ( ! isMountedRef.current ) {
-				return;
-			}
-			setIsUploading( false );
-			if ( response.success && response.data ) {
-				setImageId( response.data.attachment_id );
-				setImageUrl( response.data.url );
-				setRemoveImage( false );
-			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to upload image.', 'buddyboss' ) );
-			}
-		} ).catch( function ( err ) {
-			if ( ! isMountedRef.current ) {
-				return;
-			}
-			setIsUploading( false );
-			if ( 'AbortError' !== err.name ) {
-				setError( __( 'An error occurred while uploading. Please try again.', 'buddyboss' ) );
-			}
+	var openMediaLibrary = function () {
+		var opened = openMediaFrame( function ( attachment ) {
+			setImageId( attachment.id );
+			setImageUrl( attachment.url );
+			setRemoveImage( false );
+			setError( '' );
 		} );
+
+		if ( ! opened ) {
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss' ) );
+		}
 	};
 
 	/**
@@ -1234,7 +1176,7 @@ function ForumEditModal( props ) {
 										handleRegisteredFieldChange( field.id, val );
 									} }
 									itemId={ forum.id }
-									disabled={ isForumFieldDisabled( field.id, isGroupForum, isGroupForumChild ) }
+									disabled={ isForumFieldDisabled( field.id, isGroupForum, isGroupForumChild ) || isFieldConditionalDisabled( field, registeredValues ) }
 								/>
 							);
 						} ) }
@@ -1250,7 +1192,7 @@ function ForumEditModal( props ) {
 							handleRegisteredFieldChange( item.field.id, val );
 						} }
 						itemId={ forum.id }
-						disabled={ isForumFieldDisabled( item.field.id, isGroupForum, isGroupForumChild ) }
+						disabled={ isForumFieldDisabled( item.field.id, isGroupForum, isGroupForumChild ) || isFieldConditionalDisabled( item.field, registeredValues ) }
 					/>
 				</div>
 			);
@@ -1324,22 +1266,14 @@ function ForumEditModal( props ) {
 				<label className="components-base-control__label" htmlFor="bb-forum-edit-image">
 					{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 				</label>
-				<input
-					type="file"
-					ref={ fileInputRef }
-					accept="image/jpeg,image/png,image/gif,image/webp"
-					onChange={ handleFileSelect }
-					style={ { display: 'none' } }
-				/>
 				{ imageUrl ? (
 					<div className="bb-forum-modal__image-preview">
 						<img src={ safeUrl( imageUrl ) } alt="" />
 						<div className="bb-forum-modal__image-actions">
 							<Button
 								variant="secondary"
-								onClick={ triggerFileInput }
+								onClick={ openMediaLibrary }
 								className="bb-forum-modal__replace-image"
-								disabled={ isUploading }
 							>
 								{ __( 'Replace', 'buddyboss' ) }
 							</Button>
@@ -1348,7 +1282,6 @@ function ForumEditModal( props ) {
 								isDestructive
 								onClick={ handleRemoveImage }
 								className="bb-forum-modal__remove-image"
-								disabled={ isUploading }
 							>
 								{ __( 'Reset', 'buddyboss' ) }
 							</Button>
@@ -1357,15 +1290,10 @@ function ForumEditModal( props ) {
 				) : (
 					<button
 						type="button"
-						onClick={ triggerFileInput }
-						className={ 'bb-forum-create-modal__upload-zone' + ( isUploading ? ' bb-forum-create-modal__upload-zone--uploading' : '' ) }
-						disabled={ isUploading }
+						onClick={ openMediaLibrary }
+						className="bb-forum-create-modal__upload-zone"
 					>
-						{ isUploading ? (
-							<span className="bb-forum-create-modal__upload-spinner"></span>
-						) : (
-							<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
-						) }
+						<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
 					</button>
 				) }
 				<p className="bb-forum-create-modal__image-help">
@@ -1452,7 +1380,7 @@ function ForumEditModal( props ) {
 					variant="primary"
 					onClick={ handleSave }
 					isBusy={ isSaving }
-					disabled={ isSaving || isUploading }
+					disabled={ isSaving }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>

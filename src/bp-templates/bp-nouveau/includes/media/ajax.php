@@ -639,6 +639,15 @@ function bp_nouveau_ajax_media_delete() {
 		$album_counts = bb_media_get_album_counts( $album_id, $group_id );
 	}
 
+	// When deleting from a single album that is now empty, build the album-scoped
+	// empty-state markup. The personal/group scope rebuild above only renders a
+	// "no media" message when the whole scope is empty, so an album emptied while
+	// the user/group still has media elsewhere would otherwise show no message.
+	$album_empty_html = '';
+	if ( ! empty( $album_id ) && 0 === (int) $album_counts['album_total_count'] && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+		$album_empty_html = bb_nouveau_media_get_album_empty_state();
+	}
+
 	wp_send_json_success(
 		array(
 			'media'                    => $media,
@@ -653,6 +662,8 @@ function bp_nouveau_ajax_media_delete() {
 			'album_total_count'        => (int) $album_counts['album_total_count'],
 			'album_media_count'        => (int) $album_counts['album_media_count'],
 			'album_video_count'        => (int) $album_counts['album_video_count'],
+			'album_id'                 => (int) $album_id,
+			'album_empty_html'         => $album_empty_html,
 		)
 	);
 
