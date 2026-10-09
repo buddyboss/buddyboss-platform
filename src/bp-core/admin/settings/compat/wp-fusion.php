@@ -440,6 +440,29 @@ function bb_legacy_wpf_group_settings( $group_id ) {
  * the same save request — read-modify-write per call is safe because
  * `save_fields_data()` iterates fields synchronously within one request).
  *
+ * Why this writes groupmeta directly instead of replaying WP Fusion's handler
+ * (checked against WP Fusion 3.47.14, `WPF_BuddyPress::save_groups_data()`,
+ * hooked on `bp_group_admin_edit_after` at priority 20):
+ *
+ * - It is a pure meta writer. It only calls `groups_update_groupmeta()` /
+ *   `groups_delete_groupmeta()` for `wpf-settings-buddypress` (and
+ *   `wpf-settings`). No member/tag reconciliation happens there — tags are
+ *   applied/removed later, from `groups_join_group`, `groups_promote_member`
+ *   and `wpf_tags_modified`, which all read this meta at runtime. So nothing
+ *   is lost by not running it.
+ * - It is gated on `$_POST['bp-groups-slug']`, which the legacy group edit
+ *   screen posts but the Settings 2.0 AJAX save never does. When
+ *   `bp_group_admin_edit_after` fires from `BB_Admin_Groups_Ajax` it
+ *   therefore returns early and touches nothing.
+ * - Replaying it would be harmful, not helpful: it deletes
+ *   `wpf-settings-buddypress` whenever `$_POST['wpf-settings-buddypress']` is
+ *   empty and unconditionally deletes `wpf-settings` (group visibility) when
+ *   `$_POST['wpf-settings']` is empty, so it would clobber what this function
+ *   just saved and WP Fusion's visibility settings.
+ *
+ * Re-check this if WP Fusion changes `save_groups_data()` (e.g. adds side
+ * effects, or stops gating on `bp-groups-slug`).
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param int    $group_id Group ID.
