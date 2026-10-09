@@ -199,7 +199,9 @@ class BB_Admin_Reported_Content_Ajax {
 			$owner_ids = array();
 			$owner_map = array();
 			foreach ( $result['moderations'] as $moderation ) {
+				do_action( 'bb_moderation_before_get_related_' . $moderation->item_type );
 				$owner_id = bp_moderation_get_content_owner_id( (int) $moderation->item_id, $moderation->item_type );
+				do_action( 'bb_moderation_after_get_related_' . $moderation->item_type );
 				if ( is_array( $owner_id ) ) {
 					$owner_id = ! empty( $owner_id ) ? (int) $owner_id[0] : 0;
 				}
@@ -223,7 +225,9 @@ class BB_Admin_Reported_Content_Ajax {
 				$content_label = isset( $content_types[ $item_type ] ) ? $content_types[ $item_type ] : $item_type;
 
 				// Content URL.
+				do_action( 'bb_moderation_before_get_related_' . $item_type );
 				$content_url = bp_moderation_get_permalink( $item_id, $item_type );
+				do_action( 'bb_moderation_after_get_related_' . $item_type );
 
 				// Content owner (cached from first pass).
 				$owner_id = isset( $owner_map[ $moderation->id ] ) ? $owner_map[ $moderation->id ] : 0;
@@ -361,10 +365,13 @@ class BB_Admin_Reported_Content_Ajax {
 
 		$content_types = bp_moderation_content_types();
 		$content_label = isset( $content_types[ $item_type ] ) ? $content_types[ $item_type ] : $item_type;
-		$content_url   = bp_moderation_get_permalink( $item_id, $item_type );
+
+		do_action( 'bb_moderation_before_get_related_' . $item_type );
+		$content_url = bp_moderation_get_permalink( $item_id, $item_type );
 
 		// Content owner.
 		$owner_id = bp_moderation_get_content_owner_id( $item_id, $item_type );
+		do_action( 'bb_moderation_after_get_related_' . $item_type );
 		if ( is_array( $owner_id ) ) {
 			$owner_id = ! empty( $owner_id ) ? (int) $owner_id[0] : 0;
 		}
