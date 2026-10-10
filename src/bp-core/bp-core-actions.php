@@ -467,6 +467,7 @@ add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
  * Function will remove REST APIs endpoint.
  *
  * @since BuddyBoss 1.8.6
+ * @since BuddyBoss [BBVERSION] Only restricts requests served over the REST API, not internal rest_do_request() calls.
  *
  * @param WP_REST_Response|WP_HTTP_Response|WP_Error|mixed $response Result to send to the client.
  *                                                                   Usually a WP_REST_Response or WP_Error.
@@ -477,6 +478,12 @@ add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
  */
 function bb_restricate_rest_api_callback( $response, $handler, $request ) {
 	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	// Internal rest_do_request() calls made while rendering a page (e.g. Elementor reading its global
+	// colors and fonts to build the kit CSS) are not external REST access, so leave them alone.
+	if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
 		return $response;
 	}
 
