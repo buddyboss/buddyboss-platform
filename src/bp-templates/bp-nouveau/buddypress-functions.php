@@ -737,6 +737,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$object_nonces['group_members'] = wp_create_nonce( 'bp_nouveau_group_members' );
 		}
 
+		// Nonce for revoking a sent email invite from the member's Sent Invites screen.
+		if ( bp_is_active( 'invites' ) ) {
+			$object_nonces['invites_revoke'] = wp_create_nonce( 'bb_invites_revoke' );
+		}
+
 		// if ( bp_is_active( 'media' ) ) {
 		// $supported_objects = array_merge( $supported_objects, array( 'document' ) );
 		// }

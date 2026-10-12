@@ -1999,10 +1999,15 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	}
 
 	// Only this video's own previews or the user's uploaded thumbnails can be selected.
-	$selected_id = $pre_selected_id;
+	// The same validated ID is stored below, so a non-array `video_thumbnail` entry is rejected.
+	$selected_id = absint( $pre_selected_id );
 	if ( $thumbnail ) {
 		$selected_thumbnail = current( $thumbnail );
-		$selected_id        = isset( $selected_thumbnail['id'] ) ? $selected_thumbnail['id'] : 0;
+		$selected_id        = ( is_array( $selected_thumbnail ) && isset( $selected_thumbnail['id'] ) ) ? absint( $selected_thumbnail['id'] ) : 0;
+
+		if ( empty( $selected_id ) ) {
+			wp_send_json_error( $response );
+		}
 	}
 
 	if ( ! empty( $selected_id ) && ! bb_video_is_valid_thumbnail_for_video( $video, $selected_id ) ) {
@@ -2017,8 +2022,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	}
 
 	if ( $video_attachment_id && $thumbnail ) {
-		$pre_selected_id = current( $thumbnail );
-		$pre_selected_id = $pre_selected_id['id'];
+		$pre_selected_id = $selected_id;
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 
 		$thumbnail_images = array(
@@ -2029,7 +2033,8 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		update_post_meta( $video_attachment_id, 'video_preview_thumbnails', $thumbnail_images );
 		update_post_meta( $pre_selected_id, 'bp_video_upload', 1 );
 
-	} elseif ( $video_attachment_id && $pre_selected_id ) {
+	} elseif ( $video_attachment_id && $selected_id ) {
+		$pre_selected_id = $selected_id;
 		update_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', $pre_selected_id );
 	}
 

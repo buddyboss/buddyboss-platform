@@ -11841,6 +11841,38 @@ if ( ! function_exists( 'bb_video_is_trusted_thumbnail' ) ) {
 	}
 }
 
+if ( ! function_exists( 'bb_video_can_delete_stored_thumbnail' ) ) {
+	/**
+	 * Whether a thumbnail ID stored on a video may be deleted together with the video.
+	 *
+	 * The stored poster / custom image IDs may come from meta saved before thumbnail
+	 * validation existed, so only a trusted thumbnail attachment uploaded by the video
+	 * owner is deleted. The video's own file is never deleted through this path.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param BP_Video|object $video        Video object or row with `id`, `user_id` and `attachment_id`.
+	 * @param int             $thumbnail_id Stored thumbnail attachment ID.
+	 *
+	 * @return bool
+	 */
+	function bb_video_can_delete_stored_thumbnail( $video, $thumbnail_id ) {
+		$thumbnail_id = absint( $thumbnail_id );
+
+		if (
+			empty( $video->id ) ||
+			empty( $video->user_id ) ||
+			empty( $thumbnail_id ) ||
+			( ! empty( $video->attachment_id ) && absint( $video->attachment_id ) === $thumbnail_id )
+		) {
+			return false;
+		}
+
+		return bb_video_is_trusted_thumbnail( $video, $thumbnail_id ) &&
+			(int) get_post_field( 'post_author', $thumbnail_id ) === (int) $video->user_id;
+	}
+}
+
 if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
 	/**
 	 * Check whether an attachment may be used, or deleted, as a thumbnail of a video.

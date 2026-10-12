@@ -1314,8 +1314,19 @@ function bp_nouveau_ajax_delete_thread() {
 	 */
 	$can_delete_conversation = bp_current_user_can( 'bp_moderate' );
 	if ( ! $can_delete_conversation && class_exists( 'BP_Core_Members_Switching' ) ) {
-		$old_user                = BP_Core_Members_Switching::get_old_user();
-		$can_delete_conversation = ! empty( $old_user );
+		$old_user = BP_Core_Members_Switching::get_old_user();
+
+		/*
+		 * The old user cookie only proves that a logged_in cookie is valid, and a member
+		 * can copy their own one into it. Require a different user who can moderate and
+		 * who also passes the switching auth cookie check.
+		 */
+		$can_delete_conversation = (
+			$old_user instanceof WP_User &&
+			bp_loggedin_user_id() !== $old_user->ID &&
+			user_can( $old_user, 'bp_moderate' ) &&
+			BP_Core_Members_Switching::authenticate_old_user( $old_user )
+		);
 	}
 
 	if ( ! $can_delete_conversation ) {
