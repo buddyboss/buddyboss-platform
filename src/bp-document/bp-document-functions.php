@@ -3832,7 +3832,7 @@ function bp_document_get_forum_id( $document_id ) {
  * @return mixed|void
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Matches the exact document ID and prefers the document's own message.
+ * @since BuddyBoss [BBVERSION] Matches the exact document ID in the current user's threads.
  */
 function bp_document_get_thread_id( $document_id ) {
 
@@ -3841,17 +3841,10 @@ function bp_document_get_thread_id( $document_id ) {
 	if ( bp_is_active( 'messages' ) ) {
 		$document_id     = absint( $document_id );
 		$document_object = new BP_Document( $document_id );
+		$current_user_id = bp_loggedin_user_id();
 
-		// Resolve the thread from the message the document is attached to.
-		if ( ! empty( $document_object->message_id ) ) {
-			$message = new BP_Messages_Message( $document_object->message_id );
-			if ( ! empty( $message->id ) && ! empty( $message->thread_id ) ) {
-				$thread_id = (int) $message->thread_id;
-			}
-		}
-
-		// Otherwise match the exact ID in the message's comma-separated ID list.
-		if ( empty( $thread_id ) && ! empty( $document_id ) ) {
+		// Match the exact ID in the comma-separated ID list of the current user's threads.
+		if ( ! empty( $document_id ) && ! empty( $current_user_id ) ) {
 			$meta = array(
 				array(
 					'key'     => 'bp_document_ids',
@@ -3861,7 +3854,7 @@ function bp_document_get_thread_id( $document_id ) {
 			);
 
 			// Check if there is already previously individual group thread created.
-			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+			if ( bp_has_message_threads( array( 'user_id' => $current_user_id, 'meta_query' => $meta ) ) ) { // phpcs:ignore
 				while ( bp_message_threads() ) {
 					bp_message_thread();
 					$thread_id = bp_get_message_thread_id();
@@ -3869,6 +3862,18 @@ function bp_document_get_thread_id( $document_id ) {
 						break;
 					}
 				}
+			}
+		}
+
+		// Otherwise use the thread of the message the document is attached to, if the current user can access it.
+		if ( empty( $thread_id ) && ! empty( $document_object->message_id ) && ! empty( $current_user_id ) ) {
+			$message = new BP_Messages_Message( $document_object->message_id );
+			if (
+				! empty( $message->id ) &&
+				! empty( $message->thread_id ) &&
+				messages_check_thread_access( (int) $message->thread_id, $current_user_id )
+			) {
+				$thread_id = (int) $message->thread_id;
 			}
 		}
 

@@ -402,9 +402,20 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 
 		$auto_generated_thumbnails = (array) get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 
-		// New thumbnail upload time remove the previous one.
+		// New thumbnail upload time remove the previous one, but only when it is a trusted custom thumbnail of this video.
 		if ( empty( $request->get_param( 'attachment_id' ) ) && ! empty( $file ) && ! empty( $auto_generated_thumbnails['custom_image'] ) ) {
-			wp_delete_post( $auto_generated_thumbnails['custom_image'], true );
+			$previous_custom_image = absint( $auto_generated_thumbnails['custom_image'] );
+
+			// Stored meta is not trusted: it must be an uploaded video thumbnail of the video owner. Fails closed on older Platform.
+			if (
+				$previous_custom_image &&
+				$previous_custom_image !== (int) $attachment_id &&
+				function_exists( 'bb_video_is_valid_thumbnail_for_video' ) &&
+				bb_video_is_valid_thumbnail_for_video( $video, $previous_custom_image, false ) &&
+				(int) get_post_field( 'post_author', $previous_custom_image ) === (int) $video->user_id
+			) {
+				wp_delete_attachment( $previous_custom_image, true );
+			}
 		}
 
 		// Set the meta data after upload new custom thumbnail.

@@ -2378,30 +2378,23 @@ function bp_video_default_scope( $scope = 'all' ) {
 /**
  * Get the thread id based on video.
  *
+ * @since BuddyBoss [BBVERSION] Matches the exact video ID in the current user's threads.
+ *
  * @param string|int $video_id video id.
  *
  * @return mixed|void
- *
- * @since BuddyBoss [BBVERSION] Matches the exact video ID and prefers the video's own message.
  */
 function bp_video_get_thread_id( $video_id ) {
 
 	$thread_id = 0;
 
 	if ( bp_is_active( 'messages' ) ) {
-		$video_id     = absint( $video_id );
-		$video_object = new BP_Video( $video_id );
+		$video_id        = absint( $video_id );
+		$video_object    = new BP_Video( $video_id );
+		$current_user_id = bp_loggedin_user_id();
 
-		// Resolve the thread from the message the video is attached to.
-		if ( ! empty( $video_object->message_id ) ) {
-			$message = new BP_Messages_Message( $video_object->message_id );
-			if ( ! empty( $message->id ) && ! empty( $message->thread_id ) ) {
-				$thread_id = (int) $message->thread_id;
-			}
-		}
-
-		// Otherwise match the exact ID in the message's comma-separated ID list.
-		if ( empty( $thread_id ) && ! empty( $video_id ) ) {
+		// Match the exact ID in the comma-separated ID list of the current user's threads.
+		if ( ! empty( $video_id ) && ! empty( $current_user_id ) ) {
 			$meta = array(
 				array(
 					'key'     => 'bp_video_ids',
@@ -2411,7 +2404,7 @@ function bp_video_get_thread_id( $video_id ) {
 			);
 
 			// Check if there is already previously individual group thread created.
-			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+			if ( bp_has_message_threads( array( 'user_id' => $current_user_id, 'meta_query' => $meta ) ) ) { // phpcs:ignore
 				while ( bp_message_threads() ) {
 					bp_message_thread();
 					$thread_id = bp_get_message_thread_id();
@@ -2419,6 +2412,18 @@ function bp_video_get_thread_id( $video_id ) {
 						break;
 					}
 				}
+			}
+		}
+
+		// Otherwise use the thread of the message the video is attached to, if the current user can access it.
+		if ( empty( $thread_id ) && ! empty( $video_object->message_id ) && ! empty( $current_user_id ) ) {
+			$message = new BP_Messages_Message( $video_object->message_id );
+			if (
+				! empty( $message->id ) &&
+				! empty( $message->thread_id ) &&
+				messages_check_thread_access( (int) $message->thread_id, $current_user_id )
+			) {
+				$thread_id = (int) $message->thread_id;
 			}
 		}
 

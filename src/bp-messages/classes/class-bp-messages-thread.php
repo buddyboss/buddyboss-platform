@@ -664,6 +664,7 @@ class BP_Messages_Thread {
 	 * @since BuddyPress 1.0.0
 	 * @since BuddyPress 2.7.0 The $user_id parameter was added. Previously the current user
 	 *              was always assumed.
+	 * @since BuddyBoss [BBVERSION] Deletes the meta of every message in the thread, not only the first.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread to mark messages as
