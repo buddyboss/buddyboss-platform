@@ -805,6 +805,7 @@ function bp_video_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved video uploads.
  */
 function bp_video_add_handler( $videos = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_video_upload_count, $bp_video_upload_activity_content;
@@ -2380,36 +2381,49 @@ function bp_video_default_scope( $scope = 'all' ) {
  * @param string|int $video_id video id.
  *
  * @return mixed|void
+ *
+ * @since BuddyBoss [BBVERSION] Matches the exact video ID and prefers the video's own message.
  */
 function bp_video_get_thread_id( $video_id ) {
 
 	$thread_id = 0;
 
 	if ( bp_is_active( 'messages' ) ) {
-		$meta = array(
-			array(
-				'key'     => 'bp_video_ids',
-				'value'   => $video_id,
-				'compare' => 'LIKE',
-			),
-		);
+		$video_id     = absint( $video_id );
+		$video_object = new BP_Video( $video_id );
 
-		// Check if there is already previously individual group thread created.
-		if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
-			while ( bp_message_threads() ) {
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
-				if ( $thread_id ) {
-					break;
+		// Resolve the thread from the message the video is attached to.
+		if ( ! empty( $video_object->message_id ) ) {
+			$message = new BP_Messages_Message( $video_object->message_id );
+			if ( ! empty( $message->id ) && ! empty( $message->thread_id ) ) {
+				$thread_id = (int) $message->thread_id;
+			}
+		}
+
+		// Otherwise match the exact ID in the message's comma-separated ID list.
+		if ( empty( $thread_id ) && ! empty( $video_id ) ) {
+			$meta = array(
+				array(
+					'key'     => 'bp_video_ids',
+					'value'   => '(^|,)' . $video_id . '(,|$)',
+					'compare' => 'REGEXP',
+				),
+			);
+
+			// Check if there is already previously individual group thread created.
+			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				while ( bp_message_threads() ) {
+					bp_message_thread();
+					$thread_id = bp_get_message_thread_id();
+					if ( $thread_id ) {
+						break;
+					}
 				}
 			}
 		}
 
-		if ( empty( $thread_id ) ) {
-			$video_object = new BP_Video( $video_id );
-			if ( ! empty( $video_object->attachment_id ) ) {
-				$thread_id = get_post_meta( $video_object->attachment_id, 'thread_id', true );
-			}
+		if ( empty( $thread_id ) && ! empty( $video_object->attachment_id ) ) {
+			$thread_id = get_post_meta( $video_object->attachment_id, 'thread_id', true );
 		}
 	}
 
@@ -3575,6 +3589,7 @@ function bp_video_delete_video_previews() {
  * Return the preview url of the file.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Uses a signed receiver segment.
  *
  * @param int    $video_id      Video ID.
  * @param int    $attachment_id Attachment ID.
@@ -4567,6 +4582,7 @@ function bb_video_add_thumb_image_remove_upload_filters() {
  * @return array|false|string|string[]|void
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only creates public symlinks for the video's trusted thumbnails.
  */
 function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $generate = true ) {
 
@@ -4661,7 +4677,8 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 				}
 			}
 
-			// Override the video attachment id to given thumbnail id.
+			// Override the video attachment id to given thumbnail id (on a copy, so callers' objects stay intact).
+			$video                = clone $video;
 			$video->attachment_id = $attachment_id;
 
 			if ( $generate ) {

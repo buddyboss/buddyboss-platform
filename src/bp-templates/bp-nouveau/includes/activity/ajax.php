@@ -1298,6 +1298,7 @@ function bp_nouveau_ajax_post_update() {
  * Save activity draft data.
  *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss [BBVERSION] Only flags or deletes the user's own unsaved draft attachments.
  */
 function bb_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {

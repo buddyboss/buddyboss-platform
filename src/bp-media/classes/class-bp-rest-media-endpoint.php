@@ -2647,6 +2647,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the Gif data's value of the activity REST Field.
 	 *
+	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 *
 	 * @param object $object     The BuddyPress component's object that was just created/updated during the request.
 	 *                           (in this case the BP_Activity_Activity object).
 	 * @param object $value      The value of the REST Field to save.
@@ -3020,6 +3022,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * The function to use to update the medias's value of the topic REST Field.
 	 * - from bp_media_forums_new_post_media_save();
 	 *
+	 * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved media uploads.
+	 *
 	 * @param object $object     Value for the schema.
 	 * @param object $value      The value of the REST Field to save.
 	 *
@@ -3117,8 +3121,25 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					}
 				}
 
-				// Only the user's own unsaved upload can become a new media (fail closed without the Platform helper).
-				if ( ! function_exists( 'bb_user_can_adopt_attachment' ) || ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+				// Only the user's own unsaved upload can become a new item.
+				$can_adopt = function_exists( 'bb_user_can_adopt_attachment' )
+					? bb_user_can_adopt_attachment( $attachment_id )
+					// Older Platform without the helper: the user's own BuddyBoss upload, not yet bound to an item.
+					: (
+						is_numeric( $attachment_id ) &&
+						0 < bp_loggedin_user_id() &&
+						'attachment' === get_post_type( absint( $attachment_id ) ) &&
+						(int) get_post_field( 'post_author', absint( $attachment_id ) ) === bp_loggedin_user_id() &&
+						(
+							get_post_meta( absint( $attachment_id ), 'bp_media_upload', true ) ||
+							get_post_meta( absint( $attachment_id ), 'bp_video_upload', true ) ||
+							get_post_meta( absint( $attachment_id ), 'bp_document_upload', true )
+						) &&
+						! get_post_meta( absint( $attachment_id ), 'bp_media_id', true ) &&
+						! get_post_meta( absint( $attachment_id ), 'bp_video_id', true ) &&
+						! get_post_meta( absint( $attachment_id ), 'bp_document_id', true )
+					);
+				if ( ! $can_adopt ) {
 					continue;
 				}
 
@@ -3228,6 +3249,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
+	 *
+	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object Topics as a object.
 	 * @param object $value  The value of the REST Field to save.
@@ -3538,6 +3561,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
+	 *
+	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object Message as a object.
 	 * @param object $value  The value of the REST Field to save.

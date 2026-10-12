@@ -440,6 +440,7 @@ class BP_Messages_Thread {
 	 * Get all messages associated with a thread.
 	 *
 	 * @since BuddyPress 2.3.0
+	 * @since BuddyBoss [BBVERSION] Checks thread access before reading the cache and no longer caches denials.
 	 *
 	 * @param int  $thread_id The message thread ID.
 	 * @param null $before    Messages to get before a specific date.
@@ -809,10 +810,13 @@ class BP_Messages_Thread {
 			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query ); // db call ok; no-cache ok.
 
-			// Delete messages meta.
-			$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+			// Delete messages meta (one placeholder per ID; IN(%s) only matched the first ID).
+			$message_ids = array_filter( array_map( 'absint', (array) $message_ids ) );
+			if ( ! empty( $message_ids ) ) {
+				$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN (" . implode( ',', array_fill( 0, count( $message_ids ), '%d' ) ) . ')', $message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+			}
 
 			// Delete thread.
 			$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared

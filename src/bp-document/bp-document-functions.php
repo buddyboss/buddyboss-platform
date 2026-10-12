@@ -599,6 +599,7 @@ function bp_document_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved document uploads.
  */
 function bp_document_add_handler( $documents = array(), $privacy = 'public', $content = '', $group_id = false, $folder_id = false ) {
 	global $bp_document_upload_count, $bp_document_upload_activity_content;
@@ -3831,36 +3832,48 @@ function bp_document_get_forum_id( $document_id ) {
  * @return mixed|void
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Matches the exact document ID and prefers the document's own message.
  */
 function bp_document_get_thread_id( $document_id ) {
 
 	$thread_id = 0;
 
 	if ( bp_is_active( 'messages' ) ) {
-		$meta = array(
-			array(
-				'key'     => 'bp_document_ids',
-				'value'   => $document_id,
-				'compare' => 'LIKE',
-			),
-		);
+		$document_id     = absint( $document_id );
+		$document_object = new BP_Document( $document_id );
 
-		// Check if there is already previously individual group thread created.
-		if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
-			while ( bp_message_threads() ) {
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
-				if ( $thread_id ) {
-					break;
+		// Resolve the thread from the message the document is attached to.
+		if ( ! empty( $document_object->message_id ) ) {
+			$message = new BP_Messages_Message( $document_object->message_id );
+			if ( ! empty( $message->id ) && ! empty( $message->thread_id ) ) {
+				$thread_id = (int) $message->thread_id;
+			}
+		}
+
+		// Otherwise match the exact ID in the message's comma-separated ID list.
+		if ( empty( $thread_id ) && ! empty( $document_id ) ) {
+			$meta = array(
+				array(
+					'key'     => 'bp_document_ids',
+					'value'   => '(^|,)' . $document_id . '(,|$)',
+					'compare' => 'REGEXP',
+				),
+			);
+
+			// Check if there is already previously individual group thread created.
+			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				while ( bp_message_threads() ) {
+					bp_message_thread();
+					$thread_id = bp_get_message_thread_id();
+					if ( $thread_id ) {
+						break;
+					}
 				}
 			}
 		}
 
-		if ( empty( $thread_id ) ) {
-			$document_object = new BP_Document( $document_id );
-			if ( ! empty( $document_object->attachment_id ) ) {
-				$thread_id = get_post_meta( $document_object->attachment_id, 'thread_id', true );
-			}
+		if ( empty( $thread_id ) && ! empty( $document_object->attachment_id ) ) {
+			$thread_id = get_post_meta( $document_object->attachment_id, 'thread_id', true );
 		}
 	}
 

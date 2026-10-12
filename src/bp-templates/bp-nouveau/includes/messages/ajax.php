@@ -1188,6 +1188,7 @@ function bp_nouveau_ajax_messages_thread_read() {
  * AJAX get messages for each thread.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Only thread participants and moderators may read the thread.
  */
 function bp_nouveau_ajax_get_thread_messages() {
 	global $thread_template, $media_template, $document_template, $wpdb, $bp;
@@ -1286,6 +1287,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
  * AJAX delete entire thread.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Limited to moderators and switched admins; deletes the meta of every message.
  */
 function bp_nouveau_ajax_delete_thread() {
 
@@ -1767,6 +1769,7 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
  * Messages for each thread.
  *
  * @since BuddyBoss 1.3.0
+ * @since BuddyBoss [BBVERSION] Video thumbnails use the video's poster image.
  *
  * @param int   $thread_id thread id.
  * @param array $post      $_POST data.

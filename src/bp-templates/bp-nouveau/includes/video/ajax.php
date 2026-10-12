@@ -1380,6 +1380,7 @@ function bp_nouveau_ajax_video_update_privacy() {
  * Update video activity description.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Checks edit permission on the video that owns the attachment before saving.
  */
 function bp_nouveau_ajax_video_description_save() {
 	$response = array(
@@ -1522,6 +1523,7 @@ function bp_nouveau_object_template_results_albums_existing_video_query( $querys
  * Get description for the video.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Requires the video's own attachment.
  */
 function bp_nouveau_ajax_video_get_video_description() {
 
@@ -1852,6 +1854,7 @@ function bp_nouveau_ajax_video_move() {
  * Get Video edit thumbnail data.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Requires an editable video that owns the attachment.
  */
 function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 
@@ -1954,6 +1957,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
  * Save the video thumbnail.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only accepts this video's previews or the user's uploaded thumbnails.
  */
 function bp_nouveau_ajax_video_thumbnail_save() {
 	$response = array(
@@ -2048,6 +2052,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
  * Save the video thumbnail.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only deletes this video's custom thumbnail or the user's unsaved upload.
  */
 function bp_nouveau_ajax_video_thumbnail_delete() {
 	$response = array(

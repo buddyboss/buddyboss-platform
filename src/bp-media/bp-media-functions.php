@@ -610,6 +610,7 @@ function bp_media_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved media uploads.
  */
 function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_media_upload_count, $bp_media_upload_activity_content;
@@ -2621,35 +2622,55 @@ function bp_media_default_scope( $scope = 'all' ) {
 
 }
 
+/**
+ * Return the thread id if media belongs to message.
+ *
+ * @since BuddyBoss [BBVERSION] Matches the exact media ID and prefers the media's own message.
+ *
+ * @param int|string $media_id Media id to fetch the thread id.
+ *
+ * @return mixed|void
+ */
 function bp_media_get_thread_id( $media_id ) {
 
 	$thread_id = 0;
 
 	if ( bp_is_active( 'messages' ) ) {
-		$meta = array(
-			array(
-				'key'     => 'bp_media_ids',
-				'value'   => $media_id,
-				'compare' => 'LIKE',
-			),
-		);
+		$media_id     = absint( $media_id );
+		$media_object = new BP_Media( $media_id );
 
-		// Check if there is already previously individual group thread created.
-		if( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
-			while ( bp_message_threads() ) {
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
-				if ( $thread_id ) {
-					break;
+		// Resolve the thread from the message the media is attached to.
+		if ( ! empty( $media_object->message_id ) ) {
+			$message = new BP_Messages_Message( $media_object->message_id );
+			if ( ! empty( $message->id ) && ! empty( $message->thread_id ) ) {
+				$thread_id = (int) $message->thread_id;
+			}
+		}
+
+		// Otherwise match the exact ID in the message's comma-separated ID list.
+		if ( empty( $thread_id ) && ! empty( $media_id ) ) {
+			$meta = array(
+				array(
+					'key'     => 'bp_media_ids',
+					'value'   => '(^|,)' . $media_id . '(,|$)',
+					'compare' => 'REGEXP',
+				),
+			);
+
+			// Check if there is already previously individual group thread created.
+			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				while ( bp_message_threads() ) {
+					bp_message_thread();
+					$thread_id = bp_get_message_thread_id();
+					if ( $thread_id ) {
+						break;
+					}
 				}
 			}
 		}
 
-		if ( empty( $thread_id ) ) {
-			$media_object = new BP_Media( $media_id );
-			if ( ! empty( $media_object->attachment_id ) ) {
-				$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
-			}
+		if ( empty( $thread_id ) && ! empty( $media_object->attachment_id ) ) {
+			$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
 		}
 	}
 
@@ -3562,6 +3583,7 @@ function bp_media_delete_symlinks( $media ) {
  * Return the preview url of the file.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Uses a signed receiver segment.
  *
  * @param int    $media_id      Media ID.
  * @param int    $attachment_id Attachment ID.

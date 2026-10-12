@@ -469,6 +469,7 @@ function bp_video_update_video_privacy( $album ) {
  * Save video when new topic or reply is saved
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved video uploads.
  *
  * @param int $post_id post id.
  */
@@ -698,6 +699,7 @@ function bb_messages_video_save( $attachment ) {
  * Attach video to the message object
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only attaches videos owned by the message sender.
  *
  * @param object $message message object.
  */

@@ -10,11 +10,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
- /**
-  * Member revoke email invite.
-  *
-  * @since BuddyBoss 1.0.0
-  */
+/**
+ * Member revoke email invite.
+ *
+ * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Only the inviter or a moderator may revoke an invite.
+ */
 function bp_member_revoke_invite() {
 
 	global $bp;

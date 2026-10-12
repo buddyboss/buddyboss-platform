@@ -11729,7 +11729,7 @@ function bb_media_preview_get_receiver_id( $segment, $item_id, $attachment_id ) 
  * @param int|string $item_id       Media or video ID.
  * @param int|string $attachment_id Attachment ID.
  *
- * @return string 32-character hex signature.
+ * @return string 32-character hex signature, or an empty string when the item or attachment ID is malformed.
  */
 function bb_media_preview_receiver_signature( $receiver_id, $item_id, $attachment_id ) {
 	// Accept only a plain number with an optional `forbidden_` prefix. Anything else (e.g. `1x2`)
@@ -11783,9 +11783,10 @@ if ( ! function_exists( 'bb_video_is_trusted_thumbnail' ) ) {
 	/**
 	 * Whether an attachment may be served as a thumbnail (poster) of a video.
 	 *
-	 * A stored poster is trusted only when it is one of the video's auto-generated
-	 * previews, was uploaded by the video owner, or came through the video thumbnail
-	 * uploader. Thumbnail meta pointing at any other attachment is never served.
+	 * An attachment is trusted only when it is the video's own file, one of the video's
+	 * auto-generated previews, a thumbnail stored on this video (current poster, custom
+	 * image or default images), or came through the video thumbnail uploader. Any other
+	 * attachment, including other attachments of the video owner, is never served.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -11801,11 +11802,42 @@ if ( ! function_exists( 'bb_video_is_trusted_thumbnail' ) ) {
 			return false;
 		}
 
-		$auto_generated = function_exists( 'bb_video_get_auto_generated_preview_ids' ) ? array_map( 'absint', (array) bb_video_get_auto_generated_preview_ids( $video->attachment_id ) ) : array();
+		$video_attachment_id = ! empty( $video->attachment_id ) ? absint( $video->attachment_id ) : 0;
 
-		return in_array( $attachment_id, $auto_generated, true ) ||
-			(int) get_post_field( 'post_author', $attachment_id ) === (int) $video->user_id ||
-			(bool) get_post_meta( $attachment_id, 'bp_video_thumbnail_upload', true );
+		// The video's own file.
+		if ( $video_attachment_id === $attachment_id ) {
+			return true;
+		}
+
+		// Thumbnails that came through the video thumbnail uploader.
+		if ( get_post_meta( $attachment_id, 'bp_video_thumbnail_upload', true ) ) {
+			return true;
+		}
+
+		if ( empty( $video_attachment_id ) ) {
+			return false;
+		}
+
+		// Auto-generated previews of this video.
+		$auto_ids   = function_exists( 'bb_video_get_auto_generated_preview_ids' ) ? (array) bb_video_get_auto_generated_preview_ids( $video_attachment_id ) : array();
+		$thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+
+		if ( is_array( $thumbnails ) && ! empty( $thumbnails['default_images'] ) ) {
+			$auto_ids = array_merge( $auto_ids, (array) $thumbnails['default_images'] );
+		}
+
+		if ( in_array( $attachment_id, array_map( 'absint', $auto_ids ), true ) ) {
+			return true;
+		}
+
+		// A poster or custom image stored on this video is trusted only when the video owner uploaded it.
+		$stored_ids = array( get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true ) );
+		if ( is_array( $thumbnails ) && ! empty( $thumbnails['custom_image'] ) ) {
+			$stored_ids[] = $thumbnails['custom_image'];
+		}
+
+		return in_array( $attachment_id, array_map( 'absint', $stored_ids ), true ) &&
+			(int) get_post_field( 'post_author', $attachment_id ) === (int) $video->user_id;
 	}
 }
 

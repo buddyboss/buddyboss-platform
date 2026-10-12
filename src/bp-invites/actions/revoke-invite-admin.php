@@ -10,11 +10,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
- /**
-  * Admin revoke email invite.
-  *
-  * @since BuddyBoss 1.0.0
-  */
+/**
+ * Admin revoke email invite.
+ *
+ * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Requires a valid nonce and revoke permission.
+ */
 function bp_member_revoke_invite_admin() {
 
 	global $bp;

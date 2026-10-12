@@ -713,6 +713,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Only moderators may send a message as another member.
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -1000,6 +1001,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Members can only search their own conversations.
 	 */
 	public function search_thread_items_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -1290,6 +1292,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Honours another user_id only for moderators and deletes the meta of every message.
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/messages/:id Delete Thread
 	 * @apiName        DeleteBBThread
@@ -1390,14 +1393,21 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$wpdb->query( $query ); // db call ok; no-cache ok.
 
 		// Delete messages meta.
-		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		if ( ! empty( $message_ids ) ) {
+			$meta_message_ids = array_map( 'absint', $message_ids );
+			$id_placeholders  = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
+			$query_meta       = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		}
 
 		// Delete thread.
 		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
+
+		/** This action is documented in bp-messages/classes/class-bp-messages-thread.php (fires so media, document and GIF cleanup runs like the other delete paths). */
+		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, bp_loggedin_user_id(), true );
 
 		/**
 		 * Fires after message thread deleted.
@@ -1434,6 +1444,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Checks the caller's own moderate capability.
 	 */
 	public function delete_item_permissions_check( $request ) {
 

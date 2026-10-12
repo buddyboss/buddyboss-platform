@@ -347,6 +347,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	 * Create Video poster.
 	 *
 	 * @since          0.1.0
+	 * @since BuddyBoss [BBVERSION] Only accepts this video's previews or the user's uploaded thumbnails.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -389,7 +390,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		$video = new BP_Video( $id );
 
 		// An existing attachment must be one of this video's previews or the user's uploaded thumbnail.
-		if ( ! empty( $request->get_param( 'attachment_id' ) ) && ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id ) ) {
+		if ( ! empty( $request->get_param( 'attachment_id' ) ) && ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) || ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id ) ) ) {
 			return new WP_Error(
 				'bp_rest_attachment_invalid_id',
 				__( 'Invalid attachment ID.', 'buddyboss' ),
@@ -505,6 +506,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	 * Delete Video poster.
 	 *
 	 * @since          0.1.0
+	 * @since BuddyBoss [BBVERSION] Only deletes this video's custom thumbnail or the user's unsaved upload.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -527,7 +529,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		$preview_thumbnail_id      = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
 
 		// Only a custom uploaded thumbnail of this video can be deleted, never an arbitrary post.
-		if ( empty( $attachment_id ) || ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id, false ) ) {
+		if ( empty( $attachment_id ) || ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) || ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id, false ) ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_default_id',
 				__( 'Sorry, You have passed invalid poster ID.', 'buddyboss' ),

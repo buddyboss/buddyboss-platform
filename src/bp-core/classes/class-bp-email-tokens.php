@@ -2814,6 +2814,7 @@ class BP_Email_Tokens {
 	 * Generate the output of media/document/video/GIF preview for the notification.
 	 *
 	 * @since BuddyBoss 2.4.40
+	 * @since BuddyBoss [BBVERSION] Message media previews use the signed receiver preview URL.
 	 *
 	 * @param int    $object_id Post ID.
 	 * @param array  $tokens    Token array.

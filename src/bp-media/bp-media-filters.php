@@ -46,6 +46,7 @@ add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 ); // Delete thread medias.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_media', 10, 4 ); // Delete messages medias.
+add_action( 'bp_messages_thread_before_delete', 'bb_media_messages_remember_gif_senders', 10, 2 ); // Remember thread gif senders.
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 ); // Delete thread gifs.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_gif', 10, 4 ); // Delete messages gifs.
 // add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );.
@@ -448,6 +449,7 @@ function bp_media_delete_activity_media( $activities ) {
  * Delete media gif when related activity is deleted.
  *
  * @since BuddyBoss 1.4.9
+ * @since BuddyBoss [BBVERSION] Only deletes legacy GIF attachments uploaded by the activity author.
  *
  * @param array $activities Array of activities.
  */
@@ -526,6 +528,7 @@ function bp_media_update_media_privacy( $album ) {
  * Save media when new topic or reply is saved
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved media uploads.
  *
  * @param $post_id
  */
@@ -800,6 +803,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
  * save gif data for forum, topic, reply
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
  *
  * @param $post_id
  */
@@ -858,6 +862,7 @@ function bp_media_forums_save_gif_data( $post_id ) {
  * Attach media to the message object
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Only attaches media owned by the message sender.
  *
  * @param $message
  */
@@ -969,10 +974,78 @@ function bp_media_user_messages_delete_attached_media( $thread_id, $message_ids,
 	}
 }
 
+if ( ! function_exists( 'bb_media_get_message_sender_id' ) ) {
+	/**
+	 * Get the sender of a message whose GIF is being cleaned up.
+	 *
+	 * A whole-thread delete removes the message rows before `bp_messages_thread_after_delete`
+	 * fires, so the senders are remembered on `bp_messages_thread_before_delete`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $message_id  Message ID to look up. Pass 0 to only remember senders.
+	 * @param array $message_ids Optional. Message IDs whose senders should be remembered.
+	 *
+	 * @return int Sender user ID, or 0 when the message cannot be found.
+	 */
+	function bb_media_get_message_sender_id( $message_id, $message_ids = array() ) {
+		static $senders = array();
+
+		$message_id = (int) $message_id;
+		$lookup_ids = wp_parse_id_list( $message_ids );
+
+		if ( $message_id > 0 && ! isset( $senders[ $message_id ] ) ) {
+			$lookup_ids[] = $message_id;
+		}
+
+		$lookup_ids = array_diff( array_unique( $lookup_ids ), array_keys( $senders ) );
+
+		if ( ! empty( $lookup_ids ) ) {
+			$messages = BP_Messages_Message::get(
+				array(
+					'include'           => $lookup_ids,
+					'per_page'          => - 1,
+					'orderby'           => 'id',
+					'update_meta_cache' => false,
+				)
+			);
+
+			foreach ( $lookup_ids as $lookup_id ) {
+				$senders[ $lookup_id ] = 0;
+			}
+
+			if ( ! empty( $messages['messages'] ) ) {
+				foreach ( $messages['messages'] as $message ) {
+					$senders[ (int) $message->id ] = (int) $message->sender_id;
+				}
+			}
+		}
+
+		return isset( $senders[ $message_id ] ) ? $senders[ $message_id ] : 0;
+	}
+}
+
+if ( ! function_exists( 'bb_media_messages_remember_gif_senders' ) ) {
+	/**
+	 * Remember message senders before a thread's messages are deleted.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $thread_id   ID of the thread being deleted.
+	 * @param array $message_ids IDs of messages being deleted.
+	 */
+	function bb_media_messages_remember_gif_senders( $thread_id, $message_ids ) {
+		if ( ! empty( $message_ids ) ) {
+			bb_media_get_message_sender_id( 0, $message_ids );
+		}
+	}
+}
+
 /**
  * Delete gif attached to thread messages.
  *
  * @since BuddyBoss 1.2.9
+ * @since BuddyBoss [BBVERSION] Only deletes legacy GIF attachments uploaded by the message sender.
  *
  * @param int   $thread_id   ID of the thread being deleted.
  * @param array $message_ids IDs of messages being deleted.
@@ -983,13 +1056,16 @@ function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
 		foreach ( $message_ids as $message_id ) {
 			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
 
-			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
-					wp_delete_attachment( (int) $message_gif['still'], true );
+			// Only legacy GIF attachments uploaded by the message sender are deleted.
+			if ( ! empty( $message_gif ) && is_array( $message_gif ) ) {
+				$sender_id = bb_media_get_message_sender_id( $message_id );
+
+				if ( ! empty( $message_gif['still'] ) ) {
+					bb_media_delete_legacy_gif_attachment( $message_gif['still'], $sender_id );
 				}
 
-				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $message_gif['mp4'], true );
+				if ( ! empty( $message_gif['mp4'] ) ) {
+					bb_media_delete_legacy_gif_attachment( $message_gif['mp4'], $sender_id );
 				}
 			}
 
@@ -1003,6 +1079,7 @@ function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
  * Delete gif attached to messages.
  *
  * @since BuddyBoss 1.4.9
+ * @since BuddyBoss [BBVERSION] Only deletes legacy GIF attachments uploaded by the message sender.
  *
  * @param int   $thread_id          ID of the thread being deleted.
  * @param array $message_ids        IDs of messages being deleted.
@@ -1015,13 +1092,16 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
 		foreach ( $update_message_ids as $message_id ) {
 			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
 
-			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
-					wp_delete_attachment( (int) $message_gif['still'], true );
+			// Only legacy GIF attachments uploaded by the message sender are deleted.
+			if ( ! empty( $message_gif ) && is_array( $message_gif ) ) {
+				$sender_id = bb_media_get_message_sender_id( $message_id );
+
+				if ( ! empty( $message_gif['still'] ) ) {
+					bb_media_delete_legacy_gif_attachment( $message_gif['still'], $sender_id );
 				}
 
-				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $message_gif['mp4'], true );
+				if ( ! empty( $message_gif['mp4'] ) ) {
+					bb_media_delete_legacy_gif_attachment( $message_gif['mp4'], $sender_id );
 				}
 			}
 
@@ -1035,6 +1115,7 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
  * Save gif data into messages meta key "_gif_data"
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
  *
  * @param $message
  */
@@ -1048,8 +1129,9 @@ function bp_media_messages_save_gif_data( &$message ) {
 	) {
 		$gif_data = $_POST['gif_data'];
 
-		$still = $gif_data['images']['480w_still']['url'];
-		$mp4   = $gif_data['images']['original_mp4']['mp4'];
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = bb_media_sanitize_gif_url( $gif_data['images']['480w_still']['url'] );
+		$mp4   = bb_media_sanitize_gif_url( $gif_data['images']['original_mp4']['mp4'] );
 
 		bp_messages_update_meta(
 			$message->id,
@@ -1224,6 +1306,7 @@ function bp_media_comment_embed_gif( $comment_id ) {
  * Save gif data into activity meta key "_gif_attachment_id"
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Stores only http(s) GIF URLs and deletes only the author's legacy GIF attachments.
  *
  * @param $activity
  */
