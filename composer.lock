@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9398786fa4629e30c478a2901ab4a22f",
+    "content-hash": "b1902e327213937225cf6f2d4add1013",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -154,6 +154,48 @@
                 "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/9.1.2"
             },
             "time": "2026-09-09T17:00:57+00:00"
+        },
+        {
+            "name": "caseproof/ground-level-insights",
+            "version": "9.1.2",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-insights.git",
+                "reference": "f0ce5306695a541fda2ec301df5a995b9ee01878"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-insights/zipball/f0ce5306695a541fda2ec301df5a995b9ee01878",
+                "reference": "f0ce5306695a541fda2ec301df5a995b9ee01878",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-container": "^9.1.1",
+                "caseproof/ground-level-in-product-notifications": "^9.1.1",
+                "caseproof/ground-level-mothership": "^9.1.1",
+                "caseproof/ground-level-support": "^9.1.1",
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GroundLevel\\Insights\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Insights package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-insights/tree/9.1.2"
+            },
+            "time": "2026-09-04T21:22:24+00:00"
         },
         {
             "name": "caseproof/ground-level-mothership",
