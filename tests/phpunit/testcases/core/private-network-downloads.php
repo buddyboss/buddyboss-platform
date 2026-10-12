@@ -264,6 +264,64 @@ class BB_Tests_Core_Private_Network_Downloads extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A photo folder link has no file to download, so a member is sent to the
+	 * home page without an undefined variable warning.
+	 */
+	public function test_photo_folder_link_sends_member_home() {
+		$this->enable_private_website();
+		self::set_current_user( self::factory()->user->create() );
+		$this->set_download_request(
+			array(
+				'attachment_id'       => '123',
+				'media_type'          => 'folder',
+				'download_media_file' => '1',
+				'media_file'          => '45',
+			)
+		);
+
+		$this->assertSame( site_url(), $this->get_handler_redirect( 'bp_media_download_url_file' ) );
+	}
+
+	/**
+	 * A guest opening a video link goes to the login page.
+	 */
+	public function test_video_link_sends_guest_to_login() {
+		$this->enable_private_website();
+		self::set_current_user( 0 );
+		$this->set_download_request(
+			array(
+				'attachment_id'       => '123',
+				'video_type'          => 'video',
+				'download_video_file' => '1',
+				'video_file'          => '45',
+			)
+		);
+
+		$location = $this->get_handler_redirect( 'bp_video_download_url_file' );
+
+		$this->assertStringContainsString( 'wp-login.php', $location );
+		$this->assertSame( $this->download_url, $this->get_redirect_to( $location ) );
+	}
+
+	/**
+	 * Members on a private site reach the existing video permission check.
+	 */
+	public function test_video_link_skips_login_for_member() {
+		$this->enable_private_website();
+		self::set_current_user( self::factory()->user->create() );
+		$this->set_download_request(
+			array(
+				'attachment_id'       => '123',
+				'video_type'          => 'video',
+				'download_video_file' => '1',
+				'video_file'          => '999999',
+			)
+		);
+
+		$this->assertSame( site_url(), $this->get_handler_redirect( 'bp_video_download_url_file' ) );
+	}
+
+	/**
 	 * Without Private Website, guests reach the existing permission check, which
 	 * sends them to the home page for an item they cannot download.
 	 */

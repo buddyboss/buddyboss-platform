@@ -2684,6 +2684,9 @@ function bp_media_download_url_file() {
 		// Private Website: send guests to login before any file is streamed.
 		bb_private_network_restrict_download( 'photo' );
 
+		// Folder links have no single file to download.
+		$can_download_btn = false;
+
 		if ( 'folder' !== $_GET['media_type'] ) {
 
 			// Remove action to remove meta query for forums while download check.
