@@ -36,10 +36,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 
-		if ( ! defined( 'DOING_AJAX' ) ) {
-			define( 'DOING_AJAX', true );
-		}
-
+		// Filter rather than define( 'DOING_AJAX' ): a constant would leak into every later test.
 		add_filter( 'wp_doing_ajax', '__return_true' );
 		add_filter( 'wp_die_ajax_handler', array( $this, 'get_die_handler' ), 1 );
 
@@ -93,19 +90,50 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	 * @return array|null
 	 */
 	protected function invoke_draft_handler( $user_id, $draft ) {
+		return $this->invoke_handler( 'bb_nouveau_ajax_post_draft_activity', 'draft_activity', '_wpnonce_post_draft', 'post_draft_activity', $user_id, $draft );
+	}
+
+	/**
+	 * Invoke the forum topic/reply draft handler.
+	 *
+	 * @param int   $user_id Acting (logged-in) member.
+	 * @param mixed $draft   draft_topic_reply payload.
+	 *
+	 * @return array|null
+	 */
+	protected function invoke_forum_draft_handler( $user_id, $draft ) {
+		return $this->invoke_handler( 'bb_post_topic_reply_draft', 'draft_topic_reply', '_wpnonce_post_topic_reply_draft', 'post_topic_reply_draft_data', $user_id, $draft );
+	}
+
+	/**
+	 * Build the request globals for a draft handler, run it and decode its JSON.
+	 *
+	 * @param callable $handler      Handler function.
+	 * @param string   $field        Request field carrying the draft JSON.
+	 * @param string   $nonce_field  Request field carrying the nonce.
+	 * @param string   $nonce_action Nonce action.
+	 * @param int      $user_id      Acting (logged-in) member.
+	 * @param mixed    $draft        Draft payload - encoded to JSON when not already a string.
+	 *
+	 * @return array|null
+	 */
+	protected function invoke_handler( $handler, $field, $nonce_field, $nonce_action, $user_id, $draft ) {
 		self::set_current_user( $user_id );
 
 		$payload = is_string( $draft ) ? $draft : wp_json_encode( $draft );
 
-		$_POST['_wpnonce_post_draft'] = wp_create_nonce( 'post_draft_activity' );
-		$_REQUEST['draft_activity']   = $payload;
-		$_POST['draft_activity']      = $payload;
+		// Real requests arrive slashed (wp_magic_quotes); both handlers stripslashes() the JSON.
+		$_POST    = array(
+			$nonce_field => wp_create_nonce( $nonce_action ),
+			$field       => wp_slash( $payload ),
+		);
+		$_REQUEST = $_POST;
 
 		$this->last_response = '';
 
 		ob_start();
 		try {
-			bb_nouveau_ajax_post_draft_activity();
+			call_user_func( $handler );
 		} catch ( WPAjaxDieContinueException $e ) {
 			// Expected: the handler ended via wp_send_json_*.
 		} catch ( WPAjaxDieStopException $e ) {
@@ -306,5 +334,159 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertIsArray( $response );
 		$this->assertTrue( $response['success'], 'A valid draft_group_{id} save must succeed.' );
 		$this->assertIsArray( bp_get_user_meta( $user_id, 'draft_group_' . $group_id, true ) );
+	}
+
+	/**
+	 * Create an attachment uploaded by the given user.
+	 *
+	 * @param int $author_id Uploader.
+	 *
+	 * @return int Attachment ID.
+	 */
+	protected function create_attachment_for( $author_id ) {
+		return self::factory()->attachment->create(
+			array(
+				'post_author'    => $author_id,
+				'post_mime_type' => 'image/jpeg',
+				'file'           => 'draft-test.jpg',
+			)
+		);
+	}
+
+	/**
+	 * The ownership helper accepts only attachments the user uploaded.
+	 */
+	public function test_user_owns_draft_attachment_helper() {
+		$owner    = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$other    = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$attached = $this->create_attachment_for( $owner );
+		$post_id  = self::factory()->post->create( array( 'post_author' => $owner ) );
+
+		$this->assertTrue( bb_user_owns_draft_attachment( $attached, $owner ) );
+		$this->assertFalse( bb_user_owns_draft_attachment( $attached, $other ), 'Another user does not own it.' );
+		$this->assertFalse( bb_user_owns_draft_attachment( $post_id, $owner ), 'A non-attachment post is never a draft attachment.' );
+		$this->assertFalse( bb_user_owns_draft_attachment( 0, $owner ) );
+		$this->assertFalse( bb_user_owns_draft_attachment( -1 * $attached, $owner ), 'Negative IDs are not normalised to a real ID.' );
+		$this->assertFalse( bb_user_owns_draft_attachment( array( $attached ), $owner ) );
+	}
+
+	/**
+	 * Discarding an activity draft cannot delete another user's attachments.
+	 *
+	 * Before the ownership check, any member could name arbitrary attachment IDs in
+	 * data.media/document/video and have them permanently deleted.
+	 */
+	public function test_discard_does_not_delete_foreign_attachments() {
+		$victim   = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$attacker = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		$foreign_media    = $this->create_attachment_for( $victim );
+		$foreign_document = $this->create_attachment_for( $victim );
+		$foreign_video    = $this->create_attachment_for( $victim );
+		$foreign_image    = $this->create_attachment_for( $victim );
+
+		$response = $this->invoke_draft_handler(
+			$attacker,
+			array(
+				'data_key'                        => 'draft_user',
+				'object'                          => 'user',
+				'post_action'                     => 'discard',
+				'delete_media'                    => 'true',
+				'allow_delete_post_feature_image' => true,
+				'data'                            => array(
+					'media'                          => array( array( 'id' => $foreign_media ) ),
+					'document'                       => array( array( 'id' => $foreign_document ) ),
+					'video'                          => array( array( 'id' => $foreign_video ) ),
+					'bb_activity_post_feature_image' => array( 'id' => $foreign_image ),
+				),
+			)
+		);
+
+		$this->assertIsArray( $response );
+		foreach ( array( $foreign_media, $foreign_document, $foreign_video, $foreign_image ) as $attachment_id ) {
+			$this->assertInstanceOf( 'WP_Post', get_post( $attachment_id ), "Attachment {$attachment_id} must survive." );
+		}
+	}
+
+	/**
+	 * Discarding still deletes the member's own uploads - the normal composer path.
+	 */
+	public function test_discard_deletes_own_attachments() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$own     = $this->create_attachment_for( $user_id );
+
+		$response = $this->invoke_draft_handler(
+			$user_id,
+			array(
+				'data_key'     => 'draft_user',
+				'object'       => 'user',
+				'post_action'  => 'discard',
+				'delete_media' => 'true',
+				'data'         => array( 'media' => array( array( 'id' => $own ) ) ),
+			)
+		);
+
+		$this->assertTrue( $response['success'] );
+		$this->assertNull( get_post( $own ), 'The member\'s own draft upload is cleaned up.' );
+	}
+
+	/**
+	 * Saving a draft only flags the member's own uploads as draft media.
+	 */
+	public function test_update_flags_only_own_attachments_as_draft() {
+		$victim  = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$own     = $this->create_attachment_for( $user_id );
+		$foreign = $this->create_attachment_for( $victim );
+
+		$this->invoke_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => 'draft_user',
+				'object'      => 'user',
+				'post_action' => 'update',
+				'data'        => array( 'media' => array( array( 'id' => $own ), array( 'id' => $foreign ) ) ),
+			)
+		);
+
+		$this->assertSame( '1', get_post_meta( $own, 'bb_media_draft', true ) );
+		$this->assertSame( '', get_post_meta( $foreign, 'bb_media_draft', true ), 'Foreign attachments are not tampered with.' );
+	}
+
+	/**
+	 * The forum draft handler deletes attachments named in the previously stored
+	 * draft whenever the same data_key is saved again. Those IDs came from the
+	 * client on the earlier request, so a two-step request could delete any file.
+	 */
+	public function test_forum_draft_resave_does_not_delete_foreign_attachments() {
+		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+			$this->markTestSkipped( 'Forums component is not loaded.' );
+		}
+
+		$victim   = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$attacker = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$foreign  = $this->create_attachment_for( $victim );
+		$own      = $this->create_attachment_for( $attacker );
+
+		// The whole entry is stored as sent, and the re-save delete loop reads
+		// bbp_media from its top level - so that is where an attacker puts it.
+		$draft = array(
+			'data_key'    => 'draft_topic',
+			'object'      => 'topic',
+			'post_action' => 'update',
+			'bbp_media'   => wp_json_encode(
+				array(
+					array( 'id' => $foreign ),
+					array( 'id' => $own ),
+				)
+			),
+		);
+
+		// Step 1 plants the IDs in the stored draft; step 2 re-saves the same key.
+		$this->invoke_forum_draft_handler( $attacker, $draft );
+		$this->invoke_forum_draft_handler( $attacker, $draft );
+
+		$this->assertInstanceOf( 'WP_Post', get_post( $foreign ), 'The victim\'s attachment must survive.' );
+		$this->assertNull( get_post( $own ), 'The member\'s own stored upload is still cleaned up.' );
 	}
 }
