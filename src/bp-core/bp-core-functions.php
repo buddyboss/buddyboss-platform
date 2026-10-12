@@ -11787,3 +11787,35 @@ function bb_is_feature_provided( $feature ) {
 			return false;
 	}
 }
+
+/**
+ * Check whether a user uploaded the attachment referenced by a composer draft.
+ *
+ * Activity and forum topic/reply drafts are built client-side, so every attachment
+ * ID they carry is untrusted. Only attachments the user uploaded may be flagged as
+ * draft media or deleted when a draft is discarded - otherwise any member could
+ * permanently delete or tamper with another user's files by naming their IDs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $attachment_id Attachment ID taken from the draft payload.
+ * @param int   $user_id       Optional. User to check. Default the logged-in user.
+ *
+ * @return bool True when the attachment exists and was uploaded by the user.
+ */
+function bb_user_owns_draft_attachment( $attachment_id, $user_id = 0 ) {
+	$attachment_id = is_numeric( $attachment_id ) ? (int) $attachment_id : 0;
+	$user_id       = ! empty( $user_id ) ? (int) $user_id : bp_loggedin_user_id();
+
+	if ( 0 >= $attachment_id || empty( $user_id ) ) {
+		return false;
+	}
+
+	$attachment = get_post( $attachment_id );
+
+	return (
+		! empty( $attachment ) &&
+		'attachment' === $attachment->post_type &&
+		(int) $attachment->post_author === (int) $user_id
+	);
+}
