@@ -38,6 +38,11 @@ function groups_widget_click_handler() {
 					jQuery( link ).removeClass( 'loading' );
 					groups_widget_response( response );
 				}
+			).fail(
+				function() {
+					// Stop the tab loader when the request is refused, e.g. Private Website and a logged-out visitor.
+					jQuery( link ).removeClass( 'loading' );
+				}
 			);
 
 			return false;

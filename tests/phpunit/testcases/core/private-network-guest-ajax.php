@@ -298,7 +298,7 @@ class BB_Tests_Core_Private_Network_Guest_Ajax extends BP_UnitTestCase {
 		$activity_id = self::factory()->activity->create();
 
 		$this->assertTrue( $this->guest_ajax_allowed( 'get_single_activity_content', array( 'id' => $activity_id ) ) );
-		$this->assertTrue( $this->guest_ajax_allowed( 'activity_loadmore_comments', array( 'activity_id' => $activity_id ) ) );
+		$this->assertTrue( $this->guest_ajax_allowed( 'activity_loadmore_comments', array( 'activity_id' => $activity_id, 'parent_comment_id' => $activity_id ) ) );
 		$this->assertTrue( $this->guest_ajax_allowed( 'bb_get_reactions', array( 'item_id' => $activity_id ) ) );
 		$this->assertTrue( $this->guest_ajax_allowed( 'media_get_activity', array( 'id' => $activity_id ) ) );
 		$this->assertTrue( $this->guest_ajax_allowed( 'media_get_media_description', array( 'id' => 1 ) ) );
@@ -331,6 +331,97 @@ class BB_Tests_Core_Private_Network_Guest_Ajax extends BP_UnitTestCase {
 		$this->assertFalse( $this->guest_ajax_allowed( $action, array() ) );
 		$this->assertFalse( $this->guest_ajax_allowed( 'get_single_activity_content', array( 'id' => $text_activity ) ) );
 		$this->assertFalse( $this->guest_ajax_allowed( 'bb_get_reactions', array( 'item_id' => $text_activity ) ) );
+	}
+
+	/**
+	 * @dataProvider data_malformed_ids
+	 *
+	 * @param mixed $id Posted activity ID.
+	 */
+	public function test_public_media_directory_refuses_malformed_activity_ids( $id ) {
+		$this->private_website_on();
+		$this->allowlist_directory( 'media' );
+
+		$media_activity = self::factory()->activity->create();
+		bp_activity_update_meta( $media_activity, 'bp_media_ids', '1' );
+
+		// The handler reads the ID with FILTER_VALIDATE_INT and falls back to the sitewide stream.
+		$this->assertFalse( $this->guest_ajax_allowed( 'media_get_activity', array( 'id' => str_replace( '{id}', $media_activity, $id ) ) ) );
+		$this->assertTrue( $this->guest_ajax_allowed( 'media_get_activity', array( 'id' => (string) $media_activity ) ) );
+	}
+
+	public function data_malformed_ids() {
+		return array(
+			'trailing letter' => array( '{id}x' ),
+			'decimal'         => array( '{id}.0' ),
+			'leading zero'    => array( '0{id}' ),
+			'text suffix'     => array( '{id}abc' ),
+			'zero'            => array( '0' ),
+			'negative'        => array( '-{id}' ),
+		);
+	}
+
+	public function test_public_media_directory_unlocks_comments_of_its_activities_only() {
+		$this->private_website_on();
+		$this->allowlist_directory( 'media' );
+
+		$text_activity  = self::factory()->activity->create();
+		$media_activity = self::factory()->activity->create();
+		bp_activity_update_meta( $media_activity, 'bp_media_ids', '1' );
+
+		$this->assertTrue( $this->guest_ajax_allowed( 'activity_loadmore_comments', array( 'activity_id' => $media_activity, 'parent_comment_id' => $media_activity ) ) );
+		$this->assertTrue( $this->guest_ajax_allowed( 'bb_rl_activity_loadmore_comments', array( 'activity_id' => $media_activity, 'parent_comment_id' => $media_activity ) ) );
+		$this->assertFalse( $this->guest_ajax_allowed( 'activity_loadmore_comments', array( 'activity_id' => $text_activity ) ) );
+		$this->assertFalse( $this->guest_ajax_allowed( 'activity_loadmore_comments', array( 'activity_id' => $media_activity . 'x' ) ) );
+	}
+
+	/**
+	 * @dataProvider data_comment_loaders
+	 *
+	 * @param string $action    Comment loader action.
+	 * @param string $directory Directory listed in Public Website Content.
+	 */
+	public function test_comment_loaders_require_the_parent_comment_to_belong_to_the_activity( $action, $directory ) {
+		$this->private_website_on();
+		$this->allowlist_directory( $directory );
+
+		$activity = self::factory()->activity->create();
+		bp_activity_update_meta( $activity, 'bp_media_ids', '1' );
+		$comment  = self::factory()->activity->create( array( 'type' => 'activity_comment', 'item_id' => $activity, 'secondary_item_id' => $activity ) );
+
+		$other         = self::factory()->activity->create();
+		$other_comment = self::factory()->activity->create( array( 'type' => 'activity_comment', 'item_id' => $other, 'secondary_item_id' => $other ) );
+
+		$this->assertTrue( $this->guest_ajax_allowed( $action, array( 'activity_id' => $activity, 'parent_comment_id' => $activity ) ) );
+		$this->assertTrue( $this->guest_ajax_allowed( $action, array( 'activity_id' => $activity, 'parent_comment_id' => $comment ) ) );
+		// A comment of another activity, the other activity itself, a missing or malformed parent.
+		$this->assertFalse( $this->guest_ajax_allowed( $action, array( 'activity_id' => $activity, 'parent_comment_id' => $other_comment ) ) );
+		$this->assertFalse( $this->guest_ajax_allowed( $action, array( 'activity_id' => $activity, 'parent_comment_id' => $other ) ) );
+		$this->assertFalse( $this->guest_ajax_allowed( $action, array( 'activity_id' => $activity ) ) );
+		$this->assertFalse( $this->guest_ajax_allowed( $action, array( 'activity_id' => $activity, 'parent_comment_id' => $comment . 'x' ) ) );
+	}
+
+	public function data_comment_loaders() {
+		return array(
+			'legacy, News Feed public'      => array( 'activity_loadmore_comments', 'activity' ),
+			'legacy, Photos public'         => array( 'activity_loadmore_comments', 'media' ),
+			'ReadyLaunch, News Feed public' => array( 'bb_rl_activity_loadmore_comments', 'activity' ),
+			'ReadyLaunch, Photos public'    => array( 'bb_rl_activity_loadmore_comments', 'media' ),
+		);
+	}
+
+	public function test_public_videos_require_the_video_to_belong_to_the_activity() {
+		$this->private_website_on();
+		$this->allowlist_directory( 'video' );
+
+		$activity = self::factory()->activity->create();
+		bp_activity_update_meta( $activity, 'bp_video_ids', '11,12' );
+
+		$this->assertTrue( $this->guest_ajax_allowed( 'video_get_activity', array( 'id' => $activity ) ) );
+		$this->assertTrue( $this->guest_ajax_allowed( 'video_get_activity', array( 'id' => $activity, 'video_id' => '0' ) ) );
+		$this->assertTrue( $this->guest_ajax_allowed( 'video_get_activity', array( 'id' => $activity, 'video_id' => '12' ) ) );
+		$this->assertFalse( $this->guest_ajax_allowed( 'video_get_activity', array( 'id' => $activity, 'video_id' => '99999' ) ) );
+		$this->assertFalse( $this->guest_ajax_allowed( 'video_get_activity', array( 'id' => $activity, 'video_id' => '12x' ) ) );
 	}
 
 	public function data_media_directories() {

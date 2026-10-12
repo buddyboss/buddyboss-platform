@@ -925,6 +925,8 @@ window.bp = window.bp || {};
 					$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 					$( '.bb-subnav-filters-container .subnav-filters-modal ul li' ).removeClass( 'loading' );
 					$( '.bb-subnav-filters-search.loading' ).removeClass( 'loading' );
+					$( '.groups .group-search.activity-search.loading' ).removeClass( 'loading' );
+					$( 'body.groups .activity-head-bar .bb-subnav-filters-filtering li.loading' ).removeClass( 'loading' );
 					// Only set when the loader was shown at a custom place.
 					( component_targets || [] ).forEach(
 						function ( target ) {

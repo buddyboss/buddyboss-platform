@@ -1497,8 +1497,8 @@ function bb_private_network_guest_ajax_actions() {
 
 		// Activity.
 		'get_single_activity_content'           => 'activity',
-		'activity_loadmore_comments'            => 'activity',
-		'bb_rl_activity_loadmore_comments'      => 'activity',
+		'activity_loadmore_comments'            => array( 'activity', 'media', 'document', 'video' ),
+		'bb_rl_activity_loadmore_comments'      => array( 'activity', 'media', 'document', 'video' ),
 		'activity_sync_from_modal'              => 'activity',
 		'bb_get_reactions'                      => 'activity',
 
@@ -1674,9 +1674,10 @@ function bb_private_network_restrict_guest_ajax() {
 /**
  * Check whether a component's directory page unlocks a guest AJAX action.
  *
- * The photo, document and video `*_get_activity` handlers render any activity ID they are given.
- * Their own directory unlocks them only for an activity that carries that media type, so a public
- * Photos page does not expose text posts; any other activity needs the News Feed to be public.
+ * The photo, document and video `*_get_activity` handlers and the comment loaders render any
+ * activity ID they are given. A media directory unlocks them only for an activity that carries that
+ * media type, so a public Photos page does not expose text posts; any other activity needs the
+ * News Feed to be public.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1691,10 +1692,16 @@ function bb_private_network_is_guest_ajax_component_public( $component, $action 
 		return false;
 	}
 
-	if ( $component . '_get_activity' === $action && in_array( $component, array( 'media', 'document', 'video' ), true ) ) {
-		$activity_id = isset( $_POST['id'] ) && is_scalar( $_POST['id'] ) ? absint( $_POST['id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	// The comment loaders render the posted `parent_comment_id`; it must be part of the posted activity.
+	if ( 'activity_id' === bb_private_network_guest_ajax_activity_param( $action ) && ! bb_private_network_guest_ajax_comment_belongs_to_activity() ) {
+		return false;
+	}
+
+	$activity_param = bb_private_network_guest_ajax_activity_param( $action );
+	if ( $activity_param && in_array( $component, array( 'media', 'document', 'video' ), true ) ) {
+		$activity_id = bb_private_network_guest_ajax_posted_id( $activity_param );
 		if (
-			empty( $activity_id ) ||
+			! $activity_id ||
 			(
 				! bp_activity_get_meta( $activity_id, 'bp_' . $component . '_activity', true ) &&
 				! bp_activity_get_meta( $activity_id, 'bp_' . $component . '_ids', true )
@@ -1702,9 +1709,124 @@ function bb_private_network_is_guest_ajax_component_public( $component, $action 
 		) {
 			return false;
 		}
+
+		// The video handler also renders the posted `video_id`; it must belong to that activity.
+		if ( 'video_get_activity' === $action && ! bb_private_network_guest_ajax_video_belongs_to_activity( $activity_id ) ) {
+			return false;
+		}
 	}
 
 	return bb_is_private_network_public_url( get_permalink( $page_ids[ $component ] ) );
+}
+
+/**
+ * Get the POST field that holds the activity ID for a guest AJAX action, when a media directory
+ * may unlock it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $action AJAX action name.
+ *
+ * @return string Field name, or '' when the action does not take an activity ID.
+ */
+function bb_private_network_guest_ajax_activity_param( $action ) {
+	if ( in_array( $action, array( 'media_get_activity', 'document_get_activity', 'video_get_activity' ), true ) ) {
+		return 'id';
+	}
+
+	if ( in_array( $action, array( 'activity_loadmore_comments', 'bb_rl_activity_loadmore_comments' ), true ) ) {
+		return 'activity_id';
+	}
+
+	return '';
+}
+
+/**
+ * Read a positive integer ID from the request the way the AJAX handlers read it.
+ *
+ * The handlers use `FILTER_VALIDATE_INT`, which turns a value such as `2606x` into false and makes
+ * them fall back to the sitewide stream. Anything that is not a plain positive integer is
+ * therefore refused instead of being cast to a valid ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $field POST field name.
+ *
+ * @return int ID, or 0 when missing or not a positive integer.
+ */
+function bb_private_network_guest_ajax_posted_id( $field ) {
+	$id = filter_input( INPUT_POST, $field, FILTER_VALIDATE_INT );
+
+	if ( null === $id && isset( $_POST[ $field ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// filter_input() reads the raw request, which tests and other callers may not populate.
+		$id = filter_var( wp_unslash( $_POST[ $field ] ), FILTER_VALIDATE_INT ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	}
+
+	return ( is_int( $id ) && $id > 0 ) ? $id : 0;
+}
+
+/**
+ * Check that the `parent_comment_id` posted to a comment loader belongs to the posted activity.
+ *
+ * The loaders render the comment thread of whatever parent comment is posted, so without this a
+ * public activity could be used to read comments from any other activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when the parent is the activity itself or one of its comments.
+ */
+function bb_private_network_guest_ajax_comment_belongs_to_activity() {
+	$activity_id = bb_private_network_guest_ajax_posted_id( 'activity_id' );
+	$parent_id   = bb_private_network_guest_ajax_posted_id( 'parent_comment_id' );
+
+	if ( ! $activity_id || ! $parent_id ) {
+		return false;
+	}
+
+	if ( $activity_id === $parent_id ) {
+		return true;
+	}
+
+	$parent = new BP_Activity_Activity( $parent_id );
+
+	return ! empty( $parent->id ) && 'activity_comment' === $parent->type && (int) $parent->item_id === $activity_id;
+}
+
+/**
+ * Check that the `video_id` posted to the video theatre belongs to the posted activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity ID already checked to be a video activity.
+ *
+ * @return bool True when no video is requested or the video belongs to the activity.
+ */
+function bb_private_network_guest_ajax_video_belongs_to_activity( $activity_id ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$requested = isset( $_POST['video_id'] ) ? wp_unslash( $_POST['video_id'] ) : '';
+
+	// The theatre sends 0 when it has no video to render.
+	if ( '' === $requested || '0' === $requested || 0 === $requested ) {
+		return true;
+	}
+
+	$video_id = bb_private_network_guest_ajax_posted_id( 'video_id' );
+	if ( ! $video_id ) {
+		return false;
+	}
+
+	$video_ids = array_map( 'absint', explode( ',', (string) bp_activity_get_meta( $activity_id, 'bp_video_ids', true ) ) );
+	if ( in_array( $video_id, $video_ids, true ) ) {
+		return true;
+	}
+
+	if ( class_exists( 'BP_Video' ) ) {
+		$video = new BP_Video( $video_id );
+
+		return ! empty( $video->id ) && (int) $video->activity_id === (int) $activity_id;
+	}
+
+	return false;
 }
 
 /**

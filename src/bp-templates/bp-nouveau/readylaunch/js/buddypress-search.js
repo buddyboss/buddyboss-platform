@@ -81,6 +81,10 @@ jQuery( document ).ready(
 													// Only show error if it's not an abort.
 													if ( status !== 'abort' ) {
 														console.error( 'Search AJAX error:', error );
+														// Close the "Loading suggestions" item, e.g. when Private Website refuses a guest.
+														// ReadyLaunch keeps the list visible with CSS, so hide it with its own class too.
+														response( [] );
+														$form.find( '.ui-autocomplete' ).addClass( 'bp-hide' );
 													}
 													currentAjaxRequest = null; // Clear the reference on error.
 												}
