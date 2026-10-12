@@ -528,6 +528,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'_bb_activity_comment_visibility',
 					'_bb_activity_comment_loading',
 					'bb_activity_load_type',
+					'bb_directory_load_type',
 					'bb_ajax_request_page_load',
 					'bb_load_activity_per_request',
 					'_bp_enable_activity_like',

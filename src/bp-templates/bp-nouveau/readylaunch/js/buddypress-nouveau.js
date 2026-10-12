@@ -625,8 +625,9 @@ window.bp = window.bp || {};
 				data.order_by = $( this.objectNavParent + ' [data-bp-order="' + data.object + '"].selected' ).data( 'bp-orderby' );
 			}
 
-			// Set session's data.
-			if ( null !== data.scope ) {
+			// Set session's data. A Load More only continues the list on screen (continue_list),
+			// so it leaves the query remembered for the object (other lists share it) unchanged.
+			if ( null !== data.scope && ! data.continue_list ) {
 				if( data.object === 'activity' ) {
 					if( ( 'undefined' !== data.user_timeline && true === data.user_timeline ) || $( 'body.my-activity:not(.activity-singular)' ).length ) {
 						this.setStorage( 'bp-user-activity', 'scope', data.scope );
@@ -638,11 +639,11 @@ window.bp = window.bp || {};
 				}
 			}
 
-			if ( null !== data.filter ) {
+			if ( null !== data.filter && ! data.continue_list ) {
 				this.setStorage( 'bp-' + data.object, 'filter', data.filter );
 			}
 
-			if ( null !== data.extras ) {
+			if ( null !== data.extras && ! data.continue_list ) {
 				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
@@ -725,6 +726,19 @@ window.bp = window.bp || {};
 
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
 
+			// Remember the query a list is (re)loaded with, so its Load More continues that same
+			// list rather than whatever session memory holds for the object. The profile
+			// Connections controls are registered as "friends" while the list is "members".
+			var listObject = 'friends' === data.object ? 'members' : data.object,
+				listQuery  = 'reset' === data.method ? {
+					scope          : data.scope,
+					filter         : data.filter,
+					search_terms   : data.search_terms,
+					extras         : data.extras,
+					member_type_id : data.member_type_id,
+					group_type     : data.group_type
+				} : null;
+
 			if ( 'friends' === data.object || 'group_members' === data.object || 'manage_group_members' === data.object ) {
 				data.template = data.object;
 				data.object   = 'members';
@@ -753,11 +767,18 @@ window.bp = window.bp || {};
 			if( ! _.isUndefined( postdata.user_timeline ) ) {
 				delete postdata.user_timeline;
 			}
+			if ( ! _.isUndefined( postdata.continue_list ) ) {
+				delete postdata.continue_list;
+			}
 
 			return this.ajax( postdata, data.object ).done(
 				function ( response ) {
 					if ( false === response.success || _.isUndefined( response.data ) ) {
 						return;
+					}
+
+					if ( listQuery ) {
+						$( '#buddypress [data-bp-list="' + listObject + '"]' ).data( 'bp-list-query', listQuery );
 					}
 
 					// Control the scheduled posts layout view.
@@ -855,6 +876,9 @@ window.bp = window.bp || {};
 						self.inject( data.target, response.data.contents, data.method );
 						$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 					} else {
+						// Reset infinite scroll page counter on full list reload.
+						$( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-current-page', 1 );
+
 						/* animate to top if called from bottom pagination */
 						var animateToTop = function () {
 							var top = $( data.target );
@@ -1166,6 +1190,12 @@ window.bp = window.bp || {};
 
 			// Pagination.
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a:not([data-method])', this, this.paginateAction );
+
+			// Members/Groups load more (infinite scroll) — only when Members & Groups Loading is set to infinite scroll.
+			if ( BP_Nouveau.directory_autoload && $( this.autoloadLists ).length ) {
+				$( this.autoloadLists ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
+				$( window ).on( 'scroll', this.autoLoadMoreItems );
+			}
 
 			$document.on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
@@ -2804,6 +2834,195 @@ window.bp = window.bp || {};
 
 			// Request the page.
 			self.objectRequest( queryData );
+		},
+
+		/**
+		 * Members/Groups lists that load with infinite scroll: directories, profile Connections and
+		 * Groups, group Members and Subgroups.
+		 */
+		autoloadLists: '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"], #buddypress [data-bp-list="group_members"], #buddypress [data-bp-list="group_subgroups"]',
+
+		/**
+		 * Handle "Load More" click for Members/Groups infinite scroll.
+		 *
+		 * @param {Object} event Click event.
+		 */
+		loadMoreItems: function ( event ) {
+			event.preventDefault();
+
+			var self        = event.data,
+				$loadMore   = $( event.currentTarget ).closest( 'li.load-more' ),
+				$list       = $loadMore.closest( '[data-bp-list]' ),
+				object      = $list.data( 'bp-list' ),
+				// Continue the list that is on screen: reuse the query it was loaded with, or, for a
+				// list the server rendered with the page, read the query from the page itself.
+				// Session memory is shared by every list of the object, so it is not used here.
+				query       = $list.data( 'bp-list-query' ) || self.getListQueryFromScreen( object ),
+				currentPage = $list.data( 'bp-current-page' ) || 1,
+				linkParams  = self.getLinkParams( $loadMore.find( 'a' ).first().attr( 'href' ) ) || {},
+				linkPage    = parseInt( linkParams[ Object.keys( linkParams )[ 0 ] ], 10 ),
+				// The server renders the next page into the button link, so a list opened on a later
+				// page (e.g. a ?upage=3 URL rendered on page load) continues from there.
+				nextPage    = linkPage > 0 ? linkPage : currentPage + 1;
+
+			// Show loading state.
+			$loadMore.find( 'a' ).first().addClass( 'loading' );
+
+			var queryData = {
+				object       : object,
+				scope        : query.scope,
+				filter       : query.filter,
+				search_terms : query.search_terms,
+				extras       : query.extras,
+				page         : nextPage,
+				method       : 'append',
+				target       : '#buddypress [data-bp-list="' + object + '"] ul.bp-list',
+				// Continue this list only: do not change the query remembered for the object.
+				continue_list: true
+			};
+
+			if ( undefined !== query.group_type ) {
+				queryData.group_type = query.group_type;
+			}
+
+			if ( undefined !== query.member_type_id ) {
+				queryData.member_type_id = query.member_type_id;
+			}
+
+			self.objectRequest( queryData ).done(
+				function ( response ) {
+					if ( true === response.success ) {
+						$loadMore.remove();
+
+						// Track current page on the list container.
+						$list.data( 'bp-current-page', nextPage );
+
+						// Pages are fetched by offset, so when the order shifts between two loads (a
+						// member becomes active under "Recently Active") an item can come back on the
+						// next page. Keep only its first card.
+						var shownItems = {};
+						$list.find( 'ul.bp-list > li[data-bp-item-id]' ).each( function () {
+							var itemId = $( this ).attr( 'data-bp-item-id' );
+							if ( shownItems[ itemId ] ) {
+								$( this ).remove();
+							} else {
+								shownItems[ itemId ] = true;
+							}
+						} );
+
+						// Each group members page starts with its role heading (organizers, moderators,
+						// members); drop it when the appended page continues the section already shown.
+						if ( 'group_members' === object ) {
+							var lastHeading = null;
+							$list.find( 'ul.bp-list > li.item-entry-header' ).each( function () {
+								var heading = $.trim( $( this ).text() );
+								if ( heading === lastHeading ) {
+									$( this ).remove();
+								} else {
+									lastHeading = heading;
+								}
+							} );
+						}
+
+						// Trigger lazy load for images.
+						jQuery( window ).scroll();
+					}
+				}
+			).fail(
+				function () {
+					$loadMore.find( 'a' ).first().removeClass( 'loading' );
+				}
+			);
+		},
+
+		/**
+		 * Read the query of a Members/Groups list from the page, for a list that the server
+		 * rendered with the page and that has not been reloaded since.
+		 *
+		 * @param {string} object List object (data-bp-list value).
+		 * @return {Object} Query with scope, filter, search_terms and, when present, the types.
+		 */
+		getListQueryFromScreen: function ( object ) {
+			var $scope  = $( this.objectNavParent + ' .bb-rl-scope-filter select' ).find( ':selected[data-bp-object="' + object + '"]' ),
+				$filter = $( '#buddypress [data-bp-filter="' + object + '"]' ),
+				$search = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ),
+				query   = { scope: null, filter: null, search_terms: '' };
+
+			if ( ! $scope.length ) {
+				$scope = $( this.objectNavParent + ' [data-bp-object="' + object + '"].selected' );
+			}
+			if ( $scope.length && $scope.data( 'bp-scope' ) ) {
+				query.scope = $scope.data( 'bp-scope' );
+			}
+
+			// The profile Connections controls are registered as "friends" while the list is "members".
+			if ( ! $filter.length && 'members' === object ) {
+				$filter = $( '#buddypress [data-bp-filter="friends"]' );
+			}
+			if ( $filter.length && '-1' !== $filter.val() && '0' !== $filter.val() ) {
+				query.filter = $filter.val();
+			}
+
+			if ( ! $search.length && 'members' === object ) {
+				$search = $( '#buddypress [data-bp-search="friends"] input[type=search]' );
+			}
+			if ( ! $search.length ) {
+				$search = $( '#buddypress .dir-search input[type=search]' );
+			}
+			// The search this list was rendered with, not text typed since and not submitted yet.
+			// The server reads it from the URL (members_search / groups_search), and initObjects()
+			// only copies that into the box with .val(), so read the URL first; the box's rendered
+			// value covers a template that prints the search itself.
+			var searchArg = ( 'groups' === object || 'group_subgroups' === object ? 'groups' : 'members' ) + '_search',
+				urlSearch = this.querystring && this.querystring[ searchArg ];
+
+			if ( urlSearch ) {
+				try {
+					query.search_terms = decodeURIComponent( urlSearch.replace( /\+/g, ' ' ) );
+				} catch ( e ) {
+					query.search_terms = urlSearch;
+				}
+			} else if ( $search.length ) {
+				query.search_terms = $search.prop( 'defaultValue' ) || '';
+			}
+
+			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				query.group_type = $( '#buddypress [data-bp-group-type-filter]' ).val();
+			}
+			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				query.member_type_id = $( '#buddypress [data-bp-member-type-filter]' ).val();
+			}
+
+			return query;
+		},
+
+		/**
+		 * Auto-trigger "Load More" when scrolling near the button (Members/Groups).
+		 */
+		autoLoadMoreItems: function () {
+			// Check on every scroll event, like the activity feed autoload (loadMoreActivities).
+			// Start loading while the Load More button is still up to one screen below the
+			// viewport: a page of member/group cards is heavy, so a 50px trigger would leave
+			// the member waiting on "Loading..." at the bottom of the list.
+			var $loadMoreBtns = $( bp.Nouveau.autoloadLists ).find( 'li.load-more:visible' ),
+				$window       = $( window );
+
+			$loadMoreBtns.each( function () {
+				var $btn = $( this );
+
+				if ( $btn.data( 'bp-autoloaded' ) ) {
+					return;
+				}
+
+				var pos    = $btn.offset(),
+					offset = pos.top - $window.height();
+
+				if ( $window.scrollTop() + $window.height() > offset ) {
+					$btn.data( 'bp-autoloaded', 1 );
+					$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
+					$btn.find( 'a' ).trigger( 'click' );
+				}
+			} );
 		},
 
 		enableSubmitOnLegalAgreement: function () {
