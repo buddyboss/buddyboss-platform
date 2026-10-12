@@ -1469,6 +1469,481 @@ function bp_private_network_template_redirect() {
 }
 
 /**
+ * Get the guest (logged-out) AJAX actions that Private Website restricts.
+ *
+ * Private Website is enforced by bp_private_network_template_redirect(), which never runs for
+ * admin-ajax.php. These actions are registered for logged-out visitors and return community
+ * content, so they are checked by bb_private_network_restrict_guest_ajax() instead.
+ *
+ * Each action maps to the component (or list of components) whose directory page unlocks it when
+ * that page is listed in Public Website Content. 'loader' means the shared template loader, which
+ * renders whatever component is posted as `object`. An empty value means the action is never
+ * allowed for a guest while Private Website is on.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Action name => component name, list of component names, 'loader' or ''.
+ */
+function bb_private_network_guest_ajax_actions() {
+	$actions = array(
+		// Directory and tab lists (bp_nouveau_ajax_object_template_loader()).
+		'activity_filter'                       => 'loader',
+		'members_filter'                        => 'loader',
+		'groups_filter'                         => 'loader',
+		'media_filter'                          => 'loader',
+		'document_filter'                       => 'loader',
+		'video_filter'                          => 'loader',
+		'blogs_filter'                          => 'loader',
+
+		// Activity.
+		'get_single_activity_content'           => 'activity',
+		'activity_loadmore_comments'            => array( 'activity', 'media', 'document', 'video' ),
+		'bb_rl_activity_loadmore_comments'      => array( 'activity', 'media', 'document', 'video' ),
+		'activity_sync_from_modal'              => 'activity',
+		'bb_get_reactions'                      => 'activity',
+
+		// Photos.
+		'media_albums_loader'                   => 'media',
+		'media_get_album_view'                  => 'media',
+		'media_get_media_description'           => array( 'media', 'activity' ),
+		'media_get_activity'                    => array( 'media', 'activity' ),
+
+		// Documents.
+		'document_get_activity'                 => array( 'document', 'activity' ),
+		'document_get_document_description'     => array( 'document', 'activity' ),
+
+		// Videos.
+		'video_albums_loader'                   => 'video',
+		'video_get_video_description'           => array( 'video', 'activity' ),
+		'video_get_activity'                    => array( 'video', 'activity' ),
+
+		// Widgets.
+		'widget_members'                        => 'members',
+		'widget_friends'                        => 'members',
+		'widget_follow_my_network'              => 'members',
+		'widget_groups_list'                    => 'groups',
+		'widget_groups_members_list'            => 'groups',
+
+		// Never available to a guest while Private Website is on.
+		'bp_search_ajax'                        => '',
+		'moderation_filter'                     => '',
+		'bb_forums_parse_url'                   => '',
+		'bp_moderation_content_report'          => '',
+		'bp_moderation_block_member'            => '',
+		'bp_moderation_unblock_user'            => '',
+		'bp_moderation_content_actions_request' => '',
+		'bp_moderation_user_actions_request'    => '',
+		'media_upload'                          => '',
+		'media_save'                            => '',
+		'media_delete'                          => '',
+		'media_move_to_album'                   => '',
+		'media_album_save'                      => '',
+		'media_album_delete'                    => '',
+		'media_delete_attachment'               => '',
+		'media_update_privacy'                  => '',
+		'media_description_save'                => '',
+		'media_move'                            => '',
+		'document_document_upload'              => '',
+		'document_document_save'                => '',
+		'document_folder_save'                  => '',
+		'document_child_folder_save'            => '',
+		'document_move'                         => '',
+		'document_update_file_name'             => '',
+		'document_edit_folder'                  => '',
+		'document_delete'                       => '',
+		'document_folder_move'                  => '',
+		'document_save_privacy'                 => '',
+		'document_activity_delete'              => '',
+		'document_folder_delete'                => '',
+		'video_upload'                          => '',
+		'video_thumbnail_upload'                => '',
+		'video_save'                            => '',
+		'video_delete'                          => '',
+		'video_move'                            => '',
+		'video_move_to_album'                   => '',
+		'video_album_save'                      => '',
+		'video_album_delete'                    => '',
+		'video_delete_attachment'               => '',
+		'video_update_privacy'                  => '',
+		'video_description_save'                => '',
+		'video_thumbnail_delete_attachment'     => '',
+		'video_get_edit_thumbnail_data'         => '',
+		'video_thumbnail_save'                  => '',
+		'video_thumbnail_delete'                => '',
+	);
+
+	/**
+	 * Filters the guest AJAX actions that Private Website restricts.
+	 *
+	 * Add-ons that register `wp_ajax_nopriv_` actions returning community content should add them
+	 * here. Registration helpers (`check_email`, `xprofile_get_field`) are intentionally absent.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $actions Action name => component name (or list of names) whose directory page
+	 *                       unlocks it, 'loader' for the shared template loader (uses the posted
+	 *                       `object`), or '' to always restrict it.
+	 */
+	return (array) apply_filters( 'bb_private_network_guest_ajax_actions', $actions );
+}
+
+/**
+ * Register the Private Website check on the restricted guest AJAX actions.
+ *
+ * Runs on `admin_init`, which admin-ajax.php fires before it dispatches the action. Priority 1
+ * places the check before the handlers, which use the default priority.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_private_network_register_guest_ajax_restriction() {
+	if ( ! wp_doing_ajax() || is_user_logged_in() ) {
+		return;
+	}
+
+	foreach ( array_keys( bb_private_network_guest_ajax_actions() ) as $action ) {
+		add_action( 'wp_ajax_nopriv_' . $action, 'bb_private_network_restrict_guest_ajax', 1 );
+	}
+}
+
+/**
+ * Stop a restricted guest AJAX action when Private Website is on.
+ *
+ * The action is allowed only when the directory page of a component it returns is listed in
+ * Public Website Content. Profile and group pages never unlock it: the handlers take the
+ * component, scope and item from the request, so the page they are called from does not limit
+ * what they return.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_private_network_restrict_guest_ajax() {
+	// Inverted option: true means the site is public.
+	if ( bp_enable_private_network() || is_user_logged_in() ) {
+		return;
+	}
+
+	$action     = substr( current_action(), strlen( 'wp_ajax_nopriv_' ) );
+	$actions    = bb_private_network_guest_ajax_actions();
+	$components = isset( $actions[ $action ] ) ? $actions[ $action ] : '';
+
+	if ( 'loader' === $components ) {
+		// Sanitized below once it is known to be a string; the handler checks the nonce.
+		$object     = isset( $_POST['object'] ) ? wp_unslash( $_POST['object'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$components = is_string( $object ) ? sanitize_title( $object ) : '';
+
+		/*
+		 * A public directory unlocks only its own list. The `template` parameter switches the
+		 * loader to group member, membership request and notification loops, which take the
+		 * group from the referer, so it is never allowed for a guest.
+		 */
+		if ( ! empty( $_POST['template'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$components = '';
+		}
+	}
+
+	$components = array_filter( (array) $components );
+	$allowed    = false;
+
+	foreach ( $components as $component ) {
+		if ( bb_private_network_is_guest_ajax_component_public( $component, $action ) ) {
+			$allowed = true;
+			break;
+		}
+	}
+
+	/**
+	 * Filters whether a logged-out visitor may run a restricted AJAX action while Private Website is on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool     $allowed    True when a component's directory page is in Public Website Content.
+	 * @param string   $action     AJAX action name.
+	 * @param string[] $components Components the action returns; empty when it is always restricted.
+	 */
+	if ( apply_filters( 'bb_private_network_guest_ajax_allowed', $allowed, $action, $components ) ) {
+		return;
+	}
+
+	wp_send_json_error(
+		array(
+			'message' => __( 'Please login to access this website.', 'buddyboss' ),
+		),
+		403
+	);
+}
+
+/**
+ * Check whether a component's directory page unlocks a guest AJAX action.
+ *
+ * The photo, document and video `*_get_activity` handlers and the comment loaders render any
+ * activity ID they are given. A media directory unlocks them only for an activity that carries that
+ * media type, so a public Photos page does not expose text posts; any other activity needs the
+ * News Feed to be public.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component Component name.
+ * @param string $action    AJAX action name.
+ *
+ * @return bool True if the component's directory page is in Public Website Content.
+ */
+function bb_private_network_is_guest_ajax_component_public( $component, $action ) {
+	$page_ids = bp_core_get_directory_page_ids();
+	if ( empty( $page_ids[ $component ] ) ) {
+		return false;
+	}
+
+	// The comment loaders render the posted `parent_comment_id`; it must be part of the posted activity.
+	if ( 'activity_id' === bb_private_network_guest_ajax_activity_param( $action ) && ! bb_private_network_guest_ajax_comment_belongs_to_activity() ) {
+		return false;
+	}
+
+	$activity_param = bb_private_network_guest_ajax_activity_param( $action );
+	if ( $activity_param && in_array( $component, array( 'media', 'document', 'video' ), true ) ) {
+		$activity_id = bb_private_network_guest_ajax_posted_id( $activity_param );
+		if (
+			! $activity_id ||
+			(
+				! bp_activity_get_meta( $activity_id, 'bp_' . $component . '_activity', true ) &&
+				! bp_activity_get_meta( $activity_id, 'bp_' . $component . '_ids', true )
+			)
+		) {
+			return false;
+		}
+
+		// The video handler also renders the posted `video_id`; it must belong to that activity.
+		if ( 'video_get_activity' === $action && ! bb_private_network_guest_ajax_video_belongs_to_activity( $activity_id ) ) {
+			return false;
+		}
+	}
+
+	return bb_is_private_network_public_url( get_permalink( $page_ids[ $component ] ) );
+}
+
+/**
+ * Get the POST field that holds the activity ID for a guest AJAX action, when a media directory
+ * may unlock it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $action AJAX action name.
+ *
+ * @return string Field name, or '' when the action does not take an activity ID.
+ */
+function bb_private_network_guest_ajax_activity_param( $action ) {
+	if ( in_array( $action, array( 'media_get_activity', 'document_get_activity', 'video_get_activity' ), true ) ) {
+		return 'id';
+	}
+
+	if ( in_array( $action, array( 'activity_loadmore_comments', 'bb_rl_activity_loadmore_comments' ), true ) ) {
+		return 'activity_id';
+	}
+
+	return '';
+}
+
+/**
+ * Read a positive integer ID from the request the way the AJAX handlers read it.
+ *
+ * The handlers use `FILTER_VALIDATE_INT`, which turns a value such as `2606x` into false and makes
+ * them fall back to the sitewide stream. Anything that is not a plain positive integer is
+ * therefore refused instead of being cast to a valid ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $field POST field name.
+ *
+ * @return int ID, or 0 when missing or not a positive integer.
+ */
+function bb_private_network_guest_ajax_posted_id( $field ) {
+	$id = filter_input( INPUT_POST, $field, FILTER_VALIDATE_INT );
+
+	if ( null === $id && isset( $_POST[ $field ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// filter_input() reads the raw request, which tests and other callers may not populate.
+		$id = filter_var( wp_unslash( $_POST[ $field ] ), FILTER_VALIDATE_INT ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	}
+
+	return ( is_int( $id ) && $id > 0 ) ? $id : 0;
+}
+
+/**
+ * Check that the `parent_comment_id` posted to a comment loader belongs to the posted activity.
+ *
+ * The loaders render the comment thread of whatever parent comment is posted, so without this a
+ * public activity could be used to read comments from any other activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when the parent is the activity itself or one of its comments.
+ */
+function bb_private_network_guest_ajax_comment_belongs_to_activity() {
+	$activity_id = bb_private_network_guest_ajax_posted_id( 'activity_id' );
+	$parent_id   = bb_private_network_guest_ajax_posted_id( 'parent_comment_id' );
+
+	if ( ! $activity_id || ! $parent_id ) {
+		return false;
+	}
+
+	if ( $activity_id === $parent_id ) {
+		return true;
+	}
+
+	$parent = new BP_Activity_Activity( $parent_id );
+
+	return ! empty( $parent->id ) && 'activity_comment' === $parent->type && (int) $parent->item_id === $activity_id;
+}
+
+/**
+ * Check that the `video_id` posted to the video theatre belongs to the posted activity.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $activity_id Activity ID already checked to be a video activity.
+ *
+ * @return bool True when no video is requested or the video belongs to the activity.
+ */
+function bb_private_network_guest_ajax_video_belongs_to_activity( $activity_id ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$requested = isset( $_POST['video_id'] ) ? wp_unslash( $_POST['video_id'] ) : '';
+
+	// The theatre sends 0 when it has no video to render.
+	if ( '' === $requested || '0' === $requested || 0 === $requested ) {
+		return true;
+	}
+
+	$video_id = bb_private_network_guest_ajax_posted_id( 'video_id' );
+	if ( ! $video_id ) {
+		return false;
+	}
+
+	$video_ids = array_map( 'absint', explode( ',', (string) bp_activity_get_meta( $activity_id, 'bp_video_ids', true ) ) );
+	if ( in_array( $video_id, $video_ids, true ) ) {
+		return true;
+	}
+
+	if ( class_exists( 'BP_Video' ) ) {
+		$video = new BP_Video( $video_id );
+
+		return ! empty( $video->id ) && (int) $video->activity_id === (int) $activity_id;
+	}
+
+	return false;
+}
+
+/**
+ * Remove community content from guest Heartbeat responses when Private Website is on.
+ *
+ * Heartbeat is a WordPress AJAX action of its own, so the guest AJAX check does not see it. The
+ * News Feed "new posts" check and the members widgets answer logged-out Heartbeat requests, which
+ * would return activity and member lists that Private Website hides. Their data is kept only when
+ * the matching directory page is in Public Website Content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $response Heartbeat response.
+ *
+ * @return array
+ */
+function bb_private_network_restrict_guest_heartbeat( $response ) {
+	// Inverted option: true means the site is public.
+	if ( ! is_array( $response ) || bp_enable_private_network() || is_user_logged_in() ) {
+		return $response;
+	}
+
+	/**
+	 * Filters the guest Heartbeat response keys that Private Website removes.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $keys Response key => component whose directory page keeps it.
+	 */
+	$keys = (array) apply_filters(
+		'bb_private_network_guest_heartbeat_keys',
+		array(
+			'bp_activity_newest_activities'            => 'activity',
+			'buddyboss_members_widget_active'          => 'members',
+			'boss_recently_active_widget'              => 'members',
+			'boss_whos_online_widget'                  => 'members',
+			'boss_whos_online_widget_total'            => 'members',
+			'boss_whos_online_widget_connection'       => 'members',
+			'boss_whos_online_widget_total_connection' => 'members',
+			'users_presence'                           => 'members',
+		)
+	);
+
+	$public = array();
+	foreach ( $keys as $key => $component ) {
+		if ( ! array_key_exists( $key, $response ) ) {
+			continue;
+		}
+
+		if ( ! isset( $public[ $component ] ) ) {
+			$public[ $component ] = bb_private_network_is_guest_ajax_component_public( $component, 'heartbeat' );
+		}
+
+		if ( ! $public[ $component ] ) {
+			unset( $response[ $key ] );
+		}
+	}
+
+	return $response;
+}
+
+/**
+ * Check whether a URL is listed in the Private Website "Public Website Content" setting.
+ *
+ * Matches a URL without a query string the way bp_private_network_template_redirect() matches
+ * the requested page: full-URL entries match exactly (trailing slash ignored), relative entries
+ * match a path segment or the page and its sub-pages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $url URL to check.
+ *
+ * @return bool True if the URL is public.
+ */
+function bb_is_private_network_public_url( $url ) {
+	$exclude = bp_enable_private_network_public_content();
+	if ( empty( $url ) || '' === $exclude ) {
+		return false;
+	}
+
+	$request_url  = untrailingslashit( $url );
+	$request_path = (string) wp_parse_url( $url, PHP_URL_PATH );
+
+	foreach ( preg_split( "/\r\n|\n|\r/", $exclude ) as $entry ) {
+		$public_url = untrailingslashit( $entry );
+		if ( '' === $public_url ) {
+			continue;
+		}
+
+		if ( false !== filter_var( $entry, FILTER_VALIDATE_URL ) ) {
+			if ( $request_url === $public_url ) {
+				return true;
+			}
+			continue;
+		}
+
+		if ( false === strpos( $request_url, $public_url ) ) {
+			continue;
+		}
+
+		if ( in_array( trim( $entry, '/' ), explode( '/', $request_url ), true ) ) {
+			return true;
+		}
+
+		if ( substr( $request_path, 0, strrpos( $request_path, '/' ) ) === $entry ) {
+			return true;
+		}
+
+		if ( false !== strpos( trailingslashit( $request_url ), trailingslashit( $public_url ) ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Redirect member to profile dashboard.
  *
  * @param string $redirect_to redirect to.

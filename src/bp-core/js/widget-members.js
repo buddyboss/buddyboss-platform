@@ -105,6 +105,11 @@ function member_widget_click_handler() {
 					jQuery( link ).removeClass( 'loading' );
 					member_widget_response( response );
 				}
+			).fail(
+				function() {
+					// Stop the tab loader when the request is refused, e.g. Private Website and a logged-out visitor.
+					jQuery( link ).removeClass( 'loading' );
+				}
 			);
 
 			return false;
