@@ -247,6 +247,9 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->document_exists( $document ) );
+		// The document meta must survive the photo meta cleanup (V-7).
+		$this->assertSame( array( $document ), wp_parse_id_list( bp_activity_get_meta( $comment, 'bp_document_ids', true ) ) );
+		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
 	}
 
 	public function test_photo_delete_keeps_comment_with_a_video() {
@@ -316,6 +319,9 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->media_exists( $photo ) );
+		// The photo meta must survive the document meta cleanup (V-7).
+		$this->assertSame( array( $photo ), wp_parse_id_list( bp_activity_get_meta( $comment, 'bp_media_ids', true ) ) );
+		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_document_ids', true ) );
 	}
 
 	public function test_last_document_delete_deletes_empty_comment() {
@@ -349,6 +355,9 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 
 		$this->assertTrue( $this->activity_exists( $comment ) );
 		$this->assertTrue( $this->document_exists( $document ) );
+		// The document meta must survive the video meta cleanup (V-7).
+		$this->assertSame( array( $document ), wp_parse_id_list( bp_activity_get_meta( $comment, 'bp_document_ids', true ) ) );
+		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_video_ids', true ) );
 	}
 
 	public function test_video_delete_keeps_comment_with_other_videos() {
@@ -586,5 +595,148 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 		bb_activity_comment_remove_deleted_attachment_meta( $comment, 'foo', array( 5 ) );
 
 		$this->assertSame( '5', (string) bp_activity_get_meta( $comment, 'bp_foo_ids', true ) );
+	}
+
+	/**
+	 * Partial delete: the deleted ID leaves the list, while bp_{type}_id that
+	 * points at a surviving item and the bp_{type}_activity flag are kept (V-4).
+	 *
+	 * @return array
+	 */
+	public function attachment_type_provider() {
+		return array(
+			'photo'    => array( 'media' ),
+			'document' => array( 'document' ),
+			'video'    => array( 'video' ),
+		);
+	}
+
+	/**
+	 * Attach one item of the given meta type.
+	 *
+	 * @param int    $comment_id Comment ID.
+	 * @param string $type       'media', 'document' or 'video'.
+	 * @return int Item ID.
+	 */
+	protected function attach_by_type( $comment_id, $type ) {
+		if ( 'document' === $type ) {
+			return $this->attach_document( $comment_id );
+		}
+
+		return $this->attach_media( $comment_id, 'video' === $type ? 'video' : 'photo' );
+	}
+
+	/**
+	 * Delete one item of the given meta type through the public API.
+	 *
+	 * @param int    $id   Item ID.
+	 * @param string $type 'media', 'document' or 'video'.
+	 */
+	protected function delete_by_type( $id, $type ) {
+		$function = 'media' === $type ? 'bp_media_delete' : 'bp_' . $type . '_delete';
+
+		$this->assertNotEmpty( $function( array( 'id' => $id ) ) );
+	}
+
+	/**
+	 * @dataProvider attachment_type_provider
+	 *
+	 * @param string $type Meta type.
+	 */
+	public function test_partial_delete_keeps_surviving_id_and_activity_flag( $type ) {
+		$comment = $this->create_comment();
+		$item_1  = $this->attach_by_type( $comment, $type );
+		$item_2  = $this->attach_by_type( $comment, $type );
+		$item_3  = $this->attach_by_type( $comment, $type );
+		bp_activity_update_meta( $comment, 'bp_' . $type . '_id', $item_3 );
+		bp_activity_update_meta( $comment, 'bp_' . $type . '_activity', '1' );
+
+		$this->delete_by_type( $item_1, $type );
+
+		$this->assertTrue( $this->activity_exists( $comment ) );
+		$this->assertSame( $item_2 . ',' . $item_3, (string) bp_activity_get_meta( $comment, 'bp_' . $type . '_ids', true ) );
+		$this->assertSame( (string) $item_3, (string) bp_activity_get_meta( $comment, 'bp_' . $type . '_id', true ) );
+		$this->assertSame( '1', (string) bp_activity_get_meta( $comment, 'bp_' . $type . '_activity', true ) );
+	}
+
+	/**
+	 * A document whose ID equals a deleted photo's ID must stay in the
+	 * comment's document meta: the cleanup is scoped to the deleted type (V-7).
+	 */
+	public function test_photo_delete_keeps_document_meta_with_the_same_id() {
+		global $wpdb;
+
+		$comment  = $this->create_comment();
+		$photo    = $this->attach_media( $comment );
+		$document = $this->attach_document( $comment );
+
+		// Give the document the photo's numeric ID.
+		$table = buddypress()->document->table_name;
+		$this->assertEmpty( $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $photo ) ) ); // phpcs:ignore
+		$wpdb->update( $table, array( 'id' => $photo ), array( 'id' => $document ) ); // phpcs:ignore
+		wp_cache_flush();
+		bp_activity_update_meta( $comment, 'bp_document_ids', (string) $photo );
+		$this->assertTrue( $this->document_exists( $photo ) );
+
+		bp_media_delete( array( 'id' => $photo ) );
+
+		$this->assertTrue( $this->activity_exists( $comment ) );
+		$this->assertFalse( $this->media_exists( $photo ) );
+		$this->assertTrue( $this->document_exists( $photo ) );
+		$this->assertSame( (string) $photo, (string) bp_activity_get_meta( $comment, 'bp_document_ids', true ) );
+		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
+	}
+
+	/**
+	 * Empty input writes nothing: no deleted IDs, or no comment ID.
+	 */
+	public function test_meta_helper_with_empty_input_writes_nothing() {
+		$comment = $this->create_comment( 'keep me' );
+		bp_activity_update_meta( $comment, 'bp_media_id', 77 );
+		bp_activity_update_meta( $comment, 'bp_media_activity', '1' );
+
+		bb_activity_comment_remove_deleted_attachment_meta( $comment, 'media', array() );
+		bb_activity_comment_remove_deleted_attachment_meta( $comment, 'media', '' );
+		bb_activity_comment_remove_deleted_attachment_meta( 0, 'media', array( 77 ) );
+
+		$this->assertSame( '77', (string) bp_activity_get_meta( $comment, 'bp_media_id', true ) );
+		$this->assertSame( '1', (string) bp_activity_get_meta( $comment, 'bp_media_activity', true ) );
+		$this->assertEmpty( bp_activity_get_meta( $comment, 'bp_media_ids', true ) );
+	}
+
+	/*
+	 * Saving an edit that still lists a deleted attachment (F-R7-1).
+	 */
+
+	/**
+	 * Edit-save after a per-item delete without a reload: the stale form still
+	 * sends the deleted item. The add handler must not push the previous
+	 * item's ID again for it: the handlers reset $media_id / $video_id /
+	 * $document_id on each loop pass, so a skipped (deleted) entry adds
+	 * nothing (before, the meta became e.g. 501,501,503).
+	 *
+	 * @dataProvider attachment_type_provider
+	 *
+	 * @param string $type Meta type.
+	 */
+	public function test_add_handler_does_not_duplicate_ids_for_a_deleted_item( $type ) {
+		$comment = $this->create_comment( 'keep me' );
+		$item_1  = $this->attach_by_type( $comment, $type );
+		$item_2  = $this->attach_by_type( $comment, $type );
+		$item_3  = $this->attach_by_type( $comment, $type );
+
+		$this->delete_by_type( $item_2, $type );
+
+		$key     = 'media' === $type ? 'media_id' : $type . '_id';
+		$entries = array();
+		foreach ( array( $item_1, $item_2, $item_3 ) as $id ) {
+			$entries[] = array( $key => $id );
+		}
+
+		$handler = 'bp_' . $type . '_add_handler';
+		// Not wp_parse_id_list(): it de-duplicates and would hide the defect.
+		$ids     = array_map( 'intval', array_values( (array) $handler( $entries, 'public' ) ) );
+
+		$this->assertSame( array( $item_1, $item_3 ), $ids );
 	}
 }

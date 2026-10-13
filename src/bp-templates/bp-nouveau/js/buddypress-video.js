@@ -1787,6 +1787,9 @@ window.bp = window.bp || {};
 									}
 
 								} else {
+									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.removeDeletedItemsFromCommentEditData ) {
+										bp.Nouveau.Media.removeDeletedItemsFromCommentEditData( activityId, 'video', video );
+									}
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}

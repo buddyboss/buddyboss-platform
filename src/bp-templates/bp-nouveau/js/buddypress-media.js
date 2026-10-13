@@ -1146,6 +1146,7 @@ window.bp = window.bp || {};
 									$( 'body .bb-activity-media-elem.document-activity.' + id ).remove();
 									self.removeDeletedActivityComment( activityId );
 								} else {
+									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
@@ -1219,6 +1220,48 @@ window.bp = window.bp || {};
 							activity.decreaseActivityCommentCount( $feedItem, $feedItem.find( '.activity-state' ), $feedItem.find( '.comments-count' ), deletedCount );
 						}
 					);
+				}
+			);
+		},
+
+		/**
+		 * Remove deleted photos, documents or videos from the edit data of an
+		 * activity comment the server kept. Without this, clicking Edit before a
+		 * reload shows the deleted item again and saving sends its ID back.
+		 *
+		 * Every rendered copy of the comment (feed, "view more comments" modal)
+		 * carries its own copy of the edit data, so all of them are updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The kept activity comment ID.
+		 * @param {string}        type      Edit data key: 'media', 'document' or 'video'.
+		 * @param {Array}         ids       The deleted item IDs.
+		 */
+		removeDeletedItemsFromCommentEditData: function ( commentId, type, ids ) {
+			var deletedIds = $.map(
+				[].concat( ids ),
+				function ( value ) {
+					return parseInt( value, 10 );
+				}
+			);
+
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $commentLi = $( this ),
+						editData   = $commentLi.data( 'bp-activity-comment' );
+
+					if ( ! editData || ! Array.isArray( editData[ type ] ) ) {
+						return;
+					}
+
+					editData[ type ] = editData[ type ].filter(
+						function ( item ) {
+							return -1 === deletedIds.indexOf( parseInt( item.id, 10 ) );
+						}
+					);
+
+					$commentLi.data( 'bp-activity-comment', editData ).attr( 'data-bp-activity-comment', JSON.stringify( editData ) );
 				}
 			);
 		},
@@ -1569,6 +1612,7 @@ window.bp = window.bp || {};
 										}
 									}
 								} else {
+									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}

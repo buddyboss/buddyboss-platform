@@ -1739,6 +1739,9 @@ window.bp = window.bp || {};
 										$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 									}
 								} else {
+									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.removeDeletedItemsFromCommentEditData ) {
+										bp.Nouveau.Media.removeDeletedItemsFromCommentEditData( activityId, 'video', video );
+									}
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
