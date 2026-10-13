@@ -625,6 +625,8 @@ class BP_Messages_Thread {
 	 * Check if the current user is in the thread's active recipient list
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Reads only the user's recipient row instead of every recipient of the thread,
+	 *                              unless 'bp_messages_thread_get_recipients' is filtered.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread.
@@ -635,6 +637,11 @@ class BP_Messages_Thread {
 		$user_id = $user_id ? $user_id : bp_loggedin_user_id();
 		if ( ! $user_id ) {
 			return true;
+		}
+
+		// One recipient row answers this; loading every recipient stalls threads with thousands of members.
+		if ( ! has_filter( 'bp_messages_thread_get_recipients' ) ) {
+			return bb_messages_is_active_thread_recipient( $thread_id, $user_id );
 		}
 
 		$recipients        = self::get_recipients_for_thread( $thread_id );
