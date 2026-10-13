@@ -649,6 +649,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * These localizations require information that may not be loaded even by init.
 	 *
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss [BBVERSION] Adds the `invites_revoke` nonce.
 	 */
 	public function localize_scripts() {
 
@@ -735,6 +736,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 			// Group sub objects nonce.
 			$object_nonces['group_members'] = wp_create_nonce( 'bp_nouveau_group_members' );
+		}
+
+		// Nonce for revoking a sent email invite from the member's Sent Invites screen.
+		if ( bp_is_active( 'invites' ) ) {
+			$object_nonces['invites_revoke'] = wp_create_nonce( 'bb_invites_revoke' );
 		}
 
 		// if ( bp_is_active( 'media' ) ) {

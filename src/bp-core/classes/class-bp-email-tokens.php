@@ -2824,6 +2824,7 @@ class BP_Email_Tokens {
 	 * Generate the output of media/document/video/GIF preview for the notification.
 	 *
 	 * @since BuddyBoss 2.4.40
+	 * @since BuddyBoss [BBVERSION] Message media previews use the signed receiver preview URL.
 	 *
 	 * @param int    $object_id Post ID.
 	 * @param array  $tokens    Token array.
@@ -2917,11 +2918,8 @@ class BP_Email_Tokens {
 						while ( bp_media() ) {
 							bp_the_media();
 
-							if ( 'message' === $type ) {
-								$media_url = home_url( '/' ) . 'bb-attachment-media-preview/' . base64_encode( 'forbidden_' . bp_get_media_attachment_id() ) . '/bb-media-activity-image/' . base64_encode( 'thread_' . $tokens['thread_id'] );
-							} else {
-								$media_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bb-media-activity-image', true, $receiver_user_id );
-							}
+							// Mail clients have no session, so message media also uses the receiver-signed preview URL.
+							$media_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bb-media-activity-image', true, $receiver_user_id );
 							?>
 							<div class="bb-activity-media-elem" style="<?php echo esc_attr( $media_elem_style ); ?>">
 								<a href="<?php echo esc_url( $image_url ); ?>">

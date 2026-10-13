@@ -582,6 +582,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Only the inviter or a moderator may revoke an invite.
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -618,6 +619,15 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					__( 'Invalid invite ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
+					)
+				);
+			} elseif ( ! function_exists( 'bb_invites_user_can_revoke' ) || ! bb_invites_user_can_revoke( $invite->ID ) ) {
+				// Only the inviter (or a moderator) may revoke an invite. Fails closed on older Platform.
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss' ),
+					array(
+						'status' => 403,
 					)
 				);
 			}

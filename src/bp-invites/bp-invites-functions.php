@@ -34,6 +34,42 @@ function bp_get_invite_post_type() {
 }
 
 /**
+ * Check whether a user can revoke (delete) an email invite.
+ *
+ * Only posts of the invite post type qualify, and only the member who sent the
+ * invite or a community moderator may revoke it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $invite_id Invite post ID.
+ * @param int $user_id   User ID. Defaults to the logged-in user.
+ *
+ * @return bool
+ */
+function bb_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
+	$invite_id = absint( $invite_id );
+	$user_id   = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+	$invite    = $invite_id ? get_post( $invite_id ) : null;
+
+	if ( empty( $invite ) || empty( $user_id ) || bp_get_invite_post_type() !== $invite->post_type ) {
+		return false;
+	}
+
+	$can_revoke = ( (int) $invite->post_author === $user_id ) || bp_user_can( $user_id, 'bp_moderate' );
+
+	/**
+	 * Filters whether a user can revoke an email invite.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool    $can_revoke Whether the user can revoke the invite.
+	 * @param WP_Post $invite     Invite post.
+	 * @param int     $user_id    User ID.
+	 */
+	return (bool) apply_filters( 'bb_invites_user_can_revoke', $can_revoke, $invite, $user_id );
+}
+
+/**
  * Return labels used by the invite post type.
  *
  * @since BuddyBoss 1.0.0

@@ -713,6 +713,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Only moderators may send a message as another member.
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -735,8 +736,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$thread_id = (int) $request->get_param( 'id' );
 			$sender_id = (int) $request->get_param( 'sender_id' );
 
-			// It's an existing thread.
-			if ( $thread_id ) {
+			// Members can only send as themselves; only community moderators may send on behalf of another user.
+			if ( 0 !== $sender_id && bp_loggedin_user_id() !== $sender_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to send a message as another member.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( $thread_id ) {
+				// It's an existing thread.
 				$sender_id = ( 0 !== $sender_id ? $sender_id : bp_loggedin_user_id() );
 
 				if (
@@ -991,6 +1001,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Members can only search their own conversations.
 	 */
 	public function search_thread_items_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -1002,7 +1013,19 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( is_user_logged_in() ) {
-			$retval = true;
+			$retval  = true;
+			$user_id = (int) $request->get_param( 'user_id' );
+
+			// Members can only search their own conversations.
+			if ( 0 !== $user_id && bp_loggedin_user_id() !== $user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -1269,6 +1292,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Honours another user_id only for moderators and deletes the meta of every message.
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/messages/:id Delete Thread
 	 * @apiName        DeleteBBThread
@@ -1299,8 +1323,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$previous = $this->prepare_item_for_response( $thread, $request );
 
 		$user_id = bp_loggedin_user_id();
-		if ( ! empty( $request['user_id'] ) ) {
-			$user_id = $request['user_id'];
+
+		// Honour a different user_id only for community moderators.
+		if ( ! empty( $request['user_id'] ) && ( (int) $request['user_id'] === $user_id || bp_current_user_can( 'bp_moderate' ) ) ) {
+			$user_id = (int) $request['user_id'];
 		}
 
 		// Check the user is one of the recipients.
@@ -1367,14 +1393,21 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$wpdb->query( $query ); // db call ok; no-cache ok.
 
 		// Delete messages meta.
-		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		if ( ! empty( $message_ids ) ) {
+			$meta_message_ids = array_map( 'absint', $message_ids );
+			$id_placeholders  = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
+			$query_meta       = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		}
 
 		// Delete thread.
 		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
+
+		/** This action is documented in bp-messages/classes/class-bp-messages-thread.php (fires so media, document and GIF cleanup runs like the other delete paths). */
+		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, bp_loggedin_user_id(), true );
 
 		/**
 		 * Fires after message thread deleted.
@@ -1411,17 +1444,15 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Checks the caller's own moderate capability.
 	 */
 	public function delete_item_permissions_check( $request ) {
 
-		$retval  = $this->get_item_permissions_check( $request );
-		$user_id = bp_loggedin_user_id();
+		$retval = $this->get_item_permissions_check( $request );
 
-		if ( ! empty( $request['user_id'] ) ) {
-			$user_id = $request['user_id'];
-		}
-
-		if ( true === $retval && ! bp_user_can( $user_id, 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) ) ) {
+		// Deleting a thread removes it for every participant: check the caller's own capability,
+		// never that of a client-supplied user_id.
+		if ( true === $retval && ! bp_current_user_can( 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to delete this thread messages.', 'buddyboss' ),

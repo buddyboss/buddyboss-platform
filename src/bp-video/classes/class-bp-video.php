@@ -1009,6 +1009,7 @@ class BP_Video {
 	 * Otherwise use the filters.
 	 *
 	 * @since BuddyBoss 1.7.0
+	 * @since BuddyBoss [BBVERSION] Deletes stored poster / custom thumbnails only when owned by the video owner.
 	 *
 	 * @param array $args          {
 	 *                             An array of arguments.
@@ -1180,23 +1181,26 @@ class BP_Video {
 					}
 				}
 
+				// The video row that owns this attachment, used to validate stored thumbnail IDs.
+				$attachment_video = current( wp_list_filter( $videos, array( 'attachment_id' => $attachment_id ) ) );
+
 				// Delete poster images.
 				$get_auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
-				if ( ! empty( $get_auto_generated_thumbnails ) ) {
+				if ( ! empty( $get_auto_generated_thumbnails ) && is_array( $get_auto_generated_thumbnails ) ) {
 					foreach ( $get_auto_generated_thumbnails as $key => $attachment ) {
 						if ( is_array( $attachment ) && ! empty( $attachment ) ) {
 							foreach ( $attachment as $thumb_id ) {
 								wp_delete_attachment( $thumb_id, true );
 							}
-						} elseif ( ! empty( $attachment ) ) {
-							wp_delete_attachment( $attachment, true );
+						} elseif ( ! empty( $attachment ) && $attachment_video && bb_video_can_delete_stored_thumbnail( $attachment_video, $attachment ) ) {
+							wp_delete_attachment( absint( $attachment ), true );
 						}
 					}
 				}
 
 				$get_existing = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
-				if ( ! $get_existing ) {
-					wp_delete_attachment( $get_existing, true );
+				if ( ! empty( $get_existing ) && $attachment_video && bb_video_can_delete_stored_thumbnail( $attachment_video, $get_existing ) ) {
+					wp_delete_attachment( absint( $get_existing ), true );
 				}
 
 				if ( empty( $from ) || 'activity' === $from ) {
