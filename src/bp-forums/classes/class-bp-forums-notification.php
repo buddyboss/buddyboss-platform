@@ -856,7 +856,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * Send callback function for forum type notification.
 	 *
 	 * @since BuddyBoss 2.2.6
-	 * @since BuddyBoss [BBVERSION] Claims the chunk before sending (concurrent re-run guard) and returns false on completion so the background queue row is removed instead of re-queued.
+	 * @since BuddyBoss 3.6.1 Claims the chunk before sending (concurrent re-run guard) and returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -1015,7 +1015,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * Send callback function for topic type notification.
 	 *
 	 * @since BuddyBoss 2.2.6
-	 * @since BuddyBoss [BBVERSION] Claims the chunk before sending (concurrent re-run guard) and returns false on completion so the background queue row is removed instead of re-queued.
+	 * @since BuddyBoss 3.6.1 Claims the chunk before sending (concurrent re-run guard) and returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *

@@ -2450,7 +2450,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token group activity.content
 	 *
 	 * @since BuddyBoss 2.2.9.1
-	 * @since BuddyBoss [BBVERSION] Returns an empty string instead of reading properties on a missing activity object.
+	 * @since BuddyBoss 3.6.1 Returns an empty string instead of reading properties on a missing activity object.
 	 *
 	 * @param \BP_Email $bp_email         Core component classes.
 	 * @param array     $formatted_tokens Formatted token array.

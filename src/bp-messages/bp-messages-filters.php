@@ -991,7 +991,7 @@ add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' 
  * 'messages' query string, so only those lists change; other callers of the thread query keep
  * group threads (existing-thread lookup on send, user deletion, attachment access checks).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param string|array $querystring        Query string for the current request.
  * @param string       $querystring_object Object the query string is used for.

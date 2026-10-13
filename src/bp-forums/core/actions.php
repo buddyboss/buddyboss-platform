@@ -417,7 +417,7 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  * Save topic/reply draft data.
  *
  * @since BuddyBoss 2.0.4
- * @since BuddyBoss [BBVERSION] Only flags or deletes the user's own unsaved draft attachments.
+ * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
  */
 function bb_post_topic_reply_draft() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {

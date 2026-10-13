@@ -27,7 +27,7 @@ function messages_screen_conversation() {
 	if (
 		bb_messages_is_disabled_group_thread( $thread_id ) &&
 		bp_is_my_profile() &&
-		( messages_check_thread_access( $thread_id ) || bp_current_user_can( 'bp_moderate' ) )
+		( bb_messages_is_active_thread_recipient( $thread_id ) || bp_current_user_can( 'bp_moderate' ) )
 	) {
 		// Inbox, or compose for members with no listed threads: straight to the final page, so the notice is shown there.
 		$redirect = bb_messages_get_disabled_group_thread_redirect_url( $thread_id );

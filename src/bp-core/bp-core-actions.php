@@ -472,7 +472,7 @@ add_action( 'init', 'bb_restricate_rss_feed_callback', 10 );
  * Private Website redirect leaves feeds to this setting. Forum feeds are printed earlier and are
  * restricted by bb_restricate_rss_feed_forums_request().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  */
 function bb_restricate_rss_feed_template_redirect() {
 	if ( is_user_logged_in() || ! is_feed() || true !== bp_enable_private_rss_feeds() ) {
@@ -492,7 +492,7 @@ add_action( 'template_redirect', 'bb_restricate_rss_feed_template_redirect', 1 )
  * check never runs, so these feeds are checked here, just before the trap and on the same
  * conditions it uses to decide whether it will print a feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $query_vars Request query variables.
  *

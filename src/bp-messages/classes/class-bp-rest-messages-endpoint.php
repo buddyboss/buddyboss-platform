@@ -227,6 +227,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'is_hidden'    => $request['is_hidden'],
 		);
 
+		// Hide group threads while "Group Messages" is disabled, as the web lists do.
+		$args['exclude_disabled_group_threads'] = true;
+
 		// Include the meta_query for starred messages.
 		if ( 'starred' === $args['box'] ) {
 			$args['meta_query'] = array( // phpcs:ignore
@@ -273,10 +276,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		// Added unread thread count into header response.
 		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
 			array(
-				'fields'      => 'ids',
-				'user_id'     => bp_loggedin_user_id(),
-				'is_hidden'   => true,
-				'thread_type' => 'archived',
+				'fields'                         => 'ids',
+				'user_id'                        => bp_loggedin_user_id(),
+				'is_hidden'                      => true,
+				'thread_type'                    => 'archived',
+				'exclude_disabled_group_threads' => true,
 			)
 		);
 
@@ -373,13 +377,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! isset( $request['recipients_pagination'] ) || false === $request['recipients_pagination'] ) {
 
 			if ( ! empty( $thread->flag_filter_join_sql ) ) {
-				// The main BP_Messages_Thread populate function already cached the recipients using standard queries.
-				// Clear cache since we modified the recipients query to include group members.
-				wp_cache_delete( 'thread_recipients_' . $thread->thread_id, 'bp_messages' );
+				// Group thread: re-fetch the recipients with the group members join applied.
 				unset( $thread->flag_filter_join_sql );
+				$thread->recipients = $this->bb_rest_get_group_thread_recipients( $thread );
+			} else {
+				$thread->recipients = $thread->get_recipients( $thread->thread_id );
 			}
-
-			$thread->recipients = $thread->get_recipients( $thread->thread_id );
 		}
 
 		$retval = $this->prepare_response_for_collection(
@@ -434,6 +437,24 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				);
 			} elseif ( bp_current_user_can( 'bp_moderate' ) || messages_check_thread_access( $thread->thread_id ) ) {
 				$retval = true;
+
+				// Same rule as the web: group threads cannot be read while "Group Messages" is disabled.
+				// GET and update (PATCH/PUT/POST, whose response carries the whole thread) are refused;
+				// DELETE reuses this check and stays allowed so a site administrator can still delete the thread
+				// (delete_item_permissions_check() limits DELETE to logged-in moderators).
+				if (
+					WP_REST_Server::DELETABLE !== $request->get_method() &&
+					function_exists( 'bb_messages_is_disabled_group_thread' ) &&
+					bb_messages_is_disabled_group_thread( $thread->thread_id )
+				) {
+					$retval = new WP_Error(
+						'bp_rest_authorization_required',
+						__( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			} else {
 				$retval = $error;
 			}
@@ -736,7 +757,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$thread_id = (int) $request->get_param( 'id' );
 			$sender_id = (int) $request->get_param( 'sender_id' );
 
-			// Members can only send as themselves; only community moderators may send on behalf of another user.
+			if ( 0 !== $sender_id && bp_loggedin_user_id() !== $sender_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+				// Only site moderators may send a message as another member; keep the generic refusal.
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} elseif ( $thread_id ) {
+				// Members can only send as themselves; only community moderators may send on behalf of another user.
 			if ( 0 !== $sender_id && bp_loggedin_user_id() !== $sender_id && ! bp_current_user_can( 'bp_moderate' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -755,6 +786,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					messages_check_thread_access( $thread_id, $sender_id )
 				) {
 					$retval = true;
+
+					// Same rule as the web: no replies to group threads while "Group Messages" is disabled.
+					if ( function_exists( 'bb_messages_is_disabled_group_thread' ) && bb_messages_is_disabled_group_thread( $thread_id ) ) {
+						$retval = new WP_Error(
+							'bp_rest_authorization_required',
+							__( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+							array(
+								'status' => rest_authorization_required_code(),
+							)
+						);
+					}
 				}
 			} else {
 				// It's a new thread.
@@ -968,6 +1010,15 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				}
 			}
 
+			// Group threads cannot be opened while "Group Messages" is disabled, even when group threads are requested.
+			if ( ! empty( $threads ) && function_exists( 'bb_messages_is_disabled_group_thread' ) ) {
+				foreach ( $threads as $key => $thread ) {
+					if ( bb_messages_is_disabled_group_thread( (int) $thread->thread_id ) ) {
+						unset( $threads[ $key ] );
+					}
+				}
+			}
+
 			if ( ! empty( $threads ) ) {
 				$thread_id = current( $threads )->thread_id;
 				$thread    = $this->get_thread_object( $thread_id, $request );
@@ -1116,12 +1167,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! isset( $request['recipients_pagination'] ) || false === $request['recipients_pagination'] ) {
 
 			if ( ! empty( $thread->flag_filter_join_sql ) ) {
-				// The main BP_Messages_Thread populate function already cached the recipients using standard queries.
-				// Clear cache since we modified the recipients query to include group members.
-				wp_cache_delete( 'thread_recipients_' . $thread->thread_id, 'bp_messages' );
+				// Group thread: re-fetch the recipients with the group members join applied.
 				unset( $thread->flag_filter_join_sql );
+				$thread->recipients = $this->bb_rest_get_group_thread_recipients( $thread );
+			} else {
+				$thread->recipients = $thread->get_recipients( $thread->thread_id );
 			}
-			$thread->recipients = $thread->get_recipients( $thread->thread_id );
 		}
 
 		$retval = $this->prepare_response_for_collection(
@@ -1271,6 +1322,17 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 			if ( messages_check_thread_access( $thread_id ) ) {
 				$retval = true;
+
+				// The response carries the message, so the "Group Messages" disabled rule of get_item applies here too.
+				if ( function_exists( 'bb_messages_is_disabled_group_thread' ) && bb_messages_is_disabled_group_thread( $thread_id ) ) {
+					$retval = new WP_Error(
+						'bp_rest_authorization_required',
+						__( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+						array(
+							'status' => rest_authorization_required_code(),
+						)
+					);
+				}
 			}
 		}
 
@@ -1313,10 +1375,18 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		// Get the thread before it's deleted.
-		$thread             = $this->get_thread_object( $request['id'], $request );
-		$thread->recipients = $thread->get_recipients( $thread->thread_id );
+		$thread = $this->get_thread_object( $request['id'], $request );
 
 		if ( ! isset( $request['recipients_pagination'] ) || false === $request['recipients_pagination'] ) {
+
+			if ( ! empty( $thread->flag_filter_join_sql ) ) {
+				// Group thread: re-fetch the recipients with the group members join applied.
+				unset( $thread->flag_filter_join_sql );
+				$thread->recipients = $this->bb_rest_get_group_thread_recipients( $thread );
+			} else {
+				$thread->recipients = $thread->get_recipients( $thread->thread_id );
+			}
+		} else {
 			$thread->recipients = $thread->get_recipients( $thread->thread_id );
 		}
 
@@ -1450,9 +1520,19 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 		$retval = $this->get_item_permissions_check( $request );
 
-		// Deleting a thread removes it for every participant: check the caller's own capability,
-		// never that of a client-supplied user_id.
-		if ( true === $retval && ! bp_current_user_can( 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) ) ) {
+		if ( ! empty( $request['user_id'] ) ) {
+			$user_id = $request['user_id'];
+		}
+
+		// Deleting the whole thread is for site moderators only: check the logged-in user, never the client `user_id`
+		// alone, so a member cannot pass a moderator's `user_id`. The release check on `user_id` is kept for moderators.
+		if (
+			true === $retval &&
+			(
+				! bp_current_user_can( 'bp_moderate' ) ||
+				! bp_user_can( $user_id, 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) )
+			)
+		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to delete this thread messages.', 'buddyboss' ),
@@ -2155,12 +2235,58 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 		$thread = new BP_Messages_Thread( $thread_id, '', $args );
 
-		// Store flag in a thread object for later use.
 		if ( $flag_filter_join_sql ) {
+			// Detach the join as soon as the thread is built. This method also runs from the
+			// permission callbacks WordPress core invokes while building collection links, so a
+			// filter left attached here would leak into every later recipients query of the same
+			// request (e.g. bp_rest_can_send_message() for the following threads of a list).
+			remove_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10 );
+
+			// Store flag in a thread object for later use.
 			$thread->flag_filter_join_sql = true;
 		}
 
 		return $thread;
+	}
+
+	/**
+	 * Re-fetch a group thread's recipients with the group members join applied.
+	 *
+	 * The wp_cache_delete() below is load-bearing, and not for the reason you might expect:
+	 * BP_Messages_Thread::get_recipients() is cache-first. It returns thread_recipients_{id}
+	 * untouched whenever that key is warm, and only queries - and caches the result - on a miss.
+	 * The key therefore holds whichever shape the last caller that actually queried produced:
+	 * joined here, un-joined from anywhere that fetches recipients without this helper. Under a
+	 * persistent object cache it survives between requests. Clearing it first is what guarantees
+	 * this method returns the joined set rather than a warm un-joined one, and it is the only
+	 * reason the attached filter below has any effect at all. Do not remove it as redundant.
+	 *
+	 * (BP_Messages_Thread::populate() does warm that key, indirectly: for a logged-in user it calls
+	 * get_messages_count() -> is_thread_recipient() -> get_recipients_for_thread() -> get_recipients().
+	 * On a miss that write happens inside get_thread_object()'s attach window, so it is joined; but
+	 * on a hit populate() keeps whatever shape is already there, joined or not. That is exactly the
+	 * case the delete above exists for. populate()'s own recipients list comes from
+	 * get_pagination_recipients(), which caches only under bp_core_set_incremented_cache() keys
+	 * derived from the full SQL text, so a joined and an un-joined query never collide there.)
+	 *
+	 * The filter is attached for this one query and detached immediately, so the *filter* cannot
+	 * leak into later recipient queries. The joined *result* is still published to the shared cache
+	 * key above, which is intentional - it is the correct answer for a group thread.
+	 *
+	 * @since BuddyBoss 3.6.1
+	 *
+	 * @param BP_Messages_Thread $thread Thread object returned by get_thread_object().
+	 *
+	 * @return array Recipients keyed by user ID.
+	 */
+	protected function bb_rest_get_group_thread_recipients( $thread ) {
+		wp_cache_delete( 'thread_recipients_' . $thread->thread_id, 'bp_messages' );
+
+		add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+		$recipients = $thread->get_recipients( $thread->thread_id );
+		remove_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10 );
+
+		return $recipients;
 	}
 
 	/**
