@@ -1764,7 +1764,11 @@ window.bp = window.bp || {};
 
 				comment_data.content = comment_data.content.replace( /&nbsp;/g, ' ' );
 
-				if ( form.hasClass( 'acomment-edit' ) ) {
+				// Read the edit state now: cancelling while the request is in flight resets the form.
+				var wasCommentEdit = form.hasClass( 'acomment-edit' );
+				var form_item_id   = form.attr( 'data-item-id' );
+
+				if ( wasCommentEdit ) {
 					comment_data.edit_comment = true;
 				}
 
@@ -1820,10 +1824,7 @@ window.bp = window.bp || {};
 							}
 							form.find( '#ac-input-' + form_activity_id ).html( '' );
 
-							var wasCommentEdit = form.hasClass( 'acomment-edit' );
-
 							if ( wasCommentEdit ) {
-								var form_item_id = form.attr( 'data-item-id' );
 								form.closest( '.activity-comments' ).append( form );
 								if ( isInsideModal ) {
 									$( '#activity-modal' ).find( 'li#acomment-' + form_item_id ).replaceWith( the_comment );

@@ -3668,7 +3668,11 @@ window.bp = window.bp || {};
 
 			commentData.content = commentData.content.replace( /&nbsp;/g, ' ' );
 
-			if ( form.hasClass( 'acomment-edit' ) ) {
+			// Read the edit state now: cancelling while the request is in flight resets the form.
+			var wasCommentEdit = form.hasClass( 'acomment-edit' );
+			var form_item_id   = form.attr( 'data-item-id' );
+
+			if ( wasCommentEdit ) {
 				commentData.edit_comment = true;
 			}
 
@@ -3724,10 +3728,7 @@ window.bp = window.bp || {};
 						}
 						form.find( '#ac-input-' + form_activity_id ).html( '' );
 
-						var wasCommentEdit = form.hasClass( 'acomment-edit' );
-
 						if ( wasCommentEdit ) {
-							var form_item_id = form.attr( 'data-item-id' );
 							form.closest( '.bb-rl-activity-comments' ).append( form );
 							var $commentContainer = isInsideModal ? $( '#bb-rl-activity-modal' ).find( 'li#bb-rl-acomment-' + form_item_id ) : $( 'li#bb-rl-acomment-' + form_item_id );
 							$commentContainer.replaceWith( the_comment );

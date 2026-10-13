@@ -1735,6 +1735,7 @@ class BP_Document {
 
 					// Keep an activity comment that still has text or other attachments.
 					if ( 'activity_comment' === $activity->type && bb_activity_comment_has_remaining_content( $activity ) ) {
+						bb_activity_comment_remove_deleted_attachment_meta( $activity->id, 'document', $document_ids );
 						continue;
 					}
 

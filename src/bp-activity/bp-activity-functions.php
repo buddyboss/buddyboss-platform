@@ -3726,6 +3726,48 @@ function bb_activity_comment_has_remaining_content( $comment ) {
 	return (bool) apply_filters( 'bb_activity_comment_has_remaining_content', $has_content, $comment );
 }
 
+/**
+ * Remove deleted photos, videos or documents from a kept activity comment's meta.
+ *
+ * When the last attachment of a comment that still has text is deleted, the
+ * comment is kept but its `bp_{type}_ids`, `bp_{type}_id` and `bp_{type}_activity`
+ * meta would still point at the deleted rows. This clears them the same way
+ * editing the comment does.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $comment_id  Activity comment ID.
+ * @param string $type        Attachment type: 'media', 'video' or 'document'.
+ * @param array  $deleted_ids IDs of the attachments that were just deleted.
+ */
+function bb_activity_comment_remove_deleted_attachment_meta( $comment_id, $type, $deleted_ids ) {
+	$comment_id  = (int) $comment_id;
+	$deleted_ids = wp_parse_id_list( $deleted_ids );
+
+	if ( empty( $comment_id ) || empty( $deleted_ids ) || ! in_array( $type, array( 'media', 'video', 'document' ), true ) ) {
+		return;
+	}
+
+	$ids_key = 'bp_' . $type . '_ids';
+	$id_key  = 'bp_' . $type . '_id';
+
+	$remaining_ids = array_diff( wp_parse_id_list( bp_activity_get_meta( $comment_id, $ids_key, true ) ), $deleted_ids );
+
+	if ( empty( $remaining_ids ) ) {
+		bp_activity_delete_meta( $comment_id, $ids_key );
+		bp_activity_delete_meta( $comment_id, $id_key );
+		bp_activity_delete_meta( $comment_id, 'bp_' . $type . '_activity' );
+
+		return;
+	}
+
+	bp_activity_update_meta( $comment_id, $ids_key, implode( ',', $remaining_ids ) );
+
+	if ( in_array( (int) bp_activity_get_meta( $comment_id, $id_key, true ), $deleted_ids, true ) ) {
+		bp_activity_delete_meta( $comment_id, $id_key );
+	}
+}
+
 	/**
 	 * Delete an activity comment's children.
 	 *
