@@ -71,8 +71,8 @@
         },
         {
             "name": "caseproof\/ground-level-container",
-            "version": "9.1.2",
-            "version_normalized": "9.1.2.0",
+            "version": "9.3.0",
+            "version_normalized": "9.3.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof\/ground-level-container.git",
@@ -110,7 +110,7 @@
             ],
             "description": "The GroundLevel Container package.",
             "support": {
-                "source": "https:\/\/github.com\/caseproof\/ground-level-container\/tree\/9.1.2"
+                "source": "https:\/\/github.com\/caseproof\/ground-level-container\/tree\/9.3.0"
             },
             "install-path": "..\/caseproof\/ground-level-container"
         },
@@ -248,8 +248,8 @@
         },
         {
             "name": "caseproof\/ground-level-support",
-            "version": "9.1.2",
-            "version_normalized": "9.1.2.0",
+            "version": "9.3.0",
+            "version_normalized": "9.3.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof\/ground-level-support.git",
@@ -283,7 +283,7 @@
             ],
             "description": "The GroundLevel Support package.",
             "support": {
-                "source": "https:\/\/github.com\/caseproof\/ground-level-support\/tree\/9.1.2"
+                "source": "https:\/\/github.com\/caseproof\/ground-level-support\/tree\/9.3.0"
             },
             "install-path": "..\/caseproof\/ground-level-support"
         },
