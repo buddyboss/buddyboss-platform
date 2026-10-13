@@ -774,6 +774,7 @@ window.bp = window.bp || {};
 				attachment_id         = target.attr( 'data-item-attachment-id' ),
 				preview_attachment_id = target.attr( 'data-item-preview-attachment-id' ),
 				fromWhere             = target.attr( 'data-item-from' ),
+				self                  = this,
 				data                  = [];
 
 			if ( 'activity' !== fromWhere ) {
@@ -853,7 +854,7 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-document-activity.' + id ).remove();
-									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
 								} else {
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
@@ -862,6 +863,74 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+
+		/**
+		 * Remove an activity comment that the server deleted together with its
+		 * last photo, document or video, and take it out of the parent activity's
+		 * comment count first - the same update a direct comment delete makes.
+		 *
+		 * The comment can be rendered more than once (feed, "view more comments"
+		 * modal, media theatre), so every copy updates the counts of its own
+		 * activity. The feed card behind the modal often does not render the
+		 * comment (it shows only the latest comments), so when the comment was
+		 * removed from the modal only, the feed card's count drops by the same
+		 * number, and the modal is flagged as updated so closing it re-syncs the
+		 * feed card from the server - as after a direct comment delete.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The deleted activity comment ID.
+		 */
+		removeDeletedActivityComment: function ( commentId ) {
+			var activity       = bp.Nouveau.Activity,
+				canUpdateCount = 'undefined' !== typeof activity && 'function' === typeof activity.updateCommentCountOnDelete && 'function' === typeof activity.decreaseActivityCommentCount,
+				modalDeleted   = {},
+				feedHasCopy    = {};
+
+			$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + commentId ).each(
+				function () {
+					var $commentLi    = $( this ),
+						$activityItem = $commentLi.closest( '.activity-item' ),
+						$modal        = $commentLi.closest( '#bb-rl-activity-modal' ),
+						$countScope   = $modal.length ? $modal : $activityItem,
+						activityId    = $activityItem.data( 'bp-activity-id' );
+
+					if ( canUpdateCount && $activityItem.length ) {
+						if ( $modal.length ) {
+							modalDeleted[ activityId ] = activity.getDeletedCommentsCount( $commentLi );
+						} else if ( $commentLi.closest( '#bb-rl-activity-stream' ).length ) {
+							feedHasCopy[ activityId ] = true;
+						}
+
+						activity.updateCommentCountOnDelete( $commentLi, $activityItem, $countScope.find( '.activity-state' ), $countScope.find( '.comments-count' ) );
+					}
+
+					$commentLi.remove();
+				}
+			);
+
+			$.each(
+				modalDeleted,
+				function ( activityId, deletedCount ) {
+					// Re-sync the feed card from the server when the modal closes.
+					activity.activityHasUpdates = true;
+					activity.currentActivityId  = activityId;
+
+					// A feed card that rendered the comment was updated by its own copy above.
+					if ( feedHasCopy[ activityId ] ) {
+						return;
+					}
+
+					$( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id="' + activityId + '"]' ).not( '#bb-rl-activity-modal li' ).each(
+						function () {
+							var $feedItem = $( this );
+
+							activity.decreaseActivityCommentCount( $feedItem, $feedItem.find( '.activity-state' ), $feedItem.find( '.comments-count' ), deletedCount );
+						}
+					);
+				}
+			);
 		},
 
 		bp_ajax_media_request: function ( event, data ) {
@@ -1017,7 +1086,7 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-media-activity.' + id ).remove();
-									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
 
 									// The selectors above also clear the "view more comments"
 									// modal's copy of the activity, which leaves the modal open

@@ -1213,18 +1213,17 @@ class BP_Video {
 
 				// Check access.
 				if ( bp_activity_user_can_delete( $activity ) ) {
+
+					// Keep an activity comment that still has text or other attachments.
+					if ( 'activity_comment' === $activity->type && bb_activity_comment_has_remaining_content( $activity ) ) {
+						continue;
+					}
+
 					/** This action is documented in bp-activity/bp-activity-actions.php */
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 					// Deleting an activity comment.
 					if ( 'activity_comment' === $activity->type ) {
-
-						// Do not delete the activity if activity type is comment & have a multiple videos attached.
-						$video_ids = self::get_activity_video_id( $activity_id );
-						if ( ! empty( $video_ids ) && self::get_activity_attachment_id( $activity_id ) > 0 ) {
-							continue;
-						}
-
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
