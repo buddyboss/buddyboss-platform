@@ -1075,7 +1075,7 @@ function bb_is_enabled_subscription( $type, $notification_type = '' ) {
  * Trigger subscription notifications.
  *
  * @since BuddyBoss 2.2.6
- * @since BuddyBoss [BBVERSION] Reads one bounded page of subscription ids to decide
+ * @since BuddyBoss 3.6.1 Reads one bounded page of subscription ids to decide
  *                              between in-request delivery and the background fan-out,
  *                              and resolves user ids from that page in a second query.
  *
@@ -1136,7 +1136,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	 * reads to decide, so raising it far above the default re-introduces
 	 * in-request memory and queue-insert cost proportional to the value.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param int   $min_count Subscriber count threshold. Default 1000.
 	 * @param array $r         Parsed arguments of the notification request.
@@ -1212,7 +1212,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	 * defaults.
 	 *
 	 * @since BuddyBoss 2.2.6
-	 * @since BuddyBoss [BBVERSION] Also sizes the chunks queued by the background fan-out worker, bb_send_notifications_to_subscribers_batch().
+	 * @since BuddyBoss 3.6.1 Also sizes the chunks queued by the background fan-out worker, bb_send_notifications_to_subscribers_batch().
 	 *
 	 * @param int $min_count Number of subscribers per queued chunk. Default 20.
 	 *                       Values below 1 are treated as 1.
@@ -1258,7 +1258,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 		/**
 		 * Filters the number of subscribers fetched per page by the background fan-out worker.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.6.1
 		 *
 		 * @param int   $per_page Subscribers fetched per background page. Default 1000.
 		 * @param array $r        Parsed arguments of the notification request.
@@ -1635,7 +1635,7 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
  * exhausted. Keeps the originating web request's memory and query cost bounded
  * by the fan-out threshold regardless of subscriber count.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $args {
  *     An array of arguments.
@@ -2017,7 +2017,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
  * object whenever the activity still resolves at send time. Payloads without
  * the object are returned unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $data The notification `data` payload.
  *
@@ -2065,7 +2065,7 @@ function bb_subscriptions_compact_notification_data( $data ) {
  * no longer resolves (deleted activity, component inactive) leaves the token
  * absent for the send callback to handle.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $data The notification `data` payload.
  *
@@ -2105,7 +2105,7 @@ function bb_subscriptions_rehydrate_notification_data( $data ) {
  * unchanged, so `false` deletes the row exactly as it did when the row named
  * the callback directly.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $args Parsed send-callback arguments: type, item_id, blog_id,
  *                    notification_from, data, user_ids.
@@ -2144,7 +2144,7 @@ function bb_subscriptions_send_notification_chunk( $args ) {
  * callback claims — the key has to be identical across all of those shapes so
  * a claim, its refreshes and its completion marker all agree.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $args Parsed send-callback arguments.
  *
@@ -2179,7 +2179,7 @@ function bb_subscriptions_get_notification_chunk_key( $args ) {
 /**
  * Get the lifetime of a notification chunk claim.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $args Parsed send-callback arguments.
  *
@@ -2194,7 +2194,7 @@ function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
 	 * workers. Raise it on sites whose mail transport can take longer than the
 	 * default for one recipient.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param int   $claim_ttl Claim lifetime in seconds. Default 30.
 	 * @param array $args      Parsed send-callback arguments.
@@ -2248,7 +2248,7 @@ function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
  * (pre-existing behavior, duplicates possible) rather than silently dropping
  * the chunk.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array  $args      Parsed send-callback arguments: type, item_id, blog_id,
  *                          notification_from, data (identifies the activity/topic/reply),
@@ -2305,7 +2305,7 @@ function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
  * slow chunk (e.g. synchronous SMTP) and a stale-lock takeover cannot re-send
  * it while it is still in flight.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
  * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
@@ -2334,7 +2334,7 @@ function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = ''
  * is written: nothing was delivered, so an identical row may legitimately
  * run later.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
  * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
@@ -2361,7 +2361,7 @@ function bb_subscriptions_release_notification_chunk_claim( $args, $chunk_key = 
  * duplicate queue row for the same chunk that runs afterwards is refused by
  * bb_subscriptions_claim_notification_chunk().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
  * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
@@ -2386,7 +2386,7 @@ function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) 
 	 * drain; an identical chunk can never legitimately recur (a new post gets
 	 * a new activity/topic id and therefore a new key).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param int   $done_ttl Marker lifetime in seconds. Default DAY_IN_SECONDS.
 	 * @param array $args     Parsed send-callback arguments.
@@ -2403,7 +2403,7 @@ function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) 
  * Cursors are stored as `array( 'last_id' => int, 'time' => int )`; a bare
  * integer (a cursor written before the timestamp existed) is accepted too.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param mixed $cursor Stored cursor option value.
  *
@@ -2439,7 +2439,7 @@ function bb_subscriptions_get_fanout_cursor_last_id( $cursor ) {
  * rewrites its cursor in the timestamped shape on its next page, and the few
  * truly abandoned pre-release cursors are a bounded, one-time leftover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return int Number of cursor options deleted.
  */
@@ -2449,7 +2449,7 @@ function bb_subscriptions_sweep_stale_fanout_cursors() {
 	/**
 	 * Filters the age after which an abandoned fan-out cursor is swept.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param int $max_age Maximum cursor age in seconds. Default WEEK_IN_SECONDS.
 	 */
@@ -2461,7 +2461,7 @@ function bb_subscriptions_sweep_stale_fanout_cursors() {
 	 * The sweep walks the options table by keyset (option_id) in batches of
 	 * this size, so its memory stays bounded however many cursors exist.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param int $batch_size Cursor options per batch. Default 500.
 	 */

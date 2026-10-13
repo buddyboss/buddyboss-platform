@@ -5222,7 +5222,7 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 /**
  * Function will return the user progress based on the settings you provided.
  *
- * @since BuddyBoss [BBVERSION] The photo staleness check compares the cached
+ * @since BuddyBoss 3.6.1 The photo staleness check compares the cached
  *                              is_uploaded flags against the live avatar and
  *                              cover state instead of against the gravatar
  *                              probe alone, so a stale value in either
@@ -6241,7 +6241,7 @@ function bb_check_server_disabled_symlink() {
  * Decided from how the request is being served, never from the URL text, so a query
  * parameter such as `?x=wp-json` cannot exempt a feed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return bool True for cron, AJAX, wp-login.php and REST API requests.
  */
@@ -6276,7 +6276,7 @@ function bb_is_rss_feed_restriction_exempt_request() {
  * Function will restrict RSS feed.
  *
  * @since BuddyBoss 1.8.6
- * @since BuddyBoss [BBVERSION] Added the `$is_feed` parameter. Exempt requests are detected from the
+ * @since BuddyBoss 3.6.1 Added the `$is_feed` parameter. Exempt requests are detected from the
  *                              request type instead of the URL text, and relative Public RSS Feeds
  *                              entries are matched without the query string.
  *
@@ -6369,7 +6369,7 @@ function bb_restricate_rss_feed( $is_feed = false ) {
  * The public Content list is page-level and intentionally not applied; site owners
  * can use the new filter instead.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
  *
@@ -6385,7 +6385,7 @@ function bb_is_private_network_download_restricted( $type = '' ) {
 	/**
 	 * Filters whether Private Website blocks a guest file download.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param bool   $restricted Whether the download is blocked. Default true.
 	 * @param string $type       Download type: 'document', 'folder', 'photo' or 'video'.
@@ -6398,7 +6398,7 @@ function bb_is_private_network_download_restricted( $type = '' ) {
  *
  * After login, the member returns to the same download URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
  *
@@ -11858,7 +11858,7 @@ function bb_is_feature_provided( $feature ) {
  * that are not yet linked to a saved media, document, video or activity may be deleted when
  * the draft is discarded.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param mixed $attachment_id Attachment ID from the draft payload. Non-numeric, zero and
  *                             negative values are rejected rather than normalised.
@@ -11890,7 +11890,7 @@ function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = fals
 	/**
 	 * Filters whether a user may flag or delete an attachment referenced by a composer draft.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param bool $can_manage    Whether the user may manage the attachment.
 	 * @param int  $attachment_id Attachment ID.

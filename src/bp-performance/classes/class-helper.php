@@ -72,7 +72,7 @@ class Helper {
 	 *   `Content-Length` / `Content-Encoding` / `Content-MD5` and `Date` no longer describe it, and
 	 *   `Connection` / `Keep-Alive` / `Transfer-Encoding` are hop-by-hop (RFC 9110 section 7.6.1).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @return array List of lower-cased header names.
 	 */
@@ -104,7 +104,7 @@ class Helper {
 		 * replayed, so headers added here are also stripped from rows that already exist.
 		 *
 		 * @since BuddyBoss 1.5.7
-		 * @since BuddyBoss [BBVERSION] Moved to Helper::get_uncacheable_headers() and also applied
+		 * @since BuddyBoss 3.6.1 Moved to Helper::get_uncacheable_headers() and also applied
 		 *                              when replaying a cached response.
 		 *
 		 * @param array $disallow_headers List of header names.
@@ -135,7 +135,7 @@ class Helper {
 	 * (URLs in `Link`, the `expires=` date in `Set-Cookie`, JSON in `X-App-Language`), so the line
 	 * is split on the first colon only. See RFC 9110 section 5.5.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param string $header_line Raw header line.
 	 *
@@ -162,7 +162,7 @@ class Helper {
 	 * The comparison is case-insensitive because HTTP field names are case-insensitive
 	 * (RFC 9110 section 5.1) while integrations register deny-list entries in mixed case.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param string $header_name         Header name.
 	 * @param array  $uncacheable_headers Optional. Pre-built deny list, as returned by
@@ -189,7 +189,7 @@ class Helper {
 	/**
 	 * Adds a header to a header collection without losing repeated field lines.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param array  $headers      Collection of header name => value pairs.
 	 * @param string $header_name  Header name.

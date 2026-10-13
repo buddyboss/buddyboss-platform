@@ -1528,7 +1528,7 @@ function bb_messages_is_group_thread( $thread_id ) {
  * bb_messages_reset_disabled_group_thread_ids_cache()): sending, reading or archiving other messages
  * keeps it. Without a persistent object cache it is also kept in a non-autoloaded option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return array Thread IDs, empty while "Group Messages" is enabled.
  */
@@ -1556,7 +1556,7 @@ function bb_messages_get_disabled_group_thread_ids() {
 	 * The list hides these threads from the message lists and refuses replies to them. Keep it in line
 	 * with any custom 'bb_messages_validate_thread' rule. The filtered list is not cached.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param array $thread_ids Thread IDs.
 	 */
@@ -1570,7 +1570,7 @@ function bb_messages_get_disabled_group_thread_ids() {
  *
  * Use bb_messages_get_disabled_group_thread_ids(), which caches the result.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return array Thread IDs.
  */
@@ -1639,7 +1639,7 @@ function bb_messages_query_disabled_group_thread_ids() {
  * The messages tables are shared by every site that uses them, and so is the cache group: the key names
  * the tables, so sites (or networks) with their own tables get their own entry.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return string
  */
@@ -1653,7 +1653,7 @@ function bb_messages_disabled_group_thread_ids_cache_key() {
 /**
  * Get the cached disabled group threads.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return array|false Thread IDs, false when nothing is cached.
  */
@@ -1679,7 +1679,7 @@ function bb_messages_get_cached_disabled_group_thread_ids() {
  * left behind by code that does not know the list: a Platform downgrade followed by a re-upgrade
  * (the released code writes group threads without resetting the list). 0 disables the lifetime.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return int Seconds, 0 for no lifetime.
  */
@@ -1688,7 +1688,7 @@ function bb_messages_disabled_group_thread_ids_ttl() {
 	/**
 	 * Filters how long the cached disabled group threads stay valid.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param int $ttl Seconds. Default one day. 0 for no lifetime.
 	 */
@@ -1701,7 +1701,7 @@ function bb_messages_disabled_group_thread_ids_ttl() {
  * A plain list of IDs (the shape written before the lifetime was added) is treated as a miss, so an
  * entry written by another Platform version is rebuilt instead of trusted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param mixed $entry Stored value.
  *
@@ -1720,7 +1720,7 @@ function bb_messages_is_valid_disabled_group_thread_ids_entry( $entry ) {
 /**
  * Cache the disabled group threads.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param array $thread_ids Thread IDs.
  *
@@ -1759,7 +1759,7 @@ function bb_messages_set_cached_disabled_group_thread_ids( $thread_ids ) {
  * message gets, changes or loses the group meta the check reads (a group thread is created, or the
  * first message of a thread changes), a thread is deleted, or a group is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return void
  */
@@ -1774,7 +1774,7 @@ function bb_messages_reset_disabled_group_thread_ids_cache() {
 /**
  * Check whether a thread is a group thread that cannot be used while "Group Messages" is disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param int $thread_id Thread ID.
  *
@@ -1794,7 +1794,7 @@ function bb_messages_is_disabled_group_thread( $thread_id ) {
  * on the way. The inbox sends members without listed threads on to compose (messages_screen_inbox()),
  * and the archived list sends them on to the latest archived thread (messages_action_archived()).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param int  $thread_id Disabled group thread ID.
  * @param bool $archived  Whether the member came from the archived thread screen.
@@ -1838,7 +1838,7 @@ function bb_messages_get_disabled_group_thread_redirect_url( $thread_id, $archiv
  * recipient list by user ID, so it reads one of those rows, while any active row counts here.
  * While 'bp_messages_thread_get_recipients' is filtered, messages_check_thread_access() is used instead.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param int $thread_id Thread ID.
  * @param int $user_id   Optional. User ID. Default: the logged-in user.

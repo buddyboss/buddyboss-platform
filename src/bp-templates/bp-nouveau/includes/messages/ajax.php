@@ -3021,7 +3021,7 @@ function bp_nouveau_ajax_hide_thread() {
 /**
  * Check that the current user may list the recipients of a thread over AJAX.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param int $thread_id Thread ID.
  *

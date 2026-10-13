@@ -2244,7 +2244,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * leak into later recipient queries. The joined *result* is still published to the shared cache
 	 * key above, which is intentional - it is the correct answer for a group thread.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param BP_Messages_Thread $thread Thread object returned by get_thread_object().
 	 *
