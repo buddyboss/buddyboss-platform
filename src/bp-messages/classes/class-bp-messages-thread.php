@@ -626,7 +626,8 @@ class BP_Messages_Thread {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @since BuddyBoss [BBVERSION] Reads only the user's recipient row instead of every recipient of the thread,
-	 *                              unless 'bp_messages_thread_get_recipients' is filtered.
+	 *                              unless 'bp_messages_thread_get_recipients' or 'bp_recipients_recipient_get_join_sql'
+	 *                              is filtered.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread.
@@ -640,7 +641,8 @@ class BP_Messages_Thread {
 		}
 
 		// One recipient row answers this; loading every recipient stalls threads with thousands of members.
-		if ( ! has_filter( 'bp_messages_thread_get_recipients' ) ) {
+		// A filtered list, or the group-members join added while a group thread loads, keeps the full-list check.
+		if ( ! has_filter( 'bp_messages_thread_get_recipients' ) && ! has_filter( 'bp_recipients_recipient_get_join_sql' ) ) {
 			return bb_messages_is_active_thread_recipient( $thread_id, $user_id );
 		}
 

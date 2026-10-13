@@ -110,4 +110,35 @@ class BP_Tests_Messages_Is_Thread_Recipient extends BP_UnitTestCase {
 
 		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
 	}
+
+	/**
+	 * While the group-members join is attached (group thread views), the release full-list check runs.
+	 */
+	public function test_group_members_join_keeps_release_path() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		$thread_id = $this->create_thread( $u1, array( $u2 ) );
+
+		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
+		bp_core_reset_incrementor( 'bp_messages' );
+
+		$queries   = array();
+		$log_query = function ( $sql ) use ( &$queries ) {
+			$queries[] = $sql;
+			return $sql;
+		};
+		add_filter( 'bp_recipients_recipient_get_paged_sql', $log_query );
+		add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+
+		$joined = BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 );
+
+		remove_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10 );
+		remove_filter( 'bp_recipients_recipient_get_paged_sql', $log_query );
+
+		$this->assertFalse( $joined, 'Release answer: no group membership row means no match under the join.' );
+		$this->assertNotEmpty( $queries );
+		$this->assertStringNotContainsString( 'r.user_id =', implode( ' ', $queries ), 'The full-list (release) query ran, not the one-row lookup.' );
+		$this->assertTrue( BP_Messages_Thread::is_thread_recipient( $thread_id, $u2 ) );
+	}
 }
