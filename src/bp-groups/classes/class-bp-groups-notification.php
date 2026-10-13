@@ -1089,10 +1089,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Send callback function for group type notification.
 	 *
 	 * @since BuddyBoss 2.2.8
+	 * @since BuddyBoss [BBVERSION] Claims the chunk before sending (concurrent re-run guard), writes the rebuilt activity back into the email tokens, and returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
-	 * @return bool|void
+	 * @return false
 	 */
 	public function bb_send_subscribed_group_notifications( $args ) {
 
@@ -1117,14 +1118,28 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			return false;
 		}
 
+		// Derive the claim key from the pristine payload once: the author is
+		// removed from user_ids below, and the claim, its refreshes and its
+		// completion marker must all hash the same shape.
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $r );
+
+		// A queue row re-run by a concurrently dispatched worker must not send
+		// this chunk a second time.
+		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
+			return false;
+		}
+
 		$data_id                 = 0;
 		$author_id               = 0;
 		$type_key                = '';
 		$email_notification_type = '';
 		$usernames               = array();
 		if ( 'bb_groups_subscribed_activity' === $r['notification_from'] ) {
-			// Bail if component is not activated.
+			// Bail if component is not activated. Release the claim on every
+			// bail below the claim so nothing holds the chunk for the TTL.
 			if ( ! bp_is_active( 'activity' ) ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
 
@@ -1136,8 +1151,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			if ( empty( $activity ) || 'groups' !== $activity->component ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
+
+			// Queued rows are compacted (the serialized activity object is stripped
+			// to keep them small) and the chunk runner restores the object before
+			// this callback runs; the email renderer requires it, so always provide
+			// the resolved one. Idempotent for rows that already carry the object.
+			$r['data']['email_tokens']['tokens']['activity'] = $activity;
 
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-activity';
@@ -1146,6 +1169,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_from'] ) {
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_topic_content' ) ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
 
@@ -1157,6 +1182,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		if ( empty( $data_id ) || empty( $author_id ) || empty( $type_key ) || empty( $email_notification_type ) ) {
+			bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 			return false;
 		}
 
@@ -1169,6 +1196,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			// Keep the chunk claim alive while this (possibly slow) chunk is still sending.
+			bb_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
 			$user_id           = (int) $user_id;
 			$send_mail         = true;
 			$send_notification = true;
@@ -1250,7 +1279,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
-		return true;
+		// Every recipient is handled: mark the chunk done so a late duplicate
+		// queue row is refused, then release the claim.
+		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
+
+		// The chunk is fully processed; false removes the queue row. A truthy
+		// return would make BB_Background_Updater::task() re-run the row with
+		// the updater object as its only argument; that pass stops at the array
+		// check in bb_subscriptions_send_notification_chunk() (or, for a row
+		// queued before the chunk runner existed, at the guards above).
+		return false;
 	}
 
 	/**
