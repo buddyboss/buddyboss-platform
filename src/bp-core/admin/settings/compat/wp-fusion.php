@@ -47,8 +47,8 @@
  * (`groups/legacy-meta-bridge.php`) silently rejects all three via
  * `bb_legacy_is_safe_post_key()` (see that file's "Known limitations" —
  * array-shape reassembly only exists on the CPT path, not the groups path).
- * So — same reasoning as `compat/bp-auto-group-join.php` — the fields are
- * registered manually here via `bb_register_groups_meta_fields`, reusing the
+ * So the fields are registered manually here via
+ * `bb_register_groups_meta_fields`, reusing the
  * `wpf_tags` resolver already registered above for the CPT path (same CRM tag
  * list, same create-tag flow) so both surfaces search/label/create identically.
  *
@@ -424,7 +424,7 @@ function bb_legacy_wpf_group_settings( $group_id ) {
 
 	// Only coerce the three keys this bridge owns — `$settings` can carry extra
 	// keys WP Fusion itself stores under `wpf-settings-buddypress`, and
-	// `bb_legacy_wpf_save_group_setting()` writes this whole array back, so
+	// `bb_legacy_wpf_replay_group_save()` writes this whole array back, so
 	// forcing an unrelated key to array() here would corrupt it on next save.
 	foreach ( array_keys( $defaults ) as $key ) {
 		$settings[ $key ] = array_values( (array) $settings[ $key ] );
@@ -434,37 +434,95 @@ function bb_legacy_wpf_group_settings( $group_id ) {
 }
 
 /**
- * Write one leaf of the WP Fusion group settings array back to the single
- * `wpf-settings-buddypress` groupmeta key, preserving whatever sibling leaves
- * are already stored (each of the 3 fields calls this independently during
- * the same save request — read-modify-write per call is safe because
- * `save_fields_data()` iterates fields synchronously within one request).
+ * Stage one leaf of the WP Fusion group settings for this save request.
+ *
+ * Nothing is written to groupmeta here: the 3 fields only collect their
+ * sanitized values (read-modify-write is not needed, each owns its own key),
+ * and {@see bb_legacy_wpf_replay_group_save()} hands the merged result to WP
+ * Fusion's own `save_groups_data()` once `save_fields_data()` has finished.
+ *
+ * Call with `$group_id` and `$key` to stage, or with `$key = null` to read and
+ * clear everything staged for that group.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int    $group_id Group ID.
- * @param string $key      One of 'apply_tags', 'tag_link', 'organizer_tag'.
- * @param array  $value    Sanitized flat array of tag ids.
+ * @param int         $group_id Group ID.
+ * @param string|null $key      One of 'apply_tags', 'tag_link', 'organizer_tag', or null to flush.
+ * @param array       $value    Sanitized flat array of tag ids.
+ * @return array Staged leaves for the group (only when flushing), keyed by leaf name.
  */
-function bb_legacy_wpf_save_group_setting( $group_id, $key, $value ) {
+function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = array() ) {
+	static $staged = array();
+
+	$group_id = (int) $group_id;
+	if ( $group_id <= 0 ) {
+		return array();
+	}
+
+	if ( null === $key ) {
+		$out = isset( $staged[ $group_id ] ) ? $staged[ $group_id ] : array();
+		unset( $staged[ $group_id ] );
+		return $out;
+	}
+
+	$staged[ $group_id ][ $key ] = array_values( (array) $value );
+
+	return array();
+}
+
+/**
+ * Replay WP Fusion's group save from the values staged by the 3 fields.
+ *
+ * Settings 2.0 never fires `bp_group_admin_edit_after`, so WP Fusion's
+ * `save_groups_data()` (3.47.14: meta writer only) is called here instead.
+ * `wpf-settings` (group visibility) is re-fed so the handler doesn't delete it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int             $group_id Saved group ID.
+ * @param BP_Groups_Group $group    Saved group object (unused).
+ */
+function bb_legacy_wpf_replay_group_save( $group_id, $group ) {
+	unset( $group );
+
 	$group_id = (int) $group_id;
 	if ( $group_id <= 0 ) {
 		return;
 	}
 
-	$settings         = bb_legacy_wpf_group_settings( $group_id );
-	$settings[ $key ] = array_values( (array) $value );
-
-	// Match the legacy handler's own empty-settings cleanup
-	// (`WPF_BuddyPress::save_groups_data()`): once every leaf is empty, delete
-	// the row entirely instead of leaving `a:3:{...}` of empty arrays behind.
-	if ( empty( array_filter( $settings ) ) ) {
-		groups_delete_groupmeta( $group_id, 'wpf-settings-buddypress' );
+	// Always flush, so nothing staged leaks into a later save in the same request.
+	$staged = bb_legacy_wpf_save_group_setting( $group_id );
+	if ( empty( $staged ) ) {
 		return;
 	}
 
-	groups_update_groupmeta( $group_id, 'wpf-settings-buddypress', $settings );
+	if (
+		! function_exists( 'wp_fusion' ) ||
+		empty( wp_fusion()->integrations->buddypress ) ||
+		! method_exists( wp_fusion()->integrations->buddypress, 'save_groups_data' )
+	) {
+		return;
+	}
+
+	$settings = array_merge( bb_legacy_wpf_group_settings( $group_id ), $staged );
+	if ( empty( array_filter( $settings ) ) ) {
+		$settings = array(); // Handler deletes the row when empty.
+	}
+
+	$visibility  = groups_get_groupmeta( $group_id, 'wpf-settings', true );
+	$post_backup = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+	$_POST['bp-groups-slug']          = 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- handler's own guard.
+	$_POST['wpf-settings-buddypress'] = $settings; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$_POST['wpf-settings']            = is_array( $visibility ) ? $visibility : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+	try {
+		wp_fusion()->integrations->buddypress->save_groups_data( $group_id );
+	} finally {
+		$_POST = $post_backup; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	}
 }
+add_action( 'bb_admin_after_save_group', 'bb_legacy_wpf_replay_group_save', 50, 2 );
 
 /**
  * Sanitize a tag-id array from `AjaxMultiSelectField`.
@@ -543,7 +601,7 @@ function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
 		'ajax_action'        => 'bb_legacy_ajax_select_search',
 		'ajax_nonce'         => wp_create_nonce( 'bb_admin_settings' ),
 		'nonce_param'        => 'nonce',
-		'search_placeholder' => __( 'Select tags', 'buddyboss' ),
+		'search_placeholder' => 1 === (int) $max ? __( 'Select tag', 'buddyboss' ) : __( 'Select tags', 'buddyboss' ),
 		'string_ids'         => true,
 		'resolver'           => 'wpf_tags',
 		'selected_items'     => array(),
@@ -577,9 +635,8 @@ function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
  * them together under one "WP Fusion - Group Settings" heading, matching the
  * classic metabox's title verbatim (`WPF_BuddyPress::add_meta_box_groups()`).
  *
- * Order numbers start at 6100 — clear of core (order 100) and after
- * `bp-auto-group-join`'s 6000-6030 block, so if both plugins are active their
- * sections appear in a stable, predictable sequence.
+ * Order numbers start at 6100 — clear of core (order 100), so the WP Fusion
+ * section appears in a stable, predictable position.
  *
  * @since BuddyBoss [BBVERSION]
  *
