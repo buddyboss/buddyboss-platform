@@ -188,3 +188,102 @@ function bp_messages_clear_message_unread_cache_on_thread_archived( $thread_id, 
 }
 add_action( 'bb_messages_thread_archived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
 add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_cache_on_thread_archived', 1, 2 );
+
+/**
+ * Reset the cached disabled group threads when a setting they depend on changes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_messages_reset_disabled_group_thread_ids_on_change() {
+	bb_messages_reset_disabled_group_thread_ids_cache();
+}
+
+add_action( 'add_option_bp-disable-group-messages', 'bb_messages_reset_disabled_group_thread_ids_on_change' );
+add_action( 'update_option_bp-disable-group-messages', 'bb_messages_reset_disabled_group_thread_ids_on_change' );
+add_action( 'delete_option_bp-disable-group-messages', 'bb_messages_reset_disabled_group_thread_ids_on_change' );
+add_action( 'update_option_bp-active-components', 'bb_messages_reset_disabled_group_thread_ids_on_change' );
+add_action( 'bp_messages_message_delete_thread', 'bb_messages_reset_disabled_group_thread_ids_on_change' );
+add_action( 'groups_delete_group', 'bb_messages_reset_disabled_group_thread_ids_on_change' );
+
+/**
+ * Reset the cached disabled group threads when a message meta the check reads can change the list.
+ *
+ * A thread is listed when its first message has message_from = group, group_message_users = all,
+ * group_message_type = open and a group_message_thread_id. A write can change the list only when it
+ * gives a listed thread a value that fails the check (its first message may lose the flag), or gives a
+ * value that passes it to a thread that is not listed (a new group thread). So replies to group threads,
+ * which copy the values of the first message, and members-only group messages keep the cache. Any
+ * removal of one of these keys resets it.
+ *
+ * Not covered: a message that is older than the first message of its thread and gets its first meta
+ * later, which can change which message is first. Messages are written with their meta when sent.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|array $meta_ids   Meta ID(s).
+ * @param int       $message_id Message ID.
+ * @param string    $meta_key   Meta key.
+ * @param mixed     $meta_value Meta value.
+ *
+ * @return void
+ */
+function bb_messages_reset_disabled_group_thread_ids_on_meta_change( $meta_ids, $message_id, $meta_key, $meta_value ) {
+	global $wpdb;
+
+	static $message_threads = array();
+
+	$checks = array(
+		'message_from'            => 'group',
+		'group_message_users'     => 'all',
+		'group_message_type'      => 'open',
+		'group_message_thread_id' => true,
+	);
+
+	if ( ! isset( $checks[ $meta_key ] ) ) {
+		return;
+	}
+
+	$thread_ids = bb_messages_get_cached_disabled_group_thread_ids();
+
+	// Nothing cached, nothing to reset.
+	if ( false === $thread_ids ) {
+		return;
+	}
+
+	if ( 'deleted_message_meta' === current_action() ) {
+		bb_messages_reset_disabled_group_thread_ids_cache();
+
+		return;
+	}
+
+	if ( true === $checks[ $meta_key ] ) {
+		$passes = ! empty( $meta_value );
+
+		// The thread ID alone cannot list a thread: members-only group messages also have one.
+		if ( $passes && 'all' !== bp_messages_get_meta( $message_id, 'group_message_users', true ) ) {
+			return;
+		}
+	} else {
+		$passes = is_scalar( $meta_value ) && $checks[ $meta_key ] === (string) $meta_value;
+	}
+
+	// A failing value cannot list a thread, and no thread is listed.
+	if ( ! $passes && empty( $thread_ids ) ) {
+		return;
+	}
+
+	$message_id = (int) $message_id;
+	if ( ! isset( $message_threads[ $message_id ] ) ) {
+		$message_threads[ $message_id ] = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT thread_id FROM ' . buddypress()->messages->table_name_messages . ' WHERE id = %d', $message_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	}
+
+	if ( in_array( $message_threads[ $message_id ], array_map( 'intval', $thread_ids ), true ) !== $passes ) {
+		bb_messages_reset_disabled_group_thread_ids_cache();
+	}
+}
+
+add_action( 'added_message_meta', 'bb_messages_reset_disabled_group_thread_ids_on_meta_change', 10, 4 );
+add_action( 'updated_message_meta', 'bb_messages_reset_disabled_group_thread_ids_on_meta_change', 10, 4 );
+add_action( 'deleted_message_meta', 'bb_messages_reset_disabled_group_thread_ids_on_meta_change', 10, 4 );
