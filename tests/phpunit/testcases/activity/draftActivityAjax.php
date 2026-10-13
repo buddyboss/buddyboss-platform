@@ -354,20 +354,39 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The ownership helper accepts only attachments the user uploaded.
+	 * The draft attachment helper accepts only attachments the user uploaded.
 	 */
-	public function test_user_owns_draft_attachment_helper() {
+	public function test_user_can_manage_draft_attachment_helper() {
 		$owner    = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		$other    = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		$attached = $this->create_attachment_for( $owner );
 		$post_id  = self::factory()->post->create( array( 'post_author' => $owner ) );
 
-		$this->assertTrue( bb_user_owns_draft_attachment( $attached, $owner ) );
-		$this->assertFalse( bb_user_owns_draft_attachment( $attached, $other ), 'Another user does not own it.' );
-		$this->assertFalse( bb_user_owns_draft_attachment( $post_id, $owner ), 'A non-attachment post is never a draft attachment.' );
-		$this->assertFalse( bb_user_owns_draft_attachment( 0, $owner ) );
-		$this->assertFalse( bb_user_owns_draft_attachment( -1 * $attached, $owner ), 'Negative IDs are not normalised to a real ID.' );
-		$this->assertFalse( bb_user_owns_draft_attachment( array( $attached ), $owner ) );
+		$this->assertTrue( bb_user_can_manage_draft_attachment( $attached, false, $owner ) );
+		$this->assertTrue( bb_user_can_manage_draft_attachment( $attached, true, $owner ), 'An unsaved own upload may be deleted.' );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( $attached, false, $other ), 'Another user does not own it.' );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( $post_id, false, $owner ), 'A non-attachment post is never a draft attachment.' );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( 0, false, $owner ) );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( -1 * $attached, false, $owner ), 'Negative IDs are not normalised to a real ID.' );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( array( $attached ), false, $owner ) );
+	}
+
+	/**
+	 * An own upload already linked to a saved item may be flagged but never deleted.
+	 *
+	 * A stale draft can still name an upload after it was posted; discarding that
+	 * draft must not delete the now-published file.
+	 */
+	public function test_user_can_manage_draft_attachment_refuses_delete_of_saved_uploads() {
+		$owner = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		foreach ( array( 'bp_media_id', 'bp_document_id', 'bp_video_id', 'bb_activity_id' ) as $meta_key ) {
+			$attached = $this->create_attachment_for( $owner );
+			update_post_meta( $attached, $meta_key, 123 );
+
+			$this->assertTrue( bb_user_can_manage_draft_attachment( $attached, false, $owner ), "{$meta_key}: flagging is still allowed." );
+			$this->assertFalse( bb_user_can_manage_draft_attachment( $attached, true, $owner ), "{$meta_key}: a saved upload is not deletable." );
+		}
 	}
 
 	/**
