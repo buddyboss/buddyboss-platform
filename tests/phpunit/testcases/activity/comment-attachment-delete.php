@@ -739,4 +739,67 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 
 		$this->assertSame( array( $item_1, $item_3 ), $ids );
 	}
+
+	/*
+	 * Cache refresh for a kept comment (V-2).
+	 */
+
+	/**
+	 * Deleting one attachment from a kept comment fires
+	 * bb_activity_comment_attachment_deleted, on the partial and the
+	 * last-attachment branch, so caches of the comment and its thread
+	 * (the App API cache) are purged. bp_activity_delete_comment does not
+	 * fire for a kept comment.
+	 *
+	 * @dataProvider attachment_type_provider
+	 *
+	 * @param string $type Meta type.
+	 */
+	public function test_kept_comment_fires_attachment_deleted_action( $type ) {
+		$calls  = array();
+		$record = function ( $comment_id, $deleted_type, $deleted_ids ) use ( &$calls ) {
+			$calls[] = array( (int) $comment_id, $deleted_type, array_map( 'intval', (array) $deleted_ids ) );
+		};
+		add_action( 'bb_activity_comment_attachment_deleted', $record, 10, 3 );
+
+		$comment = $this->create_comment( 'keep me' );
+		$item_1  = $this->attach_by_type( $comment, $type );
+		$item_2  = $this->attach_by_type( $comment, $type );
+
+		$this->delete_by_type( $item_1, $type );
+		$this->delete_by_type( $item_2, $type );
+
+		remove_action( 'bb_activity_comment_attachment_deleted', $record, 10 );
+
+		$this->assertTrue( $this->activity_exists( $comment ) );
+		$this->assertSame(
+			array(
+				array( $comment, $type, array( $item_1 ) ),
+				array( $comment, $type, array( $item_2 ) ),
+			),
+			$calls
+		);
+	}
+
+	/**
+	 * The action does not fire when the comment is deleted with its last
+	 * attachment; bp_activity_delete_comment covers that case.
+	 */
+	public function test_deleted_comment_does_not_fire_attachment_deleted_action() {
+		$fired  = 0;
+		$record = function () use ( &$fired ) {
+			$fired++;
+		};
+		add_action( 'bb_activity_comment_attachment_deleted', $record );
+
+		$comment = $this->create_comment();
+		$photo   = $this->attach_media( $comment );
+
+		$this->delete_by_type( $photo, 'media' );
+
+		remove_action( 'bb_activity_comment_attachment_deleted', $record );
+
+		$this->assertFalse( $this->activity_exists( $comment ) );
+		$this->assertSame( 0, $fired );
+	}
 }

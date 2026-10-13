@@ -3761,15 +3761,28 @@ function bb_activity_comment_remove_deleted_attachment_meta( $comment_id, $type,
 		bp_activity_delete_meta( $comment_id, $ids_key );
 		bp_activity_delete_meta( $comment_id, $id_key );
 		bp_activity_delete_meta( $comment_id, 'bp_' . $type . '_activity' );
+	} else {
+		bp_activity_update_meta( $comment_id, $ids_key, implode( ',', $remaining_ids ) );
 
-		return;
+		if ( in_array( (int) bp_activity_get_meta( $comment_id, $id_key, true ), $deleted_ids, true ) ) {
+			bp_activity_delete_meta( $comment_id, $id_key );
+		}
 	}
 
-	bp_activity_update_meta( $comment_id, $ids_key, implode( ',', $remaining_ids ) );
-
-	if ( in_array( (int) bp_activity_get_meta( $comment_id, $id_key, true ), $deleted_ids, true ) ) {
-		bp_activity_delete_meta( $comment_id, $id_key );
-	}
+	/**
+	 * Fires after attachments were deleted from an activity comment that was
+	 * kept, once its attachment meta is cleaned. The comment is not deleted,
+	 * so `bp_activity_delete_comment` does not fire for it; use this to
+	 * refresh anything that shows the comment or its thread, such as the
+	 * App API cache.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $comment_id  Activity comment ID.
+	 * @param string $type        Attachment type: 'media', 'video' or 'document'.
+	 * @param array  $deleted_ids IDs of the attachments that were deleted.
+	 */
+	do_action( 'bb_activity_comment_attachment_deleted', $comment_id, $type, $deleted_ids );
 }
 
 	/**

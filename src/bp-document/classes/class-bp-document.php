@@ -1727,7 +1727,9 @@ class BP_Document {
 		// delete related activity.
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) && ! $bb_activity_comment_edit ) {
 
-			foreach ( $activity_ids as $activity_id ) {
+			// The same activity can be listed twice: once from the item's own
+			// activity and once from its attachment's parent activity.
+			foreach ( array_unique( $activity_ids ) as $activity_id ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 
 				// Check access.
