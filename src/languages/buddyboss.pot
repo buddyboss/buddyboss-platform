@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-08 06:24:50+00:00\n"
+"POT-Creation-Date: 2026-10-13 12:14:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,820 +22,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Using ${var} in strings is deprecated, use {$var} instead in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/i18n-command/src/MakeJsonCommand.php on line 359
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-
-Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
-WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: buddyboss\n"
 
 
@@ -1029,7 +216,7 @@ msgstr ""
 #: bp-core/admin/settings/activity/settings-sharing.php:143
 #: bp-core/admin/settings/activity/settings-sharing.php:311
 #: bp-core/admin/settings/notifications/settings-web-push.php:205
-#: bp-core/bp-core-functions.php:10312
+#: bp-core/bp-core-functions.php:10501
 msgid "UPGRADE LAUNCH"
 msgstr ""
 
@@ -1209,7 +396,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:311
 #: bp-core/admin/settings/members/settings-profile-navigation.php:139
 #: bp-core/admin/settings/members/settings-profile-navigation.php:222
-#: bp-core/bp-core-functions.php:10739
+#: bp-core/bp-core-functions.php:10928
 #: bp-core/classes/class-bb-core-connections-widget.php:27
 #: bp-core/classes/class-bb-core-connections-widget.php:67
 #: bp-core/gdpr/class-bp-friendship-export.php:58
@@ -1397,7 +584,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4385
 #: bp-groups/bp-groups-functions.php:4404
 #: bp-groups/bp-groups-functions.php:4421
-#: bp-groups/bp-groups-functions.php:5718
+#: bp-groups/bp-groups-functions.php:5719
 #: bp-groups/bp-groups-template.php:5622
 #: bp-groups/classes/class-bp-groups-component.php:654
 #: bp-groups/classes/class-bp-groups-component.php:966
@@ -1507,7 +694,7 @@ msgstr ""
 #: bp-core/admin/settings/media/settings-photos.php:118
 #: bp-core/admin/settings/media/settings-videos.php:101
 #: bp-core/bb-core-blocks.php:321
-#: bp-core/bp-core-functions.php:10738
+#: bp-core/bp-core-functions.php:10927
 #: bp-core/classes/class-bb-readylaunch.php:735
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1075
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1081
@@ -1582,7 +769,7 @@ msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:1011
 #: bp-core/admin/settings/activity/settings-sharing.php:289
-#: bp-core/bp-core-functions.php:10313
+#: bp-core/bp-core-functions.php:10502
 msgid "LAUNCH"
 msgstr ""
 
@@ -1873,7 +1060,7 @@ msgstr ""
 #: bb-features/community/blogging/bb-blogging-functions.php:117
 #: bp-core/bp-core-functions.php:3349
 #: bp-core/bp-core-functions.php:3445
-#: bp-core/bp-core-functions.php:7564
+#: bp-core/bp-core-functions.php:7753
 #: bp-core/classes/class-bb-readylaunch.php:4154
 #: bp-members/classes/class-bp-members-admin.php:2474
 #: bp-members/classes/class-bp-members-list-table.php:157
@@ -2117,7 +1304,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:338
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:807
 #: bp-core/admin/classes/class-bb-admin-invites-ajax.php:359
-#: bp-core/bp-core-functions.php:7594
+#: bp-core/bp-core-functions.php:7783
 #: bp-core/classes/class-bb-readylaunch.php:1316
 #: bp-core/classes/class-bb-readylaunch.php:3109
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:492
@@ -2248,12 +1435,12 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:244
 #: bp-activity/classes/class-bb-activity-readylaunch.php:253
 #: bp-activity/classes/class-bb-activity-readylaunch.php:299
-#: bp-core/bp-core-actions.php:1142
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1653
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1662
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1708
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1777
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1786
+#: bp-core/bp-core-actions.php:1202
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1678
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1687
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1733
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1802
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1811
 msgid "Invalid request."
 msgstr ""
 
@@ -2417,7 +1604,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3372
 #: bp-core/classes/class-bb-rest-subscriptions-endpoint.php:887
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1749
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1148
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1163
 #: bp-groups/classes/class-bp-rest-group-invites-endpoint.php:1231
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1744
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1160
@@ -2718,15 +1905,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:187
 #: bp-templates/bp-nouveau/includes/document/ajax.php:618
 #: bp-templates/bp-nouveau/includes/document/ajax.php:745
-#: bp-templates/bp-nouveau/includes/document/ajax.php:861
-#: bp-templates/bp-nouveau/includes/document/ajax.php:968
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1106
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1259
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1346
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1486
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1640
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1677
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1763
+#: bp-templates/bp-nouveau/includes/document/ajax.php:931
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1067
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1205
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1358
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1463
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1603
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1757
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1794
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1880
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:52
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:70
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:118
@@ -3164,7 +2351,7 @@ msgstr ""
 
 #: bp-activity/actions/delete.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:439
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1969
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1994
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -3287,7 +2474,7 @@ msgstr ""
 #: bp-core/admin/settings/advanced/settings-general.php:124
 #: bp-core/admin/settings/search/settings-network-search.php:285
 #: bp-core/bp-core-cssjs.php:238
-#: bp-core/bp-core-functions.php:10736
+#: bp-core/bp-core-functions.php:10925
 #: bp-moderation/classes/class-bp-moderation-activity.php:120
 #: bp-search/bp-search-functions.php:376
 #: bp-templates/bp-nouveau/readylaunch/blog/archive-header.php:89
@@ -3333,8 +2520,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-notification.php:648
 #: bp-core/classes/class-bb-post-notification.php:146
 #: bp-forums/classes/class-bp-forums-notification.php:428
-#: bp-groups/classes/class-bp-groups-notification.php:1286
-#: bp-groups/classes/class-bp-groups-notification.php:1487
+#: bp-groups/classes/class-bp-groups-notification.php:1324
+#: bp-groups/classes/class-bp-groups-notification.php:1525
 #: bp-messages/classes/class-bp-messages-notification.php:218
 #: bp-notifications/bp-notifications-functions.php:1390
 #: bp-notifications/bp-notifications-functions.php:1439
@@ -3604,15 +2791,15 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4288
 #: bp-blogs/bp-blogs-filters.php:266
-#: bp-core/bp-core-actions.php:1004
-#: bp-core/classes/class-bp-email-tokens.php:2764
+#: bp-core/bp-core-actions.php:1064
+#: bp-core/classes/class-bp-email-tokens.php:2773
 msgid "View Comment"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4291
 #: bp-activity/bp-activity-functions.php:4296
 #: bp-core/classes/class-bp-email-tokens.php:2309
-#: bp-core/classes/class-bp-email-tokens.php:2626
+#: bp-core/classes/class-bp-email-tokens.php:2635
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:70
 #: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:122
 #: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:174
@@ -3712,7 +2899,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6918
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2030
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1618
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1643
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -4063,25 +3250,25 @@ msgid "reactions"
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:261
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1670
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1794
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1695
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1819
 msgid "Activity id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:269
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1678
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1703
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:289
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1698
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1723
 msgid "Sorry, You are not allowed to view more comments."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:322
 #: bp-activity/classes/class-bb-activity-readylaunch.php:346
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1728
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1754
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1753
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1779
 msgid "No more items to load."
 msgstr ""
 
@@ -4345,7 +3532,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-template.php:145
 #: bp-members/classes/class-bp-core-members-template.php:127
 #: bp-messages/classes/class-bp-messages-box-template.php:115
-#: bp-messages/classes/class-bp-messages-thread.php:896
+#: bp-messages/classes/class-bp-messages-thread.php:905
 #: bp-xprofile/classes/class-bp-xprofile-data-template.php:134
 msgid "Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details."
 msgstr ""
@@ -4560,7 +3747,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:216
 #: bp-blogs/bp-blogs-filters.php:254
-#: bp-core/bp-core-actions.php:992
+#: bp-core/bp-core-actions.php:1052
 #: bp-members/classes/class-bp-members-mentions-notification.php:168
 #: bp-members/classes/class-bp-members-mentions-notification.php:267
 msgid "comment"
@@ -4835,49 +4022,49 @@ msgstr ""
 
 #. translators: %s: Total reply count.
 #: bp-activity/classes/class-bp-activity-notification.php:718
-#: bp-groups/classes/class-bp-groups-notification.php:1379
+#: bp-groups/classes/class-bp-groups-notification.php:1417
 msgid "You have %1$d new posts"
 msgstr ""
 
 #. translators: 1: User full name, 2: Activity content.
 #: bp-activity/classes/class-bp-activity-notification.php:727
-#: bp-groups/classes/class-bp-groups-notification.php:1312
+#: bp-groups/classes/class-bp-groups-notification.php:1350
 msgid "%1$s posted an update: %2$s"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:736
-#: bp-groups/classes/class-bp-groups-notification.php:1321
+#: bp-groups/classes/class-bp-groups-notification.php:1359
 msgid "%1$s posted some photos"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:742
-#: bp-groups/classes/class-bp-groups-notification.php:1327
+#: bp-groups/classes/class-bp-groups-notification.php:1365
 msgid "%1$s posted a photo"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:751
-#: bp-groups/classes/class-bp-groups-notification.php:1336
+#: bp-groups/classes/class-bp-groups-notification.php:1374
 msgid "%1$s posted some documents"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:757
-#: bp-groups/classes/class-bp-groups-notification.php:1342
+#: bp-groups/classes/class-bp-groups-notification.php:1380
 msgid "%1$s posted a document"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:766
-#: bp-groups/classes/class-bp-groups-notification.php:1351
+#: bp-groups/classes/class-bp-groups-notification.php:1389
 msgid "%1$s posted some videos"
 msgstr ""
 
 #. translators: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:772
-#: bp-groups/classes/class-bp-groups-notification.php:1357
+#: bp-groups/classes/class-bp-groups-notification.php:1395
 msgid "%1$s posted a video"
 msgstr ""
 
@@ -4885,7 +4072,7 @@ msgstr ""
 #. translators: %s: User full name.
 #: bp-activity/classes/class-bp-activity-notification.php:779
 #: bp-activity/classes/class-bp-activity-notification.php:792
-#: bp-groups/classes/class-bp-groups-notification.php:1370
+#: bp-groups/classes/class-bp-groups-notification.php:1408
 msgid "%1$s posted an update"
 msgstr ""
 
@@ -5069,7 +4256,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:781
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:1396
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:246
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:520
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:541
 msgid "You don't have access to send the media."
 msgstr ""
 
@@ -5081,7 +4268,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:794
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:1409
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:259
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:533
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:554
 msgid "You don't have access to send the document."
 msgstr ""
 
@@ -5092,7 +4279,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-reply-endpoint.php:1536
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:807
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:272
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:546
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:567
 msgid "You don't have access to send the video."
 msgstr ""
 
@@ -5104,7 +4291,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:820
 #: bp-forums/classes/class-bp-rest-topics-endpoint.php:1422
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:285
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:559
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:580
 msgid "You don't have access to send the gif."
 msgstr ""
 
@@ -5350,8 +4537,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1870
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2037
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3865
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1577
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1838
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1602
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1863
 #: bp-templates/bp-nouveau/includes/activity/functions.php:261
 #: bp-templates/bp-nouveau/includes/activity/functions.php:262
 #: bp-templates/bp-nouveau/includes/activity/functions.php:265
@@ -5367,18 +4554,19 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:804
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:272
 #: bp-members/classes/class-bp-rest-members-endpoint.php:484
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:310
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:720
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:314
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:741
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:763
 msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2028
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1616
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1641
 msgid "You turned on commenting for this post"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2032
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1620
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1645
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
@@ -5557,7 +4745,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1652
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:389
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1463
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2441
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2569
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1096
 msgid "Avatar URL with full image size (%1$d x %2$d pixels)."
 msgstr ""
@@ -5570,13 +4758,13 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1660
 #: bp-members/classes/class-bp-rest-members-actions-endpoint.php:397
 #: bp-members/classes/class-bp-rest-members-endpoint.php:1471
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2448
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2576
 #: bp-notifications/classes/class-bp-rest-notifications-endpoint.php:1104
 msgid "Avatar URL with thumb image size (%1$d x %2$d pixels)."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3312
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2434
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2562
 msgid "Avatar URLs for the author of the activity."
 msgstr ""
 
@@ -5667,17 +4855,17 @@ msgid "The action is required."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3856
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1871
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1896
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3858
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1873
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1898
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3860
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1875
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1900
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
@@ -6139,7 +5327,7 @@ msgid "Limit result set to items with a specific type."
 msgstr ""
 
 #: bp-core/admin/bb-admin-cover-crop-ajax.php:131
-#: bp-core/bp-core-actions.php:1135
+#: bp-core/bp-core-actions.php:1195
 msgid "Invalid object."
 msgstr ""
 
@@ -7739,7 +6927,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:1535
 #: bp-core/bb-core-subscriptions.php:93
 #: bp-core/bb-core-subscriptions.php:390
-#: bp-core/bb-core-subscriptions.php:1325
+#: bp-core/bb-core-subscriptions.php:1494
 #: bp-forums/admin/tools.php:445
 #: bp-forums/admin/tools.php:447
 #: bp-forums/admin/tools.php:505
@@ -8087,7 +7275,7 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-endpoint.php:497
 #: bp-members/classes/class-bp-rest-members-endpoint.php:565
 #: bp-members/classes/class-bp-rest-members-endpoint.php:577
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:322
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:326
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:181
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:352
 msgid "Invalid member ID."
@@ -8101,7 +7289,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:438
 #: bp-core/admin/settings/media/callbacks.php:445
 #: bp-core/admin/settings/media/callbacks.php:609
-#: bp-core/bp-core-functions.php:10741
+#: bp-core/bp-core-functions.php:10930
 #: bp-core/classes/class-bp-core-notification-abstract.php:184
 #: bp-core/profile-search/bps-xprofile.php:363
 #: bp-core/profile-search/bps-xprofile.php:648
@@ -8389,9 +7577,9 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:49
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:104
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1032
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1409
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1567
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1131
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1526
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1684
 #: bp-templates/bp-nouveau/includes/members/functions.php:470
 #: bp-templates/bp-nouveau/readylaunch/members/index.php:174
 #: bp-templates/bp-nouveau/readylaunch/members/single/invites/sent-invites.php:109
@@ -9344,7 +8532,7 @@ msgstr ""
 #: bp-core/admin/settings/registration/settings-login-redirects.php:55
 #: bp-core/admin/settings/registration/settings-login-redirects.php:96
 #: bp-document/bp-document-functions.php:2091
-#: bp-video/bp-video-functions.php:2724
+#: bp-video/bp-video-functions.php:2729
 msgid "Default"
 msgstr ""
 
@@ -10754,7 +9942,7 @@ msgstr ""
 #: bp-core/admin/settings/groups/settings-group-images.php:173
 #: bp-core/admin/settings/members/settings-member-directory.php:185
 #: bp-core/admin/settings/members/settings-profile-image.php:308
-#: bp-core/bp-core-functions.php:7594
+#: bp-core/bp-core-functions.php:7783
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php:32
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php:32
 msgid "None"
@@ -10915,9 +10103,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/moderation/blocked-members-loop.php:50
 #: bp-templates/bp-nouveau/buddypress/video/albums.php:66
 #: bp-templates/bp-nouveau/buddypress/video/video-loop.php:38
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1069
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1447
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1605
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1168
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1564
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1722
 #: bp-templates/bp-nouveau/includes/media/ajax.php:164
 #: bp-templates/bp-nouveau/includes/media/ajax.php:577
 #: bp-templates/bp-nouveau/includes/media/ajax.php:615
@@ -11418,9 +10606,9 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:97
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:74
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:40
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1046
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1423
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1581
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1145
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1540
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1698
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:106
 #: bp-templates/bp-nouveau/readylaunch/members/single/settings/profile.php:37
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1728
@@ -12229,7 +11417,7 @@ msgstr ""
 
 #. translators: Conjunction used between the last two items in a list (e.g., "groups, activity posts and forums").
 #: bp-core/admin/settings/media/callbacks.php:57
-#: bp-core/bp-core-catchuri.php:1614
+#: bp-core/bp-core-catchuri.php:1615
 msgid "and"
 msgstr ""
 
@@ -12470,7 +11658,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-activity.php:580
 #: bp-moderation/classes/class-bp-moderation-video.php:220
 #: bp-templates/bp-nouveau/includes/media/functions.php:210
-#: bp-video/bp-video-functions.php:2769
+#: bp-video/bp-video-functions.php:2774
 msgid "Video"
 msgstr ""
 
@@ -13398,7 +12586,7 @@ msgid "User Email"
 msgstr ""
 
 #: bp-core/admin/settings/search/settings-network-search.php:88
-#: bp-core/bp-core-functions.php:10740
+#: bp-core/bp-core-functions.php:10929
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:961
 #: bp-search/classes/class-bp-search-members.php:636
 #: bp-settings/classes/class-bp-settings-component.php:145
@@ -13493,7 +12681,7 @@ msgstr ""
 #: bp-core/admin/templates/register-banner.php:148
 #: bp-core/admin/templates/update-buddyboss.php:82
 #: bp-core/classes/class-bp-admin-tab.php:185
-#: bp-forums/core/actions.php:596
+#: bp-forums/core/actions.php:600
 #: bp-forums/topics/template.php:3051
 #: bp-templates/bp-nouveau/buddypress-functions.php:666
 #: bp-templates/bp-nouveau/buddypress/activity/activity-modal.php:16
@@ -13750,22 +12938,22 @@ msgid "There is an error while adding the subscription."
 msgstr ""
 
 #. translators: total topics
-#: bp-core/bb-core-subscriptions.php:1304
+#: bp-core/bb-core-subscriptions.php:1473
 msgid "%d group forum and discussion subscriptions migrated successfully"
 msgid_plural "%d groups forum and discussion subscriptions migrated successfully"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: Status of current action.
-#: bp-core/bb-core-subscriptions.php:1320
+#: bp-core/bb-core-subscriptions.php:1489
 msgid "Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s"
 msgstr ""
 
-#: bp-core/bp-core-actions.php:1149
+#: bp-core/bp-core-actions.php:1209
 msgid "Not a valid option"
 msgstr ""
 
-#: bp-core/bp-core-actions.php:1157
+#: bp-core/bp-core-actions.php:1217
 msgid "Not a valid value"
 msgstr ""
 
@@ -14065,8 +13253,8 @@ msgstr ""
 
 #: bp-core/bp-core-catchuri.php:708
 #: bp-core/bp-core-catchuri.php:818
-#: bp-core/bp-core-catchuri.php:1360
-#: bp-core/bp-core-functions.php:6225
+#: bp-core/bp-core-catchuri.php:1361
+#: bp-core/bp-core-functions.php:6352
 msgid "Please login to access this website."
 msgstr ""
 
@@ -14074,12 +13262,13 @@ msgstr ""
 msgid "Please login to access this group."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1374
-#: bp-core/bp-core-catchuri.php:1388
-#: bp-core/bp-core-catchuri.php:1406
-#: bp-core/bp-core-catchuri.php:1421
-#: bp-core/bp-core-catchuri.php:1441
-#: bp-core/bp-core-catchuri.php:1459
+#: bp-core/bp-core-catchuri.php:1375
+#: bp-core/bp-core-catchuri.php:1389
+#: bp-core/bp-core-catchuri.php:1407
+#: bp-core/bp-core-catchuri.php:1422
+#: bp-core/bp-core-catchuri.php:1442
+#: bp-core/bp-core-catchuri.php:1460
+#: bp-core/bp-core-functions.php:6415
 msgid "You must log in to access the page you requested."
 msgstr ""
 
@@ -15164,91 +14353,91 @@ msgstr ""
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6281
+#: bp-core/bp-core-functions.php:6470
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6856
+#: bp-core/bp-core-functions.php:7045
 msgid "The <strong>Cover Image Background</strong> color can be changed with custom CSS."
 msgstr ""
 
 #. translators: 1: theme setting url 2: app plugin url
-#: bp-core/bp-core-functions.php:6875
+#: bp-core/bp-core-functions.php:7064
 msgid "In a browser, the <strong>Cover Image Background</strong> color can be changed in the <a href=\"%1$s\">Theme Options</a>. In the app, it can be changed in the <a href=\"%2$s\">Color</a> settings."
 msgstr ""
 
 #. translators: 1: theme setting url
-#: bp-core/bp-core-functions.php:6882
+#: bp-core/bp-core-functions.php:7071
 msgid "The <strong>Cover Image Background</strong> color can be changed in the <a href=\"%s\">Theme Options</a>."
 msgstr ""
 
 #. translators: 1: app plugin url
-#: bp-core/bp-core-functions.php:6888
+#: bp-core/bp-core-functions.php:7077
 msgid "In a browser, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7229
+#: bp-core/bp-core-functions.php:7418
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7242
+#: bp-core/bp-core-functions.php:7431
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7256
+#: bp-core/bp-core-functions.php:7445
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7464
-#: bp-core/bp-core-functions.php:7684
-#: bp-core/bp-core-functions.php:7713
+#: bp-core/bp-core-functions.php:7653
+#: bp-core/bp-core-functions.php:7873
+#: bp-core/bp-core-functions.php:7902
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:204
 #: bp-templates/bp-nouveau/readylaunch/document/document-entry.php:210
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7513
-#: bp-core/bp-core-functions.php:7514
+#: bp-core/bp-core-functions.php:7702
+#: bp-core/bp-core-functions.php:7703
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:975
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7516
-#: bp-core/bp-core-functions.php:7517
+#: bp-core/bp-core-functions.php:7705
+#: bp-core/bp-core-functions.php:7706
 msgid "Email Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7523
+#: bp-core/bp-core-functions.php:7712
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7529
-#: bp-core/bp-core-functions.php:7530
+#: bp-core/bp-core-functions.php:7718
+#: bp-core/bp-core-functions.php:7719
 msgid "Notification Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7532
-#: bp-core/bp-core-functions.php:7533
+#: bp-core/bp-core-functions.php:7721
+#: bp-core/bp-core-functions.php:7722
 msgid "Notification Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7536
+#: bp-core/bp-core-functions.php:7725
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7541
+#: bp-core/bp-core-functions.php:7730
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7562
+#: bp-core/bp-core-functions.php:7751
 msgid "Enable Notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7569
-#: bp-core/bp-core-functions.php:7649
+#: bp-core/bp-core-functions.php:7758
+#: bp-core/bp-core-functions.php:7838
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:669
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:73
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:78
@@ -15256,8 +14445,8 @@ msgstr ""
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7573
-#: bp-core/bp-core-functions.php:7655
+#: bp-core/bp-core-functions.php:7762
+#: bp-core/bp-core-functions.php:7844
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:671
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:86
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:91
@@ -15265,11 +14454,11 @@ msgstr ""
 msgid "App"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7644
+#: bp-core/bp-core-functions.php:7833
 msgid "A manual notification from a site admin"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:10737
+#: bp-core/bp-core-functions.php:10926
 msgid "Groups & Discussions"
 msgstr ""
 
@@ -16815,13 +16004,15 @@ msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:4472
 #: bp-core/classes/class-bb-readylaunch.php:4539
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1723
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1840
 #: bp-templates/bp-nouveau/includes/media/ajax.php:898
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1003
 msgid "Invalid privacy status."
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:4519
+#: bp-templates/bp-nouveau/includes/document/ajax.php:802
+#: bp-templates/bp-nouveau/includes/document/ajax.php:862
 msgid "You don't have permission to edit this folder."
 msgstr ""
 
@@ -17995,7 +17186,7 @@ msgstr ""
 msgid "View Discussion"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:3038
+#: bp-core/classes/class-bp-email-tokens.php:3047
 msgid "and %d more"
 msgstr ""
 
@@ -19443,25 +18634,25 @@ msgstr ""
 msgid "Invalid document type"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1289
+#: bp-document/bp-document-filters.php:1292
 #: bp-media/bp-media-filters.php:1885
 #: bp-video/bp-video-filters.php:1151
 msgid "File not found"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1306
+#: bp-document/bp-document-filters.php:1309
 msgid "Go to document"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1600
+#: bp-document/bp-document-filters.php:1603
 msgid "Repair documents"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1662
+#: bp-document/bp-document-filters.php:1665
 msgid "%s documents updated successfully."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1672
+#: bp-document/bp-document-filters.php:1675
 msgid "Repairing documents &hellip; Complete!"
 msgstr ""
 
@@ -19487,22 +18678,22 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-single-header.php:162
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-single-header.php:247
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-thread.php:94
-#: bp-video/bp-video-functions.php:2729
+#: bp-video/bp-video-functions.php:2734
 msgid "Archive"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2101
-#: bp-video/bp-video-functions.php:2734
+#: bp-video/bp-video-functions.php:2739
 msgid "Audio"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2106
-#: bp-video/bp-video-functions.php:2739
+#: bp-video/bp-video-functions.php:2744
 msgid "Code"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2111
-#: bp-video/bp-video-functions.php:2744
+#: bp-video/bp-video-functions.php:2749
 msgid "Design"
 msgstr ""
 
@@ -19511,22 +18702,22 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/members/bb-link-preview.php:44
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-link-preview.php:51
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/members/bb-link-preview.php:49
-#: bp-video/bp-video-functions.php:2749
+#: bp-video/bp-video-functions.php:2754
 msgid "Image"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2121
-#: bp-video/bp-video-functions.php:2754
+#: bp-video/bp-video-functions.php:2759
 msgid "Presentation"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2126
-#: bp-video/bp-video-functions.php:2759
+#: bp-video/bp-video-functions.php:2764
 msgid "Spreadsheet"
 msgstr ""
 
 #: bp-document/bp-document-functions.php:2131
-#: bp-video/bp-video-functions.php:2764
+#: bp-video/bp-video-functions.php:2769
 msgid "Text"
 msgstr ""
 
@@ -19722,6 +18913,8 @@ msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:710
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:517
+#: bp-templates/bp-nouveau/includes/document/ajax.php:830
+#: bp-templates/bp-nouveau/includes/document/ajax.php:977
 msgid "Invalid Parent Folder ID."
 msgstr ""
 
@@ -19792,8 +18985,8 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1563
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1800
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:108
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1073
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1188
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1088
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1203
 #: bp-groups/classes/class-bp-rest-attachments-group-avatar-endpoint.php:80
 #: bp-groups/classes/class-bp-rest-attachments-group-cover-endpoint.php:82
 #: bp-groups/classes/class-bp-rest-group-membership-endpoint.php:70
@@ -19873,7 +19066,7 @@ msgid "Whether it is a document or folder."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1557
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1181
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1196
 msgid "A unique numeric ID for the parent Folder."
 msgstr ""
 
@@ -19982,7 +19175,7 @@ msgid "Order documents by which attribute."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1767
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1166
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1181
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1178
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1812
 msgid "Maximum number of results to return"
@@ -19993,7 +19186,7 @@ msgid "Scope of the Document."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1785
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1173
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1188
 msgid "Limit results to a specific user."
 msgstr ""
 
@@ -20018,7 +19211,7 @@ msgid "Ensure result set excludes specific document IDs."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1843
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1224
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1239
 #: bp-media/classes/class-bp-rest-media-albums-endpoint.php:1227
 #: bp-media/classes/class-bp-rest-media-endpoint.php:1880
 #: bp-video/classes/class-bp-rest-video-endpoint.php:1581
@@ -20069,10 +19262,10 @@ msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:288
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:343
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:573
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:742
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:807
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:879
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:576
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:751
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:822
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:894
 msgid "Invalid Folder ID."
 msgstr ""
 
@@ -20083,78 +19276,86 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:419
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:481
 #: bp-media/classes/class-bp-rest-media-endpoint.php:513
+#: bp-templates/bp-nouveau/includes/document/ajax.php:864
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1004
 msgid "Sorry, you are not allowed to create a folder."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-folder-endpoint.php:504
+#: bp-templates/bp-nouveau/includes/document/ajax.php:855
+#: bp-templates/bp-nouveau/includes/document/ajax.php:999
 msgid "You don't have a permission to create a folder inside this group."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:525
-#: bp-templates/bp-nouveau/includes/document/ajax.php:805
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:528
+#: bp-templates/bp-nouveau/includes/document/ajax.php:835
+#: bp-templates/bp-nouveau/includes/document/ajax.php:870
 msgid "You don't have a permission to create a folder inside this folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:636
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:648
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:645
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:657
 msgid "Sorry, You don't have permission to move this folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:661
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:670
 msgid "Couldn’t move item because it's parent folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:681
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:690
 msgid "Cannot update existing folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:727
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:736
 msgid "Sorry, you need to be logged in to update this folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:762
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:778
+#: bp-templates/bp-nouveau/includes/document/ajax.php:808
+#: bp-templates/bp-nouveau/includes/document/ajax.php:853
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1418
 msgid "You don't have a permission to edit a folder inside this group."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:824
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:887
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:839
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:902
 msgid "Sorry, you are not allowed to delete this folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:866
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:881
 msgid "Sorry, you need to be logged in to delete this folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1004
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1019
 msgid "Sorry, you are not allowed to view folder tree."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1058
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1073
 msgid "Folder Title."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1066
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1081
 msgid "A unique numeric ID for the parent folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1080
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1195
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1095
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1210
 msgid "Privacy of the folder."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1091
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1106
 msgid "A unique numeric ID for the folder"
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1157
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1172
 msgid "Order folders by which attribute."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1206
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1221
 msgid "Ensure result set includes specific folder IDs."
 msgstr ""
 
-#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1215
+#: bp-document/classes/class-bp-rest-document-folder-endpoint.php:1230
 msgid "Ensure result set excludes specific folder IDs."
 msgstr ""
 
@@ -22573,7 +21774,7 @@ msgstr ""
 msgid "Recent Replies"
 msgstr ""
 
-#: bp-forums/core/actions.php:595
+#: bp-forums/core/actions.php:599
 msgid "Forum Description"
 msgstr ""
 
@@ -23180,7 +22381,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:4391
 #: bp-groups/bp-groups-functions.php:4410
 #: bp-groups/bp-groups-functions.php:4427
-#: bp-groups/bp-groups-functions.php:5718
+#: bp-groups/bp-groups-functions.php:5719
 #: bp-members/bp-members-functions.php:3941
 #: bp-members/classes/class-bp-members-admin.php:981
 #: bp-moderation/bp-moderation-filters.php:902
@@ -23200,7 +22401,7 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2613
 #: bp-messages/bp-messages-template.php:1826
 #: bp-messages/bp-messages-template.php:2091
-#: bp-messages/classes/class-bp-messages-thread.php:1652
+#: bp-messages/classes/class-bp-messages-thread.php:1661
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:492
 msgid "Deleted User"
 msgstr ""
@@ -26282,67 +25483,67 @@ msgid "You will no longer receive emails of new discussions in groups you are su
 msgstr ""
 
 #. translators: User full name.
-#: bp-groups/classes/class-bp-groups-notification.php:1364
+#: bp-groups/classes/class-bp-groups-notification.php:1402
 msgid "%1$s posted a gif"
 msgstr ""
 
 #. translators: 1: User full name, 2: Group name, 3: Activity content.
-#: bp-groups/classes/class-bp-groups-notification.php:1389
+#: bp-groups/classes/class-bp-groups-notification.php:1427
 msgid "%1$s posted an update in %2$s: %3$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1399
+#: bp-groups/classes/class-bp-groups-notification.php:1437
 msgid "%1$s posted some photos in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1406
+#: bp-groups/classes/class-bp-groups-notification.php:1444
 msgid "%1$s posted a photo in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1416
+#: bp-groups/classes/class-bp-groups-notification.php:1454
 msgid "%1$s posted some documents in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1423
+#: bp-groups/classes/class-bp-groups-notification.php:1461
 msgid "%1$s posted a document in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1433
+#: bp-groups/classes/class-bp-groups-notification.php:1471
 msgid "%1$s posted some videos in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1440
+#: bp-groups/classes/class-bp-groups-notification.php:1478
 msgid "%1$s posted a video in %2$s"
 msgstr ""
 
 #. translators: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1448
+#: bp-groups/classes/class-bp-groups-notification.php:1486
 msgid "%1$s posted a gif in %2$s"
 msgstr ""
 
 #. translators: %s: User full name, 2: Group name.
-#: bp-groups/classes/class-bp-groups-notification.php:1455
+#: bp-groups/classes/class-bp-groups-notification.php:1493
 msgid "%1$s posted an update in %2$s"
 msgstr ""
 
 #. translators: 1: User full name, 2: Group name, 3: Discussion Title.
-#: bp-groups/classes/class-bp-groups-notification.php:1512
+#: bp-groups/classes/class-bp-groups-notification.php:1550
 msgid "%1$s started a discussion%2$s"
 msgstr ""
 
 #. translators: %s: Total reply count.
-#: bp-groups/classes/class-bp-groups-notification.php:1521
+#: bp-groups/classes/class-bp-groups-notification.php:1559
 msgid "You have %1$d new discussions"
 msgstr ""
 
 #. translators: 1: User full name, 2: Group name, 3: Discussion Title.
-#: bp-groups/classes/class-bp-groups-notification.php:1528
+#: bp-groups/classes/class-bp-groups-notification.php:1566
 msgid "%1$s started a discussion%2$s%3$s"
 msgstr ""
 
@@ -27241,7 +26442,7 @@ msgid "The URL-friendly slug for the Group."
 msgstr ""
 
 #: bp-groups/classes/class-bp-rest-groups-endpoint.php:1384
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2474
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2602
 msgid "The permalink to the Group on the site."
 msgstr ""
 
@@ -30048,6 +29249,10 @@ msgid "Message marked unread."
 msgstr ""
 
 #: bp-messages/actions/view.php:37
+#: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:212
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:452
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:783
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1311
 #: bp-messages/screens/archived-view.php:47
 #: bp-messages/screens/view.php:35
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:499
@@ -30159,14 +29364,14 @@ msgid "You need to be connected with all recipients to continue this conversatio
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:424
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:642
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:663
 msgid "There was a problem sending your message."
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:1455
 #: bp-messages/bp-messages-functions.php:2367
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1546
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1842
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1628
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1924
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:788
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:849
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2012
@@ -30198,7 +29403,7 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:2602
 #: bp-messages/bp-messages-template.php:2209
 #: bp-messages/bp-messages-template.php:2244
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1574
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1656
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2386
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2465
 msgid "This message was deleted"
@@ -30842,7 +30047,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1643
+#: bp-messages/classes/class-bp-messages-thread.php:1652
 msgid "%s Recipients"
 msgstr ""
 
@@ -30873,8 +30078,8 @@ msgid "Sorry, you have not selected any members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:234
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:506
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:595
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:527
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:616
 msgid "Sorry, Your message cannot be empty."
 msgstr ""
 
@@ -30900,7 +30105,7 @@ msgid "Message thread"
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1018
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2185
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2313
 msgid "Content of the Message to add to the Thread."
 msgstr ""
 
@@ -30909,7 +30114,7 @@ msgid "Group thread users individual or all."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-group-messages-endpoint.php:1033
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2617
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2745
 msgid "Limit result to messages created by a specific user."
 msgstr ""
 
@@ -30928,7 +30133,7 @@ msgid "Your message was sent to all members of this group."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:50
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2158
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2286
 msgid "ID of the Messages Thread."
 msgstr ""
 
@@ -30940,12 +30145,12 @@ msgstr ""
 msgid "Value for the action on message thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:170
+#: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:177
 msgid "Sorry, you are not allowed to perform action on messages."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:189
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:416
+#: bp-messages/classes/class-bp-rest-messages-actions-endpoint.php:196
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:419
 msgid "Sorry, you are not allowed to see this thread."
 msgstr ""
 
@@ -30973,332 +30178,332 @@ msgstr ""
 msgid "ID of one of the message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:332
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:336
 msgid "Sorry, you cannot view the messages."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:430
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:433
 msgid "Sorry, this thread does not exist."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:480
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:501
 msgid "Please, enter recipients user IDs."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:729
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:750
 msgid "Sorry, you need to be logged in to create a message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:793
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:834
 msgid "Sorry, term is required parameter."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:898
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:939
 msgid "Sorry, you are not allowed to search recipients."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:998
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1048
 msgid "Sorry, you are not allowed to search thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1046
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1101
 msgid "There was an error trying to update the message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1171
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1226
 msgid "Sorry, this message does not exist."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1181
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1236
 msgid "Sorry, you cannot add the message to your starred box."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1185
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1240
 msgid "Sorry, you cannot remove the message from your starred box."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1240
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1295
 msgid "Sorry, you are not allowed to star/unstar messages."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1313
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1387
 msgid "There was a problem deleting your conversation."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1427
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1509
 msgid "Sorry, you are not allowed to delete this thread messages."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1548
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1630
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2354
 msgid "Sent from %s"
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1552
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1634
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2358
 msgid "Sent from"
 msgstr ""
 
 #. translators: %s: Group name
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1560
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1642
 msgid "Left \"%s\""
 msgstr ""
 
 #. translators: %s: Group name
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1568
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1650
 msgid "Joined \"%s\""
 msgstr ""
 
 #. translators: %s: Group name
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1578
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1660
 msgid "Removed Ban \"%s\""
 msgstr ""
 
 #. translators: %s: Group name
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1584
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:1666
 msgid "Ban \"%s\""
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2164
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2292
 msgid "ID of the Messages Thread. Required when replying to an existing Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2169
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2297
 msgid "The user ID of the Message sender."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2180
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2308
 msgid "Subject of the Message initializing the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2192
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2320
 msgid "The list of the recipients user IDs of the Message."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2198
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2326
 msgid "Messages send date according UTC time and date."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2214
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2342
 msgid "Load recipients in a paginated manner."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2221
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2349
 msgid "Current page of the recipients."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2235
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2363
 msgid "By default the latest message of the thread will be updated. Specify this message ID to edit another message of the thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2247
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2375
 msgid "The user ID to remove from the thread"
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2258
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2386
 msgid "List the archived threads."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2274
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2402
 msgid "Messages to get before a specific date."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2307
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2435
 msgid "A unique numeric ID for the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2312
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2440
 msgid "The ID of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2318
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2446
 msgid "The ID of latest sender of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2324
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2452
 msgid "Title of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2332
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2460
 msgid "Title of the latest message of the Thread, as it exists in the database."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2338
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2466
 msgid "Title of the latest message of the Thread, transformed for display."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2348
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2476
 msgid "Summary of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2357
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2485
 msgid "Summary for the latest message of the Thread, as it exists in the database."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2362
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2490
 msgid "HTML summary for the latest message of the Thread, transformed for display."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2370
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2498
 msgid "Content of the latest message of the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2379
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2507
 msgid "Content for the latest message of the Thread, as it exists in the database."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2384
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2512
 msgid "HTML content for the latest message of the Thread, transformed for display."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2393
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2521
 msgid "The date the latest message of the Thread, in the site's timezone."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2400
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2528
 msgid "The date the first message of the Thread, in the site's timezone."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2407
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2535
 msgid "Total count of unread messages into the Thread for the requested user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2413
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2541
 msgid "The list of user IDs for all messages in the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2422
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2550
 msgid "Current Logged in user's ID."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2428
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2556
 msgid "Current user can send message or not."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2456
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2584
 msgid "Group ID if message sent from group."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2462
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2590
 msgid "Whether is a group thread or not."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2468
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2596
 msgid "Group name if thread created from group.  "
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2481
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2609
 msgid "Thread for all group users or selected one."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2486
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2614
 msgid "Thread type its from all or private one."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2491
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2619
 msgid "Message from group or not."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2496
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2624
 msgid "Recipient users count."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2501
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2629
 msgid "Number of recipient loading per page."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2506
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2634
 msgid "Total number of pages for the recipients."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2511
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2639
 msgid "The list of recipient User Objects involved into the Thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2519
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2647
 msgid "Number of message loading per page."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2525
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2653
 msgid "Total message count into the thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2531
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2659
 msgid "Last Message time stamp from response."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2538
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2666
 msgid "List of message objects for the thread."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2547
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2675
 msgid "List of user permission for loggedin user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2556
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2684
 msgid "Whether to check the thread archived or not for loggedin user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2562
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2690
 msgid "List of starred message IDs."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2599
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2727
 msgid "Filter the result by box."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2608
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2736
 msgid "Filter the result by thread status."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2752
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2880
 msgid "A unique numeric ID for user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2757
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2885
 msgid "User's nickname as handle."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2762
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2890
 msgid "Display Name for the user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2768
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:2896
 msgid "Avatar URL for the user."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3008
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3136
 msgid "You can't send messages in conversations you've archived."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3033
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3161
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2271
 msgid "Only group organizers can send messages to this group."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3039
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3167
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2273
 msgid "Only group organizers and moderators can send messages to this group."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3056
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3184
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2251
 msgid "Unable to send new messages at this time."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3075
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3081
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3203
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3209
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1883
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1888
 msgid "Unable to send new messages to this member."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3087
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3215
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1895
 msgid "You can't send messages to members you have blocked."
 msgstr ""
 
-#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3107
+#: bp-messages/classes/class-bp-rest-messages-endpoint.php:3235
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1831
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1838
 msgid "You must be connected to this member to send them a message."
@@ -32490,7 +31695,7 @@ msgstr ""
 msgid "Cache Purge Successfully"
 msgstr ""
 
-#: bp-performance/classes/integrations/class-integration-abstract.php:430
+#: bp-performance/classes/integrations/class-integration-abstract.php:431
 msgid "Sorry, something went wrong. Please try again later."
 msgstr ""
 
@@ -33773,9 +32978,9 @@ msgid "Edit Post Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:55
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1039
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1416
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1574
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1138
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1533
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1691
 msgid "Modified"
 msgstr ""
 
@@ -35014,7 +34219,7 @@ msgid "Sorry, there was no activity found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:299
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1896
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1921
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
@@ -35102,19 +34307,23 @@ msgstr ""
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1451
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1329
+msgid "This draft could not be saved."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1476
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1501
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1526
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1583
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1608
 msgid "There was a problem marking this operation. Close comments setting is disabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1942
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1967
 msgid "You don't have permission to delete scheduled activity."
 msgstr ""
 
@@ -35406,85 +34615,86 @@ msgid "There was a problem when trying to save the document."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:763
-#: bp-templates/bp-nouveau/includes/document/ajax.php:886
+#: bp-templates/bp-nouveau/includes/document/ajax.php:956
 msgid "Please login to create a folder."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:770
-#: bp-templates/bp-nouveau/includes/document/ajax.php:881
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1282
+#: bp-templates/bp-nouveau/includes/document/ajax.php:951
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1381
 msgid "Please enter title of folder."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:776
-#: bp-templates/bp-nouveau/includes/document/ajax.php:891
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1201
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1291
+#: bp-templates/bp-nouveau/includes/document/ajax.php:961
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1300
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1390
 msgid "Invalid folder name"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:821
-#: bp-templates/bp-nouveau/includes/document/ajax.php:925
+#: bp-templates/bp-nouveau/includes/document/ajax.php:891
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1024
 msgid "There was a problem when trying to create the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:909
+#: bp-templates/bp-nouveau/includes/document/ajax.php:982
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1009
 msgid "You don't have permission to create folder inside this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:997
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1006
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1096
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1105
 msgid "You don't have permission to move this document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1029
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1406
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1564
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1128
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1523
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1681
 msgid "Sort By:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1139
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1238
 msgid "You don't have a permission to rename the document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1208
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1307
 msgid "You don't have permission to rename folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1304
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1406
 msgid "You don't have permission to rename this folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1324
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1441
 msgid "There was a problem when trying to rename the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1511
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1519
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1628
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1636
 msgid "You don't have permission to move this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1532
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1649
 msgid "Couldn’t move item. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1544
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1661
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1656
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1773
 msgid " Documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1687
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1804
 msgid "Please login to edit a privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1708
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1825
 msgid "You don't have permission to update this folder privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1716
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1833
 msgid "You don't have permission to update this document privacy."
 msgstr ""
 
@@ -37836,116 +37046,116 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4325
+#: bp-video/bp-video-functions.php:4330
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4373
+#: bp-video/bp-video-functions.php:4378
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4909
+#: bp-video/bp-video-functions.php:4914
 msgid "Invalid upload identifier"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4924
+#: bp-video/bp-video-functions.php:4929
 msgid "Failed to create upload directory"
 msgstr ""
 
 #. translators: %s: file extension
-#: bp-video/bp-video-functions.php:4956
+#: bp-video/bp-video-functions.php:4961
 msgid "File type %s is not allowed"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4978
+#: bp-video/bp-video-functions.php:4983
 msgid "Invalid chunk parameters"
 msgstr ""
 
 #. translators: %s: file size
-#: bp-video/bp-video-functions.php:4993
+#: bp-video/bp-video-functions.php:4998
 msgid "File size exceeds maximum allowed size of %s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5008
+#: bp-video/bp-video-functions.php:5013
 msgid "Uploaded chunk is empty"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5029
+#: bp-video/bp-video-functions.php:5034
 msgid "Total uploaded size exceeds declared file size"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5045
+#: bp-video/bp-video-functions.php:5050
 msgid "Failed to save chunk %d"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5130
+#: bp-video/bp-video-functions.php:5135
 msgid "Failed to create lock file"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5138
+#: bp-video/bp-video-functions.php:5143
 msgid "Failed to acquire lock"
 msgstr ""
 
 #. translators: %1$d: parts count, %2$d: total chunks
-#: bp-video/bp-video-functions.php:5161
+#: bp-video/bp-video-functions.php:5166
 msgid "%1$d of %2$d parts received"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5182
+#: bp-video/bp-video-functions.php:5187
 msgid "Missing chunk %d"
 msgstr ""
 
 #. translators: %1$s: expected size, %2$s: got size
-#: bp-video/bp-video-functions.php:5203
+#: bp-video/bp-video-functions.php:5208
 msgid "File size mismatch. Expected: %1$s, Got: %2$s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5289
+#: bp-video/bp-video-functions.php:5294
 msgid "Cannot create destination directory"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5312
+#: bp-video/bp-video-functions.php:5317
 msgid "Cannot create the destination file"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5328
+#: bp-video/bp-video-functions.php:5333
 msgid "Chunk %d not found"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5339
+#: bp-video/bp-video-functions.php:5344
 msgid "Failed to open chunk %d"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5353
+#: bp-video/bp-video-functions.php:5358
 msgid "Failed to read chunk %d"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5365
+#: bp-video/bp-video-functions.php:5370
 msgid "Failed to write data from chunk %d"
 msgstr ""
 
 #. translators: %1$s: expected size, %2$s: got size
-#: bp-video/bp-video-functions.php:5404
+#: bp-video/bp-video-functions.php:5409
 msgid "Final file size mismatch. Expected: %1$s, Got: %2$s"
 msgstr ""
 
 #. translators: %s: file name
-#: bp-video/bp-video-functions.php:5417
+#: bp-video/bp-video-functions.php:5422
 msgid "File successfully created: %s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5453
+#: bp-video/bp-video-functions.php:5458
 msgid "Invalid filename"
 msgstr ""
 
 #. translators: %1$s: file name, %2$s: file extension
-#: bp-video/bp-video-functions.php:5489
+#: bp-video/bp-video-functions.php:5494
 msgid "Cannot create unique name for saving file %1$s%2$s"
 msgstr ""
 
