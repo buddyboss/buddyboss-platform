@@ -3729,10 +3729,14 @@ function bb_activity_comment_has_remaining_content( $comment ) {
 /**
  * Remove deleted photos, videos or documents from a kept activity comment's meta.
  *
- * When the last attachment of a comment that still has text is deleted, the
- * comment is kept but its `bp_{type}_ids`, `bp_{type}_id` and `bp_{type}_activity`
- * meta would still point at the deleted rows. This clears them the same way
- * editing the comment does.
+ * A comment is kept when one of its attachments is deleted while it still
+ * has text, a GIF or another attachment. Its `bp_{type}_ids`, `bp_{type}_id`
+ * and `bp_{type}_activity` meta would then still point at the deleted rows.
+ *
+ * The deleted IDs are removed from `bp_{type}_ids`, and `bp_{type}_id` is
+ * removed when it is one of them. When no attachment of this type remains,
+ * all three keys are deleted. Meta for the other attachment types is not
+ * touched.
  *
  * @since BuddyBoss [BBVERSION]
  *
