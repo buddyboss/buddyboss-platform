@@ -5222,7 +5222,7 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 /**
  * Function will return the user progress based on the settings you provided.
  *
- * @since BuddyBoss [BBVERSION] The photo staleness check compares the cached
+ * @since BuddyBoss 3.6.1 The photo staleness check compares the cached
  *                              is_uploaded flags against the live avatar and
  *                              cover state instead of against the gravatar
  *                              probe alone, so a stale value in either
@@ -6236,11 +6236,54 @@ function bb_check_server_disabled_symlink() {
 }
 
 /**
+ * Whether the current request is a non-feed request type that the RSS feed restriction must leave alone.
+ *
+ * Decided from how the request is being served, never from the URL text, so a query
+ * parameter such as `?x=wp-json` cannot exempt a feed.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @return bool True for cron, AJAX, wp-login.php and REST API requests.
+ */
+function bb_is_rss_feed_restriction_exempt_request() {
+	if ( wp_doing_cron() || wp_doing_ajax() ) {
+		return true;
+	}
+
+	// The login page must stay reachable (e.g. `redirect_to=/feed/`) or the login redirect loops.
+	// SCRIPT_NAME is the script actually executed; $pagenow is not used as it is derived from PHP_SELF, which includes PATH_INFO.
+	$script_name = isset( $_SERVER['SCRIPT_NAME'] ) ? wp_basename( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) : '';
+	if ( 'wp-login.php' === $script_name ) {
+		return true;
+	}
+
+	// REST requests are answered by rest_api_loaded() before any feed renders and have their own "Private REST APIs" setting.
+	if ( ! empty( $_GET['rest_route'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return true;
+	}
+
+	if ( ! get_option( 'permalink_structure' ) || empty( $_SERVER['REQUEST_URI'] ) ) {
+		return false;
+	}
+
+	$request_path = (string) wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
+	$rest_path    = (string) wp_parse_url( get_rest_url(), PHP_URL_PATH );
+
+	return '' !== $rest_path && 0 === strpos( trailingslashit( $request_path ), trailingslashit( $rest_path ) );
+}
+
+/**
  * Function will restrict RSS feed.
  *
  * @since BuddyBoss 1.8.6
+ * @since BuddyBoss 3.6.1 Added the `$is_feed` parameter. Exempt requests are detected from the
+ *                              request type instead of the URL text, and relative Public RSS Feeds
+ *                              entries are matched without the query string.
+ *
+ * @param bool $is_feed Optional. Whether the parsed main query has already identified a feed request,
+ *                      in which case the URL is not inspected. Default false.
  */
-function bb_restricate_rss_feed() {
+function bb_restricate_rss_feed( $is_feed = false ) {
 	if (
 		empty( $_SERVER['HTTP_HOST'] ) ||
 		empty( $_SERVER['REQUEST_URI'] )
@@ -6250,20 +6293,21 @@ function bb_restricate_rss_feed() {
 
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if (
+		! $is_feed &&
 		strpos( $actual_link, '/feed/' ) === false &&
 		strpos( $actual_link, 'feed=' ) === false
 	) { // if permalink has ? then need to check with feed=.
 		return;
 	}
 
-	if (
-		strpos( $actual_link, 'wp-cron.php' ) === false &&
-		strpos( $actual_link, 'wp-login.php' ) === false &&
-		strpos( $actual_link, 'admin-ajax.php' ) === false &&
-		strpos( $actual_link, 'wp-json' ) === false
-	) {
+	if ( $is_feed || ! bb_is_rss_feed_restriction_exempt_request() ) {
 		$request_url      = untrailingslashit( $actual_link );
 		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
+
+		// Relative entries (URI fragments) are matched without the query string, like the Public Website
+		// Content list, so a parameter that merely contains an allowed fragment cannot make a feed public.
+		$request_url_without_query = untrailingslashit( explode( '?', $actual_link, 2 )[0] );
+		$request_path              = (string) wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
 			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
@@ -6276,8 +6320,8 @@ function bb_restricate_rss_feed() {
 					// Check if strict match.
 					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 						return;
-					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
-						$fragments = explode( '/', $request_url );
+					} elseif ( false === $check_is_full_url && ! empty( $request_url_without_query ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url_without_query, $un_trailing_slash_it_url ) !== false ) {
+						$fragments = explode( '/', $request_url_without_query );
 						// Allow to view if fragment matched.
 						foreach ( $fragments as $fragment ) {
 							if ( $fragment === trim( $url, '/' ) ) {
@@ -6285,12 +6329,12 @@ function bb_restricate_rss_feed() {
 							}
 						}
 						// Allow to view if fragment matched with the trailing slash.
-						$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+						$is_matched_fragment = substr( $request_path, 0, strrpos( $request_path, '/' ) );
 						if ( $is_matched_fragment === $url ) {
 							return;
 						}
 						// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
-						if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+						if ( strpos( trailingslashit( $request_url_without_query ), trailingslashit( $un_trailing_slash_it_url ) ) !== false ) {
 							return;
 						}
 						// Check URL is fully matched without remove trailing slash.
@@ -6310,6 +6354,68 @@ function bb_restricate_rss_feed() {
 		bp_core_no_access( $defaults );
 		exit();
 	}
+}
+
+/**
+ * Check whether Private Website blocks the current file download for a guest.
+ *
+ * Document, folder, photo and video downloads are streamed on `init` and exit
+ * before bp_private_network_template_redirect() runs on `template_redirect`,
+ * so they need their own check.
+ *
+ * The `bp_private_network_pre_check` filter is not applied here. Its callbacks are
+ * written for page requests (The Events Calendar returns true for any URL with
+ * ?ical=1), so downloads use the `bb_is_private_network_download_restricted` filter.
+ * The public Content list is page-level and intentionally not applied; site owners
+ * can use the new filter instead.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return bool True if the download must be blocked, otherwise false.
+ */
+function bb_is_private_network_download_restricted( $type = '' ) {
+
+	// The option stores 1 for a public site, so false means Private Website is on.
+	if ( is_user_logged_in() || bp_enable_private_network() ) {
+		return false;
+	}
+
+	/**
+	 * Filters whether Private Website blocks a guest file download.
+	 *
+	 * @since BuddyBoss 3.6.1
+	 *
+	 * @param bool   $restricted Whether the download is blocked. Default true.
+	 * @param string $type       Download type: 'document', 'folder', 'photo' or 'video'.
+	 */
+	return (bool) apply_filters( 'bb_is_private_network_download_restricted', true, $type );
+}
+
+/**
+ * Send a guest to the login page when Private Website blocks a file download.
+ *
+ * After login, the member returns to the same download URL.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return void
+ */
+function bb_private_network_restrict_download( $type = '' ) {
+	if ( ! bb_is_private_network_download_restricted( $type ) ) {
+		return;
+	}
+
+	bp_core_no_access(
+		array(
+			'mode'    => 2,
+			'message' => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+		)
+	);
+	exit();
 }
 
 /**
@@ -11742,4 +11848,54 @@ function bb_is_feature_provided( $feature ) {
 		default:
 			return false;
 	}
+}
+
+/**
+ * Check whether a user may flag or delete an attachment referenced by a composer draft.
+ *
+ * Draft payloads (activity, forum topic/reply) carry client-supplied attachment IDs. Only
+ * the user's own attachments may be flagged as drafted, and only the user's own attachments
+ * that are not yet linked to a saved media, document, video or activity may be deleted when
+ * the draft is discarded.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param mixed $attachment_id Attachment ID from the draft payload. Non-numeric, zero and
+ *                             negative values are rejected rather than normalised.
+ * @param bool  $for_delete    Whether the attachment is about to be deleted. Default false.
+ * @param int   $user_id       User ID. Default the logged-in user.
+ *
+ * @return bool
+ */
+function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = false, $user_id = 0 ) {
+	// Not absint(): it would turn -42 into 42 and array( 42 ) into 1.
+	$attachment_id = is_numeric( $attachment_id ) ? (int) $attachment_id : 0;
+	$user_id       = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+
+	if ( 0 >= $attachment_id || empty( $user_id ) || 'attachment' !== get_post_type( $attachment_id ) ) {
+		return false;
+	}
+
+	$can_manage = ( (int) get_post_field( 'post_author', $attachment_id ) === $user_id );
+
+	if ( $can_manage && $for_delete ) {
+		foreach ( array( 'bp_media_id', 'bp_document_id', 'bp_video_id', 'bb_activity_id' ) as $meta_key ) {
+			if ( get_post_meta( $attachment_id, $meta_key, true ) ) {
+				$can_manage = false;
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Filters whether a user may flag or delete an attachment referenced by a composer draft.
+	 *
+	 * @since BuddyBoss 3.6.1
+	 *
+	 * @param bool $can_manage    Whether the user may manage the attachment.
+	 * @param int  $attachment_id Attachment ID.
+	 * @param bool $for_delete    Whether the attachment is about to be deleted.
+	 * @param int  $user_id       User ID.
+	 */
+	return (bool) apply_filters( 'bb_user_can_manage_draft_attachment', $can_manage, $attachment_id, $for_delete, $user_id );
 }
