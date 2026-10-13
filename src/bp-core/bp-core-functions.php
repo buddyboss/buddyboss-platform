@@ -11849,3 +11849,53 @@ function bb_is_feature_provided( $feature ) {
 			return false;
 	}
 }
+
+/**
+ * Check whether a user may flag or delete an attachment referenced by a composer draft.
+ *
+ * Draft payloads (activity, forum topic/reply) carry client-supplied attachment IDs. Only
+ * the user's own attachments may be flagged as drafted, and only the user's own attachments
+ * that are not yet linked to a saved media, document, video or activity may be deleted when
+ * the draft is discarded.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $attachment_id Attachment ID from the draft payload. Non-numeric, zero and
+ *                             negative values are rejected rather than normalised.
+ * @param bool  $for_delete    Whether the attachment is about to be deleted. Default false.
+ * @param int   $user_id       User ID. Default the logged-in user.
+ *
+ * @return bool
+ */
+function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = false, $user_id = 0 ) {
+	// Not absint(): it would turn -42 into 42 and array( 42 ) into 1.
+	$attachment_id = is_numeric( $attachment_id ) ? (int) $attachment_id : 0;
+	$user_id       = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+
+	if ( 0 >= $attachment_id || empty( $user_id ) || 'attachment' !== get_post_type( $attachment_id ) ) {
+		return false;
+	}
+
+	$can_manage = ( (int) get_post_field( 'post_author', $attachment_id ) === $user_id );
+
+	if ( $can_manage && $for_delete ) {
+		foreach ( array( 'bp_media_id', 'bp_document_id', 'bp_video_id', 'bb_activity_id' ) as $meta_key ) {
+			if ( get_post_meta( $attachment_id, $meta_key, true ) ) {
+				$can_manage = false;
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Filters whether a user may flag or delete an attachment referenced by a composer draft.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $can_manage    Whether the user may manage the attachment.
+	 * @param int  $attachment_id Attachment ID.
+	 * @param bool $for_delete    Whether the attachment is about to be deleted.
+	 * @param int  $user_id       User ID.
+	 */
+	return (bool) apply_filters( 'bb_user_can_manage_draft_attachment', $can_manage, $attachment_id, $for_delete, $user_id );
+}
