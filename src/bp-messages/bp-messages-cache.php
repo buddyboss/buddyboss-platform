@@ -192,7 +192,7 @@ add_action( 'bb_messages_thread_unarchived', 'bp_messages_clear_message_unread_c
 /**
  * Reset the cached disabled group threads when a setting they depend on changes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @return void
  */
@@ -220,7 +220,7 @@ add_action( 'groups_delete_group', 'bb_messages_reset_disabled_group_thread_ids_
  * Not covered: a message that is older than the first message of its thread and gets its first meta
  * later, which can change which message is first. Messages are written with their meta when sent.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
  * @param int|array $meta_ids   Meta ID(s).
  * @param int       $message_id Message ID.

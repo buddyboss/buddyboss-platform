@@ -632,6 +632,9 @@ class BP_Messages_Thread {
 	 * Check if the current user is in the thread's active recipient list
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 3.6.1 Reads only the user's recipient row instead of every recipient of the thread,
+	 *                              unless 'bp_messages_thread_get_recipients' or 'bp_recipients_recipient_get_join_sql'
+	 *                              is filtered.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread.
@@ -642,6 +645,12 @@ class BP_Messages_Thread {
 		$user_id = $user_id ? $user_id : bp_loggedin_user_id();
 		if ( ! $user_id ) {
 			return true;
+		}
+
+		// One recipient row answers this; loading every recipient stalls threads with thousands of members.
+		// A filtered list, or the group-members join added while a group thread loads, keeps the full-list check.
+		if ( ! has_filter( 'bp_messages_thread_get_recipients' ) && ! has_filter( 'bp_recipients_recipient_get_join_sql' ) ) {
+			return bb_messages_is_active_thread_recipient( $thread_id, $user_id );
 		}
 
 		$recipients        = self::get_recipients_for_thread( $thread_id );
@@ -892,7 +901,7 @@ class BP_Messages_Thread {
 	 * @type string $search_terms The search term to use. Defaults to ''.
 	 * @type array  $meta_query   Meta query arguments. See WP_Meta_Query for more details.
 	 * @type bool   $exclude_disabled_group_threads Exclude the group threads that cannot be opened while
-	 *                                "Group Messages" is disabled. Defaults to false. @since BuddyBoss [BBVERSION]
+	 *                                "Group Messages" is disabled. Defaults to false. @since BuddyBoss 3.6.1
 	 * }
 	 * @return array|bool Array on success. Boolean false on failure.
 	 */

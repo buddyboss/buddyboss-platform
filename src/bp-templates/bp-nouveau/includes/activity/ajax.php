@@ -1298,7 +1298,7 @@ function bp_nouveau_ajax_post_update() {
  * Save activity draft data.
  *
  * @since BuddyBoss 2.0.4
- * @since BuddyBoss [BBVERSION] Only flags or deletes the user's own unsaved draft attachments.
+ * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
  */
 function bb_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
@@ -1320,7 +1320,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		 * draft_user, draft_user_{id} and draft_group_{id}. A non-scalar key (a crafted array)
 		 * becomes '' and is rejected cleanly rather than emitting an "Array to string" notice.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.6.1
 		 */
 		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
 		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
