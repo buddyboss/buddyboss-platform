@@ -144,6 +144,11 @@ function bb_recaptcha_validate_activate( $retval ) {
 		return $retval;
 	}
 
+	// Bypass for wp-admin "Accept" bulk action, which never renders the widget.
+	if ( is_admin() ) {
+		return $retval;
+	}
+
 	$verified = bb_recaptcha_connection_status();
 
 	// If the connection is unverified and activation is not enabled, proceed to bypass the captcha.
