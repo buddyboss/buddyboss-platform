@@ -133,7 +133,7 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 		// Used everywhere
 		case 'edit_topic':
 			// Get the post
-			$_post = get_post( $args[0] );
+			$_post = !empty($args[0]) ? get_post($args[0]) : null;
 			if ( ! empty( $_post ) ) {
 
 				// Get caps for post type object
