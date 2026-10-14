@@ -4090,8 +4090,15 @@ function bp_group_type_short_code_callback( $atts ) {
 						}
 					);
 
+					// The shortcode marks its page as a groups directory, but Members & Groups Loading
+					// only applies to the real directory and the profile/group lists, so the shortcode
+					// keeps pagination.
+					add_filter( 'bb_is_list_autoload_active', '__return_false', 9999 );
+
 					// Get a BuddyPress groups-loop template part for display in a theme.
 					bp_get_template_part( 'groups/groups-loop' );
+
+					remove_filter( 'bb_is_list_autoload_active', '__return_false', 9999 );
 					?>
 				</div>
 			</div>
