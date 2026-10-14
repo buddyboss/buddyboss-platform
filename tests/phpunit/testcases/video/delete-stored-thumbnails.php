@@ -4,7 +4,9 @@
  *
  * `video_preview_thumbnails['custom_image']` and `bp_video_preview_thumbnail_id` may hold
  * IDs saved before thumbnail validation existed. Deleting the video must only remove
- * thumbnails the video owner uploaded, never another user's attachment or other posts.
+ * thumbnails the video owner uploaded, or a custom thumbnail someone else (a group
+ * organizer or moderator) uploaded for this video only. Never another user's attachment
+ * that their own video still uses, or other posts.
  *
  * @group video
  * @group video_delete_thumbnails
@@ -78,6 +80,17 @@ class BP_Tests_Video_Delete_Stored_Thumbnails extends BP_UnitTestCase {
 		$foreign2 = $this->create_attachment( $victim );
 		$page_id  = self::factory()->post->create( array( 'post_type' => 'page', 'post_author' => $victim ) );
 
+		// The victim's custom image is in use on the victim's own video.
+		$victim_video = $this->create_video( $victim );
+		update_post_meta(
+			$victim_video->attachment_id,
+			'video_preview_thumbnails',
+			array(
+				'default_images' => array(),
+				'custom_image'   => $foreign,
+			)
+		);
+
 		update_post_meta(
 			$video->attachment_id,
 			'video_preview_thumbnails',
@@ -143,5 +156,61 @@ class BP_Tests_Video_Delete_Stored_Thumbnails extends BP_UnitTestCase {
 
 		$this->assertNull( get_post( $custom ) );
 		$this->assertNull( get_post( $poster ), 'The current poster is deleted (the old check was inverted and never ran).' );
+	}
+
+	/**
+	 * A custom thumbnail a group organizer or moderator uploaded for this video only is
+	 * deleted with the video (review D-5 / A-3).
+	 */
+	public function test_editor_uploaded_thumbnail_used_only_by_this_video_is_deleted() {
+		$owner     = self::factory()->user->create();
+		$organizer = self::factory()->user->create();
+		$video     = $this->create_video( $owner );
+		$custom    = $this->create_attachment( $organizer, true );
+		$unflagged = $this->create_attachment( $organizer );
+
+		update_post_meta(
+			$video->attachment_id,
+			'video_preview_thumbnails',
+			array(
+				'default_images' => array(),
+				'custom_image'   => $custom,
+			)
+		);
+		update_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', $unflagged );
+
+		$this->assertTrue( bb_video_can_delete_stored_thumbnail( $video, $custom ) );
+		$this->assertTrue( bb_video_is_valid_thumbnail_for_video( $video, $custom, false ) );
+
+		// Not uploaded through the thumbnail uploader.
+		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $unflagged ) );
+
+		BP_Video::delete( array( 'id' => $video->id ) );
+
+		$this->assertNull( get_post( $custom ) );
+		$this->assertNotNull( get_post( $unflagged ) );
+	}
+
+	/**
+	 * A poisoned pointer to another member's thumbnail that their own video uses is
+	 * refused on the poster delete paths (review A-1).
+	 */
+	public function test_delete_path_refuses_foreign_thumbnail_used_by_another_video() {
+		$owner        = self::factory()->user->create();
+		$victim       = self::factory()->user->create();
+		$video        = $this->create_video( $owner );
+		$victim_video = $this->create_video( $victim );
+		$foreign      = $this->create_attachment( $victim, true );
+
+		update_post_meta( $victim_video->attachment_id, 'bp_video_preview_thumbnail_id', $foreign );
+		update_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', $foreign );
+
+		self::set_current_user( $owner );
+
+		$this->assertFalse( bb_video_can_delete_stored_thumbnail( $video, $foreign ) );
+		$this->assertFalse( bb_video_is_valid_thumbnail_for_video( $video, $foreign, false ) );
+
+		// Selecting it for display is unchanged.
+		$this->assertTrue( bb_video_is_valid_thumbnail_for_video( $video, $foreign ) );
 	}
 }

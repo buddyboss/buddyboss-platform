@@ -734,7 +734,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] Only moderators may send a message as another member.
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -757,11 +756,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$thread_id = (int) $request->get_param( 'id' );
 			$sender_id = (int) $request->get_param( 'sender_id' );
 
-			// Members can only send as themselves; only community moderators may send on behalf of another user.
 			if ( 0 !== $sender_id && bp_loggedin_user_id() !== $sender_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+				// Only site moderators may send a message as another member; keep the generic refusal.
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to send a message as another member.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1042,7 +1041,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] Members can only search their own conversations.
 	 */
 	public function search_thread_items_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -1054,18 +1052,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( is_user_logged_in() ) {
-			$retval  = true;
 			$user_id = (int) $request->get_param( 'user_id' );
 
-			// Members can only search their own conversations.
-			if ( 0 !== $user_id && bp_loggedin_user_id() !== $user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			// Only site moderators may look up the threads of another member; keep the generic refusal.
+			if ( 0 === $user_id || bp_loggedin_user_id() === $user_id || bp_current_user_can( 'bp_moderate' ) ) {
+				$retval = true;
 			}
 		}
 
@@ -1455,8 +1446,19 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		// Delete messages meta.
 		if ( ! empty( $message_ids ) ) {
 			$meta_message_ids = array_map( 'absint', $message_ids );
-			$id_placeholders  = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
-			$query_meta       = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+
+			/*
+			 * Prime the meta cache for every message first. The media, video, document and
+			 * GIF cleanup hooked to bp_messages_thread_after_delete reads this meta after the
+			 * rows below are gone, so without it only already-cached messages get cleaned up.
+			 * Primed in chunks so a very large thread does not build one huge IN() query.
+			 */
+			foreach ( array_chunk( $meta_message_ids, 500 ) as $meta_message_ids_chunk ) {
+				bp_messages_update_meta_cache( $meta_message_ids_chunk );
+			}
+
+			$id_placeholders = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
+			$query_meta      = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
 		}
@@ -1504,11 +1506,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_Error|bool
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] Checks the caller's own moderate capability.
 	 */
 	public function delete_item_permissions_check( $request ) {
 
-		$retval = $this->get_item_permissions_check( $request );
+		$retval  = $this->get_item_permissions_check( $request );
+		$user_id = bp_loggedin_user_id();
 
 		if ( ! empty( $request['user_id'] ) ) {
 			$user_id = $request['user_id'];
