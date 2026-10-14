@@ -5222,6 +5222,13 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 /**
  * Function will return the user progress based on the settings you provided.
  *
+ * @since BuddyBoss 3.6.1 The photo staleness check compares the cached
+ *                              is_uploaded flags against the live avatar and
+ *                              cover state instead of against the gravatar
+ *                              probe alone, so a stale value in either
+ *                              direction triggers one recalculation and a
+ *                              consistent value serves the cached meter.
+ *
  * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in
  *                        progress.
  *
@@ -5232,14 +5239,90 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	$profile_groups     = $settings['profile_groups'];
 	$profile_photo_type = $settings['profile_photo_type'];
 	// Get user profile data if exists.
-	$get_user_data     = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
-	$current_user_data = get_userdata( get_current_user_id() );
-	if ( function_exists( 'bb_validate_gravatar' ) ) {
-		$check_new_gravatar = bb_validate_gravatar( $current_user_data->user_email );
-		$existing_gravatar  = isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) && isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) ? $get_user_data['photo_type']['profile_photo']['is_uploaded'] : '';
-		if ( (bool) $check_new_gravatar !== (bool) $existing_gravatar ) {
-			bp_core_xprofile_update_profile_completion_user_progress();
+	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+
+	/*
+	 * Recalculate only when the cached photo status no longer matches reality.
+	 *
+	 * The previous check compared bb_validate_gravatar() — false unless
+	 * something populated its transient — against the stored is_uploaded flag
+	 * (avatar OR gravatar), so every member with an uploaded avatar mismatched
+	 * permanently and paid a full recalculation on every widget render, while
+	 * a stale 0 (avatar detection unavailable while an offload/CDN plugin was
+	 * inactive) never recalculated at all. Compare like for like using cheap
+	 * checks only; the outbound gravatar probe stays confined to the
+	 * recalculation itself.
+	 *
+	 * Gravatar boundaries: staleness honors the recalculation's own counting
+	 * gate (profile gravatars enabled, non-blank default) before trusting a
+	 * cached gravatar, and a newly-countable gravatar (stored 0) is detected
+	 * only from a warm probe cache whose headers match the recalculation's
+	 * own predicate (200 + Link) — never by probing outbound here, and never
+	 * on markers the recalculation would disagree with, which would loop a
+	 * full recalculation on every render. A member whose gravatar was never
+	 * probed through the avatar render path recalculates on their next
+	 * profile/avatar event instead.
+	 */
+	$bb_pc_stale = false;
+
+	if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) ) {
+		$bb_pc_stored_avatar = (bool) $get_user_data['photo_type']['profile_photo']['is_uploaded'];
+		$bb_pc_live_avatar   = bp_get_user_has_avatar( get_current_user_id() );
+
+		// Whether the recalculation is allowed to count a gravatar at all.
+		$bb_pc_gravatar_countable = bp_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' );
+
+		if ( $bb_pc_live_avatar && ! $bb_pc_stored_avatar ) {
+			// An avatar exists but the cached meter says otherwise.
+			$bb_pc_stale = true;
+		} elseif ( ! $bb_pc_live_avatar && $bb_pc_stored_avatar ) {
+			if ( ! $bb_pc_gravatar_countable ) {
+				// Gravatars cannot be counted (same gate the recalculation
+				// uses), so a stored 1 with no uploaded avatar is stale —
+				// e.g. the admin disabled gravatars after this member's
+				// gravatar was counted.
+				$bb_pc_stale = true;
+			} elseif ( function_exists( 'bb_validate_gravatar' ) ) {
+				// No uploaded avatar, but the cached flag is set — it may be
+				// a gravatar, so disambiguate the way the previous check did
+				// for exactly this subset.
+				$current_user_data = get_userdata( get_current_user_id() );
+				if ( $current_user_data && ! bb_validate_gravatar( $current_user_data->user_email ) ) {
+					$bb_pc_stale = true;
+				}
+			}
+		} elseif ( ! $bb_pc_live_avatar && ! $bb_pc_stored_avatar && $bb_pc_gravatar_countable ) {
+			// Stored 0 with no uploaded avatar — a gravatar may have become
+			// countable since (member added one, or the admin re-enabled
+			// gravatars). Consult only the cached probe headers, and fire
+			// only when they carry the same "HTTP/1.1 200 OK" + Link markers
+			// the recalculation's own probe requires — that guarantees the
+			// recalculation agrees and cannot loop back here.
+			$current_user_data = get_userdata( get_current_user_id() );
+			if ( $current_user_data ) {
+				// Same cache key bp_core_fetch_avatar() writes and bb_validate_gravatar() reads.
+				$bb_pc_grav_key     = base64_encode( 'https://www.gravatar.com/avatar/' . md5( strtolower( $current_user_data->user_email ) ) . '?d=404' );
+				$bb_pc_grav_headers = get_transient( $bb_pc_grav_key );
+
+				if ( is_array( $bb_pc_grav_headers ) && isset( $bb_pc_grav_headers[0] ) && 'HTTP/1.1 200 OK' === $bb_pc_grav_headers[0] ) {
+					foreach ( $bb_pc_grav_headers as $bb_pc_grav_header ) {
+						if ( is_string( $bb_pc_grav_header ) && 0 === stripos( $bb_pc_grav_header, 'link:' ) ) {
+							$bb_pc_stale = true;
+							break;
+						}
+					}
+				}
+			}
 		}
+	}
+
+	if ( ! $bb_pc_stale && isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) ) {
+		$bb_pc_stored_cover = (bool) $get_user_data['photo_type']['cover_photo']['is_uploaded'];
+		$bb_pc_stale        = ( (bool) bp_attachments_get_user_has_cover_image( get_current_user_id() ) !== $bb_pc_stored_cover );
+	}
+
+	if ( $bb_pc_stale ) {
+		bp_core_xprofile_update_profile_completion_user_progress();
 	}
 
 	// Get logged in user Progress.
@@ -6153,11 +6236,54 @@ function bb_check_server_disabled_symlink() {
 }
 
 /**
+ * Whether the current request is a non-feed request type that the RSS feed restriction must leave alone.
+ *
+ * Decided from how the request is being served, never from the URL text, so a query
+ * parameter such as `?x=wp-json` cannot exempt a feed.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @return bool True for cron, AJAX, wp-login.php and REST API requests.
+ */
+function bb_is_rss_feed_restriction_exempt_request() {
+	if ( wp_doing_cron() || wp_doing_ajax() ) {
+		return true;
+	}
+
+	// The login page must stay reachable (e.g. `redirect_to=/feed/`) or the login redirect loops.
+	// SCRIPT_NAME is the script actually executed; $pagenow is not used as it is derived from PHP_SELF, which includes PATH_INFO.
+	$script_name = isset( $_SERVER['SCRIPT_NAME'] ) ? wp_basename( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) : '';
+	if ( 'wp-login.php' === $script_name ) {
+		return true;
+	}
+
+	// REST requests are answered by rest_api_loaded() before any feed renders and have their own "Private REST APIs" setting.
+	if ( ! empty( $_GET['rest_route'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return true;
+	}
+
+	if ( ! get_option( 'permalink_structure' ) || empty( $_SERVER['REQUEST_URI'] ) ) {
+		return false;
+	}
+
+	$request_path = (string) wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
+	$rest_path    = (string) wp_parse_url( get_rest_url(), PHP_URL_PATH );
+
+	return '' !== $rest_path && 0 === strpos( trailingslashit( $request_path ), trailingslashit( $rest_path ) );
+}
+
+/**
  * Function will restrict RSS feed.
  *
  * @since BuddyBoss 1.8.6
+ * @since BuddyBoss 3.6.1 Added the `$is_feed` parameter. Exempt requests are detected from the
+ *                              request type instead of the URL text, and relative Public RSS Feeds
+ *                              entries are matched without the query string.
+ *
+ * @param bool $is_feed Optional. Whether the parsed main query has already identified a feed request,
+ *                      in which case the URL is not inspected. Default false.
  */
-function bb_restricate_rss_feed() {
+function bb_restricate_rss_feed( $is_feed = false ) {
 	if (
 		empty( $_SERVER['HTTP_HOST'] ) ||
 		empty( $_SERVER['REQUEST_URI'] )
@@ -6167,20 +6293,21 @@ function bb_restricate_rss_feed() {
 
 	$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 	if (
+		! $is_feed &&
 		strpos( $actual_link, '/feed/' ) === false &&
 		strpos( $actual_link, 'feed=' ) === false
 	) { // if permalink has ? then need to check with feed=.
 		return;
 	}
 
-	if (
-		strpos( $actual_link, 'wp-cron.php' ) === false &&
-		strpos( $actual_link, 'wp-login.php' ) === false &&
-		strpos( $actual_link, 'admin-ajax.php' ) === false &&
-		strpos( $actual_link, 'wp-json' ) === false
-	) {
+	if ( $is_feed || ! bb_is_rss_feed_restriction_exempt_request() ) {
 		$request_url      = untrailingslashit( $actual_link );
 		$exclude_rss_feed = bb_enable_private_rss_feeds_public_content();
+
+		// Relative entries (URI fragments) are matched without the query string, like the Public Website
+		// Content list, so a parameter that merely contains an allowed fragment cannot make a feed public.
+		$request_url_without_query = untrailingslashit( explode( '?', $actual_link, 2 )[0] );
+		$request_path              = (string) wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
 		if ( '' !== $exclude_rss_feed ) {
 			$exclude_arr_rss_feeds = preg_split( "/\r\n|\n|\r/", $exclude_rss_feed );
 			$exclude_arr_rss_feeds = array_map( 'trailingslashit', $exclude_arr_rss_feeds );
@@ -6193,8 +6320,8 @@ function bb_restricate_rss_feed() {
 					// Check if strict match.
 					if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 						return;
-					} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
-						$fragments = explode( '/', $request_url );
+					} elseif ( false === $check_is_full_url && ! empty( $request_url_without_query ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url_without_query, $un_trailing_slash_it_url ) !== false ) {
+						$fragments = explode( '/', $request_url_without_query );
 						// Allow to view if fragment matched.
 						foreach ( $fragments as $fragment ) {
 							if ( $fragment === trim( $url, '/' ) ) {
@@ -6202,12 +6329,12 @@ function bb_restricate_rss_feed() {
 							}
 						}
 						// Allow to view if fragment matched with the trailing slash.
-						$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+						$is_matched_fragment = substr( $request_path, 0, strrpos( $request_path, '/' ) );
 						if ( $is_matched_fragment === $url ) {
 							return;
 						}
 						// Allow to view if it's matched the fragment in it's sub pages like /de/pages/pricing pages.
-						if ( strpos( $request_url, $is_matched_fragment ) !== false ) {
+						if ( strpos( trailingslashit( $request_url_without_query ), trailingslashit( $un_trailing_slash_it_url ) ) !== false ) {
 							return;
 						}
 						// Check URL is fully matched without remove trailing slash.
@@ -6227,6 +6354,68 @@ function bb_restricate_rss_feed() {
 		bp_core_no_access( $defaults );
 		exit();
 	}
+}
+
+/**
+ * Check whether Private Website blocks the current file download for a guest.
+ *
+ * Document, folder, photo and video downloads are streamed on `init` and exit
+ * before bp_private_network_template_redirect() runs on `template_redirect`,
+ * so they need their own check.
+ *
+ * The `bp_private_network_pre_check` filter is not applied here. Its callbacks are
+ * written for page requests (The Events Calendar returns true for any URL with
+ * ?ical=1), so downloads use the `bb_is_private_network_download_restricted` filter.
+ * The public Content list is page-level and intentionally not applied; site owners
+ * can use the new filter instead.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return bool True if the download must be blocked, otherwise false.
+ */
+function bb_is_private_network_download_restricted( $type = '' ) {
+
+	// The option stores 1 for a public site, so false means Private Website is on.
+	if ( is_user_logged_in() || bp_enable_private_network() ) {
+		return false;
+	}
+
+	/**
+	 * Filters whether Private Website blocks a guest file download.
+	 *
+	 * @since BuddyBoss 3.6.1
+	 *
+	 * @param bool   $restricted Whether the download is blocked. Default true.
+	 * @param string $type       Download type: 'document', 'folder', 'photo' or 'video'.
+	 */
+	return (bool) apply_filters( 'bb_is_private_network_download_restricted', true, $type );
+}
+
+/**
+ * Send a guest to the login page when Private Website blocks a file download.
+ *
+ * After login, the member returns to the same download URL.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param string $type Download type. Accepts 'document', 'folder', 'photo' or 'video'.
+ *
+ * @return void
+ */
+function bb_private_network_restrict_download( $type = '' ) {
+	if ( ! bb_is_private_network_download_restricted( $type ) ) {
+		return;
+	}
+
+	bp_core_no_access(
+		array(
+			'mode'    => 2,
+			'message' => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+		)
+	);
+	exit();
 }
 
 /**
@@ -11958,19 +12147,21 @@ if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
  * that are not yet linked to a saved media, document, video or activity may be deleted when
  * the draft is discarded.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.1
  *
- * @param int  $attachment_id Attachment ID from the draft payload.
- * @param bool $for_delete    Whether the attachment is about to be deleted. Default false.
- * @param int  $user_id       User ID. Default the logged-in user.
+ * @param mixed $attachment_id Attachment ID from the draft payload. Non-numeric, zero and
+ *                             negative values are rejected rather than normalised.
+ * @param bool  $for_delete    Whether the attachment is about to be deleted. Default false.
+ * @param int   $user_id       User ID. Default the logged-in user.
  *
  * @return bool
  */
 function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = false, $user_id = 0 ) {
-	$attachment_id = absint( $attachment_id );
+	// Not absint(): it would turn -42 into 42 and array( 42 ) into 1.
+	$attachment_id = is_numeric( $attachment_id ) ? (int) $attachment_id : 0;
 	$user_id       = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
 
-	if ( empty( $attachment_id ) || empty( $user_id ) || 'attachment' !== get_post_type( $attachment_id ) ) {
+	if ( 0 >= $attachment_id || empty( $user_id ) || 'attachment' !== get_post_type( $attachment_id ) ) {
 		return false;
 	}
 
@@ -11988,7 +12179,7 @@ function bb_user_can_manage_draft_attachment( $attachment_id, $for_delete = fals
 	/**
 	 * Filters whether a user may flag or delete an attachment referenced by a composer draft.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.1
 	 *
 	 * @param bool $can_manage    Whether the user may manage the attachment.
 	 * @param int  $attachment_id Attachment ID.
