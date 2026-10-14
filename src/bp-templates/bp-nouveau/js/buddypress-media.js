@@ -1130,6 +1130,7 @@ window.bp = window.bp || {};
 					'activity_id': activityId,
 					'attachment_id': attachment_id,
 					'_wpnonce': BP_Nouveau.nonces.media,
+					'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				};
 
 				$.ajax(
@@ -1449,6 +1450,7 @@ window.bp = window.bp || {};
 				'media': media,
 				'activity_id': activityId,
 				'from_where': fromWhere,
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 			};
 
 			$.ajax(
