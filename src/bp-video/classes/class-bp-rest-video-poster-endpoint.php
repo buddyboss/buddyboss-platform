@@ -406,13 +406,21 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		if ( empty( $request->get_param( 'attachment_id' ) ) && ! empty( $file ) && ! empty( $auto_generated_thumbnails['custom_image'] ) ) {
 			$previous_custom_image = absint( $auto_generated_thumbnails['custom_image'] );
 
-			// Stored meta is not trusted: it must be an uploaded video thumbnail of the video owner. Fails closed on older Platform.
+			/*
+			 * Stored meta is not trusted: only an uploaded thumbnail of the video owner, or one only this video uses, is deleted.
+			 * The owner check is the fallback for a Platform whose validator predates bb_video_can_delete_stored_thumbnail(),
+			 * and the delete is skipped on a Platform without the validator.
+			 */
 			if (
 				$previous_custom_image &&
 				$previous_custom_image !== (int) $attachment_id &&
 				function_exists( 'bb_video_is_valid_thumbnail_for_video' ) &&
 				bb_video_is_valid_thumbnail_for_video( $video, $previous_custom_image, false ) &&
-				(int) get_post_field( 'post_author', $previous_custom_image ) === (int) $video->user_id
+				(
+					function_exists( 'bb_video_can_delete_stored_thumbnail' )
+						? bb_video_can_delete_stored_thumbnail( $video, $previous_custom_image )
+						: (int) get_post_field( 'post_author', $previous_custom_image ) === (int) $video->user_id
+				)
 			) {
 				wp_delete_attachment( $previous_custom_image, true );
 			}

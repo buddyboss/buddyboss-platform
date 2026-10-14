@@ -1446,8 +1446,19 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		// Delete messages meta.
 		if ( ! empty( $message_ids ) ) {
 			$meta_message_ids = array_map( 'absint', $message_ids );
-			$id_placeholders  = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
-			$query_meta       = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+
+			/*
+			 * Prime the meta cache for every message first. The media, video, document and
+			 * GIF cleanup hooked to bp_messages_thread_after_delete reads this meta after the
+			 * rows below are gone, so without it only already-cached messages get cleaned up.
+			 * Primed in chunks so a very large thread does not build one huge IN() query.
+			 */
+			foreach ( array_chunk( $meta_message_ids, 500 ) as $meta_message_ids_chunk ) {
+				bp_messages_update_meta_cache( $meta_message_ids_chunk );
+			}
+
+			$id_placeholders = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
+			$query_meta      = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
 		}

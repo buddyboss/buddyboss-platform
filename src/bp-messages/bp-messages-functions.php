@@ -3408,3 +3408,42 @@ function bb_messages_migration() {
 		}
 	}
 }
+
+/**
+ * Whether the current user can delete an entire conversation for every participant.
+ *
+ * Allowed for site moderators and admins, and for a moderator who is switched into a
+ * member's account. The switched-from user must be a different user who can moderate
+ * and who passes the switching auth cookie check, because the old user cookie on its own
+ * only proves that some logged_in cookie is valid.
+ *
+ * The AJAX handler and the "Delete conversation" action in the templates both use this,
+ * so the action is only shown to users the server will accept.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if the current user can delete the whole conversation.
+ */
+function bb_messages_user_can_delete_conversation() {
+	$can_delete = bp_current_user_can( 'bp_moderate' );
+
+	if ( ! $can_delete && class_exists( 'BP_Core_Members_Switching' ) && method_exists( 'BP_Core_Members_Switching', 'authenticate_old_user' ) ) {
+		$old_user = BP_Core_Members_Switching::get_old_user();
+
+		$can_delete = (
+			$old_user instanceof WP_User &&
+			bp_loggedin_user_id() !== $old_user->ID &&
+			user_can( $old_user, 'bp_moderate' ) &&
+			BP_Core_Members_Switching::authenticate_old_user( $old_user )
+		);
+	}
+
+	/**
+	 * Filters whether the current user can delete an entire conversation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $can_delete Whether the current user can delete the whole conversation.
+	 */
+	return (bool) apply_filters( 'bb_messages_user_can_delete_conversation', $can_delete );
+}
