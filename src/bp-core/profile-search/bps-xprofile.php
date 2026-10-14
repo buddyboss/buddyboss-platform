@@ -466,16 +466,33 @@ function bp_ps_xprofile_gender_users_search( $f ) {
 	if ( isset( $gender ) && ! empty( $gender ) ) {
 
 		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table_profile_fields} a WHERE parent_id = 0 AND type = 'gender' " );
-		if ( ! empty( $exists_gender ) ) {
+
+		// COUNT(*) always returns a single row (with id = NULL when no gender field exists),
+		// so guard on the resolved field id rather than on the row being present.
+		$field_id = ( ! empty( $exists_gender ) && ! empty( $exists_gender[0]->id ) ) ? (int) $exists_gender[0]->id : 0;
+
+		if ( $field_id > 0 ) {
 
 			if ( is_array( $gender ) ) {
-				$gender = "'" . implode( "', '", $gender ) . "'";
-				$where  = " AND value IN({$gender})";
-			} else {
-				$where = " AND value = '{$gender}'";
-			}
+				$gender       = array_values( $gender );
+				$placeholders = implode( ', ', array_fill( 0, count( $gender ), '%s' ) );
 
-			$custom_ids = $wpdb->get_col( "SELECT user_id FROM {$table_profile_data} WHERE field_id = {$exists_gender[0]->id} {$where}" );
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders is a list of %s placeholders, values are passed to prepare().
+				$custom_ids = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT user_id FROM {$table_profile_data} WHERE field_id = %d AND value IN ( {$placeholders} )",
+						array_merge( array( $field_id ), $gender )
+					)
+				);
+			} else {
+				$custom_ids = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT user_id FROM {$table_profile_data} WHERE field_id = %d AND value = %s",
+						$field_id,
+						$gender
+					)
+				);
+			}
 
 			if ( ! empty( $custom_ids ) ) {
 				return $custom_ids;

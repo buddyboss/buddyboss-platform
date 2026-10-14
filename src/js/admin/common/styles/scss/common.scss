@@ -1,0 +1,433 @@
+/**
+ * Shared BuddyBoss admin header + Knowledge Base modal styles.
+ * Single source of truth for the global admin header on every admin page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+@import 'variables';
+@import 'mixings';
+
+ /* Header */
+ #wpbody-content:has(.bb-admin-app > .bb-admin-header) {
+	padding-top: 57px;
+ }
+
+ .bb-admin-header {
+	background-color: #fff;
+	margin: 0 0 0 -20px;
+	padding: 12px 24px;
+	border-bottom: 1px solid $bb-border-color;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: fixed;
+    top: 32px;
+    left: 180px;
+    right: 0;
+	z-index: 100;
+
+	body.folded & {
+		left: 56px;
+	}
+
+	&__container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	&__left {
+		margin-right: auto;
+	}
+
+	&__logo {
+		display: flex;
+		align-items: center;
+
+		a {
+			display: flex;
+		}
+
+		&-img {
+			max-width: 130px;
+			height: auto;
+		}
+	}
+
+	&__center {
+		flex: 1 1 auto;
+		display: flex;
+		justify-content: center;
+		margin: 0 40px;
+		position: relative;
+	}
+
+	&__search {
+		position: relative;
+		width: 500px;
+		max-width: 100%;
+
+		&-wrapper {
+			position: relative;
+			width: 100%;
+		}
+
+		input.bb-admin-header__search-input {
+			@include bb-input-text;
+		}
+
+		&-icon {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 20px;
+			color: #6a6a6a;
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: none;
+		}
+
+		&-spinner {
+			position: absolute;
+			right: 35px;
+			top: 50%;
+			transform: translateY(-50%);
+
+			.spinner {
+				margin: 0;
+			}
+		}
+
+		&-results {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			display: flex;
+			flex-direction: column;
+			background: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-xl;
+			box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+			max-height: 400px;
+			overflow-y: auto;
+			z-index: 1000;
+			margin-top: 5px;
+		}
+
+		&-result {
+			display: flex;
+			align-items: center;
+			padding: 8px;
+			margin: 4px 8px;
+			border-radius: $bb-border-radius-lg;
+			cursor: pointer;
+			text-align: left;
+			background: none;
+			border: none;
+
+			&:hover {
+				background: $bb-background-primary-hover-color;
+			}
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			&--no-results {
+				cursor: default;
+				color: #999;
+			}
+
+			&-icon {
+				color: $bb-icon-tertiary-color;
+				font-size: 16px;
+				margin-right: 8px;
+			}
+
+			&-content {
+				flex: 1;
+			}
+
+			&-label {
+				color: $bb-text-tertiary-color;
+				font-size: 13px;
+				font-weight: 400;
+
+				&-field {
+					color: $bb-text-color;
+				}
+			}
+		}
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__icon-button {
+		background-color: transparent;
+		border: none;
+		border-radius: $bb-border-radius-md;
+		color: #2f2f2f;
+		cursor: pointer;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		text-decoration: none;
+
+		i[class*="bb-icons-"] {
+			color: $bb-icon-secondary-color;
+			font-size: 24px;
+
+			&:before {
+				margin: 0;
+			}
+		}
+
+		&:hover {
+			background-color: $bb-background-color;
+		}
+
+		&--notifications {
+			position: relative;
+		}
+	}
+
+	&__ipn-slot {
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-color;
+		}
+	}
+
+	// Mothership IPN inbox mount point. The IPN React app renders its own
+	// <button> inside Shadow DOM here, so we reset host-level button styles
+	// (padding, hover bg) to avoid double-padding and conflicting hover states.
+	// Width/height match sibling __icon-button (24px icon + 8px padding ≈ 32×32).
+	&__ipn-root {
+		padding: 0;
+		background: transparent;
+		width: 32px;
+		height: 32px;
+
+		&:hover {
+			background: transparent;
+		}
+	}
+
+	&__notification-badge {
+		position: absolute;
+		top: 2px;
+		right: 5px;
+		background-color: #ff0000;
+		color: white;
+		font-size: 9px;
+		line-height: 8px;
+		padding: 2px 0;
+		border-radius: 16px;
+		min-width: 12px;
+		text-align: center;
+		font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+		font-weight: 400;
+		letter-spacing: -0.045px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+
+	.bb-admin-header {
+		left: 56px;
+	}
+
+	.bb-admin-header__center {
+		width: 50%;
+		margin: 0;
+	}
+
+	.bb-admin-header__search {
+		width: 80%;
+		max-width: initial;
+	}
+
+}
+
+@media screen and (max-width: 782px) {
+
+	.bb-admin-header {
+		top: 46px;
+		left: 20px;
+	}
+
+	#wpbody-content:has(.bb-admin-app>.bb-admin-header) {
+		padding-top: 68px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	.bb-admin-header {
+		position: absolute;
+		left: 10px;
+	}
+}
+
+// Knowledge Base modal styles (shared so consumers get the in-app help modal).
+@import 'knowledge_base';
+
+/**
+ * Rendered WP-block content stylesheet for the Integrations drawer.
+ */
+.bb-integrations-drawer__body {
+	--wp--preset--spacing--10: 8px;
+	--wp--preset--spacing--20: 12px;
+	--wp--preset--spacing--25: 12px;
+	--wp--preset--spacing--30: 16px;
+	--wp--preset--spacing--40: 20px;
+	--wp--preset--spacing--50: 28px;
+	--wp--preset--spacing--60: 32px;
+	--wp--preset--spacing--70: 40px;
+	--wp--preset--spacing--80: 48px;
+
+	--wp--preset--font-size--small: 13px;
+	--wp--preset--font-size--medium: 14px;
+	--wp--preset--font-size--large: 16px;
+	--wp--preset--font-size--x-large: 22px;
+	--wp--preset--font-size--h-1: 23px;
+	--wp--preset--font-size--h-2: 20px;
+	--wp--preset--font-size--h-3: 18px;
+	--wp--preset--font-size--h-4: 16px;
+
+	--wp--preset--color--primary: #{$bb-primary-color};
+	--wp--preset--color--base: #fff;
+	--wp--preset--color--contrast: #1d2327;
+	--wp--preset--color--surface: #{$bb-background-primary-color};
+	--wp--preset--color--border: #{$bb-border-color};
+	--wp--preset--color--text-muted: #757575;
+
+	.is-layout-flex {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.8em;
+
+		&.is-nowrap {
+			flex-wrap: nowrap;
+			align-items: flex-start;
+		}
+	}
+
+	.is-content-justification-center { justify-content: center; }
+	.is-content-justification-space-between { justify-content: space-between; }
+	.is-content-justification-right { justify-content: flex-end; }
+
+	.wp-block-columns {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: 24px;
+
+		&.are-vertically-aligned-center { align-items: center; }
+	}
+
+	.wp-block-column {
+		flex: 1 1 0%;
+		min-width: 0;
+	}
+
+	> .alignfull {
+		margin-left: -24px;
+		margin-right: -24px;
+		padding-left: 24px;
+		padding-right: 24px;
+	}
+
+	// --- Colour presets, mapped to the admin palette. ---
+	.has-primary-background-color { background-color: var( --wp--preset--color--primary ); }
+	.has-base-background-color { background-color: var( --wp--preset--color--base ); }
+	.has-surface-background-color { background-color: var( --wp--preset--color--surface ); }
+	.has-contrast-background-color { background-color: var( --wp--preset--color--contrast ); }
+
+	.has-base-color { color: var( --wp--preset--color--base ); }
+	.has-base-color :is( p, h1, h2, h3, h4, h5, h6, span, li, strong ) { color: inherit; margin: 0; }
+	.has-base-color a:not( .wp-block-button__link ) { color: inherit; }
+	.has-contrast-color { color: var( --wp--preset--color--contrast ); }
+	.has-primary-color { color: var( --wp--preset--color--primary ); }
+	.has-text-muted-color { color: var( --wp--preset--color--text-muted ); }
+
+	// --- Font-size presets. ---
+	.has-h-1-font-size { font-size: var( --wp--preset--font-size--h-1 ); line-height: 1.25; }
+	.has-h-2-font-size { font-size: var( --wp--preset--font-size--h-2 ); }
+	.has-h-3-font-size { font-size: var( --wp--preset--font-size--h-3 ); }
+	.has-h-4-font-size { font-size: var( --wp--preset--font-size--h-4 ); }
+	.has-large-font-size { font-size: var( --wp--preset--font-size--large ); }
+	.has-medium-font-size { font-size: var( --wp--preset--font-size--medium ); }
+	.has-small-font-size { font-size: var( --wp--preset--font-size--small ); }
+
+	// --- Alignment presets. ---
+	.has-text-align-center { text-align: center; }
+	.has-text-align-right { text-align: right; }
+
+	// --- Buttons (core/buttons + core/button). ---
+	.wp-block-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		list-style: none;
+		margin: 16px 0 0;
+		padding: 0;
+
+		&.is-content-justification-center { justify-content: center; }
+	}
+
+	.wp-block-button {
+		margin: 0;
+	}
+
+	.wp-block-button__link {
+		display: inline-block;
+		padding: 10px 20px;
+		border-radius: 6px;
+		font-weight: 600;
+		text-decoration: none;
+		line-height: 1.3;
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&.has-base-color { color: var( --wp--preset--color--base ); }
+		&.has-primary-color { color: var( --wp--preset--color--primary ); }
+		&.has-contrast-color { color: var( --wp--preset--color--contrast ); }
+	}
+
+	.wp-block-button.is-style-outline .wp-block-button__link {
+		background: transparent;
+		border: 2px solid currentColor;
+	}
+
+	// --- Lists rendered as WP blocks. ---
+	.wp-block-list {
+		padding-left: 1.2em;
+
+		li {
+			margin-bottom: 8px;
+		}
+	}
+
+	// Tighten heading rhythm for the larger preset sizes above.
+	h1, h2, h3, h4 {
+		line-height: 1.3;
+	}
+}

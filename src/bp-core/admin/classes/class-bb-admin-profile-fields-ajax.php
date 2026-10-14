@@ -285,6 +285,17 @@ class BB_Admin_Profile_Fields_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss' ) ) );
 		}
 
+		// The Bio field is shared with the member's WordPress "Biographical Info",
+		// so a set holding one cannot start repeating its fields. Only the switch-on
+		// is refused, so a set that already repeats can still be renamed or edited.
+		if (
+			'on' === $group_is_repeater &&
+			'on' !== bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true ) &&
+			bb_xprofile_group_has_bio_field( $group_id )
+		) {
+			wp_send_json_error( array( 'message' => __( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set cannot be enabled. Remove the Bio field first.', 'buddyboss' ) ) );
+		}
+
 		$result = xprofile_insert_field_group(
 			array(
 				'field_group_id' => $group_id,
@@ -432,53 +443,50 @@ class BB_Admin_Profile_Fields_Ajax {
 		if ( ! empty( $field_id ) ) {
 			$args['field_id'] = $field_id;
 
-			// Preserve existing field_order on edit so the field doesn't jump to position 0.
 			$existing_field = xprofile_get_field( $field_id );
 			if ( $existing_field ) {
-				$args['field_order'] = (int) $existing_field->field_order;
+				$existing_group_id = (int) $existing_field->group_id;
+
+				if ( $existing_group_id !== (int) $group_id ) {
+					// Cross-field-set reassignment on edit. Block it unless the
+					// move is permitted. Matches the drag guardrails enforced by
+					// `reorder_fields()` (which mirrors the legacy
+					// `accept: '.connectedSortable fieldset:not(.primary_field)'`
+					// drop rule from `bp-xprofile/admin/js/admin.js`). The React
+					// modal does not currently expose a group selector, so this
+					// is defense-in-depth against direct AJAX clients.
+					if ( ! $this->bb_can_move_field_to_group( $field_id, $existing_group_id, $group_id ) ) {
+						wp_send_json_error(
+							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss' ) )
+						);
+					}
+
+					// Allowed move: append to the end of the destination set.
+					// Reusing the source-group order would collide with whatever
+					// field already holds that position in the new set.
+					$args['field_order'] = $this->bb_get_next_field_order( $group_id );
+				} else {
+					// Same set: preserve existing field_order so the field
+					// doesn't jump to position 0.
+					$args['field_order'] = (int) $existing_field->field_order;
+				}
 			}
 		}
 
 		// Auto-assign field order for new fields (exclude repeater clones, matching legacy behavior).
 		if ( empty( $field_id ) ) {
-			global $wpdb;
-			$bp = buddypress();
-
-			// Cloned fields should not be considered when determining the max order of fields in given group.
-			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name properties.
-			$cloned_field_ids = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1",
-					$group_id
-				)
-			);
-			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-			if ( ! empty( $cloned_field_ids ) ) {
-				$placeholders = implode( ',', array_fill( 0, count( $cloned_field_ids ), '%d' ) );
-				$query_args   = array_merge( array( $group_id ), array_map( 'absint', $cloned_field_ids ) );
-				$field_order  = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id NOT IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated dynamically.
-						$query_args
-					)
-				);
-			} else {
-				$field_order = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name property.
-						$group_id
-					)
-				);
-			}
-
-			++$field_order;
-			$args['field_order'] = $field_order;
+			$args['field_order'] = $this->bb_get_next_field_order( $group_id );
 		}
 
 		$saved_id = xprofile_insert_field( $args );
 
 		if ( empty( $saved_id ) ) {
+			// The Bio field is shared with the member's WordPress "Biographical Info",
+			// so a set that repeats its fields cannot hold one — adding or saving.
+			if ( 'biography' === $type && bb_xprofile_is_repeater_group( $group_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'The "Bio" profile field cannot be used in a repeater field set, because it shares its value with the member\'s WordPress profile. Move it to a field set that does not repeat.', 'buddyboss' ) ) );
+			}
+
 			// Singleton validation error messages.
 			if ( 'membertypes' === $type ) {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ) ) );
@@ -486,6 +494,8 @@ class BB_Admin_Profile_Fields_Ajax {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ) ) );
 			} elseif ( 'socialnetworks' === $type ) {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ) ) );
+			} elseif ( 'biography' === $type ) {
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss' ) ) );
 			}
 
 			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss' ) ) );
@@ -643,8 +653,18 @@ class BB_Admin_Profile_Fields_Ajax {
 				foreach ( $fields as $position => $field_id ) {
 					$sanitized_field_id = absint( $field_id );
 
-					// Validate field exists and belongs to this group before repositioning.
-					if ( ! isset( $field_group_map[ $sanitized_field_id ] ) || $field_group_map[ $sanitized_field_id ] !== $sanitized_group_id ) {
+					// Validate field exists before repositioning.
+					if ( ! isset( $field_group_map[ $sanitized_field_id ] ) ) {
+						continue;
+					}
+
+					$current_group_id = $field_group_map[ $sanitized_field_id ];
+
+					// Cross-field-set move — only proceed when the move is permitted.
+					if (
+						$current_group_id !== $sanitized_group_id &&
+						! $this->bb_can_move_field_to_group( $sanitized_field_id, $current_group_id, $sanitized_group_id )
+					) {
 						continue;
 					}
 
@@ -744,29 +764,15 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 
-		// Mirror legacy `BP_XProfile_Field::is_default_field()` (see
-		// `class-bp-xprofile-field.php` ~line 1832) so the React modal can hide
-		// the same metaboxes legacy hides: Type, Required, Visibility (and
-		// Allow-members-override), Profile Types, Placeholder. The synced set is
-		// always the Nickname field, plus First/Last when fullname format needs
-		// them. WP object cache memoises the underlying lookups, so calling
-		// these per field in the loop has no extra DB cost.
-		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
-		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
-		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
-		}
-		if ( 'first_last_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
-		}
-
 		$data = array(
 			'id'                      => (int) $field->id,
 			'name'                    => $field->name,
 			'type'                    => $field->type,
 			'is_required'             => (bool) $field->is_required,
 			'can_delete'              => (bool) $field->can_delete,
-			'is_default_field'        => in_array( (int) $field->id, $synced_field_ids, true ),
+			'is_default_field'        => $this->bb_is_default_field( $field->id ),
+			'is_settings_locked'      => $this->bb_is_settings_locked_field( $field->id ),
+			'hide_member_types'       => $this->bb_hide_member_types_for_field( $field ),
 			'field_order'             => (int) $field->field_order,
 			'alternate_name'          => $alternate_name ? $alternate_name : '',
 			'description'             => $field->description,
@@ -785,6 +791,169 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Determine whether a field is a platform "default"/synced field.
+	 *
+	 * Based on legacy `BP_XProfile_Field::is_default_field()` (see
+	 * `class-bp-xprofile-field.php` ~line 1832), but intentionally a superset:
+	 * the synced set is always the Nickname field, plus First name when the
+	 * display-name format needs it, plus Last name when the format is
+	 * `first_last_name` (legacy omits Last name there, but it equally backs the
+	 * display name and must stay in the base field set, so it's protected from
+	 * cross-field-set moves here). WP object cache memoises the underlying
+	 * lookups, so calling this per field has no extra DB cost.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @param int $field_id Field ID.
+	 * @return bool True when the field is a platform default field.
+	 */
+	private function bb_is_default_field( $field_id ) {
+		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
+		}
+		if ( 'first_last_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
+		}
+
+		return in_array( (int) $field_id, $synced_field_ids, true );
+	}
+
+	/**
+	 * Determine whether a field's Type, Requirement and Visibility settings are locked.
+	 *
+	 * Mirrors legacy `BP_XProfile_Field::is_default_field()` exactly — the set the
+	 * legacy editor used to hide the Type, Requirement and Visibility metaboxes:
+	 * the Nickname field always, plus First name when the display-name format is
+	 * `first_name` or `first_last_name`. Unlike `bb_is_default_field()` (a superset
+	 * kept for cross-field-set move protection), Last name is deliberately NOT
+	 * included: legacy always offered its Visibility (incl. "Enforce field
+	 * visibility"), Requirement and Type controls, and under `first_last_name`
+	 * members can still change Last name's visibility, so the admin controls must
+	 * stay available. See PROD-10439.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param int $field_id Field ID.
+	 * @return bool True when the field's settings sections are locked in the editor.
+	 */
+	private function bb_is_settings_locked_field( $field_id ) {
+		$locked_field_ids = array( (int) bp_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
+			$locked_field_ids[] = (int) bp_xprofile_firstname_field_id();
+		}
+
+		return in_array( (int) $field_id, $locked_field_ids, true );
+	}
+
+	/**
+	 * Determine whether the Profile Types selector is hidden for a field.
+	 *
+	 * Mirrors legacy `BP_XProfile_Field::member_type_metabox()`: hidden for the
+	 * primary field (ID 1), fields that cannot be deleted, and the Profile Type
+	 * field itself. Every other field — including Last name — may be restricted
+	 * to specific profile types, matching the legacy editor. See PROD-10439.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param BP_XProfile_Field $field Field object.
+	 * @return bool True when the Profile Types selector should not be offered.
+	 */
+	private function bb_hide_member_types_for_field( $field ) {
+		return 1 === (int) $field->id
+			|| empty( $field->can_delete )
+			|| (int) bp_get_xprofile_member_type_field_id() === (int) $field->id;
+	}
+
+	/**
+	 * Determine whether a field may be moved from one field set to another.
+	 *
+	 * Cross-field-set moves are blocked for fields the platform depends on
+	 * staying put, and for any field entering or leaving a repeater field set
+	 * (repeater sets manage their own cloned child fields and would break if a
+	 * stray field were dropped in or pulled out).
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @param int $field_id      Field ID being moved.
+	 * @param int $from_group_id Field set the field currently belongs to.
+	 * @param int $to_group_id   Field set the field is being moved into.
+	 * @return bool True when the move is allowed.
+	 */
+	private function bb_can_move_field_to_group( $field_id, $from_group_id, $to_group_id ) {
+		$field = BP_XProfile_Field::get_instance( (int) $field_id );
+		if ( ! $field || empty( $field->id ) ) {
+			return false;
+		}
+
+		// Required/primary fields and platform default (display-name) fields
+		// must remain in their field set.
+		if ( empty( $field->can_delete ) || $this->bb_is_default_field( $field_id ) ) {
+			return false;
+		}
+
+		// Block moves into or out of a repeater field set.
+		if (
+			'on' === bp_xprofile_get_meta( (int) $from_group_id, 'group', 'is_repeater_enabled' ) ||
+			'on' === bp_xprofile_get_meta( (int) $to_group_id, 'group', 'is_repeater_enabled' )
+		) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the next field order (max + 1) to assign within a field set.
+	 *
+	 * Repeater clone fields are excluded when determining the current max,
+	 * matching the legacy auto-assign behavior so a clone's order never shifts
+	 * the position of a newly added or moved-in field.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @param int $group_id Field set (group) ID.
+	 * @return int Next field order to assign.
+	 */
+	private function bb_get_next_field_order( $group_id ) {
+		global $wpdb;
+		$bp       = buddypress();
+		$group_id = (int) $group_id;
+
+		// Cloned fields should not be considered when determining the max order of fields in given group.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name properties.
+		$cloned_field_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1",
+				$group_id
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		if ( ! empty( $cloned_field_ids ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $cloned_field_ids ), '%d' ) );
+			$query_args   = array_merge( array( $group_id ), array_map( 'absint', $cloned_field_ids ) );
+			$field_order  = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id NOT IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated dynamically.
+					$query_args
+				)
+			);
+		} else {
+			$field_order = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name property.
+					$group_id
+				)
+			);
+		}
+
+		return $field_order + 1;
 	}
 
 	/**
@@ -835,6 +1004,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$labels = array(
 			'textbox'        => __( 'Single Line Input', 'buddyboss' ),
 			'textarea'       => __( 'Paragraph Input', 'buddyboss' ),
+			'biography'      => __( 'Bio', 'buddyboss' ),
 			'selectbox'      => __( 'Dropdown', 'buddyboss' ),
 			'multiselectbox' => __( 'Multi Select', 'buddyboss' ),
 			'checkbox'       => __( 'Checkboxes', 'buddyboss' ),
@@ -877,6 +1047,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$descriptions = array(
 			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss' ),
 			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss' ),
+			'biography'      => __( 'Displays a multi-line text field for the member\'s bio, shared with the "Biographical Info" field on their WordPress profile.', 'buddyboss' ),
 			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss' ),
 			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss' ),
 			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss' ),

@@ -117,6 +117,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	// AbortController ref for delete requests.
 	var deleteAbortRef = useRef( null );
 
+	// Reason the most recently hovered cross-set drop target is refused, or
+	// null when the current target is droppable. Captured during dragOver (the
+	// only point that knows both the dragged field and the hovered set) and
+	// consumed on drop so a refused release can explain itself instead of
+	// bouncing silently.
+	var dragBlockReasonRef = useRef( null );
+
 	/**
 	 * Load field groups data.
 	 *
@@ -239,6 +246,104 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	}
 
 	/**
+	 * Reset all drag-related state.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	function resetDrag() {
+		setDragItem( null );
+		setDragOverItem( null );
+		setDragType( null );
+		dragBlockReasonRef.current = null;
+	}
+
+	/**
+	 * End-of-drag handler.
+	 *
+	 * `dragend` always fires, even when the browser suppresses the `drop`
+	 * event for a refused target (dropEffect 'none'). Surface any reason
+	 * captured during the hover here so a blocked release is explained, then
+	 * reset. Idempotent with the drop path: whichever runs first clears the
+	 * ref, so the user sees a single toast. During a group reorder the ref is
+	 * never set, so this is a plain reset.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	function handleDragEnd() {
+		if ( dragBlockReasonRef.current ) {
+			setToast( { status: 'error', message: dragBlockReasonRef.current } );
+		}
+		resetDrag();
+	}
+
+	/**
+	 * Persist a reorder payload, cancelling any in-flight reorder request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} payload Reorder payload ({ group_order } or { field_order }).
+	 */
+	function saveReorder( payload ) {
+		if ( reorderAbortRef.current ) {
+			reorderAbortRef.current.abort();
+		}
+		reorderAbortRef.current = new AbortController();
+
+		// Show a sticky "saving" toast while the request is in flight; it's
+		// replaced by the success or error toast once the request settles.
+		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss' ) } );
+
+		reorderProfileFields( payload, { signal: reorderAbortRef.current.signal } )
+			.then( function ( response ) {
+				if ( response.success ) {
+					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
+				}
+			} )
+			.catch( function ( error ) {
+				if ( error && 'AbortError' === error.name ) {
+					return;
+				}
+				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
+				loadFieldGroups();
+			} );
+	}
+
+	/**
+	 * Check whether a field may be moved into a different field set.
+	 *
+	 * Mirrors the server-side guardrails so the UI can block the drop and
+	 * explain why before a request is ever sent. Returns null when the move is
+	 * allowed, otherwise a human-readable reason string.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {number} sourceGroupId Group the field currently belongs to.
+	 * @param {number} fieldIdx      Field index within the source group.
+	 * @param {number} targetGroupId Group the field is being moved into.
+	 * @returns {string|null} Block reason, or null when the move is permitted.
+	 */
+	function getCrossGroupBlockReason( sourceGroupId, fieldIdx, targetGroupId ) {
+		if ( sourceGroupId === targetGroupId ) {
+			return null;
+		}
+
+		var sourceGroup = fieldGroups.find( function ( g ) { return g.id === sourceGroupId; } );
+		var targetGroup = fieldGroups.find( function ( g ) { return g.id === targetGroupId; } );
+		var field = sourceGroup && sourceGroup.fields ? sourceGroup.fields[ fieldIdx ] : null;
+
+		if ( ! sourceGroup || ! targetGroup || ! field ) {
+			return __( 'This field can’t be moved here.', 'buddyboss' );
+		}
+		if ( ! field.can_delete || field.is_default_field ) {
+			return __( 'This field is required by the platform and can’t be moved to another field set.', 'buddyboss' );
+		}
+		if ( sourceGroup.is_repeater || targetGroup.is_repeater ) {
+			return __( 'Fields can’t be moved into or out of a repeater field set.', 'buddyboss' );
+		}
+		return null;
+	}
+
+	/**
 	 * Handle group drag start.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -264,6 +369,31 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		e.preventDefault();
 		if ( 'group' === dragType ) {
 			setDragOverItem( index );
+		} else if ( 'field' === dragType && dragItem ) {
+			// Hovering a field set card (outside any field row) targets the end
+			// of that set, which is also the only way to drop into an empty set.
+			var group = fieldGroups[ index ];
+			if ( ! group ) {
+				return;
+			}
+
+			// Mirror the row-level behavior: block a disallowed cross-set drop
+			// with the not-allowed cursor and clear any stale drop target so a
+			// release on the blocked card can't commit a prior hover position.
+			// The reason is stashed so the drop handler can surface it.
+			var cardBlockReason = getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, group.id );
+			if ( cardBlockReason ) {
+				dragBlockReasonRef.current = cardBlockReason;
+				e.dataTransfer.dropEffect = 'none';
+				if ( null !== dragOverItem ) {
+					setDragOverItem( null );
+				}
+				return;
+			}
+
+			dragBlockReasonRef.current = null;
+			e.dataTransfer.dropEffect = 'move';
+			setDragOverItem( { groupId: group.id, fieldIdx: group.fields ? group.fields.length : 0 } );
 		}
 	}
 
@@ -273,10 +403,15 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	function handleGroupDrop() {
+		// A field dropped onto the card body (not a specific row) is a field
+		// move into this set — delegate to the shared field-move handler.
+		if ( 'field' === dragType ) {
+			commitFieldMove();
+			return;
+		}
+
 		if ( 'group' !== dragType || null === dragItem || null === dragOverItem || dragItem === dragOverItem ) {
-			setDragItem( null );
-			setDragOverItem( null );
-			setDragType( null );
+			resetDrag();
 			return;
 		}
 
@@ -285,34 +420,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		newGroups.splice( dragOverItem, 0, draggedGroup );
 		setFieldGroups( newGroups );
 
-		// Save order — cancel any stale reorder request first.
-		if ( reorderAbortRef.current ) {
-			reorderAbortRef.current.abort();
-		}
-		reorderAbortRef.current = new AbortController();
-
 		var groupOrder = {};
 		newGroups.forEach( function ( group, index ) {
 			groupOrder[ index ] = group.id;
 		} );
 
-		reorderProfileFields( { group_order: groupOrder }, { signal: reorderAbortRef.current.signal } )
-			.then( function ( response ) {
-				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
-				}
-			} )
-			.catch( function ( error ) {
-				if ( error && 'AbortError' === error.name ) {
-					return;
-				}
-				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
-				loadFieldGroups();
-			} );
-
-		setDragItem( null );
-		setDragOverItem( null );
-		setDragType( null );
+		saveReorder( { group_order: groupOrder } );
+		resetDrag();
 	}
 
 	/**
@@ -343,86 +457,118 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	function handleFieldDragOver( e, groupId, fieldIdx ) {
 		e.preventDefault();
 		e.stopPropagation();
-		if ( 'field' === dragType ) {
-			setDragOverItem( { groupId: groupId, fieldIdx: fieldIdx } );
+		if ( 'field' !== dragType || ! dragItem ) {
+			return;
 		}
+
+		// Signal a disallowed cross-set move with the not-allowed cursor and
+		// clear any stale drop target so a release in the blocked region can't
+		// commit a prior (in-source-group) hover position. The reason is
+		// stashed so the drop handler can surface it instead of bouncing
+		// silently.
+		var rowBlockReason = getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, groupId );
+		if ( rowBlockReason ) {
+			dragBlockReasonRef.current = rowBlockReason;
+			e.dataTransfer.dropEffect = 'none';
+			if ( null !== dragOverItem ) {
+				setDragOverItem( null );
+			}
+			return;
+		}
+
+		dragBlockReasonRef.current = null;
+		e.dataTransfer.dropEffect = 'move';
+		setDragOverItem( { groupId: groupId, fieldIdx: fieldIdx } );
 	}
 
 	/**
-	 * Handle field drop.
+	 * Commit a field move (reorder within a set, or move across sets).
+	 *
+	 * Shared by both the field-row drop target and the field-set card drop
+	 * target (the latter handles drops into an empty set or at the end of a
+	 * set). Cross-set moves are validated against the same guardrails the
+	 * server enforces. A refused move never commits (and the field reverts to
+	 * its source position); when a reason was captured during the hover it is
+	 * surfaced as an error toast so the user understands why.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	function handleFieldDrop() {
+	function commitFieldMove() {
+		// A refused cross-set hover clears dragOverItem but stashes the reason.
+		// Read it before resetDrag() wipes the ref so the release can explain
+		// itself rather than bouncing silently.
+		var stashedBlockReason = dragBlockReasonRef.current;
 		if ( 'field' !== dragType || ! dragItem || ! dragOverItem ) {
-			setDragItem( null );
-			setDragOverItem( null );
-			setDragType( null );
-			return;
-		}
-
-		// Only allow reorder within the same group.
-		if ( dragItem.groupId !== dragOverItem.groupId ) {
-			setDragItem( null );
-			setDragOverItem( null );
-			setDragType( null );
-			return;
-		}
-
-		if ( dragItem.fieldIdx === dragOverItem.fieldIdx ) {
-			setDragItem( null );
-			setDragOverItem( null );
-			setDragType( null );
-			return;
-		}
-
-		var targetGroupId = dragItem.groupId;
-		var newGroups = fieldGroups.map( function ( group ) {
-			if ( group.id !== targetGroupId ) {
-				return group;
+			if ( stashedBlockReason ) {
+				setToast( { status: 'error', message: stashedBlockReason } );
 			}
-			var newFields = group.fields.slice();
-			var draggedField = newFields.splice( dragItem.fieldIdx, 1 )[ 0 ];
-			newFields.splice( dragOverItem.fieldIdx, 0, draggedField );
-			return Object.assign( {}, group, { fields: newFields } );
+			resetDrag();
+			return;
+		}
+
+		var sourceGroupId = dragItem.groupId;
+		var targetGroupId = dragOverItem.groupId;
+
+		// No-op: dropped on its own position within the same set.
+		if ( sourceGroupId === targetGroupId && dragItem.fieldIdx === dragOverItem.fieldIdx ) {
+			resetDrag();
+			return;
+		}
+
+		// Enforce cross-set guardrails (mirrors the server). With the dragOver
+		// handlers clearing dragOverItem on blocked hovers, a blocked target
+		// should already have been filtered out before we reach here — this is
+		// a belt-and-braces guard for programmatic drops. Surface the reason so
+		// the refused drop is explained rather than silently dropped.
+		if ( sourceGroupId !== targetGroupId ) {
+			var crossSetBlockReason = getCrossGroupBlockReason( sourceGroupId, dragItem.fieldIdx, targetGroupId );
+			if ( crossSetBlockReason ) {
+				setToast( { status: 'error', message: crossSetBlockReason } );
+				resetDrag();
+				return;
+			}
+		}
+
+		// Work on shallow clones so the move can span two sets at once.
+		var newGroups = fieldGroups.map( function ( group ) {
+			return Object.assign( {}, group, { fields: group.fields ? group.fields.slice() : [] } );
 		} );
+		var sourceGroup = newGroups.find( function ( g ) { return g.id === sourceGroupId; } );
+		var targetGroup = newGroups.find( function ( g ) { return g.id === targetGroupId; } );
+		if ( ! sourceGroup || ! targetGroup ) {
+			resetDrag();
+			return;
+		}
+
+		var movedField = sourceGroup.fields.splice( dragItem.fieldIdx, 1 )[ 0 ];
+		if ( ! movedField ) {
+			resetDrag();
+			return;
+		}
+		// Insert at the hovered row's index. For a same-set reorder, source and
+		// target are the same array, so splicing out then in at the raw index
+		// reproduces the original within-set behavior exactly. For a cross-set
+		// move the source removal doesn't shift the target array, so the raw
+		// index is already correct.
+		targetGroup.fields.splice( dragOverItem.fieldIdx, 0, movedField );
 		setFieldGroups( newGroups );
 
-		// Build field order for the affected group.
+		// Build the field order payload for every affected set (one for an
+		// in-set reorder, two for a cross-set move).
 		var fieldOrder = {};
-		var targetGroup = newGroups.find( function ( g ) {
-			return g.id === targetGroupId;
+		var affectedIds = sourceGroupId === targetGroupId ? [ targetGroupId ] : [ sourceGroupId, targetGroupId ];
+		affectedIds.forEach( function ( gid ) {
+			var group = newGroups.find( function ( g ) { return g.id === gid; } );
+			if ( group ) {
+				fieldOrder[ gid ] = {};
+				group.fields.forEach( function ( field, index ) {
+					fieldOrder[ gid ][ index ] = field.id;
+				} );
+			}
 		} );
-		if ( targetGroup ) {
-			fieldOrder[ targetGroupId ] = {};
-			targetGroup.fields.forEach( function ( field, index ) {
-				fieldOrder[ targetGroupId ][ index ] = field.id;
-			} );
-		}
 
-		// Cancel any stale reorder request first.
-		if ( reorderAbortRef.current ) {
-			reorderAbortRef.current.abort();
-		}
-		reorderAbortRef.current = new AbortController();
-
-		reorderProfileFields( { field_order: fieldOrder }, { signal: reorderAbortRef.current.signal } )
-			.then( function ( response ) {
-				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
-				}
-			} )
-			.catch( function ( error ) {
-				if ( error && 'AbortError' === error.name ) {
-					return;
-				}
-				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
-				loadFieldGroups();
-			} );
-
-		setDragItem( null );
-		setDragOverItem( null );
-		setDragType( null );
+		saveReorder( { field_order: fieldOrder } );
+		resetDrag();
 	}
 
 	/**
@@ -580,20 +726,20 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			{ fieldGroups.map( function ( group, groupIndex ) {
 				var isCollapsed = collapsed[ group.id ];
 				var isDragOver = 'group' === dragType && dragOverItem === groupIndex;
+				// Highlight the whole card while a field from another set is
+				// dragged over it (only when the move is permitted).
+				var isFieldDropTarget = 'field' === dragType && dragItem && dragOverItem &&
+					dragOverItem.groupId === group.id && dragItem.groupId !== group.id;
 
 				return (
 					<div
 						key={ group.id }
-						className={ 'bb-pf-fieldset-card' + ( isDragOver ? ' bb-pf-drag-over' : '' ) + ( isCollapsed ? ' bb-pf-fieldset-card--collapsed' : '' ) }
+						className={ 'bb-pf-fieldset-card' + ( ( isDragOver || isFieldDropTarget ) ? ' bb-pf-drag-over' : '' ) + ( isCollapsed ? ' bb-pf-fieldset-card--collapsed' : '' ) }
 						draggable={ true }
 						onDragStart={ function ( e ) { handleGroupDragStart( e, groupIndex ); } }
 						onDragOver={ function ( e ) { handleGroupDragOver( e, groupIndex ); } }
 						onDrop={ handleGroupDrop }
-						onDragEnd={ function () {
-							setDragItem( null );
-							setDragOverItem( null );
-							setDragType( null );
-						} }
+						onDragEnd={ handleDragEnd }
 					>
 
 						{/* Card header. */}
@@ -651,13 +797,9 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 												onDragOver={ function ( e ) { handleFieldDragOver( e, group.id, fieldIndex ); } }
 												onDrop={ function ( e ) {
 													e.stopPropagation();
-													handleFieldDrop();
+													commitFieldMove();
 												} }
-												onDragEnd={ function () {
-													setDragItem( null );
-													setDragOverItem( null );
-													setDragType( null );
-												} }
+												onDragEnd={ handleDragEnd }
 											>
 												<div className="bb-pf-field-left">
 													<span

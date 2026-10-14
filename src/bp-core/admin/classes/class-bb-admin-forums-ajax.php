@@ -75,8 +75,6 @@ class BB_Admin_Forums_Ajax {
 		add_action( 'wp_ajax_bb_admin_delete_forum', array( $this, 'delete_forum' ) );
 		add_action( 'wp_ajax_bb_admin_forum_bulk_action', array( $this, 'forum_bulk_action' ) );
 
-		add_action( 'wp_ajax_bb_admin_upload_forum_image', array( $this, 'upload_forum_image' ) );
-
 		// Register forum autocomplete so it works even when the Groups component
 		// is disabled. Uses priority 5 to fire before the Groups handler.
 		add_action( 'wp_ajax_bb_admin_forum_autocomplete', array( $this, 'bb_forum_autocomplete' ), 5 );
@@ -557,8 +555,10 @@ class BB_Admin_Forums_Ajax {
 			bbp_open_forum( $forum_id );
 		}
 
-		// Handle featured image.
-		if ( ! empty( $image_id ) ) {
+		// Handle featured image. The wp.media picker lets admins select any
+		// Library item, so guard against non-image (or non-existent) attachment
+		// IDs reaching set_post_thumbnail().
+		if ( ! empty( $image_id ) && wp_attachment_is_image( $image_id ) ) {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
 
@@ -746,10 +746,12 @@ class BB_Admin_Forums_Ajax {
 			}
 		}
 
-		// Handle featured image.
+		// Handle featured image. The wp.media picker lets admins select any
+		// Library item, so guard against non-image (or non-existent) attachment
+		// IDs reaching set_post_thumbnail().
 		if ( $remove_image ) {
 			delete_post_thumbnail( $forum_id );
-		} elseif ( ! empty( $image_id ) ) {
+		} elseif ( ! empty( $image_id ) && wp_attachment_is_image( $image_id ) ) {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
 
@@ -1092,81 +1094,6 @@ class BB_Admin_Forums_Ajax {
 		} else {
 			wp_send_json_error( array( 'message' => __( 'No forums were processed.', 'buddyboss' ) ) );
 		}
-	}
-
-	/**
-	 * Upload a forum featured image.
-	 *
-	 * Creates a WordPress attachment from the uploaded file and returns
-	 * the attachment ID and URL for use with set_post_thumbnail().
-	 *
-	 * @since BuddyBoss 3.0.0
-	 *
-	 * @return void
-	 */
-	public function upload_forum_image() {
-		bb_admin_verify_ajax_request( self::NONCE_ACTION );
-
-		if ( ! current_user_can( 'upload_files' ) ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have permission to upload files.', 'buddyboss' ) ) );
-		}
-
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified in bb_admin_verify_ajax_request() above.
-		if ( empty( $_FILES['file'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss' ) ) );
-		}
-
-		// Validate MIME by both extension AND file content. wp_check_filetype()
-		// alone trusts the file name; wp_check_filetype_and_ext() additionally
-		// inspects the bytes via finfo_file so a renamed payload is rejected
-		// here, not just downstream in media_handle_upload().
-		$mime_allowlist = array(
-			'jpg|jpeg|jpe' => 'image/jpeg',
-			'png'          => 'image/png',
-			'gif'          => 'image/gif',
-			'webp'         => 'image/webp',
-		);
-		$allowed_types = array_values( $mime_allowlist );
-		$file_name     = ! empty( $_FILES['file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['file']['name'] ) ) : '';
-		$tmp_path      = ! empty( $_FILES['file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['tmp_name'] ) ) : '';
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
-		$file_type = wp_check_filetype_and_ext( $tmp_path, $file_name, $mime_allowlist );
-
-		if ( empty( $file_type['type'] ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) ) );
-		}
-
-		// Server-side file size validation using WordPress/PHP configured max.
-		$max_upload_size = wp_max_upload_size();
-		if ( ! empty( $_FILES['file']['size'] ) && $_FILES['file']['size'] > $max_upload_size ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
-			wp_send_json_error(
-				array(
-					'message' => sprintf(
-						/* translators: %s: Maximum upload size (e.g., "64 MB"). */
-						__( 'File size exceeds the maximum upload limit of %s.', 'buddyboss' ),
-						size_format( $max_upload_size )
-					),
-				)
-			);
-		}
-
-		// Load required WordPress upload functions.
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		require_once ABSPATH . 'wp-admin/includes/media.php';
-
-		$attachment_id = media_handle_upload( 'file', 0 );
-
-		if ( is_wp_error( $attachment_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Image upload failed. Please try again.', 'buddyboss' ) ) );
-		}
-
-		wp_send_json_success(
-			array(
-				'attachment_id' => $attachment_id,
-				'url'           => wp_get_attachment_url( $attachment_id ),
-			)
-		);
 	}
 
 	/**

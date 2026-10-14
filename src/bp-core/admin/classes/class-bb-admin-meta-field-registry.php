@@ -260,14 +260,14 @@ class BB_Admin_Meta_Field_Registry {
 				'async_action'      => $args['async_action'],
 				'async_depends_on'  => $args['async_depends_on'],
 				// Visual grouping data — empty string when ungrouped. The
-				// label is sanitized through `wp_kses` here so the React
-				// side can render `<strong>`/`<em>` runs that some legacy
-				// metaboxes ship in their titles, while filtering script
-				// vectors. React then re-sanitizes via `sanitizeHtml()`
-				// before injection (defense in depth).
+				// label is rendered as a React text child (no HTML parsing),
+				// so we sanitize to plain text on the server. Any inline
+				// markup a legacy metabox embeds in its title (`<strong>` etc.)
+				// would display as literal characters in the modal, so strip
+				// it here for a clean heading.
 				'field_group'       => is_string( $args['field_group'] ) ? $args['field_group'] : '',
 				'field_group_label' => is_string( $args['field_group_label'] )
-					? wp_kses( $args['field_group_label'], array( 'strong' => array(), 'em' => array(), 'b' => array(), 'i' => array() ) )
+					? sanitize_text_field( $args['field_group_label'] )
 					: '',
 			);
 
@@ -366,7 +366,13 @@ class BB_Admin_Meta_Field_Registry {
 			// fields whose conditional points at something the registry never
 			// receives.
 			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by the calling AJAX handler before invoking save_fields_data().
-			if ( ! empty( $args['conditional'] ) && is_array( $args['conditional'] ) ) {
+			// A `disable` conditional only greys the field out — it stays visible
+			// and its value must still persist (e.g. WP Fusion stores `allow_tags`
+			// even when its `lock_content` gate is off; the classic metabox
+			// submits them as disabled-but-present inputs). Only a hide-style
+			// conditional (the default) means "not applicable → don't save".
+			$cond_is_disable = ! empty( $args['conditional']['action'] ) && 'disable' === $args['conditional']['action'];
+			if ( ! empty( $args['conditional'] ) && is_array( $args['conditional'] ) && ! $cond_is_disable ) {
 				$cond_field = isset( $args['conditional']['field'] ) ? (string) $args['conditional']['field'] : '';
 				$cond_value = isset( $args['conditional']['value'] ) ? $args['conditional']['value'] : null;
 

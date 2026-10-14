@@ -81,7 +81,11 @@
         }
 
         .bbpro-modal-box__body {
+            background-color: $bb-background-base-color;
             height: calc(100% - 115px);
+            padding: 0;
+            margin: 0;
+            width: 100%;
         }
 
         .bbpro-modal-box__footer {
