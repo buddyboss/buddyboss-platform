@@ -757,17 +757,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$thread_id = (int) $request->get_param( 'id' );
 			$sender_id = (int) $request->get_param( 'sender_id' );
 
-			if ( 0 !== $sender_id && bp_loggedin_user_id() !== $sender_id && ! bp_current_user_can( 'bp_moderate' ) ) {
-				// Only site moderators may send a message as another member; keep the generic refusal.
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
-			} elseif ( $thread_id ) {
-				// Members can only send as themselves; only community moderators may send on behalf of another user.
+			// Members can only send as themselves; only community moderators may send on behalf of another user.
 			if ( 0 !== $sender_id && bp_loggedin_user_id() !== $sender_id && ! bp_current_user_can( 'bp_moderate' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
