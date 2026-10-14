@@ -141,15 +141,7 @@
 				<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 			</li>
 			<?php
-			$can_delete_conversation = false;
-			if ( bp_current_user_can( 'bp_moderate' ) ) {
-				$can_delete_conversation = true;
-			} elseif ( class_exists( 'BP_Core_Members_Switching' ) ) {
-				$old_user = BP_Core_Members_Switching::get_old_user();
-				if ( ! empty( $old_user ) ) {
-					$can_delete_conversation = true;
-				}
-			}
+			$can_delete_conversation = function_exists( 'bb_messages_user_can_delete_conversation' ) ? bb_messages_user_can_delete_conversation() : bp_current_user_can( 'bp_moderate' );
 
 			if ( $can_delete_conversation ) {
 				?>

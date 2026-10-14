@@ -12036,7 +12036,10 @@ if ( ! function_exists( 'bb_video_can_delete_stored_thumbnail' ) ) {
 	 *
 	 * The stored poster / custom image IDs may come from meta saved before thumbnail
 	 * validation existed, so only a trusted thumbnail attachment uploaded by the video
-	 * owner is deleted. The video's own file is never deleted through this path.
+	 * owner is deleted, or a custom thumbnail that someone else who can edit the video
+	 * (a group organizer or a moderator) uploaded through the video thumbnail uploader,
+	 * that is stored on this video and that no other video uses. The video's own file
+	 * is never deleted through this path.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -12057,8 +12060,51 @@ if ( ! function_exists( 'bb_video_can_delete_stored_thumbnail' ) ) {
 			return false;
 		}
 
-		return bb_video_is_trusted_thumbnail( $video, $thumbnail_id ) &&
-			(int) get_post_field( 'post_author', $thumbnail_id ) === (int) $video->user_id;
+		if ( ! bb_video_is_trusted_thumbnail( $video, $thumbnail_id ) ) {
+			return false;
+		}
+
+		// Uploaded by the video owner.
+		if ( (int) get_post_field( 'post_author', $thumbnail_id ) === (int) $video->user_id ) {
+			return true;
+		}
+
+		/*
+		 * Uploaded by someone else: only a flagged custom thumbnail stored on this video that
+		 * no other video uses. A stale pointer to another member's thumbnail that their own
+		 * video still uses is never deleted.
+		 */
+		$video_attachment_id = ! empty( $video->attachment_id ) ? absint( $video->attachment_id ) : 0;
+
+		if ( empty( $video_attachment_id ) || ! get_post_meta( $thumbnail_id, 'bp_video_thumbnail_upload', true ) ) {
+			return false;
+		}
+
+		$thumbnails = get_post_meta( $video_attachment_id, 'video_preview_thumbnails', true );
+		$stored_ids = array( absint( get_post_meta( $video_attachment_id, 'bp_video_preview_thumbnail_id', true ) ) );
+
+		if ( is_array( $thumbnails ) && ! empty( $thumbnails['custom_image'] ) ) {
+			$stored_ids[] = absint( $thumbnails['custom_image'] );
+		}
+
+		if ( ! in_array( $thumbnail_id, $stored_ids, true ) ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$used_elsewhere = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id != %d AND ( ( meta_key = 'bp_video_preview_thumbnail_id' AND meta_value = %s ) OR ( meta_key = 'video_preview_thumbnails' AND ( meta_value LIKE %s OR meta_value LIKE %s ) ) ) LIMIT 1",
+				$video_attachment_id,
+				(string) $thumbnail_id,
+				'%' . $wpdb->esc_like( '"custom_image";i:' . $thumbnail_id . ';' ) . '%',
+				'%' . $wpdb->esc_like( '"custom_image";s:' . strlen( (string) $thumbnail_id ) . ':"' . $thumbnail_id . '";' ) . '%'
+			)
+		);
+
+		return empty( $used_elsewhere );
 	}
 }
 
@@ -12070,7 +12116,8 @@ if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
 	 * and custom thumbnails uploaded through the video thumbnail uploader that are already
 	 * this video's custom thumbnail / poster, or belong to the current user. On delete paths
 	 * (`$allow_auto_generated` false) the current user's upload is accepted only while it is
-	 * not yet saved as a thumbnail of any video.
+	 * not yet saved as a thumbnail of any video, and this video's stored custom thumbnail /
+	 * poster only when bb_video_can_delete_stored_thumbnail() allows deleting it.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -12105,6 +12152,11 @@ if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
 			( ! empty( $thumbnails['custom_image'] ) && absint( $thumbnails['custom_image'] ) === $thumbnail_id ) ||
 			$current_id === $thumbnail_id
 		) {
+			// Stored meta is not trusted on delete paths: it may point at another member's thumbnail.
+			if ( ! $allow_auto_generated ) {
+				return function_exists( 'bb_video_can_delete_stored_thumbnail' ) && bb_video_can_delete_stored_thumbnail( $video, $thumbnail_id );
+			}
+
 			return true;
 		}
 

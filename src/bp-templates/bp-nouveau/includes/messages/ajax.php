@@ -1329,25 +1329,10 @@ function bp_nouveau_ajax_delete_thread() {
 	/*
 	 * Deleting an entire conversation removes it for every participant, so it is
 	 * limited to the users who are shown the "Delete conversation" action: site
-	 * moderators and admins switched into a member's account.
-	 * Mirrors common/js-templates/messages/parts/bp-messages-thread.php.
+	 * moderators and admins switched into a member's account. The same helper
+	 * decides whether the templates show the action.
 	 */
-	$can_delete_conversation = bp_current_user_can( 'bp_moderate' );
-	if ( ! $can_delete_conversation && class_exists( 'BP_Core_Members_Switching' ) ) {
-		$old_user = BP_Core_Members_Switching::get_old_user();
-
-		/*
-		 * The old user cookie only proves that a logged_in cookie is valid, and a member
-		 * can copy their own one into it. Require a different user who can moderate and
-		 * who also passes the switching auth cookie check.
-		 */
-		$can_delete_conversation = (
-			$old_user instanceof WP_User &&
-			bp_loggedin_user_id() !== $old_user->ID &&
-			user_can( $old_user, 'bp_moderate' ) &&
-			BP_Core_Members_Switching::authenticate_old_user( $old_user )
-		);
-	}
+	$can_delete_conversation = bb_messages_user_can_delete_conversation();
 
 	if ( ! $can_delete_conversation ) {
 		wp_send_json_error( $response );
@@ -1412,8 +1397,19 @@ function bp_nouveau_ajax_delete_thread() {
 		// Delete messages meta.
 		if ( ! empty( $message_ids ) ) {
 			$meta_message_ids = array_map( 'absint', $message_ids );
-			$id_placeholders  = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
-			$query_meta       = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+
+			/*
+			 * Prime the meta cache for every message first. The media, video, document and
+			 * GIF cleanup hooked to bp_messages_thread_after_delete reads this meta after the
+			 * rows below are gone, so without it only already-cached messages get cleaned up.
+			 * Primed in chunks so a very large thread does not build one huge IN() query.
+			 */
+			foreach ( array_chunk( $meta_message_ids, 500 ) as $meta_message_ids_chunk ) {
+				bp_messages_update_meta_cache( $meta_message_ids_chunk );
+			}
+
+			$id_placeholders = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
+			$query_meta      = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
 		}

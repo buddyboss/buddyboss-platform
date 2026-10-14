@@ -263,4 +263,98 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 		$this->assertTrue( $response['success'] );
 		$this->assertFalse( $this->thread_exists( $thread_id ) );
 	}
+
+	/**
+	 * Meta of every message, not only the cached newest page, is still readable by the
+	 * bp_messages_thread_after_delete listeners (media, video, document and GIF cleanup).
+	 */
+	public function test_after_delete_listeners_read_meta_of_every_message() {
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$u1    = self::factory()->user->create();
+		$u2    = self::factory()->user->create();
+
+		if ( is_multisite() ) {
+			grant_super_admin( $admin );
+		}
+
+		$message_ids = array();
+		$thread_id   = 0;
+
+		// More messages than the 10 that BP_Messages_Thread caches.
+		for ( $i = 0; $i < 12; $i++ ) {
+			$args = array(
+				'sender_id'  => $u1,
+				'recipients' => array( $u2 ),
+				'subject'    => 'Delete thread meta',
+				'content'    => 'Message ' . $i,
+				'date_sent'  => gmdate( 'Y-m-d H:i:s', time() - ( ( 20 - $i ) * MINUTE_IN_SECONDS ) ),
+			);
+
+			if ( $thread_id ) {
+				$args['thread_id'] = $thread_id;
+			}
+
+			$message       = self::factory()->message->create_and_get( $args );
+			$thread_id     = (int) $message->thread_id;
+			$message_ids[] = (int) $message->id;
+		}
+
+		$oldest_id = $message_ids[0];
+		bp_messages_update_meta( $oldest_id, 'bb_test_attachment_ids', '123' );
+
+		// Start from a cold meta cache, as on a site without a persistent object cache.
+		foreach ( $message_ids as $message_id ) {
+			wp_cache_delete( $message_id, 'message_meta' );
+		}
+
+		$seen     = array();
+		$listener = function ( $deleted_thread_id, $deleted_message_ids ) use ( &$seen, $oldest_id ) {
+			$seen['ids']  = array_map( 'intval', (array) $deleted_message_ids );
+			$seen['meta'] = bp_messages_get_meta( $oldest_id, 'bb_test_attachment_ids', true );
+		};
+		add_action( 'bp_messages_thread_after_delete', $listener, 1, 2 );
+
+		self::set_current_user( $admin );
+
+		$response = $this->call_delete_thread( $thread_id );
+
+		remove_action( 'bp_messages_thread_after_delete', $listener, 1 );
+
+		$this->assertTrue( $response['success'] );
+		$this->assertContains( $oldest_id, $seen['ids'] );
+		$this->assertSame( '123', $seen['meta'] );
+
+		// The meta rows themselves are gone.
+		global $wpdb;
+		$bp = buddypress();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$this->assertSame( 0, (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->messages->table_name_meta} WHERE message_id = %d", $oldest_id ) ) );
+	}
+
+	/**
+	 * The template helper agrees with the AJAX handler.
+	 */
+	public function test_user_can_delete_conversation_helper() {
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$u1    = self::factory()->user->create();
+		$u2    = self::factory()->user->create();
+
+		if ( is_multisite() ) {
+			grant_super_admin( $admin );
+		}
+
+		self::set_current_user( $u1 );
+		$this->assertFalse( bb_messages_user_can_delete_conversation() );
+
+		// Switched in by a user who cannot moderate (e.g. a role with edit_users only).
+		$this->set_switching_cookies( $u2 );
+		$this->assertFalse( bb_messages_user_can_delete_conversation() );
+
+		// Switched in by an admin.
+		$this->set_switching_cookies( $admin );
+		$this->assertTrue( bb_messages_user_can_delete_conversation() );
+
+		self::set_current_user( $admin );
+		$this->assertTrue( bb_messages_user_can_delete_conversation() );
+	}
 }
