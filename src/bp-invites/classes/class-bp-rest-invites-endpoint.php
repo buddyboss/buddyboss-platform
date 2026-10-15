@@ -621,8 +621,12 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
-			} elseif ( ! function_exists( 'bb_invites_user_can_revoke' ) || ! bb_invites_user_can_revoke( $invite->ID ) ) {
-				// Only the inviter (or a moderator) may revoke an invite. Fails closed on older Platform.
+			} elseif (
+				function_exists( 'bb_invites_user_can_revoke' )
+					? ! bb_invites_user_can_revoke( $invite->ID )
+					: ( bp_loggedin_user_id() !== (int) $invite->post_author && ! bp_current_user_can( 'bp_moderate' ) )
+			) {
+				// Only the inviter (or a moderator) may revoke an invite. Older Platform has no helper, so check the same rule here.
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss' ),

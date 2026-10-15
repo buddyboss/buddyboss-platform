@@ -778,19 +778,31 @@ function bp_video_attach_video_to_message( &$message ) {
  */
 function bp_video_messages_delete_attached_video( $thread_id, $message_ids ) {
 
-	if ( ! empty( $message_ids ) ) {
-		foreach ( $message_ids as $message_id ) {
+	if ( empty( $message_ids ) ) {
+		return;
+	}
 
-			// get video ids attached to message.
-			$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+	$video_ids = array();
 
-			if ( ! empty( $video_ids ) ) {
-				$video_ids = explode( ',', $video_ids );
-				foreach ( $video_ids as $video_id ) {
-					bp_video_delete( array( 'id' => $video_id ) );
-				}
-			}
+	foreach ( $message_ids as $message_id ) {
+
+		// get video ids attached to message.
+		$message_video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+
+		if ( ! empty( $message_video_ids ) ) {
+			$video_ids = array_merge( $video_ids, wp_parse_id_list( $message_video_ids ) );
 		}
+	}
+
+	$video_ids = array_unique( array_filter( $video_ids ) );
+
+	// Keep the items that a message in another thread still uses, such as a group message sent to members individually.
+	if ( ! empty( $video_ids ) && function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
+		$video_ids = array_diff( $video_ids, bb_messages_get_attachment_ids_used_elsewhere( 'bp_video_ids', $video_ids, $thread_id ) );
+	}
+
+	foreach ( $video_ids as $video_id ) {
+		bp_video_delete( array( 'id' => $video_id ) );
 	}
 }
 
