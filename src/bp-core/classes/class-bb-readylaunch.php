@@ -4287,15 +4287,25 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Modify member's joined date.
 		 *
 		 * @since BuddyBoss 2.9.30
+		 * @since BuddyBoss [BBVERSION] Added the `$user_id` parameter.
 		 *
 		 * @param string $user_registered_date The user registered date.
 		 * @param string $register_date        The register date.
+		 * @param int    $user_id              The user ID.
 		 *
 		 * @return string The modified user registered date.
 		 */
-		public static function bb_rl_modify_member_joined_date( $user_registered_date, $register_date ) {
+		public static function bb_rl_modify_member_joined_date( $user_registered_date, $register_date, $user_id = 0 ) {
 
-			$register_date        = date_i18n( 'd M Y', strtotime( $register_date ) );
+			$user = ! empty( $user_id ) ? get_userdata( $user_id ) : false;
+
+			if ( ! empty( $user ) ) {
+				// Format from the stored date; `$register_date` is localized and cannot be re-parsed.
+				$register_date = date_i18n( 'd M Y', strtotime( $user->user_registered ) );
+			} else {
+				$register_date = date_i18n( 'd M Y', strtotime( $register_date ) );
+			}
+
 			$user_registered_date = sprintf(
 				/* translators: 1: User joined date. */
 				esc_html__( 'Joined %s', 'buddyboss' ),
