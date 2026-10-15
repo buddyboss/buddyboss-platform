@@ -240,18 +240,31 @@ class BP_Core extends BP_Component {
 		 * the component's code loaded for the rest of this request. The
 		 * restored component comes fully alive on the next request.
 		 */
-		$scrub_memory = (array) bp_get_option( 'bb_scrubbed_unavailable_components', array() );
-		if ( ! empty( $scrub_memory ) ) {
+		/*
+		 * Both options live on the root blog (bp_get_option()), but a provider's
+		 * claim depends on the plugins active on the CURRENT site. On multisite,
+		 * only the root blog decides what is persisted; other sites scrub their
+		 * runtime list only, so per-site plugin activation cannot flip the shared
+		 * option back and forth.
+		 */
+		$can_persist = ! is_multisite() || bp_is_root_blog();
+
+		$scrub_memory = bp_get_option( 'bb_scrubbed_unavailable_components', false );
+		if ( false === $scrub_memory ) {
+			// Seed it so later reads come from autoloaded options instead of a query per request.
+			$scrub_memory = array();
+			if ( $can_persist ) {
+				bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+			}
+		}
+
+		$scrub_memory = (array) $scrub_memory;
+		if ( $can_persist && ! empty( $scrub_memory ) ) {
 			$stored_components = (array) bp_get_option( 'bp-active-components', array() );
 			$restored          = false;
 
 			foreach ( $scrub_memory as $scrubbed_component => $stored_value ) {
-				$directory_available = file_exists( $bp->plugin_dir . 'bp-' . $scrubbed_component . '/bp-' . $scrubbed_component . '-loader.php' );
-
-				/** This filter is documented in bp-core/bp-core-functions.php */
-				$directory_available = (bool) apply_filters( 'bb_component_directory_available', $directory_available, $scrubbed_component );
-
-				if ( ! $directory_available ) {
+				if ( ! bb_is_component_directory_available( $scrubbed_component ) ) {
 					continue;
 				}
 
@@ -287,12 +300,7 @@ class BP_Core extends BP_Component {
 				continue;
 			}
 
-			$directory_available = file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
-
-			/** This filter is documented in bp-core/bp-core-functions.php */
-			$directory_available = (bool) apply_filters( 'bb_component_directory_available', $directory_available, $component );
-
-			if ( ! $directory_available ) {
+			if ( ! bb_is_component_directory_available( $component ) ) {
 				$unavailable_components[] = $component;
 				unset( $bp->active_components[ $component ] );
 			}
@@ -314,6 +322,10 @@ class BP_Core extends BP_Component {
 
 		$bp->deactivated_components = array_unique( array_merge( (array) $bp->deactivated_components, $unavailable_components ) );
 
+		if ( ! $can_persist ) {
+			return;
+		}
+
 		// Scrub only the unavailable keys from the stored option, leaving
 		// runtime-filtered values out of the database write.
 		$stored_components   = (array) bp_get_option( 'bp-active-components', array() );
@@ -325,7 +337,6 @@ class BP_Core extends BP_Component {
 			// choice) so a provider plugin (e.g. BuddyBoss Addons supplying
 			// video/document) can restore them on its (re)activation instead
 			// of the components staying permanently disabled.
-			$scrub_memory = (array) bp_get_option( 'bb_scrubbed_unavailable_components', array() );
 			foreach ( $unavailable_components as $unavailable_component ) {
 				if ( isset( $stored_components[ $unavailable_component ] ) ) {
 					$scrub_memory[ $unavailable_component ] = $stored_components[ $unavailable_component ];

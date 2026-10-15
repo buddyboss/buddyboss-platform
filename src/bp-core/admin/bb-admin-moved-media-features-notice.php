@@ -12,7 +12,8 @@
  *   2. The feature's code is NOT loaded — videos/documents: nothing claims the
  *      component through the `bb_component_directory_available` filter;
  *      GIFs: {@see bb_giphy_provider_available()} is false.
- *   3. The site has stored content of that type (videos in `bp_media` with type
+ *   3. On multisite, the current site is the BuddyBoss root blog.
+ *   4. The site has stored content of that type (videos in `bp_media` with type
  *      `video`, rows in `bp_document`, or `_gif_data` meta on activity, messages
  *      or forum posts).
  *
@@ -78,7 +79,17 @@ function bb_moved_media_features_get_stored_counts() {
 	}
 
 	// GIFs live as `_gif_data` meta on activity, messages and forum posts.
-	foreach ( array( $prefix . 'bp_activity_meta', $prefix . 'bp_messages_meta', $wpdb->postmeta ) as $meta_table ) {
+	// A forum topic/reply GIF is also copied to its activity, so forum activity
+	// rows are skipped and forum GIFs are counted once, from the post meta.
+	$activity_meta_table = $prefix . 'bp_activity_meta';
+	$activity_table      = $prefix . 'bp_activity';
+	if ( bb_moved_media_features_table_exists( $activity_meta_table ) && bb_moved_media_features_table_exists( $activity_table ) ) {
+		$counts['gif'] += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(m.id) FROM {$activity_meta_table} m INNER JOIN {$activity_table} a ON a.id = m.activity_id WHERE m.meta_key = %s AND a.type NOT IN ( 'bbp_topic_create', 'bbp_reply_create' )", '_gif_data' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted BP table names; counts are cached in a transient.
+	}
+
+	// Forums live on the BuddyBoss root blog, so read its post meta table.
+	$postmeta_table = $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'postmeta';
+	foreach ( array( $prefix . 'bp_messages_meta', $postmeta_table ) as $meta_table ) {
 		if ( bb_moved_media_features_table_exists( $meta_table ) ) {
 			$counts['gif'] += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$meta_table} WHERE meta_key = %s", '_gif_data' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted table name; counts are cached in a transient.
 		}
@@ -113,9 +124,12 @@ function bb_moved_media_features_table_exists( $table ) {
  *                            stored items, for every unavailable feature that has content.
  */
 function bb_moved_media_features_get_hidden_content() {
-	$unavailable = array(
-		'video'    => ! bb_is_component_directory_available( 'video' ),
-		'document' => ! bb_is_component_directory_available( 'document' ),
+	// Videos and Documents need Media. With Media turned off they are hidden by the
+	// admin's own choice, and installing BuddyBoss Add-ons would not show them.
+	$media_active = bp_is_active( 'media' );
+	$unavailable  = array(
+		'video'    => $media_active && ! bb_is_component_directory_available( 'video' ),
+		'document' => $media_active && ! bb_is_component_directory_available( 'document' ),
 		'gif'      => function_exists( 'bb_giphy_provider_available' ) && ! bb_giphy_provider_available(),
 	);
 
@@ -211,6 +225,12 @@ function bb_moved_media_features_notice_is_snoozed() {
  */
 function bb_moved_media_features_render_notice() {
 	if ( ! bp_current_user_can( 'bp_moderate' ) || bb_moved_media_features_notice_is_snoozed() ) {
+		return;
+	}
+
+	// On multisite the community lives on the BuddyBoss root blog; other sites' dashboards
+	// would show its counts with the wrong plugin state.
+	if ( ! bp_is_root_blog() ) {
 		return;
 	}
 

@@ -679,7 +679,8 @@ module.exports = function (grunt) {
 			'string-replace': {
 				dist: {
 					files: [{
-						src: '**/*.php',
+						// readme.txt carries the version in its Upgrade Notice heading.
+						src: [ '**/*.php', 'src/readme.txt' ],
 						expand: true,
 					}],
 					options: {

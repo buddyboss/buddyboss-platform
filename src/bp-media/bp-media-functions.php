@@ -1018,7 +1018,7 @@ function bb_media_get_album_counts( $album_id = 0, $group_id = 0 ) {
 	$media_args = array(
 		'album_id'    => $album_id,
 		'count_total' => true,
-		'video'       => true,
+		'video'       => bp_is_active( 'video' ),
 		'per_page'    => 1,
 	);
 
@@ -2693,6 +2693,14 @@ function bp_media_download_url_file() {
 
 			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+
+			// Videos share the media table; without the video component they must not
+			// be downloadable through the photo handler.
+			if ( $can_download_btn && ! bp_is_active( 'video' ) ) {
+				global $wpdb;
+				$media_type       = $wpdb->get_var( $wpdb->prepare( 'SELECT type FROM ' . buddypress()->media->table_name . ' WHERE id = %d', absint( $_GET['media_file'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+				$can_download_btn = 'video' !== $media_type;
+			}
 
 			// Add pre_get_posts action hook back.
 			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );

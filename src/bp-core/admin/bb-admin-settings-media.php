@@ -378,13 +378,22 @@ function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, 
  * @return string
  */
 function bb_media_get_addons_upgrade_url( $panel_id ) {
-	return add_query_arg(
+	// Share the notice's URL builder so the `bb_moved_media_features_upgrade_url` filter applies here too.
+	if ( function_exists( 'bb_moved_media_features_get_upgrade_url' ) ) {
+		return bb_moved_media_features_get_upgrade_url( 'settings-' . $panel_id );
+	}
+
+	$content = 'settings-' . sanitize_key( $panel_id );
+	$url     = add_query_arg(
 		array(
 			'utm_source'   => 'product',
 			'utm_medium'   => 'platform-plugin',
 			'utm_campaign' => 'moved-media-features',
-			'utm_content'  => 'settings-' . sanitize_key( $panel_id ),
+			'utm_content'  => $content,
 		),
 		'https://www.buddyboss.com/pricing/'
 	);
+
+	/** This filter is documented in bp-core/admin/bb-admin-moved-media-features-notice.php */
+	return (string) apply_filters( 'bb_moved_media_features_upgrade_url', $url, $content );
 }

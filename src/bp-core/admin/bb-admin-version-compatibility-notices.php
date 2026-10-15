@@ -47,12 +47,14 @@ function bb_platform_3_required_addons() {
 			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss' ),
 			'version' => '3.0.0',
 		),
-		// 1.2.1 is the first Add-ons build whose document module defines
-		// bb_document_user_can_add_to_folder(), which Platform's document
-		// AJAX and REST paths prefer.
+		// Platform no longer ships Video and Documents, so the Add-ons copies are
+		// the only live code. 1.2.3 is the first Add-ons build with the fixes that
+		// shipped in Platform's own copies: the Private Website download guard
+		// (bb_private_network_restrict_download()) and the REST document-folder
+		// permission rules. 1.2.1 added bb_document_user_can_add_to_folder().
 		'buddyboss-addons/buddyboss-addons.php'               => array(
 			'name'    => __( 'BuddyBoss Add-ons', 'buddyboss' ),
-			'version' => '1.2.1',
+			'version' => '1.2.3',
 		),
 		'buddyboss-gamification/buddyboss-gamification.php'   => array(
 			'name'    => __( 'BuddyBoss Gamification', 'buddyboss' ),

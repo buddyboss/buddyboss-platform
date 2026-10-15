@@ -979,7 +979,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$medias = BP_Media::get(
 			array(
 				'in'       => $media_ids,
-				'video'    => true,
+				'video'    => bp_is_active( 'video' ),
 				'per_page' => 0,
 			)
 		);
