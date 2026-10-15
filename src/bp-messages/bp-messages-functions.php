@@ -3461,3 +3461,48 @@ function bb_messages_user_can_delete_conversation() {
 	 */
 	return (bool) apply_filters( 'bb_messages_user_can_delete_conversation', $can_delete );
 }
+
+/**
+ * Get the attachment IDs that messages in other threads still use.
+ *
+ * A group message sent to members individually saves the same media, video and
+ * document IDs on the message in every member's own thread. When one of those
+ * threads is deleted, the items that another thread still shows must be kept.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $meta_key  Message meta key that holds the comma-separated item IDs.
+ *                          Accepts 'bp_media_ids', 'bp_video_ids' or 'bp_document_ids'.
+ * @param array  $item_ids  Item IDs to check.
+ * @param int    $thread_id ID of the thread being deleted. Its messages are ignored.
+ *
+ * @return array Item IDs that a message in another thread still uses.
+ */
+function bb_messages_get_attachment_ids_used_elsewhere( $meta_key, $item_ids, $thread_id ) {
+	global $wpdb;
+
+	$item_ids = wp_parse_id_list( $item_ids );
+
+	if ( empty( $item_ids ) || ! in_array( $meta_key, array( 'bp_media_ids', 'bp_video_ids', 'bp_document_ids' ), true ) ) {
+		return array();
+	}
+
+	$bp       = buddypress();
+	$used_ids = array();
+
+	foreach ( array_chunk( $item_ids, 100 ) as $item_ids_chunk ) {
+		$find_in_set = implode( ' OR ', array_fill( 0, count( $item_ids_chunk ), 'FIND_IN_SET( %d, mm.meta_value )' ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		$query = $wpdb->prepare( "SELECT mm.meta_value FROM {$bp->messages->table_name_meta} mm INNER JOIN {$bp->messages->table_name_messages} m ON m.id = mm.message_id WHERE mm.meta_key = %s AND m.thread_id <> %d AND m.is_deleted = 0 AND ( {$find_in_set} )", array_merge( array( $meta_key, (int) $thread_id ), $item_ids_chunk ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$meta_values = $wpdb->get_col( $query );
+
+		foreach ( $meta_values as $meta_value ) {
+			$used_ids = array_merge( $used_ids, wp_parse_id_list( $meta_value ) );
+		}
+	}
+
+	return array_values( array_intersect( $item_ids, $used_ids ) );
+}

@@ -1145,6 +1145,11 @@ function bp_nouveau_ajax_video_get_activity() {
 	$video_id      = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
 	$reset_comment = bb_filter_input_string( INPUT_POST, 'reset_comment' );
 
+	// The activity is rendered without privacy filters below, so check the viewer first.
+	if ( empty( $post_id ) || ! bb_activity_user_can_view( $post_id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// check activity is video or not.
 	$video_activity = bp_activity_get_meta( $post_id, 'bp_video_activity', true );
 

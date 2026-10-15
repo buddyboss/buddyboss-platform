@@ -12257,7 +12257,10 @@ if ( ! function_exists( 'bb_user_can_adopt_attachment' ) ) {
 	 * @return bool
 	 */
 	function bb_user_can_adopt_attachment( $attachment_id, $user_id = 0 ) {
-		$attachment_id = is_numeric( $attachment_id ) ? absint( $attachment_id ) : 0;
+		// Only a positive whole number can name an attachment. absint() would turn -5 into 5,
+		// and the caller would then store the negative value, which skips the attachment check on read.
+		$attachment_id = filter_var( $attachment_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+		$attachment_id = false === $attachment_id ? 0 : (int) $attachment_id;
 		$user_id       = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
 		$can_adopt     = false;
 

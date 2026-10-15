@@ -932,19 +932,31 @@ function bp_media_attach_media_to_message( &$message ) {
  */
 function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 
-	if ( ! empty( $message_ids ) ) {
-		foreach ( $message_ids as $message_id ) {
+	if ( empty( $message_ids ) ) {
+		return;
+	}
 
-			// get media ids attached to message.
-			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+	$media_ids = array();
 
-			if ( ! empty( $media_ids ) ) {
-				$media_ids = explode( ',', $media_ids );
-				foreach ( $media_ids as $media_id ) {
-					bp_media_delete( array( 'id' => $media_id ) );
-				}
-			}
+	foreach ( $message_ids as $message_id ) {
+
+		// get media ids attached to message.
+		$message_media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+
+		if ( ! empty( $message_media_ids ) ) {
+			$media_ids = array_merge( $media_ids, wp_parse_id_list( $message_media_ids ) );
 		}
+	}
+
+	$media_ids = array_unique( array_filter( $media_ids ) );
+
+	// Keep the items that a message in another thread still uses, such as a group message sent to members individually.
+	if ( ! empty( $media_ids ) && function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
+		$media_ids = array_diff( $media_ids, bb_messages_get_attachment_ids_used_elsewhere( 'bp_media_ids', $media_ids, $thread_id ) );
+	}
+
+	foreach ( $media_ids as $media_id ) {
+		bp_media_delete( array( 'id' => $media_id ) );
 	}
 }
 

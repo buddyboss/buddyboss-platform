@@ -210,7 +210,7 @@
 							<li class="delete_messages">
 								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
 							</li>
-							<?php if ( function_exists( 'bb_messages_user_can_delete_conversation' ) ? bb_messages_user_can_delete_conversation() : true ) { ?>
+							<?php if ( function_exists( 'bb_messages_user_can_delete_conversation' ) ? bb_messages_user_can_delete_conversation() : bp_current_user_can( 'bp_moderate' ) ) { ?>
 								<li class="delete_thread">
 									<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
 								</li>

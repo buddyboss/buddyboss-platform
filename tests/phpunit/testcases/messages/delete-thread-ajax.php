@@ -332,6 +332,91 @@ class BP_Tests_Messages_Delete_Thread_Ajax extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A group message sent to members individually saves the same media, video and document
+	 * IDs on the message in every member's thread. Deleting one of those threads keeps the
+	 * items another thread still uses and deletes the rest. The last thread deletes them.
+	 */
+	public function test_delete_thread_keeps_attachments_used_by_other_threads() {
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$u1    = self::factory()->user->create();
+		$u2    = self::factory()->user->create();
+		$u3    = self::factory()->user->create();
+
+		if ( is_multisite() ) {
+			grant_super_admin( $admin );
+		}
+
+		$message_one = self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $u1,
+				'recipients' => array( $u2 ),
+				'subject'    => 'Group message sent individually',
+			)
+		);
+		$message_two = self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $u1,
+				'recipients' => array( $u3 ),
+				'subject'    => 'Group message sent individually',
+			)
+		);
+		$thread_one  = (int) $message_one->thread_id;
+		$thread_two  = (int) $message_two->thread_id;
+
+		$this->assertNotEmpty( $message_one->id );
+		$this->assertNotSame( $thread_one, $thread_two );
+
+		$items     = array();
+		$item_args = function () use ( $u1 ) {
+			return array(
+				'attachment_id' => self::factory()->post->create( array( 'post_type' => 'attachment' ) ),
+				'user_id'       => $u1,
+				'privacy'       => 'message',
+			);
+		};
+
+		foreach ( array( 'shared', 'own' ) as $key ) {
+			$items['media'][ $key ]    = bp_media_add( $item_args() );
+			$items['video'][ $key ]    = bp_video_add( $item_args() );
+			$items['document'][ $key ] = bp_document_add( $item_args() );
+		}
+
+		$meta_keys = array(
+			'media'    => 'bp_media_ids',
+			'video'    => 'bp_video_ids',
+			'document' => 'bp_document_ids',
+		);
+		foreach ( $meta_keys as $type => $meta_key ) {
+			bp_messages_update_meta( $message_one->id, $meta_key, $items[ $type ]['shared'] . ',' . $items[ $type ]['own'] );
+			bp_messages_update_meta( $message_two->id, $meta_key, (string) $items[ $type ]['shared'] );
+		}
+
+		$exists = function ( $type, $id ) {
+			$item = 'media' === $type ? new BP_Media( $id ) : ( 'video' === $type ? new BP_Video( $id ) : new BP_Document( $id ) );
+
+			return ! empty( $item->id );
+		};
+
+		self::set_current_user( $admin );
+
+		$response = $this->call_delete_thread( $thread_one );
+		$this->assertTrue( $response['success'] );
+
+		foreach ( $meta_keys as $type => $meta_key ) {
+			$this->assertTrue( $exists( $type, $items[ $type ]['shared'] ), "Shared {$type} must stay while another thread uses it." );
+			$this->assertFalse( $exists( $type, $items[ $type ]['own'] ), "The deleted thread's own {$type} must be deleted." );
+		}
+
+		unset( $_POST['nonce'], $_POST['id'] );
+		$response = $this->call_delete_thread( $thread_two );
+		$this->assertTrue( $response['success'] );
+
+		foreach ( $meta_keys as $type => $meta_key ) {
+			$this->assertFalse( $exists( $type, $items[ $type ]['shared'] ), "The last thread using the {$type} deletes it." );
+		}
+	}
+
+	/**
 	 * The template helper agrees with the AJAX handler.
 	 */
 	public function test_user_can_delete_conversation_helper() {
