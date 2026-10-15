@@ -1742,6 +1742,9 @@ window.bp = window.bp || {};
 									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.removeDeletedItemsFromCommentEditData ) {
 										bp.Nouveau.Media.removeDeletedItemsFromCommentEditData( activityId, 'video', video );
 									}
+									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.refreshKeptCommentAttachments ) {
+										bp.Nouveau.Media.refreshKeptCommentAttachments( activityId, '.bb-activity-video-wrap', '', response.data.video_content );
+									}
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}

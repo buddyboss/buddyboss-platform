@@ -976,6 +976,42 @@ window.bp = window.bp || {};
 			);
 		},
 
+		/**
+		 * Re-render the photo or video grid of an activity comment the server
+		 * kept, so its layout classes (`bb-media-length-N`, "+N more") match
+		 * the items that are left. Only the comment's own grid is replaced;
+		 * grids of its replies are not touched.
+		 *
+		 * Photo and document grids share `.bb-activity-media-wrap`, so a
+		 * marker child (the move dialog only the photo grid renders) tells
+		 * them apart.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId    The kept activity comment ID.
+		 * @param {string}        wrapSelector Selector of the grid wrapper.
+		 * @param {string}        marker       Selector of a child only this grid has, or ''.
+		 * @param {string}        content      Fresh grid markup from the server, '' when none is left.
+		 */
+		refreshKeptCommentAttachments: function ( commentId, wrapSelector, marker, content ) {
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $wraps = $( this ).find( '.bb-rl-acomment-content' ).first().children( wrapSelector ).filter(
+						function () {
+							return ! marker || $( this ).children( marker ).length > 0;
+						}
+					);
+
+					if ( content ) {
+						$wraps.first().replaceWith( content );
+						$wraps.slice( 1 ).remove();
+					} else {
+						$wraps.remove();
+					}
+				}
+			);
+		},
+
 		bp_ajax_media_request: function ( event, data ) {
 			if ( bbRlMedia.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && 0 === parseInt( data.response.scopes.groups ) ) {
 				$( '.bb-photos-actions' ).hide();
@@ -1148,6 +1184,7 @@ window.bp = window.bp || {};
 									}
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
+									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bb-rl-media-move-photo', response.data.media_content );
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
