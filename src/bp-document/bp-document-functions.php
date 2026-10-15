@@ -620,6 +620,10 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 		// save document.
 		foreach ( $documents as $document ) {
 
+			// Reset per item, so an entry that is skipped (deleted, or not the
+			// user's) does not add the previous item's ID again.
+			$document_id = 0;
+
 			// Update document if existing.
 			if ( ! empty( $document['document_id'] ) ) {
 

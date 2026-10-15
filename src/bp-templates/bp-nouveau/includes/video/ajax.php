@@ -644,6 +644,16 @@ function bp_nouveau_ajax_video_delete() {
 	$response = array();
 	if ( $activity_id ) {
 		$response = bp_video_get_activity_video( $activity_id );
+
+		// A comment kept after the delete shows its grid with the comment
+		// thumbnail limit, so return the markup the comment template renders.
+		$video_activity = new BP_Activity_Activity( (int) $activity_id );
+		if ( ! empty( $video_activity->id ) && 'activity_comment' === $video_activity->type ) {
+			ob_start();
+			bp_video_activity_comment_entry( $video_activity->id );
+			$response            = (array) $response;
+			$response['content'] = ob_get_clean();
+		}
 	}
 
 	$delete_box       = false;
