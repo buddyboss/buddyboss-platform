@@ -1194,6 +1194,7 @@ function bp_nouveau_ajax_messages_thread_read() {
  * AJAX get messages for each thread.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Only thread participants and moderators may read the thread.
  */
 function bp_nouveau_ajax_get_thread_messages() {
 	global $thread_template, $media_template, $document_template, $wpdb, $bp;
@@ -1240,6 +1241,11 @@ function bp_nouveau_ajax_get_thread_messages() {
 			);
 		}
 
+		wp_send_json_error( $response );
+	}
+
+	// Only thread participants and moderators may read a thread's messages.
+	if ( ! messages_check_thread_access( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1301,6 +1307,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
  * AJAX delete entire thread.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Limited to moderators and switched admins; deletes the meta of every message.
  */
 function bp_nouveau_ajax_delete_thread() {
 
@@ -1316,6 +1323,18 @@ function bp_nouveau_ajax_delete_thread() {
 	}
 
 	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	/*
+	 * Deleting an entire conversation removes it for every participant, so it is
+	 * limited to the users who are shown the "Delete conversation" action: site
+	 * moderators and admins switched into a member's account. The same helper
+	 * decides whether the templates show the action.
+	 */
+	$can_delete_conversation = bb_messages_user_can_delete_conversation();
+
+	if ( ! $can_delete_conversation ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1376,9 +1395,24 @@ function bp_nouveau_ajax_delete_thread() {
 		$wpdb->query( $query ); // db call ok; no-cache ok.
 
 		// Delete messages meta.
-		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		if ( ! empty( $message_ids ) ) {
+			$meta_message_ids = array_map( 'absint', $message_ids );
+
+			/*
+			 * Prime the meta cache for every message first. The media, video, document and
+			 * GIF cleanup hooked to bp_messages_thread_after_delete reads this meta after the
+			 * rows below are gone, so without it only already-cached messages get cleaned up.
+			 * Primed in chunks so a very large thread does not build one huge IN() query.
+			 */
+			foreach ( array_chunk( $meta_message_ids, 500 ) as $meta_message_ids_chunk ) {
+				bp_messages_update_meta_cache( $meta_message_ids_chunk );
+			}
+
+			$id_placeholders = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
+			$query_meta      = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		}
 
 		// Delete thread.
 		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -1762,6 +1796,7 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
  * Messages for each thread.
  *
  * @since BuddyBoss 1.3.0
+ * @since BuddyBoss [BBVERSION] Video thumbnails use the video's poster image.
  *
  * @param int   $thread_id thread id.
  * @param array $post      $_POST data.
@@ -2639,7 +2674,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 							<?php
 						}
-						$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+						// Use the video's poster image, not the video file attachment itself.
+						$poster_id     = bb_get_video_thumb_id( bp_get_video_attachment_id() );
+						$thumbnail_url = $poster_id ? bb_video_get_thumb_url( bp_get_video_id(), $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' ) : '';
 
 						if ( empty( $thumbnail_url ) ) {
 							$thumbnail_url = bb_get_video_default_placeholder_image();

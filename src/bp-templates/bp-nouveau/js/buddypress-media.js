@@ -39,6 +39,10 @@ window.bp = window.bp || {};
 		 */
 		setupGlobals: function () {
 
+			// Document and video settings are only localized when those components are active.
+			var documentSettings = BP_Nouveau.document || {};
+			var videoSettings    = BP_Nouveau.video || {};
+
 			var bodySelector = $( 'body' );
 
 			// Init current page.
@@ -72,9 +76,9 @@ window.bp = window.bp || {};
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-				maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
+				maxFiles: typeof documentSettings.maxFiles !== 'undefined' ? documentSettings.maxFiles : 10,
+				maxFilesize: typeof documentSettings.max_upload_size !== 'undefined' ? documentSettings.max_upload_size : 2,
+				dictInvalidFileType: documentSettings.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 				previewTemplate: ForumDocumentTemplates,
 				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -84,19 +88,19 @@ window.bp = window.bp || {};
 			this.videoOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
-				dictFileTooBig: BP_Nouveau.video.dictFileTooBig,
-				acceptedFiles: BP_Nouveau.video.video_type,
+				dictFileTooBig: videoSettings.dictFileTooBig,
+				acceptedFiles: videoSettings.video_type,
 				createImageThumbnails: false,
-				dictDefaultMessage: BP_Nouveau.video.dropzone_video_message,
+				dictDefaultMessage: videoSettings.dropzone_video_message,
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
-				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
+				maxFiles: typeof videoSettings.maxFiles !== 'undefined' ? videoSettings.maxFiles : 10,
+				maxFilesize: typeof videoSettings.max_upload_size !== 'undefined' ? videoSettings.max_upload_size : 2,
+				dictInvalidFileType: videoSettings.dictInvalidFileType,
+				dictMaxFilesExceeded: videoSettings.video_dict_file_exceeded,
 				previewTemplate: ForumVideoTemplate,
-				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+				dictCancelUploadConfirmation: videoSettings.dictCancelUploadConfirmation,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
@@ -111,8 +115,8 @@ window.bp = window.bp || {};
 					autoProcessQueue: true,
 					addRemoveLinks: true,
 					uploadMultiple: false,
-					maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+					maxFiles: typeof documentSettings.maxFiles !== 'undefined' ? documentSettings.maxFiles : 10,
+					maxFilesize: typeof documentSettings.max_upload_size !== 'undefined' ? documentSettings.max_upload_size : 2,
 					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 					previewTemplate: ForumDocumentTemplate,
