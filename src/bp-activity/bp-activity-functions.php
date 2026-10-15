@@ -7409,6 +7409,76 @@ function bb_validate_activity_privacy( $args ) {
 	return true;
 }
 
+if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
+	/**
+	 * Check whether a user may view an activity item, including its group and privacy rules.
+	 *
+	 * AJAX handlers that render an activity by a client-supplied ID with `privacy => false`
+	 * and `show_hidden => true` must call this first. Comments are checked against their root post.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int|BP_Activity_Activity $activity Activity ID or object.
+	 * @param int                      $user_id  User ID. Default the logged-in user.
+	 *
+	 * @return bool
+	 */
+	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
+		if ( ! $activity instanceof BP_Activity_Activity ) {
+			$activity = new BP_Activity_Activity( absint( $activity ) );
+		}
+
+		if ( empty( $activity->id ) ) {
+			return false;
+		}
+
+		$user_id  = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_view = true;
+
+		$activities = array( $activity );
+		if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) && (int) $activity->item_id !== (int) $activity->id ) {
+			$root = new BP_Activity_Activity( (int) $activity->item_id );
+			if ( empty( $root->id ) ) {
+				$can_view = false;
+			} else {
+				$activities[] = $root;
+			}
+		}
+
+		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
+			foreach ( $activities as $item ) {
+				if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
+					$can_view = false;
+					break;
+				}
+
+				$privacy = bb_validate_activity_privacy(
+					array(
+						'activity_id'     => $item->id,
+						'user_id'         => $user_id,
+						'validate_action' => 'view_activity',
+					)
+				);
+				if ( is_wp_error( $privacy ) ) {
+					$can_view = false;
+					break;
+				}
+			}
+		}
+
+		/**
+		 * Filters whether a user may view an activity item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool                 $can_view Whether the user may view the activity.
+		 * @param BP_Activity_Activity $activity Activity object.
+		 * @param int                  $user_id  User ID.
+		 */
+		return (bool) apply_filters( 'bb_activity_user_can_view', $can_view, $activity, $user_id );
+	}
+}
+
 /**
  * Check whether activity schedule posts are enabled.
  *

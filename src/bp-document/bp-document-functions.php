@@ -2667,15 +2667,21 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	global $wpdb, $bp;
 
-	if ( 0 === $document_id && '' === $title ) {
+	$document_id            = (int) $document_id;
+	$attachment_document_id = (int) $attachment_document_id;
+
+	if ( $document_id <= 0 || $attachment_document_id <= 0 || '' === $title ) {
 		return false;
 	}
 
-	if ( (int) $document_id > 0 ) {
-		$has_access = bp_document_user_can_edit( $document_id );
-		if ( ! $has_access ) {
-			return false;
-		}
+	if ( ! bp_document_user_can_edit( $document_id ) ) {
+		return false;
+	}
+
+	// Only the document's own file can be renamed, and the document can't be re-pointed to another attachment.
+	$current_document = new BP_Document( $document_id );
+	if ( empty( $current_document->id ) || (int) $current_document->attachment_id !== $attachment_document_id ) {
+		return false;
 	}
 
 	$file_name    = $title;

@@ -1054,6 +1054,11 @@ function bp_nouveau_ajax_media_get_activity() {
 	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
+	// The activity is rendered without privacy filters below, so check the viewer first.
+	if ( empty( $post_id ) || ! bb_activity_user_can_view( $post_id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// check activity is media or not.
 	$media_activity = bp_activity_get_meta( $post_id, 'bp_media_activity', true );
 
@@ -1473,7 +1478,17 @@ function bp_nouveau_ajax_media_get_media_description() {
 	}
 
 	$media = new BP_Media( $media_id );
+
+	// The activity is rendered without privacy filters below, so the viewer must be able to see this photo.
+	$media_access = bb_media_user_can_access( $media_id, 'photo', $attachment_id );
+	if ( empty( $media->id ) || empty( $media_access['can_view'] ) ) {
+		wp_send_json_error( $response );
+	}
+
 	if ( bp_is_active( 'activity' ) && ! empty( $media->activity_id ) ) {
+		if ( ! bb_activity_user_can_view( $media->activity_id ) ) {
+			wp_send_json_error( $response );
+		}
 
 		remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );

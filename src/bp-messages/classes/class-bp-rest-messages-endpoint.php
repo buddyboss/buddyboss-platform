@@ -1468,8 +1468,29 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( $query_recipients ); // db call ok; no-cache ok.
 
+		/*
+		 * A Platform without bb_messages_get_attachment_ids_used_elsewhere() deletes every media,
+		 * video and document in the thread, including items that a group message sent to members
+		 * individually still shows in their own threads. Skip that cleanup there.
+		 */
+		$attachment_cleanup_callbacks = array();
+		if ( ! function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
+			$attachment_cleanup_callbacks = array( 'bp_media_messages_delete_attached_media', 'bp_video_messages_delete_attached_video', 'bp_document_messages_delete_attached_document' );
+			foreach ( $attachment_cleanup_callbacks as $key => $callback ) {
+				if ( 10 !== has_action( 'bp_messages_thread_after_delete', $callback ) ) {
+					unset( $attachment_cleanup_callbacks[ $key ] );
+					continue;
+				}
+				remove_action( 'bp_messages_thread_after_delete', $callback, 10 );
+			}
+		}
+
 		/** This action is documented in bp-messages/classes/class-bp-messages-thread.php (fires so media, document and GIF cleanup runs like the other delete paths). */
 		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, bp_loggedin_user_id(), true );
+
+		foreach ( $attachment_cleanup_callbacks as $callback ) {
+			add_action( 'bp_messages_thread_after_delete', $callback, 10, 2 );
+		}
 
 		/**
 		 * Fires after message thread deleted.

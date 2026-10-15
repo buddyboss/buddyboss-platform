@@ -4145,7 +4145,13 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 			break;
 	}
 
-	if ( ! empty( $attachment_id ) && $attachment_id > 0 && $attach_id > 0 && (int) $attachment_id !== $attach_id ) {
+	// A stored attachment ID that is not positive can never match, so fail closed.
+	if (
+		! empty( $attachment_id ) &&
+		(int) $attachment_id > 0 &&
+		in_array( $type, array( 'photo', 'video', 'document' ), true ) &&
+		( (int) $attach_id <= 0 || (int) $attachment_id !== (int) $attach_id )
+	) {
 		$can_view     = false;
 		$can_download = false;
 		$can_add      = false;
