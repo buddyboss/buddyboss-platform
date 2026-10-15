@@ -8,6 +8,13 @@
  * Distinct from `ImageUploadField`, which is tightly coupled to BuddyPress
  * avatar/cover AJAX endpoints and returns a bare URL string.
  *
+ * Note: the `useMediaFrame` hook (`../../hooks/useMediaFrame`) implements the
+ * same underlying wp.media frame pattern for callers that own their own
+ * preview/trigger markup (e.g. the forum feature-image picker). This component
+ * bundles its preview/placeholder markup instead. The two intentionally differ
+ * (this one rebuilds the frame on structural config change; the hook freezes
+ * config at first open) — if you change frame behaviour here, check the hook too.
+ *
  * Field config keys consumed (from PHP `bb_register_feature_field()`):
  *   - `library_type`     (string)  Defaults to 'image'. Pass to `library.type`.
  *   - `multiple`         (bool)    Defaults to false.
@@ -167,8 +174,13 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 					} );
 					onChangeRef.current( values );
 				} else {
-					var attachment = selection.first().toJSON();
-					onChangeRef.current( attachmentToObject( attachment ) );
+					// `first()` is undefined on an empty selection. WP disables the
+					// select button when nothing is chosen, so this is defensive
+					// against custom frame states firing `select` while empty.
+					var first = selection.first();
+					if ( first ) {
+						onChangeRef.current( attachmentToObject( first.toJSON() ) );
+					}
 				}
 			} );
 		} else {

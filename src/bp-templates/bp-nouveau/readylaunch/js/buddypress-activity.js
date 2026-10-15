@@ -181,7 +181,16 @@ window.bp = window.bp || {};
 			$bpElem.find( activityParentSelectors ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$bpElem.find( activityParentSelectors ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 
-			$( '#bb-rl-media-model-container .bb-rl-activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			// The activityParentSelectors binding above already covers the theater's
+			// activity list when it renders inside #buddypress - binding it again
+			// here attached the handler twice, so every theater action (e.g. the
+			// three-dots Delete) fired two AJAX requests and the second one errored.
+			// Keep this binding only for layouts where the theater renders outside
+			// #buddypress and the find() above could not reach it.
+			var $theaterActivityList = $( '#bb-rl-media-model-container .bb-rl-activity-list' );
+			if ( $theaterActivityList.length && ! $theaterActivityList.closest( '#buddypress' ).length ) {
+				$theaterActivityList.on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			}
 			$( '.bb-rl-activity-model-wrapper' ).on( 'click', '.bb-rl-ac-form-placeholder', bp.Nouveau, this.activityRootComment.bind( this ) );
 			$document.keydown( this.commentFormAction );
 			$document.click( this.togglePopupDropdown );
@@ -2532,8 +2541,20 @@ window.bp = window.bp || {};
 			if ( ! $.fn.emojioneArea ) {
 				return;
 			}
-			
-			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
+
+			var $acInput = $( parentSelector + '#ac-input-' + activityId );
+
+			// Scope to the last match so emojioneArea's wrapInner doesn't nest widgets on duplicate inputs.
+			if ( $acInput.length > 1 ) {
+				$acInput = $acInput.last();
+			}
+
+			// Skip if already initialized to avoid nested .emojionearea wrappers with dead outer buttons.
+			if ( $acInput.length && $acInput.data( 'emojioneArea' ) ) {
+				return;
+			}
+
+			$acInput.emojioneArea(
 				{
 					standalone: true,
 					hideSource: false,
@@ -2591,6 +2612,13 @@ window.bp = window.bp || {};
 				
 				// Bind to modal container instead of document for better cleanup
 				$modalContainer.on( 'click' + eventNamespace, '#bb-rl-ac-reply-emoji-button-' + activityId, function( e ) {
+					// Skip the manual toggle when the click came from the emoji button itself so that emojioneArea's built-in
+					// behavior is preserved. Clicks that reach this handler from elsewhere (edge cases)
+					// still fall through to the original logic.
+					if ( $( e.target ).closest( '.emojionearea-button' ).length ) {
+						return;
+					}
+
 					var $targetInput = $( parentSelector + '#ac-input-' + activityId );
 					var emojioneAreaInstance = $targetInput.data( 'emojioneArea' );
 					
@@ -3058,6 +3086,38 @@ window.bp = window.bp || {};
 								activityItem.removeClass( 'has-comments' );
 								activityState.removeClass( 'has-comments' );
 								commentsText.empty();
+							}
+						}
+
+						// Deleting the activity from inside the "view more comments"
+						// modal removes only the modal's copy of the entry below -
+						// the feed's copy stays stale and the modal is left open as
+						// an empty shell. Drop the feed copy, close the modal through
+						// its real close button, and anchor the feed on the deleted
+						// post's neighbor so the user lands at the right position.
+						// The close empties the modal list, so the slideUp below runs
+						// on a detached node for this path - intentional no-op.
+						if ( ! ajaxData.is_comment && li_parent.closest( '#bb-rl-activity-modal' ).length ) {
+							var $feedCopy   = $( '#bb-rl-activity-stream li.activity-item[data-bp-activity-id="' + ajaxData.id + '"]' );
+							var $feedAnchor = $feedCopy.prevAll( 'li.activity-item:not(.bb-rl-activity-popup)' ).first();
+							if ( ! $feedAnchor.length ) {
+								$feedAnchor = $feedCopy.nextAll( 'li.activity-item:not(.bb-rl-activity-popup)' ).first();
+							}
+
+							$feedCopy.remove();
+
+							var $modalCloseButton = $( '#bb-rl-activity-modal .bb-rl-modal-activity-header .bb-rl-close-action-popup' );
+							if ( $modalCloseButton.length ) {
+								$modalCloseButton.trigger( 'click' );
+							} else {
+								// A theme override may rename the close control - never
+								// leave the emptied modal open.
+								$( '#bb-rl-activity-modal' ).closest( '.bb-rl-activity-model-wrapper' ).hide();
+							}
+
+							if ( $feedAnchor.length ) {
+								var adminBar = $( '#wpadminbar' ).length !== 0 ? $( '#wpadminbar' ).innerHeight() : 0;
+								$( 'html, body' ).animate( { scrollTop: parseInt( $feedAnchor.offset().top ) - ( 80 + adminBar ) }, 300 );
 							}
 						}
 
@@ -4498,6 +4558,14 @@ window.bp = window.bp || {};
 					// Handle comment form if present
 					if ( 'undefined' !== typeof response.data.comment_form ) {
 						var $activityComments = $( '.bb-rl-internal-model .bb-rl-modal-activity-footer' );
+
+						// Drop any stale ac-form/emoji button left by launchActivityPopup to avoid duplicate IDs on re-init.
+						$activityComments.find( '#ac-form-' + settings.activityId ).remove();
+						$activityComments.find( '.bb-rl-post-elements-buttons-item.bb-rl-post-emoji #bb-rl-ac-reply-emoji-button-' + settings.activityId ).empty();
+
+						// Clear orphaned detached pickers left in the theatre by the removed form.
+						$( '.bb-rl-emojionearea-theatre' ).find( '.emojionearea-picker' ).remove();
+
 						$activityComments.find( '.bb-rl-ac-form-placeholder' ).after( response.data.comment_form );
 						$activityComments.find( '#ac-form-' + settings.activityId ).removeClass( 'not-initialized' ).addClass( 'root events-initiated' ).find( '#ac-input-' + settings.activityId ).focus();
 

@@ -317,16 +317,18 @@ class BP_Video_Album {
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = 'm.user_id = ' . (int) $r['user_id'];
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = 'm.group_id = ' . (int) $r['group_id'];
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
-			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+			$privacy_values              = (array) $r['privacy'];
+			$privacy_placeholders        = implode( ', ', array_fill( 0, count( $privacy_values ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $privacy_placeholders is a list of %s tokens; values are passed as prepare() args.
+			$where_conditions['privacy'] = $wpdb->prepare( "m.privacy IN ({$privacy_placeholders})", $privacy_values );
 		}
 
 		/**
