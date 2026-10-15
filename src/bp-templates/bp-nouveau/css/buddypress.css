@@ -15933,6 +15933,321 @@ body .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
 }
 
 /*__ Settings __*/
+/*__ Security (Two-Factor) __*/
+.security-info {
+  margin-bottom: 20px;
+  color: #767676;
+}
+
+.bb-two-factor-form fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.bb-two-factor-form fieldset[disabled] {
+  opacity: 0.6;
+}
+
+.bb-two-factor-form legend.screen-reader-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+  word-wrap: normal !important;
+}
+
+.bb-two-factor-form fieldset > p {
+  max-width: 640px;
+  margin-bottom: 20px;
+  color: #767676;
+}
+
+.bb-two-factor-form hr {
+  height: 1px;
+  margin: 30px 0;
+  border: 0;
+  background: #eee;
+}
+
+.bb-two-factor-form .two-factor-methods-table,
+.bb-two-factor-form .two-factor-primary-method-table {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+}
+
+.bb-two-factor-form .two-factor-methods-table tbody,
+.bb-two-factor-form .two-factor-methods-table tr,
+.bb-two-factor-form .two-factor-methods-table th,
+.bb-two-factor-form .two-factor-methods-table td,
+.bb-two-factor-form .two-factor-primary-method-table tbody,
+.bb-two-factor-form .two-factor-primary-method-table tr,
+.bb-two-factor-form .two-factor-primary-method-table th,
+.bb-two-factor-form .two-factor-primary-method-table td {
+  display: block;
+  padding: 0;
+  border: 0;
+}
+
+.bb-two-factor-form .two-factor-methods-table tr,
+.bb-two-factor-form .two-factor-primary-method-table tr {
+  margin-bottom: 20px;
+  padding: 1em;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.bb-two-factor-form .two-factor-methods-table tr:last-child,
+.bb-two-factor-form .two-factor-primary-method-table tr:last-child {
+  margin-bottom: 0;
+}
+
+.bb-two-factor-form .two-factor-methods-table th,
+.bb-two-factor-form .two-factor-primary-method-table th {
+  margin-bottom: 10px;
+  color: #767676;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.bb-two-factor-form .two-factor-methods-table th label,
+.bb-two-factor-form .two-factor-primary-method-table th label {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.bb-two-factor-form .two-factor-method-label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0;
+  cursor: pointer;
+}
+
+.bb-two-factor-form .two-factor-method-label input[type="checkbox"] {
+  flex-shrink: 0;
+  margin: 0 10px 0 0;
+}
+
+.bb-two-factor-form .two-factor-method-recommended {
+  margin-left: 5px;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 3px;
+  background: #eaeaea;
+  color: #555;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: help;
+}
+
+.bb-two-factor-form #two-factor-totp-options,
+.bb-two-factor-form #two-factor-backup-codes,
+.bb-two-factor-form .two-factor-backup-codes-wrapper {
+  margin-top: 15px;
+  padding: 1em;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.bb-two-factor-form #two-factor-totp-options p,
+.bb-two-factor-form #two-factor-backup-codes p,
+.bb-two-factor-form .two-factor-backup-codes-wrapper p {
+  margin-bottom: 10px;
+}
+
+.bb-two-factor-form #two-factor-totp-options p:last-child,
+.bb-two-factor-form #two-factor-backup-codes p:last-child,
+.bb-two-factor-form .two-factor-backup-codes-wrapper p:last-child {
+  margin-bottom: 0;
+}
+
+.bb-two-factor-form .two-factor-backup-codes-wrapper {
+  margin-top: 10px;
+}
+
+.bb-two-factor-form .two-factor-methods-table td > p {
+  margin: 10px 0 0;
+  color: #767676;
+}
+
+.bb-two-factor-form .totp-steps {
+  margin: 0;
+  padding-left: 1em;
+}
+
+.bb-two-factor-form .totp-steps > li {
+  margin-bottom: 15px;
+}
+
+.bb-two-factor-form .totp-steps > li:last-child {
+  margin-bottom: 0;
+}
+
+.bb-two-factor-form #two-factor-qr-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 204px;
+  min-width: 0;
+  height: 204px;
+  min-height: 0;
+  margin: 15px 0;
+  padding: 0.7em;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.bb-two-factor-form #two-factor-qr-code svg {
+  display: block;
+  width: 180px;
+  height: 180px;
+}
+
+.bb-two-factor-form code {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  background: #fff;
+  font-size: 14px;
+  letter-spacing: 1px;
+  word-break: break-all;
+}
+
+.bb-two-factor-form label[for="two-factor-totp-authcode"] {
+  display: block;
+}
+
+.bb-two-factor-form #two-factor-totp-authcode {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  margin-top: 5px;
+}
+
+.bb-two-factor-form .totp-submit {
+  margin-top: 10px;
+}
+
+.bb-two-factor-form .two-factor-backup-codes-list-wrap {
+  display: block;
+  margin-top: 0;
+  padding: 1em;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.bb-two-factor-form .two-factor-backup-codes-unused-codes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 20px;
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+}
+
+.bb-two-factor-form .two-factor-backup-codes-unused-codes li {
+  margin: 0;
+}
+
+.bb-two-factor-form .two-factor-backup-codes-token {
+  letter-spacing: 0.2em;
+}
+
+.bb-two-factor-form #two-factor-primary-provider {
+  width: 100%;
+  max-width: 320px;
+}
+
+.bb-two-factor-form .description {
+  margin: 5px 0 0;
+  color: #767676;
+  font-size: 13px;
+}
+
+.bb-two-factor-form #two-factor-backup-codes em {
+  display: inline-block;
+  margin-left: 5px;
+  color: #767676;
+  font-size: 13px;
+}
+
+.bb-two-factor-form .notice,
+.bb-two-factor-form #totp-setup-error {
+  margin: 0 0 20px;
+  padding: 0.7em 1em;
+  border: 0;
+  border-left: 3px solid #0b80a4;
+  border-radius: 6px;
+  background: #fafafa;
+  box-shadow: none;
+}
+
+.bb-two-factor-form .notice p,
+.bb-two-factor-form #totp-setup-error p {
+  margin: 0 0 5px;
+}
+
+.bb-two-factor-form .notice p:last-child,
+.bb-two-factor-form #totp-setup-error p:last-child {
+  margin-bottom: 0;
+}
+
+.bb-two-factor-form .notice.notice-warning,
+.bb-two-factor-form #totp-setup-error.notice-warning {
+  border-left-color: #edbb34;
+}
+
+.bb-two-factor-form .notice.notice-error,
+.bb-two-factor-form #totp-setup-error.notice-error {
+  border-left-color: #d33;
+}
+
+.bb-two-factor-form .notice.notice-success,
+.bb-two-factor-form #totp-setup-error.notice-success {
+  border-left-color: #8a2;
+}
+
+.bb-two-factor-form #totp-setup-error {
+  margin: 10px 0 0;
+  border-left-color: #d33;
+}
+
+.bb-two-factor-form .button-two-factor-backup-codes-copy,
+.bb-two-factor-form .button-two-factor-backup-codes-download {
+  margin-right: 5px;
+}
+
+.bb-two-factor-form .submit {
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 544px) {
+  .bb-two-factor-form .two-factor-methods-table tr,
+  .bb-two-factor-form .two-factor-primary-method-table tr {
+    padding: 0.7em;
+  }
+  .bb-two-factor-form .two-factor-backup-codes-unused-codes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 6.0 - Forms  - General

@@ -239,6 +239,12 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php';
 		}
 
+		// "Register your email and get Memberships & Courses" banner for
+		// free, unlicensed installs on the Settings page.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-register-banner.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-register-banner.php';
+		}
+
 		// Field & section upgrade modal catalog (Settings 2.0 marketing copy
 		// for `pro_only` fields and `pro_notice` sections). Hosted on S3 like
 		// the placeholder features catalog and shares its cache-flush plumbing

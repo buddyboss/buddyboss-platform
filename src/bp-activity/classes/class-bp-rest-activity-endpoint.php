@@ -1214,12 +1214,131 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Whether this request changes nothing but the activity privacy.
+	 *
+	 * The web treats a privacy change as exempt from the edit toggle and the edit window:
+	 * bp_nouveau_activity_privacy() renders the selector via bp_activity_user_can_edit( false, true ),
+	 * and bp_nouveau_ajax_activity_update_privacy() authorizes the write on
+	 * bp_activity_user_can_delete() alone. Without this the REST route would deny what the
+	 * website still allows.
+	 *
+	 * Decided by what would change, not by which keys were sent. Every client-controlled source
+	 * is inspected (JSON body, form body and query string, the same sources update_item() reads
+	 * through get_param()), so a field cannot be smuggled in through a source the check ignores.
+	 *
+	 * Which keys carry data is taken from the route's registered arguments, so WordPress's own
+	 * request parameters (_embed, _fields, _locale, _method, _jsonp, _envelope) need no list of
+	 * their own: the server reads them straight from $_GET and never registers them.
+	 *
+	 * The registered set is not quite the whole contract, though — get_param() also returns
+	 * unregistered parameters, and update_item() reads one the editable route never registers
+	 * (see bb_rest_update_read_params()), so that is added back. A registered argument that
+	 * merely echoes the stored value (post_title, content) is not an edit; anything else is.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param WP_REST_Request      $request  Full details about the request.
+	 * @param BP_Activity_Activity $activity The activity being updated.
+	 *
+	 * @return bool True when privacy is the only thing being changed.
+	 */
+	protected function bb_rest_is_privacy_only_update( $request, $activity ) {
+		$attributes = $request->get_attributes();
+		$registered = isset( $attributes['args'] ) && is_array( $attributes['args'] ) ? $attributes['args'] : array();
+		$carries    = array_merge( $registered, array_flip( $this->bb_rest_update_read_params() ) );
+
+		// Only arguments the update can act on; everything else is routing noise.
+		$supplied = array_intersect_key(
+			array_merge(
+				(array) $request->get_query_params(),
+				(array) $request->get_body_params(),
+				(array) $request->get_json_params()
+			),
+			$carries
+		);
+
+		if ( ! array_key_exists( 'privacy', $supplied ) ) {
+			return false;
+		}
+
+		$stored_title   = isset( $activity->post_title ) ? $activity->post_title : '';
+		$stored_content = isset( $activity->content ) ? $activity->content : '';
+
+		foreach ( $supplied as $param => $value ) {
+			// The item being addressed and the response context are not data.
+			if ( in_array( $param, array( 'privacy', 'id', 'context' ), true ) ) {
+				continue;
+			}
+
+			// Required arguments echoed back unchanged are not edits.
+			if ( 'post_title' === $param && $this->bb_rest_same_text( $value, $stored_title ) ) {
+				continue;
+			}
+
+			if ( 'content' === $param && $this->bb_rest_same_text( $value, $stored_content ) ) {
+				continue;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Parameters update_item() reads through get_param() that the editable route does not register.
+	 *
+	 * Registration is the endpoint's contract, but get_param() does not enforce it, so a value
+	 * read directly still reaches the update while array_intersect_key() against the registered
+	 * arguments would drop it. bb_activity_post_feature_image_id is the current case: Pro adds it
+	 * through bp_rest_activity_create_item_query_arguments only, with no update counterpart, yet
+	 * update_item() reads it.
+	 *
+	 * Keep this in step with the direct get_param() reads in update_item(); anything listed here
+	 * counts as data when deciding whether an update touches more than the privacy.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @return array Parameter names.
+	 */
+	protected function bb_rest_update_read_params() {
+		return array( 'bb_activity_post_feature_image_id' );
+	}
+
+	/**
+	 * Whether two text values are the same once line endings are normalised.
+	 *
+	 * @since BuddyBoss 3.5.1
+	 *
+	 * @param mixed $supplied Value from the request.
+	 * @param mixed $stored   Value on the activity.
+	 *
+	 * @return bool
+	 */
+	protected function bb_rest_same_text( $supplied, $stored ) {
+		if ( ! is_scalar( $supplied ) || ! is_scalar( $stored ) ) {
+			return false;
+		}
+
+		// Line endings only. prepare_item_for_database() writes the value as supplied, so every
+		// difference this ignores is a difference that still reaches the database — trimming
+		// would let trailing whitespace through, and unslashing (which REST does not apply to
+		// its parameters anyway) would let 'C:\path' match 'C:path' and overwrite the backslash.
+		$normalize = function ( $text ) {
+			return str_replace( "\r\n", "\n", (string) $text );
+		};
+
+		return $normalize( $supplied ) === $normalize( $stored );
+	}
+
+	/**
 	 * Check if a given request has access to update an activity.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.5.1 A privacy-only update is exempt from the edit toggle and window.
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -1260,10 +1379,18 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					)
 				);
 			} elseif (
-				function_exists( 'bp_is_activity_edit_enabled' )
-				&& ! bp_is_activity_edit_enabled()
-				&& function_exists( 'bp_activity_user_can_edit' )
-				&& ! bp_activity_user_can_edit( $activity )
+				// A privacy-only change falls through to the bp_activity_user_can_delete() branch
+				// below, which is the same authority the website's privacy handler uses.
+				! $this->bb_rest_is_privacy_only_update( $request, $activity )
+				&& (
+					(
+						function_exists( 'bp_is_activity_edit_enabled' )
+						&& ! bp_is_activity_edit_enabled()
+					) || (
+						function_exists( 'bp_activity_user_can_edit' )
+						&& ! bp_activity_user_can_edit( $activity )
+					)
+				)
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
@@ -1708,6 +1835,24 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$pin_type = ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) ? 'group' : 'activity';
+
+		// The pin/unpin mutation is provided by the Pinned Posts add-on module.
+		// `function_exists()` alone is not enough: Platform installs a no-op
+		// deprecation shim of the same name at `bp_init:1` (so un-updated external
+		// callers degrade instead of fatalling), and REST runs later. The shim
+		// advertises itself via `bb_activity_pin_unpin_post_is_stub()`.
+		if (
+			! function_exists( 'bb_activity_pin_unpin_post' )
+			|| function_exists( 'bb_activity_pin_unpin_post_is_stub' )
+		) {
+			return new WP_Error(
+				'bp_rest_activity_pinned_posts_unavailable',
+				__( 'Pinned posts are not available on this site.', 'buddyboss' ),
+				array(
+					'status' => 501,
+				)
+			);
+		}
 
 		$result = bb_activity_pin_unpin_post( $args );
 
@@ -2345,12 +2490,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['comment_depth'] = $activity->depth;
 		}
 
+		// Commenter's mention name and profile URL to build the auto-mention when replying.
+		$data['mention_name'] = function_exists( 'bp_activity_get_user_mentionname' ) && ! empty( $activity->user_id ) ? bp_activity_get_user_mentionname( $activity->user_id ) : '';
+		$data['user_link']    = function_exists( 'bp_core_get_user_domain' ) && ! empty( $activity->user_id ) ? bp_core_get_user_domain( $activity->user_id ) : '';
+
 		// Get comments (count).
 		if ( ! empty( $activity->children ) ) {
 			$data['comment_count'] = isset( $activity->all_child_count ) ? $activity->all_child_count : bp_activity_recurse_comment_count( $activity );
 			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] && empty( $request->get_param( 'apply_limit' ) ) ) {
 				// First check the comment is disabled from the activity settings for post type.
-				// For more information please check this PROD-2475.
+				// For more information, please check this PROD-2475.
 				if ( 'blogs' === $activity->component && $data['can_comment'] ) {
 					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 					// This is for activity comment to attach the comment in the feed.
@@ -2866,39 +3015,52 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_activity',
 			'type'       => 'object',
 			'properties' => array(
-				'id'                             => array(
+				'id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
-				'primary_item_id'                => array(
+				'primary_item_id'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID of some other object primarily associated with this one.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'secondary_item_id'              => array(
+				'secondary_item_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID of some other object also associated with this one.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'user_id'                        => array(
+				'user_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The ID for the author of the activity.', 'buddyboss' ),
 					'type'        => 'integer',
 				),
-				'name'                           => array(
+				'name'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'User\'s display name for the activity.', 'buddyboss' ),
 					'type'        => 'string',
 				),
-				'link'                           => array(
+				'mention_name'      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'User\'s mention name for the activity comment.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+				'user_link'         => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Profile URL of the activity comment author.', 'buddyboss' ),
+					'format'      => 'uri',
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+				'link'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The permalink to this activity on the site.', 'buddyboss' ),
 					'format'      => 'uri',
 					'type'        => 'string',
 				),
-				'component'                      => array(
+				'component'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The active BuddyPress component the activity relates to.', 'buddyboss' ),
 					'type'        => 'string',
@@ -2907,7 +3069,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						'sanitize_callback' => 'sanitize_key',
 					),
 				),
-				'type'                           => array(
+				'type'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The activity type of the activity.', 'buddyboss' ),
 					'type'        => 'string',
@@ -2916,7 +3078,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						'sanitize_callback' => 'sanitize_key',
 					),
 				),
-				'title'                          => array(
+				'title'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'The description of the activity\'s type (eg: Username posted an update)', 'buddyboss' ),
 					'type'        => 'string',
@@ -2934,7 +3096,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'content'                        => array(
+				'content'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Allowed HTML content for the activity.', 'buddyboss' ),
 					'type'        => 'object',
@@ -2958,13 +3120,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'date'                           => array(
+				'date'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( "The date the activity was published, in the site's timezone.", 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
-				'status'                         => array(
+				'status'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the activity has been marked as spam or not.', 'buddyboss' ),
 					'type'        => 'string',
@@ -2974,149 +3136,149 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						'sanitize_callback' => 'sanitize_key',
 					),
 				),
-				'comments'                       => array(
+				'comments'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'A list of objects children of the activity object.', 'buddyboss' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
-				'comment_count'                  => array(
+				'comment_count'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Total number of comments of the activity object.', 'buddyboss' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
-				'hidden'                         => array(
+				'hidden'            => array(
 					'context'     => array( 'edit' ),
 					'description' => __( 'Whether the activity object should be sitewide hidden or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 				),
-				'favorited'                      => array(
+				'favorited'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the activity object has been favorited by the current user.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_favorite'                   => array(
+				'can_favorite'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the favorite access for the activity object.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'favorite_count'                 => array(
+				'favorite_count'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Favorite count for the activity object.', 'buddyboss' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
-				'can_comment'                    => array(
+				'can_comment'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the comment access for the activity object.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'comment_count'                  => array(
+				'comment_count'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Comment count for the activity object.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_edit'                       => array(
+				'can_edit'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the edit access for the activity object.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'is_edited'                      => array(
+				'is_edited'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Determine whether an activity has been edited or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_delete'                     => array(
+				'can_delete'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the delete access for the activity object.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'content_stripped'               => array(
+				'content_stripped'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Content for the activity without HTML tags.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
-				'privacy'                        => array(
+				'privacy'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Privacy of the activity.', 'buddyboss' ),
 					'type'        => 'string',
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'media' ),
 				),
-				'activity_data'                  => array(
+				'activity_data'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Activity data for allow edit or not.', 'buddyboss' ),
 					'type'        => 'object',
 				),
-				'feature_media'                  => array(
+				'feature_media'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Feature media image which added last in the content for blog post as well as custom post type.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 				),
-				'preview_data'                   => array(
+				'preview_data'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'WordPress Embed data with activity.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
-				'link_embed_url'                 => array(
+				'link_embed_url'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'WordPress Embed URL with activity.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
-				'is_pinned'                      => array(
+				'is_pinned'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Is perticular activity is pinned.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_pin'                        => array(
+				'can_pin'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Is user allowed to pin and unpin the respective activity.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'reacted_names'                  => array(
+				'reacted_names'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => esc_html__( 'Reacted user names and count for the activity reactions.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
-				'reacted_counts'                 => array(
+				'reacted_counts'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => esc_html__( 'Reaction count for the activity.', 'buddyboss' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
-				'reacted_id'                     => array(
+				'reacted_id'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => esc_html__( 'Reaction ID from user reacted on the activity.', 'buddyboss' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
-				'is_comment_closed'              => array(
+				'is_comment_closed' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Is perticular activity comments are closed.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'can_close_comment'              => array(
+				'can_close_comment' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Is user allowed to turn on and turn off the respective activity comments.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
-				'activity_status'                => array(
+				'activity_status'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Status of the activity.', 'buddyboss' ),
 					'type'        => 'string',

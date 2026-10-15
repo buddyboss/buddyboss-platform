@@ -297,6 +297,31 @@ export function buildCategoryTree( taxonomyTerms, parentSlug, articles, opts = {
 		// PHP proxy's pruning behavior).
 		.filter( ( node ) => node.count > 0 );
 
+	// Flat category — articles hang off the parent term itself with no child
+	// categories to host them (e.g. a newly published product category). The
+	// parent is normally only the breadcrumb, so those articles would have no
+	// sidebar node to render in and the category would look empty. Surface them
+	// under the parent as a single node. Only applies when nothing else
+	// rendered, so nested categories keep their existing shape.
+	if ( subcategories.length === 0 ) {
+		// Same shape buildNode() emits, so KBSidebar renders it identically.
+		const ownArticles = ( articlesByTerm.get( parentTerm.id ) || [] ).map( ( a ) => ( {
+			id:    a.id,
+			slug:  a.slug,
+			title: decodeEntities( a.title?.rendered || '' ),
+		} ) );
+		if ( ownArticles.length > 0 ) {
+			subcategories.push( {
+				id:       parentTerm.id,
+				slug:     parentTerm.slug,
+				name:     decodeEntities( parentTerm.name || '' ),
+				count:    ownArticles.length,
+				children: [],
+				articles: ownArticles,
+			} );
+		}
+	}
+
 	// `truncated_remaining` reflects how many articles the API said exist but
 	// we couldn't render. After dedup, `seen.size` is the unique-rendered
 	// count — server total minus that is the closest accurate approximation.
