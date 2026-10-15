@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,20 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 Important: Videos, Documents and Animated GIFs (GIPHY) have moved to the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans. Your existing videos, documents and GIFs are kept, but they will be hidden from members until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
 
 == Changelog ==
+
+= 3.6.1 =
+* Bug: Activity - Fixed PHP warnings in activity feed caused by invalid cached activity data
+* Bug: Core - Fixed a security issue in how activity post drafts are saved
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover some restricted content
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover file download links
+* Bug: Groups - Fixed a permissions issue with creating folders in group documents
+* Bug: Groups - Fixed an out-of-memory error that could occur when uploading media in very large groups
+* Bug: LearnDash - Fixed an issue cached API responses, causing the app's course screen to show placeholder content instead of the actual course curriculum
+* Bug: Media - Fixed an issue where profile completion did not recognize avatars and cover photos when media offloading was enabled
+* Bug: Messages - Fixed a slowdown that made pages load very slowly on large sites with many members and unread message notifications
+* Bug: Messages - Fixed an issue where some conversations in the app incorrectly showed that new messages could not be sent
+* Bug: ReadyLaunch - Fixed an issue where a stray divider line appeared in the group header for logged-out visitors
+* Bug: ReadyLaunch - Fixed an issue where discussion tags overflowed their container when a discussion had many tags
 
 = 3.6.0 =
 * Enhancement: Social Login - Added frontend Two-Factor Authentication management under Account - Security, allowing members to securely set up and manage 2FA and use it seamlessly with BuddyBoss Social Login
