@@ -520,6 +520,16 @@ function bp_nouveau_ajax_media_delete() {
 	$response = array();
 	if ( $activity_id ) {
 		$response = bp_media_get_activity_media( $_POST['activity_id'] );
+
+		// A comment kept after the delete shows its grid with the comment
+		// thumbnail limit, so return the markup the comment template renders.
+		$media_activity = new BP_Activity_Activity( (int) $activity_id );
+		if ( ! empty( $media_activity->id ) && 'activity_comment' === $media_activity->type ) {
+			ob_start();
+			bp_media_activity_comment_entry( $media_activity->id );
+			$response            = (array) $response;
+			$response['content'] = ob_get_clean();
+		}
 	}
 
 	$delete_box       = false;

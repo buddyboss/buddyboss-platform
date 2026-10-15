@@ -630,6 +630,10 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 		// save  media.
 		foreach ( $medias as $media ) {
 
+			// Reset per item, so an entry that is skipped (deleted, or not the
+			// user's) does not add the previous item's ID again.
+			$media_id = 0;
+
 			// Update media if existing.
 			if ( ! empty( $media['media_id'] ) ) {
 				$bp_media = new BP_Media( $media['media_id'] );
