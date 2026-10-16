@@ -1362,7 +1362,7 @@ window.bp = window.bp || {};
 		};
 
 		/**
-		 * Drop localStorage copies the server reports were evicted from the draft budget.
+		 * Tell the member the server evicted older drafts from the draft budget.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1377,15 +1377,28 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			var self = this;
+
 			// The server evicted older drafts to keep this member under the
-			// draft budget. Their local copies must go too: left in
-			// localStorage they are re-uploaded on the next visit and evict
-			// this draft in turn, so the member only ever sees drafts vanish
-			// at random. Inner forum drafts arrive as "meta_key:inner_key".
+			// draft budget. Their localStorage copies are deliberately KEPT:
+			// they are the only copy left, and eviction is safe only because
+			// the browser still holds one. Reopening that reply box restores
+			// the local copy, and an edit there saves it again.
+			//
+			// They are dropped from the in-memory working set, though. The
+			// unload beacon replays that whole set as `all_data`, which would
+			// re-upload an evicted draft the member did not touch and evict
+			// the draft just saved in its place. The open box's own key is
+			// never dropped - the member is writing in it. Inner forum drafts
+			// arrive as "meta_key:inner_key".
 			_.each(
 				keys,
 				function ( key ) {
-					localStorage.removeItem( String( key ).split( ':' ).pop() );
+					var inner_key = String( key ).split( ':' ).pop();
+
+					if ( inner_key !== self.topic_reply_draft.data_key ) {
+						delete self.all_draft_data[ inner_key ];
+					}
 				}
 			);
 

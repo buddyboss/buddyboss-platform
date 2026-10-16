@@ -1393,7 +1393,7 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * Drop localStorage copies the server reports were evicted from the draft budget.
+		 * Tell the member the server evicted older drafts from the draft budget.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1409,16 +1409,12 @@ window.bp = window.bp || {};
 			}
 
 			// The server evicted older drafts to keep this member under the
-			// draft budget. Their local copies must go too: left in
-			// localStorage they are re-uploaded on the next visit and evict
-			// this draft in turn, so the member only ever sees drafts vanish
-			// at random. Inner forum drafts arrive as "meta_key:inner_key".
-			_.each(
-				keys,
-				function ( key ) {
-					localStorage.removeItem( String( key ).split( ':' ).pop() );
-				}
-			);
+			// draft budget. Their localStorage copies are deliberately KEPT:
+			// they are the only copy left, and eviction is safe only because
+			// the browser still holds one. Keeping them does not re-upload
+			// them - this composer saves only its own key, and only after the
+			// member edits it. Reopening that composer restores the local copy,
+			// and an edit there saves it again (evicting the then-oldest draft).
 
 			this.showDraftFeedback( bbRlActivity.params.draft_evicted_message );
 		},
