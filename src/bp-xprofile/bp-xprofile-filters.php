@@ -798,6 +798,7 @@ function xprofile_filter_field_edit_name( $field_name ) {
  *
  * @since BuddyBoss 1.2.3
  * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter
+ * @since BuddyBoss [BBVERSION] The cached name is refreshed when the member's profile data changes.
  *
  * @global \BP_XProfile_Field_Type $field
  *
@@ -814,7 +815,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 
 	global $bb_default_display_avatar;
 
-	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id ) . '_' . trim( $current_user_id );
+	$cache_key = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id ) . '_' . trim( $current_user_id ) . '_' . bb_xprofile_member_display_name_cache_version( $user_id );
 
 	if ( isset( $cache[ $cache_key ] ) && ! $bb_default_display_avatar ) {
 		return $cache[ $cache_key ];
@@ -860,7 +861,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 			$full_name = bb_core_build_visible_display_name( $user_id, $list_fields );
 		}
 		$bb_default_display_avatar = false;
-		$cache[ $cache_key ]       = $full_name;
+
+		// Store under the member's version as it is now: resolving the name can self-heal (save) an
+		// empty name field, which advances it, and the pre-resolution key would then never be hit.
+		$cache_key           = 'bb_xprofile_filter_get_user_display_name_' . trim( $user_id ) . '_' . trim( $current_user_id ) . '_' . bb_xprofile_member_display_name_cache_version( $user_id );
+		$cache[ $cache_key ] = $full_name;
 	}
 
 	return $full_name;
