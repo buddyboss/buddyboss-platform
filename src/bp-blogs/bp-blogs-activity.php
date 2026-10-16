@@ -1498,6 +1498,7 @@ add_filter( 'bp_get_activity_comment_permalink', 'bp_blogs_activity_comment_perm
  * This is only done if the activity comment is associated with a blog comment.
  *
  * @since BuddyPress 2.0.1
+ * @since BuddyBoss [BBVERSION] Falls back to the activity comment permalink when no synced post comment exists.
  *
  * @param string               $retval   The activity permalink.
  * @param BP_Activity_Activity $activity Activity object.
@@ -1512,7 +1513,9 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 		return $retval;
 	}
 
-	$parent_activity = new BP_Activity_Activity( $activity->item_id );
+	// Unsynced comments (e.g. post type without comments support) have no post comment link.
+	$activity_permalink = $retval;
+	$parent_activity    = new BP_Activity_Activity( $activity->item_id );
 
 	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = $activity->primary_link;
@@ -1524,6 +1527,10 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 			}
 			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $post_type . '_comment_id' );
 			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
+		}
+
+		if ( empty( $retval ) ) {
+			$retval = $activity_permalink;
 		}
 	}
 
