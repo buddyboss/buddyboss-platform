@@ -938,6 +938,14 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 .bb-rl-activity-form.bb-rl-focus-in {
   position: relative;
 }
+.bb-rl-activity-form .bb-draft-save-feedback,
+.bb-rl-activity-form .bb-draft-retention-note {
+  display: none;
+}
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-save-feedback,
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-retention-note {
+  display: flex;
+}
 
 .bb-rl-activity-form.bb-rl-focus-in .bb-rl-bb-model-header {
   display: flex;

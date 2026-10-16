@@ -191,6 +191,35 @@
 	}
 }
 
+// Draft notices belong to the OPEN composer, not the collapsed bar.
+//
+// `#whats-new-form` is always in the page - "collapsed" is the `focus-in--empty`
+// state, not a separate element - so a notice inserted into it renders over the
+// collapsed bar unless it is gated. The rest of the composer chrome
+// (#activity-header, #editor-toolbar, the footer) is hidden by default and shown
+// on `.focus-in`; these follow the same pattern rather than inventing a second
+// mechanism.
+//
+// The node is still created and still carries its text while hidden, so opening
+// the composer reveals it with no JS round trip - a fetch-failure warning raised
+// while the composer was shut is shown the moment the member opens it, which is
+// before they can type.
+#whats-new-form {
+
+	.bb-draft-save-feedback,
+	.bb-draft-retention-note {
+		display: none;
+	}
+
+	&.focus-in {
+
+		.bb-draft-save-feedback,
+		.bb-draft-retention-note {
+			display: flex;
+		}
+	}
+}
+
 #whats-new-form.focus-in--privacy {
 
 	#whats-new-privacy-stage {
@@ -1080,7 +1109,6 @@
 	.activity-link-preview-container {
 		margin-bottom: 20px;
 	}
-
 
 	.medium-editor-toolbar {
 		top: inherit;
@@ -2205,3 +2233,4 @@ input.search-query-input {
 .bb-title-tooltip-wrapper {
 	z-index: 100000;
 }
+
