@@ -45,16 +45,11 @@ function bb_platform_3_required_addons() {
 	return array(
 		'buddyboss-platform-pro/buddyboss-platform-pro.php'   => array(
 			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss' ),
-			'version' => '3.0.0',
+			'version' => bb_platform_3_pro_required_version(),
 		),
-		// Platform no longer ships Video and Documents, so the Add-ons copies are
-		// the only live code. 1.2.3 is the first Add-ons build with the fixes that
-		// shipped in Platform's own copies: the Private Website download guard
-		// (bb_private_network_restrict_download()) and the REST document-folder
-		// permission rules. 1.2.1 added bb_document_user_can_add_to_folder().
 		'buddyboss-addons/buddyboss-addons.php'               => array(
 			'name'    => __( 'BuddyBoss Add-ons', 'buddyboss' ),
-			'version' => '1.2.3',
+			'version' => bb_platform_3_addons_required_version(),
 		),
 		'buddyboss-gamification/buddyboss-gamification.php'   => array(
 			'name'    => __( 'BuddyBoss Gamification', 'buddyboss' ),
@@ -73,6 +68,41 @@ function bb_platform_3_required_addons() {
 			'version' => '2.0.0',
 		),
 	);
+}
+
+/**
+ * Minimum BuddyBoss Platform Pro version required by this Platform.
+ *
+ * Pro builds before PROD-9995 still register the Upload Videos and Upload
+ * Documents access-control fields when those components are inactive.
+ * They do not fatal, because the field callbacks only run from the media
+ * settings screen, so this floor only keeps the settings screen accurate.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum Platform Pro version.
+ */
+function bb_platform_3_pro_required_version() {
+	// @todo: Update when release. Set to the Platform Pro version that ships the PROD-9995 access-control changes (3.3.3 does not have them).
+	return '3.0.0';
+}
+
+/**
+ * Minimum BuddyBoss Add-ons version required by this Platform.
+ *
+ * Platform no longer ships Video and Documents, so the Add-ons copies are
+ * the only live code. 1.2.3 is the first Add-ons build with the fixes that
+ * shipped in Platform's own copies: the Private Website download guard
+ * (bb_private_network_restrict_download()) and the REST document-folder
+ * permission rules. 1.2.1 added bb_document_user_can_add_to_folder().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum Add-ons version.
+ */
+function bb_platform_3_addons_required_version() {
+	// @todo: Update when release. Confirm against the Add-ons release that ships PROD-9995 and the PROD-10594 security ports (1.2.2 does not have them).
+	return '1.2.3';
 }
 
 /**
