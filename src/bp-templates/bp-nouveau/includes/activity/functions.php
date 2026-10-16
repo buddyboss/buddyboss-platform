@@ -322,7 +322,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
 	// draft and publish pipelines strip - blocking at paste is honest feedback
 	// instead of silently losing the member's image.
-	$activity_params['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
+	$activity_params['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss' );
 
 	// The draft is fetched lazily now, so a failed read leaves the composer
 	// empty over a draft that still exists on the server. Without a message the

@@ -1083,7 +1083,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// Forum-composer copies of the activity composer's draft messages. They are
 	// localized separately because the activity params are not present on
 	// forum-only pages.
-	$params['forums']['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
+	$params['forums']['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss' );
 	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
 
 	// The lazy fetch can fail on a flaky connection. When it does, the member

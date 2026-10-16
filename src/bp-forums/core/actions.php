@@ -1294,7 +1294,7 @@ function bb_post_topic_reply_draft() {
 					// data is what leaves no room, discarding drafts cannot help,
 					// because the eviction loop only ever deletes drafts.
 					$budget_message = 'meta_budget' === $budget_reason
-						? __( 'Your draft could not be saved because your account has reached its stored-data limit. Removing other drafts will not help.', 'buddyboss' )
+						? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' )
 						: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' );
 
 					wp_send_json_error(

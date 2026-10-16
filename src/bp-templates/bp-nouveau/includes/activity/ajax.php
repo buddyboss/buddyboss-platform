@@ -1700,9 +1700,11 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// member's NON-draft stored data is what leaves no room, discarding
 				// drafts cannot help - the eviction loop only ever deletes drafts -
 				// so sending them to do that is advice that cannot work and reads as
-				// blame for something they did not do.
+				// blame for something they did not do. Members cannot see or fix
+				// that stored data either, so the message only tells them what they
+				// can do: keep their text. bb_draft_cap_rejected above still logs it.
 				$budget_message = 'meta_budget' === $budget_reason
-					? __( 'Your draft could not be saved because your account has reached its stored-data limit. Removing other drafts will not help.', 'buddyboss' )
+					? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' )
 					: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' );
 
 				wp_send_json_error(
