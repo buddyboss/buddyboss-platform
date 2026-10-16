@@ -435,6 +435,7 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  * semantic; requests editing DIFFERENT keys no longer overwrite each other.
  *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
  * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
  *                              the `evicted_draft_keys` response field.
  * @since BuddyBoss [BBVERSION] Writes merge onto a fresh read of the row
