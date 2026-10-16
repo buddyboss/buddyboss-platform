@@ -5295,11 +5295,26 @@ MediumEditor.extensions = {};
     }
 
     // Added support for removing image while pasting - BuddyBoss.
+    // Only an IMAGE-ONLY clipboard counts: Word, Google Docs and spreadsheets
+    // put a bitmap next to the text they copy, and dropping the whole paste for
+    // that lost the member's text without a word (PROD-9621 V16).
     var isFilePaste = function (event) {
-        return event &&
-            event.clipboardData &&
-            event.clipboardData.items &&
-            event.clipboardData.types.includes( 'Files' );
+        var clipboard = event && event.clipboardData;
+
+        return !! ( clipboard &&
+            clipboard.items &&
+            clipboard.types.includes( 'Files' ) &&
+            ! clipboard.types.includes( 'text/plain' ) &&
+            ! clipboard.types.includes( 'text/html' ) );
+    }
+
+    // Tell the composer an image paste was refused, so it can say why. A
+    // keyboard paste lands in the body-level paste bin, where the composer's
+    // own paste listener never sees it (PROD-9621 V03) - BuddyBoss.
+    var notifyImagePasteBlocked = function (editable) {
+        if ( editable && editable.dispatchEvent && 'function' === typeof window.CustomEvent ) {
+            editable.dispatchEvent( new window.CustomEvent( 'bb-image-paste-blocked', { bubbles: true } ) );
+        }
     }
 
     var PasteHandler = MediumEditor.Extension.extend({
@@ -5381,6 +5396,7 @@ MediumEditor.extensions = {};
             // Added support for removing image while pasting - BuddyBoss.
             if ( isFilePaste( event ) ) {
                 event.preventDefault();
+                notifyImagePasteBlocked( editable );
                 return;
             }
 
@@ -5443,6 +5459,10 @@ MediumEditor.extensions = {};
 
             // Added support for removing image while pasting - BuddyBoss.
             if ( isFilePaste( event ) ) {
+                // Notify BEFORE removePasteBin(), which clears keyboardPasteEditable.
+                notifyImagePasteBlocked( keyboardPasteEditable );
+                event.preventDefault();
+                this.removePasteBin();
                 return;
             }
 
