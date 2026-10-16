@@ -488,7 +488,7 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 				continue;
 			}
 
-			if ( ! bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+			if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 				continue;
 			}
 
@@ -517,40 +517,6 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 	// invalidate - the attachment is a stamped orphan the sweep may reap once it
 	// ages past retention.
 	return array_keys( $stamped );
-}
-
-/**
- * Whether a user may manage (stamp or delete) an attachment from a draft.
- *
- * Draft payloads are client JSON; without this check any logged-in member
- * could delete arbitrary attachments site-wide through the draft handlers.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param int $attachment_id Attachment post ID.
- * @param int $user_id       Acting user ID.
- * @return bool True when the attachment exists and belongs to the user.
- */
-function bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) {
-	$attachment_id = (int) $attachment_id;
-	$user_id       = (int) $user_id;
-	$can_manage    = false;
-
-	if ( $attachment_id > 0 && $user_id > 0 ) {
-		$attachment = get_post( $attachment_id );
-		$can_manage = ( ! empty( $attachment ) && 'attachment' === $attachment->post_type && (int) $attachment->post_author === $user_id );
-	}
-
-	/**
-	 * Filters whether a user may manage an attachment referenced by a draft.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool $can_manage    Whether the user owns the attachment.
-	 * @param int  $attachment_id Attachment post ID.
-	 * @param int  $user_id       Acting user ID.
-	 */
-	return (bool) apply_filters( 'bb_draft_user_can_manage_attachment', $can_manage, $attachment_id, $user_id );
 }
 
 /**
@@ -1043,7 +1009,7 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
 			continue;
 		}
 
-		if ( ! bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+		if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 			continue;
 		}
 
@@ -1098,7 +1064,7 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
 	$affected = array();
 
 	foreach ( $released as $attachment_id ) {
-		if ( ! bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+		if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 			continue;
 		}
 
@@ -1356,7 +1322,7 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
 
 		foreach ( $removed as $removed_entry ) {
 			foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
-				if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+				if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 					delete_post_meta( $attachment_id, 'bb_media_draft' );
 					delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
 				}
@@ -2685,7 +2651,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 	if ( ! $defer_attachment_release ) {
 		foreach ( $removed as $removed_entry ) {
 			foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
-				if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+				if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 					delete_post_meta( $attachment_id, 'bb_media_draft' );
 					delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
 				}

@@ -773,7 +773,7 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $new_media_data ) ) {
 					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
-						if ( empty( $new_media_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_media_attachment['id'], $user_id ) ) {
+						if ( empty( $new_media_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $user_id ) ) {
 							unset( $new_media_data[ $media_key ] );
 							continue;
 						}
@@ -828,7 +828,7 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $new_document_data ) ) {
 					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
-						if ( empty( $new_document_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_document_attachment['id'], $user_id ) ) {
+						if ( empty( $new_document_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $user_id ) ) {
 							unset( $new_document_data[ $document_key ] );
 							continue;
 						}
@@ -883,7 +883,7 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $new_video_data ) ) {
 					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
-						if ( empty( $new_video_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_video_attachment['id'], $user_id ) ) {
+						if ( empty( $new_video_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $user_id ) ) {
 							unset( $new_video_data[ $video_key ] );
 							continue;
 						}
@@ -1157,7 +1157,7 @@ function bb_post_topic_reply_draft() {
 						}
 
 						foreach ( $sibling_owned_list as $sibling_owned_index => $sibling_owned_attachment ) {
-							if ( empty( $sibling_owned_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $sibling_owned_attachment['id'], $user_id ) ) {
+							if ( empty( $sibling_owned_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $sibling_owned_attachment['id'], false, $user_id ) ) {
 								unset( $sibling_owned_list[ $sibling_owned_index ] );
 							}
 						}
@@ -1181,7 +1181,7 @@ function bb_post_topic_reply_draft() {
 					// stamping loop below writes without further checks
 					//.
 					foreach ( bb_draft_collect_attachment_ids( $merged_entry ) as $sibling_attachment_id ) {
-						if ( bb_draft_user_can_manage_attachment( $sibling_attachment_id, $user_id ) ) {
+						if ( bb_user_can_manage_draft_attachment( $sibling_attachment_id, false, $user_id ) ) {
 							$stamp_attachment_ids[] = (int) $sibling_attachment_id;
 						}
 					}
@@ -1359,7 +1359,7 @@ function bb_post_topic_reply_draft() {
 
 				foreach ( $trimmed_entries as $trimmed_inner_key => $trimmed_entry ) {
 					foreach ( array_diff( bb_draft_collect_attachment_ids( $trimmed_entry ), $surviving_attachment_ids ) as $evicted_attachment_id ) {
-						if ( bb_draft_user_can_manage_attachment( $evicted_attachment_id, $user_id ) ) {
+						if ( bb_user_can_manage_draft_attachment( $evicted_attachment_id, false, $user_id ) ) {
 							delete_post_meta( $evicted_attachment_id, 'bb_media_draft' );
 							delete_post_meta( $evicted_attachment_id, 'bb_activity_post_feature_image_draft' );
 						}
@@ -1466,7 +1466,7 @@ function bb_post_topic_reply_draft() {
 			// Kept deliberately: the merged row is reachable from client JSON, so
 			// a crafted sibling entry could name another member's attachment. The
 			// stamp must never be applied on that basis.
-			if ( bb_draft_user_can_manage_attachment( $restamp_attachment_id, $user_id ) ) {
+			if ( bb_user_can_manage_draft_attachment( $restamp_attachment_id, false, $user_id ) ) {
 				update_post_meta( $restamp_attachment_id, 'bb_media_draft', 1 );
 			}
 		}

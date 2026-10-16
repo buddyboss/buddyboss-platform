@@ -1442,7 +1442,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( ! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ) {
 				$feature_image_id = (int) $draft_activity['data']['bb_activity_post_feature_image']['id'];
 
-				if ( bb_draft_user_can_manage_attachment( $feature_image_id, $draft_user_id ) ) {
+				if ( bb_user_can_manage_draft_attachment( $feature_image_id, false, $draft_user_id ) ) {
 					update_post_meta( $feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
 				} elseif ( ! function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
 					// Core-only: no Pro per-object check will run, so a foreign
@@ -1460,7 +1460,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
 				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
 					// Attachment IDs arrive as client JSON - only the owner may stamp them.
-					if ( empty( $new_media_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_media_attachment['id'], $draft_user_id ) ) {
+					if ( empty( $new_media_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $draft_user_id ) ) {
 						unset( $draft_activity['data']['media'][ $media_key ] );
 						continue;
 					}
@@ -1484,7 +1484,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
 				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
 					// Attachment IDs arrive as client JSON - only the owner may stamp them.
-					if ( empty( $new_document_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_document_attachment['id'], $draft_user_id ) ) {
+					if ( empty( $new_document_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $draft_user_id ) ) {
 						unset( $draft_activity['data']['document'][ $document_key ] );
 						continue;
 					}
@@ -1508,7 +1508,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
 				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
 					// Attachment IDs arrive as client JSON - only the owner may stamp them.
-					if ( empty( $new_video_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_video_attachment['id'], $draft_user_id ) ) {
+					if ( empty( $new_video_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $draft_user_id ) ) {
 						unset( $draft_activity['data']['video'][ $video_key ] );
 						continue;
 					}
@@ -1566,7 +1566,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 						);
 					}
 					// Only the owner's attachment may be flagged as drafted (PROD-10561).
-					if ( bb_draft_user_can_manage_attachment( $attachment_id, $draft_user_id ) ) {
+					if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $draft_user_id ) ) {
 						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
 						$stamp_feature_image_id = (int) $attachment_id;
 					}

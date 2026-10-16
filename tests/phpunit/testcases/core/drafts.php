@@ -104,15 +104,15 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$attachment_id = self::factory()->attachment->create( array( 'post_author' => $owner ) );
 		$post_id       = self::factory()->post->create( array( 'post_author' => $owner ) );
 
-		$this->assertTrue( bb_draft_user_can_manage_attachment( $attachment_id, $owner ) );
+		$this->assertTrue( bb_user_can_manage_draft_attachment( $attachment_id, false, $owner ) );
 
 		// Another member's attachment must be untouchable (PROD-9621 RF-1).
-		$this->assertFalse( bb_draft_user_can_manage_attachment( $attachment_id, $stranger ) );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( $attachment_id, false, $stranger ) );
 
 		// Non-attachment posts and invalid IDs never qualify.
-		$this->assertFalse( bb_draft_user_can_manage_attachment( $post_id, $owner ) );
-		$this->assertFalse( bb_draft_user_can_manage_attachment( 0, $owner ) );
-		$this->assertFalse( bb_draft_user_can_manage_attachment( 999999999, $owner ) );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( $post_id, false, $owner ) );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( 0, false, $owner ) );
+		$this->assertFalse( bb_user_can_manage_draft_attachment( 999999999, false, $owner ) );
 	}
 
 	public function test_activity_data_key_validation() {
