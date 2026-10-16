@@ -66,13 +66,30 @@ function bb_platform_3_required_addons() {
 		),
 		'buddyboss-offload-media/buddyboss-offload-media.php' => array(
 			'name'    => __( 'BuddyBoss Offload Media', 'buddyboss' ),
-			'version' => '2.0.0',
+			'version' => bb_platform_3_offload_media_required_version(),
 		),
-		'buddyboss-sharing/buddyboss-sharing.php'             => array(
+		'buddyboss-sharing/buddyboss-sharing.php'           => array(
 			'name'    => __( 'BuddyBoss Sharing', 'buddyboss' ),
 			'version' => '2.0.0',
 		),
 	);
+}
+
+/**
+ * Minimum BuddyBoss Offload Media version required by this Platform.
+ *
+ * Video and Documents now ship in BuddyBoss Add-ons, so BP_Video and
+ * BP_Document can be missing. Offload Media only guards those classes
+ * from the release that carries the PROD-9995 class_exists() checks;
+ * older builds can fatal while processing existing videos or documents.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum Offload Media version.
+ */
+function bb_platform_3_offload_media_required_version() {
+	// @todo: Update when release. Set to the Offload Media version that ships the PROD-9995 BP_Video/BP_Document guards (2.1.4 does not have them).
+	return '2.0.0';
 }
 
 /**
