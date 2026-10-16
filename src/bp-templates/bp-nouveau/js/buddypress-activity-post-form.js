@@ -68,6 +68,9 @@ window.bp = window.bp || {};
 	bp.draft_ajax_interval   = false;
 	bp.draft_content_changed = false;
 	bp.draft_pending_sync    = false;
+	bp.draft_base            = [ 'none' ];
+	bp.draft_conflict        = false;
+	bp.draft_save_blocked    = false;
 
 	/**
 	 * [Activity description]
@@ -1074,6 +1077,8 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
+			this.sweepExpiredLocalDrafts();
+
 			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( BP_Nouveau.activity.params.object ) ) {
 				bp.draft_activity.object = BP_Nouveau.activity.params.object;
 
@@ -1125,6 +1130,11 @@ window.bp = window.bp || {};
 							// response nobody read. It stays protected until a
 							// save is confirmed (see postDraftActivity()).
 							bp.draft_pending_sync = true === draft_activity_local_data.bb_draft_pending_sync;
+
+							// The revisions this copy was built on; a save from
+							// it may only replace one of those (bb_draft_base).
+							bp.draft_base               = bp.Nouveau.Activity.postForm.draftBaseFrom( draft_activity_local_data );
+							bp.draft_activity._draft_rev = draft_activity_local_data._draft_rev;
 						}
 					} else {
 						$.removeCookie( bp.draft_activity.data_key );
@@ -1452,6 +1462,9 @@ window.bp = window.bp || {};
 				function ( response ) {
 					bp.draft_fetch_in_progress = false;
 
+					// Evictions whose hand-back never reached this browser.
+					self.handleEvictedDrafts( response );
+
 					// A successful read clears any earlier failure state, so a
 					// transient network blip at page load no longer disables server
 					// sync for the rest of the page view - postDraftActivity()
@@ -1491,6 +1504,10 @@ window.bp = window.bp || {};
 						// nothing was withheld.
 						if ( ! hasLocalDraftData && memberStartedWriting && BP_Nouveau.activity.params.draft_not_restored_message ) {
 							self.showDraftFeedback( BP_Nouveau.activity.params.draft_not_restored_message );
+
+							// What the member typed is not based on the stored draft,
+							// so it must not be saved over it in this page view.
+							bp.draft_save_blocked = true;
 						}
 
 						return;
@@ -1498,6 +1515,7 @@ window.bp = window.bp || {};
 
 					bp.old_draft_data      = response.draft_activity.data;
 					bp.draft_activity      = response.draft_activity;
+					bp.draft_base   = [ response.draft_activity._draft_rev || '' ];
 					bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bp.old_draft_data );
 
 					self.checkAndStoreDraftToLocalStorage( bp.draft_activity );
@@ -1602,6 +1620,197 @@ window.bp = window.bp || {};
 					self.showDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
 				}
 			} );
+
+			// A keyboard Cmd/Ctrl+V is routed through MediumEditor's body-level
+			// paste bin, which the listener above never sees. The editor refuses
+			// the image there and reports it with this event (V03).
+			$( document ).on( 'bb-image-paste-blocked.bbDraftImageGuard', '#whats-new-form', function () {
+				self.showDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
+			} );
+		},
+
+		/**
+		 * A new random revision id for one draft save.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string}
+		 */
+		newDraftRev: function() {
+			var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+				rev   = '',
+				i;
+
+			for ( i = 0; i < 16; i++ ) {
+				rev += chars.charAt( Math.floor( Math.random() * chars.length ) );
+			}
+
+			return rev;
+		},
+
+		/**
+		 * The revisions a stored or local draft copy was built on.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} copy Draft entry or local copy.
+		 *
+		 * @return {Array}
+		 */
+		draftBaseFrom: function( copy ) {
+			if ( copy && _.isArray( copy._draft_base ) && copy._draft_base.length ) {
+				return copy._draft_base.slice( -8 );
+			}
+
+			return [ ( copy && copy._draft_rev ) ? String( copy._draft_rev ) : '' ];
+		},
+
+		/**
+		 * Whether this browser's copy of a draft key is marked pending.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key localStorage key.
+		 *
+		 * @return {boolean}
+		 */
+		isLocalDraftPending: function( key ) {
+			try {
+				var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+
+				return !! ( copy && true === copy.bb_draft_pending_sync );
+			} catch ( e ) {
+				return false;
+			}
+		},
+
+		/**
+		 * Keep the newer stored draft after the server refused a save over it.
+		 *
+		 * The stored draft becomes the local copy, so a reload shows it; the
+		 * member's text stays in the composer; saving stops for the page view.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} response The refusal, carrying `draft_activity`.
+		 *
+		 * @return {void}
+		 */
+		handleDraftConflict: function( response ) {
+			var stored = response.draft_activity;
+
+			bp.draft_conflict     = true;
+			bp.draft_pending_sync = false;
+			this.clearDraftInterval();
+
+			try {
+				if ( stored && 'object' === typeof stored && stored.data_key ) {
+					localStorage.setItem( stored.data_key, JSON.stringify( _.extend( {}, stored, { _draft_local_at: Math.floor( Date.now() / 1000 ) } ) ) );
+				} else {
+					localStorage.removeItem( bp.draft_activity.data_key );
+				}
+			} catch ( e ) {
+				// Over quota: the server still holds the stored draft.
+			}
+
+			this.showDraftFeedback( BP_Nouveau.activity.params.draft_conflict_message || response.message || '' );
+		},
+
+		/**
+		 * Drop local draft copies older than the draft retention.
+		 *
+		 * The server deletes drafts untouched for that long; a local copy of
+		 * one (a hand-back, for instance) goes at the same age.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		sweepExpiredLocalDrafts: function() {
+			var days   = parseInt( BP_Nouveau.activity.params.draft_retention_days, 10 ),
+				cutoff = Math.floor( Date.now() / 1000 ) - ( days * 86400 ),
+				keys   = [],
+				i;
+
+			if ( ! days || 1 > days ) {
+				return;
+			}
+
+			try {
+				for ( i = 0; i < localStorage.length; i++ ) {
+					if ( /^draft_/.test( localStorage.key( i ) ) ) {
+						keys.push( localStorage.key( i ) );
+					}
+				}
+
+				_.each(
+					keys,
+					function ( key ) {
+						var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+
+						if ( copy && copy._draft_local_at && parseInt( copy._draft_local_at, 10 ) < cutoff ) {
+							localStorage.removeItem( key );
+						}
+					}
+				);
+			} catch ( e ) {
+				// Storage unavailable or a corrupt copy: the composer repairs its own key.
+			}
+		},
+
+		/**
+		 * Hand-back keys this browser stored and has not reported to the server yet.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {Array}
+		 */
+		getEvictionAcks: function() {
+			try {
+				return _.compact( String( localStorage.getItem( 'bb_draft_evicted_ack' ) || '' ).split( ',' ) );
+			} catch ( e ) {
+				return [];
+			}
+		},
+
+		/**
+		 * Record a stored hand-back so the next request acknowledges it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key Evicted key.
+		 *
+		 * @return {void}
+		 */
+		addEvictionAck: function( key ) {
+			try {
+				localStorage.setItem( 'bb_draft_evicted_ack', _.uniq( this.getEvictionAcks().concat( [ String( key ) ] ) ).slice( -50 ).join( ',' ) );
+			} catch ( e ) {
+				// Without the acknowledgement the server simply sends it again.
+			}
+		},
+
+		/**
+		 * Forget acknowledgements a request delivered.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Array} sent Keys the request carried.
+		 *
+		 * @return {void}
+		 */
+		clearEvictionAcks: function( sent ) {
+			try {
+				var left = _.difference( this.getEvictionAcks(), sent || [] );
+
+				if ( left.length ) {
+					localStorage.setItem( 'bb_draft_evicted_ack', left.join( ',' ) );
+				} else {
+					localStorage.removeItem( 'bb_draft_evicted_ack' );
+				}
+			} catch ( e ) {
+				// Harmless: the server drops entries it already holds again.
+			}
 		},
 
 		/**
@@ -1629,11 +1838,29 @@ window.bp = window.bp || {};
 					var storage_key = String( key ).split( ':' ).pop(),
 						copy;
 
-					if ( ! entry || 'object' !== typeof entry || ! storage_key || null !== localStorage.getItem( storage_key ) ) {
+					if ( ! entry || 'object' !== typeof entry || ! storage_key ) {
 						return;
 					}
 
-					copy = _.extend( {}, entry, { bb_draft_pending_sync: true } );
+					bp.Nouveau.Activity.postForm.addEvictionAck( key );
+
+					// A copy this browser already holds may be newer, so keep its
+					// content - but mark it pending, or another tab's composer
+					// close wipes what is now the only copy (V07).
+					if ( null !== localStorage.getItem( storage_key ) ) {
+						try {
+							var existing = JSON.parse( localStorage.getItem( storage_key ) );
+							if ( existing && 'object' === typeof existing ) {
+								existing.bb_draft_pending_sync = true;
+								localStorage.setItem( storage_key, JSON.stringify( existing ) );
+							}
+						} catch ( e ) {
+							// Unreadable copy: leave it to the composer's own repair.
+						}
+						return;
+					}
+
+					copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
 					if ( -1 !== String( key ).indexOf( ':' ) ) {
 						copy.bb_draft_owner = owner_id;
 					}
@@ -1659,6 +1886,12 @@ window.bp = window.bp || {};
 		handleEvictedDrafts: function( response ) {
 			var keys = ( response && response.evicted_draft_keys ) ? response.evicted_draft_keys : [];
 
+			// Store every hand-back, including ones re-sent because an earlier
+			// response was lost; announce only this request's evictions.
+			if ( response && response.evicted_drafts ) {
+				bp.Nouveau.Activity.postForm.storeEvictedDrafts( response.evicted_drafts, parseInt( BP_Nouveau.activity.params.user_id, 10 ) );
+			}
+
 			if ( ! keys || ! keys.length ) {
 				return;
 			}
@@ -1668,7 +1901,6 @@ window.bp = window.bp || {};
 			// localStorage, marked pending: it is now the only copy, and the
 			// composer for that key restores it and saves it again. A copy this
 			// browser already holds is never overwritten - it may be newer.
-			bp.Nouveau.Activity.postForm.storeEvictedDrafts( response.evicted_drafts, parseInt( BP_Nouveau.activity.params.user_id, 10 ) );
 
 			this.showDraftFeedback( BP_Nouveau.activity.params.draft_evicted_message );
 		},
@@ -2021,15 +2253,22 @@ window.bp = window.bp || {};
 					)
 				)
 			) {
-				if ( bp.draft_content_changed ) {
+				if ( bp.draft_content_changed && ( bp.draft_fetch_failed || bp.draft_save_blocked || bp.draft_conflict ) ) {
+					// The composer is not based on the stored draft (it failed to
+					// load, was not loaded, or is older than a stored version).
+					// Emptying it is not a discard of that draft - only the
+					// Discard button is - so touch neither copy (V08).
+					bp.draft_activity.data = false;
+				} else if ( bp.draft_content_changed ) {
 					localStorage.removeItem( bp.draft_activity.data_key );
 					bp.Nouveau.Activity.postForm.resetDraftActivity( true );
 				} else {
 					bp.draft_activity.data = false;
 
 					// The composer is just closed, not emptied by the member. A
-					// pending copy is the ONLY copy of this draft, so keep it.
-					if ( ! bp.draft_pending_sync ) {
+					// pending copy is the ONLY copy of this draft, so keep it -
+					// whether this tab or another one marked it pending (V07).
+					if ( ! bp.draft_pending_sync && ! bp.Nouveau.Activity.postForm.isLocalDraftPending( bp.draft_activity.data_key ) ) {
 						localStorage.removeItem( bp.draft_activity.data_key );
 					}
 				}
@@ -2274,7 +2513,7 @@ window.bp = window.bp || {};
 			}
 
 			// Checked the content changed or not.
-			if ( ! is_force_saved && ! bp.draft_content_changed && ! bp.draft_pending_sync ) {
+			if ( ! is_force_saved && ! bp.draft_content_changed ) {
 				return;
 			}
 
@@ -2282,7 +2521,25 @@ window.bp = window.bp || {};
 			// stored copy. The slim payload also fits the sendBeacon quota that a
 			// full multi-hundred-KB draft exceeds, which silently dropped discard
 			// requests for exactly the oversized drafts that most needed deleting.
+			// A conflict or a "not loaded" outcome stops saving this key for the
+			// page view, and nothing is sent while the stored draft is still
+			// being read - the composer is not based on it yet (V02).
+			if ( bp.draft_conflict || bp.draft_save_blocked || ( bp.draft_fetch_in_progress && 'delete' !== bp.draft_activity.post_action ) ) {
+				return;
+			}
+
+			// Each save carries a new revision id and the revisions it was built
+			// on; the server refuses to replace any other stored version.
+			var draft_rev  = this.newDraftRev(),
+				draft_base = bp.draft_base.slice( 0 ),
+				draft_acks = this.getEvictionAcks();
+
+			if ( 'delete' !== bp.draft_activity.post_action ) {
+				bp.draft_activity._draft_rev = draft_rev;
+			}
+
 			var draft_payload = bp.draft_activity;
+
 			if ( 'delete' === bp.draft_activity.post_action ) {
 				draft_payload = _.omit( bp.draft_activity, 'data' );
 			} else if ( bp.draft_activity.data && bp.draft_activity.data.video && bp.draft_activity.data.video.length ) {
@@ -2329,6 +2586,16 @@ window.bp = window.bp || {};
 				}
 			}
 
+			// The server strips inline base64 images anyway; stripping them here
+			// stops every autosave tick uploading them (V27).
+			if ( draft_payload.data && 'string' === typeof draft_payload.data.content && /data:[^"']*base64/i.test( draft_payload.data.content ) ) {
+				draft_payload = JSON.parse( JSON.stringify( draft_payload ) );
+				draft_payload.data.content = draft_payload.data.content.replace(
+					/(\s(?:src|href)\s*=\s*)(["'])data:[^"']*base64[^"']*\2/gi,
+					'$1$2$2'
+				);
+			}
+
 			if ( ! is_reload_window ) {
 				// A discard sends post_action 'delete'; a save sends 'update'. The
 				// fail handler needs this to pick the right message when the server
@@ -2341,7 +2608,9 @@ window.bp = window.bp || {};
 
 				var draft_data = {
 					_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
-					draft_activity: draft_payload
+					draft_activity: draft_payload,
+					bb_draft_base: draft_base.join( ',' ),
+					bb_draft_evicted_ack: draft_acks.join( ',' )
 				};
 
 				// Some firewalls restrict iframe tag in form post like wordfence.
@@ -2360,6 +2629,9 @@ window.bp = window.bp || {};
 					function ( response ) {
 						bp.Nouveau.Activity.postForm.showDraftFeedback( '' );
 						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
+
+						bp.draft_base = isDiscardRequest ? [ 'none' ] : [ draft_rev ];
+						bp.Nouveau.Activity.postForm.clearEvictionAcks( draft_acks );
 
 						// The server now holds this draft, so its local copy is an
 						// ordinary cache again.
@@ -2395,10 +2667,32 @@ window.bp = window.bp || {};
 						}
 
 						// A budget refusal may have evicted older drafts before it
-						// gave up; drop their local copies so the UI does not keep
-						// listing drafts that no longer exist (H1). No-op when the
-						// response carries no evicted keys.
+						// gave up; keep their hand-back (H1). No-op when the
+						// response carries none.
 						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
+
+						// A newer version is stored: keep it, keep the member's text
+						// on screen, and stop saving this key (bb_draft_base).
+						if ( response && response.conflict ) {
+							bp.Nouveau.Activity.postForm.handleDraftConflict( response );
+
+							return;
+						}
+
+						// The outcome is unknown when the response was lost - the
+						// server may have stored this save - so its revision stays an
+						// acceptable stored version. Without it, every later save
+						// of this key was a false conflict (NEW-2).
+						if ( ! isDiscardRequest ) {
+							bp.draft_base = _.uniq( draft_base.concat( [ draft_rev ] ) ).slice( -8 );
+						}
+
+						// Any other refusal leaves the server without this text, so
+						// the local copy must survive closing the composer (V12).
+						if ( ! isDiscardRequest ) {
+							bp.draft_pending_sync = true;
+							bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+						}
 
 						// Surface guardrail rejections (draft too large, too many
 						// drafts) with the server's message when it sends one;
@@ -2439,7 +2733,12 @@ window.bp = window.bp || {};
 				// handed back. It may refuse instead, so keep the local copy
 				// pending until a later save is confirmed.
 				formData.append( 'bb_draft_beacon', '1' );
+				formData.append( 'bb_draft_base', draft_base.join( ',' ) );
+				formData.append( 'bb_draft_evicted_ack', draft_acks.join( ',' ) );
 				if ( 'delete' !== bp.draft_activity.post_action ) {
+					// Either outcome is acceptable as the stored version later:
+					// the beacon's revision if it landed, the old one if not.
+					bp.draft_base         = _.uniq( draft_base.concat( [ draft_rev ] ) ).slice( -8 );
 					bp.draft_pending_sync = true;
 					bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 				}
@@ -2563,6 +2862,16 @@ window.bp = window.bp || {};
 		},
 
 		checkAndStoreDraftToLocalStorage: function( draft_activity ) {
+			// After a conflict the local copy is the newer STORED draft; the
+			// composer's text must not replace it (bb_draft_base).
+			if ( bp.draft_conflict && draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
+				return;
+			}
+
+			if ( draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
+				draft_activity = _.extend( {}, draft_activity, { _draft_base: bp.draft_base, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+			}
+
 			try {
 				// Strip inline base64 data: URLs before storing. The paste guard
 				// converts pasted images to uploads, but a drag-and-drop drops a raw

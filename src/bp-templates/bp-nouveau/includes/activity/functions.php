@@ -316,7 +316,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// gating a group draft on it would make a member's valid, still-fetchable
 	// draft_group_N invisible when the switch is filtered false for them.
 	$activity_params['has_draft'] = ( bp_is_group() || bb_user_can_create_activity() )
-		&& metadata_exists( 'user', bp_loggedin_user_id(), bp_get_user_meta_key( $draft_activity_meta_key ) );
+		&& (
+			metadata_exists( 'user', bp_loggedin_user_id(), bp_get_user_meta_key( $draft_activity_meta_key ) )
+			// An evicted draft whose hand-back never reached this browser is
+			// fetched and restored like a stored one (V06).
+			|| false !== bb_draft_get_held_entry( bp_loggedin_user_id(), $draft_activity_meta_key )
+		);
 
 	// Interim guard until pasted images are routed through the media uploader:
 	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
@@ -350,6 +355,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// as unexplained data loss when a draft is gone after a few weeks away.
 	// Empty when expiry is disabled, so the JS renders nothing.
 	$draft_retention_days = bb_draft_retention_days();
+	$activity_params['draft_retention_days']   = (int) $draft_retention_days;
+	$activity_params['draft_conflict_message'] = bb_draft_conflict_message();
 
 	$activity_params['draft_retention_message'] = $draft_retention_days ? sprintf(
 		/* translators: %s: Number of days a draft is kept. */

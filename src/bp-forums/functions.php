@@ -1061,6 +1061,17 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$params['forums']['has_draft'] = false;
 	$draft_row                     = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
+	// An evicted forum draft whose hand-back never reached this browser is
+	// fetched and restored like a stored one (V06).
+	if ( get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ) ) {
+		foreach ( array_keys( bb_draft_pending_evicted( $user_id ) ) as $held_key ) {
+			if ( 0 === strpos( (string) $held_key, 'bb_user_topic_reply_draft:' ) ) {
+				$params['forums']['has_draft'] = true;
+				break;
+			}
+		}
+	}
+
 	if ( ! empty( $draft_row ) && is_array( $draft_row ) ) {
 		foreach ( $draft_row as $draft_entry ) {
 			if ( is_array( $draft_entry ) && bb_draft_topic_reply_entry_has_payload( $draft_entry ) ) {
@@ -1073,6 +1084,8 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// Same retention disclosure as the activity composer - a draft that
 	// vanishes after the retention window must never be a surprise.
 	$draft_retention_days = bb_draft_retention_days();
+	$params['forums']['draft_retention_days']   = (int) $draft_retention_days;
+	$params['forums']['draft_conflict_message'] = bb_draft_conflict_message();
 
 	$params['forums']['draft_retention_message'] = $draft_retention_days ? sprintf(
 		/* translators: %s: Number of days a draft is kept. */

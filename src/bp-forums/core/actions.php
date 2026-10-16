@@ -492,6 +492,19 @@ function bb_post_topic_reply_draft() {
 		$all_data = is_array( $decoded_all_data ) ? $decoded_all_data : array();
 	}
 
+	// Per-sibling conflict bases and new revision ids for the `all_data`
+	// replay (see bb_draft_base_matches()). A sibling with no base is merged
+	// as before, so an older client keeps working.
+	$all_base = array();
+	$all_rev  = array();
+	foreach ( array( 'all_base' => &$all_base, 'all_rev' => &$all_rev ) as $all_field => &$all_target ) {
+		if ( ! empty( $_REQUEST[ $all_field ] ) && is_string( $_REQUEST[ $all_field ] ) ) {
+			$decoded_all_field = json_decode( stripslashes( $_REQUEST[ $all_field ] ), true );
+			$all_target        = is_array( $decoded_all_field ) ? $decoded_all_field : array();
+		}
+	}
+	unset( $all_target );
+
 	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
 
 		// Coerce only scalars, and do it before anything reads the key. A
@@ -535,6 +548,14 @@ function bb_post_topic_reply_draft() {
 			! $is_draft_update &&
 			is_array( $existing_draft ) &&
 			isset( $existing_draft[ (string) $draft_topic_reply['data_key'] ] )
+		);
+
+		// A discard only removes the version the composer showed: one that never
+		// loaded the stored draft (a failed fetch, a stale tab) must not delete
+		// it or its attachments.
+		$discard_conflict = (
+			$discarding_own_draft &&
+			! bb_draft_base_matches( $existing_draft[ (string) $draft_topic_reply['data_key'] ], bb_draft_request_base() )
 		);
 
 		// The shape check above resolves client-supplied post IDs, so on its own
@@ -583,6 +604,18 @@ function bb_post_topic_reply_draft() {
 		$primary_rejected  = ! $draft_key_allowed;
 		$primary_rejection = array();
 
+		if ( ! $primary_rejected && $discard_conflict ) {
+			/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+			do_action( 'bb_draft_conflict_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'] );
+
+			$primary_rejected  = true;
+			$primary_rejection = array(
+				'message'        => bb_draft_conflict_message(),
+				'conflict'       => true,
+				'draft_activity' => $existing_draft[ (string) $draft_topic_reply['data_key'] ],
+			);
+		}
+
 		// Sanitize and cap the incoming entry BEFORE any side effect (attachment
 		// deletion or stamping) so a rejected request leaves storage untouched.
 		// This is the cheap bound that keeps a huge payload away from the
@@ -621,6 +654,24 @@ function bb_post_topic_reply_draft() {
 			// enforces (H4 per-type parity).
 			bb_draft_protect_payload_attachments( $protect_lists, $user_id );
 
+			// Never replace a stored version this composer did not show (see the
+			// activity handler). Recorded, not thrown, so the sibling merge still
+			// runs, like every other primary rejection here (GH1).
+			if ( ! bb_draft_base_matches( $existing_draft[ $draft_topic_reply['data_key'] ] ?? array(), bb_draft_request_base() ) ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'] );
+
+				$primary_rejected  = true;
+				$primary_rejection = array(
+					'message'        => bb_draft_conflict_message(),
+					'conflict'       => true,
+					'draft_activity' => $existing_draft[ $draft_topic_reply['data_key'] ],
+				);
+			}
+		}
+
+		if ( $is_draft_update && ! $primary_rejected ) {
+
 			// Strip data URLs, then judge the RAW width before kses runs inside
 			// bb_forums_sanitize_draft_entry(). bbp_kses_data() on a multi-MB
 			// payload is the expensive step, and it used to run before any cap
@@ -630,7 +681,7 @@ function bb_post_topic_reply_draft() {
 
 			if ( $raw_entry_size > bb_draft_max_size() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $raw_entry_size, 'per_draft' );
+				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], $raw_entry_size, 'per_draft' );
 
 				$primary_rejected  = true;
 				$primary_rejection = array(
@@ -642,11 +693,16 @@ function bb_post_topic_reply_draft() {
 			// already failed - the primary is not going to be stored either way.
 			if ( ! $primary_rejected ) {
 				$draft_topic_reply    = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+
+				$draft_topic_reply['_draft_rev'] = bb_draft_sanitize_rev( $draft_topic_reply['_draft_rev'] ?? '' );
+
+				// Browser-side bookkeeping is never stored with the draft.
+				unset( $draft_topic_reply['bb_draft_pending_sync'], $draft_topic_reply['_draft_base'], $draft_topic_reply['bb_draft_owner'] );
 				$sanitized_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
 
 				if ( $sanitized_entry_size > bb_draft_max_size() ) {
 					/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-					do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $sanitized_entry_size, 'per_draft' );
+					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], $sanitized_entry_size, 'per_draft' );
 
 					$primary_rejected  = true;
 					$primary_rejection = array(
@@ -712,10 +768,10 @@ function bb_post_topic_reply_draft() {
 		// draft references.
 		$stamp_attachment_ids = array();
 
-		// The replaced/discarded entry's attachment stamps are released only
-		// after every cap has accepted the write - a rejected save leaves the
-		// stored draft, so unstamping here would expose the attachments of a
-		// draft that still exists to the orphan crons.
+		// A discarded entry's attachment stamps are released only after the
+		// row is written - a rejected request leaves the stored draft, so
+		// unstamping here would expose the attachments of a draft that still
+		// exists to the orphan crons. A replaced entry keeps its stamps.
 		$unstamp_draft_entry = array();
 
 		// Nothing is replaced when the stored primary is kept or rejected, so
@@ -748,7 +804,9 @@ function bb_post_topic_reply_draft() {
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
-				$new_media_data = json_decode( $draft_topic_reply['data']['bbp_media'], true );
+				// The list is client JSON; an array here (a crafted request) would
+				// fatal json_decode() on PHP 8 (V25).
+				$new_media_data = is_string( $draft_topic_reply['data']['bbp_media'] ) ? json_decode( $draft_topic_reply['data']['bbp_media'], true ) : ( is_array( $draft_topic_reply['data']['bbp_media'] ) ? $draft_topic_reply['data']['bbp_media'] : array() );
 
 				// REFUSED rather than truncated. The slice this replaces mutated
 				// the array that is re-encoded and STORED just below, so entries
@@ -803,7 +861,9 @@ function bb_post_topic_reply_draft() {
 
 			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
-				$new_document_data = json_decode( $draft_topic_reply['data']['bbp_document'], true );
+				// The list is client JSON; an array here (a crafted request) would
+				// fatal json_decode() on PHP 8 (V25).
+				$new_document_data = is_string( $draft_topic_reply['data']['bbp_document'] ) ? json_decode( $draft_topic_reply['data']['bbp_document'], true ) : ( is_array( $draft_topic_reply['data']['bbp_document'] ) ? $draft_topic_reply['data']['bbp_document'] : array() );
 
 				// REFUSED rather than truncated. The slice this replaces mutated
 				// the array that is re-encoded and STORED just below, so entries
@@ -858,7 +918,9 @@ function bb_post_topic_reply_draft() {
 
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
-				$new_video_data = json_decode( $draft_topic_reply['data']['bbp_video'], true );
+				// The list is client JSON; an array here (a crafted request) would
+				// fatal json_decode() on PHP 8 (V25).
+				$new_video_data = is_string( $draft_topic_reply['data']['bbp_video'] ) ? json_decode( $draft_topic_reply['data']['bbp_video'], true ) : ( is_array( $draft_topic_reply['data']['bbp_video'] ) ? $draft_topic_reply['data']['bbp_video'] : array() );
 
 				// REFUSED rather than truncated. The slice this replaces mutated
 				// the array that is re-encoded and STORED just below, so entries
@@ -922,7 +984,7 @@ function bb_post_topic_reply_draft() {
 
 			if ( $draft_entry_size > bb_draft_max_size() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $draft_entry_size, 'per_draft' );
+				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], $draft_entry_size, 'per_draft' );
 
 				$primary_rejected  = true;
 				$primary_rejection = array(
@@ -1021,6 +1083,12 @@ function bb_post_topic_reply_draft() {
 						continue;
 					}
 
+					// A replayed sibling may only replace the version this tab
+					// held. Another tab or device may have saved it since.
+					if ( isset( $all_base[ $data_key ] ) && ! bb_draft_base_matches( $existing_draft[ $data_key ], bb_draft_parse_base( $all_base[ $data_key ] ) ) ) {
+						continue;
+					}
+
 					$merged_entry         = $existing_draft[ $data_key ];
 					$merged_entry['data'] = $d_data;
 
@@ -1069,6 +1137,8 @@ function bb_post_topic_reply_draft() {
 					}
 
 					$merged_entry = bb_forums_sanitize_draft_entry( $merged_entry );
+
+					$merged_entry['_draft_rev'] = bb_draft_sanitize_rev( $all_rev[ $data_key ] ?? '' );
 
 					if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
 						// Keep the previously stored entry rather than failing the
@@ -1204,8 +1274,7 @@ function bb_post_topic_reply_draft() {
 		// reverted the other tab's autosave. Only the keys this request actually
 		// decided about are ours to write; every other key belongs to whoever
 		// wrote it last (M2).
-		wp_cache_delete( $user_id, 'user_meta' );
-		$fresh_draft_row = bp_get_user_meta( $user_id, $usermeta_key, true );
+		$fresh_draft_row = bb_draft_fresh_value( $user_id, $usermeta_key, true ) ?? '';
 		$stored_row_size = strlen( maybe_serialize( $fresh_draft_row ) );
 
 		if ( ! is_array( $fresh_draft_row ) ) {
@@ -1270,6 +1339,13 @@ function bb_post_topic_reply_draft() {
 			$other_draft_bytes = array_sum( $draft_sizes['drafts'] ) - $forum_row_bytes;
 			$forum_row_cap     = max( bb_draft_max_size(), bb_draft_user_total_max_size() - $other_draft_bytes );
 
+			// Evict first, refuse only when even that cannot fit: when the
+			// member's NON-draft meta leaves less room than the draft cap, trim
+			// the row down to that room too, instead of letting the budget
+			// below refuse a row that trimming would have made fit (V13).
+			$draft_headroom = bb_draft_user_meta_budget() - max( 0, (int) $draft_sizes['total'] - array_sum( $draft_sizes['drafts'] ) );
+			$forum_row_cap  = max( bb_draft_max_size(), min( $forum_row_cap, $draft_headroom ) );
+
 			$trimmed_row = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
 
 			// A page-unload save cannot read its response, so it must not trim
@@ -1278,7 +1354,7 @@ function bb_post_topic_reply_draft() {
 			// saves them on the next visit (see bb_draft_enforce_user_budget()).
 			if ( ! empty( $trimmed_row['evicted'] ) && bb_draft_is_beacon_request() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, strlen( maybe_serialize( $existing_draft ) ), 'drafts_over_cap' );
+				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], strlen( maybe_serialize( $existing_draft ) ), 'drafts_over_cap' );
 
 				wp_send_json_error(
 					array(
@@ -1313,7 +1389,7 @@ function bb_post_topic_reply_draft() {
 					$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
 
 					/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, $forum_row_size, $budget_reason );
+					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'], $forum_row_size, $budget_reason );
 
 					// See the activity handler: when the member's NON-draft stored
 					// data is what leaves no room, discarding drafts cannot help,
@@ -1332,7 +1408,7 @@ function bb_post_topic_reply_draft() {
 							// runs), so announcing them would tell the member drafts
 							// were removed that are still on the server (H4).
 							'evicted_draft_keys' => $draft_budget['evicted'],
-							'evicted_drafts'     => $draft_budget['entries'],
+							'evicted_drafts'     => bb_draft_handback( $user_id, $draft_budget['entries'] ),
 						)
 					);
 				}
@@ -1376,57 +1452,29 @@ function bb_post_topic_reply_draft() {
 			// entries are handed back to the browser and still reference those
 			// files, and the orphan-stamp sweep releases a stamp only once nothing
 			// stored references it and it is past retention.
+			bb_draft_mark_evicted_attachments( $trimmed_entries, $user_id );
+
 			foreach ( array_keys( $trimmed_entries ) as $trimmed_inner_key ) {
 				/** This action is documented in bp-core/bb-core-drafts.php */
 				do_action( 'bb_draft_evicted', (int) $user_id, 'bb_user_topic_reply_draft:' . $trimmed_inner_key, 'aggregate_cap' );
 			}
 		}
 
-		// The request is accepted. Release the stamps only for attachments the
-		// replaced entry held and the new one does NOT keep - unstamping the
-		// whole replaced entry would strip protection from files the member is
-		// still drafting with, because a restored draft re-sends its stored
-		// attachment list verbatim. The stamps for everything the new entry
-		// keeps are re-applied below, so the set difference is what may be
-		// released.
+		// The replaced entries' attachment stamps are deliberately NOT released,
+		// for the primary or any sibling. A replace is not proof the file is
+		// unused: a second tab or device still drafting with it saves a list
+		// without it, and releasing the stamp let the orphan cron delete a photo
+		// that tab still showed. Stamps no draft references are released by the
+		// orphan-stamp sweep after retention, as in 3.6.1.
 		//
-		// $existing_draft is the row as just written, so the whole surviving row
-		// is what may retain a stamp - not only the entry that replaced this
-		// one. The composer carries its content across reply targets, so one
-		// attachment is routinely referenced by several inner drafts of this
-		// row; comparing against the replacing entry alone released files a
-		// sibling inner draft still pointed at and the orphan crons deleted
-		// them. Matches the whole-row exclusion the eviction branch above
-		// already applies.
-		if ( ! $primary_rejected && ! empty( $unstamp_draft_entry ) ) {
+		// A DISCARD is different: the member removed the draft on purpose, so
+		// its attachments are released for the orphan cron, minus anything the
+		// written row or another draft row still references.
+		if ( ! $is_draft_update && ! $primary_rejected && ! empty( $unstamp_draft_entry ) ) {
 			if ( null === $cross_row_retained_ids && bb_draft_collect_attachment_ids( $unstamp_draft_entry ) ) {
 				$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
 			}
-			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id, $existing_draft, (array) $cross_row_retained_ids );
-		}
-
-		// Release the stamps a SIBLING draft dropped this request - the same set
-		// difference the primary entry gets above. The merge re-stamps every
-		// attachment a merged sibling KEEPS (into $stamp_attachment_ids,
-		// re-applied just below), but never released what a sibling stopped
-		// referencing, so a photo removed from a sibling reply kept its
-		// bb_media_draft stamp for ever - protected from the orphan cron by a
-		// draft that no longer points at it. Previous = the entry as freshly
-		// stored; retain = the whole written row, so an attachment another
-		// surviving inner draft still holds is never released (and the re-stamp
-		// below backstops anything that is).
-		foreach ( array_keys( $decided_draft_keys ) as $decided_key ) {
-			// The primary entry is released above.
-			if ( (string) $draft_topic_reply['data_key'] === (string) $decided_key ) {
-				continue;
-			}
-
-			if ( isset( $fresh_draft_row[ $decided_key ] ) ) {
-				if ( null === $cross_row_retained_ids && bb_draft_collect_attachment_ids( $fresh_draft_row[ $decided_key ] ) ) {
-					$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
-				}
-				bb_draft_release_replaced_attachments( $fresh_draft_row[ $decided_key ], array(), $user_id, $existing_draft, (array) $cross_row_retained_ids );
-			}
+			bb_draft_release_replaced_attachments( $unstamp_draft_entry, array(), $user_id, $existing_draft, (array) $cross_row_retained_ids );
 		}
 
 		// Re-stamp only attachments a SURVIVING entry of the written row still
@@ -1478,7 +1526,7 @@ function bb_post_topic_reply_draft() {
 			// a crafted sibling entry could name another member's attachment. The
 			// stamp must never be applied on that basis.
 			if ( bb_user_can_manage_draft_attachment( $restamp_attachment_id, false, $user_id ) ) {
-				update_post_meta( $restamp_attachment_id, 'bb_media_draft', 1 );
+				update_post_meta( $restamp_attachment_id, 'bb_media_draft', '1' );
 			}
 		}
 
@@ -1520,8 +1568,8 @@ function bb_post_topic_reply_draft() {
 		if ( $primary_rejected ) {
 			if ( ! empty( $evicted_draft_keys ) ) {
 				$primary_rejection['evicted_draft_keys'] = $evicted_draft_keys;
-				$primary_rejection['evicted_drafts']     = isset( $evicted_drafts ) ? $evicted_drafts : array();
 			}
+			$primary_rejection['evicted_drafts'] = bb_draft_handback( $user_id, isset( $evicted_drafts ) ? $evicted_drafts : array() );
 			wp_send_json_error( $primary_rejection );
 		}
 	}
@@ -1530,7 +1578,7 @@ function bb_post_topic_reply_draft() {
 		array(
 			'draft_activity'     => $draft_topic_reply,
 			'evicted_draft_keys' => isset( $evicted_draft_keys ) ? $evicted_draft_keys : array(),
-			'evicted_drafts'     => isset( $evicted_drafts ) ? $evicted_drafts : array(),
+			'evicted_drafts'     => bb_draft_handback( $user_id, isset( $evicted_drafts ) ? $evicted_drafts : array() ),
 		)
 	);
 }
@@ -1552,10 +1600,37 @@ function bb_get_topic_reply_drafts() {
 	$draft_data = bp_get_user_meta( bp_loggedin_user_id(), 'bb_user_topic_reply_draft', true );
 	$drafts     = array();
 
+	// The page sends the key prefixes its forms can use (draft_discussion_{forum},
+	// draft_reply_{topic}). Only those drafts are returned, not the member's
+	// whole forum draft row on every forum page (V14). Without prefixes - an
+	// older page - every draft is returned as before.
+	$prefixes = array();
+	if ( ! empty( $_POST['prefixes'] ) ) {
+		foreach ( array_slice( explode( ',', sanitize_text_field( wp_unslash( $_POST['prefixes'] ) ) ), 0, 20 ) as $prefix ) {
+			$prefix = trim( $prefix );
+			if ( preg_match( '/^draft_(discussion|reply|topic)(_\d+)?$/', $prefix ) ) {
+				$prefixes[] = $prefix;
+			}
+		}
+	}
+
 	if ( ! empty( $draft_data ) && is_array( $draft_data ) ) {
 		foreach ( $draft_data as $data ) {
 			if ( ! isset( $data['data_key'] ) ) {
 				continue;
+			}
+
+			if ( ! empty( $prefixes ) ) {
+				$wanted = false;
+				foreach ( $prefixes as $prefix ) {
+					if ( $prefix === (string) $data['data_key'] || 0 === strpos( (string) $data['data_key'], $prefix . '_' ) ) {
+						$wanted = true;
+						break;
+					}
+				}
+				if ( ! $wanted ) {
+					continue;
+				}
 			}
 
 			// An entry with no text and no attachment has nothing to restore.
@@ -1569,9 +1644,35 @@ function bb_get_topic_reply_drafts() {
 		}
 	}
 
+	$owed = bb_draft_handback( bp_loggedin_user_id() );
+
+	// Evicted forum drafts whose hand-back never reached the browser are
+	// restored like stored ones, within the same prefixes (V06).
+	foreach ( $owed as $owed_key => $owed_entry ) {
+		$owed_parts = explode( ':', (string) $owed_key, 2 );
+
+		if ( 2 !== count( $owed_parts ) || 'bb_user_topic_reply_draft' !== $owed_parts[0] || isset( $drafts[ $owed_parts[1] ] ) || ! is_array( $owed_entry ) || ! bb_draft_topic_reply_entry_has_payload( $owed_entry ) ) {
+			continue;
+		}
+
+		$owed_wanted = empty( $prefixes );
+		foreach ( $prefixes as $prefix ) {
+			if ( $prefix === $owed_parts[1] || 0 === strpos( $owed_parts[1], $prefix . '_' ) ) {
+				$owed_wanted = true;
+				break;
+			}
+		}
+
+		if ( $owed_wanted ) {
+			$drafts[ $owed_parts[1] ] = $owed_entry;
+		}
+	}
+
 	wp_send_json_success(
 		array(
-			'drafts' => $drafts,
+			'drafts'         => $drafts,
+			// Evictions whose hand-back never reached this browser.
+			'evicted_drafts' => $owed,
 		)
 	);
 }

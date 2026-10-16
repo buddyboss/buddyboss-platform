@@ -106,6 +106,10 @@ window.bp = window.bp || {};
 			this.is_topic_reply_form_submit = false;
 			this.draft_content_changed      = false;
 			this.all_draft_data             = {};
+			this.draft_base_map             = {};
+			this.draft_pending_keys         = {};
+			this.draft_conflict_keys        = {};
+			this.draft_blocked_keys         = {};
 			this.bbp_lead_topic_tags        = '';
 			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};
 			this.topic_reply_draft          = {
@@ -389,11 +393,22 @@ window.bp = window.bp || {};
 					var stored_owner  = ( 'undefined' !== typeof draft_activity_local_data.bb_draft_owner ) ? parseInt( draft_activity_local_data.bb_draft_owner, 10 ) : 0;
 					var current_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
 
-					if ( stored_owner && current_owner && stored_owner !== current_owner ) {
+					// An ownerless copy is foreign too: every copy this pack writes
+					// is stamped, so one without an owner came from an older client
+					// and cannot be attributed to this member (V22).
+					if ( current_owner && stored_owner !== current_owner ) {
 						localStorage.removeItem( this.topic_reply_draft.data_key );
 					} else {
 						this.topic_reply_draft.data                          = draft_activity_local_data.data;
+						this.topic_reply_draft._draft_rev                    = draft_activity_local_data._draft_rev;
 						this.all_draft_data[this.topic_reply_draft.data_key] = draft_activity_local_data.data;
+						this.draft_base_map[this.topic_reply_draft.data_key] = bbDraftBaseFrom( draft_activity_local_data );
+
+						// A handed-back or refused copy stays pending until a
+						// save is confirmed (V11).
+						if ( true === draft_activity_local_data.bb_draft_pending_sync ) {
+							this.draft_pending_keys[this.topic_reply_draft.data_key] = true;
+						}
 					}
 				}
 			}
@@ -401,13 +416,6 @@ window.bp = window.bp || {};
 			return this.topic_reply_draft;
 		};
 
-		/**
-		 * Seed the working draft from the server copy when localStorage holds nothing for the key.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @return {void}
-		 */
 		/**
 		 * Persist the working draft to localStorage without letting a quota
 		 * throw abort the caller.
@@ -427,7 +435,21 @@ window.bp = window.bp || {};
 		this.storeTopicReplyDraftLocal = function () {
 			// Stamp the owner so a restore on a shared browser can reject another
 			// member's draft (#7).
+			// After a conflict the local copy is the newer STORED draft; the
+			// composer's text must not replace it.
+			if ( this.draft_conflict_keys[ this.topic_reply_draft.data_key ] ) {
+				return;
+			}
+
 			this.topic_reply_draft.bb_draft_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
+			this.topic_reply_draft._draft_base    = this.draftBaseFor( this.topic_reply_draft.data_key );
+			this.topic_reply_draft._draft_local_at = Math.floor( Date.now() / 1000 );
+
+			if ( this.draft_pending_keys[ this.topic_reply_draft.data_key ] ) {
+				this.topic_reply_draft.bb_draft_pending_sync = true;
+			} else {
+				delete this.topic_reply_draft.bb_draft_pending_sync;
+			}
 
 			// Declared outside the try so the quota retry below can reuse the
 			// stripped copy rather than re-serialising the base64 original.
@@ -490,6 +512,13 @@ window.bp = window.bp || {};
 			}
 		};
 
+		/**
+		 * Seed the working draft from the server copy when localStorage holds nothing for the key.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.syncTopicReplyDraftData = function() {
 			if (
 				'undefined' === typeof this.bp_nouveau_forums_data ||
@@ -518,6 +547,7 @@ window.bp = window.bp || {};
 
 			this.topic_reply_draft                               = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
 			this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
+			this.draft_base_map[this.topic_reply_draft.data_key] = [ this.topic_reply_draft._draft_rev || '' ];
 			this.storeTopicReplyDraftLocal();
 		};
 
@@ -657,7 +687,7 @@ window.bp = window.bp || {};
 			this.clearDraftNotices();
 
 			var target                      = this.currentForm ? this.currentForm : $( 'form#new-post' );
-			var editor_key                  = target.find( '.bbp-the-content' ).data( 'key' ),
+			var editor_key                  = target.find( '.bbp-the-content:not(.emojionearea)' ).data( 'key' ),
 				$editor,
 				$medium_editor,
 				media_dropzone_container    = target.find( '#forums-post-media-uploader' ),
@@ -1066,17 +1096,6 @@ window.bp = window.bp || {};
 			);
 		};
 
-		/**
-		 * Persist the collected draft to the server.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param {boolean} is_force_saved Whether the save was forced rather than interval-driven.
-		 * @param {boolean} is_reload_window Whether the save is running from the page-unload handler.
-		 * @param {boolean} is_send_all_data Whether the full draft payload (not just the delta) is sent.
-		 *
-		 * @return {void}
-		 */
 		// Re-attempt the one-time lazy read that failed at page load, so a
 		// transient blip does not latch draft_fetch_failed for the whole page
 		// view. Called from the autosave tick in postTopicReplyDraft(). On success
@@ -1104,7 +1123,8 @@ window.bp = window.bp || {};
 				BP_Nouveau.ajaxurl,
 				{
 					action: 'bb_get_topic_reply_drafts',
-					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft
+					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
+					prefixes: bbDraftKeyPrefixes().join( ',' )
 				}
 			).done(
 				function ( response ) {
@@ -1114,6 +1134,10 @@ window.bp = window.bp || {};
 					if ( response && response.success ) {
 						BP_Nouveau.forums.draft_fetch_failed   = false;
 						BP_Nouveau.forums.draft_retry_attempts = 0;
+
+						if ( response.data && response.data.evicted_drafts ) {
+							bbDraftStoreHandback( response.data.evicted_drafts );
+						}
 					}
 				}
 			).always(
@@ -1123,6 +1147,17 @@ window.bp = window.bp || {};
 			);
 		};
 
+		/**
+		 * Persist the collected draft to the server.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {boolean} is_force_saved Whether the save was forced rather than interval-driven.
+		 * @param {boolean} is_reload_window Whether the save is running from the page-unload handler.
+		 * @param {boolean} is_send_all_data Whether the full draft payload (not just the delta) is sent.
+		 *
+		 * @return {void}
+		 */
 		this.postTopicReplyDraft = function ( is_force_saved, is_reload_window, is_send_all_data ) {
 			// Captured synchronously up front: discardTopicReplyDraftForm()
 			// resets post_action back to 'update' before any async response
@@ -1159,10 +1194,44 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// A conflict or a "not loaded" outcome stops saving this key for the
+			// page view (bb_draft_base).
+			if ( this.draft_conflict_keys[ this.topic_reply_draft.data_key ] || this.draft_blocked_keys[ this.topic_reply_draft.data_key ] ) {
+				return;
+			}
+
 			this.topic_reply_draft.data = this.all_draft_data[this.topic_reply_draft.data_key];
 
+			// Each save carries a new revision id and the revisions it was built
+			// on; the server refuses to replace any other stored version.
+			var draft_key  = this.topic_reply_draft.data_key,
+				draft_rev  = bbDraftNewRev(),
+				draft_base = this.draftBaseFor( draft_key ),
+				draft_acks = bbDraftGetAcks();
+
+			if ( ! is_discard_request ) {
+				this.topic_reply_draft._draft_rev = draft_rev;
+			}
+
 			var self = this,
-				draft_payload = this.topic_reply_draft;
+				draft_payload = _.omit( this.topic_reply_draft, [ '_draft_base', '_draft_local_at', 'bb_draft_pending_sync', 'bb_draft_owner' ] );
+
+			// The server strips inline base64 images anyway; stripping them here
+			// stops every autosave tick uploading them (V27).
+			if ( draft_payload.data && 'object' === typeof draft_payload.data ) {
+				_.each(
+					[ 'bbp_topic_content', 'bbp_reply_content' ],
+					function ( content_key ) {
+						if ( 'string' === typeof draft_payload.data[ content_key ] && /data:[^"']*base64/i.test( draft_payload.data[ content_key ] ) ) {
+							draft_payload.data = _.extend( {}, draft_payload.data );
+							draft_payload.data[ content_key ] = draft_payload.data[ content_key ].replace(
+								/(\s(?:src|href)\s*=\s*)(["'])data:[^"']*base64[^"']*\2/gi,
+								'$1$2$2'
+							);
+						}
+					}
+				);
+			}
 
 			// A delete needs only the key, never the content - the server
 			// disposes from its own stored row. Slimming the payload also keeps
@@ -1170,7 +1239,7 @@ window.bp = window.bp || {};
 			// which a full near-cap draft exceeds (the request would silently
 			// never be sent and the server row would survive the discard).
 			if ( is_discard_request ) {
-				draft_payload = _.omit( this.topic_reply_draft, 'data' );
+				draft_payload = _.omit( draft_payload, 'data' );
 			}
 
 			if ( ! is_reload_window ) {
@@ -1181,7 +1250,9 @@ window.bp = window.bp || {};
 				var draft_data = {
 					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
 					action: 'post_topic_reply_draft',
-					draft_topic_reply: draft_payload
+					draft_topic_reply: draft_payload,
+					bb_draft_base: draft_base.join( ',' ),
+					bb_draft_evicted_ack: draft_acks.join( ',' )
 				};
 
 				// Send data to server.
@@ -1217,6 +1288,21 @@ window.bp = window.bp || {};
 								// notice, since the save itself failed.
 								self.handleEvictedDrafts( response );
 
+								// A newer version is stored: keep it, keep the
+								// member's text on screen, and stop saving this key.
+								if ( response && response.data && response.data.conflict ) {
+									self.handleDraftConflict( draft_key, response.data.draft_activity, response.data.message );
+
+									return;
+								}
+
+								// A refused save was not stored; keeping its revision in
+								// the base is harmless and matches the lost-response
+								// path below.
+								if ( ! is_discard_request ) {
+									self.draft_base_map[ draft_key ] = _.uniq( draft_base.concat( [ draft_rev ] ) ).slice( -8 );
+								}
+
 								self.showDraftFeedback(
 									( response && response.data && response.data.message ) ?
 										response.data.message :
@@ -1237,6 +1323,18 @@ window.bp = window.bp || {};
 							self.showDraftFeedback( '' );
 							self.handleEvictedDrafts( response );
 
+							self.draft_base_map[ draft_key ] = is_discard_request ? [ 'none' ] : [ draft_rev ];
+							bbDraftClearAcks( draft_acks );
+
+							// Confirmed on the server: the local copy is an ordinary
+							// cache again.
+							if ( ! is_discard_request && self.draft_pending_keys[ draft_key ] ) {
+								delete self.draft_pending_keys[ draft_key ];
+								if ( draft_key === self.topic_reply_draft.data_key && null !== localStorage.getItem( draft_key ) ) {
+									self.storeTopicReplyDraftLocal();
+								}
+							}
+
 							// A successful DISCARD round-trip proves the connection and
 							// nonce are fine, so clear a latched fetch-failure and its M16
 							// retry budget - a transient blip at page load would otherwise
@@ -1252,6 +1350,12 @@ window.bp = window.bp || {};
 							bp.Nouveau.TopicReplyDraft.markDiscarded( draft_payload.data_key, false );
 						},
 						error: function ( jqXHR, textStatus ) {
+							// The response was lost, not necessarily the save: keep this
+							// revision acceptable as the stored version (NEW-2).
+							if ( ! is_discard_request && 'abort' !== textStatus ) {
+								self.draft_base_map[ draft_key ] = _.uniq( draft_base.concat( [ draft_rev ] ) ).slice( -8 );
+							}
+
 							// A transport failure - network drop, 500, timeout -
 							// never reached success:, so the member saw NOTHING: the
 							// composer looked normal while the server copy silently
@@ -1299,10 +1403,39 @@ window.bp = window.bp || {};
 				// response is never read and an evicted draft could not be
 				// handed back. It refuses instead; the local copies stay.
 				formData.append( 'bb_draft_beacon', '1' );
+				formData.append( 'bb_draft_base', draft_base.join( ',' ) );
+				formData.append( 'bb_draft_evicted_ack', draft_acks.join( ',' ) );
 				formData.append( 'draft_topic_reply', JSON.stringify( draft_payload ) );
 
+				// The beacon's response is never read, so either outcome is an
+				// acceptable stored version later: its revision, or the old one.
+				if ( ! is_discard_request ) {
+					this.draft_base_map[ draft_key ] = _.uniq( draft_base.concat( [ draft_rev ] ) ).slice( -8 );
+					this.storeTopicReplyDraftLocal();
+				}
+
 				if ( is_send_all_data ) {
+					var all_base = {},
+						all_rev  = {};
+
+					// Each replayed sibling may only replace the version this tab
+					// held, and gets its own new revision id.
+					_.each(
+						_.keys( this.all_draft_data ),
+						function ( sibling_key ) {
+							if ( sibling_key === draft_key ) {
+								return;
+							}
+
+							all_base[ sibling_key ] = self.draftBaseFor( sibling_key ).join( ',' );
+							all_rev[ sibling_key ]  = bbDraftNewRev();
+							bbDraftAddBaseToLocal( sibling_key, all_rev[ sibling_key ] );
+						}
+					);
+
 					formData.append( 'all_data', JSON.stringify( this.all_draft_data ) );
+					formData.append( 'all_base', JSON.stringify( all_base ) );
+					formData.append( 'all_rev', JSON.stringify( all_rev ) );
 				}
 
 				// Known limitation: browsers cap sendBeacon payloads (~64KB). When
@@ -1361,6 +1494,12 @@ window.bp = window.bp || {};
 		this.announceSuppressedDraftRestore = function () {
 			var message = ( 'undefined' !== typeof BP_Nouveau.forums ) ? BP_Nouveau.forums.draft_not_restored_message : '';
 
+			// What the member typed is not based on the stored draft, so it must
+			// not be saved over it in this page view (V02).
+			if ( this.topic_reply_draft.data_key ) {
+				this.draft_blocked_keys[ this.topic_reply_draft.data_key ] = true;
+			}
+
 			if ( message ) {
 				this.showDraftFeedback( message );
 			}
@@ -1382,34 +1521,55 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.storeEvictedDrafts = function ( drafts ) {
-			var owner_id = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
+			bbDraftStoreHandback( drafts );
+		};
 
-			if ( ! drafts || 'object' !== typeof drafts ) {
-				return;
+		/**
+		 * The revisions the composer's copy of a draft key was built on.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key Inner draft key.
+		 *
+		 * @return {Array}
+		 */
+		this.draftBaseFor = function ( key ) {
+			if ( this.draft_base_map[ key ] ) {
+				return this.draft_base_map[ key ].slice( 0 );
 			}
 
-			_.each(
-				drafts,
-				function ( entry, key ) {
-					var storage_key = String( key ).split( ':' ).pop(),
-						copy;
+			if ( this.bp_nouveau_forums_data && this.bp_nouveau_forums_data[ key ] ) {
+				return [ this.bp_nouveau_forums_data[ key ]._draft_rev || '' ];
+			}
 
-					if ( ! entry || 'object' !== typeof entry || ! storage_key || null !== localStorage.getItem( storage_key ) ) {
-						return;
-					}
+			return [ 'none' ];
+		};
 
-					copy = _.extend( {}, entry, { bb_draft_pending_sync: true } );
-					if ( -1 !== String( key ).indexOf( ':' ) ) {
-						copy.bb_draft_owner = owner_id;
-					}
+		/**
+		 * Keep the newer stored draft after the server refused a save over it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key     Inner draft key.
+		 * @param {Object} stored  The stored entry the server returned.
+		 * @param {string} message The server's message.
+		 *
+		 * @return {void}
+		 */
+		this.handleDraftConflict = function ( key, stored, message ) {
+			this.draft_conflict_keys[ key ] = true;
+			delete this.draft_pending_keys[ key ];
+			this.clearTopicReplyDraftIntervals();
 
-					try {
-						localStorage.setItem( storage_key, JSON.stringify( copy ) );
-					} catch ( e ) {
-						// Over quota: nothing more this browser can keep.
-					}
+			try {
+				if ( stored && 'object' === typeof stored ) {
+					localStorage.setItem( key, JSON.stringify( _.extend( {}, stored, { bb_draft_owner: parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 ), _draft_local_at: Math.floor( Date.now() / 1000 ) } ) ) );
 				}
-			);
+			} catch ( e ) {
+				// Over quota: the server still holds the stored draft.
+			}
+
+			this.showDraftFeedback( BP_Nouveau.forums.draft_conflict_message || message || '' );
 		};
 
 		/**
@@ -1424,6 +1584,12 @@ window.bp = window.bp || {};
 		this.handleEvictedDrafts = function ( response ) {
 			var keys = ( response && response.data && response.data.evicted_draft_keys ) ? response.data.evicted_draft_keys : [];
 
+			// Store every hand-back, including ones re-sent because an earlier
+			// response was lost; announce only this request's evictions.
+			if ( response && response.data && response.data.evicted_drafts ) {
+				bbDraftStoreHandback( response.data.evicted_drafts );
+			}
+
 			if ( ! keys || ! keys.length ) {
 				return;
 			}
@@ -1436,7 +1602,6 @@ window.bp = window.bp || {};
 			// hold yet is stored from the hand-back: it is now the only copy.
 			// Reopening that composer restores it, and an edit there saves it
 			// again.
-			this.storeEvictedDrafts( response.data.evicted_drafts );
 			//
 			// They are dropped from the in-memory working set, though. The
 			// unload beacon replays that whole set as `all_data`, which would
@@ -1613,6 +1778,13 @@ window.bp = window.bp || {};
 					self.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
 				}
 			} );
+
+			// A keyboard Cmd/Ctrl+V is routed through MediumEditor's body-level
+			// paste bin, which the listener above never sees. The editor refuses
+			// the image there and reports it with this event (V03).
+			$form.on( 'bb-image-paste-blocked.bbDraftImageGuard', function () {
+				self.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
+			} );
 		};
 
 		/**
@@ -1773,7 +1945,7 @@ window.bp = window.bp || {};
 
 			var $form         = this.currentForm ? this.currentForm : $('form#new-post'),
 				activity_data = {},
-				editor_key    = $form.find('.bbp-the-content').data('key'),
+				editor_key    = $form.find( '.bbp-the-content:not(.emojionearea)' ).data( 'key' ),
 				$editor       = $form.find('#bbp_editor_topic_content_' + editor_key);
 
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
@@ -1923,7 +2095,7 @@ window.bp = window.bp || {};
 
 			var $form         = this.currentForm ? this.currentForm : $( 'form#new-post' ),
 				activity_data = {},
-				editor_key    = $form.find( '.bbp-the-content' ).data( 'key' ),
+				editor_key    = $form.find( '.bbp-the-content:not(.emojionearea)' ).data( 'key' ),
 				$editor       = $form.find( '#bbp_editor_reply_content_' + editor_key );
 
 			if ( 'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
@@ -2495,6 +2667,232 @@ window.bp = window.bp || {};
 
 
 	/**
+	 * A new random revision id for one draft save.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {string}
+	 */
+	var bbDraftNewRev = function () {
+		var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+			rev   = '',
+			i;
+
+		for ( i = 0; i < 16; i++ ) {
+			rev += chars.charAt( Math.floor( Math.random() * chars.length ) );
+		}
+
+		return rev;
+	};
+
+	/**
+	 * The revisions a stored or local draft copy was built on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} copy Draft entry or local copy.
+	 * @return {Array}
+	 */
+	var bbDraftBaseFrom = function ( copy ) {
+		if ( copy && _.isArray( copy._draft_base ) && copy._draft_base.length ) {
+			return copy._draft_base.slice( -8 );
+		}
+
+		return [ ( copy && copy._draft_rev ) ? String( copy._draft_rev ) : '' ];
+	};
+
+	/**
+	 * Add a revision to the base of a local copy (after a beacon replayed it).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} key Inner draft key.
+	 * @param {string} rev Revision the replay sent.
+	 * @return {void}
+	 */
+	var bbDraftAddBaseToLocal = function ( key, rev ) {
+		try {
+			var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+
+			if ( copy && 'object' === typeof copy ) {
+				copy._draft_base = _.uniq( bbDraftBaseFrom( copy ).concat( [ rev ] ) ).slice( -8 );
+				localStorage.setItem( key, JSON.stringify( copy ) );
+			}
+		} catch ( e ) {
+			// Without it the next save from that copy is refused, never overwrites.
+		}
+	};
+
+	/**
+	 * Hand-back keys this browser stored and has not reported to the server yet.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {Array}
+	 */
+	var bbDraftGetAcks = function () {
+		try {
+			return _.compact( String( localStorage.getItem( 'bb_draft_evicted_ack' ) || '' ).split( ',' ) );
+		} catch ( e ) {
+			return [];
+		}
+	};
+
+	/**
+	 * Forget acknowledgements a request delivered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Array} sent Keys the request carried.
+	 * @return {void}
+	 */
+	var bbDraftClearAcks = function ( sent ) {
+		try {
+			var left = _.difference( bbDraftGetAcks(), sent || [] );
+
+			if ( left.length ) {
+				localStorage.setItem( 'bb_draft_evicted_ack', left.join( ',' ) );
+			} else {
+				localStorage.removeItem( 'bb_draft_evicted_ack' );
+			}
+		} catch ( e ) {
+			// Harmless: the server drops entries it already holds again.
+		}
+	};
+
+	/**
+	 * Keep drafts the server evicted from the draft budget in localStorage.
+	 *
+	 * Forum inner keys ("meta_key:inner_key") are stored in this composer's
+	 * shape, activity keys in the activity composer's shape. Each copy is
+	 * marked pending, because the server no longer holds it. A copy this
+	 * browser already holds keeps its content (it may be newer) but is marked
+	 * pending too, so no composer close wipes what is now the only copy.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} drafts Evicted entries keyed like `evicted_draft_keys`.
+	 * @return {void}
+	 */
+	var bbDraftStoreHandback = function ( drafts ) {
+		var owner_id = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 ),
+			acks     = bbDraftGetAcks();
+
+		if ( ! drafts || 'object' !== typeof drafts ) {
+			return;
+		}
+
+		_.each(
+			drafts,
+			function ( entry, key ) {
+				var storage_key = String( key ).split( ':' ).pop(),
+					copy;
+
+				if ( ! entry || 'object' !== typeof entry || ! storage_key ) {
+					return;
+				}
+
+				acks.push( String( key ) );
+
+				try {
+					if ( null !== localStorage.getItem( storage_key ) ) {
+						copy = JSON.parse( localStorage.getItem( storage_key ) );
+						if ( copy && 'object' === typeof copy ) {
+							copy.bb_draft_pending_sync = true;
+							localStorage.setItem( storage_key, JSON.stringify( copy ) );
+						}
+						return;
+					}
+
+					copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+					if ( -1 !== String( key ).indexOf( ':' ) ) {
+						copy.bb_draft_owner = owner_id;
+					}
+
+					localStorage.setItem( storage_key, JSON.stringify( copy ) );
+				} catch ( e ) {
+					// Over quota or a corrupt copy: nothing more this browser can keep.
+				}
+			}
+		);
+
+		try {
+			localStorage.setItem( 'bb_draft_evicted_ack', _.uniq( acks ).slice( -50 ).join( ',' ) );
+		} catch ( e ) {
+			// Without the acknowledgement the server simply sends it again.
+		}
+	};
+
+	/**
+	 * Draft key prefixes the forum forms on this page can use.
+	 *
+	 * A new-topic form drafts under draft_discussion_{forum}; a reply form
+	 * under draft_reply_{topic} or draft_reply_{topic}_{reply}, depending on
+	 * which reply is answered. The draft fetch asks only for these.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {Array}
+	 */
+	var bbDraftKeyPrefixes = function () {
+		var prefixes = [];
+
+		$( 'form[name="new-post"]' ).each(
+			function () {
+				var forum_id = parseInt( $( this ).find( '#bbp_forum_id' ).val(), 10 ),
+					topic_id = parseInt( $( this ).find( '#bbp_topic_id' ).val(), 10 );
+
+				if ( $( this ).find( '#bbp_forum_id' ).length ) {
+					prefixes.push( 0 < forum_id ? 'draft_discussion_' + forum_id : 'draft_topic' );
+				} else if ( $( this ).find( '#bbp_topic_id' ).length ) {
+					prefixes.push( 0 < topic_id ? 'draft_reply_' + topic_id : 'draft_reply' );
+				}
+			}
+		);
+
+		return _.uniq( prefixes );
+	};
+
+	/**
+	 * Drop local draft copies older than the draft retention.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {void}
+	 */
+	var bbDraftSweepExpired = function () {
+		var days   = ( 'undefined' !== typeof BP_Nouveau.forums ) ? parseInt( BP_Nouveau.forums.draft_retention_days, 10 ) : 0,
+			cutoff = Math.floor( Date.now() / 1000 ) - ( days * 86400 ),
+			keys   = [],
+			i;
+
+		if ( ! days || 1 > days ) {
+			return;
+		}
+
+		try {
+			for ( i = 0; i < localStorage.length; i++ ) {
+				if ( /^draft_/.test( localStorage.key( i ) ) ) {
+					keys.push( localStorage.key( i ) );
+				}
+			}
+
+			_.each(
+				keys,
+				function ( key ) {
+					var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+
+					if ( copy && copy._draft_local_at && parseInt( copy._draft_local_at, 10 ) < cutoff ) {
+						localStorage.removeItem( key );
+					}
+				}
+			);
+		} catch ( e ) {
+			// Storage unavailable or a corrupt copy: each composer repairs its own key.
+		}
+	};
+
+	/**
 	 * Snapshot one form's editable content without needing an instance.
 	 *
 	 * Shared with the instance method so the capture taken before the lazy fetch
@@ -2528,7 +2926,12 @@ window.bp = window.bp || {};
 		// the Discard button CSS-hidden) and a role="alert" told the member they
 		// had "already started writing here" on a form they had not touched, on
 		// every page load (H3).
-		$form.find( '.bbp-the-content' ).each(
+		// `:not(.emojionearea)`: with forum emoji on, emojionearea wraps the
+		// editor in a div that copies its classes, so a second
+		// `.bbp-the-content` appears after this module captured the first
+		// snapshot. Counting it made every form look typed-into, so no forum
+		// draft was ever restored and the next autosave overwrote it (V01).
+		$form.find( '.bbp-the-content:not(.emojionearea)' ).each(
 			function () {
 				parts.push( $.trim( $( this ).text() ) );
 			}
@@ -2601,6 +3004,10 @@ window.bp = window.bp || {};
 	};
 
 
+	// Called here, not where `forms` is declared: it is a function expression,
+	// so it only exists once its `var` line has run (NEW-1).
+	bbDraftSweepExpired();
+
 	if (
 		0 < forms.length &&
 		'undefined' !== typeof BP_Nouveau.forums &&
@@ -2653,7 +3060,8 @@ window.bp = window.bp || {};
 				BP_Nouveau.ajaxurl,
 				{
 					action: 'bb_get_topic_reply_drafts',
-					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft
+					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
+					prefixes: bbDraftKeyPrefixes().join( ',' )
 				}
 			).done(
 				function ( response ) {
@@ -2664,6 +3072,11 @@ window.bp = window.bp || {};
 						bbDraftFetchFailed();
 
 						return;
+					}
+
+					// Evictions whose hand-back never reached this browser.
+					if ( response.data && response.data.evicted_drafts ) {
+						bbDraftStoreHandback( response.data.evicted_drafts );
 					}
 
 					if ( response.data && response.data.drafts ) {

@@ -1382,6 +1382,138 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * An evicted draft's file stays protected for the retention counted from
+	 * the eviction, not from its upload (V10).
+	 */
+	public function test_sweep_keeps_the_stamp_of_a_recently_evicted_draft_file() {
+		$user_id = self::factory()->user->create();
+		$evicted = $this->make_stamped_unsaved_attachment( $user_id, 40 );
+		$plain   = $this->make_stamped_unsaved_attachment( $user_id, 40 );
+
+		bb_draft_mark_evicted_attachments(
+			array( array( 'data' => array( 'media' => array( array( 'id' => $evicted ) ) ) ) ),
+			$user_id
+		);
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '1', (string) get_post_meta( $evicted, 'bb_media_draft', true ), 'A file of a just-evicted (handed-back) draft keeps its stamp.' );
+		$this->assertSame( '', (string) get_post_meta( $plain, 'bb_media_draft', true ), 'Control: an old unreferenced stamp is still released.' );
+
+		// Once the eviction itself is past retention, the stamp goes too.
+		update_post_meta( $evicted, 'bb_draft_evicted_at', time() - 3 * DAY_IN_SECONDS );
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '', (string) get_post_meta( $evicted, 'bb_media_draft', true ) );
+		$this->assertSame( '', (string) get_post_meta( $evicted, 'bb_draft_evicted_at', true ), 'The eviction marker is cleared with the stamp.' );
+	}
+
+	/**
+	 * Healing an oversized legacy draft strips the pasted base64 and keeps the
+	 * text instead of deleting the draft (V09).
+	 */
+	public function test_salvage_strips_pasted_base64_and_keeps_the_text() {
+		$user_id = self::factory()->user->create();
+		$text    = '<p>My unpublished words.</p>';
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_5',
+			array(
+				'data_key'        => 'draft_group_5',
+				'_draft_saved_at' => 100,
+				'data'            => array( 'content' => $text . '<img src="data:image/png;base64,' . str_repeat( 'A', 200 * KB_IN_BYTES ) . '">' ),
+			)
+		);
+
+		$this->assertTrue( bb_draft_salvage_oversized_draft( $user_id, 'draft_group_5' ), 'The row is salvaged, not left for disposal.' );
+
+		$stored = bp_get_user_meta( $user_id, 'draft_group_5', true );
+		$this->assertStringContainsString( 'My unpublished words.', $stored['data']['content'] );
+		$this->assertStringNotContainsString( 'base64', $stored['data']['content'] );
+	}
+
+	/**
+	 * A draft key naming a trashed or pending topic is refused like a key that
+	 * names nothing, so the check is not an existence oracle (V24).
+	 */
+	public function test_key_context_refuses_trashed_and_pending_posts() {
+		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$open    = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum ) );
+		$trashed = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum, 'post_status' => 'trash' ) );
+		$pending = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum, 'post_status' => 'pending' ) );
+
+		$this->assertNotFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $open ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $trashed ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_' . $pending ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_reply_999999999' ) );
+	}
+
+	/**
+	 * The expiry cron re-checks a draft's age on a fresh read, so one re-saved
+	 * after the batch was read survives (V30).
+	 */
+	public function test_expiry_skips_a_draft_resaved_after_the_batch_read() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_8',
+			array(
+				'data_key'        => 'draft_group_8',
+				'_draft_saved_at' => 100,
+				'data'            => array( 'content' => 'old' ),
+			)
+		);
+
+		// Simulate the member re-saving between the batch read and the dispose:
+		// just before the cron's fresh read of this row runs.
+		$stored_key = bp_get_user_meta_key( 'draft_group_8' );
+		$resaved    = false;
+		$resave     = function ( $query ) use ( $user_id, $stored_key, &$resaved ) {
+			global $wpdb;
+
+			if ( ! $resaved && 0 === strpos( ltrim( $query ), 'SELECT meta_value FROM' ) && false !== strpos( $query, "'" . $stored_key . "'" ) ) {
+				$resaved = true;
+				$wpdb->query(
+					$wpdb->prepare(
+						"UPDATE {$wpdb->usermeta} SET meta_value = %s WHERE user_id = %d AND meta_key = %s",
+						maybe_serialize(
+							array(
+								'data_key'        => 'draft_group_8',
+								'_draft_saved_at' => time(),
+								'data'            => array( 'content' => 'fresh' ),
+							)
+						),
+						$user_id,
+						$stored_key
+					)
+				);
+			}
+
+			return $query;
+		};
+		add_filter( 'query', $resave );
+
+		delete_site_option( 'bb_draft_cleanup_cursor' );
+		bb_drafts_delete_expired( 0 );
+
+		remove_filter( 'query', $resave );
+
+		$this->assertTrue( $resaved, 'Premise: the re-save ran inside the window.' );
+		wp_cache_delete( $user_id, 'user_meta' );
+		$stored = bp_get_user_meta( $user_id, 'draft_group_8', true );
+		$this->assertIsArray( $stored, 'A draft re-saved after the batch read must not be deleted.' );
+		$this->assertSame( 'fresh', $stored['data']['content'] );
+	}
+
+	/**
 	 * M3: a stamp left by a cap-refused save, referenced by no stored draft,
 	 * must be released so the orphan cron can finally reap the file - while a
 	 * stamp a stored draft still references is left alone.
@@ -4767,9 +4899,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		$this->assertSame(
-			'',
+			'1',
 			(string) get_post_meta( $orphaned, 'bb_media_draft', true ),
-			'An evicted sibling attachment must stay released, not be re-stamped by the unconditional re-stamp loop.'
+			'An evicted sibling is handed back to the browser and still references its file, so the stamp stays until the orphan-stamp sweep (PROD-9621 V10).'
 		);
 	}
 
@@ -4878,9 +5010,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( 's updated', $stored[ $sibling_key ]['data']['bbp_topic_content'], 'The sibling merge must have happened.' );
 
 		$this->assertSame(
-			'',
+			'1',
 			(string) get_post_meta( $dropped, 'bb_media_draft', true ),
-			'An attachment a sibling stopped referencing must have its stamp released so the orphan cron can reap it.'
+			'A replace keeps the stamp of an attachment the sibling dropped: another tab may still hold it. The orphan-stamp sweep releases it after retention (PROD-9621 V04).'
 		);
 		$this->assertSame(
 			'1',
@@ -5064,9 +5196,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Negative control: an attachment nothing references any more must
 		// still be released, or the fix has simply disabled releasing.
 		$this->assertSame(
-			'',
+			'1',
 			(string) get_post_meta( $only_here, 'bb_media_draft', true ),
-			'An attachment no stored draft references any more must still be released.'
+			'A replace keeps the stamp of an attachment nothing else references; the orphan-stamp sweep releases it after retention (PROD-9621 V04).'
 		);
 	}
 
@@ -5415,9 +5547,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( 'updated', $stored['data']['content'], 'Premise: the replacement must have been stored.' );
 
 		$this->assertSame(
-			'',
+			'1',
 			(string) get_post_meta( $dropped, 'bb_media_draft', true ),
-			'An attachment the replaced draft dropped must have its stamp released, or it can never be cleaned up.'
+			'A replace keeps the stamp of an attachment the new draft dropped: a second tab may still hold it, and the orphan cron would delete it. The sweep releases it after retention (PROD-9621 V04).'
 		);
 
 		$this->assertSame(
@@ -8241,9 +8373,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		$this->assertSame(
-			'',
+			'1',
 			(string) get_post_meta( $only_here, 'bb_media_draft', true ),
-			'Negative control: an attachment nothing else references must still be released, or the fix would simply leak orphan protection for ever.'
+			'A replace keeps the stamp of an attachment nothing else references; the orphan-stamp sweep releases it after retention (PROD-9621 V04).'
 		);
 	}
 
@@ -8311,9 +8443,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		$this->assertSame(
-			'',
+			'1',
 			(string) get_post_meta( $only_here, 'bb_media_draft', true ),
-			'Negative control: an attachment nothing else references must still be released.'
+			'A replace keeps the stamp of an attachment nothing else references; the orphan-stamp sweep releases it after retention (PROD-9621 V04).'
 		);
 	}
 

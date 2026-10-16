@@ -1406,6 +1406,34 @@ function bb_nouveau_ajax_post_draft_activity() {
 				$draft_user_id
 			);
 
+			// Never replace a stored version this composer did not show: a
+			// lazy fetch that had not landed, a handed-back copy older than a
+			// save from another device, a second tab behind the first. The
+			// uploads above stay protected; the stored draft is returned so the
+			// browser can keep it (bb_draft_base_matches()).
+			$stored_draft_entry = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+
+			if ( ! bb_draft_base_matches( $stored_draft_entry, bb_draft_request_base() ) ) {
+				/**
+				 * Fires when a draft save is refused because a newer version is stored.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int    $user_id  User ID.
+				 * @param string $data_key Draft key ("meta_key" or "meta_key:inner_key").
+				 */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bb_draft_conflict_message(),
+						'conflict'       => true,
+						'draft_activity' => $stored_draft_entry,
+						'evicted_drafts' => bb_draft_handback( $draft_user_id ),
+					)
+				);
+			}
+
 			// The client attachment lists arrive as JSON and each entry costs a
 			// per-ID ownership lookup, so they must be bounded. This REFUSES an
 			// over-bound list instead of silently storing a truncated one: the
@@ -1435,9 +1463,9 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 			// Owner-gate the feature image before the caps run, mirroring the
 			// BLOCKER-1 ordering the media/document/video lists use. When Pro is
-			// present its richer per-object check runs in the block below and
-			// keeps its existing error-on-foreign behaviour; a verified owner is
-			// merely protected early here. When Pro is ABSENT that block is
+			// present its richer per-object check runs in the block below, which
+			// errors on an image the member may not edit and drops one they may
+			// edit but do not own; a verified owner is merely protected early here. When Pro is ABSENT that block is
 			// skipped entirely, so a foreign attachment id used to be stored
 			// straight into the member's own draft row - here it is dropped the
 			// same way an unowned media id is (GH review C1).
@@ -1445,7 +1473,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				$feature_image_id = (int) $draft_activity['data']['bb_activity_post_feature_image']['id'];
 
 				if ( bb_user_can_manage_draft_attachment( $feature_image_id, false, $draft_user_id ) ) {
-					update_post_meta( $feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
+					update_post_meta( $feature_image_id, 'bb_activity_post_feature_image_draft', '1' );
 				} elseif ( ! function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
 					// Core-only: no Pro per-object check will run, so a foreign
 					// or unknown id must not be stored.
@@ -1568,9 +1596,15 @@ function bb_nouveau_ajax_post_draft_activity() {
 						);
 					}
 					// Only the owner's attachment may be flagged as drafted (PROD-10561).
+					// Pro's check answers "may this member edit it?", which a
+					// moderator passes for someone else's PUBLISHED image, so a
+					// draft would otherwise store - and later publish with - a
+					// file that is not theirs. Drop it from the draft (V23).
 					if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $draft_user_id ) ) {
 						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
 						$stamp_feature_image_id = (int) $attachment_id;
+					} else {
+						unset( $draft_activity['data']['bb_activity_post_feature_image'] );
 					}
 				}
 			}
@@ -1615,7 +1649,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
-			$raw_draft_size = strlen( maybe_serialize( $draft_activity ) );
+			// Measured unslashed: this handler keeps the payload slashed, but
+			// update_metadata() stores it unslashed, and the forum handler
+			// measures that same stored width (V21).
+			$raw_draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
 
 			if ( $raw_draft_size > bb_draft_max_size() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
@@ -1660,8 +1697,12 @@ function bb_nouveau_ajax_post_draft_activity() {
 			}
 
 			$draft_activity['_draft_saved_at'] = time();
+			$draft_activity['_draft_rev']      = bb_draft_sanitize_rev( $draft_activity['_draft_rev'] ?? '' );
 
-			$draft_size = strlen( maybe_serialize( $draft_activity ) );
+			// Browser-side bookkeeping is never stored with the draft.
+			unset( $draft_activity['bb_draft_pending_sync'], $draft_activity['_draft_base'] );
+
+			$draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
 
 			if ( $draft_size > bb_draft_max_size() ) {
 
@@ -1671,7 +1712,9 @@ function bb_nouveau_ajax_post_draft_activity() {
 				 * @since BuddyBoss [BBVERSION]
 				 *
 				 * @param int    $user_id  User whose draft was rejected.
-				 * @param string $data_key Draft usermeta key.
+				 * @param string $data_key Draft key: the usermeta key for an activity draft,
+				 *                         "bb_user_topic_reply_draft:{inner key}" for a forum
+				 *                         draft - the same shape `evicted_draft_keys` uses.
 				 * @param int    $size     Serialized draft size in bytes.
 				 * @param string $reason   Which cap rejected it, and why it cannot be
 				 *                         resolved by the member where relevant:
@@ -1717,7 +1760,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 						// from its localStorage/UI rather than list drafts that are
 						// gone (H1).
 						'evicted_draft_keys' => $draft_budget['evicted'],
-						'evicted_drafts'     => $draft_budget['entries'],
+						'evicted_drafts'     => bb_draft_handback( $draft_user_id, $draft_budget['entries'] ),
 					)
 				);
 			}
@@ -1727,10 +1770,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 			// Every cap accepted the save - apply the deferred protection stamps now.
 			foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
-				update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+				update_post_meta( $stamp_attachment_id, 'bb_media_draft', '1' );
 			}
 			if ( $stamp_feature_image_id ) {
-				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
+				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', '1' );
 			}
 
 			// Strip the OTHER shape's attachment keys before storing. This handler
@@ -1749,8 +1792,6 @@ function bb_nouveau_ajax_post_draft_activity() {
 					$draft_activity['data']['bbp_video']
 				);
 			}
-
-			$replaced_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
 
 			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
 			bb_draft_flush_user_meta_sizes( $draft_user_id );
@@ -1788,35 +1829,34 @@ function bb_nouveau_ajax_post_draft_activity() {
 				bb_draft_invalidate_referenced_cache( bb_draft_collect_attachment_ids( $draft_activity ) );
 			}
 
-			// Release the stamps of attachments the replaced draft held and the
-			// new one does not keep. Without this the activity path only ever
-			// ADDED bb_media_draft, so an attachment the member removed from
-			// their draft stayed orphan-protected for good and the cleanup crons
-			// could never reclaim it - a slow leak of undeletable files. The
-			// forum handler was given this and the activity handler was not, so
-			// the helper had exactly one of its two call sites.
-			//
-			// Read BEFORE the write and released AFTER it: releasing first would
-			// expose the attachments of a draft that still exists if anything
-			// below failed. No $retain_entries argument is needed here because an
-			// activity draft is one draft per meta row, so it has no siblings
-			// that could still reference them - but a DIFFERENT row (another
-			// activity draft, a group draft, the forum row) can, so the cross-row
-			// retain set is passed to keep those stamps (L7 fan-out).
-			if ( is_array( $replaced_draft ) && ! empty( $replaced_draft ) ) {
-				bb_draft_release_replaced_attachments(
-					$replaced_draft,
-					$draft_activity,
-					$draft_user_id,
-					array(),
-					bb_draft_collect_other_row_referenced_ids( $draft_user_id, $draft_activity['data_key'] )
-				);
-			}
+			// The replaced draft's attachment stamps are deliberately NOT released.
+			// A replace is not proof the file is unused: a second tab or device
+			// still drafting with it saves a list without it, and releasing the
+			// stamp then let the orphan cron delete a photo that tab still showed.
+			// Stamps a draft no longer references are released by the
+			// orphan-stamp sweep after retention, as in 3.6.1.
 		} else {
 			// Dispose strictly from the STORED draft - the client payload's
 			// attachment lists are never used for deletion, so a crafted request
 			// cannot delete attachments the draft never referenced.
 			$stored_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+
+			// A discard only removes the version the composer showed. A composer
+			// that never loaded the stored draft (a failed fetch, a stale tab)
+			// must not delete it, or its attachments, on the member's behalf.
+			if ( ! bb_draft_base_matches( $stored_draft, bb_draft_request_base() ) ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bb_draft_conflict_message(),
+						'conflict'       => true,
+						'draft_activity' => $stored_draft,
+						'evicted_drafts' => bb_draft_handback( $draft_user_id ),
+					)
+				);
+			}
 
 			if ( is_array( $stored_draft ) && ! empty( $stored_draft['data'] ) && is_array( $stored_draft['data'] ) ) {
 
@@ -1873,7 +1913,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		array(
 			'draft_activity'     => $draft_activity,
 			'evicted_draft_keys' => $evicted_draft_keys,
-			'evicted_drafts'     => $evicted_drafts,
+			'evicted_drafts'     => bb_draft_handback( $draft_user_id ?? bp_loggedin_user_id(), $evicted_drafts ),
 		)
 	);
 }
@@ -1905,10 +1945,19 @@ function bb_nouveau_ajax_get_draft_activity() {
 	}
 
 	$draft_activity = bp_get_user_meta( $user_id, $data_key, true );
+	$owed           = bb_draft_handback( $user_id );
+
+	// Nothing stored, but this key was evicted and its hand-back never reached
+	// the browser: restore the held copy (V06).
+	if ( ( empty( $draft_activity ) || ! is_array( $draft_activity ) ) && isset( $owed[ $data_key ] ) && is_array( $owed[ $data_key ] ) ) {
+		$draft_activity = $owed[ $data_key ];
+	}
 
 	wp_send_json_success(
 		array(
 			'draft_activity' => ( ! empty( $draft_activity ) && is_array( $draft_activity ) ) ? $draft_activity : false,
+			// Evictions whose hand-back never reached this browser.
+			'evicted_drafts' => $owed,
 		)
 	);
 }
