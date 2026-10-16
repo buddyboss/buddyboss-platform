@@ -1018,7 +1018,7 @@ function bb_media_get_album_counts( $album_id = 0, $group_id = 0 ) {
 	$media_args = array(
 		'album_id'    => $album_id,
 		'count_total' => true,
-		'video'       => true,
+		'video'       => bp_is_active( 'video' ),
 		'per_page'    => 1,
 	);
 
@@ -1086,7 +1086,6 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 
 	return http_build_query( $querystring );
 }
-
 
 /**
  * Object template results media personal scope.
@@ -2695,6 +2694,14 @@ function bp_media_download_url_file() {
 			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 
+			// Videos share the media table; without the video component they must not
+			// be downloadable through the photo handler.
+			if ( $can_download_btn && ! bp_is_active( 'video' ) ) {
+				global $wpdb;
+				$media_type       = $wpdb->get_var( $wpdb->prepare( 'SELECT type FROM ' . buddypress()->media->table_name . ' WHERE id = %d', absint( $_GET['media_file'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+				$can_download_btn = 'video' !== $media_type;
+			}
+
 			// Add pre_get_posts action hook back.
 			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 		}
@@ -2831,7 +2838,6 @@ function bp_media_get_forum_id( $media_id ) {
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
 }
-
 
 /**
  * Return the breadcrumbs.
@@ -3814,6 +3820,26 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 
+	// Bail with no access when the component for the requested type is not
+	// active (e.g. the video/document components are not present in this build),
+	// since their classes and functions are not loaded.
+	if (
+		( 'video' === $type && ! bp_is_active( 'video' ) ) ||
+		( in_array( $type, array( 'document', 'folder' ), true ) && ! bp_is_active( 'document' ) )
+	) {
+		$data = array(
+			'can_view'     => false,
+			'can_download' => false,
+			'can_add'      => false,
+			'can_edit'     => false,
+			'can_delete'   => false,
+			'can_move'     => false,
+		);
+
+		/** This filter is documented in bp-media/bp-media-functions.php */
+		return apply_filters( 'bb_media_user_can_access', $data, $id, $type, 0 );
+	}
+
 	$can_view        = false;
 	$can_download    = false;
 	$can_add         = false;
@@ -4207,69 +4233,6 @@ add_action(
 		bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 	}
 );
-
-
-/**
- * Check the GIPHY key is valid or not.
- *
- * @param boolean $api_key GIPHY api key.
- * @param boolean $message GIPHY api key validation response message.
- *
- * @return mixed Whether the giphy key is valid or error object.
- *
- * @since BuddyBoss 2.1.2
- */
-function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
-
-	static $cache = array();
-	$cache_key    = 'bb_check_valid_giphy_api_key';
-	$saved_key    = bp_media_get_gif_api_key();
-	$use_caching  = false;
-
-	if ( empty( $api_key ) && empty( $cache ) ) {
-
-		// Use caching if not user action.
-		$cache       = get_transient( $cache_key );
-		$use_caching = true;
-
-		// Remove old cache if empty key saved.
-		if ( ! empty( $cache ) && is_array( $cache ) && ! array_key_exists( $saved_key, $cache ) ) {
-			delete_transient( $cache_key );
-		}
-	}
-
-	$api_key = ! empty( $api_key ) ? $api_key : $saved_key;
-	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
-		if ( true === $message ) {
-			return $cache[ $api_key ];
-		}
-		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-	}
-
-	if ( empty( $api_key ) ) {
-		return false;
-	}
-
-	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output && ! is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-		if ( $use_caching ) {
-			$cache_expiry = MONTH_IN_SECONDS;
-			if ( 200 !== $cache[ $api_key ]['response']['code'] ) {
-				$cache_expiry = WEEK_IN_SECONDS;
-			}
-			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
-		}
-	} elseif ( is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-	} else {
-		return false;
-	}
-	if ( true === $message ) {
-		return $cache[ $api_key ];
-	}
-	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-}
 
 /**
  * Run migration for media and video description from post table to media table.
