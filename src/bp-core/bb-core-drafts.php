@@ -1334,6 +1334,21 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
 }
 
 /**
+ * Whether the current draft save was sent by the page-unload beacon.
+ *
+ * The composers send their last save with navigator.sendBeacon() and flag
+ * it, because the browser never reads that response. The budget uses it to
+ * refuse rather than evict, since an evicted draft could not be handed back.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True for a page-unload save.
+ */
+function bb_draft_is_beacon_request() {
+	return ! empty( $_POST['bb_draft_beacon'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
+}
+
+/**
  * Enforce the per-user draft and meta budgets before storing a draft.
  *
  * When the combined size of the user's drafts would exceed
@@ -1378,11 +1393,20 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
  * @param int    $user_id     User ID.
  * @param string $current_key Meta key about to be written (protected from eviction).
  * @param int    $new_size    Serialized size of the value about to be written.
+ * Evicting a draft from a live save does NOT lose it. The evicted entries are
+ * returned in `entries` and the save handlers hand them back to the browser,
+ * which keeps them in localStorage; their attachment stamps are kept too, so
+ * the files stay protected until the orphan-stamp sweep's normal retention
+ * window. A 'beacon' save cannot read its response, so it never evicts: when
+ * the draft does not fit it is refused and the browser keeps its local copy.
+ *
  * @param string $context     Optional. 'save' (default) refuses over the total-meta budget;
+ *                            'beacon' is a save that never evicts (page-unload saves);
  *                            'heal' bypasses that refusal and always evicts down to the draft cap.
  * @return array {
  *     @type bool     $allowed Whether the save may proceed.
  *     @type string[] $evicted Draft keys evicted to make room ("meta_key" or "meta_key:inner_key").
+ *     @type array    $entries Evicted draft entries keyed like `$evicted`, for the hand-back.
  *     @type string   $reason  Why the save was refused, '' when allowed. 'drafts_over_cap' when the
  *                             member's own drafts are over budget and eviction cannot recover
  *                             enough; 'meta_budget' when their NON-draft meta leaves no room, which
@@ -1397,6 +1421,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 	$result   = array(
 		'allowed' => true,
 		'evicted' => array(),
+		'entries' => array(),
 		'reason'  => '',
 	);
 
@@ -1484,6 +1509,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 					// undercount f643e4d0c8 fixed in bb_forums_trim_draft_row(),
 					// which is the sibling of this loop.
 					'bytes'     => strlen( maybe_serialize( $inner_draft ) ) + bb_draft_serialized_key_bytes( (string) $inner_key ),
+					'entry'     => $inner_draft,
 				);
 			}
 		} else {
@@ -1492,6 +1518,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 				'inner_key' => '',
 				'saved_at'  => isset( $stored['_draft_saved_at'] ) ? (int) $stored['_draft_saved_at'] : 0,
 				'bytes'     => $bytes,
+				'entry'     => $stored,
 			);
 		}
 	}
@@ -1532,13 +1559,31 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		return $result;
 	}
 
+	// A page-unload save is sent with navigator.sendBeacon(), whose response
+	// the browser never reads - an eviction there would delete a draft with no
+	// hand-back to keep it. Refuse instead: the browser still holds this
+	// draft locally and saves it on the next visit over a request that can
+	// receive the hand-back.
+	if ( 'beacon' === $context ) {
+		$result['allowed'] = false;
+		$result['reason']  = 'drafts_over_cap';
+
+		return $result;
+	}
+
 	// The eviction below deletes rows and, by default, releases their attachment
 	// stamps in the CURRENT blog. That is correct for a live in-blog save, but
 	// the healing context runs from the root-only one-shot and evicts heavy
 	// users' rows network-wide, so on multisite it would strip a same-numbered
 	// attachment on the wrong blog - H2 verbatim (F1). Defer the release there
 	// so the per-site orphan-stamp sweep reaps in the correct blog instead.
-	$defer_attachment_release = ( 'heal' === $context && is_multisite() );
+	//
+	// A live save defers the release as well, for a different reason: its
+	// evicted drafts are handed back to the browser, so their files are still
+	// referenced there. The orphan-stamp sweep releases a stamp only once
+	// nothing stored references the file AND it is past retention, which is
+	// the same window the member was promised for the draft itself.
+	$defer_attachment_release = ( 'heal' !== $context || is_multisite() );
 
 	foreach ( $candidates as $candidate ) {
 		if ( $draft_total <= $total_cap ) {
@@ -1552,7 +1597,8 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		$draft_total -= $candidate['bytes'];
 		$evicted_key  = '' !== $candidate['inner_key'] ? $candidate['meta_key'] . ':' . $candidate['inner_key'] : $candidate['meta_key'];
 
-		$result['evicted'][] = $evicted_key;
+		$result['evicted'][]             = $evicted_key;
+		$result['entries'][ $evicted_key ] = $candidate['entry'];
 
 		/**
 		 * Fires when a stored draft is evicted to keep a user under the draft size budget.

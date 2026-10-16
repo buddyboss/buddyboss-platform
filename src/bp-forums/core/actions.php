@@ -419,8 +419,9 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  *
  * Responds with `draft_activity` (the accepted entry) plus
  * `evicted_draft_keys` — the inner draft keys the row trim or the per-user
- * budget removed to make room, which the client uses to drop their stale
- * localStorage copies.
+ * budget removed to make room — and `evicted_drafts`, those entries keyed the
+ * same way, which the client keeps in localStorage so an eviction never
+ * loses a draft. A page-unload (beacon) save never evicts; it is refused.
  *
  * Refuses with a `message` when the entry exceeds the per-draft cap or when
  * the member's total user meta would pass the platform budget, and with an
@@ -1269,12 +1270,36 @@ function bb_post_topic_reply_draft() {
 			$other_draft_bytes = array_sum( $draft_sizes['drafts'] ) - $forum_row_bytes;
 			$forum_row_cap     = max( bb_draft_max_size(), bb_draft_user_total_max_size() - $other_draft_bytes );
 
-			$trimmed_row        = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
+			$trimmed_row = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
+
+			// A page-unload save cannot read its response, so it must not trim
+			// other drafts out of the row - they could not be handed back. Refuse
+			// instead; the browser keeps every one of these drafts locally and
+			// saves them on the next visit (see bb_draft_enforce_user_budget()).
+			if ( ! empty( $trimmed_row['evicted'] ) && bb_draft_is_beacon_request() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, strlen( maybe_serialize( $existing_draft ) ), 'drafts_over_cap' );
+
+				wp_send_json_error(
+					array(
+						'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+					)
+				);
+			}
+
 			$existing_draft     = $trimmed_row['row'];
 			$evicted_draft_keys = $trimmed_row['evicted'];
 			// Held back until the row is written - the budget check below can
 			// still refuse and abandon it (H4).
 			$trimmed_entries = $trimmed_row['entries'];
+
+			// The entries every eviction removed, keyed like
+			// $evicted_draft_keys, so the client can keep them in localStorage
+			// and an eviction never loses a draft.
+			$evicted_drafts = array();
+			foreach ( $trimmed_entries as $trimmed_inner_key => $trimmed_entry ) {
+				$evicted_drafts[ $usermeta_key . ':' . $trimmed_inner_key ] = $trimmed_entry;
+			}
 
 			$forum_row_size = strlen( maybe_serialize( $existing_draft ) );
 
@@ -1282,7 +1307,7 @@ function bb_post_topic_reply_draft() {
 			// discard because the USER is over budget would deadlock the very
 			// remedy the budget error tells them to perform.
 			if ( $forum_row_size > $stored_row_size ) {
-				$draft_budget = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size );
+				$draft_budget = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size, bb_draft_is_beacon_request() ? 'beacon' : 'save' );
 
 				if ( empty( $draft_budget['allowed'] ) ) {
 					$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
@@ -1307,11 +1332,13 @@ function bb_post_topic_reply_draft() {
 							// runs), so announcing them would tell the member drafts
 							// were removed that are still on the server (H4).
 							'evicted_draft_keys' => $draft_budget['evicted'],
+							'evicted_drafts'     => $draft_budget['entries'],
 						)
 					);
 				}
 
 				$evicted_draft_keys = array_merge( $evicted_draft_keys, $draft_budget['evicted'] );
+				$evicted_drafts     = array_merge( $evicted_drafts, $draft_budget['entries'] );
 			}
 
 			// Strip the OTHER shape's attachment keys from every entry before
@@ -1345,29 +1372,13 @@ function bb_post_topic_reply_draft() {
 			bb_draft_flush_user_meta_sizes( $user_id );
 
 			// The trimmed row is now stored, so the evictions really happened:
-			// release their attachment stamps and announce them. Attachments the
-			// surviving row still holds are excluded (H4).
-			if ( ! empty( $trimmed_entries ) ) {
-				if ( null === $cross_row_retained_ids ) {
-					$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
-				}
-				$surviving_attachment_ids = $cross_row_retained_ids;
-
-				foreach ( $existing_draft as $surviving_entry ) {
-					$surviving_attachment_ids = array_merge( $surviving_attachment_ids, bb_draft_collect_attachment_ids( $surviving_entry ) );
-				}
-
-				foreach ( $trimmed_entries as $trimmed_inner_key => $trimmed_entry ) {
-					foreach ( array_diff( bb_draft_collect_attachment_ids( $trimmed_entry ), $surviving_attachment_ids ) as $evicted_attachment_id ) {
-						if ( bb_user_can_manage_draft_attachment( $evicted_attachment_id, false, $user_id ) ) {
-							delete_post_meta( $evicted_attachment_id, 'bb_media_draft' );
-							delete_post_meta( $evicted_attachment_id, 'bb_activity_post_feature_image_draft' );
-						}
-					}
-
-					/** This action is documented in bp-core/bb-core-drafts.php */
-					do_action( 'bb_draft_evicted', (int) $user_id, 'bb_user_topic_reply_draft:' . $trimmed_inner_key, 'aggregate_cap' );
-				}
+			// announce them. Their attachment stamps are deliberately KEPT - the
+			// entries are handed back to the browser and still reference those
+			// files, and the orphan-stamp sweep releases a stamp only once nothing
+			// stored references it and it is past retention.
+			foreach ( array_keys( $trimmed_entries ) as $trimmed_inner_key ) {
+				/** This action is documented in bp-core/bb-core-drafts.php */
+				do_action( 'bb_draft_evicted', (int) $user_id, 'bb_user_topic_reply_draft:' . $trimmed_inner_key, 'aggregate_cap' );
 			}
 		}
 
@@ -1509,6 +1520,7 @@ function bb_post_topic_reply_draft() {
 		if ( $primary_rejected ) {
 			if ( ! empty( $evicted_draft_keys ) ) {
 				$primary_rejection['evicted_draft_keys'] = $evicted_draft_keys;
+				$primary_rejection['evicted_drafts']     = isset( $evicted_drafts ) ? $evicted_drafts : array();
 			}
 			wp_send_json_error( $primary_rejection );
 		}
@@ -1518,6 +1530,7 @@ function bb_post_topic_reply_draft() {
 		array(
 			'draft_activity'     => $draft_topic_reply,
 			'evicted_draft_keys' => isset( $evicted_draft_keys ) ? $evicted_draft_keys : array(),
+			'evicted_drafts'     => isset( $evicted_drafts ) ? $evicted_drafts : array(),
 		)
 	);
 }

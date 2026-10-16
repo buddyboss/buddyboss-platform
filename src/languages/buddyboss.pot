@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-16 04:45:20+00:00\n"
+"POT-Creation-Date: 2026-10-16 06:26:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1450,11 +1450,11 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:253
 #: bp-activity/classes/class-bb-activity-readylaunch.php:299
 #: bp-core/bp-core-actions.php:1202
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2126
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2135
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2181
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2250
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2259
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2131
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2140
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2186
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2255
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2264
 msgid "Invalid request."
 msgstr ""
 
@@ -2369,7 +2369,7 @@ msgstr ""
 
 #: bp-activity/actions/delete.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:445
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2442
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2447
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -2940,7 +2940,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6918
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2030
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2091
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2096
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -3305,25 +3305,25 @@ msgid "reactions"
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:261
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2143
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2267
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2148
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2272
 msgid "Activity id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:269
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2151
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2156
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:289
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2171
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2176
 msgid "Sorry, You are not allowed to view more comments."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:322
 #: bp-activity/classes/class-bb-activity-readylaunch.php:346
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2201
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2227
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2206
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2232
 msgid "No more items to load."
 msgstr ""
 
@@ -4650,8 +4650,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1870
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2037
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3865
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2050
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2311
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2055
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2316
 #: bp-templates/bp-nouveau/includes/activity/functions.php:265
 #: bp-templates/bp-nouveau/includes/activity/functions.php:266
 #: bp-templates/bp-nouveau/includes/activity/functions.php:269
@@ -4674,12 +4674,12 @@ msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2028
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2089
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2094
 msgid "You turned on commenting for this post"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2032
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2093
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2098
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
@@ -4970,17 +4970,17 @@ msgid "The action is required."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3856
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2344
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2349
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3858
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2346
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2351
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3860
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2348
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2353
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
@@ -12951,7 +12951,7 @@ msgstr ""
 #: bp-core/admin/templates/register-banner.php:148
 #: bp-core/admin/templates/update-buddyboss.php:82
 #: bp-core/classes/class-bp-admin-tab.php:185
-#: bp-forums/core/actions.php:1591
+#: bp-forums/core/actions.php:1604
 #: bp-forums/topics/template.php:3051
 #: bp-templates/bp-nouveau/buddypress-functions.php:666
 #: bp-templates/bp-nouveau/buddypress/activity/activity-modal.php:16
@@ -22349,32 +22349,33 @@ msgstr ""
 msgid "Recent Replies"
 msgstr ""
 
-#: bp-forums/core/actions.php:636
-#: bp-forums/core/actions.php:652
-#: bp-forums/core/actions.php:928
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1624
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1686
+#: bp-forums/core/actions.php:637
+#: bp-forums/core/actions.php:653
+#: bp-forums/core/actions.php:929
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1626
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1688
 msgid "Your draft is too large to save. Please remove some content and try again."
 msgstr ""
 
-#: bp-forums/core/actions.php:769
-#: bp-forums/core/actions.php:824
-#: bp-forums/core/actions.php:879
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1428
+#: bp-forums/core/actions.php:770
+#: bp-forums/core/actions.php:825
+#: bp-forums/core/actions.php:880
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1430
 msgid "Your draft has too many attachments to save. Please remove some and try again."
 msgstr ""
 
-#: bp-forums/core/actions.php:1297
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1707
-msgid "Your draft could not be saved. Please copy your text before leaving this page."
-msgstr ""
-
-#: bp-forums/core/actions.php:1298
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1708
+#: bp-forums/core/actions.php:1285
+#: bp-forums/core/actions.php:1323
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1710
 msgid "Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again."
 msgstr ""
 
-#: bp-forums/core/actions.php:1590
+#: bp-forums/core/actions.php:1322
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1709
+msgid "Your draft could not be saved. Please copy your text before leaving this page."
+msgstr ""
+
+#: bp-forums/core/actions.php:1603
 msgid "Forum Description"
 msgstr ""
 
@@ -35140,7 +35141,7 @@ msgid "Sorry, there was no activity found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:305
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2369
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2374
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
@@ -35229,24 +35230,24 @@ msgstr ""
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1361
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1387
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1363
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1389
 msgid "This draft could not be saved."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1924
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1929
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1974
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1979
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2056
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2061
 msgid "There was a problem marking this operation. Close comments setting is disabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:2415
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:2420
 msgid "You don't have permission to delete scheduled activity."
 msgstr ""
 

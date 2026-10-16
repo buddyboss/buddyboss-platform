@@ -73,6 +73,7 @@ window.bp = window.bp || {};
 	bp.draft_local_interval  = false;
 	bp.draft_ajax_interval   = false;
 	bp.draft_content_changed = false;
+	bp.draft_pending_sync    = false;
 
 	/**
 	 * [Activity description]
@@ -953,6 +954,12 @@ window.bp = window.bp || {};
 							$.removeCookie( activityDraftKey );
 						} else if ( draft_activity_local_data ) {
 							bp.draft_activity.data = draft_activity_local_data.data;
+
+							// A copy the server may not hold - handed back by an
+							// eviction, or last sent by an unload beacon whose
+							// response nobody read. It stays protected until a
+							// save is confirmed (see postDraftActivity()).
+							bp.draft_pending_sync = true === draft_activity_local_data.bb_draft_pending_sync;
 						}
 					} else {
 						$.removeCookie( activityDraftKey );
@@ -1393,6 +1400,49 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Keep drafts the server evicted from the draft budget in localStorage.
+		 *
+		 * Activity keys are stored in this composer's own shape, forum inner
+		 * keys ("meta_key:inner_key") in the forum composer's shape. Each copy
+		 * is marked pending, because the server no longer holds it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} drafts   Evicted entries keyed like `evicted_draft_keys`.
+		 * @param {number} owner_id The current member, stamped on forum copies.
+		 *
+		 * @return {void}
+		 */
+		storeEvictedDrafts: function( drafts, owner_id ) {
+			if ( ! drafts || 'object' !== typeof drafts ) {
+				return;
+			}
+
+			_.each(
+				drafts,
+				function ( entry, key ) {
+					var storage_key = String( key ).split( ':' ).pop(),
+						copy;
+
+					if ( ! entry || 'object' !== typeof entry || ! storage_key || null !== localStorage.getItem( storage_key ) ) {
+						return;
+					}
+
+					copy = _.extend( {}, entry, { bb_draft_pending_sync: true } );
+					if ( -1 !== String( key ).indexOf( ':' ) ) {
+						copy.bb_draft_owner = owner_id;
+					}
+
+					try {
+						localStorage.setItem( storage_key, JSON.stringify( copy ) );
+					} catch ( e ) {
+						// Over quota: nothing more this browser can keep.
+					}
+				}
+			);
+		},
+
+		/**
 		 * Tell the member the server evicted older drafts from the draft budget.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1409,12 +1459,11 @@ window.bp = window.bp || {};
 			}
 
 			// The server evicted older drafts to keep this member under the
-			// draft budget. Their localStorage copies are deliberately KEPT:
-			// they are the only copy left, and eviction is safe only because
-			// the browser still holds one. Keeping them does not re-upload
-			// them - this composer saves only its own key, and only after the
-			// member edits it. Reopening that composer restores the local copy,
-			// and an edit there saves it again (evicting the then-oldest draft).
+			// draft budget and handed their entries back. Keep each one in
+			// localStorage, marked pending: it is now the only copy, and the
+			// composer for that key restores it and saves it again. A copy this
+			// browser already holds is never overwritten - it may be newer.
+			bp.Nouveau.Activity.postForm.storeEvictedDrafts( response.evicted_drafts, parseInt( bbRlActivity.params.user_id, 10 ) );
 
 			this.showDraftFeedback( bbRlActivity.params.draft_evicted_message );
 		},
@@ -1539,6 +1588,9 @@ window.bp = window.bp || {};
 					);
 				}
 
+				if ( bp.draft_pending_sync && draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
+					draft_activity = _.extend( {}, draft_activity, { bb_draft_pending_sync: true } );
+				}
 				var json_data    = JSON.stringify( draft_activity );
 				var encoder      = new TextEncoder();
 				var data_size_mb = encoder.encode( json_data ).length / ( 1024 * 1024 );
@@ -1835,7 +1887,12 @@ window.bp = window.bp || {};
 					bp.Nouveau.Activity.postForm.resetDraftActivity( true );
 				} else {
 					bp.draft_activity.data = false;
-					localStorage.removeItem( bp.draft_activity.data_key );
+
+					// The composer is just closed, not emptied by the member. A
+					// pending copy is the ONLY copy of this draft, so keep it.
+					if ( ! bp.draft_pending_sync ) {
+						localStorage.removeItem( bp.draft_activity.data_key );
+					}
 				}
 
 				return false;
@@ -2081,7 +2138,7 @@ window.bp = window.bp || {};
 			}
 
 			// Checked the content changed or not.
-			if ( ! is_force_saved && ! bp.draft_content_changed ) {
+			if ( ! is_force_saved && ! bp.draft_content_changed && ! bp.draft_pending_sync ) {
 				return;
 			}
 
@@ -2165,6 +2222,15 @@ window.bp = window.bp || {};
 					function ( response ) {
 						bp.Nouveau.Activity.postForm.showDraftFeedback( '' );
 						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
+
+						// The server now holds this draft, so its local copy is an
+						// ordinary cache again.
+						if ( ! isDiscardRequest && bp.draft_pending_sync ) {
+							bp.draft_pending_sync = false;
+							if ( null !== localStorage.getItem( bp.draft_activity.data_key ) ) {
+								bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+							}
+						}
 					}
 				).fail(
 					function ( response, textStatus ) {
@@ -2230,6 +2296,16 @@ window.bp = window.bp || {};
 				formData.append( 'action', 'post_draft_activity' );
 				formData.append( 'draft_activity', JSON.stringify( draft_payload ) );
 
+				// The server never evicts on a beacon save, because this
+				// response is never read and an evicted draft could not be
+				// handed back. It may refuse instead, so keep the local copy
+				// pending until a later save is confirmed.
+				formData.append( 'bb_draft_beacon', '1' );
+				if ( 'delete' !== bp.draft_activity.post_action ) {
+					bp.draft_pending_sync = true;
+					bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+				}
+
 				// Known limitation: browsers cap sendBeacon payloads (~64KB). An
 				// at-cap UPDATE draft can exceed that and this unload sync is then
 				// silently skipped; the periodic XHR saves remain the durable path.
@@ -2246,6 +2322,7 @@ window.bp = window.bp || {};
 
 			// Delete the activity from the database.
 			$.cookie( bp.draft_activity.data_key, 'deleted' );
+			bp.draft_pending_sync = false;
 			bp.draft_activity.post_action = 'delete';
 			if ( is_send_server ) {
 				// In-page discard goes over XHR; the beacon transport is reserved

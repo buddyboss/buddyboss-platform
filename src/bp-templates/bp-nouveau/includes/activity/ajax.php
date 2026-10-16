@@ -1305,8 +1305,9 @@ function bp_nouveau_ajax_post_update() {
  *
  * Responds with `draft_activity` (the accepted entry, or one whose `data` is
  * false after a discard) plus `evicted_draft_keys` — the draft keys the
- * per-user budget removed to make room, which the client uses to drop their
- * stale localStorage copies.
+ * per-user budget removed to make room — and `evicted_drafts`, those drafts'
+ * stored entries keyed the same way, which the client keeps in localStorage so
+ * an eviction never loses a draft.
  *
  * Refuses with a `message` when the entry exceeds the per-draft cap or when
  * the member's total user meta would pass the platform budget, and with an
@@ -1342,6 +1343,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 	}
 
 	$evicted_draft_keys = array();
+	$evicted_drafts     = array();
 
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
 		/*
@@ -1688,7 +1690,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				);
 			}
 
-			$draft_budget = bb_draft_enforce_user_budget( $draft_user_id, $draft_activity['data_key'], $draft_size );
+			$draft_budget = bb_draft_enforce_user_budget( $draft_user_id, $draft_activity['data_key'], $draft_size, bb_draft_is_beacon_request() ? 'beacon' : 'save' );
 
 			if ( empty( $draft_budget['allowed'] ) ) {
 				$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
@@ -1715,11 +1717,13 @@ function bb_nouveau_ajax_post_draft_activity() {
 						// from its localStorage/UI rather than list drafts that are
 						// gone (H1).
 						'evicted_draft_keys' => $draft_budget['evicted'],
+						'evicted_drafts'     => $draft_budget['entries'],
 					)
 				);
 			}
 
 			$evicted_draft_keys = $draft_budget['evicted'];
+			$evicted_drafts     = $draft_budget['entries'];
 
 			// Every cap accepted the save - apply the deferred protection stamps now.
 			foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
@@ -1869,6 +1873,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		array(
 			'draft_activity'     => $draft_activity,
 			'evicted_draft_keys' => $evicted_draft_keys,
+			'evicted_drafts'     => $evicted_drafts,
 		)
 	);
 }

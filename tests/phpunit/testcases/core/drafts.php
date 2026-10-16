@@ -226,6 +226,69 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_custom_thing' ), 'Third-party draft_* meta must never be touched.' );
 	}
 
+	public function test_save_eviction_hands_back_the_evicted_entry_and_keeps_its_stamp() {
+		$user_id = self::factory()->user->create();
+		$att     = $this->make_stamped_unsaved_attachment( $user_id );
+		$oldest  = array(
+			'data_key'        => 'draft_group_1',
+			'data'            => array(
+				'content' => str_repeat( 'a', 200 ),
+				'media'   => array( array( 'id' => $att ) ),
+			),
+			'_draft_saved_at' => 100,
+		);
+
+		bp_update_user_meta( $user_id, 'draft_group_1', $oldest );
+
+		$total_cap = 400;
+		add_filter(
+			'bb_draft_user_total_max_size',
+			function () use ( $total_cap ) {
+				return $total_cap;
+			}
+		);
+
+		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
+
+		$this->assertTrue( $result['allowed'] );
+		$this->assertSame( array( 'draft_group_1' ), $result['evicted'] );
+		$this->assertSame( $oldest, $result['entries']['draft_group_1'], 'The evicted entry must come back so the browser can keep it.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'The row itself is still removed from usermeta.' );
+		$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'A handed-back draft still references its file, so the stamp is kept for the sweep.' );
+	}
+
+	public function test_beacon_save_refuses_instead_of_evicting() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_1',
+			array(
+				'data_key'        => 'draft_group_1',
+				'data'            => array( 'content' => str_repeat( 'a', 200 ) ),
+				'_draft_saved_at' => 100,
+			)
+		);
+
+		add_filter(
+			'bb_draft_user_total_max_size',
+			function () {
+				return 400;
+			}
+		);
+
+		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 400, 'beacon' );
+
+		$this->assertFalse( $result['allowed'], 'A page-unload save cannot receive a hand-back, so it must not evict.' );
+		$this->assertSame( 'drafts_over_cap', $result['reason'] );
+		$this->assertSame( array(), $result['evicted'] );
+		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'The older draft must survive a refused beacon save.' );
+
+		// A beacon save that fits is stored normally.
+		$fits = bb_draft_enforce_user_budget( $user_id, 'draft_user', 10, 'beacon' );
+		$this->assertTrue( $fits['allowed'] );
+	}
+
 	public function test_meta_budget_refuses_save_for_heavy_meta_user() {
 		$user_id = self::factory()->user->create();
 
@@ -4071,6 +4134,119 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// closing quote, not stop at the first angle bracket and leave a tail.
 		$svg = '<img src="data:image/svg+xml,<svg><rect/></svg>" alt="x">';
 		$this->assertStringNotContainsString( 'rect', bb_draft_strip_data_urls( $svg ), 'The payload must run to the attribute delimiter, not to the first `>`.' );
+	}
+
+	/**
+	 * Run the forum draft save handler and return its decoded JSON response.
+	 *
+	 * @param string $data_key Inner draft key.
+	 * @param array  $data     Draft data payload.
+	 * @param bool   $beacon   Whether to flag the request as a page-unload beacon.
+	 * @return array|null Decoded response.
+	 */
+	protected function drive_forum_draft_save_response( $data_key, $data, $beacon = false ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_topic_reply'] = wp_slash(
+			wp_json_encode(
+				array(
+					'data_key'    => $data_key,
+					'object'      => 'topic',
+					'post_action' => 'update',
+					'data'        => $data,
+				)
+			)
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		if ( $beacon ) {
+			$_POST['bb_draft_beacon'] = '1';
+		}
+		$_REQUEST = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+
+		$output = ob_get_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		$_POST    = array();
+		$_REQUEST = array();
+
+		return json_decode( $output, true );
+	}
+
+	/**
+	 * A forum save that trims an older draft out of the row hands it back.
+	 *
+	 * Eviction is only safe if the browser keeps a copy, and after the composer
+	 * closes the server copy is often the only one. The trimmed entry must come
+	 * back in `evicted_drafts`, and its file must stay protected because the
+	 * handed-back draft still references it. A beacon save cannot receive that
+	 * hand-back, so the same save sent as a beacon is refused instead.
+	 */
+	public function test_forum_row_trim_hands_back_the_evicted_draft() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_old = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_new = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$old_key   = 'draft_discussion_' . $forum_old;
+		$new_key   = 'draft_discussion_' . $forum_new;
+		$att       = $this->make_draft_attachment( $user_id );
+		update_post_meta( $att, 'bb_media_draft', 1 );
+
+		$old_entry = array(
+			'data_key'        => $old_key,
+			'object'          => 'topic',
+			'data'            => array(
+				'bbp_topic_content' => str_repeat( 'o', 60 * KB_IN_BYTES ),
+				'bbp_media'         => wp_json_encode( array( array( 'id' => $att ) ) ),
+			),
+			'_draft_saved_at' => 100,
+		);
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( array( $old_key => $old_entry ) ) );
+
+		$new_data = array( 'bbp_topic_content' => str_repeat( 'n', 60 * KB_IN_BYTES ) );
+
+		// One 100 KB budget: the two 60 KB drafts cannot share the row.
+		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
+
+		// Beacon first: nothing may be trimmed, and the save is refused.
+		$beacon = $this->drive_forum_draft_save_response( $new_key, $new_data, true );
+		$row    = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertFalse( $beacon['success'], 'A beacon save that needs a trim must be refused.' );
+		$this->assertArrayHasKey( $old_key, $row, 'A refused beacon save must not trim the older draft.' );
+		$this->assertArrayNotHasKey( $new_key, $row );
+
+		// The same save over a normal request trims and hands back.
+		$saved = $this->drive_forum_draft_save_response( $new_key, $new_data );
+		$row   = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertTrue( $saved['success'], 'Premise: the normal save is accepted.' );
+		$this->assertContains( 'bb_user_topic_reply_draft:' . $old_key, $saved['data']['evicted_draft_keys'] );
+		$this->assertArrayNotHasKey( $old_key, $row, 'Premise: the older draft was trimmed out of the row.' );
+		$this->assertSame(
+			$old_entry['data']['bbp_topic_content'],
+			$saved['data']['evicted_drafts'][ 'bb_user_topic_reply_draft:' . $old_key ]['data']['bbp_topic_content'],
+			'The trimmed draft must be handed back so the browser keeps it.'
+		);
+		$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'The handed-back draft still references its file, so the stamp is kept.' );
+
+		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
 	}
 
 	/**

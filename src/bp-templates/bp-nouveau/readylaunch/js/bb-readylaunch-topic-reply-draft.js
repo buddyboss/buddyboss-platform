@@ -1252,6 +1252,11 @@ window.bp = window.bp || {};
 				var formData = new FormData();
 				formData.append( '_wpnonce_post_topic_reply_draft', BP_Nouveau.forums.nonces.post_topic_reply_draft );
 				formData.append( 'action', 'post_topic_reply_draft' );
+
+				// The server never evicts on a beacon save, because this
+				// response is never read and an evicted draft could not be
+				// handed back. It refuses instead; the local copies stay.
+				formData.append( 'bb_draft_beacon', '1' );
 				formData.append( 'draft_topic_reply', JSON.stringify( draft_payload ) );
 
 				if ( is_send_all_data ) {
@@ -1320,6 +1325,52 @@ window.bp = window.bp || {};
 		};
 
 		/**
+		 * Keep drafts the server evicted from the draft budget in localStorage.
+		 *
+		 * Forum inner keys ("meta_key:inner_key") are stored in this
+		 * composer's shape, activity keys in the activity composer's shape.
+		 * Each copy is marked pending, because the server no longer holds it;
+		 * the activity composer reads that marker. A copy this browser already
+		 * holds is never overwritten - it may be newer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} drafts Evicted entries keyed like `evicted_draft_keys`.
+		 *
+		 * @return {void}
+		 */
+		this.storeEvictedDrafts = function ( drafts ) {
+			var owner_id = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
+
+			if ( ! drafts || 'object' !== typeof drafts ) {
+				return;
+			}
+
+			_.each(
+				drafts,
+				function ( entry, key ) {
+					var storage_key = String( key ).split( ':' ).pop(),
+						copy;
+
+					if ( ! entry || 'object' !== typeof entry || ! storage_key || null !== localStorage.getItem( storage_key ) ) {
+						return;
+					}
+
+					copy = _.extend( {}, entry, { bb_draft_pending_sync: true } );
+					if ( -1 !== String( key ).indexOf( ':' ) ) {
+						copy.bb_draft_owner = owner_id;
+					}
+
+					try {
+						localStorage.setItem( storage_key, JSON.stringify( copy ) );
+					} catch ( e ) {
+						// Over quota: nothing more this browser can keep.
+					}
+				}
+			);
+		};
+
+		/**
 		 * Tell the member the server evicted older drafts from the draft budget.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1338,10 +1389,12 @@ window.bp = window.bp || {};
 			var self = this;
 
 			// The server evicted older drafts to keep this member under the
-			// draft budget. Their localStorage copies are deliberately KEPT:
-			// they are the only copy left, and eviction is safe only because
-			// the browser still holds one. Reopening that reply box restores
-			// the local copy, and an edit there saves it again.
+			// draft budget and handed their entries back. Their localStorage
+			// copies are deliberately KEPT, and a draft this browser did not
+			// hold yet is stored from the hand-back: it is now the only copy.
+			// Reopening that composer restores it, and an edit there saves it
+			// again.
+			this.storeEvictedDrafts( response.data.evicted_drafts );
 			//
 			// They are dropped from the in-memory working set, though. The
 			// unload beacon replays that whole set as `all_data`, which would
