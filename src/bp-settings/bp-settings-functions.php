@@ -94,7 +94,8 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 	$registered_notification_settings = bp_settings_get_registered_notification_keys();
 
 	/*
-	 * We sanitize values for core notification keys.
+	 * Core notification keys. These are always 'yes' or 'no', even if
+	 * they are added to the non-boolean list below.
 	 *
 	 * @todo use register_meta()
 	 */
@@ -114,14 +115,32 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 		)
 	);
 
+	/**
+	 * Filters the notification keys that hold a non-boolean value.
+	 *
+	 * Every other registered notification key is treated as a 'yes' or 'no'
+	 * toggle. Keys returned here are stored as plain text, 255 characters at most.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string[] $keys Notification keys allowed to hold non-boolean values.
+	 */
+	$non_boolean_notification_settings = (array) apply_filters( 'bb_settings_non_boolean_notification_keys', array() );
+
 	foreach ( (array) $settings as $key => $value ) {
 		// Skip if not a registered setting.
 		if ( ! in_array( $key, $registered_notification_settings, true ) ) {
 			continue;
 		}
 
-		// Force core keys to 'yes' or 'no' values.
-		if ( in_array( $key, $core_notification_settings, true ) ) {
+		if (
+			in_array( $key, $non_boolean_notification_settings, true ) &&
+			! in_array( $key, $core_notification_settings, true )
+		) {
+			// Opted-out key: plain text only, length capped.
+			$value = is_scalar( $value ) ? mb_substr( sanitize_text_field( (string) $value ), 0, 255 ) : '';
+		} else {
+			// Every other notification preference is a 'yes' or 'no' toggle.
 			$value = 'yes' === $value ? 'yes' : 'no';
 		}
 
