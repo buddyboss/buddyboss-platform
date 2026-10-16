@@ -149,6 +149,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss' ),
+		'upload_server_error'                => __( 'Upload failed. The server rejected the request (HTTP {{statusCode}}). Please try again later.', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {

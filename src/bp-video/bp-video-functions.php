@@ -4944,16 +4944,22 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	$extension = isset( $info['extension'] ) ? '.' . strtolower( $info['extension'] ) : '';
 	$filename  = sanitize_file_name( $info['filename'] );
 
-	// Validate file extension against allowed types.
-	$allowed_extensions = apply_filters( 'bfu_allowed_extensions', array(
-		'mp4',
-		'mov',
-		'avi',
-		'wmv',
-		'flv',
-		'mkv',
-		'webm',
-	) );
+	// Validate file extension against the extensions enabled in Settings > Media > Video Extensions,
+	// so chunked uploads accept the same types as the non-chunked path (bp_video_allowed_mimes()).
+	$allowed_extensions = array_map( 'strtolower', array_keys( bp_video_allowed_mimes() ) );
+	if ( empty( $allowed_extensions ) ) {
+		$allowed_extensions = array( 'mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm' );
+	}
+
+	/**
+	 * Filters the file extensions accepted by the chunked (resumable) video upload.
+	 *
+	 * @since BuddyBoss 2.15.0
+	 * @since BuddyBoss [BBVERSION] The default list is built from the active video extensions setting instead of a fixed list.
+	 *
+	 * @param array $allowed_extensions Lower-case extensions without the leading dot.
+	 */
+	$allowed_extensions = apply_filters( 'bfu_allowed_extensions', $allowed_extensions );
 	$ext_without_dot    = ltrim( $extension, '.' );
 	if ( ! empty( $extension ) && ! in_array( $ext_without_dot, $allowed_extensions, true ) ) {
 		$errors[] = sprintf(
