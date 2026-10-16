@@ -1779,12 +1779,6 @@ window.bp = window.bp || {};
 				}
 			} );
 
-			// A keyboard Cmd/Ctrl+V is routed through MediumEditor's body-level
-			// paste bin, which the listener above never sees. The editor refuses
-			// the image there and reports it with this event (V03).
-			$form.on( 'bb-image-paste-blocked.bbDraftImageGuard', function () {
-				self.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
-			} );
 		};
 
 		/**
