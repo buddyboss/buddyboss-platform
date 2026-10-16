@@ -326,7 +326,21 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 				if ( 'richtext' === field.type && window.tinymce ) {
 					var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + group.id );
 					if ( editorInstance ) {
+						// getContent() returns the editor's raw HTML, complete with the
+						// <p>/<br> markup TinyMCE uses internally. A group description is
+						// stored as plain text with real line breaks — bp_groups_filter_kses()
+						// (hooked to 'groups_group_description_before_save') allows only
+						// inline tags, so any <p>/<br> is stripped with no replacement and
+						// every line break is lost on save. TinyMCE's own save path avoids
+						// this by running content through removep() on the 'SaveContent'
+						// event, but that event only fires for editor.save() — not for a
+						// direct getContent() call like this one. Apply the same conversion
+						// here so paragraphs and breaks come back as the newlines the
+						// storage format expects.
 						val = editorInstance.getContent();
+						if ( window.wp && window.wp.editor && window.wp.editor.removep ) {
+							val = window.wp.editor.removep( val );
+						}
 					}
 				}
 
