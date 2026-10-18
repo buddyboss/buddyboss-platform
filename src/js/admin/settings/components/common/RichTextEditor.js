@@ -44,6 +44,31 @@ export function forceRemoveEditor( editorId ) {
 }
 
 /**
+ * Get the saved content of a RichTextEditor instance.
+ *
+ * Uses wp.editor.getContent(), which calls editor.save() so WordPress's own
+ * SaveContent conversion turns <p>/<br> back into line breaks, then returns
+ * the textarea value. This also returns edits made in the Text tab, where
+ * TinyMCE is hidden and its own getContent() is stale.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} editorId Editor ID.
+ * @param {string} fallback Value to return when the editor is not available.
+ * @returns {string} Editor content.
+ */
+export function getRichTextEditorContent( editorId, fallback ) {
+	if ( window.wp && window.wp.editor && 'function' === typeof window.wp.editor.getContent ) {
+		var content = window.wp.editor.getContent( editorId );
+		if ( 'string' === typeof content ) {
+			return content;
+		}
+	}
+
+	return fallback;
+}
+
+/**
  * Rich Text Editor wrapper for TinyMCE.
  *
  * @param {Object}   props          Component props.
