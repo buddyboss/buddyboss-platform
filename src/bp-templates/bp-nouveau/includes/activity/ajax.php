@@ -325,6 +325,87 @@ function bp_nouveau_ajax_delete_activity() {
 		wp_send_json_error( $response );
 	}
 
+	// Capture the album context of this activity's media/videos before deletion,
+	// so a single-album view can refresh its empty-state after the activity (and
+	// its cascade-deleted items) is removed (e.g. deleting the last photo or
+	// video from the theater opened on the album view). The attached ids are
+	// read from activity meta first (usually primed) so the media/video tables
+	// are only queried for the ~1% of deletes that actually carry attachments.
+	$activity_album_id     = 0;
+	$activity_album_group  = 0;
+	$deleted_media_ids     = array();
+	$deleted_video_ids     = array();
+	if ( empty( $_POST['is_comment'] ) && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+		$attached_media_meta = bp_is_active( 'media' ) ? bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
+		$attached_video_meta = bp_is_active( 'video' ) ? bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
+
+		// Batch uploads attach each item to its own child activity, which carries
+		// only the bp_media_activity/bp_video_activity marker - never the plural
+		// ids meta - so the marker must also open the capture path.
+		$is_media_activity = '' !== (string) $attached_media_meta
+			|| ( bp_is_active( 'media' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) );
+		$is_video_activity = '' !== (string) $attached_video_meta
+			|| ( bp_is_active( 'video' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) );
+
+		// The row lookups below serve two consumers: the album context (only used
+		// by the two single-album screens) and the fallback ids for marker-only
+		// child activities. Skip them when neither applies - i.e. the common feed
+		// delete, whose ids already came from the plural meta.
+		$in_single_album_view = bp_is_single_album() || bp_is_single_video_album();
+
+		if ( $is_media_activity && class_exists( 'BP_Media' ) ) {
+			if ( '' !== (string) $attached_media_meta ) {
+				$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
+			}
+			if ( $in_single_album_view || empty( $deleted_media_ids ) ) {
+				$activity_media = BP_Media::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_media['medias'] ) ) {
+					$first_media          = current( $activity_media['medias'] );
+					$activity_album_id    = (int) $first_media->album_id;
+					$activity_album_group = (int) $first_media->group_id;
+
+					// A marker-only child activity owns exactly one media row.
+					if ( empty( $deleted_media_ids ) ) {
+						$deleted_media_ids = array( (int) $first_media->id );
+					}
+				}
+			}
+		}
+
+		// Photos and videos live in separate tables; a video-only activity finds
+		// no BP_Media rows, so fall back to the video table for the album context.
+		if ( $is_video_activity && class_exists( 'BP_Video' ) ) {
+			if ( '' !== (string) $attached_video_meta ) {
+				$deleted_video_ids = array_map( 'intval', array_filter( explode( ',', $attached_video_meta ) ) );
+			}
+			if ( ( $in_single_album_view && empty( $activity_album_id ) ) || empty( $deleted_video_ids ) ) {
+				$activity_video = BP_Video::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_video['videos'] ) ) {
+					$first_video = current( $activity_video['videos'] );
+					if ( empty( $activity_album_id ) ) {
+						$activity_album_id    = (int) $first_video->album_id;
+						$activity_album_group = (int) $first_video->group_id;
+					}
+
+					// A marker-only child activity owns exactly one video row.
+					if ( empty( $deleted_video_ids ) ) {
+						$deleted_video_ids = array( (int) $first_video->id );
+					}
+				}
+			}
+		}
+	}
+
 	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
@@ -378,6 +459,50 @@ function bp_nouveau_ajax_delete_activity() {
 		$response['activity']           = $activity_html;
 		$response['parent_activity_id'] = $parent_activity_id;
 	}
+
+	// Refresh the single-album empty-state when this activity's media/videos
+	// emptied the album. The theater delete on the album view removes the whole
+	// activity via this handler, so the album grid needs the album-scoped
+	// empty-state (the media/video delete handlers cannot see this path). The
+	// deleted ids let the client clear every tile of a multi-item activity -
+	// the server cascade-deletes them all, not just the one open in the theater.
+	if ( ! empty( $deleted_media_ids ) || ! empty( $deleted_video_ids ) ) {
+		// Always returned: directory and other non-album grids use these to clear
+		// every tile of a multi-item activity, whatever page the delete came from.
+		$response['deleted_media_ids'] = $deleted_media_ids;
+		$response['deleted_video_ids'] = $deleted_video_ids;
+	}
+
+	if ( ! empty( $activity_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
+		// Counts and empty-state markup are only consumed by the two single-album
+		// screens, so skip their queries/render when the delete came from anywhere
+		// else (feed, directories) - under admin-ajax these route checks resolve
+		// from the referer, i.e. the page the delete request originated on.
+		// bp_is_single_video_album() is also true on the media album screen
+		// (bp_is_video_component() returns true for the media component), so the
+		// video-album branch must additionally rule out the media album route.
+		$in_video_album = bp_is_single_video_album() && ! bp_is_single_album();
+		if ( $in_video_album || bp_is_single_album() ) {
+			$album_counts                  = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
+			$response['album_id']          = $activity_album_id;
+			$response['album_total_count'] = (int) $album_counts['album_total_count'];
+			$response['album_media_count'] = (int) $album_counts['album_media_count'];
+			$response['album_video_count'] = (int) $album_counts['album_video_count'];
+
+			// The standalone video album screen only lists videos, so it is "empty"
+			// when no videos remain even if the mixed album still holds photos; the
+			// unified media album screen is empty only when everything is gone.
+			$response['album_empty_html'] = '';
+			if ( $in_video_album ) {
+				if ( 0 === (int) $album_counts['album_video_count'] && function_exists( 'bb_nouveau_video_get_album_empty_state' ) ) {
+					$response['album_empty_html'] = bb_nouveau_video_get_album_empty_state();
+				}
+			} elseif ( 0 === (int) $album_counts['album_total_count'] ) {
+				$response['album_empty_html'] = bb_nouveau_media_get_album_empty_state();
+			}
+		}
+	}
+
 	wp_send_json_success( $response );
 }
 
@@ -684,6 +809,7 @@ function bp_nouveau_ajax_get_activity_objects() {
  * Processes Activity updates received via a POST request.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Turned-off commenting no longer blocks editing the activity.
  *
  * @return string JSON reply.
  */
@@ -1112,13 +1238,26 @@ function bp_nouveau_ajax_post_update() {
 	// Delete draft activity.
 	delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
 
+	$activity_args = array(
+		'include'     => $activity_id,
+		'show_hidden' => $is_private,
+	);
+
+	/*
+	 * In ReadyLaunch, activity comments are displayed only inside the activity modal
+	 * (or on the single activity screen), never inline in the feed. The feed loop
+	 * enforces this with 'display_comments=false' (see readylaunch/activity/activity-loop.php).
+	 *
+	 * Mirror that here so a re-rendered (newly posted or edited) activity injected back
+	 * into the stream stays consistent and doesn't render a comment thread whose reply
+	 * form is absent in this context, which would leave the "Comment"/"Reply" buttons dead.
+	 */
+	if ( bb_is_readylaunch_enabled() && ! bp_is_single_activity() ) {
+		$activity_args['display_comments'] = false;
+	}
+
 	ob_start();
-	if ( bp_has_activities(
-		array(
-			'include'     => $activity_id,
-			'show_hidden' => $is_private,
-		)
-	) ) {
+	if ( bp_has_activities( $activity_args ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
@@ -1151,6 +1290,7 @@ function bp_nouveau_ajax_post_update() {
  * Save activity draft data.
  *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
  */
 function bb_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
@@ -1164,13 +1304,31 @@ function bb_nouveau_ajax_post_draft_activity() {
 	}
 
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+		/*
+		 * The client's data_key names the usermeta row this handler writes or deletes, so it
+		 * must never reach bp_update_user_meta()/bp_delete_user_meta() unchecked - an arbitrary
+		 * key (e.g. wp_capabilities) would let a member overwrite any of their own meta,
+		 * including their role. Only the keys the composers actually use are allowed:
+		 * draft_user, draft_user_{id} and draft_group_{id}. A non-scalar key (a crafted array)
+		 * becomes '' and is rejected cleanly rather than emitting an "Array to string" notice.
+		 *
+		 * @since BuddyBoss 3.6.1
+		 */
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'This draft could not be saved.', 'buddyboss' ),
+				)
+			);
+		}
 
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
 				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
-					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_media_attachment['bb_media_draft'] ) && ! empty( $new_media_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_media_attachment['id'] ) ) {
 						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1180,7 +1338,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
 				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
-					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_document_attachment['bb_media_draft'] ) && ! empty( $new_document_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_document_attachment['id'] ) ) {
 						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1190,7 +1348,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
 				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
-					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_video_attachment['bb_media_draft'] ) && ! empty( $new_video_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_video_attachment['id'] ) ) {
 						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1205,7 +1363,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 						array(
 							'action'        => 'edit',
 							'attachment_id' => $attachment_id,
-							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
+							// Never trust a client-supplied user_id for a permission check.
+							'user_id'       => bp_loggedin_user_id(),
 							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
 							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
 						)
@@ -1221,8 +1380,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 							)
 						);
 					}
-					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
-					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					if ( bb_user_can_manage_draft_attachment( $attachment_id ) ) {
+						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+						update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					}
 				}
 			}
 
@@ -1240,7 +1401,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the medias.
 				if ( ! empty( $medias ) ) {
 					foreach ( $medias as $media ) {
-						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] && bb_user_can_manage_draft_attachment( $media['id'], true ) ) {
 							wp_delete_attachment( $media['id'], true );
 						}
 					}
@@ -1249,7 +1411,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the documents.
 				if ( ! empty( $documents ) ) {
 					foreach ( $documents as $document ) {
-						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] && bb_user_can_manage_draft_attachment( $document['id'], true ) ) {
 							wp_delete_attachment( $document['id'], true );
 						}
 					}
@@ -1258,7 +1421,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the videos.
 				if ( ! empty( $videos ) ) {
 					foreach ( $videos as $video ) {
-						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] && bb_user_can_manage_draft_attachment( $video['id'], true ) ) {
 							wp_delete_attachment( $video['id'], true );
 						}
 					}
@@ -1272,7 +1436,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				true === (bool) $draft_activity['allow_delete_post_feature_image']
 			) {
 				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
-				if ( 0 < (int) $attachment_id ) {
+				if ( 0 < (int) $attachment_id && bb_user_can_manage_draft_attachment( $attachment_id, true ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}

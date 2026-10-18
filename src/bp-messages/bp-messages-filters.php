@@ -861,10 +861,12 @@ function bp_core_get_js_strings_callback( $params ) {
 	if ( is_user_logged_in() ) {
 		$hidden_threads = BP_Messages_Thread::get_current_threads_for_user(
 			array(
-				'fields'      => 'ids',
-				'user_id'     => bp_loggedin_user_id(),
-				'is_hidden'   => true,
-				'thread_type' => 'archived',
+				'fields'                         => 'ids',
+				'user_id'                        => bp_loggedin_user_id(),
+				'is_hidden'                      => true,
+				'thread_type'                    => 'archived',
+				// Same rule as the archived list, so the flag does not count threads the list hides.
+				'exclude_disabled_group_threads' => true,
 			)
 		);
 
@@ -981,6 +983,36 @@ function bb_messages_validate_groups_thread( $thread_id ) {
 }
 
 add_filter( 'bb_messages_validate_thread', 'bb_messages_validate_groups_thread' );
+
+/**
+ * Hide group threads from the message lists while "Group Messages" is disabled.
+ *
+ * The header dropdown, the Messages sidebar and the inbox screens load their threads with the
+ * 'messages' query string, so only those lists change; other callers of the thread query keep
+ * group threads (existing-thread lookup on send, user deletion, attachment access checks).
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param string|array $querystring        Query string for the current request.
+ * @param string       $querystring_object Object the query string is used for.
+ *
+ * @return string|array
+ */
+function bb_messages_exclude_disabled_group_threads_querystring( $querystring, $querystring_object ) {
+	if ( 'messages' !== $querystring_object || ! function_exists( 'bp_disable_group_messages' ) || true === bp_disable_group_messages() ) {
+		return $querystring;
+	}
+
+	if ( is_array( $querystring ) ) {
+		$querystring['exclude_disabled_group_threads'] = true;
+	} else {
+		$querystring .= '&exclude_disabled_group_threads=1';
+	}
+
+	return $querystring;
+}
+
+add_filter( 'bp_ajax_querystring', 'bb_messages_exclude_disabled_group_threads_querystring', 20, 2 );
 
 /**
  * Display the html for the notification preferences actions.
@@ -1244,20 +1276,43 @@ function bb_clear_group_thread_cache( $thread_id ) {
 /**
  * Function to bypass the name privacy for admin.
  *
+ * Only a viewer that resolves to a real administrator account lifts the hidden levels. Every other
+ * viewer - an anonymous one, the bb_core_guest_viewer_id() sentinel, or an ID with no user row -
+ * leaves them exactly as the caller computed them: this is a privacy filter, so "we could not
+ * establish who is looking" has to mean "hide", never "show everything".
+ *
  * @since BuddyBoss 2.7.00
+ *
+ * @since BuddyBoss 3.5.0 An empty, anonymous or unresolvable viewer no longer clears the
+ *        hidden levels.
  *
  * @param array $hidden_levels     Hidden levels.
  * @param int   $displayed_user_id Displayed user id.
- * @param int   $current_user_id   Current user id.
+ * @param int   $current_user_id   Current user id. May be 0 for an anonymous request or
+ *                                 bb_core_guest_viewer_id() for an explicitly public resolution.
  *
  * @return array
  */
 function bb_bypass_name_privacy_for_admin( $hidden_levels, $displayed_user_id, $current_user_id ) {
-	if ( empty( $current_user_id ) ) {
-		return array();
+	$current_user_id = (int) $current_user_id;
+
+	// No viewer to test. bb_core_guest_viewer_id() is a sentinel, not a user row, so get_userdata()
+	// would return false for it and never identify an administrator.
+	if (
+		empty( $current_user_id ) ||
+		( function_exists( 'bb_core_guest_viewer_id' ) && bb_core_guest_viewer_id() === $current_user_id )
+	) {
+		return $hidden_levels;
 	}
 
 	$current_user_data = get_userdata( $current_user_id );
+
+	// A deleted or never-existing ID: get_userdata() returns false, and reading ->roles off it is a
+	// PHP 8 TypeError in the in_array() below.
+	if ( empty( $current_user_data ) || ! is_array( $current_user_data->roles ) ) {
+		return $hidden_levels;
+	}
+
 	if ( in_array( 'administrator', $current_user_data->roles, true ) ) {
 		$hidden_levels = array();
 	}
