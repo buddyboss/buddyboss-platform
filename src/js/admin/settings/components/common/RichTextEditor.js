@@ -51,6 +51,11 @@ export function forceRemoveEditor( editorId ) {
  * the textarea value. This also returns edits made in the Text tab, where
  * TinyMCE is hidden and its own getContent() is stale.
  *
+ * When the editor is not mounted (for example, the modal switched to another
+ * tab), the fallback is the last value the editor sent through onChange,
+ * which is TinyMCE HTML. Run it through the same removep() conversion so
+ * both paths return the same format.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param {string} editorId Editor ID.
@@ -58,11 +63,19 @@ export function forceRemoveEditor( editorId ) {
  * @returns {string} Editor content.
  */
 export function getRichTextEditorContent( editorId, fallback ) {
-	if ( window.wp && window.wp.editor && 'function' === typeof window.wp.editor.getContent ) {
+	if ( ! window.wp || ! window.wp.editor ) {
+		return fallback;
+	}
+
+	if ( 'function' === typeof window.wp.editor.getContent ) {
 		var content = window.wp.editor.getContent( editorId );
 		if ( 'string' === typeof content ) {
 			return content;
 		}
+	}
+
+	if ( 'string' === typeof fallback && /<(p|br)\b/i.test( fallback ) && 'function' === typeof window.wp.editor.removep ) {
+		return window.wp.editor.removep( fallback );
 	}
 
 	return fallback;
