@@ -809,6 +809,7 @@ function bp_nouveau_ajax_get_activity_objects() {
  * Processes Activity updates received via a POST request.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Turned-off commenting no longer blocks editing the activity.
  *
  * @return string JSON reply.
  */
@@ -957,15 +958,6 @@ function bp_nouveau_ajax_post_update() {
 	$item_id     = 0;
 	$object      = '';
 	$is_private  = false;
-
-	// Check if the activity comments closed.
-	if ( ! empty( $activity_id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity_id ) ) {
-		wp_send_json_error(
-			array(
-				'message' => __( 'The comments are closed for the activity. The activity cannot be edited.', 'buddyboss' )
-			)
-		);
-	}
 
 	// Try to get the item id from posted variables.
 	if ( ! empty( $_POST['item_id'] ) ) {
