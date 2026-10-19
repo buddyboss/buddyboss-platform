@@ -97,8 +97,8 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		$this->assertTrue( $this->can_read( $reply, $member ) );
 	}
 
-	public function test_comment_in_private_group_is_refused_to_banned_member() {
-		list( $g, , $comment ) = $this->group_thread( 'private' );
+	public function test_comment_and_reply_in_private_group_are_refused_to_banned_member() {
+		list( $g, , $comment, $reply ) = $this->group_thread( 'private' );
 
 		$banned = self::factory()->user->create();
 		self::add_user_to_group( $banned, $g );
@@ -106,6 +106,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		$member->ban();
 
 		$this->assertFalse( $this->can_read( $comment, $banned ) );
+		$this->assertFalse( $this->can_read( $reply, $banned ) );
 	}
 
 	public function test_comment_in_private_group_is_readable_by_admin() {
@@ -176,7 +177,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	/**
 	 * @group bb_activity_user_can_view
 	 */
-	public function test_with_parents_refuses_comment_in_private_group_to_non_member() {
+	public function test_view_refuses_comment_in_private_group_to_non_member() {
 		list( $g, $root, $comment, $reply ) = $this->group_thread( 'private' );
 
 		$member = self::factory()->user->create();
@@ -193,7 +194,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	/**
 	 * @group bb_activity_user_can_view
 	 */
-	public function test_with_parents_follows_photo_of_friends_only_post() {
+	public function test_view_follows_photo_of_friends_only_post() {
 		$friend = self::factory()->user->create();
 		friends_add_friend( $this->author, $friend, true );
 
@@ -233,7 +234,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	/**
 	 * @group bb_activity_user_can_view
 	 */
-	public function test_with_parents_allows_comment_on_public_post_for_guest() {
+	public function test_view_allows_comment_on_public_post_for_guest() {
 		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
 		$comment = bp_activity_new_comment(
 			array(
@@ -310,5 +311,85 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		remove_filter( 'bb_activity_user_can_view', '__return_true' );
 
 		$this->assertTrue( $can_view );
+	}
+
+	/**
+	 * A comment copies its post's privacy but keeps the commenter as its owner.
+	 *
+	 * @group bb_activity_user_can_view
+	 */
+	public function test_view_follows_post_author_for_others_comment_on_friends_only_post() {
+		$commenter     = self::factory()->user->create();
+		$author_friend = self::factory()->user->create();
+		friends_add_friend( $this->author, $commenter, true );
+		friends_add_friend( $this->author, $author_friend, true );
+
+		$post = self::factory()->activity->create(
+			array(
+				'user_id' => $this->author,
+				'privacy' => 'friends',
+			)
+		);
+
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $commenter,
+				'activity_id' => $post,
+				'content'     => 'comment',
+			)
+		);
+
+		$reply = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $post,
+				'parent_id'   => $comment,
+				'content'     => 'reply',
+			)
+		);
+
+		// A friend of the author, not of the commenter.
+		$this->set_current_user( $author_friend );
+		$this->assertTrue( bb_activity_user_can_view( $comment, $author_friend ) );
+		$this->assertTrue( bb_activity_user_can_view( $reply, $author_friend ) );
+
+		$this->set_current_user( $this->stranger );
+		$this->assertFalse( bb_activity_user_can_view( $comment, $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_view( $reply, $this->stranger ) );
+	}
+
+	/**
+	 * @group bb_activity_user_can_view
+	 */
+	public function test_view_lets_author_read_others_comment_on_only_me_post() {
+		$commenter = self::factory()->user->create();
+
+		$post = self::factory()->activity->create(
+			array(
+				'user_id' => $this->author,
+				'privacy' => 'public',
+			)
+		);
+
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $commenter,
+				'activity_id' => $post,
+				'content'     => 'comment',
+			)
+		);
+
+		// The author narrows the post afterwards; saving it copies onlyme to its comments,
+		// which stay owned by the commenter.
+		$root          = new BP_Activity_Activity( $post );
+		$root->privacy = 'onlyme';
+		$root->save();
+		$this->assertSame( 'onlyme', ( new BP_Activity_Activity( $comment ) )->privacy );
+
+		$this->set_current_user( $this->author );
+		$this->assertTrue( bb_activity_user_can_view( $comment, $this->author ) );
+
+		$this->set_current_user( $commenter );
+		$this->assertFalse( bb_activity_user_can_view( $comment, $commenter ) );
 	}
 }

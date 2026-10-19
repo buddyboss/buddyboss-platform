@@ -553,7 +553,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	$activity = $activity_array['activities'][0];
 
 	// Guests can call this, so only return content the user can read, in its group and thread.
-	if ( ! bb_activity_user_can_view( $activity ) ) {
+	if ( ! bb_activity_user_can_view( (int) $activity->id ) ) {
 		wp_send_json_error( $response );
 	}
 

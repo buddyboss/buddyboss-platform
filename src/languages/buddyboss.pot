@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-19 08:11:23+00:00\n"
+"POT-Creation-Date: 2026-10-19 08:56:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1355,7 +1355,7 @@ msgstr ""
 
 #: bb-features/community/reactions/bb-activity-reactions.php:810
 #: bp-activity/bp-activity-functions.php:1769
-#: bp-activity/classes/class-bb-activity-readylaunch.php:715
+#: bp-activity/classes/class-bb-activity-readylaunch.php:729
 msgid " and "
 msgstr ""
 
@@ -1446,9 +1446,9 @@ msgid "There is an error while adding the reaction."
 msgstr ""
 
 #: bb-features/community/reactions/classes/class-bb-reaction.php:928
-#: bp-activity/classes/class-bb-activity-readylaunch.php:244
-#: bp-activity/classes/class-bb-activity-readylaunch.php:253
-#: bp-activity/classes/class-bb-activity-readylaunch.php:299
+#: bp-activity/classes/class-bb-activity-readylaunch.php:245
+#: bp-activity/classes/class-bb-activity-readylaunch.php:254
+#: bp-activity/classes/class-bb-activity-readylaunch.php:300
 #: bp-core/bp-core-actions.php:1202
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1685
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1694
@@ -2985,26 +2985,26 @@ msgstr ""
 msgid "Sorry, You cannot view on this activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7868
+#: bp-activity/bp-activity-functions.php:7874
 #: bp-blogs/bp-blogs-activity.php:287
 #: bp-blogs/bp-blogs-activity.php:1715
 #, php-format
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7870
+#: bp-activity/bp-activity-functions.php:7876
 #: bp-blogs/bp-blogs-activity.php:289
 #: bp-blogs/bp-blogs-activity.php:1717
 #, php-format
 msgid "%1$s posted a new post."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:8139
+#: bp-activity/bp-activity-functions.php:8145
 msgid "Please enter a title for your activity."
 msgstr ""
 
 #. translators: 1: maximum length of the post title, 2: current length of the post title.
-#: bp-activity/bp-activity-functions.php:8153
+#: bp-activity/bp-activity-functions.php:8159
 #, php-format
 msgid "Title must be less than %1$d characters. You used %2$d characters."
 msgstr ""
@@ -3283,7 +3283,7 @@ msgid "Stop Following"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4395
-#: bp-activity/classes/class-bb-activity-readylaunch.php:864
+#: bp-activity/classes/class-bb-activity-readylaunch.php:878
 msgid "Unfollow"
 msgstr ""
 
@@ -3304,32 +3304,33 @@ msgstr ""
 msgid "reactions"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:261
+#: bp-activity/classes/class-bb-activity-readylaunch.php:262
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1702
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1839
 msgid "Activity id cannot be empty."
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:269
+#: bp-activity/classes/class-bb-activity-readylaunch.php:270
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1710
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:289
+#: bp-activity/classes/class-bb-activity-readylaunch.php:290
+#: bp-activity/classes/class-bb-activity-readylaunch.php:313
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1730
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1753
 msgid "Sorry, You are not allowed to view more comments."
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:322
-#: bp-activity/classes/class-bb-activity-readylaunch.php:346
+#: bp-activity/classes/class-bb-activity-readylaunch.php:336
+#: bp-activity/classes/class-bb-activity-readylaunch.php:360
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1773
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1799
 msgid "No more items to load."
 msgstr ""
 
 #. translators: %d: activity comment count
-#: bp-activity/classes/class-bb-activity-readylaunch.php:401
+#: bp-activity/classes/class-bb-activity-readylaunch.php:415
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:327
 #, php-format
 msgctxt "placeholder: activity comments count"
@@ -3337,7 +3338,7 @@ msgid "%d Comments"
 msgstr ""
 
 #. translators: %d: activity comment count
-#: bp-activity/classes/class-bb-activity-readylaunch.php:404
+#: bp-activity/classes/class-bb-activity-readylaunch.php:418
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:329
 #, php-format
 msgctxt "placeholder: activity comment count"
@@ -3345,18 +3346,18 @@ msgid "%d Comment"
 msgstr ""
 
 #. Translators: %d: reply count
-#: bp-activity/classes/class-bb-activity-readylaunch.php:462
+#: bp-activity/classes/class-bb-activity-readylaunch.php:476
 #, php-format
 msgid "%d Reply"
 msgstr ""
 
 #. Translators: %d: reply count
-#: bp-activity/classes/class-bb-activity-readylaunch.php:464
+#: bp-activity/classes/class-bb-activity-readylaunch.php:478
 #, php-format
 msgid "%d Replies"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:466
+#: bp-activity/classes/class-bb-activity-readylaunch.php:480
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:212
 #: bp-core/admin/settings/forums/settings-forum-permalinks.php:105
 #: bp-core/bp-core-wp-emails.php:243
@@ -3380,8 +3381,8 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:467
-#: bp-activity/classes/class-bb-activity-readylaunch.php:563
+#: bp-activity/classes/class-bb-activity-readylaunch.php:481
+#: bp-activity/classes/class-bb-activity-readylaunch.php:577
 #: bp-core/gdpr/class-bp-activity-export.php:70
 #: bp-moderation/classes/class-bp-moderation-activity-comment.php:318
 #: bp-moderation/classes/class-bp-moderation-comment.php:493
@@ -3393,11 +3394,11 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:468
+#: bp-activity/classes/class-bb-activity-readylaunch.php:482
 msgid "Write a reply..."
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:469
+#: bp-activity/classes/class-bb-activity-readylaunch.php:483
 #: bp-templates/bp-nouveau/buddypress/activity/activity-modal.php:64
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:31
 #: bp-templates/bp-nouveau/readylaunch/activity/activity-modal.php:77
@@ -3406,7 +3407,7 @@ msgid "Write a comment..."
 msgstr ""
 
 #. translators: %d: follower count
-#: bp-activity/classes/class-bb-activity-readylaunch.php:531
+#: bp-activity/classes/class-bb-activity-readylaunch.php:545
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1565
 #, php-format
 msgid "%d follower"
@@ -3415,36 +3416,36 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Translators: %s: user link
-#: bp-activity/classes/class-bb-activity-readylaunch.php:640
+#: bp-activity/classes/class-bb-activity-readylaunch.php:654
 #, php-format
 msgid "%s started the discussion"
 msgstr ""
 
 #. Translators: %s: user link
-#: bp-activity/classes/class-bb-activity-readylaunch.php:643
+#: bp-activity/classes/class-bb-activity-readylaunch.php:657
 #, php-format
 msgid "%s replied to the discussion"
 msgstr ""
 
 #. Translators: %s: user link
-#: bp-activity/classes/class-bb-activity-readylaunch.php:683
+#: bp-activity/classes/class-bb-activity-readylaunch.php:697
 #, php-format
 msgid "%s updated group details"
 msgstr ""
 
 #. translators: %1$s: user link, %2$s: mentioned users avatar, %3$s: mentioned users link, %4$s: mentioned users link and, %5$s: last mentioned user link
-#: bp-activity/classes/class-bb-activity-readylaunch.php:711
+#: bp-activity/classes/class-bb-activity-readylaunch.php:725
 #, php-format
 msgid "%1$s <span class=\"activity-to\">to</span> %2$s%3$s%4$s%5$s"
 msgstr ""
 
 #. translators: %1$s: user link, %2$s: friend link
-#: bp-activity/classes/class-bb-activity-readylaunch.php:727
+#: bp-activity/classes/class-bb-activity-readylaunch.php:741
 #, php-format
 msgid "%1$s & %2$s are now connected"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:776
+#: bp-activity/classes/class-bb-activity-readylaunch.php:790
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1526
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1538
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1586
@@ -3461,12 +3462,12 @@ msgid "Add a description"
 msgstr ""
 
 #. translators: %s: media type
-#: bp-activity/classes/class-bb-activity-readylaunch.php:780
+#: bp-activity/classes/class-bb-activity-readylaunch.php:794
 #, php-format
 msgid "Type %s description"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:795
+#: bp-activity/classes/class-bb-activity-readylaunch.php:809
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1542
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1595
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1648
@@ -3476,7 +3477,7 @@ msgstr ""
 msgid "Done Editing"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:796
+#: bp-activity/classes/class-bb-activity-readylaunch.php:810
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:106
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:86
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:60
@@ -3492,19 +3493,19 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:891
+#: bp-activity/classes/class-bb-activity-readylaunch.php:905
 msgid "Download document"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:894
+#: bp-activity/classes/class-bb-activity-readylaunch.php:908
 msgid "Download photo"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:897
+#: bp-activity/classes/class-bb-activity-readylaunch.php:911
 msgid "Download video"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:902
+#: bp-activity/classes/class-bb-activity-readylaunch.php:916
 #: bp-document/bp-document-filters.php:300
 #: bp-messages/bp-messages-functions.php:2948
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:37
@@ -3529,7 +3530,7 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: bp-activity/classes/class-bb-activity-readylaunch.php:979
+#: bp-activity/classes/class-bb-activity-readylaunch.php:993
 msgid "Comments are closed for this post"
 msgstr ""
 

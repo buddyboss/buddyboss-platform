@@ -7495,6 +7495,12 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 					break;
 				}
 
+				// A comment copies its root's privacy but keeps the commenter as user_id, so its
+				// own check would test friendship with the commenter. The root on the chain decides.
+				if ( 'activity_comment' === $item->type ) {
+					continue;
+				}
+
 				$privacy = bb_validate_activity_privacy(
 					array(
 						'activity_id'     => $item->id,
