@@ -2824,7 +2824,7 @@ window.bp = window.bp || {};
 
 			loadURLPreview: function ( url ) {
 				var self   = this,
-					regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+					regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/i;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
 					if ( ( ! _.isUndefined( self.options.activity.get( 'link_success' ) ) && true === self.options.activity.get( 'link_success' ) ) && self.options.activity.get( 'link_url' ) === url ) {
@@ -2864,7 +2864,18 @@ window.bp = window.bp || {};
 
 					if ( ! urlResponse ) {
 						self.loadURLAjax = bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always(
-							function ( response ) {
+							function ( response, textStatus ) {
+								// A failed request passes the jqXHR here, not the parsed preview data.
+								if ( ! _.isObject( response ) || ! _.isUndefined( response.readyState ) ) {
+
+									// A newer request replaced this one.
+									if ( 'abort' === textStatus ) {
+										return;
+									}
+
+									response = { error: BP_Nouveau.link_preview_error };
+								}
+
 								self.setURLResponse( response, url );
 							}
 						);

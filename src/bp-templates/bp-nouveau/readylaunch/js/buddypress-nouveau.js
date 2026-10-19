@@ -4344,7 +4344,7 @@ window.bp = window.bp || {};
 					}
 				}
 
-				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/i;
 				url        = $.trim( url );
 				if ( regexp.test( url ) ) {
 
@@ -4406,11 +4406,17 @@ window.bp = window.bp || {};
 							},
 							function ( response ) {
 								// success callback.
-								self.setURLResponse( response, url );
+								self.setURLResponse( _.isObject( response ) ? response : { error: BP_Nouveau.link_preview_error }, url );
 							}
-						).always(
-							function () {
-								// always callback.
+						).fail(
+							function ( jqXHR, textStatus ) {
+								// A newer request replaced this one.
+								if ( 'abort' === textStatus ) {
+									return;
+								}
+
+								// Show an error instead of leaving the loader running.
+								self.setURLResponse( { error: BP_Nouveau.link_preview_error }, url );
 							}
 						);
 					} else {
