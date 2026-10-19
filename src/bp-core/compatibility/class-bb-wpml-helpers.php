@@ -82,7 +82,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			// switch statement has no `gender` case, so the Gender field silently falls through
 			// untranslated there (it is translated correctly in the edit-screen dropdown, via the
 			// separate `bp_get_the_profile_field_options_select_gender` filter that plugin also hooks).
-			add_filter( 'bp_get_the_profile_field_value', array( $this, 'bb_wpml_translate_gender_field_value' ), 20, 3 );
+			add_filter( 'bp_get_the_profile_field_value', array( $this, 'bb_wpml_translate_gender_field_value' ), 9, 3 );
 
 			add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_wpml_groups_dir_search_where_conditions' ), 10, 2 );
 			add_filter( 'Bp_Search_Groups_sql', array( $this, 'bb_wpml_groups_search_global_sql' ), 10, 2 );
@@ -368,9 +368,14 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * `translate_value_profile_view()`) already translates radio/selectbox/checkbox/
 		 * multiselectbox option values via this same filter, but its switch statement has
 		 * no `gender` case, so a Gender field's value is returned untranslated here even
-		 * though the string is correctly registered/translated in WPML String Translation
-		 * (under the "Buddypress Multilingual" domain — the same domain/name pattern that
-		 * plugin already uses for every other option-based field type).
+		 * though the option label is registered in WPML String Translation.
+		 *
+		 * Runs at priority 9, like the bridge, so the value is still unwrapped (before
+		 * `wpautop` at 10). The label is resolved the same way the bridge does it: the
+		 * option is matched by its original label and looked up through the
+		 * `wpml_translate_single_string` API under the bridge's own string name. Once the
+		 * bridge adds a `gender` case, the original label is no longer in the value, so
+		 * this becomes a no-op.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -378,44 +383,55 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * @param string $field_type The type of the field.
 		 * @param int    $field_id   ID of the field being rendered.
 		 *
-		 * @return string The translated value, if a translation exists; otherwise the original value.
+		 * @return string The value with the option label translated, if a translation exists.
 		 */
 		public function bb_wpml_translate_gender_field_value( $value, $field_type, $field_id = 0 ) {
-			if ( 'gender' !== $field_type || empty( $value ) || ! class_exists( 'Sitepress' ) ) {
+			if ( 'gender' !== $field_type || empty( $value ) || empty( $field_id ) || ! function_exists( 'bpml_sanitize_string_name' ) ) {
 				return $value;
 			}
 
-			$current_language = apply_filters( 'wpml_current_language', null );
-			$default_language = apply_filters( 'wpml_default_language', null );
-
-			// Nothing to translate when viewing in the default language.
-			if ( empty( $current_language ) || $current_language === $default_language ) {
+			$field = xprofile_get_field( (int) $field_id );
+			if ( empty( $field->id ) ) {
 				return $value;
 			}
 
-			global $wpdb;
+			// The stored label; $value may already be escaped or wrapped in a search link.
+			$raw_value = ( isset( $GLOBALS['field']->id, $GLOBALS['field']->data->value ) && (int) $GLOBALS['field']->id === (int) $field_id )
+				? $GLOBALS['field']->data->value
+				: $value;
 
-			// Matches the string name buddypress-multilingual registers for each option,
-			// e.g. "profile field 28 - option 'female' name".
-			$string_name = sprintf( "profile field %d - option '%s' name", (int) $field_id, sanitize_title( $value ) );
+			foreach ( (array) $field->get_children() as $option ) {
+				if ( empty( $option->name ) || $option->name !== $raw_value ) {
+					continue;
+				}
 
-			$translated_value = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT st.value
-					FROM {$wpdb->prefix}icl_strings s
-					INNER JOIN {$wpdb->prefix}icl_string_translations st ON st.string_id = s.id
-					WHERE s.name = %s
-					AND s.context = %s
-					AND st.language = %s
-					AND st.status = %d",
-					$string_name,
-					'Buddypress Multilingual',
-					$current_language,
-					10 // ICL_TM_COMPLETE.
-				)
-			);
+				// Same string name and context the bridge registers for each option label.
+				$string_name = sprintf( "profile field %d - option '%s' name", (int) $field_id, bpml_sanitize_string_name( $option->name, 30 ) );
+				$translated  = stripslashes( apply_filters( 'wpml_translate_single_string', $option->name, 'Buddypress Multilingual', $string_name ) );
 
-			return ( ! empty( $translated_value ) ) ? $translated_value : $value;
+				if ( '' === $translated || $translated === $option->name ) {
+					break;
+				}
+
+				$translated = esc_html( $translated );
+
+				// Expected format is a search link: only change the link text, not its URL.
+				foreach ( array_unique( array( esc_html( $option->name ), $option->name ) ) as $label ) {
+					$linked = str_replace( ">{$label}</a>", ">{$translated}</a>", $value, $count );
+					if ( $count ) {
+						return $linked;
+					}
+
+					// Plain text value.
+					if ( $value === $label ) {
+						return $translated;
+					}
+				}
+
+				break;
+			}
+
+			return $value;
 		}
 
 		/**
