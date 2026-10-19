@@ -216,3 +216,19 @@ function bb_media_get_video_extension_data() {
 	return bb_media_get_extension_data( 'bp_video_extensions_support' );
 }
 
+/**
+ * Refresh the video extensions field with real defaults once they're loadable.
+ *
+ * Thin wrapper around the shared `bb_media_lazy_refresh_extension_defaults()`
+ * in callbacks.php — see that function's docblock for the full explanation
+ * of the `bp_loaded` priority-5 load-order problem this works around for
+ * `bp_video_allowed_video_type()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature being loaded.
+ */
+function bb_media_lazy_refresh_video_extension_defaults( $feature_id ) {
+	bb_media_lazy_refresh_extension_defaults( $feature_id, 'videos', 'videos_settings', 'bp_video_extensions_support', 'bp_video_allowed_video_type', true );
+}
+add_action( 'bb_admin_settings_before_get_feature', 'bb_media_lazy_refresh_video_extension_defaults' );

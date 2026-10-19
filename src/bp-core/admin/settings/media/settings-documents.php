@@ -201,6 +201,23 @@ function bb_media_get_document_extension_data() {
 }
 
 /**
+ * Refresh the document extensions field with real defaults once they're loadable.
+ *
+ * Thin wrapper around the shared `bb_media_lazy_refresh_extension_defaults()`
+ * in callbacks.php — see that function's docblock for the full explanation
+ * of the `bp_loaded` priority-5 load-order problem this works around for
+ * `bp_media_allowed_document_type()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature being loaded.
+ */
+function bb_media_lazy_refresh_document_extension_defaults( $feature_id ) {
+	bb_media_lazy_refresh_extension_defaults( $feature_id, 'documents', 'documents_settings', 'bp_document_extensions_support', 'bp_media_allowed_document_type' );
+}
+add_action( 'bb_admin_settings_before_get_feature', 'bb_media_lazy_refresh_document_extension_defaults' );
+
+/**
  * Get icon options for the document extension icon dropdown.
  *
  * Uses the existing `bb_document_icon_class` filter to map icons. When ReadyLaunch
