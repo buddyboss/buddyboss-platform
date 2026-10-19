@@ -124,6 +124,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 
 		// Check if the thread is a group thread and join with group members to the query.
+		$join_group_members = false;
 		if ( bp_is_active( 'groups' ) && function_exists( 'bb_messages_is_group_thread' ) && function_exists( 'bb_recipients_recipient_get_join_sql_with_group_members' ) ) {
 			$is_group_message_thread = bb_messages_is_group_thread( $thread_id );
 			$first_message           = BP_Messages_Thread::get_first_message( $thread_id );
@@ -131,10 +132,16 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 
 			if ( $is_group_message_thread && $group_id ) {
 				add_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10, 2 );
+				$join_group_members = true;
 			}
 		}
 
 		$thread = new BP_Messages_Thread( $thread_id );
+
+		if ( $join_group_members ) {
+			// Detach the join right after the thread is built so it cannot leak into later queries of this request.
+			remove_filter( 'bp_recipients_recipient_get_join_sql', 'bb_recipients_recipient_get_join_sql_with_group_members', 10 );
+		}
 
 		$retval = $this->prepare_response_for_collection(
 			$this->message_endpoint->prepare_item_for_response( $thread, $request )
@@ -196,6 +203,17 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			if ( true === $retval ) {
 				$retval = true;
 			}
+		}
+
+		// The response carries the whole thread, so the "Group Messages" disabled rule of get_item applies here too.
+		if ( true === $retval && function_exists( 'bb_messages_is_disabled_group_thread' ) && bb_messages_is_disabled_group_thread( $thread->thread_id ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
 		}
 
 		/**
