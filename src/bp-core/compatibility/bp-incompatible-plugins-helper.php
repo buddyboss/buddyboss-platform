@@ -1252,7 +1252,8 @@ add_action( 'init', 'bb_om_compatibility_helper', 10 );
  * @return array The query variables without `author` for BuddyBoss REST requests.
  */
 function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
-	if ( empty( $query_vars['rest_route'] ) || empty( $query_vars['author'] ) ) {
+	// `rest_route` arrives as an array for `?rest_route[]=…`; core's rest_api_loaded() ignores those too.
+	if ( empty( $query_vars['rest_route'] ) || ! is_string( $query_vars['rest_route'] ) || empty( $query_vars['author'] ) ) {
 		return $query_vars;
 	}
 
