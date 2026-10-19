@@ -1276,6 +1276,43 @@ window.bp = window.bp || {};
 								}
 							}
 
+							// Deleting the activity from inside the "view more comments"
+							// modal removes only the modal's copy of the entry below -
+							// the feed's copy stays stale and the modal is left open as
+							// an empty shell. Drop the feed copy, close the modal through
+							// its real close button, and anchor the feed on the deleted
+							// post's neighbor so the user lands at the right position.
+							// The close empties the modal list, so the slideUp below runs
+							// on a detached node for this path - intentional no-op.
+							if ( ! ajaxData.is_comment && li_parent.closest( '#activity-modal' ).length ) {
+								var $feedCopy   = $( '#activity-stream li.activity-item[data-bp-activity-id="' + ajaxData.id + '"]' );
+								var $feedAnchor = $feedCopy.prevAll( 'li.activity-item:not(.activity-popup)' ).first();
+								if ( ! $feedAnchor.length ) {
+									$feedAnchor = $feedCopy.nextAll( 'li.activity-item:not(.activity-popup)' ).first();
+								}
+
+								// A pin toggled from inside the modal is moot once the post
+								// is deleted - left set, the close-button's sync handler
+								// reloads the whole feed over the anchor scroll below.
+								bp.Nouveau.Activity.activityPinHasUpdates = false;
+
+								$feedCopy.remove();
+
+								var $modalCloseButton = $( '#activity-modal .bb-modal-activity-header .bb-close-action-popup' );
+								if ( $modalCloseButton.length ) {
+									$modalCloseButton.trigger( 'click' );
+								} else {
+									// A theme override may rename the close control - never
+									// leave the emptied modal open.
+									$( '#activity-modal' ).closest( '.bb-activity-model-wrapper' ).hide();
+								}
+
+								if ( $feedAnchor.length ) {
+									var adminBar = $( '#wpadminbar' ).length !== 0 ? $( '#wpadminbar' ).innerHeight() : 0;
+									$( 'html, body' ).animate( { scrollTop: parseInt( $feedAnchor.offset().top ) - ( 80 + adminBar ) }, 300 );
+								}
+							}
+
 							// Remove the entry.
 							li_parent.slideUp(
 								300,
