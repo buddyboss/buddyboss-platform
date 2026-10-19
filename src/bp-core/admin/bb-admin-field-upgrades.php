@@ -556,7 +556,8 @@ function bb_register_field_upgrades_license_hooks() {
 		return;
 	}
 
-	$plugin_id = get_option( 'buddyboss_dynamic_plugin_id', '' );
+	// Network-wide when Platform is network-activated.
+	$plugin_id = \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector::get_license_option( 'buddyboss_dynamic_plugin_id', '' );
 	if ( empty( $plugin_id ) && defined( 'PLATFORM_EDITION' ) ) {
 		$plugin_id = PLATFORM_EDITION;
 	}

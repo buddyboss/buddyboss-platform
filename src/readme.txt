@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.5.0
+Stable tag: 3.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,37 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.6.1 =
+* Bug: Activity - Fixed PHP warnings in activity feed caused by invalid cached activity data
+* Bug: Core - Fixed a security issue in how activity post drafts are saved
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover some restricted content
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover file download links
+* Bug: Groups - Fixed a permissions issue with creating folders in group documents
+* Bug: Groups - Fixed an out-of-memory error that could occur when uploading media in very large groups
+* Bug: LearnDash - Fixed an issue cached API responses, causing the app's course screen to show placeholder content instead of the actual course curriculum
+* Bug: Media - Fixed an issue where profile completion did not recognize avatars and cover photos when media offloading was enabled
+* Bug: Messages - Fixed a slowdown that made pages load very slowly on large sites with many members and unread message notifications
+* Bug: Messages - Fixed an issue where some conversations in the app incorrectly showed that new messages could not be sent
+* Bug: ReadyLaunch - Fixed an issue where a stray divider line appeared in the group header for logged-out visitors
+* Bug: ReadyLaunch - Fixed an issue where discussion tags overflowed their container when a discussion had many tags
+
+= 3.6.0 =
+* Enhancement: Social Login - Added frontend Two-Factor Authentication management under Account - Security, allowing members to securely set up and manage 2FA and use it seamlessly with BuddyBoss Social Login
+* Bug: Groups - Fixed an issue where group members could not move documents into a group folder created by another member
+* Bug: Media - Fixed a display issue where the page layout broke after deleting all photos, videos or documents in comment and media pop-ups
+* Bug: Media - Fixed an issue where the empty album message was not shown after deleting the last photo or video in an album
+* Bug: Members - Fixed an issue where using the browser's back button after searching members showed a "Confirm Form Resubmission" error instead of the members list
+* Bug: ReadyLaunch - Fixed an issue where the comment box appeared inside the activity post and the layout broke after editing an activity or deleting its media
+
+= 3.5.1 =
+* Bug: Activity - Fixed an issue where a blocked member's posts and activity were still visible in the activity feed
+* Bug: Activity - Fixed an issue where the activity post editing time limit could become invalid, causing the settings page to show the wrong value and editing to stop working correctly
+* Bug: Core - Fixed an issue where administrators were unable to edit other users’ profile settings
+* Bug: Groups - Fixed an issue where the group invite member list took a long time to load
+* Bug: Login - Fixed an issue where the login security check (reCAPTCHA) could expire before a form was submitted, incorrectly locking out legitimate users
+* Bug: ReadyLaunch - Fixed a display issue where the password show/hide icon appeared above the password field instead of inside it in ReadyLaunch
+* Bug: Translations - Fixed an issue where translated text for the post reporting options did not appear on the site
 
 = 3.5.0 =
 * New Feature! Notification - Turn a flood of notification emails into a single daily or weekly Email Digest, with each member choosing their own frequency
