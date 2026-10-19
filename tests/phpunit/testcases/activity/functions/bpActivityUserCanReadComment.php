@@ -1,0 +1,249 @@
+<?php
+
+/**
+ * PROD-10649: an activity comment is readable only when its root activity is.
+ *
+ * A comment is stored with component 'activity' and no group of its own, so
+ * bp_activity_user_can_read() checks the group of its root activity (item_id).
+ *
+ * @group activity
+ * @group bp_activity_user_can_read
+ */
+class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTestCase {
+
+	protected $author;
+	protected $stranger;
+
+	public function setUp(): void {
+		parent::setUp();
+
+		$this->author   = self::factory()->user->create();
+		$this->stranger = self::factory()->user->create();
+	}
+
+	/**
+	 * Create a group post with a comment and a nested reply.
+	 *
+	 * @param string $status Group status.
+	 *
+	 * @return array Group, root, comment and reply IDs.
+	 */
+	protected function group_thread( $status ) {
+		$g = self::factory()->group->create(
+			array(
+				'creator_id' => $this->author,
+				'status'     => $status,
+			)
+		);
+
+		$root = self::factory()->activity->create(
+			array(
+				'component'     => buddypress()->groups->id,
+				'type'          => 'activity_update',
+				'user_id'       => $this->author,
+				'item_id'       => $g,
+				'hide_sitewide' => 'public' !== $status,
+			)
+		);
+
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $root,
+				'content'     => 'comment',
+			)
+		);
+
+		$reply = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $root,
+				'parent_id'   => $comment,
+				'content'     => 'reply',
+			)
+		);
+
+		return array( $g, $root, $comment, $reply );
+	}
+
+	protected function can_read( $activity_id, $user_id ) {
+		$this->set_current_user( $user_id );
+
+		return bp_activity_user_can_read( new BP_Activity_Activity( $activity_id ), $user_id );
+	}
+
+	public function test_comment_and_reply_in_private_group_are_refused_to_non_member() {
+		list( , $root, $comment, $reply ) = $this->group_thread( 'private' );
+
+		$this->assertFalse( $this->can_read( $root, $this->stranger ) );
+		$this->assertFalse( $this->can_read( $comment, $this->stranger ) );
+		$this->assertFalse( $this->can_read( $reply, $this->stranger ) );
+	}
+
+	public function test_comment_and_reply_in_hidden_group_are_refused_to_non_member() {
+		list( , , $comment, $reply ) = $this->group_thread( 'hidden' );
+
+		$this->assertFalse( $this->can_read( $comment, $this->stranger ) );
+		$this->assertFalse( $this->can_read( $reply, $this->stranger ) );
+	}
+
+	public function test_comment_in_private_group_is_readable_by_member() {
+		list( $g, , $comment, $reply ) = $this->group_thread( 'private' );
+
+		$member = self::factory()->user->create();
+		self::add_user_to_group( $member, $g );
+
+		$this->assertTrue( $this->can_read( $comment, $member ) );
+		$this->assertTrue( $this->can_read( $reply, $member ) );
+	}
+
+	public function test_comment_in_private_group_is_refused_to_banned_member() {
+		list( $g, , $comment ) = $this->group_thread( 'private' );
+
+		$banned = self::factory()->user->create();
+		self::add_user_to_group( $banned, $g );
+		$member = new BP_Groups_Member( $banned, $g );
+		$member->ban();
+
+		$this->assertFalse( $this->can_read( $comment, $banned ) );
+	}
+
+	public function test_comment_in_private_group_is_readable_by_admin() {
+		list( , , $comment ) = $this->group_thread( 'private' );
+
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		$this->assertTrue( $this->can_read( $comment, $admin ) );
+	}
+
+	public function test_comment_in_public_group_is_readable_by_non_member() {
+		list( , , $comment, $reply ) = $this->group_thread( 'public' );
+
+		$this->assertTrue( $this->can_read( $comment, $this->stranger ) );
+		$this->assertTrue( $this->can_read( $reply, $this->stranger ) );
+	}
+
+	public function test_comment_on_profile_post_is_readable_by_others() {
+		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $root,
+				'content'     => 'comment',
+			)
+		);
+
+		$this->assertTrue( $this->can_read( $comment, $this->stranger ) );
+	}
+
+	public function test_comment_on_spammed_root_is_refused() {
+		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $root,
+				'content'     => 'comment',
+			)
+		);
+
+		$root_activity = new BP_Activity_Activity( $root );
+		bp_activity_mark_as_spam( $root_activity );
+		$root_activity->save();
+
+		$this->assertFalse( $this->can_read( $comment, $this->stranger ) );
+	}
+
+	public function test_comment_whose_root_is_missing_is_refused() {
+		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $root,
+				'content'     => 'comment',
+			)
+		);
+
+		$comment_activity = new BP_Activity_Activity( $comment );
+
+		// Remove only the root row, as orphaned data would look.
+		BP_Activity_Activity::delete( array( 'id' => $root ) );
+		wp_cache_delete( $root, 'bp_activity' );
+
+		$this->set_current_user( $this->stranger );
+		$this->assertFalse( bp_activity_user_can_read( $comment_activity, $this->stranger ) );
+	}
+
+	/**
+	 * @group bb_activity_user_can_read_with_parents
+	 */
+	public function test_with_parents_refuses_comment_in_private_group_to_non_member() {
+		list( $g, $root, $comment, $reply ) = $this->group_thread( 'private' );
+
+		$member = self::factory()->user->create();
+		self::add_user_to_group( $member, $g );
+
+		$this->set_current_user( $this->stranger );
+		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $root ), $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $reply ), $this->stranger ) );
+
+		$this->set_current_user( $member );
+		$this->assertTrue( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), $member ) );
+	}
+
+	/**
+	 * @group bb_activity_user_can_read_with_parents
+	 */
+	public function test_with_parents_follows_photo_of_friends_only_post() {
+		$friend = self::factory()->user->create();
+		friends_add_friend( $this->author, $friend, true );
+
+		$post = self::factory()->activity->create(
+			array(
+				'user_id' => $this->author,
+				'privacy' => 'friends',
+			)
+		);
+
+		// Each photo of a post with several photos gets a hidden sub-activity.
+		$photo = self::factory()->activity->create(
+			array(
+				'user_id'           => $this->author,
+				'privacy'           => 'media',
+				'hide_sitewide'     => true,
+				'secondary_item_id' => $post,
+			)
+		);
+
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $photo,
+				'content'     => 'comment',
+			)
+		);
+
+		$this->set_current_user( $this->stranger );
+		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $photo ), $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), $this->stranger ) );
+
+		$this->set_current_user( $friend );
+		$this->assertTrue( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), $friend ) );
+	}
+
+	/**
+	 * @group bb_activity_user_can_read_with_parents
+	 */
+	public function test_with_parents_allows_comment_on_public_post_for_guest() {
+		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $root,
+				'content'     => 'comment',
+			)
+		);
+
+		$this->set_current_user( 0 );
+		$this->assertTrue( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), 0 ) );
+	}
+}
