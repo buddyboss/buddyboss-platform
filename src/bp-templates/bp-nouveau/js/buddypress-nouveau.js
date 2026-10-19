@@ -3282,7 +3282,6 @@ window.bp = window.bp || {};
 						midClick: true,
 						callbacks: {
 							open: function () {
-								console.log( 'called' );
 								$( '#notes-error' ).hide();
 								var contentId   = this.currItem.el.data( 'bp-content-id' );
 								var contentType = this.currItem.el.data( 'bp-content-type' );
