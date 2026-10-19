@@ -511,6 +511,7 @@ function bp_nouveau_ajax_delete_activity() {
  * Used for the 'Read More' link on long activity items.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Only returns content the user can read, in its group and thread.
  *
  * @return string JSON reply.
  */
@@ -550,6 +551,11 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	}
 
 	$activity = $activity_array['activities'][0];
+
+	// Guests can call this, so only return content the user can read, in its group and thread.
+	if ( ! bb_activity_user_can_read_with_parents( $activity ) ) {
+		wp_send_json_error( $response );
+	}
 
 	/**
 	 * Fires before the return of an activity's full, non-excerpted content via a POST request.
@@ -1668,6 +1674,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
  * Get more comments.
  *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION] The activity and the parent comment must be readable, in their group and thread.
  *
  * @return void
  */
@@ -1731,6 +1738,19 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Guests can call this, so the activity and the comment whose replies are loaded must
+	// both be readable, in their group and thread.
+	if (
+		! bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $activity_id ) ) ||
+		! bb_activity_user_can_read_with_parents( $parent_commment )
+	) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
 			)
 		);
 	}
