@@ -3748,6 +3748,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
  * Can a user see a particular activity item?
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] An activity comment is checked against its root activity.
  *
  * @param  BP_Activity_Activity $activity Activity object.
  * @param  integer              $user_id  User ID.
@@ -3761,10 +3762,22 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// A comment is stored with component 'activity' and no group of its own, so the
+	// group check runs on its root activity (item_id, also for nested replies).
+	$access_activity = $activity;
+	if ( isset( $activity->type ) && 'activity_comment' === $activity->type ) {
+		$access_activity = new BP_Activity_Activity( (int) $activity->item_id );
+
+		// Fail closed when the root no longer exists.
+		if ( empty( $access_activity->id ) ) {
+			$retval = false;
+		}
+	}
+
 	// If activity is from a group, do extra cap checks.
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	if ( $retval && bp_is_active( 'groups' ) && buddypress()->groups->id === $access_activity->component ) {
 		// Check to see if the user has access to the activity's parent group.
-		$group = groups_get_group( $activity->item_id );
+		$group = groups_get_group( $access_activity->item_id );
 		if ( $group ) {
 			// For logged-in user, we can check against the 'user_has_access' prop.
 			if ( bp_loggedin_user_id() === $user_id ) {
@@ -3773,15 +3786,15 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 				// Manually check status.
 			} elseif ( 'private' === $group->status || 'hidden' === $group->status ) {
 				// Only group members that are not banned can view.
-				if ( ! groups_is_user_member( $user_id, $activity->item_id ) || groups_is_user_banned( $user_id, $activity->item_id ) ) {
+				if ( ! groups_is_user_member( $user_id, $access_activity->item_id ) || groups_is_user_banned( $user_id, $access_activity->item_id ) ) {
 					$retval = false;
 				}
 			}
 		}
 	}
 
-	// Spammed items are not visible to the public.
-	if ( $activity->is_spam ) {
+	// Spammed items are not visible to the public, nor are comments on a spammed root.
+	if ( $activity->is_spam || ! empty( $access_activity->is_spam ) ) {
 		$retval = false;
 	}
 
