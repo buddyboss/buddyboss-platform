@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-19 07:45:42+00:00\n"
+"POT-Creation-Date: 2026-10-19 08:11:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2815,29 +2815,29 @@ msgstr ""
 msgid "Editing activity comments is currently disabled."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3965
+#: bp-activity/bp-activity-functions.php:3887
 msgid "Thumbnail"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4370
-#: bp-activity/bp-activity-functions.php:4374
-#: bp-activity/bp-activity-functions.php:4377
-#: bp-activity/bp-activity-functions.php:4381
-#: bp-activity/bp-activity-functions.php:4386
+#: bp-activity/bp-activity-functions.php:4292
+#: bp-activity/bp-activity-functions.php:4296
+#: bp-activity/bp-activity-functions.php:4299
+#: bp-activity/bp-activity-functions.php:4303
+#: bp-activity/bp-activity-functions.php:4308
 #: bp-activity/classes/class-bp-activity-notification.php:218
 #: bp-members/classes/class-bp-members-mentions-notification.php:274
 msgid "post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4379
+#: bp-activity/bp-activity-functions.php:4301
 #: bp-blogs/bp-blogs-filters.php:266
 #: bp-core/bp-core-actions.php:1064
 #: bp-core/classes/class-bp-email-tokens.php:2773
 msgid "View Comment"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:4382
-#: bp-activity/bp-activity-functions.php:4387
+#: bp-activity/bp-activity-functions.php:4304
+#: bp-activity/bp-activity-functions.php:4309
 #: bp-core/classes/class-bp-email-tokens.php:2309
 #: bp-core/classes/class-bp-email-tokens.php:2635
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:70
@@ -2846,19 +2846,19 @@ msgstr ""
 msgid "View Post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5544
+#: bp-activity/bp-activity-functions.php:5466
 #: bp-forums/functions.php:1132
 msgid "URL is not valid."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5552
+#: bp-activity/bp-activity-functions.php:5474
 #: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:116
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:106
 #: bp-forums/functions.php:1140
 msgid "There was a problem generating a link preview."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6081
+#: bp-activity/bp-activity-functions.php:6003
 #: bp-groups/bp-groups-filters.php:1168
 #: bp-messages/classes/class-bp-messages-notification.php:373
 #: bp-messages/classes/class-bp-messages-notification.php:447
@@ -2868,7 +2868,7 @@ msgstr ""
 msgid "some photos"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6083
+#: bp-activity/bp-activity-functions.php:6005
 #: bp-groups/bp-groups-filters.php:1170
 #: bp-messages/classes/class-bp-messages-notification.php:380
 #: bp-messages/classes/class-bp-messages-notification.php:455
@@ -2878,7 +2878,7 @@ msgstr ""
 msgid "a photo"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6088
+#: bp-activity/bp-activity-functions.php:6010
 #: bp-groups/bp-groups-filters.php:1175
 #: bp-messages/classes/class-bp-messages-notification.php:390
 #: bp-messages/classes/class-bp-messages-notification.php:466
@@ -2888,7 +2888,7 @@ msgstr ""
 msgid "some documents"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6090
+#: bp-activity/bp-activity-functions.php:6012
 #: bp-groups/bp-groups-filters.php:1177
 #: bp-messages/classes/class-bp-messages-notification.php:397
 #: bp-messages/classes/class-bp-messages-notification.php:474
@@ -2898,7 +2898,7 @@ msgstr ""
 msgid "a document"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6095
+#: bp-activity/bp-activity-functions.php:6017
 #: bp-groups/bp-groups-filters.php:1182
 #: bp-messages/classes/class-bp-messages-notification.php:407
 #: bp-messages/classes/class-bp-messages-notification.php:485
@@ -2908,7 +2908,7 @@ msgstr ""
 msgid "some videos"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6097
+#: bp-activity/bp-activity-functions.php:6019
 #: bp-groups/bp-groups-filters.php:1184
 #: bp-messages/classes/class-bp-messages-notification.php:414
 #: bp-messages/classes/class-bp-messages-notification.php:493
@@ -2918,93 +2918,93 @@ msgstr ""
 msgid "a video"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6100
+#: bp-activity/bp-activity-functions.php:6022
 msgid "a new poll"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6102
+#: bp-activity/bp-activity-functions.php:6024
 #: bp-groups/bp-groups-filters.php:1164
 #: bp-groups/bp-groups-filters.php:1189
 msgid "an update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:6279
+#: bp-activity/bp-activity-functions.php:6201
 msgid "Friendships"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7007
-#: bp-activity/bp-activity-functions.php:7019
+#: bp-activity/bp-activity-functions.php:6929
+#: bp-activity/bp-activity-functions.php:6941
 #, php-format
 msgid "%s turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7009
+#: bp-activity/bp-activity-functions.php:6931
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2030
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1649
 msgid "You turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7013
+#: bp-activity/bp-activity-functions.php:6935
 msgid "An organizer turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7015
+#: bp-activity/bp-activity-functions.php:6937
 msgid "A moderator turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7017
-#: bp-activity/bp-activity-functions.php:7022
+#: bp-activity/bp-activity-functions.php:6939
+#: bp-activity/bp-activity-functions.php:6944
 msgid "An admin turned off commenting for this post"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7462
+#: bp-activity/bp-activity-functions.php:7384
 msgid "Sorry, You cannot add comments on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7468
+#: bp-activity/bp-activity-functions.php:7390
 msgid "Sorry, You cannot perform reactions on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7471
+#: bp-activity/bp-activity-functions.php:7393
 msgid "Sorry, You cannot view on `Only Me` activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7482
+#: bp-activity/bp-activity-functions.php:7404
 msgid "Sorry, please establish a friendship with the author of the activity to add a comment."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7488
+#: bp-activity/bp-activity-functions.php:7410
 msgid "Sorry, please establish a friendship with the author of the activity to perform a reaction."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7491
+#: bp-activity/bp-activity-functions.php:7413
 msgid "Sorry, please establish a friendship with the author of the activity to view."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7495
+#: bp-activity/bp-activity-functions.php:7417
 msgid "Sorry, You cannot view on this activity."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7846
+#: bp-activity/bp-activity-functions.php:7868
 #: bp-blogs/bp-blogs-activity.php:287
 #: bp-blogs/bp-blogs-activity.php:1715
 #, php-format
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:7848
+#: bp-activity/bp-activity-functions.php:7870
 #: bp-blogs/bp-blogs-activity.php:289
 #: bp-blogs/bp-blogs-activity.php:1717
 #, php-format
 msgid "%1$s posted a new post."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:8117
+#: bp-activity/bp-activity-functions.php:8139
 msgid "Please enter a title for your activity."
 msgstr ""
 
 #. translators: 1: maximum length of the post title, 2: current length of the post title.
-#: bp-activity/bp-activity-functions.php:8131
+#: bp-activity/bp-activity-functions.php:8153
 #, php-format
 msgid "Title must be less than %1$d characters. You used %2$d characters."
 msgstr ""

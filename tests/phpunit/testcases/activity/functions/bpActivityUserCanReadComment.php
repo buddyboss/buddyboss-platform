@@ -174,7 +174,7 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 	}
 
 	/**
-	 * @group bb_activity_user_can_read_with_parents
+	 * @group bb_activity_user_can_view
 	 */
 	public function test_with_parents_refuses_comment_in_private_group_to_non_member() {
 		list( $g, $root, $comment, $reply ) = $this->group_thread( 'private' );
@@ -183,15 +183,15 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		self::add_user_to_group( $member, $g );
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $root ), $this->stranger ) );
-		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $reply ), $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $root ), $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $reply ), $this->stranger ) );
 
 		$this->set_current_user( $member );
-		$this->assertTrue( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), $member ) );
+		$this->assertTrue( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), $member ) );
 	}
 
 	/**
-	 * @group bb_activity_user_can_read_with_parents
+	 * @group bb_activity_user_can_view
 	 */
 	public function test_with_parents_follows_photo_of_friends_only_post() {
 		$friend = self::factory()->user->create();
@@ -223,15 +223,15 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		);
 
 		$this->set_current_user( $this->stranger );
-		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $photo ), $this->stranger ) );
-		$this->assertFalse( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $photo ), $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), $this->stranger ) );
 
 		$this->set_current_user( $friend );
-		$this->assertTrue( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), $friend ) );
+		$this->assertTrue( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), $friend ) );
 	}
 
 	/**
-	 * @group bb_activity_user_can_read_with_parents
+	 * @group bb_activity_user_can_view
 	 */
 	public function test_with_parents_allows_comment_on_public_post_for_guest() {
 		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
@@ -244,6 +244,71 @@ class BP_Tests_Activity_Functions_BpActivityUserCanReadComment extends BP_UnitTe
 		);
 
 		$this->set_current_user( 0 );
-		$this->assertTrue( bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $comment ), 0 ) );
+		$this->assertTrue( bb_activity_user_can_view( new BP_Activity_Activity( $comment ), 0 ) );
+	}
+
+	/**
+	 * @group bb_activity_user_can_view
+	 */
+	public function test_view_accepts_an_id_and_an_activity_row() {
+		list( , , $comment ) = $this->group_thread( 'private' );
+
+		// AJAX handlers hold a row from bp_activity_get_specific(), not a BP_Activity_Activity.
+		$row = bp_activity_get_specific(
+			array(
+				'activity_ids'     => $comment,
+				'display_comments' => 'stream',
+			)
+		)['activities'][0];
+
+		$this->set_current_user( $this->stranger );
+		$this->assertFalse( bb_activity_user_can_view( $comment, $this->stranger ) );
+		$this->assertFalse( bb_activity_user_can_view( $row, $this->stranger ) );
+
+		$this->set_current_user( $this->author );
+		$this->assertTrue( bb_activity_user_can_view( $comment, $this->author ) );
+		$this->assertTrue( bb_activity_user_can_view( $row, $this->author ) );
+	}
+
+	/**
+	 * @group bb_activity_user_can_view
+	 */
+	public function test_view_lets_moderators_through() {
+		$post = self::factory()->activity->create(
+			array(
+				'user_id' => $this->author,
+				'privacy' => 'onlyme',
+			)
+		);
+
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $post,
+				'content'     => 'comment',
+			)
+		);
+
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		$this->set_current_user( $this->stranger );
+		$this->assertFalse( bb_activity_user_can_view( $comment, $this->stranger ) );
+
+		$this->set_current_user( $admin );
+		$this->assertTrue( bb_activity_user_can_view( $comment, $admin ) );
+	}
+
+	/**
+	 * @group bb_activity_user_can_view
+	 */
+	public function test_view_is_filterable() {
+		list( , , $comment ) = $this->group_thread( 'private' );
+
+		add_filter( 'bb_activity_user_can_view', '__return_true' );
+		$this->set_current_user( $this->stranger );
+		$can_view = bb_activity_user_can_view( $comment, $this->stranger );
+		remove_filter( 'bb_activity_user_can_view', '__return_true' );
+
+		$this->assertTrue( $can_view );
 	}
 }

@@ -553,7 +553,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	$activity = $activity_array['activities'][0];
 
 	// Guests can call this, so only return content the user can read, in its group and thread.
-	if ( ! bb_activity_user_can_read_with_parents( $activity ) ) {
+	if ( ! bb_activity_user_can_view( $activity ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1745,8 +1745,8 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	// Guests can call this, so the activity and the comment whose replies are loaded must
 	// both be readable, in their group and thread.
 	if (
-		! bb_activity_user_can_read_with_parents( new BP_Activity_Activity( $activity_id ) ) ||
-		! bb_activity_user_can_read_with_parents( $parent_commment )
+		! bb_activity_user_can_view( $activity_id ) ||
+		! bb_activity_user_can_view( $parent_commment )
 	) {
 		wp_send_json_error(
 			array(

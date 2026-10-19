@@ -3816,84 +3816,6 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 }
 
 /**
- * Can a user read an activity and every activity it belongs to?
- *
- * A comment is readable only when its root activity (item_id) is. A post with several
- * photos, videos or documents gives each one a hidden sub-activity (privacy
- * media/video/document), which is readable only when the post or comment it belongs to
- * (secondary_item_id) is. The privacy and read checks run on each of them.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param BP_Activity_Activity|object $activity Activity object.
- * @param int                         $user_id  Optional. User ID. Default: the logged-in user.
- *
- * @return bool
- */
-function bb_activity_user_can_read_with_parents( $activity, $user_id = 0 ) {
-	if ( empty( $activity ) || empty( $activity->id ) ) {
-		return false;
-	}
-
-	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
-	}
-
-	$activities = array( $activity );
-	$current    = $activity;
-
-	// Walk up from a comment to its root, and from a sub-activity to its post or comment.
-	// The longest real chain is comment > sub-activity > comment > post.
-	for ( $hop = 0; $hop <= 4; $hop++ ) {
-		$parent_id = 0;
-
-		if ( isset( $current->type ) && 'activity_comment' === $current->type ) {
-			$parent_id = (int) $current->item_id;
-		} elseif (
-			isset( $current->privacy ) &&
-			in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) &&
-			! empty( $current->secondary_item_id ) &&
-			(int) $current->secondary_item_id !== (int) $current->id
-		) {
-			$parent_id = (int) $current->secondary_item_id;
-		}
-
-		if ( empty( $parent_id ) ) {
-			break;
-		}
-
-		// Fail closed when the chain is longer than any real one, or a parent no longer exists.
-		if ( 4 === $hop ) {
-			return false;
-		}
-
-		$current = new BP_Activity_Activity( $parent_id );
-
-		if ( empty( $current->id ) ) {
-			return false;
-		}
-
-		$activities[] = $current;
-	}
-
-	foreach ( $activities as $item ) {
-		$privacy_check = bb_validate_activity_privacy(
-			array(
-				'activity_id'     => $item->id,
-				'validate_action' => 'view_activity',
-				'user_id'         => $user_id,
-			)
-		);
-
-		if ( is_wp_error( $privacy_check ) || ! bp_activity_user_can_read( $item, $user_id ) ) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-/**
  * Hide a user's activity.
  *
  * @since BuddyPress 1.2.0
@@ -7498,6 +7420,106 @@ function bb_validate_activity_privacy( $args ) {
 	}
 
 	return true;
+}
+
+if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
+	/**
+	 * Check whether a user may view an activity item, including its group and privacy rules.
+	 *
+	 * AJAX handlers that render an activity by a client-supplied ID must call this first.
+	 * A comment is checked against its root post (item_id), and the hidden
+	 * media/video/document sub-activity of a multi-item post against the post or comment it
+	 * belongs to (secondary_item_id). A comment on one of those sub-activities shares its
+	 * privacy value, so comments are walked first.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int|BP_Activity_Activity $activity Activity ID or object.
+	 * @param int                      $user_id  User ID. Default the logged-in user.
+	 *
+	 * @return bool
+	 */
+	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
+		if ( ! $activity instanceof BP_Activity_Activity ) {
+			// Accept an ID, or a row from bp_activity_get() / bp_activity_get_specific().
+			$activity = new BP_Activity_Activity( is_object( $activity ) && isset( $activity->id ) ? (int) $activity->id : absint( $activity ) );
+		}
+
+		if ( empty( $activity->id ) ) {
+			return false;
+		}
+
+		$user_id    = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_view   = true;
+		$activities = array( $activity );
+		$current    = $activity;
+
+		// Walk up from a comment to its root, and from a sub-activity to its post or comment.
+		// The longest real chain is comment > sub-activity > comment > post.
+		for ( $hop = 0; $hop <= 4; $hop++ ) {
+			$parent_id = 0;
+
+			if ( 'activity_comment' === $current->type ) {
+				$parent_id = (int) $current->item_id;
+			} elseif (
+				in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) &&
+				! empty( $current->secondary_item_id ) &&
+				(int) $current->secondary_item_id !== (int) $current->id
+			) {
+				$parent_id = (int) $current->secondary_item_id;
+			}
+
+			if ( empty( $parent_id ) ) {
+				break;
+			}
+
+			// Fail closed when the chain is longer than any real one, or a parent no longer exists.
+			if ( 4 === $hop ) {
+				$can_view = false;
+				break;
+			}
+
+			$current = new BP_Activity_Activity( $parent_id );
+			if ( empty( $current->id ) ) {
+				$can_view = false;
+				break;
+			}
+
+			$activities[] = $current;
+		}
+
+		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
+			foreach ( $activities as $item ) {
+				if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
+					$can_view = false;
+					break;
+				}
+
+				$privacy = bb_validate_activity_privacy(
+					array(
+						'activity_id'     => $item->id,
+						'user_id'         => $user_id,
+						'validate_action' => 'view_activity',
+					)
+				);
+				if ( is_wp_error( $privacy ) ) {
+					$can_view = false;
+					break;
+				}
+			}
+		}
+
+		/**
+		 * Filters whether a user may view an activity item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool                 $can_view Whether the user may view the activity.
+		 * @param BP_Activity_Activity $activity Activity object.
+		 * @param int                  $user_id  User ID.
+		 */
+		return (bool) apply_filters( 'bb_activity_user_can_view', $can_view, $activity, $user_id );
+	}
 }
 
 /**
