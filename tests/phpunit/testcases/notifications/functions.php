@@ -140,6 +140,98 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Counts for the same user with different query args must not share a cache slot.
+	 *
+	 * @group cache
+	 * @ticket PROD-10344
+	 */
+	public function test_get_total_count_cache_does_not_collide_across_query_args() {
+		$u = self::factory()->user->create();
+
+		self::factory()->notification->create( array(
+			'component_name' => 'groups',
+			'user_id'        => $u,
+			'is_new'         => true,
+		) );
+		self::factory()->notification->create( array(
+			'component_name' => 'messages',
+			'user_id'        => $u,
+			'is_new'         => true,
+		) );
+		self::factory()->notification->create( array(
+			'component_name' => 'messages',
+			'user_id'        => $u,
+			'is_new'         => false,
+		) );
+
+		// Name the components explicitly: the default component list depends on
+		// which components are active, which is not what this test is about.
+		$components = array( 'groups', 'messages' );
+
+		$queries = array(
+			'unread'          => array( array( 'user_id' => $u, 'is_new' => true, 'component_name' => $components ), 2 ),
+			'all'             => array( array( 'user_id' => $u, 'is_new' => 'both', 'component_name' => $components ), 3 ),
+			'read'            => array( array( 'user_id' => $u, 'is_new' => false, 'component_name' => $components ), 1 ),
+			'unread groups'   => array( array( 'user_id' => $u, 'is_new' => true, 'component_name' => 'groups' ), 1 ),
+			'unread messages' => array( array( 'user_id' => $u, 'is_new' => true, 'component_name' => 'messages' ), 1 ),
+		);
+
+		// Prime every variant first, then read them all back from cache.
+		foreach ( array( 'prime', 'cached' ) as $pass ) {
+			foreach ( $queries as $label => $query ) {
+				$this->assertSame(
+					$query[1],
+					BP_Notifications_Notification::get_total_count( $query[0] ),
+					sprintf( 'Count for "%s" (%s pass).', $label, $pass )
+				);
+			}
+		}
+	}
+
+	/**
+	 * Conditions added through the where-conditions filter must be part of the cache key.
+	 *
+	 * @group cache
+	 * @ticket PROD-10344
+	 */
+	public function test_get_total_count_cache_reflects_where_conditions_filter() {
+		$u = self::factory()->user->create();
+
+		self::factory()->notification->create( array(
+			'component_name' => 'groups',
+			'user_id'        => $u,
+		) );
+
+		$args = array( 'user_id' => $u, 'is_new' => true );
+
+		$this->assertSame( 1, BP_Notifications_Notification::get_total_count( $args ) );
+
+		$exclude_all = function ( $where_sql ) {
+			return $where_sql . ' AND 1 = 0';
+		};
+
+		add_filter( 'bb_notifications_get_where_conditions', $exclude_all );
+		$this->assertSame( 0, BP_Notifications_Notification::get_total_count( $args ), 'A filtered query must not reuse the unfiltered cached count.' );
+		remove_filter( 'bb_notifications_get_where_conditions', $exclude_all );
+
+		$this->assertSame( 1, BP_Notifications_Notification::get_total_count( $args ), 'The unfiltered count must still be served after the filter is removed.' );
+	}
+
+	/**
+	 * The count cache key must be a plain hash, safe for Memcached (no whitespace).
+	 *
+	 * @group cache
+	 * @ticket PROD-10344
+	 */
+	public function test_count_cache_key_is_a_plain_hash() {
+		$u = self::factory()->user->create();
+
+		$key = bp_notifications_get_count_cache_key( $u, 'SELECT COUNT(*) FROM wp_bp_notifications n WHERE n.user_id = ' . $u );
+
+		$this->assertSame( 1, preg_match( '/^[a-f0-9]{32}$/', $key ), 'The key should be a 32-character hash.' );
+	}
+
+	/**
 	 * @group bp_notifications_update_meta_cache
 	 */
 	public function test_bp_notifications_update_meta_cache() {
