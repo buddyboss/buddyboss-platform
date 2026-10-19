@@ -75,44 +75,32 @@ function bp_notifications_bump_user_count_cache_incrementor( $user_id ) {
 }
 
 /**
- * Build a cache key for a notification count query that reflects every
- * argument affecting the underlying SQL, not just the user ID.
+ * Build a cache key for a notification count query.
  *
- * Used by BP_Notifications_Notification::get_total_count() so that two
- * queries for the same user with different filters (e.g. an unfiltered
- * count vs. a component_name-filtered one) never collide on the same
- * cache slot. See PROD-10344.
+ * The key is a hash of the final count SQL plus the user's incrementor, so it
+ * reflects every input that shapes the query (including is_new, meta/date
+ * queries and conditions added through `bb_notifications_get_where_conditions`)
+ * and is always a plain 32-character hash, which is safe for Memcached.
+ *
+ * Used by BP_Notifications_Notification::get_total_count() so that two queries
+ * for the same user with different filters never share a cache slot. See PROD-10344.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int   $user_id User ID the count belongs to.
- * @param array $args    The full parsed args used to build the count query
- *                       (see BP_Notifications_Notification::get_total_count()).
+ * @param int    $user_id User ID the count belongs to.
+ * @param string $sql     The final SQL of the count query.
+ *
  * @return string Cache key.
  */
-function bp_notifications_get_count_cache_key( $user_id, $args ) {
-	// Only the args that actually shape the SQL WHERE clause should
-	// participate in the key.
-	$relevant = array_intersect_key(
-		$args,
-		array_flip(
-			array(
-				'id',
-				'item_id',
-				'secondary_item_id',
-				'component_name',
-				'component_action',
-				'excluded_action',
-				'search_terms',
-				'date_query',
-				'meta_query',
-			)
-		)
-	);
+function bp_notifications_get_count_cache_key( $user_id, $sql ) {
+	global $wpdb;
 
 	$incrementor = bp_notifications_get_user_count_cache_incrementor( $user_id );
 
-	return $user_id . ':' . $incrementor . ':' . md5( maybe_serialize( $relevant ) );
+	// Remove the placeholder escape strings from the query.
+	$sql = $wpdb->remove_placeholder_escape( $sql );
+
+	return md5( $sql . $incrementor );
 }
 
 /**
