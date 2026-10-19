@@ -30,7 +30,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 		$last_message_id = (int) $messages_template->thread->last_message_id;
 
 		$group_id = bp_messages_get_meta( $last_message_id, 'group_id', true );
-		if ( 0 === $last_message_id && ! $group_id ) {
+
+		// A member's reply carries no group meta, so read the group from the first message like the thread list.
+		if ( ! $group_id ) {
 			$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
 			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group.
 			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
@@ -166,19 +168,20 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			}
 		}
 
-		// Fetch all recipient.
-		$messages_template->thread->recipients = $messages_template->thread->get_recipients();
-
+		// The thread already holds one page of recipients; only the header preview is built from it.
+		// Building every recipient here runs several queries per member and stalls large threads.
 		if ( function_exists( 'bb_messages_user_can_send_message' ) ) {
-			$recipient_ids = wp_list_pluck( (array) $messages_template->thread->recipients, 'user_id' );
-			$can_message   = bb_messages_user_can_send_message(
+			// Without recipients_id the platform reads the thread's recipient IDs itself.
+			$can_message = bb_messages_user_can_send_message(
 				array(
-					'sender_id'     => bp_loggedin_user_id(),
-					'recipients_id' => $recipient_ids,
-					'thread_id'     => $messages_template->thread->thread_id,
+					'sender_id' => bp_loggedin_user_id(),
+					'thread_id' => $messages_template->thread->thread_id,
 				)
 			);
 		} else {
+			// The friendship check below needs every recipient.
+			$messages_template->thread->recipients = $messages_template->thread->get_recipients();
+
 			$can_message        = ( $is_group_thread || bp_current_user_can( 'bp_moderate' ) ) ? true : apply_filters( 'bb_can_user_send_message_in_thread', true, $messages_template->thread->thread_id, (array) $messages_template->thread->recipients );
 			$is_check_un_access = $can_message && ! $is_group_thread && bp_is_active( 'friends' ) && bp_force_friendship_to_message();
 			$un_access_users    = false;
@@ -239,7 +242,23 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			$can_message = false;
 		}
 
-		$include_you = count( $other_recipients ) >= 2;
+		// The thread holds one page of recipients. When the page is partial, count the other members
+		// who have not left the thread (release counted them from the full list); the viewer is one of them.
+		$other_recipients_count = count( $other_recipients );
+		if ( ! $is_group_thread && isset( $messages_template->thread->total_recipients_count ) && (int) $messages_template->thread->total_recipients_count > count( (array) $messages_template->thread->recipients ) ) {
+			$active_recipients      = BP_Messages_Thread::get(
+				array(
+					'include_threads' => array( (int) $messages_template->thread->thread_id ),
+					'is_deleted'      => 0,
+					'per_page'        => 1,
+					'fields'          => 'ids',
+					'count_total'     => true,
+				)
+			);
+			$other_recipients_count = max( 0, (int) ( isset( $active_recipients['total'] ) ? $active_recipients['total'] : 0 ) - 1 );
+		}
+
+		$include_you = $other_recipients_count >= 2;
 		$first_three = array_slice( $other_recipients, 0, 3 );
 		if ( count( $first_three ) === 0 ) {
 			$include_you = true;
@@ -318,16 +337,95 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				?>
 				<div class="notification-avatar">
 					<?php
-					if ( count( $other_recipients ) > 1 ) {
+					if ( $other_recipients_count > 1 ) {
 						$last_sender_data = wp_list_filter( $recipients, array( 'user_id' => (int) $messages_template->thread->last_sender_id ) );
 						$last_sender_data = ! empty( $last_sender_data ) ? reset( $last_sender_data ) : array();
+
+						// The last sender can be outside the loaded page of recipients. Like release, only a member
+						// who has not left the thread gets the hover attribute.
+						$last_sender_id = (int) $messages_template->thread->last_sender_id;
+						if ( empty( $last_sender_data ) && ! empty( $last_sender_id ) && ! in_array( $last_sender_id, array_map( 'intval', wp_list_pluck( (array) $messages_template->thread->recipients, 'user_id' ) ), true ) ) {
+							$last_sender_row = BP_Messages_Thread::get(
+								array(
+									'include_threads' => array( (int) $messages_template->thread->thread_id ),
+									'user_id'         => $last_sender_id,
+									'is_deleted'      => 0,
+									'per_page'        => 1,
+									'fields'          => 'ids',
+								)
+							);
+							if ( ! empty( $last_sender_row['recipients'] ) ) {
+								$last_sender_data = array(
+									'user_id'            => $last_sender_id,
+									'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $last_sender_id ) : false,
+									'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $last_sender_id ) : false,
+									'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $last_sender_id ) : false,
+									'is_deleted'         => empty( get_userdata( $last_sender_id ) ) ? 1 : 0,
+								);
+							}
+						}
 						?>
 						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>" <?php echo ( ! empty( $last_sender_data['user_id'] ) && empty( $last_sender_data['is_deleted'] ) && empty( $last_sender_data['is_user_suspended'] ) && empty( $last_sender_data['is_user_blocked'] ) && empty( $last_sender_data['is_user_blocked_by'] ) ) ? 'data-bb-hp-profile="' . esc_attr( $last_sender_data['user_id'] ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in the ternary. ?>>
 							<?php bp_message_thread_avatar(); ?>
 						</a>
 						<?php
 					} else {
-						$recipient = ! empty( $first_three[0] ) ? $first_three[0] : $current_user;
+						// Like release, show the other member who has not left the thread, else the viewer.
+						$recipient = ! empty( $first_three[0] ) ? $first_three[0] : ( $other_recipients_count > 0 ? false : $current_user );
+
+						// The member to show can be outside the loaded page of recipients: the other member who has
+						// not left the thread (even when the viewer is on the page), or the viewer when no other member
+						// is left. Release read the full list.
+						if ( empty( $recipient ) && isset( $messages_template->thread->total_recipients_count ) && (int) $messages_template->thread->total_recipients_count > count( (array) $messages_template->thread->recipients ) ) {
+							$page_recipients = BP_Messages_Thread::get(
+								array(
+									'include_threads' => array( (int) $messages_template->thread->thread_id ),
+									'user_id'         => $other_recipients_count > 0 ? 0 : bp_loggedin_user_id(),
+									'is_deleted'      => 0,
+									'per_page'        => $other_recipients_count > 0 ? 2 : 1,
+								)
+							);
+							foreach ( (array) $page_recipients['recipients'] as $page_recipient ) {
+								$page_recipient_id = (int) $page_recipient->user_id;
+								$is_you            = bp_loggedin_user_id() === $page_recipient_id;
+								if ( $other_recipients_count > 0 && $is_you ) {
+									continue;
+								}
+								$recipient = array(
+									'avatar'             => esc_url(
+										bp_core_fetch_avatar(
+											array(
+												'item_id' => $page_recipient_id,
+												'object'  => 'user',
+												'type'    => 'thumb',
+												'width'   => BP_AVATAR_THUMB_WIDTH,
+												'height'  => BP_AVATAR_THUMB_HEIGHT,
+												'html'    => false,
+											)
+										)
+									),
+									'user_id'            => $page_recipient_id,
+									'user_link'          => bp_core_get_userlink( $page_recipient_id, false, true ),
+									'user_name'          => bp_core_get_user_displayname( $page_recipient_id ),
+									'is_you'             => $is_you,
+									'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $page_recipient_id ) : false,
+									'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $page_recipient_id ) : false,
+									'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $page_recipient_id ) : false,
+									'is_deleted'         => empty( get_userdata( $page_recipient_id ) ) ? 1 : 0,
+								);
+								break;
+							}
+						}
+
+						// Nothing to show (for example the viewer left the thread): print an empty avatar without notices.
+						if ( empty( $recipient ) ) {
+							$recipient = array(
+								'user_id'   => 0,
+								'user_link' => '',
+								'user_name' => '',
+								'avatar'    => '',
+							);
+						}
 
 						// If user suspended.
 						if ( isset( $recipient['is_user_suspended'] ) && true === $recipient['is_user_suspended'] ) {
@@ -518,7 +616,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							}
 						}
 						// For conversations with a single recipient - Don't include the name of the last person to message before the message content.
-						if ( ! $is_group_thread && ! empty( $recipients ) && count( $other_recipients ) === 1 ) {
+						if ( ! $is_group_thread && ! empty( $recipients ) && 1 === $other_recipients_count ) {
 							$last_sender = '';
 						}
 						if ( $last_sender ) {
