@@ -570,6 +570,13 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
+		// DB version 23605 — update an active BuddyBoss Add-ons to the version this
+		// Platform requires, once, on the upgrade into this release (PROD-9995). Runs
+		// after the install step above.
+		if ( $raw_db_version < 23605 ) {
+			bb_maybe_update_addons_bundle();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4688,4 +4695,177 @@ function bb_install_addons_bundle_on_upgrade() {
 		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
 	}
+}
+
+/**
+ * Minimum BuddyBoss Add-ons version this Platform needs.
+ *
+ * Reads the floor from the version-compatibility notice so both stay in sync;
+ * that file is admin-only, hence the fallback.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum Add-ons version.
+ */
+function bb_get_addons_required_version() {
+	return function_exists( 'bb_platform_3_addons_required_version' ) ? bb_platform_3_addons_required_version() : '1.2.3';
+}
+
+/**
+ * Update an active BuddyBoss Add-ons below the required version.
+ *
+ * The package comes from the Mothership catalog of the activated license, so the
+ * plan decides: a plan that carries the buddyboss-addons product gets the latest
+ * build; a plan that does not (e.g. Free or Lite) has nothing to download and is
+ * skipped. Non-interactive (Automatic_Upgrader_Skin); the add-on is re-activated
+ * in its previous scope afterwards, as WordPress does after a manual update.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Result: 'inactive', 'up_to_date', 'vcs_checkout', 'not_entitled', 'no_package',
+ *                'updated' or 'failed'.
+ */
+function bb_update_addons_bundle_to_required_version() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+
+	// Only an active copy is updated; an inactive or missing one is left alone.
+	if ( ! is_plugin_active( $plugin_file ) ) {
+		return 'inactive';
+	}
+
+	$plugins   = get_plugins();
+	$installed = isset( $plugins[ $plugin_file ]['Version'] ) ? (string) $plugins[ $plugin_file ]['Version'] : '';
+
+	if ( '' !== $installed && version_compare( $installed, bb_get_addons_required_version(), '>=' ) ) {
+		return 'up_to_date';
+	}
+
+	// Never overwrite a version-control checkout (a development copy), as WordPress
+	// core's own auto-updater does not.
+	$plugin_dir = trailingslashit( WP_PLUGIN_DIR ) . dirname( $plugin_file );
+	foreach ( array( '.git', '.svn', '.hg', '.bzr' ) as $vcs_dir ) {
+		if ( is_dir( $plugin_dir . '/' . $vcs_dir ) ) {
+			return 'vcs_checkout';
+		}
+	}
+
+	// Plan check: only a license whose plan carries the add-on product can download it.
+	if ( ! bb_is_entitled_to_addons() ) {
+		// For an activated license a catalog outage also reads as "not entitled"; report
+		// it as a failure so it is retried.
+		if (
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) &&
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) &&
+			( new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector() )->getLicenseActivationStatus() &&
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored()
+		) {
+			return 'failed';
+		}
+
+		return 'not_entitled';
+	}
+
+	$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+	$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
+	$latest       = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
+	$latest       = ( null !== $latest && ! empty( $latest->number ) ) ? (string) $latest->number : '';
+
+	/**
+	 * Filters the BuddyBoss Add-ons package used for the post-update upgrade.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array       $package {
+	 *     @type string $url     Package URL (or local zip path).
+	 *     @type string $version Package version.
+	 * }
+	 * @param object|null $product The Mothership product, or null.
+	 */
+	$package      = (array) apply_filters(
+		'bb_addons_bundle_update_package',
+		array(
+			'url'     => $download_url,
+			'version' => $latest,
+		),
+		$product
+	);
+	$download_url = isset( $package['url'] ) ? (string) $package['url'] : '';
+	$latest       = isset( $package['version'] ) ? (string) $package['version'] : '';
+
+	if ( '' === $download_url || '' === $latest || version_compare( $latest, $installed, '<=' ) ) {
+		return 'no_package';
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/misc.php';
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	// Plugin_Upgrader::upgrade() reads the package from the update transient.
+	$inject_package = function ( $transient ) use ( $plugin_file, $download_url, $latest ) {
+		if ( ! is_object( $transient ) ) {
+			$transient = new stdClass();
+		}
+		if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
+			$transient->response = array();
+		}
+		$transient->response[ $plugin_file ] = (object) array(
+			'slug'        => 'buddyboss-addons',
+			'plugin'      => $plugin_file,
+			'new_version' => $latest,
+			'package'     => $download_url,
+		);
+
+		return $transient;
+	};
+
+	$network_wide = is_multisite() && is_plugin_active_for_network( $plugin_file );
+
+	add_filter( 'site_transient_update_plugins', $inject_package );
+	$upgrader = new Plugin_Upgrader( new Automatic_Upgrader_Skin() );
+	$result   = $upgrader->upgrade( $plugin_file );
+	remove_filter( 'site_transient_update_plugins', $inject_package );
+
+	// The upgrader deactivates the plugin before replacing it; restore it in the same
+	// scope even when the update failed part-way. Silent, like WordPress's own reactivation.
+	if ( ! is_plugin_active( $plugin_file ) ) {
+		$activated = activate_plugin( $plugin_file, '', $network_wide, true );
+
+		if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+			bb_error_log( 'BuddyBoss Addons auto-update: re-activation failed: ' . $activated->get_error_message() );
+		}
+	}
+
+	if ( true !== $result ) {
+		if ( function_exists( 'bb_error_log' ) ) {
+			bb_error_log( 'BuddyBoss Addons auto-update: update failed' . ( is_wp_error( $result ) ? ': ' . $result->get_error_message() : '.' ) );
+		}
+
+		return 'failed';
+	}
+
+	return 'updated';
+}
+
+/**
+ * After the Platform update to this release, update an active BuddyBoss Add-ons below the required version.
+ *
+ * One-time migration called from bp_version_updater() for db version 23605, so it runs only on the
+ * upgrade request (Plugins screen, auto-update or FTP alike) and never on a normal
+ * admin page load. The flag keeps later releases from running it again.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_maybe_update_addons_bundle() {
+	if ( bp_get_option( 'bb_addons_bundle_update_done', false ) ) {
+		return;
+	}
+
+	// Set first so a fatal inside the upgrader can never make it run again.
+	bp_update_option( 'bb_addons_bundle_update_done', 1 );
+
+	bb_update_addons_bundle_to_required_version();
 }
