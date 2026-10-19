@@ -27,6 +27,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
 
+		$incrementor_before = bp_notifications_get_user_count_cache_incrementor( $u );
+
 		// Trigger invalidation via save
 		self::factory()->notification->create( array(
 			'component_name' => 'messages',
@@ -35,8 +37,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		) );
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
-		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
+		$this->assertNotSame( $incrementor_before, bp_notifications_get_user_count_cache_incrementor( $u ), 'The count cache incrementor should change after invalidation.' );
+		$this->assertEquals( 3, bp_notifications_get_unread_notification_count( $u ), 'Unread count should reflect the change, not a stale cached value.' );
 	}
 
 	/**
@@ -59,12 +61,14 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
 
+		$incrementor_before = bp_notifications_get_user_count_cache_incrementor( $u );
+
 		// delete
 		BP_Notifications_Notification::delete( array( 'id' => $n1, ) );
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
-		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
+		$this->assertNotSame( $incrementor_before, bp_notifications_get_user_count_cache_incrementor( $u ), 'The count cache incrementor should change after invalidation.' );
+		$this->assertEquals( 1, bp_notifications_get_unread_notification_count( $u ), 'Unread count should reflect the change, not a stale cached value.' );
 	}
 
 	/**
@@ -88,6 +92,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
 
+		$incrementor_before = bp_notifications_get_user_count_cache_incrementor( $u );
+
 		// mark all notifications by user as read
 		BP_Notifications_Notification::update(
 			array( 'is_new'  => false ),
@@ -95,8 +101,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		);
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
-		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
+		$this->assertNotSame( $incrementor_before, bp_notifications_get_user_count_cache_incrementor( $u ), 'The count cache incrementor should change after invalidation.' );
+		$this->assertEquals( 0, bp_notifications_get_unread_notification_count( $u ), 'Unread count should reflect the change, not a stale cached value.' );
 	}
 
 	/**
@@ -120,6 +126,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		// just to be sure...
 		$this->assertEquals( 2, $count, 'Cache count should be 2 before invalidation.' );
 
+		$incrementor_before = bp_notifications_get_user_count_cache_incrementor( $u );
+
 		// mark one notification as read
 		BP_Notifications_Notification::update(
 			array( 'is_new' => false ),
@@ -127,8 +135,8 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 		);
 
 		$this->assertFalse( wp_cache_get( 'all_for_user_' . $u, 'bp_notifications' ) );
-		$unread_cache_key = bp_notifications_get_count_cache_key( $u, array( 'user_id' => $u, 'is_new' => true ) );
-		$this->assertFalse( wp_cache_get( $unread_cache_key, 'bp_notifications_unread_count' ) );
+		$this->assertNotSame( $incrementor_before, bp_notifications_get_user_count_cache_incrementor( $u ), 'The count cache incrementor should change after invalidation.' );
+		$this->assertEquals( 1, bp_notifications_get_unread_notification_count( $u ), 'Unread count should reflect the change, not a stale cached value.' );
 	}
 
 	/**
