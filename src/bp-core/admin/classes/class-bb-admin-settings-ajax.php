@@ -584,6 +584,8 @@ class BB_Admin_Settings_Ajax {
 						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss' ) ),
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
+						// Optional plan tier (e.g. 'start') for the badge style variant.
+						'tier'       => sanitize_key( $section['pro_notice']['tier'] ?? '' ),
 					);
 
 					$section_modal = null;
@@ -592,6 +594,12 @@ class BB_Admin_Settings_Ajax {
 						$catalog_entry = bb_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
 
 						if ( $catalog_entry ) {
+							// Optional catalog badge text (e.g. "UPGRADE START"). The registered
+							// `badge_text` stays the fallback when the entry has none.
+							if ( ! empty( $catalog_entry['upgrade_badge_text'] ) ) {
+								$formatted_section['pro_notice']['badge_text'] = sanitize_text_field( $catalog_entry['upgrade_badge_text'] );
+							}
+
 							$section_modal = bb_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
 							if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
 								$section_modal = bb_admin_apply_addon_upsell_tier( $section_modal, $feature_id );
@@ -619,6 +627,16 @@ class BB_Admin_Settings_Ajax {
 							'media'       => $registered_media,
 							'url'         => esc_url_raw( $registered_modal['url'] ?? 'https://www.buddyboss.com/pricing/' ),
 						);
+					}
+
+					// A section that declares its plan tier keeps the modal on the same plan
+					// as its badge when the catalog entry carries no tier, or the default 'pro'.
+					if (
+						! empty( $section_modal ) &&
+						'' !== $formatted_section['pro_notice']['tier'] &&
+						( empty( $section_modal['tier'] ) || 'pro' === $section_modal['tier'] )
+					) {
+						$section_modal['tier'] = $formatted_section['pro_notice']['tier'];
 					}
 
 					if ( ! empty( $section_modal ) ) {
@@ -1331,6 +1349,12 @@ class BB_Admin_Settings_Ajax {
 					// The registered `button_url` is the fallback for when the catalog has
 					// no entry, so the catalog wins whenever it does.
 					$field_data['button_url'] = $field_data['upgrade_catalog_url'];
+				}
+
+				// Optional catalog button label (e.g. "Upgrade to Start"). The registered
+				// `button_label` stays the fallback when the entry has none.
+				if ( ! empty( $upsell_entry['upgrade_button_label'] ) ) {
+					$field_data['button_label'] = sanitize_text_field( $upsell_entry['upgrade_button_label'] );
 				}
 
 				if ( ! empty( $upsell_entry ) && function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {

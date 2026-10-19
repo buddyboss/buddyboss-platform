@@ -317,11 +317,15 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_media_feature', 
  * @param string $icon_class   Icon font class.
  * @param string $description  Empty state description.
  * @param int    $order        Panel order.
- * @param string $button_label Optional. Button label. Default 'Upgrade'.
+ * @param string $button_label Optional. Button label. Default 'Upgrade to Start'.
  *
  * @return void
  */
 function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, $description, $order, $button_label = '' ) {
+	// Popup content used when the field-upgrades catalog has no entry for this panel yet,
+	// so the badge and button always open the popup. A catalog entry replaces it.
+	$upsell_modal = bb_media_get_addons_upsell_modal( $panel_id, $title, $description );
+
 	bb_register_side_panel(
 		'media',
 		$panel_id,
@@ -340,8 +344,17 @@ function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, 
 		$panel_id,
 		$panel_id,
 		array(
-			'title' => $title,
-			'order' => 10,
+			'title'      => $title,
+			'order'      => 10,
+			// Section header badge: the feature needs the Start plan (BuddyBoss Add-ons).
+			'pro_notice' => array(
+				'show'       => true,
+				'tier'       => 'start',
+				'badge_text' => __( 'UPGRADE START', 'buddyboss' ),
+				'badge_icon' => 'bb-icons-rl-crown-simple',
+				'link_url'   => bb_media_get_addons_upgrade_url( $panel_id ),
+				'modal'      => $upsell_modal,
+			),
 		)
 	);
 
@@ -356,15 +369,61 @@ function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, 
 			'icon'                    => $icon_class,
 			'empty_state_title'       => $title,
 			'empty_state_description' => $description,
-			'button_label'            => '' !== $button_label ? $button_label : __( 'Upgrade', 'buddyboss' ),
+			'button_label'            => '' !== $button_label ? $button_label : __( 'Upgrade to Start', 'buddyboss' ),
 			// Fallback only: with `upgrade_from_catalog` on, the AJAX formatter swaps in the
 			// campaign-tagged URL from the field-upgrades catalog when it has an entry.
 			'button_url'              => bb_media_get_addons_upgrade_url( $panel_id ),
 			'upgrade_from_catalog'    => true,
+			'upgrade_modal'           => $upsell_modal,
 			'button_target'           => '_blank',
 			'sanitize_callback'       => '__return_empty_string',
 			'order'                   => 10,
 		)
+	);
+}
+
+/**
+ * Get the fallback upgrade popup content for a Media settings upsell panel.
+ *
+ * Used until the field-upgrades catalog carries an entry for the panel; the
+ * catalog entry wins whenever it exists.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $panel_id    Side panel ID ('videos', 'documents' or 'animated_gifs').
+ * @param string $label       Popup header label (the panel title).
+ * @param string $description Popup description.
+ *
+ * @return array Modal payload in the `pro_notice.modal` / `upgrade_modal` shape.
+ */
+function bb_media_get_addons_upsell_modal( $panel_id, $label, $description ) {
+	$image_base = 'https://bb-features-marketing.s3.amazonaws.com/images/field-upgrades/';
+	$panels     = array(
+		'videos'        => array(
+			'title' => __( 'Share Videos in Your Community', 'buddyboss' ),
+			'image' => 'media-upload-videos.png',
+		),
+		'documents'     => array(
+			'title' => __( 'Share Documents and Folders', 'buddyboss' ),
+			'image' => 'media-upload-documents.png',
+		),
+		'animated_gifs' => array(
+			'title' => __( 'Post Animated GIFs', 'buddyboss' ),
+			'image' => 'media-upload-photos.png',
+		),
+	);
+	$panel      = isset( $panels[ $panel_id ] ) ? $panels[ $panel_id ] : array(
+		'title' => $label,
+		'image' => '',
+	);
+
+	return array(
+		'tier'        => 'start',
+		'label'       => $label,
+		'title'       => $panel['title'],
+		'description' => $description,
+		'image_url'   => '' !== $panel['image'] ? $image_base . $panel['image'] : '',
+		'url'         => bb_media_get_addons_upgrade_url( $panel_id ),
 	);
 }
 
