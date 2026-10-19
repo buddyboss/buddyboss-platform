@@ -5,6 +5,8 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { getRichTextEditorContent } from '../components/common/RichTextEditor';
+
 /**
  * Format a number with comma-separated thousands.
  *
@@ -322,21 +324,10 @@ export function buildRegisteredFieldPayload( fields, values, itemId ) {
 
 		var val = values[ field.id ];
 
-		// For richtext fields, pull latest content from the editor. Use
-		// wp.editor.getContent() rather than tinymce's own editor.getContent()
-		// directly: when the field is in Text/Code view, TinyMCE's in-memory
-		// buffer is stale (edits typed directly into the textarea, e.g. a
-		// hand-written <a> tag, never reach the hidden Visual iframe), so
-		// reading it there would silently drop those edits on save. WP's own
-		// wp.editor.getContent() is built for exactly this situation: it only
-		// pulls from TinyMCE when the Visual editor is actually active, and
-		// otherwise reads the textarea directly, which always holds the
-		// authoritative value regardless of which view is showing.
-		if ( 'richtext' === field.type && window.wp && window.wp.editor ) {
-			var editorId = 'bb-admin-edit-' + field.id + '-' + itemId;
-			if ( window.tinymce && window.tinymce.get( editorId ) ) {
-				val = window.wp.editor.getContent( editorId );
-			}
+		// For richtext fields, pull latest content from the editor. This also
+		// returns edits made in the Code tab, where TinyMCE's content is stale.
+		if ( 'richtext' === field.type ) {
+			val = getRichTextEditorContent( 'bb-admin-edit-' + field.id + '-' + itemId, val );
 		}
 
 		var safeVal = null !== val && undefined !== val ? val : '';
