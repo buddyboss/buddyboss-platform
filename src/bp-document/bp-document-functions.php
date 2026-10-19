@@ -2610,7 +2610,10 @@ function bp_document_filename_to_title( $filename ) {
  */
 function bp_document_unserialize_deep( $var ) {
 	while ( is_serialized( $var ) ) {
-		$var = @unserialize( $var );
+		// Disallow object instantiation: this walks arbitrary post meta/options
+		// data, so untrusted serialized values must never be allowed to
+		// construct PHP objects (PHP Object Injection / gadget chain RCE).
+		$var = @unserialize( $var, array( 'allowed_classes' => false ) );
 	}
 
 	return $var;
