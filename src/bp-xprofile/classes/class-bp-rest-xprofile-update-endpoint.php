@@ -582,6 +582,53 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 					$validations['message']  = $bp_error_message_string;
 				}
 			} else {
+				/*
+				 * Reject a Profile Type this member is not allowed to select for themselves.
+				 *
+				 * This endpoint only requires is_user_logged_in() and always acts on
+				 * bp_loggedin_user_id(), while the block below strips the member's roles and
+				 * applies the type's `_bp_member_type_wp_roles` mapping. Without this gate any
+				 * member could post the ID of a Profile Type hidden from the profile field and
+				 * self-assign its WP role. The helper checks
+				 * `_bp_member_type_enable_profile_field`, the same meta the web profile-edit
+				 * screen validates in bp-xprofile/screens/edit.php — including that screen's
+				 * allowance for re-submitting the type the member already has, so saving an
+				 * unchanged profile keeps working after an admin hides the type.
+				 *
+				 * Platform ships its own copy of this controller and carries the identical
+				 * gate; exactly one of the two is ever live (this plugin registers at
+				 * bp_rest_api_init priority 5, Platform's components at 10), so the two must
+				 * stay in sync.
+				 */
+				if ( function_exists( 'bb_is_member_type_allowed_on_registration' ) ) {
+					$bb_current_member_type  = bp_get_member_type( $user_id );
+					$bb_current_type_post_id = ! empty( $bb_current_member_type ) ? bp_member_type_post_by_type( $bb_current_member_type ) : 0;
+
+					// Never treat an array as "keeping the current type": (int) on a non-empty
+					// array is 1, which would otherwise match a current type whose post ID is 1.
+					$bb_keeping_current_type = (
+						! is_array( $value )
+						&& ! empty( $bb_current_type_post_id )
+						&& (int) $bb_current_type_post_id === (int) $value
+					);
+
+					if (
+						! empty( $value )
+						&& ! $bb_keeping_current_type
+						&& (
+							// An array is never a valid single-select submission; reject it rather
+							// than skip validation, and short-circuit absint() on an array.
+							is_array( $value )
+							|| ! bb_is_member_type_allowed_on_registration( absint( $value ) )
+						)
+					) {
+						$validations['field_id'] = $field_id;
+						$validations['message']  = __( 'Invalid option selected. Please try again', 'buddyboss' );
+
+						return $validations;
+					}
+				}
+
 				bp_set_member_type( $user_id, '' );
 				bp_set_member_type( $user_id, $member_type_name );
 

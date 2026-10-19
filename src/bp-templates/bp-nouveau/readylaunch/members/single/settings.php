@@ -44,6 +44,9 @@ defined( 'ABSPATH' ) || exit;
 		case 'delete-account':
 			bp_get_template_part( 'members/single/settings/delete-account' );
 			break;
+		case 'security':
+			bp_get_template_part( 'members/single/settings/security' );
+			break;
 		case 'general':
 			bp_get_template_part( 'members/single/settings/general' );
 			break;
