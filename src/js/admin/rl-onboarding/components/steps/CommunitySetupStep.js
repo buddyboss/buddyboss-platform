@@ -1,5 +1,5 @@
 import { useState, useEffect } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { BaseStepLayout } from '../BaseStepLayout';
 import { DynamicStepRenderer } from '../DynamicStepRenderer';
 import { getInitialFormData } from '../../../utils/formDefaults';
@@ -37,7 +37,11 @@ export const CommunitySetupStep = ({
         Object.entries(stepOptions).forEach(([key, config]) => {
             if (config.required && (!formData[key] || formData[key].trim() === '')) {
                 newErrors[key] = config.label
-                    ? __(`${config.label} is required`, 'buddyboss')
+                    ? sprintf(
+                        /* translators: %s: Field label. */
+                        __('%s is required', 'buddyboss'),
+                        config.label
+                    )
                     : __('This field is required', 'buddyboss');
             }
         });
