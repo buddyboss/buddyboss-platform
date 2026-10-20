@@ -163,10 +163,8 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 					<ul>
 						<?php
 						if ( bp_is_active( 'messages' ) ) {
-							$messages_menu_link = trailingslashit(
-								bp_loggedin_user_domain() . bp_get_messages_slug()
-							);
-						?>
+							$messages_menu_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+							?>
 							<li>
 								<a href="<?php echo esc_url( $messages_menu_link ); ?>" ref="notification_bell">
 									<i class="bb-icons-rl-chat-teardrop-text"></i>
@@ -182,10 +180,8 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 						<?php } ?>
 						<?php
 						if ( bp_is_active( 'notifications' ) ) {
-							$notification_menu_link = trailingslashit(
-								bp_loggedin_user_domain() . bp_get_notifications_slug()
-							);
-						?>
+							$notification_menu_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
+							?>
 							<li>
 								<a href="<?php echo esc_url( $notification_menu_link ); ?>" ref="notification_bell">
 									<i class="bb-icons-rl-bell-simple"></i>
