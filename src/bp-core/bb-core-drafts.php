@@ -1613,6 +1613,13 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
  * @return array Entries keyed like `evicted_draft_keys`.
  */
 function bb_draft_pending_evicted( $user_id, $acked = array() ) {
+	// Every draft save and fetch lands here. Reading the option for a member
+	// with nothing held would record a miss in the site-wide `notoptions`
+	// cache item, one key per drafting member, so check the meta flag first.
+	if ( ! get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
+		return array();
+	}
+
 	$hold = bb_draft_get_evicted_hold( $user_id );
 
 	if ( empty( $hold ) ) {

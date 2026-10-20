@@ -822,4 +822,37 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		unset( $_POST['bb_draft_evicted_ack'] );
 		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The flag clears with the hold.' );
 	}
+	/**
+	 * A draft request from a member with nothing held must not read the hold
+	 * option, or every drafting member adds a key to the site-wide
+	 * `notoptions` cache item until it outgrows the object cache.
+	 */
+	public function test_handback_without_a_hold_leaves_notoptions_alone() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$option  = bb_draft_evicted_hold_option( $user_id );
+		$read    = 0;
+
+		$count = function ( $pre, $name ) use ( $option, &$read ) {
+			if ( $name === $option ) {
+				++$read;
+			}
+
+			return $pre;
+		};
+		add_filter( 'pre_option', $count, 10, 2 );
+		add_filter( 'pre_site_option', $count, 10, 2 );
+
+		$owed = bb_draft_handback( $user_id );
+
+		remove_filter( 'pre_option', $count, 10 );
+		remove_filter( 'pre_site_option', $count, 10 );
+
+		$this->assertSame( array(), $owed );
+		$this->assertSame( 0, $read, 'The hold option is not read when the member has no hold.' );
+
+		$notoptions = is_multisite()
+			? wp_cache_get( get_current_network_id() . ':notoptions', 'site-options' )
+			: wp_cache_get( 'notoptions', 'options' );
+		$this->assertArrayNotHasKey( $option, (array) $notoptions, 'No notoptions entry is added for the member.' );
+	}
 }
