@@ -247,4 +247,15 @@ function bb_admin_script_translations_fallback( $translations, $file, $handle, $
 
 	return bb_admin_get_script_translations_from_mo( $handle );
 }
-add_filter( 'pre_load_script_translations', 'bb_admin_script_translations_fallback', 10, 4 );
+
+/**
+ * Register the hooks that serve the admin React translations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_admin_script_translations_register_hooks() {
+	add_filter( 'pre_load_script_translations', 'bb_admin_script_translations_fallback', 10, 4 );
+}
+bb_admin_script_translations_register_hooks();

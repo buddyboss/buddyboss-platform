@@ -38,11 +38,9 @@ class BP_Tests_Core_AdminScriptTranslations extends BP_UnitTestCase {
 		require_once ABSPATH . WPINC . '/pomo/mo.php';
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-script-translations.php';
 
-		// The file registers the filter when it is first included; the test case
-		// restores $wp_filter after every test, so re-attach it the same way.
-		if ( ! has_filter( 'pre_load_script_translations', 'bb_admin_script_translations_fallback' ) ) {
-			add_filter( 'pre_load_script_translations', 'bb_admin_script_translations_fallback', 10, 4 );
-		}
+		// The file registers its hooks when it is first included; the test case
+		// restores $wp_filter after every test, so run the same registration.
+		bb_admin_script_translations_register_hooks();
 
 		$this->fixture_base = trailingslashit( get_temp_dir() ) . 'bb-script-i18n-' . uniqid( '', true );
 		wp_mkdir_p( $this->fixture_base );
@@ -66,7 +64,7 @@ class BP_Tests_Core_AdminScriptTranslations extends BP_UnitTestCase {
 		remove_all_filters( 'gettext' );
 
 		unload_textdomain( 'buddyboss', true );
-		foreach ( array( 'bb-admin-settings', 'bb-admin-common', 'bb-rl-onboarding-script' ) as $handle ) {
+		foreach ( array( 'bb-admin-settings', 'bb-admin-integrations', 'bb-admin-common', 'bb-rl-onboarding-script' ) as $handle ) {
 			wp_dequeue_script( $handle );
 			wp_deregister_script( $handle );
 		}
@@ -183,6 +181,43 @@ class BP_Tests_Core_AdminScriptTranslations extends BP_UnitTestCase {
 		foreach ( $builds as $build ) {
 			$this->assertFileExists( buddypress()->plugin_dir . $build );
 			$this->assertFileExists( buddypress()->plugin_dir . 'languages/buddyboss-de_DE-' . md5( $build ) . '.json', $build );
+		}
+	}
+
+	/**
+	 * The fallback is registered on core's pre_load_script_translations filter
+	 * with the priority and arguments it needs.
+	 */
+	public function test_fallback_is_registered() {
+		remove_all_filters( 'pre_load_script_translations' );
+
+		bb_admin_script_translations_register_hooks();
+
+		$this->assertSame( 10, has_filter( 'pre_load_script_translations', 'bb_admin_script_translations_fallback' ) );
+		$this->assertSame( 4, $GLOBALS['wp_filter']['pre_load_script_translations']->callbacks[10]['bb_admin_script_translations_fallback']['accepted_args'] );
+	}
+
+	/**
+	 * The real Settings and Integrations enqueues attach the `buddyboss`
+	 * translations.
+	 */
+	public function test_settings_and_integrations_enqueues_attach_translations() {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php';
+
+		bb_admin_settings_enqueue_app_script(
+			buddypress()->plugin_url . 'bp-core/admin/bb-settings/settings/build',
+			array(
+				'dependencies' => array(),
+				'version'      => '1',
+			)
+		);
+		bb_admin_integrations_enqueue_app_script( buddypress()->plugin_url . 'bp-core/admin/bb-settings/integrations/build', array(), '1' );
+
+		foreach ( array( 'bb-admin-settings', 'bb-admin-integrations' ) as $handle ) {
+			$this->assertTrue( wp_script_is( $handle, 'enqueued' ), $handle );
+			$this->assertSame( 'buddyboss', wp_scripts()->registered[ $handle ]->textdomain, $handle );
+			$this->assertSame( buddypress()->plugin_dir . 'languages', wp_scripts()->registered[ $handle ]->translations_path, $handle );
 		}
 	}
 
