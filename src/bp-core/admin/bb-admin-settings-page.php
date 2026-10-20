@@ -182,13 +182,7 @@ function bb_admin_settings_page() {
 	}
 
 	// Enqueue scripts and styles.
-	wp_enqueue_script(
-		'bb-admin-settings',
-		$build_url . '/index.js',
-		$asset['dependencies'],
-		$asset['version'],
-		true
-	);
+	bb_admin_settings_enqueue_app_script( $build_url, $asset );
 
 	// Resolve the LTR admin CSS path. Bake the .min suffix into the URL the
 	// same way bb-icons{$min}.css does two enqueues above — WordPress does
@@ -638,4 +632,25 @@ function bb_admin_settings_page() {
 		</noscript>
 	</div>
 	<?php
+}
+
+/**
+ * Enqueue the Settings 2.0 React app and attach its translations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $build_url Base URL of the Settings build directory.
+ * @param array  $asset     Build asset data with `dependencies` and `version`.
+ *
+ * @return void
+ */
+function bb_admin_settings_enqueue_app_script( $build_url, $asset ) {
+	wp_enqueue_script(
+		'bb-admin-settings',
+		$build_url . '/index.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+	bb_admin_set_script_translations( 'bb-admin-settings' );
 }

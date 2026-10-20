@@ -60,7 +60,7 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                             alt="BuddyBoss Theme Preview"
                             className="bb-rl-product-preview"
                         />
-                        <p className="bb-rl-splash-content-product-description">{__('Our crafted theme made just for the BuddyBoss Platform giving you full control to design a community that feels truly yours.', 'buddybos s')}</p>
+                        <p className="bb-rl-splash-content-product-description">{__('Our crafted theme made just for the BuddyBoss Platform giving you full control to design a community that feels truly yours.', 'buddyboss')}</p>
                         <ul className="bb-rl-splash-content-product-features">
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
@@ -104,7 +104,7 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                             alt="BuddyBoss Theme Preview"
                             className="bb-rl-product-preview"
                         />
-                        <p className="bb-rl-splash-content-product-description">{__('Get your community up and running in no time with our easy to use template system.', 'buddybos s')}</p>
+                        <p className="bb-rl-splash-content-product-description">{__('Get your community up and running in no time with our easy to use template system.', 'buddyboss')}</p>
                         <ul className="bb-rl-splash-content-product-features">
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>

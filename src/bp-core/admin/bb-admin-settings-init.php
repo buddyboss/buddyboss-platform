@@ -140,6 +140,11 @@ function bb_admin_settings_init() {
 			}
 		}
 
+		// Translations for the admin React apps (wp_set_script_translations, served from the loaded catalog).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-script-translations.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-script-translations.php';
+		}
+
 		// Admin settings page (menu registration, render function).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';

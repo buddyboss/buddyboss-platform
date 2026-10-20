@@ -96,13 +96,7 @@ function bb_admin_integrations_page() {
 	// it (and guarantees load order) when the bundle is enqueued.
 	$integrations_deps = array_unique( array_merge( $asset['dependencies'], array( 'bb-admin-common' ) ) );
 
-	wp_enqueue_script(
-		'bb-admin-integrations',
-		$build_url . '/index.js',
-		$integrations_deps,
-		$asset['version'],
-		true
-	);
+	bb_admin_integrations_enqueue_app_script( $build_url, $integrations_deps, $asset['version'] );
 
 	// Resolve the admin CSS path. Unlike the Settings build (Grunt emits .min +
 	// RTL variants), the integrations SCSS step emits a single, already-compressed
@@ -240,4 +234,26 @@ function bb_admin_integrations_page() {
 	echo '<div class="wrap"><div id="bb-admin-integrations" class="bb-admin-app"></div>';
 	do_action( 'bb_admin_header_actions' );
 	echo '</div>';
+}
+
+/**
+ * Enqueue the Integrations React app and attach its translations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $build_url    Base URL of the Integrations build directory.
+ * @param array  $dependencies Script dependencies (including bb-admin-common).
+ * @param string $version      Script version.
+ *
+ * @return void
+ */
+function bb_admin_integrations_enqueue_app_script( $build_url, $dependencies, $version ) {
+	wp_enqueue_script(
+		'bb-admin-integrations',
+		$build_url . '/index.js',
+		$dependencies,
+		$version,
+		true
+	);
+	bb_admin_set_script_translations( 'bb-admin-integrations' );
 }

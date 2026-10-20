@@ -45,6 +45,7 @@ function bb_register_admin_common_assets() {
 		$asset['version'],
 		true
 	);
+	bb_admin_set_script_translations( 'bb-admin-common' );
 
 	if ( file_exists( $build_dir . '/styles/common.css' ) ) {
 		wp_register_style(
