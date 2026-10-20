@@ -57,35 +57,45 @@ function bb_admin_get_script_translation_strings() {
 }
 
 /**
- * Get one sample count per plural form of the loaded `buddyboss` translations.
+ * Get the plural rule of the loaded `buddyboss` translations: the Plural-Forms
+ * header to print and one sample count per plural form.
  *
- * _n() takes a count, not a form index, so each form is looked up with a count
- * that selects it under the catalog's Plural-Forms rule.
+ * The header is read exactly like core does (Gettext_Translations and
+ * WP_Translation_File): a header core can not parse falls back to
+ * `nplurals=2; plural=n != 1;`, so the React admin always uses the rule PHP's
+ * _n() uses. _n() takes a count, not a form index, so each form is looked up
+ * with a count that selects it under that rule.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return int[] Plural form index => count.
+ * @return array {
+ *     @type string $header  Plural-Forms header for the Jed locale data.
+ *     @type int[]  $samples Plural form index => count.
+ * }
  */
-function bb_admin_get_script_translation_plural_samples() {
+function bb_admin_get_script_translation_plural_rule() {
+	$default      = 'nplurals=2; plural=n != 1;';
 	$translations = get_translations_for_domain( 'buddyboss' );
 	$headers      = is_array( $translations->headers ) ? $translations->headers : array();
 	$header       = ! empty( $headers['Plural-Forms'] ) ? $headers['Plural-Forms'] : '';
 	$nplurals     = 2;
-	$expression   = 'n != 1';
-
-	if ( preg_match( '/^\s*nplurals\s*=\s*(\d+)\s*;\s*plural\s*=\s*(.+?)\s*;?\s*$/', $header, $matches ) ) {
-		$nplurals   = max( 1, (int) $matches[1] );
-		$expression = $matches[2];
-	}
+	$plural_forms = null;
 
 	if ( ! class_exists( 'Plural_Forms' ) ) {
 		require_once ABSPATH . WPINC . '/pomo/plural-forms.php';
 	}
 
-	try {
-		$plural_forms = new Plural_Forms( $expression );
-	} catch ( Exception $e ) {
-		$nplurals     = 2;
+	if ( preg_match( '/^\s*nplurals\s*=\s*(\d+)\s*;\s+plural\s*=\s*(.+)$/', $header, $matches ) ) {
+		try {
+			$plural_forms = new Plural_Forms( rtrim( trim( $matches[2] ), ';' ) );
+			$nplurals     = max( 1, (int) $matches[1] );
+		} catch ( Exception $e ) {
+			$plural_forms = null;
+		}
+	}
+
+	if ( null === $plural_forms ) {
+		$header       = $default;
 		$plural_forms = new Plural_Forms( 'n != 1' );
 	}
 
@@ -102,7 +112,10 @@ function bb_admin_get_script_translation_plural_samples() {
 
 	ksort( $samples );
 
-	return $samples;
+	return array(
+		'header'  => $header,
+		'samples' => $samples,
+	);
 }
 
 /**
@@ -119,7 +132,6 @@ function bb_admin_get_script_translation_plural_samples() {
 function bb_admin_get_script_translations_from_mo( $handle ) {
 	static $cache = array();
 
-	$domain  = 'buddyboss';
 	$locale  = determine_locale();
 	$strings = bb_admin_get_script_translation_strings();
 
@@ -131,8 +143,8 @@ function bb_admin_get_script_translations_from_mo( $handle ) {
 		return $cache[ $handle ][ $locale ];
 	}
 
-	$data    = array();
-	$samples = null;
+	$data = array();
+	$rule = bb_admin_get_script_translation_plural_rule();
 
 	foreach ( $strings[ $handle ] as $item ) {
 		list( $singular, $context, $plural ) = array_pad( (array) $item, 3, '' );
@@ -151,9 +163,7 @@ function bb_admin_get_script_translations_from_mo( $handle ) {
 			continue;
 		}
 
-		if ( null === $samples ) {
-			$samples = bb_admin_get_script_translation_plural_samples();
-		}
+		$samples = $rule['samples'];
 
 		$forms      = array();
 		$translated = false;
@@ -185,10 +195,6 @@ function bb_admin_get_script_translations_from_mo( $handle ) {
 		return false;
 	}
 
-	$translations = get_translations_for_domain( $domain );
-	$headers      = is_array( $translations->headers ) ? $translations->headers : array();
-	$plural_forms = ! empty( $headers['Plural-Forms'] ) ? $headers['Plural-Forms'] : 'nplurals=2; plural=(n != 1);';
-
 	$cache[ $handle ][ $locale ] = wp_json_encode(
 		array(
 			'domain'      => 'messages',
@@ -198,7 +204,7 @@ function bb_admin_get_script_translations_from_mo( $handle ) {
 					'' => array(
 						'domain'       => 'messages',
 						'lang'         => $locale,
-						'plural-forms' => $plural_forms,
+						'plural-forms' => $rule['header'],
 					),
 				) + $data,
 			),

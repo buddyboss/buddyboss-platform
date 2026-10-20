@@ -447,6 +447,31 @@ class BP_Tests_Core_AdminScriptTranslations extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A Plural-Forms header core can not parse (no space after ';') falls back
+	 * to core's default rule, so React picks the same form as PHP _n().
+	 */
+	public function test_unparsable_plural_forms_header_follows_core() {
+		$this->load_catalog(
+			'base',
+			array(
+				array(
+					'singular'     => 'Discussion',
+					'plural'       => 'Discussions',
+					'is_plural'    => true,
+					'translations' => array( 'Diskussion', 'Diskussionen' ),
+				),
+			),
+			'nplurals=2;plural=(n > 1);'
+		);
+
+		$data = $this->locale_data( bb_admin_script_translations_fallback( null, false, 'bb-admin-settings', 'buddyboss' ) );
+
+		$this->assertSame( 'nplurals=2; plural=n != 1;', $data['']['plural-forms'] );
+		$this->assertSame( _n( 'Discussion', 'Discussions', 1, 'buddyboss' ), $data['Discussion'][0] );
+		$this->assertSame( _n( 'Discussion', 'Discussions', 0, 'buddyboss' ), $data['Discussion'][1] );
+	}
+
+	/**
 	 * Nothing translated (an English site) means no locale data is printed.
 	 */
 	public function test_returns_false_when_nothing_is_translated() {
