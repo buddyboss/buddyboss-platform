@@ -2341,6 +2341,11 @@ window.bp = window.bp || {};
 
 						self.dropzone_obj[ d_dropzone_obj_key ].files.push( d_mock_file );
 						self.dropzone_obj[ d_dropzone_obj_key ].emit( 'addedfile', d_mock_file );
+						// A draft keeps the upload response's formatted size ("14 KB"), which
+						// Dropzone's numeric formatter shows as "0 b"; show the stored text.
+						if ( d_mock_file.previewElement && d_mock_file.size && ! _.isFinite( Number( d_mock_file.size ) ) ) {
+							$( d_mock_file.previewElement ).find( '[data-dz-size]' ).text( String( d_mock_file.size ) );
+						}
 						self.dropzone_obj[ d_dropzone_obj_key ].emit( 'dz-success', d_mock_file );
 						self.dropzone_obj[ d_dropzone_obj_key ].emit( 'complete', d_mock_file );
 					}

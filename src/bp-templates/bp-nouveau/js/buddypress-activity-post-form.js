@@ -772,6 +772,11 @@ window.bp = window.bp || {};
 					if ( self.dropzone ) {
 						self.dropzone.files.push( doc_file );
 						self.dropzone.emit( 'addedfile', doc_file );
+						// A draft keeps the upload response's formatted size ("14 KB"), which
+						// Dropzone's numeric formatter shows as "0 b"; show the stored text.
+						if ( doc_file.previewElement && doc_file.size && ! _.isFinite( Number( doc_file.size ) ) ) {
+							$( doc_file.previewElement ).find( '[data-dz-size]' ).text( String( doc_file.size ) );
+						}
 						self.dropzone.emit( 'complete', doc_file );
 					}
 				}
