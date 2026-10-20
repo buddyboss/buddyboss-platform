@@ -36,11 +36,14 @@ class BP_Tests_Core_AdminScriptTranslations extends BP_UnitTestCase {
 		parent::set_up();
 
 		require_once ABSPATH . WPINC . '/pomo/mo.php';
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-script-translations.php';
 
-		// The file registers its hooks when it is first included; the test case
-		// restores $wp_filter after every test, so run the same registration.
-		bb_admin_script_translations_register_hooks();
+		if ( 'test_loading_the_file_registers_the_fallback' !== $this->getName( false ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-script-translations.php';
+
+			// The file registers its hooks when it is first included; the test case
+			// restores $wp_filter after every test, so run the same registration.
+			bb_admin_script_translations_register_hooks();
+		}
 
 		$this->fixture_base = trailingslashit( get_temp_dir() ) . 'bb-script-i18n-' . uniqid( '', true );
 		wp_mkdir_p( $this->fixture_base );
@@ -182,6 +185,23 @@ class BP_Tests_Core_AdminScriptTranslations extends BP_UnitTestCase {
 			$this->assertFileExists( buddypress()->plugin_dir . $build );
 			$this->assertFileExists( buddypress()->plugin_dir . 'languages/buddyboss-de_DE-' . md5( $build ) . '.json', $build );
 		}
+	}
+
+	/**
+	 * Loading the file registers the fallback by itself. Runs in its own process
+	 * because the file is included only once per process (set_up() of the other
+	 * tests calls the registration function directly).
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_loading_the_file_registers_the_fallback() {
+		$this->assertFalse( function_exists( 'bb_admin_script_translations_register_hooks' ), 'The file must not be loaded before this test.' );
+		remove_all_filters( 'pre_load_script_translations' );
+
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-script-translations.php';
+
+		$this->assertSame( 10, has_filter( 'pre_load_script_translations', 'bb_admin_script_translations_fallback' ) );
 	}
 
 	/**
