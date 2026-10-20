@@ -189,6 +189,7 @@ function bb_admin_settings_page() {
 		$asset['version'],
 		true
 	);
+	bb_admin_set_script_translations( 'bb-admin-settings' );
 
 	// Resolve the LTR admin CSS path. Bake the .min suffix into the URL the
 	// same way bb-icons{$min}.css does two enqueues above — WordPress does

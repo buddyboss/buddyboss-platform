@@ -602,11 +602,37 @@ module.exports = function (grunt) {
 				// WP-CLI makepot with header fixing.
 				// Exclude the compiled React bundles under bb-settings/*/build/* — they
 				// are minified single-line files that blow up WP-CLI's peast JS parser
-				// (memory exhaustion) and contribute no strings to the POT (JS admin i18n
-				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
+				// (memory exhaustion) and only duplicate the source strings. The admin
+				// React *source* (js/admin/*) IS scanned so its strings reach
+				// translators; js/blocks/* stays out of scope here. WP_CLI_PHP_ARGS
 				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/blocks/*, bp-core/admin/bb-settings/*/build/*"',
+					cwd: '.',
+					stdout: true
+				},
+				// Admin React translations (standard JSON artifacts + the per-handle
+				// manifest the runtime serves the React admin from):
+				// 1. admin_js_i18n — map each js/admin source file to the built script
+				//    it is enqueued as (lazy route chunks merge into the entry file),
+				//    and write the per-handle string manifest read at runtime
+				//    (bp-core/admin/bb-admin-script-translations.php).
+				// 2. update_po — carry the new POT references into the bundled .po files
+				//    so their existing translations are linked to the JS sources.
+				// 3. make_json — write buddyboss-{locale}-{md5}.json next to the .po files.
+				//    --no-purge is required: the default strips JS strings out of the .po.
+				admin_js_i18n: {
+					command: 'node bin/admin-js-i18n.js',
+					cwd: '.',
+					stdout: true
+				},
+				update_po: {
+					command: 'wp i18n update-po src/languages/buddyboss.pot src/languages/',
+					cwd: '.',
+					stdout: true
+				},
+				make_json: {
+					command: 'wp i18n make-json src/languages/ --no-purge --use-map=node_modules/.cache/bb-admin-js-i18n/map.json',
 					cwd: '.',
 					stdout: true
 				},
@@ -723,7 +749,7 @@ module.exports = function (grunt) {
 	);
 
 	// WP-CLI makepot task with grunt-wp-i18n compatible headers
-	grunt.registerTask('makepot', ['exec:makepot_wp', 'exec:fix_wp_cli_headers']);
+	grunt.registerTask('makepot', ['exec:makepot_wp', 'exec:fix_wp_cli_headers', 'exec:admin_js_i18n', 'exec:update_po', 'exec:make_json']);
 
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('webpack', ['exec:build_blocks', 'exec:build_admin']);

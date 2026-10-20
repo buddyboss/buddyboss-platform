@@ -103,6 +103,7 @@ function bb_admin_integrations_page() {
 		$asset['version'],
 		true
 	);
+	bb_admin_set_script_translations( 'bb-admin-integrations' );
 
 	// Resolve the admin CSS path. Unlike the Settings build (Grunt emits .min +
 	// RTL variants), the integrations SCSS step emits a single, already-compressed

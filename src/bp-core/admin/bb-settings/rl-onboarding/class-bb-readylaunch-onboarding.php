@@ -533,6 +533,10 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			true
 		);
 
+		if ( function_exists( 'bb_admin_set_script_translations' ) ) {
+			bb_admin_set_script_translations( $this->get_config( 'react_script_handle' ) );
+		}
+
 		// Enqueue the CSS.
 		wp_enqueue_style(
 			$this->get_config( 'react_style_handle' ),
