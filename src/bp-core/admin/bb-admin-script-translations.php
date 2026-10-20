@@ -142,8 +142,8 @@ function bb_admin_get_script_translations_from_mo( $handle ) {
 		// Looked up exactly as PHP __() / _x() / _n() / _nx() would: first-match
 		// across layered catalogs, and through the gettext filters (WPML).
 		if ( '' === $plural ) {
-			// phpcs:ignore WordPress.WP.I18n.LowLevelTranslationFunction, WordPress.WP.I18n.NonSingularStringLiteralText, WordPress.WP.I18n.NonSingularStringLiteralContext, WordPress.WP.I18n.NonSingularStringLiteralDomain
-			$translated = '' !== $context ? translate_with_gettext_context( $singular, $context, $domain ) : translate( $singular, $domain );
+			// phpcs:ignore WordPress.WP.I18n.LowLevelTranslationFunction, WordPress.WP.I18n.NonSingularStringLiteralText, WordPress.WP.I18n.NonSingularStringLiteralContext
+			$translated = '' !== $context ? translate_with_gettext_context( $singular, $context, 'buddyboss' ) : translate( $singular, 'buddyboss' );
 
 			if ( $translated !== $singular ) {
 				$data[ $key ] = array( $translated );
@@ -168,8 +168,8 @@ function bb_admin_get_script_translations_from_mo( $handle ) {
 			}
 
 			$count = $samples[ $index ];
-			// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle, WordPress.WP.I18n.NonSingularStringLiteralPlural, WordPress.WP.I18n.NonSingularStringLiteralContext, WordPress.WP.I18n.NonSingularStringLiteralDomain
-			$form            = '' !== $context ? _nx( $singular, $plural, $count, $context, $domain ) : _n( $singular, $plural, $count, $domain );
+			// phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle, WordPress.WP.I18n.NonSingularStringLiteralPlural, WordPress.WP.I18n.NonSingularStringLiteralContext
+			$form            = '' !== $context ? _nx( $singular, $plural, $count, $context, 'buddyboss' ) : _n( $singular, $plural, $count, 'buddyboss' );
 			$forms[ $index ] = $form;
 			$translated      = $translated || ( 1 === $count ? $singular : $plural ) !== $form;
 		}
