@@ -2868,6 +2868,41 @@ window.bp = window.bp || {};
 	};
 
 	/**
+	 * Whether a stored draft, or a held hand-back, belongs to a form on this page.
+	 *
+	 * `has_draft` is site-wide, so on its own it sent the lazy fetch from every
+	 * forum page once the member had a draft anywhere. A held hand-back is
+	 * fetched from any page, because that fetch is also what delivers it. A page
+	 * rendered without `draft_keys` (an older cached page) fetches as before.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {boolean}
+	 */
+	var bbDraftPageHasDraft = function () {
+		var keys = BP_Nouveau.forums.draft_keys,
+			prefixes;
+
+		if ( true === BP_Nouveau.forums.has_evicted_hold || ! _.isArray( keys ) ) {
+			return true;
+		}
+
+		prefixes = bbDraftKeyPrefixes();
+
+		return _.some(
+			keys,
+			function ( key ) {
+				return _.some(
+					prefixes,
+					function ( prefix ) {
+						return prefix === String( key ) || 0 === String( key ).indexOf( prefix + '_' );
+					}
+				);
+			}
+		);
+	};
+
+	/**
 	 * Drop local draft copies older than the draft retention.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -3026,6 +3061,7 @@ window.bp = window.bp || {};
 		0 < forms.length &&
 		'undefined' !== typeof BP_Nouveau.forums &&
 		true === BP_Nouveau.forums.has_draft &&
+		bbDraftPageHasDraft() &&
 		$.isEmptyObject( BP_Nouveau.forums.draft )
 	) {
 		// Capture what each form arrived with BEFORE the request goes out.

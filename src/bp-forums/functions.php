@@ -1061,12 +1061,20 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$params['forums']['has_draft'] = false;
 	$draft_row                     = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 
+	// The keys of those drafts, so a page fetches only when one of its own forms
+	// has a draft. `has_draft` is site-wide: on its own it sent the fetch from
+	// every forum page once the member had a draft anywhere.
+	$params['forums']['draft_keys']       = array();
+	$params['forums']['has_evicted_hold'] = false;
+
 	// An evicted forum draft whose hand-back never reached this browser is
-	// fetched and restored like a stored one (V06).
+	// fetched and restored like a stored one (V06). It is fetched from any
+	// forum page, since that fetch is also what hands it back.
 	if ( get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ) ) {
 		foreach ( array_keys( bb_draft_pending_evicted( $user_id ) ) as $held_key ) {
 			if ( 0 === strpos( (string) $held_key, 'bb_user_topic_reply_draft:' ) ) {
-				$params['forums']['has_draft'] = true;
+				$params['forums']['has_draft']        = true;
+				$params['forums']['has_evicted_hold'] = true;
 				break;
 			}
 		}
@@ -1074,9 +1082,9 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 
 	if ( ! empty( $draft_row ) && is_array( $draft_row ) ) {
 		foreach ( $draft_row as $draft_entry ) {
-			if ( is_array( $draft_entry ) && bb_draft_topic_reply_entry_has_payload( $draft_entry ) ) {
-				$params['forums']['has_draft'] = true;
-				break;
+			if ( is_array( $draft_entry ) && ! empty( $draft_entry['data_key'] ) && bb_draft_topic_reply_entry_has_payload( $draft_entry ) ) {
+				$params['forums']['has_draft']    = true;
+				$params['forums']['draft_keys'][] = (string) $draft_entry['data_key'];
 			}
 		}
 	}

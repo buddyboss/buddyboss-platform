@@ -899,6 +899,59 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The forum params name which keys hold a restorable draft, so a page
+	 * fetches only when one of its own forms has one (C-04). An empty entry is
+	 * not named; a held hand-back is flagged so any page still fetches it.
+	 */
+	public function test_forum_params_name_the_keys_with_a_restorable_draft() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$user_id  = self::factory()->user->create();
+		$old_user = get_current_user_id();
+		$this->set_current_user( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_reply_11_0' => array(
+					'data_key'        => 'draft_reply_11_0',
+					'data'            => array( 'bbp_reply_content' => 'stored' ),
+					'_draft_saved_at' => time(),
+				),
+				'draft_reply_12_0' => array(
+					'data_key'        => 'draft_reply_12_0',
+					'data'            => array( 'bbp_reply_content' => '' ),
+					'_draft_saved_at' => time(),
+				),
+			)
+		);
+
+		$params = bb_nouveau_forum_localize_scripts( array() );
+
+		$this->assertTrue( $params['forums']['has_draft'] );
+		$this->assertSame( array( 'draft_reply_11_0' ), $params['forums']['draft_keys'], 'Only the key with something to restore is named.' );
+		$this->assertFalse( $params['forums']['has_evicted_hold'] );
+
+		bb_draft_hold_evicted(
+			$user_id,
+			array(
+				'bb_user_topic_reply_draft:draft_reply_13_0' => array(
+					'data_key' => 'draft_reply_13_0',
+					'data'     => array( 'bbp_reply_content' => 'held' ),
+				),
+			)
+		);
+
+		$params = bb_nouveau_forum_localize_scripts( array() );
+		$this->set_current_user( $old_user );
+
+		$this->assertTrue( $params['forums']['has_evicted_hold'], 'A held forum hand-back is flagged so any forum page fetches it.' );
+	}
+
+	/**
 	 * Recommendation #5 - the whole point of the has_draft probe is that the
 	 * localized params must NOT carry the draft content (only a cheap boolean),
 	 * so page HTML stays small and the full draft is fetched lazily. Assert the
