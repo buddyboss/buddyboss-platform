@@ -2440,7 +2440,7 @@ msgstr "Gruppen"
 #: js/admin/settings/screens/DiscussionsListScreen.js:567
 #: js/admin/settings/screens/ForumsListScreen.js:644
 msgid "Discussions"
-msgstr "Diskussionen"
+msgstr "meine Diskussionen"
 
 #: bp-core/admin/bb-admin-settings-forums.php:224
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:222
@@ -4395,7 +4395,7 @@ msgstr ""
 #: js/admin/settings/screens/DiscussionTagsListScreen.js:500
 #: js/admin/settings/screens/GroupsListScreen.js:697
 msgid "Name"
-msgstr "Name"
+msgstr "Vorname"
 
 #: bp-core/bp-core-taxonomy.php:38
 msgid "BuddyBoss email types"
@@ -9804,7 +9804,7 @@ msgstr ""
 #: js/admin/settings/components/fields/InputButtonField.js:40
 #: js/admin/settings/components/fields/InputButtonField.js:80
 msgid "Connect"
-msgstr "Verbinden"
+msgstr "Freundschaft anfragen"
 
 #: bp-friends/bp-friends-template.php:871
 #, php-format
@@ -13923,7 +13923,7 @@ msgstr "eingeladen"
 #: js/admin/settings/screens/InvitesListScreen.js:578
 #: js/admin/settings/screens/InvitesListScreen.js:619
 msgid "Revoke Invite"
-msgstr "Einladung zurücknehmen"
+msgstr "löschen"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:199
 #: bp-templates/bp-nouveau/readylaunch/members/single/invites/sent-invites.php:203
