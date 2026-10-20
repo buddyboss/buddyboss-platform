@@ -2869,6 +2869,12 @@ window.bp = window.bp || {};
 		},
 
 		checkAndStoreDraftToLocalStorage: function( draft_activity ) {
+			// No key yet (the composer's default `data_key: false`): storing would
+			// write a stray localStorage entry literally named "false".
+			if ( ! draft_activity || ! draft_activity.data_key ) {
+				return;
+			}
+
 			// After a conflict the local copy is the newer STORED draft; the
 			// composer's text must not replace it (bb_draft_base).
 			if ( bp.draft_conflict && draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
