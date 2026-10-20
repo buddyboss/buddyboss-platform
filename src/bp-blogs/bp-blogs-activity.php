@@ -1462,6 +1462,7 @@ add_filter( 'bp_activity_can_comment_reply', 'bp_blogs_can_comment_reply', 10, 2
  * activity item is a 'new_blog_post' entry.
  *
  * @since BuddyPress 2.0.0
+ * @since BuddyBoss [BBVERSION] Falls back to the activity comment permalink when no synced post comment exists.
  *
  * @param string $retval The activity comment permalink.
  * @return string
@@ -1476,7 +1477,9 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 
 	// Maybe adjust the link if item ID exists.
 	if ( ( false !== $item_id ) && isset( buddypress()->blogs->allow_comments[ $item_id ] ) ) {
-		$retval = $activities_template->activity->current_comment->primary_link;
+		// Unsynced comments (e.g. made before the post type supported comments) have no post comment link.
+		$activity_permalink = $retval;
+		$retval             = $activities_template->activity->current_comment->primary_link;
 		if ( empty( $retval ) ) {
 			$post_type = str_replace( 'new_blog_', '', $activities_template->activity->type );
 			if ( empty( $post_type ) ) {
@@ -1485,6 +1488,10 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 			}
 			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_' . $post_type . '_comment_id' );
 			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
+		}
+
+		if ( empty( $retval ) ) {
+			$retval = $activity_permalink;
 		}
 	}
 

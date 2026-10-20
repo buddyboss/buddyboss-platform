@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-13 13:25:59+00:00\n"
+"POT-Creation-Date: 2026-10-20 06:28:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2987,14 +2987,14 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:7755
 #: bp-blogs/bp-blogs-activity.php:287
-#: bp-blogs/bp-blogs-activity.php:1715
+#: bp-blogs/bp-blogs-activity.php:1729
 #, php-format
 msgid "%1$s posted a new post, on the site %2$s"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:7757
 #: bp-blogs/bp-blogs-activity.php:289
-#: bp-blogs/bp-blogs-activity.php:1717
+#: bp-blogs/bp-blogs-activity.php:1731
 #, php-format
 msgid "%1$s posted a new post."
 msgstr ""
@@ -5074,7 +5074,7 @@ msgid "%1$s created the site %2$s"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:263
-#: bp-blogs/bp-blogs-activity.php:1659
+#: bp-blogs/bp-blogs-activity.php:1673
 msgid "(no title)"
 msgstr ""
 
@@ -5089,12 +5089,12 @@ msgstr ""
 msgid "%1$s commented on the post, %2$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1708
+#: bp-blogs/bp-blogs-activity.php:1722
 #, php-format
 msgid "%1$s posted a new %2$s, on the site %3$s"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:1710
+#: bp-blogs/bp-blogs-activity.php:1724
 #, php-format
 msgid "%1$s posted a new %2$s."
 msgstr ""
