@@ -492,6 +492,37 @@ class BP_Tests_Core_AdminScriptTranslations extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A Plural-Forms rule that parses but never selects an in-range form falls
+	 * back to the default rule instead of failing.
+	 */
+	public function test_plural_rule_without_an_in_range_form_falls_back() {
+		$this->load_catalog(
+			'base',
+			array(
+				array(
+					'singular'     => 'Discussion',
+					'plural'       => 'Discussions',
+					'is_plural'    => true,
+					'translations' => array( 'Diskussion' ),
+				),
+				array(
+					'singular'     => 'Member',
+					'translations' => array( 'Mitglied' ),
+				),
+			),
+			'nplurals=1; plural=1;'
+		);
+
+		$rule = bb_admin_get_script_translation_plural_rule();
+		$this->assertSame( 'nplurals=2; plural=n != 1;', $rule['header'] );
+		$this->assertSame( array( 1, 0 ), $rule['samples'] );
+
+		$data = $this->locale_data( bb_admin_script_translations_fallback( null, false, 'bb-admin-settings', 'buddyboss' ) );
+		$this->assertSame( 'nplurals=2; plural=n != 1;', $data['']['plural-forms'] );
+		$this->assertSame( array( 'Mitglied' ), $data['Member'] );
+	}
+
+	/**
 	 * Nothing translated (an English site) means no locale data is printed.
 	 */
 	public function test_returns_false_when_nothing_is_translated() {

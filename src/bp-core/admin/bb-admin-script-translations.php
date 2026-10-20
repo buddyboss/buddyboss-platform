@@ -110,6 +110,16 @@ function bb_admin_get_script_translation_plural_rule() {
 		}
 	}
 
+	// A rule that parses but never selects an in-range form (a hand-edited
+	// header) has nothing to sample: use the default rule, like an unparsable one.
+	if ( empty( $samples ) ) {
+		$header  = $default;
+		$samples = array(
+			0 => 1,
+			1 => 0,
+		);
+	}
+
 	ksort( $samples );
 
 	return array(
