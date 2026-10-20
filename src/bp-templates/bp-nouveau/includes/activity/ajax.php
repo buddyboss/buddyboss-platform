@@ -1649,6 +1649,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			// Document preview text is never restored; it must not count
+			// toward the cap or be stored.
+			$draft_activity = bb_draft_strip_document_render_fields( $draft_activity );
+
 			// Measured unslashed: this handler keeps the payload slashed, but
 			// update_metadata() stores it unslashed, and the forum handler
 			// measures that same stored width (V21).

@@ -778,6 +778,8 @@ function bb_draft_shed_preview_frames( $draft ) {
 		}
 	}
 
+	$draft = bb_draft_strip_document_render_fields( $draft );
+
 	if ( ! empty( $draft['data']['video'] ) && is_array( $draft['data']['video'] ) ) {
 		foreach ( $draft['data']['video'] as $index => $entry ) {
 			if ( is_array( $entry ) && isset( $entry['js_preview'] ) ) {
@@ -805,6 +807,64 @@ function bb_draft_shed_preview_frames( $draft ) {
 			// size comparison report a reclaim that did not happen.
 			if ( $shed ) {
 				$draft['data']['bbp_video'] = wp_json_encode( $entries );
+			}
+		}
+	}
+
+	return $draft;
+}
+
+/**
+ * Remove render-only fields from a draft's document attachments.
+ *
+ * The document upload response carries `text` - up to 10 KB of preview text
+ * for css, csv, htm, html, js and txt files - and the `svg_icon_download`
+ * markup. The composer stores the response whole in the draft, but a restore
+ * never reads either field. Kept, ten text-like attachments filled the
+ * per-draft cap on their own and the member was told to remove content they
+ * never typed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $draft Draft entry, activity (`document`) or forum (`bbp_document` JSON).
+ * @return array The draft without those fields.
+ */
+function bb_draft_strip_document_render_fields( $draft ) {
+	if ( empty( $draft['data'] ) || ! is_array( $draft['data'] ) ) {
+		return $draft;
+	}
+
+	$fields = array( 'text', 'svg_icon_download' );
+
+	if ( ! empty( $draft['data']['document'] ) && is_array( $draft['data']['document'] ) ) {
+		foreach ( $draft['data']['document'] as $index => $entry ) {
+			if ( is_array( $entry ) ) {
+				foreach ( $fields as $field ) {
+					unset( $draft['data']['document'][ $index ][ $field ] );
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $draft['data']['bbp_document'] ) && is_string( $draft['data']['bbp_document'] ) ) {
+		$entries = json_decode( $draft['data']['bbp_document'], true );
+
+		if ( ! empty( $entries ) && is_array( $entries ) ) {
+			$shed = false;
+
+			foreach ( $entries as $index => $entry ) {
+				foreach ( $fields as $field ) {
+					if ( is_array( $entry ) && array_key_exists( $field, $entry ) ) {
+						unset( $entries[ $index ][ $field ] );
+						$shed = true;
+					}
+				}
+			}
+
+			// Re-encoded only when something was removed (see the video
+			// entries in bb_draft_shed_preview_frames()).
+			if ( $shed ) {
+				$draft['data']['bbp_document'] = wp_json_encode( $entries );
 			}
 		}
 	}

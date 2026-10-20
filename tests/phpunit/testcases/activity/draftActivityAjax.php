@@ -822,6 +822,70 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		unset( $_POST['bb_draft_evicted_ack'] );
 		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The flag clears with the hold.' );
 	}
+
+	/**
+	 * Document preview text is not part of the draft (C-05). Ten text-like
+	 * attachments carry about 100 KB of it, which on its own filled the
+	 * per-draft cap and refused a draft holding two letters of text.
+	 */
+	public function test_document_preview_text_does_not_count_toward_the_cap() {
+		$user_id   = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$documents = array();
+
+		for ( $i = 0; $i < 10; $i++ ) {
+			$documents[] = array(
+				'id'                => $this->create_attachment_for( $user_id ),
+				'full_name'         => 'sheet-' . $i . '.csv',
+				'svg_icon'          => 'bb-icon-file-csv',
+				'svg_icon_download' => '<i class="bb-icon-download"></i>',
+				'text'              => str_repeat( 'a,b,c' . "\n", 2000 ),
+			);
+		}
+
+		$response = $this->invoke_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => 'draft_user',
+				'object'      => 'user',
+				'post_action' => 'update',
+				'data'        => array(
+					'content'  => 'hi',
+					'document' => $documents,
+				),
+			)
+		);
+
+		$this->assertTrue( $response['success'], 'The draft saves: the preview text is not the member\'s content.' );
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$this->assertCount( 10, $stored['data']['document'], 'Every attachment is kept.' );
+		$this->assertArrayNotHasKey( 'text', $stored['data']['document'][0], 'The preview text is not stored.' );
+		$this->assertArrayNotHasKey( 'svg_icon_download', $stored['data']['document'][0] );
+		$this->assertSame( 'bb-icon-file-csv', $stored['data']['document'][0]['svg_icon'], 'The icon a restore renders is kept.' );
+	}
+
+	/**
+	 * The forum composer stores its documents as JSON; the same fields go.
+	 */
+	public function test_forum_document_preview_text_is_stripped() {
+		$draft = bb_draft_strip_document_render_fields(
+			array(
+				'data' => array(
+					'bbp_document' => wp_json_encode(
+						array(
+							array(
+								'id'   => 5,
+								'text' => str_repeat( 'x', 10000 ),
+							),
+						)
+					),
+				),
+			)
+		);
+
+		$this->assertSame( array( array( 'id' => 5 ) ), json_decode( $draft['data']['bbp_document'], true ) );
+	}
+
 	/**
 	 * A draft request from a member with nothing held must not read the hold
 	 * option, or every drafting member adds a key to the site-wide

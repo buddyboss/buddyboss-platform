@@ -677,6 +677,7 @@ function bb_post_topic_reply_draft() {
 			// payload is the expensive step, and it used to run before any cap
 			// could refuse the request (M4).
 			$draft_topic_reply = bb_forums_strip_draft_data_urls( $draft_topic_reply );
+			$draft_topic_reply = bb_draft_strip_document_render_fields( $draft_topic_reply );
 			$raw_entry_size    = strlen( maybe_serialize( $draft_topic_reply ) );
 
 			if ( $raw_entry_size > bb_draft_max_size() ) {
