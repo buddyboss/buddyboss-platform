@@ -46,6 +46,7 @@ function bb_messages_sanitize_delay_time( $value ) {
  * @since BuddyBoss 3.0.0
  * @since BuddyBoss [BBVERSION] Schedules the event directly; bp_core_schedule_cron() cannot schedule after `bp_init`.
  *                               Schedules only while delayed emails are in effect (bb_check_delay_email_notification()).
+ *                               Clears every scheduled occurrence before rescheduling.
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings (JSON decoded).
@@ -71,10 +72,8 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 	// Always unschedule the existing cron event first.
 	// After the AJAX save, the old option value is already overwritten in the DB,
 	// so we cannot reliably compare old vs new; clearing and re-scheduling is safe.
-	$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
-	if ( $timestamp ) {
-		wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
-	}
+	// Clear every occurrence, not just the next one, so a duplicate event cannot survive the save.
+	wp_clear_scheduled_hook( 'bb_digest_email_notifications_hook' );
 
 	// Re-schedule the cron event only while delayed emails are in effect — the same check the
 	// immediate message emails use to stand down (it is false, or undefined, when the

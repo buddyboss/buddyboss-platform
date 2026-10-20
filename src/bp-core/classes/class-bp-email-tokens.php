@@ -1054,7 +1054,8 @@ class BP_Email_Tokens {
 		$group        = $tokens['group'] ?? false;
 
 		if ( ! empty( $message_id ) ) {
-			$thread_id = bb_get_thread_id_by_message_id( $message_id );
+			// Same row the sender is resolved from below, so this is a single query per message.
+			$thread_id = $this->bb_get_stored_message( (int) $message_id )['thread_id'];
 		}
 
 		if ( empty( $group ) ) {
@@ -1995,26 +1996,18 @@ class BP_Email_Tokens {
 	 * @param array     $tokens           Token array.
 	 *
 	 * @return string html for the output.
+	 *
+	 * @since BuddyBoss [BBVERSION] Reads the stored sender through the memoised message lookup.
 	 */
 	public function token__sender_name( $bp_email, $formatted_tokens, $tokens ) {
-		$output    = $tokens['sender.name'] ?? '';
-		$bp_prefix = bp_core_get_table_prefix();
+		$output = $tokens['sender.name'] ?? '';
 
 		if ( ! in_array( $bp_email->get( 'type' ), array( 'group-message-email', 'messages-unread' ), true ) || ! isset( $tokens['message_id'] ) ) {
 			return $output;
 		}
 
-		$settings = bp_email_get_appearance_settings();
-
-		global $wpdb;
-
-		$table_name = $bp_prefix . 'bp_messages_messages';
-		$sender_id  = $wpdb->get_var(
-			$wpdb->prepare(
-				'SELECT sender_id FROM `' . $table_name . '` WHERE id = %d',
-				$tokens['message_id']
-			)
-		);
+		$settings  = bp_email_get_appearance_settings();
+		$sender_id = $this->bb_get_stored_message( (int) $tokens['message_id'] )['sender_id'];
 
 		$sender_name = $tokens['sender.name'] ?? bp_core_get_user_displayname( $sender_id, $this->bb_get_receiver_user_id( $tokens ) );
 		if ( ! empty( $sender_id ) ) {
@@ -3125,7 +3118,7 @@ class BP_Email_Tokens {
 			return (int) $tokens['sender.id'];
 		}
 
-		$sender_id = ! empty( $tokens['message_id'] ) ? $this->bb_get_sender_id_by_message_id( (int) $tokens['message_id'] ) : 0;
+		$sender_id = ! empty( $tokens['message_id'] ) ? $this->bb_get_stored_message( (int) $tokens['message_id'] )['sender_id'] : 0;
 		if ( $sender_id > 0 ) {
 			return $sender_id;
 		}
@@ -3134,31 +3127,47 @@ class BP_Email_Tokens {
 	}
 
 	/**
-	 * Get the sender of a stored message, memoised for the request.
+	 * Get the thread and sender of a stored message, memoised for the request.
+	 *
+	 * token__message() needs both for the same message, so they are read in one query. A
+	 * message's thread and sender never change, so the memo needs no invalidation.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int $message_id Message ID.
 	 *
-	 * @return int Sender user ID, or 0 when the message does not exist.
+	 * @return array {
+	 *     @type int $thread_id Thread ID, or 0 when the message does not exist.
+	 *     @type int $sender_id Sender user ID, or 0 when the message does not exist.
+	 * }
 	 */
-	protected function bb_get_sender_id_by_message_id( $message_id ) {
-		static $senders = array();
+	protected function bb_get_stored_message( $message_id ) {
+		static $messages = array();
+
+		$empty = array(
+			'thread_id' => 0,
+			'sender_id' => 0,
+		);
 
 		if ( $message_id <= 0 ) {
-			return 0;
+			return $empty;
 		}
 
-		if ( ! isset( $senders[ $message_id ] ) ) {
+		if ( ! isset( $messages[ $message_id ] ) ) {
 			global $wpdb;
 
 			$table_name = bp_core_get_table_prefix() . 'bp_messages_messages';
 
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$senders[ $message_id ] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT sender_id FROM `{$table_name}` WHERE id = %d", $message_id ) );
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT thread_id, sender_id FROM `{$table_name}` WHERE id = %d", $message_id ) );
+
+			$messages[ $message_id ] = empty( $row ) ? $empty : array(
+				'thread_id' => (int) $row->thread_id,
+				'sender_id' => (int) $row->sender_id,
+			);
 		}
 
-		return $senders[ $message_id ];
+		return $messages[ $message_id ];
 	}
 
 }
