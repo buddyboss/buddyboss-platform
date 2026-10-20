@@ -2377,7 +2377,7 @@ msgstr "Gruppen"
 #: js/admin/settings/screens/DiscussionsListScreen.js:567
 #: js/admin/settings/screens/ForumsListScreen.js:644
 msgid "Discussions"
-msgstr "meine Diskussionen"
+msgstr "Diskussionen"
 
 #: bp-core/admin/bb-admin-settings-forums.php:224
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:222
@@ -4304,7 +4304,7 @@ msgstr ""
 #: js/admin/settings/screens/DiscussionTagsListScreen.js:500
 #: js/admin/settings/screens/GroupsListScreen.js:697
 msgid "Name"
-msgstr "Vorname"
+msgstr "Name"
 
 #: bp-core/bp-core-taxonomy.php:38
 msgid "BuddyBoss email types"
@@ -9533,7 +9533,7 @@ msgstr ""
 #: js/admin/settings/components/fields/InputButtonField.js:40
 #: js/admin/settings/components/fields/InputButtonField.js:80
 msgid "Connect"
-msgstr "Freundschaft anfragen"
+msgstr "Verbinden"
 
 #: bp-friends/bp-friends-template.php:871
 msgid "%s connection"
@@ -13567,7 +13567,7 @@ msgstr "eingeladen"
 #: js/admin/settings/screens/InvitesListScreen.js:578
 #: js/admin/settings/screens/InvitesListScreen.js:619
 msgid "Revoke Invite"
-msgstr "löschen"
+msgstr "Einladung zurücknehmen"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:199
 #: bp-templates/bp-nouveau/readylaunch/members/single/invites/sent-invites.php:203
@@ -33009,7 +33009,7 @@ msgstr ""
 msgid "BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-page.php:637
+#: bp-core/admin/bb-admin-settings-page.php:630
 msgid "JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser."
 msgstr ""
 

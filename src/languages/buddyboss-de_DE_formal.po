@@ -33247,7 +33247,7 @@ msgstr ""
 msgid "BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-page.php:637
+#: bp-core/admin/bb-admin-settings-page.php:630
 msgid "JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser."
 msgstr ""
 
