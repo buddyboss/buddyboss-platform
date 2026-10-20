@@ -1124,12 +1124,132 @@ function bb_schedule_event_on_update_notification_settings() {
 add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
 
 /**
+ * Re-create the delayed message email event when it is missing.
+ *
+ * With delayed emails on, new-message emails are only sent by this event, so a site
+ * without it sends none. Saving the Settings 2.0 Messages panel from 3.0.0 until [BBVERSION] removed
+ * the event without re-adding it, and nothing repaired it on upgrade. This checks on every
+ * load and schedules the event only when none exists, so an existing schedule is never
+ * changed. Only the root blog, where the delay settings live, gets the event.
+ *
+ * Runs on `bp_init` priority 11: the BuddyBoss cron intervals are registered on `bp_init`
+ * priority 10, and wp_schedule_event() rejects an unknown recurrence. The event is scheduled
+ * directly rather than through bp_core_schedule_cron(), so the BP_Core_Cron singleton is not
+ * built earlier than on release, which would start scheduling unrelated declared crons.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_messages_maybe_schedule_digest_email_notifications() {
+
+	// The settings live on the root blog and the save paths only (un)schedule there. On a
+	// network-activated multisite, an event on a subsite would process the same global
+	// messages and never be removed when the delay is turned off.
+	if ( ! bp_is_root_blog() ) {
+		return;
+	}
+
+	// A legacy settings save schedules or removes the event itself in this request
+	// (bb_schedule_event_on_update_notification_settings()), and the option still holds
+	// the old value until that save runs — so leave this request to it.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( isset( $_POST['time_delay_email_notification'] ) ) {
+		return;
+	}
+
+	if ( wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'bb_check_delay_email_notification' ) || ! bb_check_delay_email_notification() ) {
+		return;
+	}
+
+	$schedule = bb_get_delay_notification_time_by_minutes( bb_get_delay_email_notifications_time() );
+	if ( empty( $schedule['schedule_key'] ) ) {
+		return;
+	}
+
+	// The same per-hook veto BP_Core_Cron::schedule() applies to declared crons.
+	if ( ! apply_filters( 'bp_core_cron_schedule_bb_digest_email_notifications_hook', true ) ) {
+		return;
+	}
+
+	wp_schedule_event( time(), $schedule['schedule_key'], 'bb_digest_email_notifications_hook' );
+}
+add_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications', 11 );
+
+/**
+ * Record when delayed message emails are turned off and back on.
+ *
+ * While the delay is off, every new message is emailed at once and that email does not mark
+ * the message as sent for the digest. When the delay is turned back on, the save paths schedule
+ * the digest event to run straight away, and it looks back one whole delay window — so it would
+ * email those messages a second time (up to a day of them with the 24 hour delay).
+ * bb_digest_message_email_notifications() skips messages sent inside the last off period these
+ * two markers bound. Messages sent before the delay was turned off were never emailed, so they
+ * stay eligible.
+ *
+ * Hooked to the option update, so every save path (Settings 2.0, legacy settings, direct
+ * bp_update_option() calls) is covered, and it only fires when the stored value changes. The
+ * values are compared through the same filter bb_delay_email_notifications_enabled() applies,
+ * so nothing is recorded when a site forces the delay on or off with that filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $old_value Previous value of the delay option.
+ * @param mixed $value     New value of the delay option.
+ */
+function bb_messages_record_delay_email_notification_change( $old_value, $value ) {
+	/** This filter is documented in bp-notifications/bp-notifications-functions.php */
+	$was_enabled = (bool) apply_filters( 'bb_delay_email_notifications_enabled', $old_value );
+	/** This filter is documented in bp-notifications/bp-notifications-functions.php */
+	$is_enabled = (bool) apply_filters( 'bb_delay_email_notifications_enabled', $value );
+
+	if ( $was_enabled === $is_enabled ) {
+		return;
+	}
+
+	bp_update_option( $is_enabled ? 'bb_delay_email_notification_enabled_at' : 'bb_delay_email_notification_disabled_at', bp_core_current_time() );
+}
+add_action( 'update_option_delay_email_notification', 'bb_messages_record_delay_email_notification_change', 10, 2 );
+
+/**
+ * Record the off edge when the delay option is stored for the first time.
+ *
+ * Until the delay option is first saved it is absent and defaults to on, so the save that
+ * turns the delay off adds the option instead of updating it and the update hook never fires.
+ * Without this, bb_digest_message_email_notifications() would treat everything before the delay
+ * was turned back on as off, and skip messages that were still waiting for the digest.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option Option name.
+ * @param mixed  $value  Value of the added option.
+ */
+function bb_messages_record_delay_email_notification_added( $option, $value ) {
+	// The missing option reads as on (see bb_delay_email_notifications_enabled()).
+	bb_messages_record_delay_email_notification_change( 1, $value );
+}
+add_action( 'add_option_delay_email_notification', 'bb_messages_record_delay_email_notification_added', 10, 2 );
+
+/**
  * Prepare the email notification content.
  *
  * @since BuddyBoss 2.1.4
+ * @since BuddyBoss [BBVERSION] Sends nothing while delayed emails are not in effect, and skips
+ *                              messages sent while the delay was last turned off.
  */
 function bb_digest_message_email_notifications() {
 	global $wpdb;
+
+	// The digest only replaces the immediate new-message emails while delayed emails are in
+	// effect — the check messages_notification_new_message() and the group senders use to
+	// stand down. Otherwise (legacy preferences, delay off, Notifications component off) the
+	// immediate email has already been sent, and an event left scheduled would send it again.
+	if ( ! function_exists( 'bb_check_delay_email_notification' ) || ! bb_check_delay_email_notification() ) {
+		return;
+	}
+
 	$bp_prefix = bp_core_get_table_prefix();
 
 	// Get all defined time.
@@ -1143,9 +1263,21 @@ function bb_digest_message_email_notifications() {
 			$current_date = bp_core_current_time();
 			$start_date   = wp_date( 'Y-m-d H:i:s', strtotime( $current_date . ' -' . $db_delay_time . ' minutes' ), new DateTimeZone( 'UTC' ) );
 
+			// Skip messages sent while the delay was last turned off: they were emailed at once.
+			// Without an off marker (turned off before the markers existed) the whole time before
+			// it was turned back on counts as off. All values are UTC 'Y-m-d H:i:s', so string
+			// comparison orders them, and the fragment holds only prepared datetimes.
+			$off_period_sql = '';
+			$enabled_at     = (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' );
+			if ( '' !== $enabled_at && $enabled_at > $start_date ) {
+				$disabled_at    = (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' );
+				$off_start      = ( '' !== $disabled_at && $disabled_at <= $enabled_at ) ? $disabled_at : '1970-01-01 00:00:00';
+				$off_period_sql = $wpdb->prepare( ' AND ( m.date_sent < %s OR m.date_sent >= %s )', $off_start, $enabled_at );
+			}
+
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT m.*, r.user_id, r.unread_count FROM `{$bp_prefix}bp_messages_messages` AS m LEFT JOIN `{$bp_prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$bp_prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL ORDER BY m.thread_id, m.id ASC",
+					"SELECT m.*, r.user_id, r.unread_count FROM `{$bp_prefix}bp_messages_messages` AS m LEFT JOIN `{$bp_prefix}bp_messages_recipients` AS r ON m.thread_id = r.thread_id LEFT JOIN `{$bp_prefix}bp_messages_meta` AS meta1 ON ( m.id = meta1.message_id AND meta1.meta_key = 'bb_sent_digest_email' ) WHERE m.date_sent >= %s AND m.date_sent <= %s AND r.unread_count > %d AND r.is_deleted = %d AND m.sender_id != r.user_id AND r.is_hidden = %d AND meta1.message_id IS NULL{$off_period_sql} ORDER BY m.thread_id, m.id ASC",
 					$start_date,
 					$current_date,
 					0,
