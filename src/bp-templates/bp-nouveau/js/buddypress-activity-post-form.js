@@ -1818,7 +1818,8 @@ window.bp = window.bp || {};
 		 *
 		 * Activity keys are stored in this composer's own shape, forum inner
 		 * keys ("meta_key:inner_key") in the forum composer's shape. Each copy
-		 * is marked pending, because the server no longer holds it.
+		 * is marked pending, because the server no longer holds it, and a key
+		 * is acknowledged only once its copy is stored.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1842,34 +1843,40 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					bp.Nouveau.Activity.postForm.addEvictionAck( key );
+					var entry_rev = entry._draft_rev ? String( entry._draft_rev ) : '',
+						existing;
 
-					// A copy this browser already holds may be newer, so keep its
-					// content - but mark it pending, or another tab's composer
-					// close wipes what is now the only copy (V07).
-					if ( null !== localStorage.getItem( storage_key ) ) {
-						try {
-							var existing = JSON.parse( localStorage.getItem( storage_key ) );
-							if ( existing && 'object' === typeof existing ) {
-								existing.bb_draft_pending_sync = true;
-								localStorage.setItem( storage_key, JSON.stringify( existing ) );
-							}
-						} catch ( e ) {
-							// Unreadable copy: leave it to the composer's own repair.
-						}
-						return;
-					}
-
-					copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
-					if ( -1 !== String( key ).indexOf( ':' ) ) {
-						copy.bb_draft_owner = owner_id;
+					try {
+						existing = JSON.parse( localStorage.getItem( storage_key ) || 'null' );
+					} catch ( e ) {
+						existing = null;
 					}
 
 					try {
-						localStorage.setItem( storage_key, JSON.stringify( copy ) );
+						// Keep this browser's copy only when it is the handed-back
+						// revision or was built on it - it is then at least as new.
+						// Mark it pending, or another tab's composer close wipes
+						// what is now the only copy (V07). Any other copy is older
+						// than a save made elsewhere, so the handed-back entry wins.
+						if ( existing && 'object' === typeof existing && ( ! entry_rev || String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( bp.Nouveau.Activity.postForm.draftBaseFrom( existing ), entry_rev ) ) ) {
+							existing.bb_draft_pending_sync = true;
+							localStorage.setItem( storage_key, JSON.stringify( existing ) );
+						} else {
+							copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+							if ( -1 !== String( key ).indexOf( ':' ) ) {
+								copy.bb_draft_owner = owner_id;
+							}
+
+							localStorage.setItem( storage_key, JSON.stringify( copy ) );
+						}
 					} catch ( e ) {
-						// Over quota: nothing more this browser can keep.
+						// Over quota: not acknowledged, so the server keeps holding
+						// it and hands it back again on the next request.
+						return;
 					}
+
+					// Acknowledge only a copy this browser actually stored.
+					bp.Nouveau.Activity.postForm.addEvictionAck( key );
 				}
 			);
 		},

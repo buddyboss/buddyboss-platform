@@ -2766,8 +2766,10 @@ window.bp = window.bp || {};
 	 * Forum inner keys ("meta_key:inner_key") are stored in this composer's
 	 * shape, activity keys in the activity composer's shape. Each copy is
 	 * marked pending, because the server no longer holds it. A copy this
-	 * browser already holds keeps its content (it may be newer) but is marked
-	 * pending too, so no composer close wipes what is now the only copy.
+	 * browser already holds keeps its content only when it is the handed-back
+	 * revision or was built on it; it is marked pending too, so no composer
+	 * close wipes what is now the only copy. A key is acknowledged only once
+	 * its copy is stored.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -2792,27 +2794,39 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				acks.push( String( key ) );
+				var entry_rev = entry._draft_rev ? String( entry._draft_rev ) : '',
+					existing;
 
 				try {
-					if ( null !== localStorage.getItem( storage_key ) ) {
-						copy = JSON.parse( localStorage.getItem( storage_key ) );
-						if ( copy && 'object' === typeof copy ) {
-							copy.bb_draft_pending_sync = true;
-							localStorage.setItem( storage_key, JSON.stringify( copy ) );
-						}
-						return;
-					}
-
-					copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
-					if ( -1 !== String( key ).indexOf( ':' ) ) {
-						copy.bb_draft_owner = owner_id;
-					}
-
-					localStorage.setItem( storage_key, JSON.stringify( copy ) );
+					existing = JSON.parse( localStorage.getItem( storage_key ) || 'null' );
 				} catch ( e ) {
-					// Over quota or a corrupt copy: nothing more this browser can keep.
+					existing = null;
 				}
+
+				try {
+					// Keep this browser's copy only when it is the handed-back
+					// revision or was built on it - it is then at least as new.
+					// Any other copy is older than a save made elsewhere, so the
+					// handed-back entry wins.
+					if ( existing && 'object' === typeof existing && ( ! entry_rev || String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( bbDraftBaseFrom( existing ), entry_rev ) ) ) {
+						existing.bb_draft_pending_sync = true;
+						localStorage.setItem( storage_key, JSON.stringify( existing ) );
+					} else {
+						copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+						if ( -1 !== String( key ).indexOf( ':' ) ) {
+							copy.bb_draft_owner = owner_id;
+						}
+
+						localStorage.setItem( storage_key, JSON.stringify( copy ) );
+					}
+				} catch ( e ) {
+					// Over quota: not acknowledged, so the server keeps holding
+					// it and hands it back again on the next request.
+					return;
+				}
+
+				// Acknowledge only a copy this browser actually stored.
+				acks.push( String( key ) );
 			}
 		);
 
