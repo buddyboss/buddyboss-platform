@@ -787,15 +787,20 @@
 			padding: 0;
 			border: 0;
 
-			@media (max-width: 420px) {
-				// Stop this icon wrapper (and the emojionearea wrapper inside it)
-				// from being the picker's containing block - both collapse to
-				// button-width, which threw off horizontal centering. Falls back
-				// to #bb-rl-whats-new-toolbar, which is wide and stable.
+			@media (max-width: 680px) {
+				// Stop this icon wrapper from being the picker's containing block -
+				// it collapses to button-width, which threw off horizontal centering.
+				// Falls back to #bb-rl-whats-new-toolbar, centred with the footer.
 				position: static !important;
 
-				.emojionearea.emojionearea-standalone {
-					position: static !important;
+				// Static positioning moves the tooltip onto the "Aa" button, and
+				// phones show it on tap, so hide it at this size.
+				&[data-bp-tooltip] {
+
+					&:after,
+					&:before {
+						display: none;
+					}
 				}
 			}
 		}
@@ -804,10 +809,18 @@
 			top: inherit;
 			bottom: 40px;
 
-			@media (max-width: 420px) {
+			@media (max-width: 680px) {
 				left: 50% !important;
 				right: auto !important;
 				transform: translateX(-50%) !important;
+			}
+
+			// The default anchor sits the picker to the left of the emoji button, which
+			// runs off-screen until the post modal clears the picker's width. Open it
+			// to the right of the button instead, inside the modal.
+			@media (min-width: 681px) and (max-width: 1200px) {
+				left: 0;
+				right: auto;
 			}
 		}
 
