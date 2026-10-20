@@ -1214,6 +1214,25 @@ function bb_messages_record_delay_email_notification_change( $old_value, $value 
 add_action( 'update_option_delay_email_notification', 'bb_messages_record_delay_email_notification_change', 10, 2 );
 
 /**
+ * Record the off edge when the delay option is stored for the first time.
+ *
+ * Until the delay option is first saved it is absent and defaults to on, so the save that
+ * turns the delay off adds the option instead of updating it and the update hook never fires.
+ * Without this, bb_digest_message_email_notifications() would treat everything before the delay
+ * was turned back on as off, and skip messages that were still waiting for the digest.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option Option name.
+ * @param mixed  $value  Value of the added option.
+ */
+function bb_messages_record_delay_email_notification_added( $option, $value ) {
+	// The missing option reads as on (see bb_delay_email_notifications_enabled()).
+	bb_messages_record_delay_email_notification_change( 1, $value );
+}
+add_action( 'add_option_delay_email_notification', 'bb_messages_record_delay_email_notification_added', 10, 2 );
+
+/**
  * Prepare the email notification content.
  *
  * @since BuddyBoss 2.1.4

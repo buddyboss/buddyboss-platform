@@ -536,4 +536,70 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->assertSame( 1, $this->count_digest_events() );
 		$this->assertSame( 'bb_schedule_15min', wp_get_schedule( 'bb_digest_email_notifications_hook' ), 'the remaining event is the fresh one on the saved interval, not a stale leftover' );
 	}
+
+	/**
+	 * N1 — on a site that never stored the delay option (it defaults to on), the first save
+	 * that turns the delay off adds the option instead of updating it. That must still record
+	 * the off edge, or a message that was waiting for the digest is skipped when the delay is
+	 * turned back on.
+	 */
+	public function test_turning_off_a_never_stored_delay_records_the_off_edge() {
+		global $wpdb;
+
+		bp_update_option( 'time_delay_email_notification', 15 );
+		bp_delete_option( 'delay_email_notification' );
+		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
+		$this->assertTrue( bb_check_delay_email_notification(), 'precondition: the missing option defaults to delay on' );
+
+		$sender    = self::factory()->user->create();
+		$recipient = self::factory()->user->create();
+
+		$this->sent = array();
+		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
+
+		// Delay on by default: the message waits for the digest.
+		$thread_id = messages_new_message(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $recipient ),
+				'subject'    => 'S',
+				'content'    => 'waiting for the digest',
+			)
+		);
+		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
+
+		// Sent five minutes ago, before the delay is turned off.
+		$message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->update(
+			buddypress()->messages->table_name_messages,
+			array( 'date_sent' => gmdate( 'Y-m-d H:i:s', time() - 5 * MINUTE_IN_SECONDS ) ),
+			array( 'id' => $message_id )
+		);
+
+		// First ever save of the option: added, not updated.
+		bp_update_option( 'delay_email_notification', 0 );
+		$this->assertNotSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ), 'adding the option as off records the off edge' );
+
+		bp_update_option( 'delay_email_notification', 1 );
+		bb_digest_message_email_notifications();
+
+		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'the waiting message is still emailed' );
+		$this->assertSame( 'yes', bp_messages_get_meta( $message_id, 'bb_sent_digest_email' ) );
+	}
+
+	/**
+	 * Adding the delay option as on (its default) is not a change, so nothing is recorded.
+	 */
+	public function test_adding_the_delay_option_as_on_records_nothing() {
+		bp_delete_option( 'delay_email_notification' );
+		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
+
+		bp_update_option( 'delay_email_notification', 1 );
+
+		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ) );
+		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ) );
+	}
 }
