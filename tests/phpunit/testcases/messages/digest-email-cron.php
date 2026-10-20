@@ -373,4 +373,167 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 		$this->assertSame( array(), $this->sent, 'the digest must not email it a second time' );
 		$this->assertEmpty( bp_messages_get_meta( $message_id, 'bb_sent_digest_email' ), 'the message is left untouched' );
 	}
+
+	/**
+	 * Turning the delay off and back on records each edge; other changes leave the markers alone.
+	 */
+	public function test_turning_the_delay_off_and_on_records_each_edge() {
+		$datetime = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
+
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
+
+		bp_update_option( 'delay_email_notification', 0 );
+		$this->assertSame( 1, preg_match( $datetime, (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ) ), 'turning the delay off records a UTC datetime' );
+		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ), 'turning the delay off does not record an on edge' );
+
+		bp_update_option( 'delay_email_notification', 1 );
+		$this->assertSame( 1, preg_match( $datetime, (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ) ), 'turning the delay back on records a UTC datetime' );
+
+		bp_update_option( 'bb_delay_email_notification_enabled_at', '2000-01-01 00:00:00' );
+		bp_update_option( 'time_delay_email_notification', 30 );
+		$this->assertSame( '2000-01-01 00:00:00', bp_get_option( 'bb_delay_email_notification_enabled_at' ), 'other delay changes leave the markers alone' );
+	}
+
+	/**
+	 * Nothing is recorded when a site forces the delay on with the filter, because the
+	 * effective setting never changed and no message was emailed at once.
+	 */
+	public function test_no_marker_when_the_filter_forces_the_delay_on() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_delete_option( 'bb_delay_email_notification_enabled_at' );
+		bp_delete_option( 'bb_delay_email_notification_disabled_at' );
+		add_filter( 'bb_delay_email_notifications_enabled', '__return_true' );
+
+		bp_update_option( 'delay_email_notification', 0 );
+		bp_update_option( 'delay_email_notification', 1 );
+
+		remove_filter( 'bb_delay_email_notifications_enabled', '__return_true' );
+		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ) );
+		$this->assertSame( '', (string) bp_get_option( 'bb_delay_email_notification_enabled_at', '' ) );
+	}
+
+	/**
+	 * A message still waiting for the digest when the delay is turned off and back on was never
+	 * emailed, so the digest must still send it.
+	 */
+	public function test_digest_still_sends_a_message_that_was_waiting_when_the_delay_was_toggled() {
+		global $wpdb;
+
+		bp_update_option( 'time_delay_email_notification', 15 );
+		bp_update_option( 'delay_email_notification', 1 );
+
+		$sender    = self::factory()->user->create();
+		$recipient = self::factory()->user->create();
+
+		$this->sent = array();
+		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
+
+		// Delay on: the message waits for the digest.
+		$thread_id = messages_new_message(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $recipient ),
+				'subject'    => 'S',
+				'content'    => 'waiting for the digest',
+			)
+		);
+		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
+
+		// Sent two minutes ago, before the delay is turned off and on again.
+		$message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->update(
+			buddypress()->messages->table_name_messages,
+			array( 'date_sent' => gmdate( 'Y-m-d H:i:s', time() - 2 * MINUTE_IN_SECONDS ) ),
+			array( 'id' => $message_id )
+		);
+		bp_update_option( 'bb_delay_email_notification_disabled_at', gmdate( 'Y-m-d H:i:s', time() - MINUTE_IN_SECONDS ) );
+		bp_update_option( 'bb_delay_email_notification_enabled_at', bp_core_current_time() );
+
+		bb_digest_message_email_notifications();
+
+		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'the waiting message is still emailed' );
+		$this->assertSame( 'yes', bp_messages_get_meta( $message_id, 'bb_sent_digest_email' ) );
+	}
+
+	/**
+	 * M-1 — after the delay is turned back on, the digest must not email messages that were
+	 * already emailed at once while it was off, even though they are inside the delay window.
+	 */
+	public function test_digest_skips_messages_emailed_while_the_delay_was_off() {
+		global $wpdb;
+
+		bp_update_option( 'time_delay_email_notification', 15 );
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'delay_email_notification', 0 );
+		$this->assertNotSame( '', (string) bp_get_option( 'bb_delay_email_notification_disabled_at', '' ), 'precondition: the off edge is recorded' );
+
+		// Turned off two minutes ago, so the message below falls inside the off period.
+		bp_update_option( 'bb_delay_email_notification_disabled_at', gmdate( 'Y-m-d H:i:s', time() - 2 * MINUTE_IN_SECONDS ) );
+
+		$sender    = self::factory()->user->create();
+		$recipient = self::factory()->user->create();
+
+		$this->sent = array();
+		add_action( 'bp_send_email', array( $this, 'capture_email' ), 10, 3 );
+
+		// Delay off: the message is emailed at once.
+		$thread_id = messages_new_message(
+			array(
+				'sender_id'  => $sender,
+				'recipients' => array( $recipient ),
+				'subject'    => 'S',
+				'content'    => 'sent while the delay was off',
+			)
+		);
+		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'precondition: the immediate email went out' );
+
+		// Sent a minute ago, so it is inside the 15 minute window but before the delay comes back.
+		$old_message_id = (int) BP_Messages_Thread::get_last_message( (int) $thread_id )->id;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->update(
+			buddypress()->messages->table_name_messages,
+			array( 'date_sent' => gmdate( 'Y-m-d H:i:s', time() - MINUTE_IN_SECONDS ) ),
+			array( 'id' => $old_message_id )
+		);
+
+		bp_update_option( 'delay_email_notification', 1 );
+
+		// Positive control: a message sent after the delay is back waits for the digest.
+		$this->sent = array();
+		messages_new_message(
+			array(
+				'sender_id' => $sender,
+				'thread_id' => $thread_id,
+				'content'   => 'sent after the delay came back',
+			)
+		);
+		$this->assertSame( array(), $this->sent, 'precondition: no immediate email while delay is in effect' );
+
+		bb_digest_message_email_notifications();
+
+		$this->assertSame( array( array( 'messages-unread', $recipient ) ), $this->sent, 'exactly one email: the new message' );
+		$this->assertEmpty( bp_messages_get_meta( $old_message_id, 'bb_sent_digest_email' ), 'the already-emailed message is not picked up' );
+	}
+
+	/**
+	 * L-1 — the Settings 2.0 save clears every scheduled occurrence, so a duplicate event (two
+	 * concurrent repairs, a third-party scheduler) cannot survive it.
+	 */
+	public function test_settings_2_0_save_clears_duplicate_digest_events() {
+		bp_update_option( 'delay_email_notification', 1 );
+		bp_update_option( 'time_delay_email_notification', 15 );
+
+		// Two stale events on an old interval.
+		wp_schedule_event( time(), 'bb_schedule_1hour', 'bb_digest_email_notifications_hook' );
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_1hour', 'bb_digest_email_notifications_hook' );
+		$this->assertSame( 2, $this->count_digest_events(), 'precondition: two digest events' );
+
+		bb_messages_reschedule_cron_after_save( 'messages', array(), array( 'time_delay_email_notification' => 15 ) );
+
+		$this->assertSame( 1, $this->count_digest_events() );
+		$this->assertSame( 'bb_schedule_15min', wp_get_schedule( 'bb_digest_email_notifications_hook' ), 'the remaining event is the fresh one on the saved interval, not a stale leftover' );
+	}
 }
