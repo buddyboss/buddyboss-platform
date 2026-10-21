@@ -6166,6 +6166,82 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * D-03: an all_data sibling sheds document preview text like the primary.
+	 *
+	 * The upload response carries up to ~10 KB of preview `text` per text-like
+	 * document. The primary save dropped it before the size cap, but the
+	 * sibling merge the unload beacon uses did not, so it stored the text and
+	 * a sibling with ten or so CSV files was skipped as over the cap.
+	 */
+	public function test_d03_all_data_sibling_sheds_document_preview_text() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array(
+					'data_key'        => $primary_key,
+					'data'            => array( 'bbp_topic_content' => 'primary original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+				$sibling_key => array(
+					'data_key'        => $sibling_key,
+					'data'            => array( 'bbp_topic_content' => 'sibling original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		// Eleven documents with a 10,000-byte preview each: over the 100 KB
+		// per-draft cap with the previews, far under it without them.
+		$documents = array();
+		for ( $i = 0; $i < 11; $i++ ) {
+			$documents[] = array(
+				'id'                => $this->make_draft_attachment( $user_id ),
+				'name'              => 'sheet-' . $i . '.csv',
+				'text'              => str_repeat( 'x', 10000 ),
+				'svg_icon_download' => '<i class="bb-icon-download"></i>',
+			);
+		}
+
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'primary updated' ),
+			array(
+				$sibling_key => array(
+					'bbp_topic_content' => 'sibling updated',
+					'bbp_document'      => wp_json_encode( $documents ),
+				),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'sibling updated',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'Without its preview text the sibling fits the cap and must be stored.'
+		);
+
+		$stored_documents = json_decode( $stored[ $sibling_key ]['data']['bbp_document'], true );
+
+		$this->assertCount( 11, $stored_documents );
+
+		foreach ( $stored_documents as $stored_document ) {
+			$this->assertArrayNotHasKey( 'text', $stored_document, 'Document preview text must not be stored in a sibling draft.' );
+			$this->assertArrayNotHasKey( 'svg_icon_download', $stored_document );
+		}
+	}
+
+	/**
 	 * R1/Q15: the row trim must not re-serialize the whole row per eviction.
 	 *
 	 * `bb_forums_trim_draft_row()` asked "does it fit yet?" with

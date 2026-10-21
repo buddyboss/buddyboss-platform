@@ -1035,6 +1035,12 @@ function bb_post_topic_reply_draft() {
 				// primary path would strip, cap, or reject.
 				if ( isset( $existing_draft[ $data_key ] ) && is_array( $d_data ) ) {
 
+					// Shed document preview text first, as the primary entry
+					// does, so neither the size caps below nor the unchanged-entry
+					// check compare it - the stored copy never carries it.
+					$d_data = bb_draft_strip_document_render_fields( array( 'data' => $d_data ) );
+					$d_data = $d_data['data'];
+
 					// Re-authorize per sibling key. The unload beacon replays
 					// whatever the tab still holds, so an entry stored while the
 					// member could still see its forum may arrive long after that
