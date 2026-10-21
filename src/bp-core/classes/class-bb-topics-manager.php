@@ -373,10 +373,9 @@ class BB_Topics_Manager {
 		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
 		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
 
-		if ( empty( $slug ) ) {
+		// Only site moderators may set a slug. Everyone else gets the slug of the topic name, as REST does.
+		if ( empty( $slug ) || ! bp_current_user_can( 'bp_moderate' ) ) {
 			$slug = sanitize_title( $name );
-		} else {
-			$slug = sanitize_title( $slug );
 		}
 		if ( empty( $slug ) ) {
 			wp_send_json_error(
