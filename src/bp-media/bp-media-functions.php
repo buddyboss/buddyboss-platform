@@ -610,6 +610,7 @@ function bp_media_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved media uploads.
  */
 function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_media_upload_count, $bp_media_upload_activity_content;
@@ -671,6 +672,11 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 
 				// Check if a media is already saved.
 				if ( get_post_meta( $media['id'], 'bp_media_id', true ) ) {
+					continue;
+				}
+
+				// Only the user's own unsaved upload can become a new media.
+				if ( ! bb_user_can_adopt_attachment( $media['id'] ) ) {
 					continue;
 				}
 
@@ -2620,35 +2626,61 @@ function bp_media_default_scope( $scope = 'all' ) {
 
 }
 
+/**
+ * Return the thread id if media belongs to message.
+ *
+ * @since BuddyBoss 1.4.4
+ * @since BuddyBoss [BBVERSION] Matches the exact media ID in the current user's threads.
+ *
+ * @param int|string $media_id Media id to fetch the thread id.
+ *
+ * @return mixed|void
+ */
 function bp_media_get_thread_id( $media_id ) {
 
 	$thread_id = 0;
 
 	if ( bp_is_active( 'messages' ) ) {
-		$meta = array(
-			array(
-				'key'     => 'bp_media_ids',
-				'value'   => $media_id,
-				'compare' => 'LIKE',
-			),
-		);
+		$media_id        = absint( $media_id );
+		$media_object    = new BP_Media( $media_id );
+		$current_user_id = bp_loggedin_user_id();
 
-		// Check if there is already previously individual group thread created.
-		if( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
-			while ( bp_message_threads() ) {
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
-				if ( $thread_id ) {
-					break;
+		// Match the exact ID in the comma-separated ID list of the current user's threads.
+		if ( ! empty( $media_id ) && ! empty( $current_user_id ) ) {
+			$meta = array(
+				array(
+					'key'     => 'bp_media_ids',
+					'value'   => '(^|,)' . $media_id . '(,|$)',
+					'compare' => 'REGEXP',
+				),
+			);
+
+			// Check if there is already previously individual group thread created.
+			if ( bp_has_message_threads( array( 'user_id' => $current_user_id, 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				while ( bp_message_threads() ) {
+					bp_message_thread();
+					$thread_id = bp_get_message_thread_id();
+					if ( $thread_id ) {
+						break;
+					}
 				}
 			}
 		}
 
-		if ( empty( $thread_id ) ) {
-			$media_object = new BP_Media( $media_id );
-			if ( ! empty( $media_object->attachment_id ) ) {
-				$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
+		// Otherwise use the thread of the message the media is attached to, if the current user can access it.
+		if ( empty( $thread_id ) && ! empty( $media_object->message_id ) && ! empty( $current_user_id ) ) {
+			$message = new BP_Messages_Message( $media_object->message_id );
+			if (
+				! empty( $message->id ) &&
+				! empty( $message->thread_id ) &&
+				messages_check_thread_access( (int) $message->thread_id, $current_user_id )
+			) {
+				$thread_id = (int) $message->thread_id;
 			}
+		}
+
+		if ( empty( $thread_id ) && ! empty( $media_object->attachment_id ) ) {
+			$thread_id = get_post_meta( $media_object->attachment_id, 'thread_id', true );
 		}
 	}
 
@@ -3568,6 +3600,7 @@ function bp_media_delete_symlinks( $media ) {
  * Return the preview url of the file.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Uses a signed receiver segment.
  *
  * @param int    $media_id      Media ID.
  * @param int    $attachment_id Attachment ID.
@@ -3645,7 +3678,7 @@ function bp_media_get_preview_image_url( $media_id, $attachment_id, $size = 'bb-
 				$attachment_url = home_url( '/' ) . 'bb-media-preview/' . base64_encode( $attachment_id ) . '/' . base64_encode( $media_id ) . '/' . $size;
 
 				if ( 0 < $receiver_id ) {
-					$attachment_url = $attachment_url . '/' . base64_encode( 'receiver_' . $receiver_id );
+					$attachment_url = $attachment_url . '/' . bb_media_preview_receiver_segment( $receiver_id, $media_id, $attachment_id );
 				}
 			}
 		}
@@ -4116,7 +4149,13 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 			break;
 	}
 
-	if ( ! empty( $attachment_id ) && $attachment_id > 0 && $attach_id > 0 && (int) $attachment_id !== $attach_id ) {
+	// A stored attachment ID that is not positive can never match, so fail closed.
+	if (
+		! empty( $attachment_id ) &&
+		(int) $attachment_id > 0 &&
+		in_array( $type, array( 'photo', 'video', 'document' ), true ) &&
+		( (int) $attach_id <= 0 || (int) $attachment_id !== (int) $attach_id )
+	) {
 		$can_view     = false;
 		$can_download = false;
 		$can_add      = false;

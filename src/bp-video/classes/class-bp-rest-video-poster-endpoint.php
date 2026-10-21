@@ -347,6 +347,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	 * Create Video poster.
 	 *
 	 * @since          0.1.0
+	 * @since BuddyBoss [BBVERSION] Only accepts this video's previews or the user's uploaded thumbnails.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -386,12 +387,43 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$video                     = new BP_Video( $id );
+		$video = new BP_Video( $id );
+
+		// An existing attachment must be one of this video's previews or the user's uploaded thumbnail.
+		if ( ! empty( $request->get_param( 'attachment_id' ) ) && ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) || ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id ) ) ) {
+			return new WP_Error(
+				'bp_rest_attachment_invalid_id',
+				__( 'Invalid attachment ID.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
 		$auto_generated_thumbnails = (array) get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 
-		// New thumbnail upload time remove the previous one.
+		// New thumbnail upload time remove the previous one, but only when it is a trusted custom thumbnail of this video.
 		if ( empty( $request->get_param( 'attachment_id' ) ) && ! empty( $file ) && ! empty( $auto_generated_thumbnails['custom_image'] ) ) {
-			wp_delete_post( $auto_generated_thumbnails['custom_image'], true );
+			$previous_custom_image = absint( $auto_generated_thumbnails['custom_image'] );
+
+			/*
+			 * Stored meta is not trusted: only an uploaded thumbnail of the video owner, or one only this video uses, is deleted.
+			 * The owner check is the fallback for a Platform whose validator predates bb_video_can_delete_stored_thumbnail(),
+			 * and the delete is skipped on a Platform without the validator.
+			 */
+			if (
+				$previous_custom_image &&
+				$previous_custom_image !== (int) $attachment_id &&
+				function_exists( 'bb_video_is_valid_thumbnail_for_video' ) &&
+				bb_video_is_valid_thumbnail_for_video( $video, $previous_custom_image, false ) &&
+				(
+					function_exists( 'bb_video_can_delete_stored_thumbnail' )
+						? bb_video_can_delete_stored_thumbnail( $video, $previous_custom_image )
+						: (int) get_post_field( 'post_author', $previous_custom_image ) === (int) $video->user_id
+				)
+			) {
+				wp_delete_attachment( $previous_custom_image, true );
+			}
 		}
 
 		// Set the meta data after upload new custom thumbnail.
@@ -493,6 +525,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	 * Delete Video poster.
 	 *
 	 * @since          0.1.0
+	 * @since BuddyBoss [BBVERSION] Only deletes this video's custom thumbnail or the user's unsaved upload.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -513,6 +546,17 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		$video                     = new BP_Video( $id );
 		$auto_generated_thumbnails = get_post_meta( $video->attachment_id, 'video_preview_thumbnails', true );
 		$preview_thumbnail_id      = get_post_meta( $video->attachment_id, 'bp_video_preview_thumbnail_id', true );
+
+		// Only a custom uploaded thumbnail of this video can be deleted, never an arbitrary post.
+		if ( empty( $attachment_id ) || ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) || ! bb_video_is_valid_thumbnail_for_video( $video, $attachment_id, false ) ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_default_id',
+				__( 'Sorry, You have passed invalid poster ID.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
 
 		if (
 			isset( $auto_generated_thumbnails['default_images'] ) &&

@@ -2327,6 +2327,7 @@ function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $use
  * Send digest email into background.
  *
  * @since BuddyBoss 2.1.4
+ * @since BuddyBoss [BBVERSION] Derives each recipient's email type from their own unread count.
  *
  * @param array $recipient_messages Message array.
  * @param int   $thread_id          ID of the thread.
@@ -2375,6 +2376,9 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 		$group_id = 0;
 	}
 
+	// The thread-level digest type. Each recipient's email type is derived from it below.
+	$digest_email_type = $email_type;
+
 	$message_slug = bp_get_messages_slug();
 
 	static $moderation = array();
@@ -2415,6 +2419,11 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 			continue;
 		}
 
+		// Type this recipient's email by their own unread count. $email_type is shared
+		// across the loop, so a single-message recipient must not leave the single type
+		// in place for a later recipient who has several unread messages — that turned
+		// their digest into a one-message email and dropped the rest.
+		$email_type = $digest_email_type;
 		if ( 1 === count( $messages ) ) {
 			if ( ! empty( $group_id ) ) {
 				$email_type = 'group-message-email';
@@ -3407,4 +3416,88 @@ function bb_messages_migration() {
 			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
 		}
 	}
+}
+
+/**
+ * Whether the current user can delete an entire conversation for every participant.
+ *
+ * Allowed for site moderators and admins, and for a moderator who is switched into a
+ * member's account. The switched-from user must be a different user who can moderate
+ * and who passes the switching auth cookie check, because the old user cookie on its own
+ * only proves that some logged_in cookie is valid.
+ *
+ * The AJAX handler and the "Delete conversation" action in the templates both use this,
+ * so the action is only shown to users the server will accept.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if the current user can delete the whole conversation.
+ */
+function bb_messages_user_can_delete_conversation() {
+	$can_delete = bp_current_user_can( 'bp_moderate' );
+
+	if ( ! $can_delete && class_exists( 'BP_Core_Members_Switching' ) && method_exists( 'BP_Core_Members_Switching', 'authenticate_old_user' ) ) {
+		$old_user = BP_Core_Members_Switching::get_old_user();
+
+		$can_delete = (
+			$old_user instanceof WP_User &&
+			bp_loggedin_user_id() !== $old_user->ID &&
+			user_can( $old_user, 'bp_moderate' ) &&
+			BP_Core_Members_Switching::authenticate_old_user( $old_user )
+		);
+	}
+
+	/**
+	 * Filters whether the current user can delete an entire conversation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $can_delete Whether the current user can delete the whole conversation.
+	 */
+	return (bool) apply_filters( 'bb_messages_user_can_delete_conversation', $can_delete );
+}
+
+/**
+ * Get the attachment IDs that messages in other threads still use.
+ *
+ * A group message sent to members individually saves the same media, video and
+ * document IDs on the message in every member's own thread. When one of those
+ * threads is deleted, the items that another thread still shows must be kept.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $meta_key  Message meta key that holds the comma-separated item IDs.
+ *                          Accepts 'bp_media_ids', 'bp_video_ids' or 'bp_document_ids'.
+ * @param array  $item_ids  Item IDs to check.
+ * @param int    $thread_id ID of the thread being deleted. Its messages are ignored.
+ *
+ * @return array Item IDs that a message in another thread still uses.
+ */
+function bb_messages_get_attachment_ids_used_elsewhere( $meta_key, $item_ids, $thread_id ) {
+	global $wpdb;
+
+	$item_ids = wp_parse_id_list( $item_ids );
+
+	if ( empty( $item_ids ) || ! in_array( $meta_key, array( 'bp_media_ids', 'bp_video_ids', 'bp_document_ids' ), true ) ) {
+		return array();
+	}
+
+	$bp       = buddypress();
+	$used_ids = array();
+
+	foreach ( array_chunk( $item_ids, 100 ) as $item_ids_chunk ) {
+		$find_in_set = implode( ' OR ', array_fill( 0, count( $item_ids_chunk ), 'FIND_IN_SET( %d, mm.meta_value )' ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		$query = $wpdb->prepare( "SELECT mm.meta_value FROM {$bp->messages->table_name_meta} mm INNER JOIN {$bp->messages->table_name_messages} m ON m.id = mm.message_id WHERE mm.meta_key = %s AND m.thread_id <> %d AND m.is_deleted = 0 AND ( {$find_in_set} )", array_merge( array( $meta_key, (int) $thread_id ), $item_ids_chunk ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$meta_values = $wpdb->get_col( $query );
+
+		foreach ( $meta_values as $meta_value ) {
+			$used_ids = array_merge( $used_ids, wp_parse_id_list( $meta_value ) );
+		}
+	}
+
+	return array_values( array_intersect( $item_ids, $used_ids ) );
 }
