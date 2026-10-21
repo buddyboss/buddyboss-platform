@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-13 13:25:59+00:00\n"
+"POT-Creation-Date: 2026-10-21 05:57:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1295,7 +1295,7 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:731
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1015
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1197
-#: bp-core/classes/class-bb-topics-manager.php:1877
+#: bp-core/classes/class-bb-topics-manager.php:1961
 msgid "Item ID is required."
 msgstr ""
 
@@ -3546,11 +3546,11 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-topics-manager.php:184
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1645
-#: bp-core/classes/class-bb-topics-manager.php:830
-#: bp-core/classes/class-bb-topics-manager.php:1490
-#: bp-core/classes/class-bb-topics-manager.php:1569
-#: bp-core/classes/class-bb-topics-manager.php:1725
-#: bp-core/classes/class-bb-topics-manager.php:1853
+#: bp-core/classes/class-bb-topics-manager.php:908
+#: bp-core/classes/class-bb-topics-manager.php:1574
+#: bp-core/classes/class-bb-topics-manager.php:1655
+#: bp-core/classes/class-bb-topics-manager.php:1815
+#: bp-core/classes/class-bb-topics-manager.php:1937
 msgid "Topic ID is required."
 msgstr ""
 
@@ -7427,11 +7427,11 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-moderation-ajax.php:87
 #: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:72
 #: bp-core/classes/class-bb-telemetry.php:1251
-#: bp-core/classes/class-bb-topics-manager.php:301
-#: bp-core/classes/class-bb-topics-manager.php:1479
-#: bp-core/classes/class-bb-topics-manager.php:1558
-#: bp-core/classes/class-bb-topics-manager.php:1714
-#: bp-core/classes/class-bb-topics-manager.php:2034
+#: bp-core/classes/class-bb-topics-manager.php:355
+#: bp-core/classes/class-bb-topics-manager.php:1563
+#: bp-core/classes/class-bb-topics-manager.php:1644
+#: bp-core/classes/class-bb-topics-manager.php:1804
+#: bp-core/classes/class-bb-topics-manager.php:2118
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -16577,8 +16577,8 @@ msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:376
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:711
-#: bp-core/classes/class-bb-topics-manager.php:312
-#: bp-core/classes/class-bb-topics-manager.php:437
+#: bp-core/classes/class-bb-topics-manager.php:366
+#: bp-core/classes/class-bb-topics-manager.php:515
 msgid "Topic name is required."
 msgstr ""
 
@@ -16590,8 +16590,8 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:717
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:983
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1177
-#: bp-core/classes/class-bb-topics-manager.php:837
-#: bp-core/classes/class-bb-topics-manager.php:1869
+#: bp-core/classes/class-bb-topics-manager.php:915
+#: bp-core/classes/class-bb-topics-manager.php:1953
 msgid "Item type is required."
 msgstr ""
 
@@ -16610,6 +16610,7 @@ msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:432
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:748
+#: bp-core/classes/class-bb-topics-manager.php:410
 msgid "Topic name not found in activity topics."
 msgstr ""
 
@@ -16666,7 +16667,7 @@ msgid "Invalid permission type for group topics. Must be one of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:778
-#: bp-core/classes/class-bb-topics-manager.php:658
+#: bp-core/classes/class-bb-topics-manager.php:736
 msgid "You cannot assign or update a global topic under a group."
 msgstr ""
 
@@ -16705,7 +16706,7 @@ msgid "You cannot delete a topic for this group."
 msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1144
-#: bp-core/classes/class-bb-topics-manager.php:2076
+#: bp-core/classes/class-bb-topics-manager.php:2160
 msgid "Failed to update topic order."
 msgstr ""
 
@@ -16864,90 +16865,90 @@ msgstr ""
 #. translators: %s: Topic name
 #. translators: %s: topic name
 #: bp-core/classes/class-bb-topics-manager.php:169
-#: bp-core/classes/class-bb-topics-manager.php:1592
+#: bp-core/classes/class-bb-topics-manager.php:1674
 #, php-format
 msgid "Deleting \"%s\"?"
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:333
+#: bp-core/classes/class-bb-topics-manager.php:383
 msgid "Please enter a valid topic name."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:470
-#: bp-core/classes/class-bb-topics-manager.php:700
+#: bp-core/classes/class-bb-topics-manager.php:548
+#: bp-core/classes/class-bb-topics-manager.php:778
 msgid "This topic name is already in use. Please enter a unique topic name."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:484
+#: bp-core/classes/class-bb-topics-manager.php:562
 msgid "Maximum number of topics (20) has been reached."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:571
-#: bp-core/classes/class-bb-topics-manager.php:768
+#: bp-core/classes/class-bb-topics-manager.php:649
+#: bp-core/classes/class-bb-topics-manager.php:846
 msgid "Topic relationship not found."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:849
+#: bp-core/classes/class-bb-topics-manager.php:927
 msgid "Invalid item type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:856
+#: bp-core/classes/class-bb-topics-manager.php:934
 msgid "Invalid permission type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:890
+#: bp-core/classes/class-bb-topics-manager.php:968
 msgid "Failed to add topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1041
+#: bp-core/classes/class-bb-topics-manager.php:1119
 msgid "Failed to update topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1588
+#: bp-core/classes/class-bb-topics-manager.php:1670
 msgid "Deleting"
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1735
+#: bp-core/classes/class-bb-topics-manager.php:1824
 msgid "Migrate topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1813
+#: bp-core/classes/class-bb-topics-manager.php:1897
 msgid "Failed to delete topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1818
+#: bp-core/classes/class-bb-topics-manager.php:1902
 msgid "Topic migrated successfully."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1861
+#: bp-core/classes/class-bb-topics-manager.php:1945
 msgid "New topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1890
+#: bp-core/classes/class-bb-topics-manager.php:1974
 msgid "Item type is invalid."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1899
+#: bp-core/classes/class-bb-topics-manager.php:1983
 msgid "Old topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1908
+#: bp-core/classes/class-bb-topics-manager.php:1992
 msgid "New topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1940
+#: bp-core/classes/class-bb-topics-manager.php:2024
 msgid "Failed to migrate topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1954
+#: bp-core/classes/class-bb-topics-manager.php:2038
 msgid "Failed to get new topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2045
+#: bp-core/classes/class-bb-topics-manager.php:2129
 msgid "No topic order provided."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2074
+#: bp-core/classes/class-bb-topics-manager.php:2158
 msgid "Topic order updated successfully."
 msgstr ""
 

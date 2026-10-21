@@ -387,11 +387,14 @@ class BB_Topics_Manager {
 		}
 
 		// Group organizers may only pick existing activity topics when the group topics option says so.
+		// Editing a group topic without changing it (for example its permission only) is still allowed.
+		$previous_topic = ! empty( $previous_topic_id ) ? $this->bb_get_topic_by( 'id', $previous_topic_id ) : null;
 		if (
 			'groups' === $item_type &&
 			! bp_current_user_can( 'bp_moderate' ) &&
 			function_exists( 'bb_get_group_activity_topic_options' ) &&
-			'only_from_activity_topics' === bb_get_group_activity_topic_options()
+			'only_from_activity_topics' === bb_get_group_activity_topic_options() &&
+			! ( $previous_topic && $previous_topic->slug === $slug )
 		) {
 			$activity_topic = $this->bb_get_topics(
 				array(
