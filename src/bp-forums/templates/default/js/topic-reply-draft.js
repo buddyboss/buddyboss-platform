@@ -103,6 +103,7 @@ window.bp = window.bp || {};
 			this.topic_reply_local_interval = false;
 			this.topic_reply_ajax_interval  = false;
 			this.draft_ajax_request         = null;
+			this.draft_inflight             = null;
 			this.is_topic_reply_form_submit = false;
 			this.draft_content_changed      = false;
 			this.all_draft_data             = {};
@@ -1215,6 +1216,16 @@ window.bp = window.bp || {};
 				draft_base = this.draftBaseFor( draft_key ),
 				draft_acks = bbDraftGetAcks();
 
+			// A save of this key still in flight may be stored even when the
+			// next one cancels it - PHP finishes a request it already received -
+			// so keep its revision an acceptable stored version. Otherwise this
+			// save is refused as a conflict with the member's own earlier save
+			// (D-01).
+			if ( this.draft_inflight && this.draft_inflight.key === draft_key ) {
+				draft_base                       = _.uniq( draft_base.concat( [ this.draft_inflight.rev ] ) ).slice( -8 );
+				this.draft_base_map[ draft_key ] = draft_base.slice( 0 );
+			}
+
 			if ( ! is_discard_request ) {
 				this.topic_reply_draft._draft_rev = draft_rev;
 			}
@@ -1260,6 +1271,9 @@ window.bp = window.bp || {};
 					bb_draft_base: draft_base.join( ',' ),
 					bb_draft_evicted_ack: draft_acks.join( ',' )
 				};
+
+				var draft_inflight  = is_discard_request ? null : { key: draft_key, rev: draft_rev };
+				this.draft_inflight = draft_inflight;
 
 				// Send data to server.
 				this.draft_ajax_request = $.ajax(
@@ -1394,6 +1408,15 @@ window.bp = window.bp || {};
 									( BP_Nouveau.forums.draft_discard_failed_message || '' ) :
 									( BP_Nouveau.forums.draft_save_failed_message || '' )
 							);
+						}
+					}
+				);
+
+				// Settled, or cancelled after its revision was read above.
+				this.draft_ajax_request.always(
+					function () {
+						if ( self.draft_inflight === draft_inflight ) {
+							self.draft_inflight = null;
 						}
 					}
 				);

@@ -55,6 +55,7 @@ window.bp = window.bp || {};
 	bp.group_id              = 0;
 	bp.privacy               = 'public';
 	bp.draft_ajax_request    = null;
+	bp.draft_inflight        = null;
 	bp.old_draft_data        = false;
 	bp.draft_activity        = {
 		object: false,
@@ -2547,6 +2548,15 @@ window.bp = window.bp || {};
 				draft_base = bp.draft_base.slice( 0 ),
 				draft_acks = this.getEvictionAcks();
 
+			// A save of this key still in flight is cancelled below, but PHP
+			// finishes a request it already received, so it may be stored. Keep
+			// its revision an acceptable stored version, or this save is refused
+			// as a conflict with the member's own earlier save (D-01).
+			if ( bp.draft_inflight && bp.draft_inflight.key === bp.draft_activity.data_key ) {
+				draft_base    = _.uniq( draft_base.concat( [ bp.draft_inflight.rev ] ) ).slice( -8 );
+				bp.draft_base = draft_base.slice( 0 );
+			}
+
 			if ( 'delete' !== bp.draft_activity.post_action ) {
 				bp.draft_activity._draft_rev = draft_rev;
 			}
@@ -2637,6 +2647,9 @@ window.bp = window.bp || {};
 					draft_data.draft_activity.data.link_description = '';
 				}
 
+				var draft_inflight = isDiscardRequest ? null : { key: bp.draft_activity.data_key, rev: draft_rev };
+				bp.draft_inflight  = draft_inflight;
+
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
 					function ( response ) {
@@ -2722,6 +2735,17 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+
+				// Settled, or cancelled after its revision was read above.
+				if ( 'function' === typeof bp.draft_ajax_request.always ) {
+					bp.draft_ajax_request.always(
+						function () {
+							if ( bp.draft_inflight === draft_inflight ) {
+								bp.draft_inflight = null;
+							}
+						}
+					);
+				}
 
 			} else {
 				// Abort any in-flight autosave XHR before the unload beacon,
