@@ -825,6 +825,10 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 		// save video.
 		foreach ( $videos as $video ) {
 
+			// Reset per item, so an entry that is skipped (deleted, or not the
+			// user's) does not add the previous item's ID again.
+			$video_id = 0;
+
 			// Update video if existing.
 			if ( ! empty( $video['video_id'] ) ) {
 				$bp_video = new BP_Video( $video['video_id'] );
