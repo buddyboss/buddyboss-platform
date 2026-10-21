@@ -820,11 +820,13 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
-	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
-		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
-		}
+	// A chosen topic is checked even when a topic is not required. Nothing is checked or saved while topics are off.
+	$topics_enabled = bb_is_enabled_activity_topics();
+	$topic_id       = $topics_enabled && isset( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+	if ( $topics_enabled && bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
+	}
+	if ( ! empty( $topic_id ) ) {
 		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
 		if (
 			empty( $existing_topic_id ) ||

@@ -238,6 +238,10 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var newTopic = response.data.content.topic;
+				// The response puts the display label in permission_type. Keep the key we sent,
+				// or the next edit sends the label and the server stores it.
+				newTopic.permission_label = newTopic.permission_type;
+				newTopic.permission_type = data.permission_type;
 				// The response includes is_global_activity from bb_get_topic().
 				// Normalize to is_global for consistent rendering.
 				if ( newTopic.is_global_activity ) {
@@ -281,6 +285,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var updatedTopic = response.data.content.topic;
 				var originalTopicId = String( data.topic_id );
+				updatedTopic.permission_label = updatedTopic.permission_type;
+				updatedTopic.permission_type = data.permission_type;
 				setTopics( function ( prev ) {
 					return prev.map( function ( t ) {
 						if ( String( t.topic_id ) === originalTopicId ) {

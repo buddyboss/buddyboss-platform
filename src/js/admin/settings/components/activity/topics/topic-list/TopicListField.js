@@ -140,6 +140,8 @@ export function TopicListField( { field, value, values, onChange } ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var newTopic = response.data.content.topic;
+				// The response puts the display label in permission_type; keep the key we sent.
+				newTopic.permission_type = data.permission_type;
 				var updatedTopics = topics.concat( [ newTopic ] );
 				setTopics( updatedTopics );
 				onChange( field.name, updatedTopics );
@@ -170,6 +172,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var updatedTopic = response.data.content.topic;
+				updatedTopic.permission_type = data.permission_type;
 				// Compare using the original topic_id sent in the request,
 				// because editing a topic name may create a new topic_id.
 				var originalTopicId = String( data.topic_id );

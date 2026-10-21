@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-21 08:12:15+00:00\n"
+"POT-Creation-Date: 2026-10-21 10:44:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1295,7 +1295,7 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:731
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1015
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1197
-#: bp-core/classes/class-bb-topics-manager.php:2016
+#: bp-core/classes/class-bb-topics-manager.php:2037
 msgid "Item ID is required."
 msgstr ""
 
@@ -1450,11 +1450,11 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:253
 #: bp-activity/classes/class-bb-activity-readylaunch.php:299
 #: bp-core/bp-core-actions.php:1202
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1678
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1687
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1733
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1802
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1811
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1680
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1689
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1735
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1804
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1813
 msgid "Invalid request."
 msgstr ""
 
@@ -2369,7 +2369,7 @@ msgstr ""
 
 #: bp-activity/actions/delete.php:60
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:439
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1994
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1996
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -2458,7 +2458,7 @@ msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:950
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:952
 msgid "Please enter some content to post."
 msgstr ""
 
@@ -2940,7 +2940,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:6918
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2030
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1643
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1645
 msgid "You turned off commenting for this post"
 msgstr ""
 
@@ -3305,25 +3305,25 @@ msgid "reactions"
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:261
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1695
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1819
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1697
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1821
 msgid "Activity id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:269
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1703
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1705
 msgid "Parent comment id cannot be empty."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:289
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1723
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1725
 msgid "Sorry, You are not allowed to view more comments."
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:322
 #: bp-activity/classes/class-bb-activity-readylaunch.php:346
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1753
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1779
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1755
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1781
 msgid "No more items to load."
 msgstr ""
 
@@ -3546,11 +3546,11 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-topics-manager.php:184
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1645
-#: bp-core/classes/class-bb-topics-manager.php:963
-#: bp-core/classes/class-bb-topics-manager.php:1629
-#: bp-core/classes/class-bb-topics-manager.php:1710
-#: bp-core/classes/class-bb-topics-manager.php:1870
-#: bp-core/classes/class-bb-topics-manager.php:1992
+#: bp-core/classes/class-bb-topics-manager.php:984
+#: bp-core/classes/class-bb-topics-manager.php:1650
+#: bp-core/classes/class-bb-topics-manager.php:1731
+#: bp-core/classes/class-bb-topics-manager.php:1891
+#: bp-core/classes/class-bb-topics-manager.php:2013
 msgid "Topic ID is required."
 msgstr ""
 
@@ -4546,7 +4546,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:690
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1058
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:890
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:892
 msgid "You do not have permission to upload feature image."
 msgstr ""
 
@@ -4566,7 +4566,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:904
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1423
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1453
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1113
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1115
 msgid "Schedule activity settings disabled."
 msgstr ""
 
@@ -4576,8 +4576,8 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:925
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1445
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1082
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1102
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1084
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1104
 msgid "Please set a minimum schedule time for at least 1 hour later."
 msgstr ""
 
@@ -4650,8 +4650,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:1870
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2037
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3865
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1602
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1863
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1604
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1865
 #: bp-templates/bp-nouveau/includes/activity/functions.php:261
 #: bp-templates/bp-nouveau/includes/activity/functions.php:262
 #: bp-templates/bp-nouveau/includes/activity/functions.php:265
@@ -4674,12 +4674,12 @@ msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2028
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1641
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1643
 msgid "You turned on commenting for this post"
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:2032
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1645
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1647
 msgid "You are not permitted with the requested operation"
 msgstr ""
 
@@ -4970,17 +4970,17 @@ msgid "The action is required."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3856
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1896
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1898
 msgid "Notifications for this activity have been unmuted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3858
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1898
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1900
 msgid "Notifications for this activity have been muted."
 msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-endpoint.php:3860
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1900
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1902
 msgid "Notifications for this activity already been muted."
 msgstr ""
 
@@ -7428,10 +7428,10 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:72
 #: bp-core/classes/class-bb-telemetry.php:1251
 #: bp-core/classes/class-bb-topics-manager.php:356
-#: bp-core/classes/class-bb-topics-manager.php:1618
-#: bp-core/classes/class-bb-topics-manager.php:1699
-#: bp-core/classes/class-bb-topics-manager.php:1859
-#: bp-core/classes/class-bb-topics-manager.php:2173
+#: bp-core/classes/class-bb-topics-manager.php:1639
+#: bp-core/classes/class-bb-topics-manager.php:1720
+#: bp-core/classes/class-bb-topics-manager.php:1880
+#: bp-core/classes/class-bb-topics-manager.php:2194
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -16578,7 +16578,7 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:376
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:711
 #: bp-core/classes/class-bb-topics-manager.php:367
-#: bp-core/classes/class-bb-topics-manager.php:516
+#: bp-core/classes/class-bb-topics-manager.php:537
 msgid "Topic name is required."
 msgstr ""
 
@@ -16590,8 +16590,8 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:717
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:983
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1177
-#: bp-core/classes/class-bb-topics-manager.php:970
-#: bp-core/classes/class-bb-topics-manager.php:2008
+#: bp-core/classes/class-bb-topics-manager.php:991
+#: bp-core/classes/class-bb-topics-manager.php:2029
 msgid "Item type is required."
 msgstr ""
 
@@ -16610,7 +16610,7 @@ msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:432
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:748
-#: bp-core/classes/class-bb-topics-manager.php:411
+#: bp-core/classes/class-bb-topics-manager.php:432
 msgid "Topic name not found in activity topics."
 msgstr ""
 
@@ -16667,7 +16667,7 @@ msgid "Invalid permission type for group topics. Must be one of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:778
-#: bp-core/classes/class-bb-topics-manager.php:743
+#: bp-core/classes/class-bb-topics-manager.php:764
 msgid "You cannot assign or update a global topic under a group."
 msgstr ""
 
@@ -16706,7 +16706,7 @@ msgid "You cannot delete a topic for this group."
 msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1144
-#: bp-core/classes/class-bb-topics-manager.php:2215
+#: bp-core/classes/class-bb-topics-manager.php:2236
 msgid "Failed to update topic order."
 msgstr ""
 
@@ -16865,90 +16865,94 @@ msgstr ""
 #. translators: %s: Topic name
 #. translators: %s: topic name
 #: bp-core/classes/class-bb-topics-manager.php:170
-#: bp-core/classes/class-bb-topics-manager.php:1729
+#: bp-core/classes/class-bb-topics-manager.php:1750
 #, php-format
 msgid "Deleting \"%s\"?"
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:384
+#: bp-core/classes/class-bb-topics-manager.php:389
+msgid "Please choose who can post in this topic."
+msgstr ""
+
+#: bp-core/classes/class-bb-topics-manager.php:405
 msgid "Please enter a valid topic name."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:549
-#: bp-core/classes/class-bb-topics-manager.php:790
+#: bp-core/classes/class-bb-topics-manager.php:570
+#: bp-core/classes/class-bb-topics-manager.php:811
 msgid "This topic name is already in use. Please enter a unique topic name."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:563
+#: bp-core/classes/class-bb-topics-manager.php:584
 msgid "Maximum number of topics (20) has been reached."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:654
-#: bp-core/classes/class-bb-topics-manager.php:862
+#: bp-core/classes/class-bb-topics-manager.php:675
+#: bp-core/classes/class-bb-topics-manager.php:883
 msgid "Topic relationship not found."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:982
+#: bp-core/classes/class-bb-topics-manager.php:1003
 msgid "Invalid item type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:989
+#: bp-core/classes/class-bb-topics-manager.php:1010
 msgid "Invalid permission type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1023
+#: bp-core/classes/class-bb-topics-manager.php:1044
 msgid "Failed to add topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1174
+#: bp-core/classes/class-bb-topics-manager.php:1195
 msgid "Failed to update topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1725
+#: bp-core/classes/class-bb-topics-manager.php:1746
 msgid "Deleting"
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1879
+#: bp-core/classes/class-bb-topics-manager.php:1900
 msgid "Migrate topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1952
+#: bp-core/classes/class-bb-topics-manager.php:1973
 msgid "Failed to delete topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1957
+#: bp-core/classes/class-bb-topics-manager.php:1978
 msgid "Topic migrated successfully."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2000
+#: bp-core/classes/class-bb-topics-manager.php:2021
 msgid "New topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2029
+#: bp-core/classes/class-bb-topics-manager.php:2050
 msgid "Item type is invalid."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2038
+#: bp-core/classes/class-bb-topics-manager.php:2059
 msgid "Old topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2047
+#: bp-core/classes/class-bb-topics-manager.php:2068
 msgid "New topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2079
+#: bp-core/classes/class-bb-topics-manager.php:2100
 msgid "Failed to migrate topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2093
+#: bp-core/classes/class-bb-topics-manager.php:2114
 msgid "Failed to get new topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2184
+#: bp-core/classes/class-bb-topics-manager.php:2205
 msgid "No topic order provided."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2213
+#: bp-core/classes/class-bb-topics-manager.php:2234
 msgid "Topic order updated successfully."
 msgstr ""
 
@@ -35077,7 +35081,7 @@ msgid "Sorry, there was no activity found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:299
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1921
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1923
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
@@ -35097,92 +35101,92 @@ msgstr ""
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:826
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:827
 msgid "Please select a topic before posting."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:847
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:849
 msgid "The topic does not exist."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:853
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:861
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:855
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:863
 msgid "You do not have permission to post in this topic."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:965
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:967
 msgid "The comments are closed for the activity. The activity cannot be edited."
 msgstr ""
 
 #. translators: 1: string or media and medias. 2: group text.
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1005
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1028
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1007
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1030
 #, php-format
 msgid "You don't have access to upload %1$s%2$s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1006
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1008
 msgid "media"
 msgid_plural "medias"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1007
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1030
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1009
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1032
 msgid " inside group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1029
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1031
 msgid "document"
 msgid_plural "documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1091
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1093
 msgid "Please set a schedule date between next three months."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1123
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1125
 msgid "You don't have access to do a activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1136
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1138
 msgid "You don't have access to schedule the activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1187
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1189
 msgid "You don't have permission to schedule activity in particular group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1233
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1235
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1280
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1282
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1280
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1282
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1329
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1331
 msgid "This draft could not be saved."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1476
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1478
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1526
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1528
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1608
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1610
 msgid "There was a problem marking this operation. Close comments setting is disabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:1967
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:1969
 msgid "You don't have permission to delete scheduled activity."
 msgstr ""
 

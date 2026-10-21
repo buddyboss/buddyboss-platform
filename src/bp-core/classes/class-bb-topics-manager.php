@@ -372,7 +372,28 @@ class BB_Topics_Manager {
 
 		$name            = sanitize_text_field( wp_unslash( $_POST['name'] ) );
 		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
+		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : '';
+
+		// Only store a known permission key. A label such as "All group members" would lock members out of the topic.
+		if ( 'activity' === $item_type ) {
+			$permission_types = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_activity_topic_permission_type() : array();
+		} else {
+			$permission_types = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type() : array();
+		}
+		if ( ! empty( $permission_types ) ) {
+			if ( '' === $permission_type ) {
+				$permission_type = key( $permission_types );
+			} elseif ( ! isset( $permission_types[ $permission_type ] ) ) {
+				wp_send_json_error(
+					array(
+						'error' => __( 'Please choose who can post in this topic.', 'buddyboss' ),
+						'topic' => array(),
+					)
+				);
+			}
+		} elseif ( '' === $permission_type ) {
+			$permission_type = 'anyone';
+		}
 
 		// Only site moderators may set a slug. Everyone else gets the slug of the topic name, as REST does.
 		if ( empty( $slug ) || ! bp_current_user_can( 'bp_moderate' ) ) {
