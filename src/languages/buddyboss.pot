@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-21 05:57:57+00:00\n"
+"POT-Creation-Date: 2026-10-21 08:12:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1295,7 +1295,7 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:731
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1015
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1197
-#: bp-core/classes/class-bb-topics-manager.php:1961
+#: bp-core/classes/class-bb-topics-manager.php:2016
 msgid "Item ID is required."
 msgstr ""
 
@@ -3187,9 +3187,9 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1058
 #: bp-notifications/bp-notifications-template.php:805
 #: bp-notifications/bp-notifications-template.php:1056
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:61
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:62
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:63
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:64
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:65
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:16
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:81
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:356
@@ -3205,9 +3205,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2329
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:253
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:61
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:62
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:63
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:64
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:65
 #: bp-templates/bp-nouveau/readylaunch/document/actions.php:23
 #: bp-templates/bp-nouveau/readylaunch/document/activity-document-actions.php:71
 #: bp-templates/bp-nouveau/readylaunch/document/document-entry.php:319
@@ -3546,11 +3546,11 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-topics-manager.php:184
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1645
-#: bp-core/classes/class-bb-topics-manager.php:908
-#: bp-core/classes/class-bb-topics-manager.php:1574
-#: bp-core/classes/class-bb-topics-manager.php:1655
-#: bp-core/classes/class-bb-topics-manager.php:1815
-#: bp-core/classes/class-bb-topics-manager.php:1937
+#: bp-core/classes/class-bb-topics-manager.php:963
+#: bp-core/classes/class-bb-topics-manager.php:1629
+#: bp-core/classes/class-bb-topics-manager.php:1710
+#: bp-core/classes/class-bb-topics-manager.php:1870
+#: bp-core/classes/class-bb-topics-manager.php:1992
 msgid "Topic ID is required."
 msgstr ""
 
@@ -7320,9 +7320,9 @@ msgstr ""
 #: bp-forums/topics/template.php:55
 #: bp-forums/topics/template.php:2787
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:929
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:57
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:58
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:59
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:60
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:61
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:46
 #: bp-templates/bp-nouveau/buddypress/video/single-album.php:41
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1527
@@ -7333,9 +7333,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:477
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1582
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1613
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:57
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:58
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:59
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:60
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:61
 #: bp-templates/bp-nouveau/readylaunch/document/document-entry.php:276
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/profile-loop.php:35
 #: bp-templates/bp-nouveau/readylaunch/video/single-album.php:44
@@ -7427,11 +7427,11 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-moderation-ajax.php:87
 #: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:72
 #: bp-core/classes/class-bb-telemetry.php:1251
-#: bp-core/classes/class-bb-topics-manager.php:355
-#: bp-core/classes/class-bb-topics-manager.php:1563
-#: bp-core/classes/class-bb-topics-manager.php:1644
-#: bp-core/classes/class-bb-topics-manager.php:1804
-#: bp-core/classes/class-bb-topics-manager.php:2118
+#: bp-core/classes/class-bb-topics-manager.php:356
+#: bp-core/classes/class-bb-topics-manager.php:1618
+#: bp-core/classes/class-bb-topics-manager.php:1699
+#: bp-core/classes/class-bb-topics-manager.php:1859
+#: bp-core/classes/class-bb-topics-manager.php:2173
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -16577,8 +16577,8 @@ msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:376
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:711
-#: bp-core/classes/class-bb-topics-manager.php:366
-#: bp-core/classes/class-bb-topics-manager.php:515
+#: bp-core/classes/class-bb-topics-manager.php:367
+#: bp-core/classes/class-bb-topics-manager.php:516
 msgid "Topic name is required."
 msgstr ""
 
@@ -16590,8 +16590,8 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:717
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:983
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1177
-#: bp-core/classes/class-bb-topics-manager.php:915
-#: bp-core/classes/class-bb-topics-manager.php:1953
+#: bp-core/classes/class-bb-topics-manager.php:970
+#: bp-core/classes/class-bb-topics-manager.php:2008
 msgid "Item type is required."
 msgstr ""
 
@@ -16610,7 +16610,7 @@ msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:432
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:748
-#: bp-core/classes/class-bb-topics-manager.php:410
+#: bp-core/classes/class-bb-topics-manager.php:411
 msgid "Topic name not found in activity topics."
 msgstr ""
 
@@ -16667,7 +16667,7 @@ msgid "Invalid permission type for group topics. Must be one of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:778
-#: bp-core/classes/class-bb-topics-manager.php:736
+#: bp-core/classes/class-bb-topics-manager.php:743
 msgid "You cannot assign or update a global topic under a group."
 msgstr ""
 
@@ -16706,7 +16706,7 @@ msgid "You cannot delete a topic for this group."
 msgstr ""
 
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:1144
-#: bp-core/classes/class-bb-topics-manager.php:2160
+#: bp-core/classes/class-bb-topics-manager.php:2215
 msgid "Failed to update topic order."
 msgstr ""
 
@@ -16850,105 +16850,105 @@ msgstr ""
 msgid "Are you sure you want to delete \"%s\"? This cannot be undone."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:165
+#: bp-core/classes/class-bb-topics-manager.php:166
 msgid "An error occurred while updating topic order."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:166
+#: bp-core/classes/class-bb-topics-manager.php:167
 msgid "Create Topic"
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:167
+#: bp-core/classes/class-bb-topics-manager.php:168
 msgid "Edit Topic"
 msgstr ""
 
 #. translators: %s: Topic name
 #. translators: %s: topic name
-#: bp-core/classes/class-bb-topics-manager.php:169
-#: bp-core/classes/class-bb-topics-manager.php:1674
+#: bp-core/classes/class-bb-topics-manager.php:170
+#: bp-core/classes/class-bb-topics-manager.php:1729
 #, php-format
 msgid "Deleting \"%s\"?"
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:383
+#: bp-core/classes/class-bb-topics-manager.php:384
 msgid "Please enter a valid topic name."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:548
-#: bp-core/classes/class-bb-topics-manager.php:778
+#: bp-core/classes/class-bb-topics-manager.php:549
+#: bp-core/classes/class-bb-topics-manager.php:790
 msgid "This topic name is already in use. Please enter a unique topic name."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:562
+#: bp-core/classes/class-bb-topics-manager.php:563
 msgid "Maximum number of topics (20) has been reached."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:649
-#: bp-core/classes/class-bb-topics-manager.php:846
+#: bp-core/classes/class-bb-topics-manager.php:654
+#: bp-core/classes/class-bb-topics-manager.php:862
 msgid "Topic relationship not found."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:927
+#: bp-core/classes/class-bb-topics-manager.php:982
 msgid "Invalid item type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:934
+#: bp-core/classes/class-bb-topics-manager.php:989
 msgid "Invalid permission type."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:968
+#: bp-core/classes/class-bb-topics-manager.php:1023
 msgid "Failed to add topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1119
+#: bp-core/classes/class-bb-topics-manager.php:1174
 msgid "Failed to update topic relationship."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1670
+#: bp-core/classes/class-bb-topics-manager.php:1725
 msgid "Deleting"
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1824
+#: bp-core/classes/class-bb-topics-manager.php:1879
 msgid "Migrate topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1897
+#: bp-core/classes/class-bb-topics-manager.php:1952
 msgid "Failed to delete topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1902
+#: bp-core/classes/class-bb-topics-manager.php:1957
 msgid "Topic migrated successfully."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1945
+#: bp-core/classes/class-bb-topics-manager.php:2000
 msgid "New topic ID is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1974
+#: bp-core/classes/class-bb-topics-manager.php:2029
 msgid "Item type is invalid."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1983
+#: bp-core/classes/class-bb-topics-manager.php:2038
 msgid "Old topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:1992
+#: bp-core/classes/class-bb-topics-manager.php:2047
 msgid "New topic ID does not exist."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2024
+#: bp-core/classes/class-bb-topics-manager.php:2079
 msgid "Failed to migrate topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2038
+#: bp-core/classes/class-bb-topics-manager.php:2093
 msgid "Failed to get new topic."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2129
+#: bp-core/classes/class-bb-topics-manager.php:2184
 msgid "No topic order provided."
 msgstr ""
 
-#: bp-core/classes/class-bb-topics-manager.php:2158
+#: bp-core/classes/class-bb-topics-manager.php:2213
 msgid "Topic order updated successfully."
 msgstr ""
 
@@ -23231,7 +23231,7 @@ msgstr ""
 #: bp-messages/bp-messages-filters.php:1027
 #: bp-messages/bp-messages-filters.php:1029
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:62
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:52
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:54
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:152
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:75
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:262
@@ -23242,7 +23242,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:225
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:236
 #: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:103
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:52
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:54
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-thread.php:73
 #: bp-templates/bp-nouveau/readylaunch/groups/single/members-loop.php:256
 #: bp-templates/bp-nouveau/readylaunch/groups/single/members-loop.php:267
@@ -33173,8 +33173,8 @@ msgstr ""
 msgid "Mention someone"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:43
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:43
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:45
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:45
 msgid "Global"
 msgstr ""
 

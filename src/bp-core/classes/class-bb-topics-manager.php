@@ -162,6 +162,7 @@ class BB_Topics_Manager {
 				/* translators: %s: Topic name */
 				'delete_topic_confirm'         => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
 				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
+				'can_reorder_topics'           => bp_current_user_can( 'bp_moderate' ),
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
 				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
@@ -599,6 +600,10 @@ class BB_Topics_Manager {
 			$topic_id = $this->wpdb->insert_id;
 		} else {
 			$topic_id = $existing_slug->id;
+
+			if ( 'activity' === $r['item_type'] ) {
+				$this->bb_update_topic_name( $existing_slug, $r['name'] );
+			}
 		}
 
 		if ( empty( $r['topic_id'] ) && ! empty( $topic_id ) ) {
@@ -711,7 +716,7 @@ class BB_Topics_Manager {
 				'topic_id' => $previous_topic_id,
 			)
 		);
-		$is_global_activity = $previous_topic && isset( $previous_topic->is_global_activity ) ? $previous_topic->is_global_activity : false;
+		$is_global_activity = 'groups' === $item_type && $this->bb_is_topic_global( $previous_topic_id );
 
 		/**
 		 * Fires before a topic has been updated.
@@ -724,12 +729,14 @@ class BB_Topics_Manager {
 		 */
 		do_action( 'bb_topic_before_updated', $r, $previous_topic_id, $previous_topic );
 
-		// First, check if the new name exists in the bb_topics table.
-		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
-		if ( ! $existing_topic ) { // NO.
-			if ( $is_global_activity && 'groups' === $item_type ) {
+		// A group can change the permission of a global topic, but not rename it or swap it for another topic.
+		if ( $is_global_activity ) {
+			$previous_topic_row = $this->bb_get_topic_by( 'id', $previous_topic_id );
+			$new_slug           = ! empty( $slug ) ? $slug : sanitize_title( $name );
+
+			if ( ! $previous_topic_row || $previous_topic_row->slug !== $new_slug ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					unset( $r, $existing_topic, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
+					unset( $r, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
 
 					return new WP_Error(
 						'bb_topic_global_activity_group',
@@ -741,6 +748,11 @@ class BB_Topics_Manager {
 
 				return false;
 			}
+		}
+
+		// First, check if the new name exists in the bb_topics table.
+		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
+		if ( ! $existing_topic ) { // NO.
 			// Case: Name doesn't exist - create new topic.
 			$topic_data = $this->bb_add_topic(
 				array(
@@ -832,6 +844,10 @@ class BB_Topics_Manager {
 				);
 			}
 
+			if ( 'activity' === $item_type ) {
+				$this->bb_update_topic_name( $existing_topic, $name );
+			}
+
 			$topic_data = $this->bb_get_topic(
 				array(
 					'topic_id'  => $new_topic_id,
@@ -861,6 +877,45 @@ class BB_Topics_Manager {
 		do_action( 'bb_topic_after_updated', $topic_data, $r, $previous_topic_id, $previous_topic );
 
 		return $topic_data;
+	}
+
+	/**
+	 * Use the activity topic's name for a topic row that a group created first.
+	 *
+	 * Topic rows are shared by slug, so a group topic can create the row that a later
+	 * activity topic reuses. The activity topic is managed by the site admin and its
+	 * name is the one that should show everywhere.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $topic The row from the topics table.
+	 * @param string $name  The activity topic name.
+	 */
+	private function bb_update_topic_name( $topic, $name ) {
+		$name = sanitize_text_field( $name );
+
+		if ( empty( $topic->id ) || '' === $name || $topic->name === $name ) {
+			return;
+		}
+
+		$this->wpdb->update(
+			$this->topics_table,
+			array( 'name' => $name ),
+			array( 'id' => $topic->id ),
+			array( '%s' ),
+			array( '%d' )
+		);
+
+		wp_cache_delete( 'bb_topic_id_' . $topic->id, self::$topic_cache_group );
+		wp_cache_delete( 'bb_topic_slug_' . $topic->slug, self::$topic_cache_group );
+		wp_cache_delete( 'bb_topic_name_' . $topic->name, self::$topic_cache_group );
+
+		// Group topic lists cache the name per relationship, so clear the whole group.
+		if ( function_exists( 'wp_cache_supports' ) && wp_cache_supports( 'flush_group' ) ) {
+			wp_cache_flush_group( self::$topic_cache_group );
+		} else {
+			wp_cache_flush();
+		}
 	}
 
 	/**
