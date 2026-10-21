@@ -76,6 +76,14 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			add_action( 'bb_get_the_profile_field_options_select_html', array( $this, 'bb_wpml_profile_field_options_order' ), 10, 2 );
 
+			// Translate the Gender field's displayed value on the profile view page.
+			// The "BuddyPress Multilingual" bridge plugin translates radio/selectbox/checkbox/
+			// multiselectbox option values on view via `bp_get_the_profile_field_value`, but its
+			// switch statement has no `gender` case, so the Gender field silently falls through
+			// untranslated there (it is translated correctly in the edit-screen dropdown, via the
+			// separate `bp_get_the_profile_field_options_select_gender` filter that plugin also hooks).
+			add_filter( 'bp_get_the_profile_field_value', array( $this, 'bb_wpml_translate_gender_field_value' ), 9, 3 );
+
 			add_filter( 'bp_groups_get_where_conditions', array( $this, 'bb_wpml_groups_dir_search_where_conditions' ), 10, 2 );
 			add_filter( 'Bp_Search_Groups_sql', array( $this, 'bb_wpml_groups_search_global_sql' ), 10, 2 );
 
@@ -351,6 +359,79 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			}
 
 			return $html;
+		}
+
+		/**
+		 * Translate the Gender field's displayed value on the profile view page.
+		 *
+		 * The "BuddyPress Multilingual" bridge plugin (`class.xprofile.php`,
+		 * `translate_value_profile_view()`) already translates radio/selectbox/checkbox/
+		 * multiselectbox option values via this same filter, but its switch statement has
+		 * no `gender` case, so a Gender field's value is returned untranslated here even
+		 * though the option label is registered in WPML String Translation.
+		 *
+		 * Runs at priority 9, like the bridge, so the value is still unwrapped (before
+		 * `wpautop` at 10). The label is resolved the same way the bridge does it: the
+		 * option is matched by its original label and looked up through the
+		 * `wpml_translate_single_string` API under the bridge's own string name. Once the
+		 * bridge adds a `gender` case, the original label is no longer in the value, so
+		 * this becomes a no-op.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $value      The field value to display.
+		 * @param string $field_type The type of the field.
+		 * @param int    $field_id   ID of the field being rendered.
+		 *
+		 * @return string The value with the option label translated, if a translation exists.
+		 */
+		public function bb_wpml_translate_gender_field_value( $value, $field_type, $field_id = 0 ) {
+			if ( 'gender' !== $field_type || empty( $value ) || empty( $field_id ) || ! function_exists( 'bpml_sanitize_string_name' ) ) {
+				return $value;
+			}
+
+			$field = xprofile_get_field( (int) $field_id );
+			if ( empty( $field->id ) ) {
+				return $value;
+			}
+
+			// The stored label; $value may already be escaped or wrapped in a search link.
+			$raw_value = ( isset( $GLOBALS['field']->id, $GLOBALS['field']->data->value ) && (int) $GLOBALS['field']->id === (int) $field_id )
+				? $GLOBALS['field']->data->value
+				: $value;
+
+			foreach ( (array) $field->get_children() as $option ) {
+				if ( empty( $option->name ) || $option->name !== $raw_value ) {
+					continue;
+				}
+
+				// Same string name and context the bridge registers for each option label.
+				$string_name = sprintf( "profile field %d - option '%s' name", (int) $field_id, bpml_sanitize_string_name( $option->name, 30 ) );
+				$translated  = stripslashes( apply_filters( 'wpml_translate_single_string', $option->name, 'Buddypress Multilingual', $string_name ) );
+
+				if ( '' === $translated || $translated === $option->name ) {
+					break;
+				}
+
+				$translated = esc_html( $translated );
+
+				// Expected format is a search link: only change the link text, not its URL.
+				foreach ( array_unique( array( esc_html( $option->name ), $option->name ) ) as $label ) {
+					$linked = str_replace( ">{$label}</a>", ">{$translated}</a>", $value, $count );
+					if ( $count ) {
+						return $linked;
+					}
+
+					// Plain text value.
+					if ( $value === $label ) {
+						return $translated;
+					}
+				}
+
+				break;
+			}
+
+			return $value;
 		}
 
 		/**
