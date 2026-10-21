@@ -423,7 +423,10 @@ window.bp = window.bp || {};
 			}
 
 			this.topic_reply_draft.bb_draft_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
-			this.topic_reply_draft._draft_base    = this.draftBaseFor( this.topic_reply_draft.data_key );
+			// Text typed while the stored draft was still loading is based on
+			// nothing; recording the stored revision let the next page view save
+			// it over that draft without a conflict (D-02).
+			this.topic_reply_draft._draft_base    = this.draft_blocked_keys[ this.topic_reply_draft.data_key ] ? [ 'none' ] : this.draftBaseFor( this.topic_reply_draft.data_key );
 			this.topic_reply_draft._draft_local_at = Math.floor( Date.now() / 1000 );
 
 			if ( this.draft_pending_keys[ this.topic_reply_draft.data_key ] ) {
