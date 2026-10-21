@@ -9,8 +9,8 @@
  * required topic, duplicates, limit, rename/delete/migrate, old-slug redirects,
  * feed filtering and posting permissions.
  *
- * The group topic options live in Platform Pro, which is not loaded in this
- * suite, so the option-backed Pro wrappers are defined below when missing.
+ * The group topic options and permissions live in Platform Pro, which is not
+ * loaded in this suite, so the Pro functions they use are mirrored below when missing.
  */
 
 if ( ! function_exists( 'bb_is_enabled_group_activity_topics' ) ) {
@@ -36,6 +36,62 @@ if ( ! function_exists( 'bb_get_group_activity_topic_options' ) ) {
 	 */
 	function bb_get_group_activity_topic_options( $group_topic_options = 'only_from_activity_topics' ) {
 		return apply_filters( 'bb_get_group_activity_topic_options', bp_get_option( 'bb-group-activity-topics-options', $group_topic_options ) );
+	}
+}
+
+if ( ! function_exists( 'bb_group_activity_topic_permission_type' ) ) {
+	/**
+	 * Mirror of the Platform Pro function (includes/topics/bb-topics-functions.php).
+	 *
+	 * @param string $existing_permission_type Permission type to return on its own.
+	 *
+	 * @return array
+	 */
+	function bb_group_activity_topic_permission_type( $existing_permission_type = '' ) {
+		$permission_types = array(
+			'members' => 'All group members',
+			'mods'    => 'Organizers and Moderators Only',
+			'admins'  => 'Organizers Only',
+		);
+
+		if ( ! empty( $existing_permission_type ) && isset( $permission_types[ $existing_permission_type ] ) ) {
+			return array( $existing_permission_type => $permission_types[ $existing_permission_type ] );
+		}
+
+		return $permission_types;
+	}
+}
+
+if ( ! function_exists( 'bb_can_user_post_to_group_activity_topic' ) ) {
+	/**
+	 * Mirror of the Platform Pro function (includes/topics/bb-topics-functions.php).
+	 *
+	 * @param int $user_id  User ID.
+	 * @param int $group_id Group ID.
+	 * @param int $topic_id Topic ID.
+	 *
+	 * @return bool
+	 */
+	function bb_can_user_post_to_group_activity_topic( $user_id, $group_id, $topic_id ) {
+		$topic_permission = bb_topics_manager_instance()->bb_get_topic_permission_type(
+			array(
+				'topic_id'  => $topic_id,
+				'item_id'   => $group_id,
+				'item_type' => 'groups',
+			)
+		);
+
+		if ( groups_is_user_admin( $user_id, $group_id ) ) {
+			return true;
+		}
+		if ( groups_is_user_mod( $user_id, $group_id ) ) {
+			return in_array( $topic_permission, array( 'mods', 'members' ), true );
+		}
+		if ( groups_is_user_member( $user_id, $group_id ) ) {
+			return 'members' === $topic_permission;
+		}
+
+		return false;
 	}
 }
 
@@ -197,7 +253,11 @@ abstract class BB_Topics_Manager_TestCase extends BP_UnitTestCase {
 		$level = ob_get_level();
 		ob_start();
 		try {
-			$this->manager->$method();
+			if ( method_exists( $this->manager, $method ) ) {
+				$this->manager->$method();
+			} else {
+				call_user_func( $method );
+			}
 		} catch ( WPAjaxDieContinueException $e ) {
 			// Expected: the handler ended via wp_send_json_* or check_ajax_referer().
 		} catch ( WPAjaxDieStopException $e ) {
@@ -1065,6 +1125,331 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 
 		$this->assertContains( $tagged, array_map( 'intval', $ids ) );
 		$this->assertNotContains( $untagged, array_map( 'intval', $ids ) );
+	}
+
+	/**
+	 * Post an activity update through the nouveau AJAX handler and return the JSON reply.
+	 */
+	protected function post_update( $user_id, $post ) {
+		if ( ! function_exists( 'bp_nouveau_ajax_post_update' ) ) {
+			require_once BP_PLUGIN_DIR . 'bp-templates/bp-nouveau/includes/activity/ajax.php';
+		}
+
+		self::set_current_user( $user_id );
+		$post['_wpnonce_post_update'] = wp_create_nonce( 'post_update' );
+
+		return $this->ajax_with_post( 'bp_nouveau_ajax_post_update', $user_id, $post );
+	}
+
+	/**
+	 * Like ajax(), but the request body already carries its own nonce field.
+	 */
+	protected function ajax_with_post( $callable, $user_id, $post ) {
+		self::set_current_user( $user_id );
+		$_POST    = wp_slash( $post );
+		$_REQUEST = $_POST;
+
+		$this->last_response    = '';
+		$this->last_die_message = '';
+
+		$level = ob_get_level();
+		ob_start();
+		try {
+			call_user_func( $callable );
+		} catch ( WPAjaxDieContinueException $e ) {
+			// Expected.
+		} catch ( WPAjaxDieStopException $e ) {
+			$this->last_die_message = $e->getMessage();
+		}
+		if ( ob_get_level() > $level ) {
+			$this->last_response .= (string) ob_get_clean();
+		}
+
+		return json_decode( $this->last_response, true );
+	}
+
+	public function test_topic_permission_is_checked_when_topic_is_not_required() {
+		bp_update_option( 'bb_activity_topic_required', 0 );
+		self::set_current_user( $this->admin );
+		$restricted = $this->add_topic( 'Admins Only', 'activity', 0, 'mods_admins' );
+
+		$response = $this->post_update(
+			$this->member,
+			array(
+				'content'  => 'Posting into an admin-only topic.',
+				'object'   => 'user',
+				'topic_id' => $restricted,
+			)
+		);
+
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'You do not have permission to post in this topic.', $response['data']['message'] );
+	}
+
+	public function test_group_topic_permission_and_ownership_are_checked_when_topic_is_not_required() {
+		bp_update_option( 'bb_activity_topic_required', 0 );
+		self::set_current_user( $this->admin );
+		$organizers_only = $this->add_topic( 'Organizers Only Topic', 'groups', $this->own_group, 'admins' );
+
+		$response = $this->post_update(
+			$this->member,
+			array(
+				'content'  => 'Posting into an organizer-only group topic.',
+				'object'   => 'group',
+				'item_id'  => $this->own_group,
+				'topic_id' => $organizers_only,
+			)
+		);
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'You do not have permission to post in this topic.', $response['data']['message'] );
+
+		// Beta is linked to the other group only.
+		$response = $this->post_update(
+			$this->member,
+			array(
+				'content'  => 'Posting with another group topic.',
+				'object'   => 'group',
+				'item_id'  => $this->own_group,
+				'topic_id' => $this->beta,
+			)
+		);
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'The topic does not exist.', $response['data']['message'] );
+	}
+
+	/**
+	 * Messages the topic check in bp_nouveau_ajax_post_update() can send.
+	 */
+	protected function assert_not_refused_for_topic( $response, $message = '' ) {
+		$this->assertIsArray( $response, $message );
+		$error = isset( $response['data']['message'] ) ? $response['data']['message'] : '';
+		$this->assertNotContains(
+			$error,
+			array( 'Please select a topic before posting.', 'The topic does not exist.', 'You do not have permission to post in this topic.' ),
+			$message . ' ' . wp_json_encode( $response )
+		);
+		$this->assertTrue( $response['success'], $message . ' ' . wp_json_encode( $response ) );
+	}
+
+	/**
+	 * A member's activity tagged with a topic, by the member.
+	 */
+	protected function member_activity( $topic_id, $component = 'activity', $item_id = 0 ) {
+		bp_update_option( '_bp_enable_activity_edit', 1 );
+
+		$activity = self::factory()->activity->create(
+			array(
+				'component' => $component,
+				'type'      => 'activity_update',
+				'item_id'   => $item_id,
+				'user_id'   => $this->member,
+				'content'   => 'Original content',
+			)
+		);
+		bb_activity_topics_manager_instance()->bb_add_activity_topic_relationship(
+			array(
+				'topic_id'    => $topic_id,
+				'activity_id' => $activity,
+				'component'   => $component,
+				'item_id'     => $item_id,
+			)
+		);
+
+		return $activity;
+	}
+
+	/**
+	 * Restrict an activity topic to admins, as the site admin would after members used it.
+	 */
+	protected function restrict_activity_topic( $topic_id ) {
+		self::set_current_user( $this->admin );
+		$this->manager->bb_update_topic_relationship(
+			array(
+				'permission_type' => 'mods_admins',
+				'where'           => array( 'topic_id' => $topic_id, 'item_id' => 0, 'item_type' => 'activity' ),
+			)
+		);
+	}
+
+	public function data_topic_required() {
+		return array( 'not required' => array( 0 ), 'required' => array( 1 ) );
+	}
+
+	/**
+	 * @dataProvider data_topic_required
+	 */
+	public function test_edit_keeps_existing_topic_after_its_permission_changed( $required ) {
+		bp_update_option( 'bb_activity_topic_required', $required );
+		$activity = $this->member_activity( $this->alpha );
+		$this->restrict_activity_topic( $this->alpha );
+
+		$response = $this->post_update(
+			$this->member,
+			array( 'id' => $activity, 'content' => 'Edited content', 'object' => 'user', 'topic_id' => $this->alpha )
+		);
+
+		$this->assert_not_refused_for_topic( $response, 'Unchanged topic on edit' );
+		$this->assertSame( $this->alpha, $this->activity_topic( $activity ) );
+	}
+
+	/**
+	 * @dataProvider data_topic_required
+	 */
+	public function test_edit_without_topic_field_is_not_blocked( $required ) {
+		bp_update_option( 'bb_activity_topic_required', $required );
+		$activity = $this->member_activity( $this->alpha );
+
+		$response = $this->post_update( $this->member, array( 'id' => $activity, 'content' => 'Edited content', 'object' => 'user' ) );
+
+		$this->assert_not_refused_for_topic( $response, 'No topic_id posted (PROD-8796 isset guard)' );
+		$this->assertSame( $this->alpha, $this->activity_topic( $activity ) );
+	}
+
+	/**
+	 * @dataProvider data_topic_required
+	 */
+	public function test_edit_to_restricted_topic_is_refused( $required ) {
+		bp_update_option( 'bb_activity_topic_required', $required );
+		self::set_current_user( $this->admin );
+		$restricted = $this->add_topic( 'Admins Only', 'activity', 0, 'mods_admins' );
+		$activity   = $this->member_activity( $this->alpha );
+
+		$response = $this->post_update(
+			$this->member,
+			array( 'id' => $activity, 'content' => 'Edited content', 'object' => 'user', 'topic_id' => $restricted )
+		);
+
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'You do not have permission to post in this topic.', $response['data']['message'] );
+		$this->assertSame( $this->alpha, $this->activity_topic( $activity ) );
+	}
+
+	public function test_topics_off_ignores_topic_and_required_setting() {
+		bp_update_option( 'bb_activity_topic_required', 1 );
+		$activity = $this->member_activity( $this->alpha );
+		bp_update_option( 'bb_enable_activity_topics', 0 );
+
+		foreach ( array( 0, $this->beta ) as $topic_id ) {
+			$this->assert_not_refused_for_topic(
+				$this->post_update( $this->member, array( 'id' => $activity, 'content' => 'Edited while topics are off', 'object' => 'user', 'topic_id' => $topic_id ) ),
+				'Topics off, topic_id ' . $topic_id
+			);
+		}
+	}
+
+	public function test_edit_to_allowed_topic_and_removing_topic() {
+		bp_update_option( 'bb_activity_topic_required', 0 );
+		$activity = $this->member_activity( $this->alpha );
+
+		$this->assert_not_refused_for_topic(
+			$this->post_update( $this->member, array( 'id' => $activity, 'content' => 'Moved', 'object' => 'user', 'topic_id' => $this->gamma ) ),
+			'Change to an allowed topic'
+		);
+		$this->assertSame( $this->gamma, $this->activity_topic( $activity ) );
+
+		$this->assert_not_refused_for_topic(
+			$this->post_update( $this->member, array( 'id' => $activity, 'content' => 'No topic', 'object' => 'user', 'topic_id' => 0 ) ),
+			'Removing the topic when it is not required'
+		);
+
+		bp_update_option( 'bb_activity_topic_required', 1 );
+		$response = $this->post_update( $this->member, array( 'id' => $activity, 'content' => 'No topic', 'object' => 'user', 'topic_id' => 0 ) );
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'Please select a topic before posting.', $response['data']['message'] );
+	}
+
+	/**
+	 * @dataProvider data_topic_required
+	 */
+	public function test_group_edit_keeps_existing_topic_but_checks_a_new_one( $required ) {
+		bp_update_option( 'bb_activity_topic_required', $required );
+		self::set_current_user( $this->admin );
+		$custom          = $this->add_topic( 'Members Then Admins', 'groups', $this->own_group, 'members' );
+		$organizers_only = $this->add_topic( 'Organizers Only Topic', 'groups', $this->own_group, 'admins' );
+		$activity        = $this->member_activity( $custom, 'groups', $this->own_group );
+
+		// The organizer tightens the topic after the member posted.
+		$this->manager->bb_update_topic_relationship(
+			array(
+				'permission_type' => 'admins',
+				'where'           => array( 'topic_id' => $custom, 'item_id' => $this->own_group, 'item_type' => 'groups' ),
+			)
+		);
+
+		$this->assert_not_refused_for_topic(
+			$this->post_update( $this->member, array( 'id' => $activity, 'content' => 'Edited', 'object' => 'group', 'item_id' => $this->own_group, 'topic_id' => $custom ) ),
+			'Unchanged group topic on edit'
+		);
+		$this->assertSame( $custom, $this->activity_topic( $activity ) );
+
+		$response = $this->post_update( $this->member, array( 'id' => $activity, 'content' => 'Edited', 'object' => 'group', 'item_id' => $this->own_group, 'topic_id' => $organizers_only ) );
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'You do not have permission to post in this topic.', $response['data']['message'] );
+		$this->assertSame( $custom, $this->activity_topic( $activity ) );
+	}
+
+	public function data_topic_settings() {
+		return array(
+			'both, not required'     => array( 'allow_both', 0 ),
+			'both, required'         => array( 'allow_both', 1 ),
+			'create own, required'   => array( 'create_own_topics', 1 ),
+			'only activity, not req' => array( 'only_from_activity_topics', 0 ),
+		);
+	}
+
+	/**
+	 * Editing a group topic that already has posts keeps or moves those posts.
+	 *
+	 * @dataProvider data_topic_settings
+	 */
+	public function test_organizer_edits_topic_that_has_posts( $mode, $required ) {
+		bp_update_option( 'bb_activity_topic_required', $required );
+		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		self::set_current_user( $this->admin );
+		$custom   = $this->add_topic( 'Posts Custom', 'groups', $this->own_group );
+		$global   = $this->member_activity( $this->alpha, 'groups', $this->own_group );
+		$tagged   = $this->member_activity( $custom, 'groups', $this->own_group );
+		bp_update_option( 'bb-group-activity-topics-options', $mode );
+
+		// Permission-only edits keep every post on its topic.
+		$this->assert_success( $this->add_ajax( $this->organizer, array( 'name' => 'posts-custom', 'topic_id' => $custom, 'permission_type' => 'admins' ) ), 'custom permission' );
+		$this->assert_success( $this->add_ajax( $this->organizer, array( 'name' => 'alpha-topic', 'topic_id' => $this->alpha, 'permission_type' => 'mods' ) ), 'global permission' );
+		$this->assertSame( $custom, $this->activity_topic( $tagged ) );
+		$this->assertSame( $this->alpha, $this->activity_topic( $global ) );
+		$this->assertSame( 'admins', $this->relationship( $custom, 'groups', $this->own_group )->permission_type );
+
+		$rename = $this->add_ajax( $this->organizer, array( 'name' => 'Posts Renamed', 'topic_id' => $custom ) );
+		if ( 'only_from_activity_topics' === $mode ) {
+			// Renaming to a custom name is not possible in this mode; the post keeps its topic.
+			$this->assertFalse( $rename['success'] );
+			$this->assertSame( $custom, $this->activity_topic( $tagged ) );
+			return;
+		}
+
+		$this->assert_success( $rename, 'rename' );
+		$renamed = (int) $rename['data']['content']['topic']['topic_id'];
+		$this->assertNotSame( $custom, $renamed );
+		$this->assertSame( $renamed, $this->activity_topic( $tagged ), 'The post moves to the renamed topic.' );
+		$this->assertSame( $this->alpha, $this->activity_topic( $global ), 'Other posts are untouched.' );
+		$this->assertSame(
+			'posts-renamed',
+			$this->manager->bb_get_redirected_topic_slug( array( 'old_slug' => 'posts-custom', 'item_type' => 'groups', 'item_id' => $this->own_group ) )
+		);
+	}
+
+	public function test_permission_label_is_not_stored_as_permission_type() {
+		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		$custom = $this->add_topic( 'Label Custom', 'groups', $this->own_group );
+
+		foreach ( array( 'organizer' => $this->organizer, 'admin' => $this->admin ) as $who => $user_id ) {
+			$response = $this->add_ajax( $user_id, array( 'name' => 'label-custom', 'topic_id' => $custom, 'permission_type' => 'All group members' ) );
+
+			$this->assertFalse( $response['success'], $who );
+			$this->assertSame( 'Please choose who can post in this topic.', $response['data']['error'], $who );
+			$this->assertSame( 'members', $this->relationship( $custom, 'groups', $this->own_group )->permission_type, $who );
+		}
+
+		$this->assertFalse( $this->add_ajax( $this->admin, array( 'name' => 'Label Activity', 'item_type' => 'activity', 'item_id' => 0, 'permission_type' => 'Anyone' ) )['success'] );
 	}
 
 	public function test_admin_only_topic_cannot_be_used_by_member() {
