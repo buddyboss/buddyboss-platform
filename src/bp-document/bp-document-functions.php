@@ -599,6 +599,7 @@ function bp_document_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved document uploads.
  */
 function bp_document_add_handler( $documents = array(), $privacy = 'public', $content = '', $group_id = false, $folder_id = false ) {
 	global $bp_document_upload_count, $bp_document_upload_activity_content;
@@ -667,6 +668,11 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 
 				// Check if a document is already saved.
 				if ( get_post_meta( $document['id'], 'bp_document_id', true ) ) {
+					continue;
+				}
+
+				// Only the user's own unsaved upload can become a new document.
+				if ( ! bb_user_can_adopt_attachment( $document['id'] ) ) {
 					continue;
 				}
 
@@ -2661,15 +2667,21 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	global $wpdb, $bp;
 
-	if ( 0 === $document_id && '' === $title ) {
+	$document_id            = (int) $document_id;
+	$attachment_document_id = (int) $attachment_document_id;
+
+	if ( $document_id <= 0 || $attachment_document_id <= 0 || '' === $title ) {
 		return false;
 	}
 
-	if ( (int) $document_id > 0 ) {
-		$has_access = bp_document_user_can_edit( $document_id );
-		if ( ! $has_access ) {
-			return false;
-		}
+	if ( ! bp_document_user_can_edit( $document_id ) ) {
+		return false;
+	}
+
+	// Only the document's own file can be renamed, and the document can't be re-pointed to another attachment.
+	$current_document = new BP_Document( $document_id );
+	if ( empty( $current_document->id ) || (int) $current_document->attachment_id !== $attachment_document_id ) {
+		return false;
 	}
 
 	$file_name    = $title;
@@ -3826,36 +3838,53 @@ function bp_document_get_forum_id( $document_id ) {
  * @return mixed|void
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Matches the exact document ID in the current user's threads.
  */
 function bp_document_get_thread_id( $document_id ) {
 
 	$thread_id = 0;
 
 	if ( bp_is_active( 'messages' ) ) {
-		$meta = array(
-			array(
-				'key'     => 'bp_document_ids',
-				'value'   => $document_id,
-				'compare' => 'LIKE',
-			),
-		);
+		$document_id     = absint( $document_id );
+		$document_object = new BP_Document( $document_id );
+		$current_user_id = bp_loggedin_user_id();
 
-		// Check if there is already previously individual group thread created.
-		if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
-			while ( bp_message_threads() ) {
-				bp_message_thread();
-				$thread_id = bp_get_message_thread_id();
-				if ( $thread_id ) {
-					break;
+		// Match the exact ID in the comma-separated ID list of the current user's threads.
+		if ( ! empty( $document_id ) && ! empty( $current_user_id ) ) {
+			$meta = array(
+				array(
+					'key'     => 'bp_document_ids',
+					'value'   => '(^|,)' . $document_id . '(,|$)',
+					'compare' => 'REGEXP',
+				),
+			);
+
+			// Check if there is already previously individual group thread created.
+			if ( bp_has_message_threads( array( 'user_id' => $current_user_id, 'meta_query' => $meta ) ) ) { // phpcs:ignore
+				while ( bp_message_threads() ) {
+					bp_message_thread();
+					$thread_id = bp_get_message_thread_id();
+					if ( $thread_id ) {
+						break;
+					}
 				}
 			}
 		}
 
-		if ( empty( $thread_id ) ) {
-			$document_object = new BP_Document( $document_id );
-			if ( ! empty( $document_object->attachment_id ) ) {
-				$thread_id = get_post_meta( $document_object->attachment_id, 'thread_id', true );
+		// Otherwise use the thread of the message the document is attached to, if the current user can access it.
+		if ( empty( $thread_id ) && ! empty( $document_object->message_id ) && ! empty( $current_user_id ) ) {
+			$message = new BP_Messages_Message( $document_object->message_id );
+			if (
+				! empty( $message->id ) &&
+				! empty( $message->thread_id ) &&
+				messages_check_thread_access( (int) $message->thread_id, $current_user_id )
+			) {
+				$thread_id = (int) $message->thread_id;
 			}
+		}
+
+		if ( empty( $thread_id ) && ! empty( $document_object->attachment_id ) ) {
+			$thread_id = get_post_meta( $document_object->attachment_id, 'thread_id', true );
 		}
 	}
 

@@ -440,6 +440,7 @@ class BP_Messages_Thread {
 	 * Get all messages associated with a thread.
 	 *
 	 * @since BuddyPress 2.3.0
+	 * @since BuddyBoss [BBVERSION] Checks thread access before reading the cache and no longer caches denials.
 	 *
 	 * @param int  $thread_id The message thread ID.
 	 * @param null $before    Messages to get before a specific date.
@@ -449,17 +450,23 @@ class BP_Messages_Thread {
 	 */
 	public static function get_messages( $thread_id = 0, $before = null, $perpage = 10 ) {
 		$thread_id = (int) $thread_id;
+
+		/*
+		 * If the current user isn't a recipient, return an empty array.
+		 *
+		 * The check runs on every call, before the cache is read: the cache key is
+		 * shared by all users, so a cache hit must not skip it. Denials are not
+		 * cached, so they cannot blank the thread for its real recipients.
+		 */
+		if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			return array();
+		}
+
 		$cache_key = "{$thread_id}{$before}{$perpage}";
 		$messages  = wp_cache_get( $cache_key, 'bp_messages_threads' );
 
-		if ( false === $messages || ! is_array( $messages ) || static::$noCache ) {
-			// if current user isn't the recpient, then return empty array.
-			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
-
-				return array();
-			}
-
+		// An empty cached array may be a denial cached by an older version, so treat it as a miss.
+		if ( false === $messages || ! is_array( $messages ) || empty( $messages ) || static::$noCache ) {
 			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00';
 
 			if ( ! $before ) {
@@ -666,6 +673,7 @@ class BP_Messages_Thread {
 	 * @since BuddyPress 1.0.0
 	 * @since BuddyPress 2.7.0 The $user_id parameter was added. Previously the current user
 	 *              was always assumed.
+	 * @since BuddyBoss [BBVERSION] Deletes the meta of every message in the thread, not only the first.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread to mark messages as
@@ -812,10 +820,13 @@ class BP_Messages_Thread {
 			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query ); // db call ok; no-cache ok.
 
-			// Delete messages meta.
-			$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+			// Delete messages meta (one placeholder per ID; IN(%s) only matched the first ID).
+			$message_ids = array_filter( array_map( 'absint', (array) $message_ids ) );
+			if ( ! empty( $message_ids ) ) {
+				$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN (" . implode( ',', array_fill( 0, count( $message_ids ), '%d' ) ) . ')', $message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+			}
 
 			// Delete thread.
 			$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared

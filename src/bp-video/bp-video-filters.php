@@ -469,6 +469,7 @@ function bp_video_update_video_privacy( $album ) {
  * Save video when new topic or reply is saved
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved video uploads.
  *
  * @param int $post_id post id.
  */
@@ -525,6 +526,15 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 					continue;
 				}
 			}
+
+			// Only the user's own unsaved upload can become a new video.
+			if ( ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+				continue;
+			}
+
+			// The attachment ID is used in file paths, so keep the validated integer.
+			$attachment_id = absint( $attachment_id );
+			$video['id']   = $attachment_id;
 
 			$video_id = bp_video_add(
 				array(
@@ -689,6 +699,7 @@ function bb_messages_video_save( $attachment ) {
  * Attach video to the message object
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only attaches videos owned by the message sender.
  *
  * @param object $message message object.
  */
@@ -721,10 +732,16 @@ function bp_video_attach_video_to_message( &$message ) {
 
 				// Get media_id from the attachment ID.
 				$video_media_id = get_post_meta( $attachment_id, 'bp_video_id', true );
-				$video_ids[]    = $video_media_id;
 
 				// Attach already created media.
-				$video             = new BP_Video( $video_media_id );
+				$video = new BP_Video( $video_media_id );
+
+				// Only the sender's own video can be attached to the message.
+				if ( empty( $video_media_id ) || empty( $video->id ) || ! in_array( (int) $video->user_id, array( (int) $message->sender_id, bp_loggedin_user_id() ), true ) ) {
+					continue;
+				}
+
+				$video_ids[]       = $video_media_id;
 				$video->privacy    = 'message';
 				$video->message_id = $message->id;
 				$video->save();
@@ -732,7 +749,7 @@ function bp_video_attach_video_to_message( &$message ) {
 				if ( ! empty( $attachment['js_preview'] ) ) {
 					$video_array               = json_decode( json_encode( $video ), true );
 					$video_array['js_preview'] = $attachment['js_preview'];
-					$video_array['id']         = $attachment_id;
+					$video_array['id']         = (int) $video->attachment_id;
 					bp_video_preview_image_by_js( $video_array );
 				}
 
@@ -761,19 +778,31 @@ function bp_video_attach_video_to_message( &$message ) {
  */
 function bp_video_messages_delete_attached_video( $thread_id, $message_ids ) {
 
-	if ( ! empty( $message_ids ) ) {
-		foreach ( $message_ids as $message_id ) {
+	if ( empty( $message_ids ) ) {
+		return;
+	}
 
-			// get video ids attached to message.
-			$video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+	$video_ids = array();
 
-			if ( ! empty( $video_ids ) ) {
-				$video_ids = explode( ',', $video_ids );
-				foreach ( $video_ids as $video_id ) {
-					bp_video_delete( array( 'id' => $video_id ) );
-				}
-			}
+	foreach ( $message_ids as $message_id ) {
+
+		// get video ids attached to message.
+		$message_video_ids = bp_messages_get_meta( $message_id, 'bp_video_ids', true );
+
+		if ( ! empty( $message_video_ids ) ) {
+			$video_ids = array_merge( $video_ids, wp_parse_id_list( $message_video_ids ) );
 		}
+	}
+
+	$video_ids = array_unique( array_filter( $video_ids ) );
+
+	// Keep the items that a message in another thread still uses, such as a group message sent to members individually.
+	if ( ! empty( $video_ids ) && function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
+		$video_ids = array_diff( $video_ids, bb_messages_get_attachment_ids_used_elsewhere( 'bp_video_ids', $video_ids, $thread_id ) );
+	}
+
+	foreach ( $video_ids as $video_id ) {
+		bp_video_delete( array( 'id' => $video_id ) );
 	}
 }
 
