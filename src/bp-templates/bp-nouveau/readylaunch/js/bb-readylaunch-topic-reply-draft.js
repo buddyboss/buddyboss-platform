@@ -641,6 +641,35 @@ window.bp = window.bp || {};
 		};
 
 		/**
+		 * Resolve the MediumEditor instance that owns a composer element.
+		 *
+		 * Prefers the instance registered on the element itself, which is the
+		 * one ReadyLaunch created; falls back to the default pack's registry.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} $editor    The contenteditable editor element.
+		 * @param {Array}  registry   The default pack's editor registry, if any.
+		 * @param {string} editor_key The editor key within that registry.
+		 *
+		 * @return {Object|null} The editor instance, or null when none owns the element.
+		 */
+		this.getTopicReplyDraftEditor = function ( $editor, registry, editor_key ) {
+			var element  = $editor && $editor.length ? $editor.get( 0 ) : null,
+				instance = null;
+
+			if ( element && 'function' === typeof window.MediumEditor.getEditorFromElement ) {
+				instance = window.MediumEditor.getEditorFromElement( element );
+			}
+
+			if ( ! instance && registry && registry[ editor_key ] && registry[ editor_key ].elements && registry[ editor_key ].elements.length ) {
+				instance = registry[ editor_key ];
+			}
+
+			return instance || null;
+		};
+
+		/**
 		 * Reset the topic/reply post form fields to their empty state.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -664,23 +693,28 @@ window.bp = window.bp || {};
 			// Reset editor.
 			if ( 'undefined' !== typeof window.MediumEditor ) {
 				if ( 'topic' === this.topic_reply_draft.object ) {
-					if ( window.forums_medium_topic_editor ) {
-						$medium_editor = window.forums_medium_topic_editor[editor_key];
+					$editor = target.find( '#bbp_editor_topic_content_' + editor_key );
+					// ReadyLaunch builds its own editor on this element before the
+					// default pack's editor.js runs, so the instance in
+					// window.forums_medium_topic_editor holds no element and its
+					// setContent() is a silent no-op. Resolve the instance that
+					// owns the element, as the restore does (O-1).
+					$medium_editor = this.getTopicReplyDraftEditor( $editor, window.forums_medium_topic_editor, editor_key );
+					if ( $medium_editor ) {
 						$medium_editor.setContent( '' );
 					}
-					$editor = target.find( '#bbp_editor_topic_content_' + editor_key );
 					$editor.removeClass( 'error' );
 					target.find( '#bbp_topic_content' ).val( '' );
 					target.find( '#bbp_topic_title' ).val( '' );
 					target.removeClass( 'has-title' );
 				} else if ( 'reply' === this.topic_reply_draft.object ) {
-					if ( window.forums_medium_reply_editor ) {
-						$medium_editor = window.forums_medium_reply_editor[editor_key];
+					$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
+					// Same as the topic branch above (O-1).
+					$medium_editor = this.getTopicReplyDraftEditor( $editor, window.forums_medium_reply_editor, editor_key );
+					if ( $medium_editor ) {
 						$medium_editor.setContent( '' );
 					}
-					$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
 					$editor.removeClass( 'error' );
-					$editor = target.find( '#bbp_editor_reply_content_' + editor_key );
 					target.find( '#bbp_reply_content' ).val( '' );
 					setTimeout(
 						function () {
