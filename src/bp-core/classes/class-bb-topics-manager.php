@@ -290,12 +290,68 @@ class BB_Topics_Manager {
 	}
 
 	/**
+	 * Check whether the current user can manage topics in a topics AJAX request.
+	 *
+	 * Site moderators can manage every topic. A group organizer can manage the
+	 * topics of a group they organize, and only topics already linked to that group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string    $item_type The item type, 'activity' or 'groups'.
+	 * @param int       $item_id   The item ID.
+	 * @param int|array $topic_ids Optional. Topic IDs that must belong to the item. Empty IDs are skipped.
+	 *
+	 * @return bool True if the current user can manage the topics, false otherwise.
+	 */
+	private function bb_current_user_can_manage_topics( $item_type, $item_id, $topic_ids = array() ) {
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			return true;
+		}
+
+		if (
+			'groups' !== $item_type ||
+			empty( $item_id ) ||
+			! bp_is_active( 'groups' ) ||
+			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+			! bb_is_enabled_group_activity_topics() ||
+			! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+		) {
+			return false;
+		}
+
+		foreach ( array_filter( wp_parse_id_list( $topic_ids ) ) as $topic_id ) {
+			$group_topic = $this->bb_get_topics(
+				array(
+					'topic_id'  => $topic_id,
+					'item_id'   => $item_id,
+					'item_type' => 'groups',
+					'fields'    => 'id',
+				)
+			);
+
+			if ( empty( $group_topic['topics'] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Add a new global topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_add_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$can_manage = $this->bb_current_user_can_manage_topics(
+			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity',
+			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
+			isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0
+		);
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $can_manage ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1473,7 +1529,15 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_edit_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$can_manage = $this->bb_current_user_can_manage_topics(
+			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '',
+			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
+			isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0
+		);
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $can_manage ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1552,7 +1616,15 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_delete_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$can_manage = $this->bb_current_user_can_manage_topics(
+			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '',
+			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
+			isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0
+		);
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $can_manage ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1708,7 +1780,18 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_migrate_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$can_manage = $this->bb_current_user_can_manage_topics(
+			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '',
+			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
+			array(
+				isset( $_POST['old_topic_id'] ) ? absint( wp_unslash( $_POST['old_topic_id'] ) ) : 0,
+				isset( $_POST['new_topic_id'] ) ? absint( wp_unslash( $_POST['new_topic_id'] ) ) : 0,
+			)
+		);
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $can_manage ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
