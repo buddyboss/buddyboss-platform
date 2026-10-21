@@ -136,11 +136,11 @@ class BP_Invites_Component extends BP_Component {
 
 		// Screens - User profile integration.
 		if ( bp_is_user() ) {
-			require $this->path . 'bp-invites/screens/send-invites.php';
+			require_once $this->path . 'bp-invites/screens/send-invites.php';
 
 			// Sub-nav items.
 			if ( in_array( bp_current_action(), $actions, true ) ) {
-				require $this->path . 'bp-invites/screens/' . bp_current_action() . '.php';
+				require_once $this->path . 'bp-invites/screens/' . bp_current_action() . '.php';
 			}
 		}
 

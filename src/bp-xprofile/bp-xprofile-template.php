@@ -1001,8 +1001,11 @@ function bp_get_the_profile_field_visibility_level_label() {
  */
 function bp_unserialize_profile_field( $value ) {
 	if ( is_serialized( $value ) ) {
-		$field_value = @unserialize( $value );
-		$field_value = implode( ', ', $field_value );
+		// Disallow object instantiation to prevent PHP object injection from stored field values.
+		$field_value = bb_xprofile_safe_unserialize( $value );
+		if ( is_array( $field_value ) ) {
+			$field_value = implode( ', ', $field_value );
+		}
 		return $field_value;
 	}
 

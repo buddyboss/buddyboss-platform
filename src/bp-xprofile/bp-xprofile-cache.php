@@ -166,7 +166,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 		}
 
 		// Add to the cache array.
-		$cache[ $otype ][ $oid ][ $okey ][] = maybe_unserialize( $ovalue );
+		$cache[ $otype ][ $oid ][ $okey ][] = bb_xprofile_safe_unserialize( $ovalue ); // Object injection guard.
 	}
 
 	// Loop through data and cache to the appropriate object.

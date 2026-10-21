@@ -102,7 +102,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
 	 */
 	public function edit_field_options_html( array $args = array() ) {
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) );
+		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
 
 		$options = $this->field_obj->get_children();
 		$html    = '';

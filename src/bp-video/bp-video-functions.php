@@ -102,7 +102,7 @@ function bp_video_upload() {
 	/**
 	 * Filter the attachment URL.
 	 *
-	 * @since BuddyBoss [BBOMVERSION]
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @param string $attachment_url Attachment URL.
 	 * @param int    $attachment_id Attachment ID.
@@ -112,7 +112,7 @@ function bp_video_upload() {
 	/**
 	 * Filter the video message URL.
 	 *
-	 * @since BuddyBoss [BBOMVERSION]
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @param string $video_message_url Video message URL.
 	 * @param int    $attachment_id Attachment ID.
@@ -747,7 +747,11 @@ function bp_video_add( $args = '' ) {
 		$video->privacy = $r['privacy'];
 	} elseif ( ! empty( $video->group_id ) ) {
 		$video->privacy = 'grouponly';
-		if ( ! empty( $video->activity_id ) ) {
+		// `BP_Activity_Activity` is loaded by the activity component and is
+		// NOT in the always-on autoload list. Guard against fatals when
+		// activity is deactivated but a group video upload still references
+		// an activity_id. Mirrors the gating in bp_media_add().
+		if ( ! empty( $video->activity_id ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $video->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
 				$video->privacy = $r['privacy'];
@@ -2448,13 +2452,18 @@ function bp_video_download_link( $attachment_id, $video_id ) {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_download_url_file() {
-	$attachment_id       = bb_filter_input_string( INPUT_GET, 'attachment_id' );
-	$download_video_file = bb_filter_input_string( INPUT_GET, 'download_video_file' );
-	$video_file          = bb_filter_input_string( INPUT_GET, 'video_file' );
-	$video_type          = bb_filter_input_string( INPUT_GET, 'video_type' );
+	// Read $_GET rather than filter_input() so the handler can be unit tested.
+	$attachment_id       = isset( $_GET['attachment_id'] ) ? sanitize_text_field( wp_unslash( $_GET['attachment_id'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
+	$download_video_file = isset( $_GET['download_video_file'] ) ? sanitize_text_field( wp_unslash( $_GET['download_video_file'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
+	$video_file          = isset( $_GET['video_file'] ) ? sanitize_text_field( wp_unslash( $_GET['video_file'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
+	$video_type          = isset( $_GET['video_type'] ) ? sanitize_text_field( wp_unslash( $_GET['video_type'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification
 	$can_download_btn    = false;
 
 	if ( isset( $attachment_id ) && isset( $download_video_file ) && isset( $video_file ) && isset( $video_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		// Private Website: send guests to login before any file is streamed.
+		bb_private_network_restrict_download( 'video' );
+
 		if ( 'album' !== $video_type ) {
 
 			// Remove action to remove meta query for forums while download check.

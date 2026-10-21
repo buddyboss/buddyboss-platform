@@ -90,11 +90,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Forums needs to listen to BuddyBoss group deletion.
 			add_action( 'groups_before_delete_group', array( $this, 'disconnect_forum_from_group' ) );
 
-			// Adds a Forums metabox to the new BuddyBoss Group Admin UI
-			add_action( 'bp_groups_admin_meta_boxes', array( $this, 'group_admin_ui_edit_screen' ) );
-
-			// Saves the Forums options if they come from the BuddyBoss Group Admin UI
-			add_action( 'bp_group_admin_edit_after', array( $this, 'edit_screen_save' ) );
+			// Forum lifecycle (create/disconnect/visibility) on group save.
+			add_action( 'bb_admin_after_save_group', array( $this, 'bb_forum_lifecycle_on_group_save' ), 10, 2 );
 
 			// Adds a hidden input value to the "Group Settings" page
 			add_action( 'bp_before_group_settings_admin', array( $this, 'group_settings_hidden_field' ) );
@@ -574,35 +571,25 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/**
-		 * Adds a metabox to BuddyBoss Group Admin UI
+		 * Adds a metabox to BuddyBoss Group Admin UI.
 		 *
-		 * @since bbPress (r4814)
-		 *
-		 * @uses add_meta_box
-		 * @uses BBP_Forums_Group_Extension::group_admin_ui_display_metabox() To display the edit screen
+		 * @since      bbPress (r4814)
+		 * @deprecated BuddyBoss 3.0.0 No longer used. Settings 2.0 handles forum via BB_Admin_Meta_Field_Registry.
 		 */
 		public function group_admin_ui_edit_screen() {
-			add_meta_box(
-				'bbpress_group_admin_ui_meta_box',
-				__( 'Discussion Forum', 'buddyboss' ),
-				array( $this, 'group_admin_ui_display_metabox' ),
-				get_current_screen()->id,
-				'side',
-				'core'
-			);
+			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry' );
 		}
 
 		/**
-		 * Displays the Forums metabox in BuddyBoss Group Admin UI
+		 * Displays the Forums metabox in BuddyBoss Group Admin UI.
 		 *
-		 * @since bbPress (r4814)
+		 * @since      bbPress (r4814)
+		 * @deprecated BuddyBoss 3.0.0 No longer used. Settings 2.0 handles forum via BB_Admin_Meta_Field_Registry.
 		 *
-		 * @param object $item (group object)
-		 * @uses add_meta_box
-		 * @uses BBP_Forums_Group_Extension::edit_screen() To get the html
+		 * @param object $item Group object.
 		 */
 		public function group_admin_ui_display_metabox( $item ) {
-			$this->edit_screen( $item );
+			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry' );
 		}
 
 		/** Create ****************************************************************/
@@ -1213,7 +1200,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/** Form Helpers **********************************************************/
-
 		public function forum_parent() {
 			?>
 
@@ -1470,8 +1456,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Map a custom post type link to its group forum
 		 *
-		 * @param string    $url
-		 * @param obj       $post
+		 * @param string $url
+		 * @param obj    $post
 		 * @param $leavename
 		 * @param $sample
 		 * @uses maybe_map_permalink_to_group()
@@ -1956,6 +1942,128 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			}
 
 			return $attr_output;
+		}
+
+		/**
+		 * Handle forum lifecycle during admin group save.
+		 *
+		 * Creates a new forum when enabling for the first time, disconnects
+		 * when disabling, restores last_forum_id when re-enabling, and repairs
+		 * forum visibility after any change.
+		 *
+		 * Hooked to `bb_admin_after_save_group`.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param int    $group_id Group ID.
+		 * @param object $group    Group object after save.
+		 * @return void
+		 */
+		public function bb_forum_lifecycle_on_group_save( $group_id, $group ) {
+			// Re-fetch the group to get updated enable_forum value after save.
+			$group = groups_get_group( $group_id );
+
+			if ( empty( $group->id ) ) {
+				return;
+			}
+
+			$enable_forum  = (int) $group->enable_forum;
+			$forum_ids     = bbp_get_group_forum_ids( $group_id );
+			$forum_id      = ! empty( $forum_ids ) ? (int) current( $forum_ids ) : 0;
+			$forum_changed = false;
+
+			// Forum was just disabled — disconnect and save last_forum_id for potential re-enable.
+			if ( empty( $enable_forum ) && ! empty( $forum_id ) ) {
+				$forum_changed = true;
+				groups_update_groupmeta( $group_id, 'last_forum_id', $forum_id );
+				update_post_meta( $forum_id, '_last_bbp_group_ids', array( $group_id ) );
+
+				bbp_remove_forum_id_from_group( $group_id, $forum_id );
+				bbp_remove_group_id_from_forum( $forum_id, $group_id );
+			}
+
+			// Forum was just enabled and no forum is currently associated — create or restore one.
+			if ( ! empty( $enable_forum ) && empty( $forum_id ) ) {
+				$forum_changed = true;
+				$restored      = false;
+
+				// Try to restore last associated forum.
+				$last_forum_id = (int) groups_get_groupmeta( $group_id, 'last_forum_id' );
+				if ( ! empty( $last_forum_id ) ) {
+					$forum_exists = bbp_get_forum( $last_forum_id );
+
+					if ( ! empty( $forum_exists ) ) {
+						// Verify the last association is still valid.
+						$last_group_ids = get_post_meta( $last_forum_id, '_last_bbp_group_ids', true );
+						$last_group_ids = ! empty( $last_group_ids ) ? array_filter( $last_group_ids ) : array();
+
+						if ( in_array( $group_id, $last_group_ids, true ) ) {
+							// Look for forum can be associated.
+							$valid_forum = $this->forum_can_associate_with_group( $last_forum_id, $group_id, false );
+
+							if ( ! empty( $valid_forum ) ) {
+								bbp_add_forum_id_to_group( $group_id, $last_forum_id );
+								bbp_add_group_id_to_forum( $last_forum_id, $group_id );
+								$forum_id = $last_forum_id;
+								$restored = true;
+
+								// Clean up last association meta.
+								delete_post_meta( $last_forum_id, '_last_bbp_group_ids' );
+								groups_delete_groupmeta( $group_id, 'last_forum_id' );
+							}
+						}
+					}
+				}
+
+				// No forum restored — create a new one.
+				if ( ! $restored ) {
+					// Set forum status based on group privacy.
+					switch ( $group->status ) {
+						case 'hidden':
+							$status = bbp_get_hidden_status_id();
+							break;
+						case 'private':
+							$status = bbp_get_private_status_id();
+							break;
+						case 'public':
+						default:
+							$status = bbp_get_public_status_id();
+							break;
+					}
+
+					$forum_id = bbp_insert_forum(
+						array(
+							'post_title'   => $group->name,
+							'post_content' => $group->description,
+							'post_status'  => $status,
+						)
+					);
+
+					if ( ! empty( $forum_id ) ) {
+						// Setup forum args with forum ID and group ID.
+						$this->new_forum(
+							array(
+								'forum_id' => $forum_id,
+								'group_id' => $group_id,
+							)
+						);
+					}
+				}
+			}
+
+			// Repair forum visibility only when a forum state actually changed (enabled/disabled).
+			if ( $forum_changed ) {
+				bbp_repair_forum_visibility();
+			}
+
+			/**
+			 * Fires after forum lifecycle is handled during group save.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param int $group_id The group ID.
+			 */
+			do_action( 'bp_group_admin_after_edit_screen_save', $group_id );
 		}
 	}
 endif;

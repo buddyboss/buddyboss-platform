@@ -538,6 +538,15 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				return;
 			}
 
+			// This WPML shim is loaded by bp-incompatible-plugins-helper.php
+			// based on `class_exists( 'SitePress' )`, NOT on BP component
+			// state. When activity is deactivated via Settings 2.0, the
+			// `bp_activity_*` helpers are undefined — bail rather than
+			// fatalling on every `post_updated` while WPML is installed.
+			if ( ! bp_is_active( 'activity' ) ) {
+				return;
+			}
+
 			$default_lang = apply_filters( 'wpml_default_language', null );
 			if ( empty( $default_lang ) ) {
 				return;
@@ -584,6 +593,13 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 */
 		public function bb_handle_wpml_switch_post_language() {
 			if ( ! defined( 'ICL_SITEPRESS_VERSION' ) || ! class_exists( 'WPML_Post_Edit_Ajax' ) ) {
+				return;
+			}
+
+			// See note on `bb_handle_wpml_language_change()` above — this
+			// AJAX handler is registered when WPML is installed, but its
+			// body relies on the activity component being active.
+			if ( ! bp_is_active( 'activity' ) ) {
 				return;
 			}
 

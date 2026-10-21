@@ -38,10 +38,10 @@ $is_memberpress_inner = (
 	class_exists( 'memberpress\courses\helpers\Courses' ) &&
 	! helpers\Courses::is_a_course( $post ) &&
 	( ! $bb_rl_ld_helper || ! $bb_rl_ld_helper->bb_rl_is_learndash_inner_page() ) &&
-	! bbp_is_single_forum() &&
-	! bbp_is_single_topic() &&
-	! bbp_is_single_reply() &&
-	! is_bbpress()
+	! ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) &&
+	! ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() ) &&
+	! ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) &&
+	! ( function_exists( 'is_bbpress' ) && is_bbpress() )
 );
 $panel_classes = 'bb-rl-left-panel widget-area';
 if ( $is_memberpress_inner ) {

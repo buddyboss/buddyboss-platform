@@ -1,6 +1,30 @@
 /* jshint node:true */
 /* global module */
 module.exports = function (grunt) {
+	// Build a GitHub clone URL for the buddyboss org, choosing between SSH
+	// (`git@github.com:...`) and HTTPS (`https://github.com/...`) at runtime.
+	//
+	// Order of precedence:
+	//   1. `GIT_PROTOCOL` env var, if set to "ssh" or "https" (explicit override).
+	//   2. Default: SSH — `buddyboss-platform-api` is a private repo and the
+	//      typical contributor has an SSH key registered with GitHub. HTTPS to
+	//      a private repo only works when the shell has credentials configured
+	//      (GH_TOKEN env, credential helper, or a token in the URL), so it's
+	//      not a safe default for a fresh clone.
+	//
+	// Use cases:
+	//   Default (SSH):                    grunt bp_rest
+	//   CI runner with token, no key:     GIT_PROTOCOL=https grunt bp_rest
+	//                                     (caller is responsible for ensuring
+	//                                      git credential auth is set up)
+	function bbGithubCloneUrl( repo ) {
+		var proto = ( process.env.GIT_PROTOCOL || '' ).toLowerCase();
+		if ( 'https' === proto ) {
+			return 'https://github.com/buddyboss/' + repo + '.git';
+		}
+		return 'git@github.com:buddyboss/' + repo + '.git';
+	}
+
 	var sass       = require( 'node-sass' ),
 		SOURCE_DIR = 'src/',
 		BUILD_DIR  = 'buddyboss-platform/',
@@ -16,8 +40,7 @@ module.exports = function (grunt) {
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
 			// '!bp-forums/**/*.css',
-			'!**/endpoints/**/*.css',
-			'!**/js/admin/readylaunch/styles/**/*.css'
+			'!**/endpoints/**/*.css'
 		],
 
 		BP_JS = [
@@ -34,6 +57,7 @@ module.exports = function (grunt) {
 		BP_SCSS_CSS_FILES = [
 			// '!bp-templates/bp-legacy/css/twenty*.css',
 			'!bp-templates/bp-nouveau/css/buddypress.css',
+			'!bp-templates/bp-nouveau/buddypress/css/member-blog.css',
 			'!bp-core/admin/css/hello.css',
 			'!bp-core/css/medium-editor-beagle.css',
 			'!bp-core/css/medium-editor.css',
@@ -120,6 +144,15 @@ module.exports = function (grunt) {
 					flatten: true,
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
+				},
+				member_blog: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/sass/member-blog.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/buddypress/css/'
 				},
 				ready_launch: {
 					cwd: SOURCE_DIR,
@@ -280,7 +313,17 @@ module.exports = function (grunt) {
 					'**/bp-notifications/**',
 					'**/bp-settings/**',
 					'**/bp-xprofile/**',
-					'**/bp-integrations/**'
+					'**/bp-integrations/**',
+					// Do NOT re-import any LearnDash REST files. The LD
+					// integration was extracted from Platform in PROD-9792
+					// and now lives in the buddyboss-learndash addon plugin.
+					// The platform-api repo still ships its own copy of the
+					// LD REST controller at
+					// buddyboss-platform-api/includes/bp-integrations/learndash/
+					// — without this exclusion `grunt bp_rest` would sweep
+					// that file back into src/bp-integrations/learndash/
+					// and silently recreate the directory we deleted.
+					'!**/bp-integrations/learndash/**'
 					],
 					options: {
 						process : function( content ) {
@@ -315,8 +358,34 @@ module.exports = function (grunt) {
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**',
-					'!**/bp-integrations/**'
+					'!**/bp-integrations/**',
+					// Reactions REST endpoint lives under the new feature
+					// directory layout (`src/bb-features/community/reactions/classes/`).
+					// Excluded here so the flatten-to-bp-core sweep doesn't
+					// recreate a stale duplicate at `bp-core/classes/`. See
+					// the dedicated `bp_rest_reactions` task below.
+					'!**/class-bb-rest-reactions-endpoint.php'
 					],
+					options: {
+						process : function( content ) {
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						}
+					}
+				},
+				bp_rest_reactions: {
+					// The reactions feature is the first one fully migrated to the
+					// feature-based architecture (`src/bb-features/community/reactions/`).
+					// Its REST controller belongs alongside the rest of the feature's
+					// classes, not in the legacy `bp-core/classes/` flat namespace.
+					// Source path mirrors where buddyboss-platform-api stores it
+					// today: `bp-components/classes/`. If the API repo moves the file,
+					// update `cwd`/`src` here and the matching exclusion in `bp_rest_core`.
+					cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/bp-components/classes/',
+					dest: SOURCE_DIR + 'bb-features/community/reactions/classes/',
+					expand: true,
+					flatten: true,
+					filter: 'isFile',
+					src: ['class-bb-rest-reactions-endpoint.php'],
 					options: {
 						process : function( content ) {
 							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
@@ -485,6 +554,20 @@ module.exports = function (grunt) {
 					cwd: '.',
 					stdout: true
 				},
+				// Local-only counterpart to `init_build_dir_git`. Used by
+				// the `build_test` task — creates the buddyboss-platform/
+				// directory the rest of the build flow expects to exist,
+				// WITHOUT any git initialisation, remote fetch, or branch
+				// checkout. The empty build dir + copy:files + compress
+				// steps that follow are purely filesystem operations, so
+				// they work fine on a plain directory. No `.git` means
+				// `empty_build_dir`'s find pattern has nothing to skip —
+				// files just get removed cleanly.
+				init_build_dir_clean: {
+					command: 'mkdir -p buddyboss-platform',
+					cwd: '.',
+					stdout: true
+				},
 				empty_build_dir: {
 					command: 'cd buddyboss-platform && find . -not -path "./.git*" -not -name "." -not -name ".." -delete && cd ..',
 					cwd: '.',
@@ -497,17 +580,17 @@ module.exports = function (grunt) {
 				},
 
 				rest_api: {
-					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
 				rest_performance: {
-					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
 				fetch_bb_icons: {
-					command: 'git clone https://github.com/buddyboss/bb-icons.git',
+					command: 'git clone ' + bbGithubCloneUrl( 'bb-icons' ),
 					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
 					stdout: false,
 				},
@@ -516,9 +599,14 @@ module.exports = function (grunt) {
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
-				// WP-CLI makepot with header fixing
+				// WP-CLI makepot with header fixing.
+				// Exclude the compiled React bundles under bb-settings/*/build/* — they
+				// are minified single-line files that blow up WP-CLI's peast JS parser
+				// (memory exhaustion) and contribute no strings to the POT (JS admin i18n
+				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
+				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
 					cwd: '.',
 					stdout: true
 				},
@@ -640,12 +728,60 @@ module.exports = function (grunt) {
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('webpack', ['exec:build_blocks', 'exec:build_admin']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'webpack', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin:minify', 'cssmin:rtl', 'makepot']);
-	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
+	// Re-imports the REST controllers from the buddyboss-platform-api repo, which is
+	// their source of truth: `copy:bp_rest_*` runs API `includes/` -> Platform `src/`,
+	// so anything hand-edited in a generated file here is overwritten on the next run.
+	//
+	// RELEASE PAIRING - read before tagging. This task is deliberately NOT part of
+	// `release`, `build` or `default` (see `release` below for why), so a REST fix that
+	// lives only in the API repo is absent from the Platform artefact customers install
+	// until someone runs this. When a change spans both repos, the two must be tagged
+	// together and this task must be run on the Platform branch first:
+	//
+	//   1. Merge and tag buddyboss-platform-api.
+	//   2. On the Platform release branch: `grunt bp_rest`.
+	//   3. Commit the regenerated `src/**` copies with the release.
+	//   4. Only then bump the Platform version and tag.
+	//
+	// Skipping step 2 ships Platform's previous copies. Nothing fails: the generated
+	// classes are valid, the routes register, and the standalone API plugin (which most
+	// test sites run) masks the difference entirely, so the gap only shows on sites
+	// running Platform without it.
+	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'copy:bp_rest_reactions', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
 	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
 	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
 
+	// Build-test task: identical to `build` except it never touches the
+	// production branch — no git init, no fetch, no checkout, no commit,
+	// no push. Produces the same `buddyboss-platform-plugin.zip` as
+	// `build` so QA can ship the artefact to staging without altering
+	// the canonical release branch. Use this for ad-hoc test builds,
+	// CI dry-runs, or local "what would the next release look like"
+	// inspection. Steps:
+	//   1. string-replace:dist             — substitute [BBVERSION] etc.
+	//   2. exec:composer                   — install prod composer deps
+	//   3. clean:all                       — wipe any prior build artefact
+	//   4. exec:init_build_dir_clean       — `mkdir -p buddyboss-platform/` (NO git)
+	//   5. exec:empty_build_dir            — clear any leftover files (no .git to skip — fine)
+	//   6. copy:files                      — stage built sources
+	//   7. clean:composer                  — drop dev composer state from the staged dir
+	//   8. compress                        — zip → buddyboss-platform-plugin.zip
+	//   9. clean:all                       — final tidy
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
+
+	// `bp_rest` is intentionally absent from this chain, and from `build` and `default`.
+	// It is not an oversight, and adding it would make releases less reproducible, not
+	// more: `exec:rest_api` does a bare `git clone` of a PRIVATE repo, so it (a) needs an
+	// SSH key or GH_TOKEN on whatever machine cuts the release and turns a credential
+	// problem into a failed release, and (b) clones that repo's DEFAULT BRANCH at the
+	// moment the task runs - not a tag - so the same Platform commit would produce a
+	// different artefact depending on when it was built, and could sweep in unreleased
+	// API work. It also rewrites tracked files under `src/` mid-build, which would leave
+	// the shipped zip differing from the tagged tree.
+	// Run `grunt bp_rest` as a reviewable commit on the branch instead - see its
+	// RELEASE PAIRING note above.
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.

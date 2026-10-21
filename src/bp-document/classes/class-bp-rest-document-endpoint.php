@@ -712,7 +712,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 						'status' => 400,
 					)
 				);
-			} elseif ( ! bp_folder_user_can_edit( $parent_folder->id ) ) {
+			} elseif (
+				! (
+					function_exists( 'bb_document_user_can_add_to_folder' )
+						? bb_document_user_can_add_to_folder( $parent_folder->id )
+						: bp_folder_user_can_edit( $parent_folder->id )
+				)
+			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
 					__( 'You don\'t have a permission to create a document inside this folder.', 'buddyboss' ),
@@ -1007,7 +1013,12 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			}
 
 			if ( true === $retval && isset( $request['folder_id'] ) && ! empty( $request['folder_id'] ) ) {
-				if ( ! bp_folder_user_can_edit( (int) $request['folder_id'] ) ) {
+				// Moving into a folder is a contribute action, not an edit of the folder.
+				$can_move_into_folder = function_exists( 'bb_document_user_can_add_to_folder' )
+					? bb_document_user_can_add_to_folder( (int) $request['folder_id'] )
+					: bp_folder_user_can_edit( (int) $request['folder_id'] );
+
+				if ( ! $can_move_into_folder ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
 						__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss' ),

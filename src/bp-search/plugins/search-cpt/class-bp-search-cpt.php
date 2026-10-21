@@ -34,28 +34,41 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb;
 
-			$enrolled_courses  = array();
-			$exclude_post_type = false;
-			if ( function_exists( 'learndash_get_post_types' ) ) {
-				$ld_post_types = learndash_get_post_types();
-				if ( ! empty( $ld_post_types ) && in_array( $this->cpt_name, $ld_post_types, true ) ) {
-					$ld_course_slug = learndash_get_post_type_slug( 'course' );
-					if (
-						$ld_course_slug === $this->cpt_name &&
-						'yes' !== LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'include_in_search' )
-					) {
-						$exclude_post_type = true;
-					} else {
-						if ( is_user_logged_in() ) {
-							if ( learndash_post_type_search_param( $this->cpt_name, 'search_enrolled_only' ) ) {
-								$enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id(), array(), true );
-							}
-						} elseif ( learndash_post_type_search_param( $this->cpt_name, 'search_login_only' ) ) {
-							$exclude_post_type = true;
-						}
-					}
-				}
-			}
+			/**
+			 * Filter the pre-query context for a CPT search. Integrations can
+			 * return an array with keys `exclude_post_type` (bool) and
+			 * `enrolled_courses` (array of IDs) to gate the query — e.g. the
+			 * LearnDash integration (buddyboss-learndash) restricts search
+			 * results to enrolled courses when its
+			 * `search_enrolled_only`/`search_login_only` toggles are on.
+			 *
+			 * Replaced an inline LearnDash-specific block in this method in
+			 * BuddyBoss 3.0.0; the addon now subscribes to this filter.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param array  $context  { exclude_post_type: bool, enrolled_courses: int[] }.
+			 * @param string $cpt_name The post type being searched.
+			 */
+			$context = apply_filters(
+				'bb_search_cpt_pre_query_context',
+				array(
+					'exclude_post_type' => false,
+					'enrolled_courses'  => array(),
+				),
+				$this->cpt_name
+			);
+
+			$exclude_post_type = ! empty( $context['exclude_post_type'] );
+			// Force every entry to a non-negative integer before any SQL interpolation.
+			// The filter contract documents `enrolled_courses` as `int[]`, but `is_array()`
+			// alone admits an array of arbitrary strings — a third-party (or buggy) hook
+			// callback could otherwise inject SQL via the `IN (...)` clause built at the
+			// bottom of this branch. wp_parse_id_list() drops empties, casts to int, and
+			// dedupes, so the resulting list is always safe to interpolate.
+			$enrolled_courses = isset( $context['enrolled_courses'] ) && is_array( $context['enrolled_courses'] )
+				? wp_parse_id_list( $context['enrolled_courses'] )
+				: array();
 
 			$query_placeholder = array();
 
@@ -119,8 +132,12 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$sql                 .= " AND p.post_type != %s";
 				$query_placeholder[] = $this->cpt_name;
 			} elseif ( false === $exclude_post_type && ! empty( $enrolled_courses ) ) {
-				$courses_id_in = '"' . implode( '","', $enrolled_courses ) . '"';
-				$sql .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
+				// $enrolled_courses is guaranteed to be a list of non-negative integers
+				// (wp_parse_id_list above). Interpolating an integer list directly is
+				// safe; the previous double-quoted-string form widened the surface for
+				// no functional gain — meta_value compares fine against unquoted ints.
+				$courses_id_in = implode( ',', $enrolled_courses );
+				$sql          .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
 			}
 
 			$query_placeholder[] = $this->cpt_name;

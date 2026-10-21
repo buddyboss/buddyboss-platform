@@ -881,7 +881,18 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		if ( 'user' == $object ) {
 			$item_id = bp_displayed_user_id();
 		} elseif ( 'group' == $object ) {
-			$item_id = buddypress()->groups->current_group->id;
+			// `buddypress()->groups->current_group` is populated by
+			// `BP_Groups_Component`; when groups is deactivated via
+			// Settings 2.0, `->groups` is unset and accessing
+			// `->current_group->id` would fatal on PHP 8+. Leave
+			// `$item_id` at 0 in that case — the `if ( ! $item_id )`
+			// guard below will then return false cleanly.
+			if (
+				bp_is_active( 'groups' ) &&
+				isset( buddypress()->groups->current_group->id )
+			) {
+				$item_id = buddypress()->groups->current_group->id;
+			}
 		} elseif ( 'blog' == $object ) {
 			$item_id = get_current_blog_id();
 		}

@@ -56,7 +56,9 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
-	wp_enqueue_script( 'bp-nouveau-activity-reacted' );
+	if ( bp_is_activity_like_active() ) {
+		wp_enqueue_script( 'bp-nouveau-activity-reacted' );
+	}
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );

@@ -370,27 +370,29 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = "d.activity_id = {$r['activity_id']}";
+			$where_conditions['activity'] = 'd.activity_id = ' . (int) $r['activity_id'];
 		}
 
 		// existing-document check to query document which has no folders assigned.
 		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-			$where_conditions['folder'] = "d.folder_id = {$r['folder_id']}";
+			$where_conditions['folder'] = 'd.folder_id = ' . (int) $r['folder_id'];
 		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
 			$where_conditions['folder'] = 'd.folder_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "d.user_id = {$r['user_id']}";
+			$where_conditions['user'] = 'd.user_id = ' . (int) $r['user_id'];
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "d.group_id = {$r['group_id']}";
+			$where_conditions['group'] = 'd.group_id = ' . (int) $r['group_id'];
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
-			$where_conditions['privacy'] = "d.privacy IN ({$privacy})";
+			$privacy_values              = (array) $r['privacy'];
+			$privacy_placeholders        = implode( ', ', array_fill( 0, count( $privacy_values ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $privacy_placeholders is a list of %s tokens; values are passed as prepare() args.
+			$where_conditions['privacy'] = $wpdb->prepare( "d.privacy IN ({$privacy_placeholders})", $privacy_values );
 		}
 
 		// Process meta_query into SQL.
@@ -407,10 +409,12 @@ class BP_Document {
 		// Check the status of document item.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
-				$where_conditions['status'] = "d.status IN ({$status})";
+				$status_values              = $r['status'];
+				$status_placeholders        = implode( ', ', array_fill( 0, count( $status_values ), '%s' ) );
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $status_placeholders is a list of %s tokens; values are passed as prepare() args.
+				$where_conditions['status'] = $wpdb->prepare( "d.status IN ({$status_placeholders})", $status_values );
 			} else {
-				$where_conditions['status'] = "d.status = '{$r['status']}'";
+				$where_conditions['status'] = $wpdb->prepare( 'd.status = %s', $r['status'] );
 			}
 		}
 

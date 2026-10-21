@@ -1,0 +1,1151 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Reactions Styles
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Reaction migration notice wrapper (for both reaction_migration and reaction_notice)
+.bb-admin-reaction-migration-wrapper,
+.bb-admin-reaction-notice-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding-bottom: 16px;
+	border-bottom: 0.5px solid $bb-border-secondary-color;
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+// Reaction info wrapper (informational text with link)
+.bb-admin-reaction-info-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+}
+
+.bb-admin-reaction-info {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	min-height: 24px;
+	padding: 3px 16px 3px 0;
+	max-width: 900px;
+	width: 100%;
+
+	&__text {
+		margin: 0;
+		font-size: 13px; // --font/size/sm
+		line-height: 18px; // --font/line-height/sm
+		font-weight: 400; // --font/weight/regular
+		color: #666; // --text/default/tertiary
+		max-width: 900px;
+	}
+
+	&__link {
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		&:focus {
+			outline: 2px solid $bb-link-color;
+			outline-offset: 2px;
+		}
+	}
+}
+
+/* Emotions modal */
+#bbpro_emotion_modal {
+
+    .media-modal-content {
+        background: transparent;
+        box-shadow: none;
+
+        .bbpro-modal-box__header {
+            background-color: $bb-background-base-color;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
+            padding: 22px 24px;
+
+            h3 {
+                color: $bb-text-color;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 1;
+            }
+        }
+
+        .bbpro-modal-box__body {
+            background-color: $bb-background-base-color;
+            height: calc(100% - 115px);
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .bbpro-modal-box__footer {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+            padding: 8px 16px;
+
+            .bbpro_select_icon {
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 18px;
+                color: $bb-text-inverse-color;
+                background-color: $bb-background-brand-primary-color;
+                padding: 8px 16px;
+                border: none;
+                border-radius: $bb-border-radius-lg;
+            }
+        }
+    }
+
+    .media-modal-close {
+        top: 20px;
+        right: 20px;
+        width: auto;
+        height: auto;
+        box-shadow: none;
+
+        .media-modal-icon {
+            display: flex;
+
+            &:before {
+                content: "\e4f6";
+                color: $bb-icon-secondary-color;
+                font-size: 24px;
+                font-family: "bb-icons-rl";
+                font-weight: 400;
+            }
+        }
+
+        &:hover {
+            background-color: $bb-background-primary-color;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    #bbpro-icon-left-section {
+        background-color: $bb-background-base-color;
+        border-right: 1px solid $bb-border-secondary-color;
+
+        .bbpro-icon-filters {
+            border-bottom: 1px solid $bb-border-secondary-color;
+
+            select {
+                @include bb-admin-settings-select;
+
+                &:hover {
+                    color: $bb-text-color;
+                }
+            }
+        }
+    }
+
+    #bbpro-icon-right-section {
+        background-color: $bb-background-base-color;
+    }
+
+    #bbpro_icon_preview {
+
+        h3 {
+            color: $bb-text-color;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        > div[class*="bbpro-new-icon"] {
+
+            input[type="text"] {
+                background-color: $bb-background-primary-color;
+                border: 1px solid $bb-border-secondary-color;
+                color: $bb-text-color;
+                font-size: 13px;
+                font-weight: 400;
+                padding: 2px 8px;
+                border-radius: $bb-border-radius-md;
+            }
+
+            label {
+                color: $bb-text-secondary-color;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .wp-picker-container {
+
+                .wp-color-result {
+                    border-color: $bb-border-secondary-color;
+
+                    span {
+                        background-color: $bb-background-secondary-color;
+                    }
+                }
+
+                .wp-picker-default {
+                    background-color: $bb-background-secondary-color;
+                    border-color: $bb-border-secondary-color;
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    padding: 4px 8px;
+                    border-radius: $bb-border-radius-md;
+                    line-height: 1.8;
+                    min-height: auto;
+                }
+
+                .iris-picker {
+                    background-color: $bb-background-base-color;
+                    border: 1px solid $bb-border-secondary-color;
+                    border-radius: $bb-border-radius-xl;
+                    box-shadow: none;
+
+                    .iris-picker-inner {
+                        background-color: $bb-background-base-color;
+                    }
+
+                    .iris-square,
+                    .iris-slider,
+                    .iris-square-inner,
+                    .iris-palette {
+                        border-radius: $bb-border-radius-xl;
+                    }
+                }
+            }
+        }
+
+        .bbpro-new-icon-text-wrp .bbpro-icon-text-limit {
+            color: $bb-text-tertiary-color;
+        }
+    }
+
+    .bbpro_icon_picker_preview  {
+
+        .icon-picker-preview {
+            background-color: $bb-background-base-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-md;
+            box-shadow: none;
+        }
+    }
+
+    .bbpro-icon-search {
+        position: relative;
+
+        input.bbpro-icon-search-input {
+            background-color: $bb-background-primary-color;
+            border: 1px solid $bb-border-secondary-color;
+            color: $bb-text-color;
+            font-size: 13px;
+            font-weight: 400;
+            padding: 2px 8px 2px 30px;
+            border-radius: $bb-border-radius-md;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+                border-color: $bb-border-primary-color;
+            }
+        }
+
+        [class*="bb-icon"] {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0;
+
+            &:before {
+                content: "\e30c";
+                font-size: 16px;
+                font-family: "bb-icons-rl";
+                line-height: 1;
+                font-weight: 400;
+                color: $bb-icon-tertiary-color;
+            }
+        }
+    }
+
+    .bbpro-dialog-icon-picker a.bbpro-icon {
+        background-color: $bb-background-primary-color;
+        border-radius: $bb-border-radius-md;
+        box-shadow: none;
+        border: 1px solid $bb-border-secondary-color;
+
+        &:after {
+            display: none;
+        }
+
+        .bbpro-icon-title {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            box-shadow: none;
+            border-radius: 0 0 $bb-border-radius-md $bb-border-radius-md;
+
+            span {
+                color: $bb-text-color;
+                font-size: 12px;
+            }
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 4rem;
+            width: 100%;
+            height: calc(100% - 30px);
+            top: 0;
+        }
+
+        img {
+            width: 50px;
+        }
+    }
+
+    .bbpro-icons-list {
+        max-height: calc(100% - 55px);
+
+        .bbpro-icon > i:before {
+            color: $bb-text-color;
+            font-size: 5em;
+        }
+    }
+
+    .bbpro-icon-uploader-main,
+    .bbpro-emojis-list {
+        max-height: calc(100% - 55px);
+        overflow: auto;
+    }
+
+
+}
+
+// Migration modal specific styles
+.bb-admin-migration-modal {
+
+	&__loader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 250px;
+		font-size: 32px;
+		color: $bb-primary-color;
+
+		.bb-icons-rl {
+			display: block;
+		}
+	}
+
+	&__wizard {
+
+		.bbpro_migration_wizard_screens {
+			display: none;
+
+			&.active {
+				display: block;
+			}
+		}
+
+		.bbpro-modal-box__body {
+			margin-right: 0;
+			margin-left: 0;
+			padding: 20px;
+
+			p {
+				margin: 0 0 16px;
+			}
+
+			ul {
+				margin: 0 0 12px;
+				list-style: disc;
+				list-style-position: inside;
+				padding: 0 0 0 16px;
+			}
+
+			.migration_emotion_list {
+
+				ul {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 12px;
+					margin: 0 0 16px 20px;
+					list-style: none;
+					padding: 0;
+				}
+			}
+
+			h3 {
+				margin: 0 0 10px 0;
+			}
+
+			.text-center {
+				text-align: center;
+			}
+
+			> select {
+
+				@include bb-admin-settings-select;
+				margin-bottom: 25px;
+			}
+		}
+
+		.bbpro-modal-box__footer {
+			margin-left: 0;
+			margin-right: 0;
+			background-color: transparent;
+			border-top: 1px solid $bb-border-secondary-color;
+			padding: 15px 24px;
+
+			.cancel_migration_wizard {
+				background-color: $bb-background-secondary-color;
+				border-color: $bb-border-secondary-color;
+				color: $bb-text-color;
+				font-size: 13px;
+				font-weight: 400;
+				padding: 4px 8px;
+				border-radius: $bb-border-radius-lg;
+				line-height: 1.8;
+				min-height: auto;
+			}
+
+			.start_migration_wizard,
+			.footer_next_wizard_screen {
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 18px;
+				color: $bb-text-inverse-color !important;
+				background-color: $bb-background-brand-primary-color !important;
+				padding: 8px 16px;
+				border: none;
+				border-radius: $bb-border-radius-lg;
+				margin-left: 8px;
+
+				&.disabled {
+					opacity: 0.5;
+					pointer-events: none;
+				}
+			}
+		}
+	}
+
+    &__content {
+
+        > .bb-admin-notice {
+            margin: 14px;
+            width: auto;
+            
+            p {
+                margin: 0;
+            }
+        }
+    }
+
+	// ─────────────────────────────────────────────────────────────────
+	// Settings 2.0 React Migration Modal (`MigrationModal.js`)
+	//
+	// The legacy `&__wizard` block above targets the server-rendered HTML
+	// the Settings 1.0 admin tab consumes (`.bbpro_migration_wizard_*`,
+	// `.bbpro-modal-box__*`). Those classes never appear in the React
+	// JSX, so the legacy rules silently no-op for Settings 2.0 — both
+	// can safely coexist during the transition until the @todo: Remove
+	// after 3 release cleanup ships.
+	//
+	// The selectors below are the React-side replacements. JSX shape:
+	//   __wizard (one of __wizard--screen-1 | __wizard--screen-2)
+	//     ├── <p>  intro / "Which reactions" headings
+	//     ├── __reactions
+	//     │     ├── <CheckboxControl> for the Likes row
+	//     │     ├── __reactions-group-toggle (the "Emotions (N)" master)
+	//     │     └── __reactions-list — individual emotion rows
+	//     ├── __section-heading + __target-select  (footer_wizard only)
+	//     ├── __warnings (screen 2 only)
+	//     └── __footer (Cancel / Continue / Back / Start conversion)
+	// ─────────────────────────────────────────────────────────────────
+
+	&__wizard--screen-1,
+	&__wizard--screen-2 {
+		padding: 20px 24px;
+
+		// Intro paragraph + bold-question headings.
+		> p {
+			margin: 0 0 16px;
+			color: $bb-text-color;
+			font-size: 13px;
+			line-height: 1.5;
+		}
+	}
+
+	// Empty-state variant — admin opened the wizard but there's nothing to
+	// convert (e.g. footer wizard while site is in likes mode and no emotion
+	// reactions exist). Tighter heading/message spacing than the regular
+	// screens since there's no form below them, and centered layout so the
+	// short message doesn't read as orphaned copy left-aligned against the
+	// full modal width.
+	&__wizard--no-data {
+		padding: 24px 24px 20px;
+
+		> p {
+			margin: 0 0 8px;
+			color: $bb-text-color;
+			font-size: 13px;
+			line-height: 1.5;
+
+			&:last-of-type {
+				margin-bottom: 24px;
+			}
+		}
+	}
+
+	&__no-data-heading {
+		strong {
+			font-size: 14px;
+			font-weight: 600;
+			color: $bb-text-color;
+		}
+	}
+
+	&__section-heading {
+		margin: 20px 0 12px;
+		color: $bb-text-color;
+		font-size: 14px;
+		line-height: 1.4;
+
+		strong {
+			font-weight: 600;
+		}
+	}
+
+	// Reaction-row container — stacks the Likes checkbox (footer wizard
+	// only), the "Emotions (N)" group toggle, and the per-emotion list.
+	&__reactions {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 20px;
+
+		.components-checkbox-control {
+			margin-bottom: 0;
+
+			.components-base-control__field {
+				margin-bottom: 0;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+
+			.components-checkbox-control__label {
+				font-size: 13px;
+				color: $bb-text-color;
+				line-height: 1.4;
+			}
+		}
+	}
+
+	// Group-toggle row ("Emotions (N)" or "All emotions (N)"). Slightly
+	// heavier weight so it reads as a parent of the indented list below.
+	&__reactions-group-toggle {
+
+		.components-checkbox-control__label {
+			font-weight: 500;
+		}
+	}
+
+	// Individual per-emotion rows — indented under the group toggle to
+	// signal hierarchy without using nested checkboxes (which break
+	// keyboard nav and assistive-tech grouping). Wrapping flex row mirrors
+	// the legacy `.migration_emotion_list ul` layout (multiple checkboxes
+	// per line, wrapping as the modal narrows) instead of one row per item.
+	&__reactions-list {
+		list-style: none;
+		margin: 0;
+		padding: 0 0 0 24px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 16px;
+
+		li {
+			margin: 0;
+		}
+	}
+
+	// Target-emotion <CustomSelectControl> wrapper. Constrained max-width
+	// so the dropdown doesn't span the full modal width on wide viewports
+	// — matches the legacy `select` width treatment.
+	&__target-select {
+		max-width: 280px;
+		margin-bottom: 20px;
+	}
+
+	// Confirmation-screen warning bullets.
+	&__warnings {
+		margin: 0 0 16px;
+		padding: 0 0 0 18px;
+		list-style: disc;
+
+		li {
+			margin: 0 0 6px;
+			font-size: 13px;
+			line-height: 1.5;
+			color: $bb-text-color;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	// Footer button row — right-aligned with the brand-primary "Start
+	// conversion" button next to a neutral Cancel/Back. Matches the
+	// CoverCropModal / AvatarCropModal footer treatment so all Settings
+	// 2.0 modals carry the same chrome.
+	&__footer {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 8px;
+		margin: 24px -24px -20px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.components-button {
+			min-height: 32px;
+			border-radius: $bb-border-radius-lg;
+			font-size: 13px;
+			font-weight: 400;
+			padding: 6px 16px;
+			line-height: 1.4;
+
+			&.is-secondary {
+				background: $bb-background-secondary-color;
+				border: 0.5px solid $bb-border-secondary-color;
+				color: $bb-text-color;
+				box-shadow: none;
+
+				&:hover:not( :disabled ) {
+					background: $bb-background-secondary-hover-color;
+				}
+			}
+
+			&.is-primary {
+				background: $bb-background-brand-primary-color;
+				border: 1px solid $bb-background-brand-primary-color;
+				color: $bb-text-inverse-color;
+				box-shadow: none;
+
+				&:hover:not( :disabled ) {
+					background: $bb-background-brand-primary-hover-color;
+					border-color: $bb-background-brand-primary-hover-color;
+				}
+
+				&:disabled {
+					opacity: 0.5;
+					cursor: not-allowed;
+				}
+			}
+		}
+	}
+
+    .components-input-control__container {
+
+        .components-select-control__input {
+            @include bb-admin-settings-select;
+        }
+
+        &:has(> .components-select-control__input) {
+            padding: 0 !important;
+
+            .components-input-control__suffix,
+            .components-input-control__backdrop {
+                display: none !important;
+            }
+        }
+    }
+
+}
+
+// Notice styles for both migration-wrapper and notice-wrapper
+.bb-admin-reaction-migration-wrapper,
+.bb-admin-reaction-notice-wrapper {
+
+	.bb-admin-notice {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 8px;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-lg;
+
+		// Warning state (pending migration)
+		&--warning {
+			background-color: $bb-background-warning-primary-color;
+			border-color: $bb-border-warning-secondary-color;
+
+			.bb-admin-notice__icon [class*="bb-icon"] {
+				color: $bb-icon-warning-primary-color;
+			}
+		}
+
+		// Success state (completed migration)
+		&--success {
+			background-color: $bb-background-positive-primary-color;
+			border-color: $bb-border-positive-secondary-color;
+
+			.bb-admin-notice__icon [class*="bb-icon"] {
+				color: $bb-icon-positive-primary-color;
+			}
+
+			.bb-admin-notice__content {
+				color: $bb-text-positive-primary-color;
+			}
+		}
+
+		// Info state (in-progress migration)
+		&--info {
+			background-color: $bb-background-primary-color;
+			border-color: $bb-border-tertiary-color;
+
+			.bb-admin-notice__icon [class*="bb-icon"] {
+				color: $bb-icon-color;
+			}
+		}
+
+		.bb-admin-notice__content {
+			flex: 1;
+			color: $bb-text-color;
+			font-size: 13px;
+
+			p {
+				margin: 0;
+			}
+		}
+
+		.bb-admin-notice__actions {
+			margin-left: auto;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+
+			button {
+				color: $bb-text-color;
+				font-size: 13px;
+				font-weight: 400;
+				border: none;
+				background: none;
+				padding: 2px 4px;
+				cursor: pointer;
+
+				&:hover {
+					opacity: 0.8;
+				}
+			}
+		}
+
+		.bb-admin-notice__icon {
+			display: flex;
+			flex-shrink: 0;
+
+			[class*="bb-icon"] {
+				font-size: 20px;
+				font-weight: 500;
+
+				&.bb-icons-rl-spinner {
+					font-weight: 400;
+				}
+			}
+		}
+
+		.bb-admin-notice__close {
+			display: flex;
+			border: none;
+			background: none;
+			padding: 0;
+			cursor: pointer;
+			flex-shrink: 0;
+
+			[class*="bb-icon"] {
+				color: $bb-icon-tertiary-color;
+				font-size: 16px;
+				font-weight: 400;
+			}
+
+			&:hover [class*="bb-icon"] {
+				color: $bb-text-color;
+			}
+		}
+	}
+}
+
+// Animation for spinner
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.animate-spin {
+	animation: spin 1s linear infinite;
+}
+
+/* ----------------------------------------------------------------
+   Reactions Settings
+   ---------------------------------------------------------------- */
+
+   .bb-reaction-mode {
+
+    &__cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+        max-width: 656px;
+    }
+
+    &__radios {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 8px;
+    }
+
+    &__radio-label {
+        display: flex;
+        align-items: center;
+        color: $bb-text-color;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+
+        input {
+            margin: 0 8px 0 0;
+        }
+
+        &.disabled {
+
+            input[type=radio] {
+                border-color: $bb-icon-brand-disabled-color;
+            }
+
+            .bb-reaction-mode__radio-label-text {
+                color: $bb-text-disabled-color;
+            }
+        }
+    }
+
+    .bb-reaction-mode-description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
+        padding: 3px 0;
+    }
+}
+
+.bb_emotions_item {
+    height: 96px;
+    width: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &.is-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .bb_emotions_icon {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i.bb-icon-rf {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 32px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+
+    .bb_emotions_footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        span {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 18px;
+            color: $bb-text-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .bb_emotions_actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            // WordPress DropdownMenu toggle button
+            .components-dropdown-menu__toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                min-width: auto;
+                height: auto;
+                color: $bb-icon-tertiary-color;
+
+                i {
+                    font-size: 16px;
+                    line-height: 1;
+                    font-weight: 700;
+                }
+
+                &:hover,
+                &:focus,
+                &.is-pressed {
+                    color: $bb-text-color;
+                    background: none;
+                    box-shadow: none;
+                }
+
+                // Hide default WordPress icon if present
+                .dashicon,
+                svg:not(:first-child) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    // Checkbox control inside card footer (used by checkbox_cards field type).
+    .bb_emotions_footer .components-checkbox-control {
+        margin-bottom: 0;
+        flex-shrink: 0;
+
+        .components-base-control__field {
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .components-checkbox-control__input-container {
+            margin-right: 0;
+        }
+    }
+
+    &.bb_emotions_item_action {
+        background: $bb-background-primary-color;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background: $bb-background-primary-color;
+        }
+
+        .bb_emotions_add_new {
+            width: 100%;
+            height: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+
+            i {
+                font-size: 32px;
+                line-height: 1;
+                color: $bb-text-tertiary-color;
+            }
+        }
+
+        &:hover .bb_emotions_add_new i {
+            color: $bb-text-color;
+        }
+    }
+}
+
+.bb-reaction-button-field {
+    display: flex;
+}
+
+.bb-reaction-button-card {
+    width: 96px;
+    height: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    &__preview {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    &__icon-wrapper {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+
+        [class*="bb-icon"] {
+            font-size: 32px;
+            line-height: 1;
+            color: $bb-icon-tertiary-color;
+            font-weight: 400;
+        }
+
+        &:hover i {
+            color: $bb-icon-color;
+        }
+    }
+
+    &__footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        input[type="text"] {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1;
+            color: $bb-text-color;
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-height: auto;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+
+            &::placeholder {
+                color: $bb-text-tertiary-color;
+            }
+        }
+    }
+
+    &__menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        color: $bb-text-tertiary-color;
+
+        // WordPress DropdownMenu toggle button
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            // Hide default WordPress icon if present
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+}

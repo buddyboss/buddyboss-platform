@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86127cdb632461cfaee1b1300d48e3b1",
+    "content-hash": "5705c898cd9f700371dc32bbbad1f515",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -74,16 +74,16 @@
         },
         {
             "name": "caseproof/ground-level-container",
-            "version": "2.2.1",
+            "version": "9.3.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-container.git",
-                "reference": "9ae1d847eb6a3c1aa193fd301f1edfbde4a5dbd9"
+                "reference": "7458f9851de5e35a00234bf599180d9a03a2525c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-container/zipball/9ae1d847eb6a3c1aa193fd301f1edfbde4a5dbd9",
-                "reference": "9ae1d847eb6a3c1aa193fd301f1edfbde4a5dbd9",
+                "url": "https://api.github.com/repos/caseproof/ground-level-container/zipball/7458f9851de5e35a00234bf599180d9a03a2525c",
+                "reference": "7458f9851de5e35a00234bf599180d9a03a2525c",
                 "shasum": ""
             },
             "require": {
@@ -110,28 +110,28 @@
             ],
             "description": "The GroundLevel Container package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-container/tree/2.2.1"
+                "source": "https://github.com/caseproof/ground-level-container/tree/9.3.0"
             },
-            "time": "2025-07-18T22:41:43+00:00"
+            "time": "2026-07-15T17:07:11+00:00"
         },
         {
             "name": "caseproof/ground-level-in-product-notifications",
-            "version": "2.2.1",
+            "version": "9.1.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-in-product-notifications.git",
-                "reference": "ff498291dc2aed130eba994b465b432e522bd01b"
+                "reference": "fb2b17d79c42904365d6f417d4750bcec36122d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/ff498291dc2aed130eba994b465b432e522bd01b",
-                "reference": "ff498291dc2aed130eba994b465b432e522bd01b",
+                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/fb2b17d79c42904365d6f417d4750bcec36122d8",
+                "reference": "fb2b17d79c42904365d6f417d4750bcec36122d8",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^2.2.1",
-                "caseproof/ground-level-mothership": "^2.2.1",
-                "caseproof/ground-level-support": "^2.2.1",
+                "caseproof/ground-level-container": "^9.1.2",
+                "caseproof/ground-level-mothership": "^9.1.2",
+                "caseproof/ground-level-support": "^9.1.2",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -151,27 +151,69 @@
             ],
             "description": "The GroundLevel In-Product Notifications package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/2.2.1"
+                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/9.1.2"
             },
-            "time": "2026-02-04T19:52:51+00:00"
+            "time": "2026-09-09T17:00:57+00:00"
         },
         {
-            "name": "caseproof/ground-level-mothership",
-            "version": "2.2.1",
+            "name": "caseproof/ground-level-insights",
+            "version": "9.1.2",
             "source": {
                 "type": "git",
-                "url": "git@github.com:caseproof/ground-level-mothership.git",
-                "reference": "aa774ad678722efcfdf4cd59edefa052acbfa886"
+                "url": "git@github.com:caseproof/ground-level-insights.git",
+                "reference": "f0ce5306695a541fda2ec301df5a995b9ee01878"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/aa774ad678722efcfdf4cd59edefa052acbfa886",
-                "reference": "aa774ad678722efcfdf4cd59edefa052acbfa886",
+                "url": "https://api.github.com/repos/caseproof/ground-level-insights/zipball/f0ce5306695a541fda2ec301df5a995b9ee01878",
+                "reference": "f0ce5306695a541fda2ec301df5a995b9ee01878",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^2.2.1",
-                "caseproof/ground-level-support": "^2.2.1",
+                "caseproof/ground-level-container": "^9.1.1",
+                "caseproof/ground-level-in-product-notifications": "^9.1.1",
+                "caseproof/ground-level-mothership": "^9.1.1",
+                "caseproof/ground-level-support": "^9.1.1",
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GroundLevel\\Insights\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Team Caseproof",
+                    "email": "developers@caseproof.com"
+                }
+            ],
+            "description": "The GroundLevel Insights package.",
+            "support": {
+                "source": "https://github.com/caseproof/ground-level-insights/tree/9.1.2"
+            },
+            "time": "2026-09-04T21:22:24+00:00"
+        },
+        {
+            "name": "caseproof/ground-level-mothership",
+            "version": "9.1.2",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:caseproof/ground-level-mothership.git",
+                "reference": "69d74c6770a1951f7560e2d6104e0c56a3f4f3f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/69d74c6770a1951f7560e2d6104e0c56a3f4f3f9",
+                "reference": "69d74c6770a1951f7560e2d6104e0c56a3f4f3f9",
+                "shasum": ""
+            },
+            "require": {
+                "caseproof/ground-level-container": "^9.1.2",
+                "caseproof/ground-level-support": "^9.1.2",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -191,22 +233,22 @@
             ],
             "description": "The GroundLevel Mothership package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-mothership/tree/2.2.1"
+                "source": "https://github.com/caseproof/ground-level-mothership/tree/9.1.2"
             },
-            "time": "2026-02-04T19:52:51+00:00"
+            "time": "2026-09-09T17:00:57+00:00"
         },
         {
             "name": "caseproof/ground-level-support",
-            "version": "2.2.1",
+            "version": "9.3.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-support.git",
-                "reference": "b61302fe5912fad993e9c32e32c97d303cd10021"
+                "reference": "d5d378031bf2bd1c8af89979c734b88a59e161c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-support/zipball/b61302fe5912fad993e9c32e32c97d303cd10021",
-                "reference": "b61302fe5912fad993e9c32e32c97d303cd10021",
+                "url": "https://api.github.com/repos/caseproof/ground-level-support/zipball/d5d378031bf2bd1c8af89979c734b88a59e161c3",
+                "reference": "d5d378031bf2bd1c8af89979c734b88a59e161c3",
                 "shasum": ""
             },
             "require": {
@@ -229,9 +271,9 @@
             ],
             "description": "The GroundLevel Support package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-support/tree/3.0.1"
+                "source": "https://github.com/caseproof/ground-level-support/tree/9.3.0"
             },
-            "time": "2026-01-27T21:29:41+00:00"
+            "time": "2026-08-12T14:07:19+00:00"
         },
         {
             "name": "composer/installers",
@@ -1029,16 +1071,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.33.0",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "a3cc8b044a6ea513310cbd48ef7333b384945638"
+                "reference": "141046a8f9477948ff284fa65be2095baafb94f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/a3cc8b044a6ea513310cbd48ef7333b384945638",
-                "reference": "a3cc8b044a6ea513310cbd48ef7333b384945638",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/141046a8f9477948ff284fa65be2095baafb94f2",
+                "reference": "141046a8f9477948ff284fa65be2095baafb94f2",
                 "shasum": ""
             },
             "require": {
@@ -1088,7 +1130,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.33.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.37.0"
             },
             "funding": [
                 {
@@ -1108,20 +1150,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2026-04-10T16:19:22+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.33.0",
+            "version": "v1.43.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "6d857f4d76bd4b343eac26d6b539585d2bc56493"
+                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/6d857f4d76bd4b343eac26d6b539585d2bc56493",
-                "reference": "6d857f4d76bd4b343eac26d6b539585d2bc56493",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
+                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
                 "shasum": ""
             },
             "require": {
@@ -1173,7 +1215,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.33.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.0"
             },
             "funding": [
                 {
@@ -1193,20 +1235,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-23T08:48:59+00:00"
+            "time": "2026-09-24T15:19:04+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.33.0",
+            "version": "v1.43.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "0cc9dd0f17f61d8131e7df6b84bd344899fe2608"
+                "reference": "9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/0cc9dd0f17f61d8131e7df6b84bd344899fe2608",
-                "reference": "0cc9dd0f17f61d8131e7df6b84bd344899fe2608",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74",
+                "reference": "9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74",
                 "shasum": ""
             },
             "require": {
@@ -1257,7 +1299,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.33.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.43.0"
             },
             "funding": [
                 {
@@ -1277,7 +1319,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-02T08:10:11+00:00"
+            "time": "2026-09-25T15:50:05+00:00"
         },
         {
             "name": "symfony/process",
@@ -1418,6 +1460,7 @@
                     "type": "tidelift"
                 }
             ],
+            "abandoned": true,
             "time": "2022-01-17T14:14:24+00:00"
         },
         {
@@ -2044,16 +2087,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.33.0",
+            "version": "v1.43.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "380872130d3a5dd3ace2f4010d95125fde5d5c70"
+                "reference": "5cac8f4db97208823aa353f59a01faad2da52c75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/380872130d3a5dd3ace2f4010d95125fde5d5c70",
-                "reference": "380872130d3a5dd3ace2f4010d95125fde5d5c70",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5cac8f4db97208823aa353f59a01faad2da52c75",
+                "reference": "5cac8f4db97208823aa353f59a01faad2da52c75",
                 "shasum": ""
             },
             "require": {
@@ -2102,7 +2145,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.33.0"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.43.0"
             },
             "funding": [
                 {
@@ -2122,20 +2165,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-27T09:58:17+00:00"
+            "time": "2026-09-25T15:46:47+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.33.0",
+            "version": "v1.43.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
-                "reference": "3833d7255cc303546435cb650316bff708a1c75c"
+                "reference": "ebd57ccc7edb93d632e184efbe7693d2517bab3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/3833d7255cc303546435cb650316bff708a1c75c",
-                "reference": "3833d7255cc303546435cb650316bff708a1c75c",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/ebd57ccc7edb93d632e184efbe7693d2517bab3b",
+                "reference": "ebd57ccc7edb93d632e184efbe7693d2517bab3b",
                 "shasum": ""
             },
             "require": {
@@ -2187,7 +2230,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.33.0"
+                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.43.0"
             },
             "funding": [
                 {
@@ -2207,20 +2250,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2026-09-23T22:02:09+00:00"
         },
         {
             "name": "symfony/polyfill-php81",
-            "version": "v1.33.0",
+            "version": "v1.38.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php81.git",
-                "reference": "4a4cfc2d253c21a5ad0e53071df248ed48c6ce5c"
+                "reference": "6bfb9c766cacffbc8e118cb87217d08ed84e5cd7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php81/zipball/4a4cfc2d253c21a5ad0e53071df248ed48c6ce5c",
-                "reference": "4a4cfc2d253c21a5ad0e53071df248ed48c6ce5c",
+                "url": "https://api.github.com/repos/symfony/polyfill-php81/zipball/6bfb9c766cacffbc8e118cb87217d08ed84e5cd7",
+                "reference": "6bfb9c766cacffbc8e118cb87217d08ed84e5cd7",
                 "shasum": ""
             },
             "require": {
@@ -2267,7 +2310,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php81/tree/v1.33.0"
+                "source": "https://github.com/symfony/polyfill-php81/tree/v1.38.1"
             },
             "funding": [
                 {
@@ -2287,7 +2330,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2026-05-26T12:45:58+00:00"
         },
         {
             "name": "symfony/service-contracts",

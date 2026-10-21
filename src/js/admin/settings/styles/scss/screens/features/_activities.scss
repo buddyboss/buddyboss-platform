@@ -1,0 +1,803 @@
+/* ----------------------------------------------------------------
+   Activity List Screen
+   ---------------------------------------------------------------- */
+
+.bb-activity-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Toolbar — layout styled via .bb-admin-list-toolbar
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Filter Dropdown
+	&__filter-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Action Type Filter
+	&__action-filter {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Search — styled via .bb-admin-list-search
+
+	// Table — base styled via .bb-admin-list-table
+
+	&__edit-loading {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.1);
+		z-index: 100000;
+	}
+
+	&__table {
+		table-layout: fixed;
+	}
+
+	&__table th.bb-activity-list__th--author {
+		font-size: 14px;
+		color: $bb-text-color;
+		width: 18%;
+	}
+
+	&__th--activity {
+		width: 28%;
+	}
+
+	&__th--checkbox {
+		width: 30px;
+	}
+
+	&__th--actions {
+		width: 30px;
+	}
+
+	// Author Column
+	&__author {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+		border: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__author-info {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		overflow: hidden;
+	}
+
+	&__author-name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	&__spam-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 2px 4px;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		color: $bb-text-warning-primary-color;
+		font-size: 11px;
+		line-height: 1.2;
+		border-radius: $bb-border-radius-full;
+
+		i {
+			color: $bb-icon-warning-primary-color;
+			font-size: 12px;
+		}
+	}
+
+	// Activity Column
+	&__content {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		line-height: 18px;
+	}
+
+	&__action-text {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		display: block;
+		padding: 3px 0;
+		line-height: 1.5;
+
+		a {
+			font-weight: 600;
+			color: $bb-text-color;
+			text-decoration: none;
+		}
+	}
+
+	&__content-preview {
+		font-size: 13px;
+		color: $bb-text-color;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		padding: 3px 0;
+		line-height: 1.5;
+
+		a {
+			color: $bb-link-color;
+			text-decoration: none;
+		}
+
+		p {
+			margin: 0;
+		}
+	}
+
+	&__td--activity_topic {
+		
+		.bb-topic-url {
+			color: $bb-link-color;
+			text-decoration: none;
+		}
+	}
+
+	// Date Column
+	&__td--date {
+		white-space: nowrap;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__date {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+
+		i {
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			line-height: 1;
+		}
+	}
+
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
+	&__td--actions {
+		text-align: center;
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__toolbar,
+		&__table-wrapper,
+		&__footer {
+			min-width: 820px;
+		}
+	}
+
+}
+
+// Custom panel main - Allow full width for custom screens (ActivityList, GroupsList).
+.bb-admin-feature-settings__main--custom-panel {
+	padding: 0;
+    max-width: 1600px;
+	margin: 0 auto;
+	width: 100%;
+
+	.bb-activity-list {
+		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Activity Edit Modal
+   ---------------------------------------------------------------- */
+
+// Shared meta field styles (used by common/RegisteredMetaField & RichTextEditor).
+.bb-admin-meta-field {
+
+	&__label {
+		display: block;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-secondary-color;
+		margin-bottom: 8px;
+	}
+
+	&__editor-field {
+		margin-bottom: 16px;
+	}
+
+	&__editor-wrapper {
+		overflow: hidden;
+		
+		.bb-admin-meta-field__label + & {
+			margin-top: -26px;
+		}
+
+		.wp-editor-container {
+			display: flex;
+			flex-direction: column;
+			border: none;
+			background-color: transparent;
+
+			.quicktags-toolbar {
+				order: 3;
+				border: none;
+				background-color: transparent;
+
+				.ed_button {
+					background-color: $bb-background-secondary-color;
+					border-color: $bb-border-secondary-color;
+					color: $bb-text-color;
+					border-radius: $bb-border-radius-md;
+
+					&:focus,
+					&:hover {
+						background-color: $bb-background-secondary-color;
+						border-color: $bb-border-secondary-color;
+						color: $bb-text-color;
+					}
+				}
+			}
+		}
+
+		.mce-toolbar-grp .mce-btn-group {
+
+			.mce-btn {
+				margin: 0 4px;
+				background-color: transparent;
+				border: none;
+
+				button {
+					padding: 4px;
+				}
+
+				&[aria-haspopup="true"] {
+					@include bb-admin-settings-select;
+					padding: 2px 4px;
+
+					.mce-caret {
+						display: none;
+					}
+
+					&:focus,
+					&:hover {
+						background-color: $bb-background-color;
+						border-color: $bb-border-quaternary-color;
+					}
+
+					&.mce-first {
+						margin-left: 0;
+					}
+				}
+
+				&.mce-active .mce-ico:before {
+					font-weight: 700;
+				}
+
+				&:focus,
+				&:hover {
+					background-color: transparent;
+					box-shadow: none;
+					outline: none;
+					border-color: transparent;
+					color: $bb-text-color;
+				}
+			}
+
+			.mce-ico:before {
+				content: "\e5be";
+				font-family: "bb-icons-rl";
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				font-weight: 400;
+			}
+			
+			.mce-i-bold:before {
+				content: "\e5be";
+			}
+
+			.mce-i-italic:before {
+				content: "\e5c0";
+			}
+
+			.mce-i-bullist:before {
+				content: "\e2f2";
+			}
+
+			.mce-i-numlist:before {
+				content: "\e2f6";
+			}
+
+			.mce-i-blockquote:before {
+				content: "\e660";
+			}
+
+			.mce-i-link:before {
+				content: "\e2e2";
+			}
+
+			.mce-i-unlink:before {
+				content: "\e1bc";
+			}
+
+			.mce-i-underline:before {
+				content: "\e5C4";
+			}
+
+			.mce-i-strikethrough:before {
+				content: "\e5C2";
+			}
+			
+			.mce-i-alignleft:before {
+				content: "\e484";
+			}
+
+			.mce-i-aligncenter:before {
+				content: "\E486";
+			}
+
+			.mce-i-alignright:before {
+				content: "\e486";
+			}
+
+			.mce-i-undo:before {
+				content: "\e038";
+			}
+
+			.mce-i-redo:before {
+				content: "\e036";
+			}
+
+			.mce-i-fullscreen {
+				display: none; // Todo: Remove after making fullscreen working.
+			}
+
+			.mce-i-fullscreen:before {
+				content: "\e0a2";
+			}
+		}
+
+		.wp-editor-tabs  {
+			padding-right: 10px;
+			margin-bottom: 0;
+			position: relative;
+			z-index: 1;
+
+			.wp-switch-editor {
+				background-color: $bb-background-color;
+				border-radius: $bb-border-radius-md $bb-border-radius-md 0 0;
+				border: 1px solid $bb-border-tertiary-color;
+				border-bottom: none;
+			}
+		}
+
+		.tmce-active .switch-tmce,
+		.html-active .switch-html {
+			background-color: $bb-background-base-color;
+			border-bottom: none;
+		}
+
+		.mce-container-body {
+			display: flex;
+			flex-direction: column;
+			padding: 0;
+		}
+
+		.mce-edit-area.mce-panel {
+			border: 1px solid $bb-border-tertiary-color !important;
+			border-radius: $bb-border-radius-md;
+			background-color: $bb-background-color;
+			overflow: hidden;
+			margin: 0 0 4px 0;
+			padding-bottom: 10px;
+		}
+
+		.mce-tinymce {
+			border: none;
+			background-color: transparent;
+		}
+
+		.mce-top-part {
+			order: 3;
+			margin-top: 8px;
+
+			&:before {
+				box-shadow: none;
+			}
+
+			div.mce-toolbar-grp {
+				border-bottom: none;
+				background: transparent;
+			}
+		}
+
+		.mce-statusbar {
+			margin: -9px 0 0 0;
+			padding: 0 4px 4px 0;
+			background-color: $bb-background-color;
+			border-radius: 0 0 $bb-border-radius-md $bb-border-radius-md;
+			border: 1px solid $bb-border-tertiary-color !important;
+			border-top: none !important;
+
+			.mce-resizehandle i:before {
+				content: "\e0a6";
+				font-family: "bb-icons-rl";
+				color: $bb-icon-secondary-color;
+				font-size: 16px;
+				font-weight: 400;
+			}
+		}
+	}
+
+	&__textarea {
+		width: 100%;
+		min-height: 120px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 8px;
+		font-size: 13px;
+		resize: vertical;
+	}
+
+	&__description {
+		font-size: 12px;
+		color: $bb-text-tertiary-color;
+		margin: 0 0 10px 0;
+	}
+
+	&__row {
+		display: flex;
+		gap: 16px;
+
+		> * {
+			flex: 1;
+		}
+	}
+
+	&__history {
+		margin-top: 16px;
+	}
+
+	&__history-title {
+		font-size: 13px;
+		font-weight: 600;
+		margin: 0 0 8px 0;
+	}
+
+	&__history-entry {
+		font-size: 13px;
+	}
+
+	&__readonly-field {
+		margin-bottom: 16px;
+	}
+
+	&__readonly-value {
+		display: block;
+		font-size: 13px;
+	}
+
+	&__select-field .components-base-control {
+		
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+		}
+
+		.components-input-control-suffix-wrapper,
+		.components-input-control__backdrop {
+			display: none;
+		}
+	}
+}
+
+.bb-activity-edit-modal {
+	width: 720px;
+	max-width: 90vw;
+	max-height: 90%;
+
+	&__body {
+		padding: 16px 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+
+			+ .bb-admin-meta-field__description {
+				margin-top: -6px;
+			}
+		}
+
+		.components-text-control__input,
+		.components-select-control select {
+			font-size: 13px;
+		}
+	}
+
+	&__footer {
+		justify-content: space-between;
+	}
+
+	&__footer-left {
+		display: flex;
+		align-items: center;
+	}
+
+	&__footer-right {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__view-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 14px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.8;
+		color: $bb-text-color;
+		text-decoration: none;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
+
+		&:hover {
+			color: $bb-text-color;
+			background-color: $bb-background-secondary-color;
+			border-color: $bb-border-secondary-color;
+			text-decoration: none;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+}
+
+.bb-activity-comment-modal {
+
+	&.components-modal__frame {
+		width: 680px;
+		max-width: 90vw;
+	}
+
+	.components-modal__header {
+		padding: 16px 16px 16px 24px;
+	}
+
+	.components-modal__content {
+		padding: 0;
+		margin-top: 64px;
+	}
+
+	&__body {
+		padding: 16px 24px 8px;
+	}
+
+	&__error {
+		color: $bb-error-color;
+		font-size: 13px;
+		margin: 0 0 12px 0;
+	}
+
+	&__footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
+	}
+
+	&__footer-left {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		padding: 8px 0;
+	}
+
+	&__footer-right {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		flex: 1;
+		gap: 8px;
+		padding: 8px 0;
+	}
+
+	&__view-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+		text-decoration: none;
+		background-color: transparent;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
+
+		&:hover {
+			color: $bb-text-color;
+			background-color: $bb-background-primary-hover-color;
+			border-color: $bb-border-tertiary-color;
+			text-decoration: none;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+}
+
+.bb-activity-list__delete-confirm-modal.bb-admin-settings-modal {
+	max-width: 550px;
+
+	.bb-admin-settings-modal__body {
+		padding: 24px;
+
+		> p {
+			margin: 0;
+		}
+	}
+
+	.bb-admin-settings-modal__footer {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+	}
+}
+
+// Custom Post Types section (Activity → Posts Visibility panel):
+// Each CPT (toggle + Enable-comments checkbox / not-supported notice) is registered
+// as its OWN group (`cpt_feed_<post_type>`), so by default the --group-last
+// modifier draws a divider after every CPT. Per Figma the section reads as a
+// single visual block — no dividers between consecutive CPTs. Strip the
+// border restoration that --group-last would otherwise add for any field
+// belonging to a `cpt_feed_*` group.
+.bb-admin-settings-form__field[data-group^="cpt_feed_"] {
+
+	&.bb-admin-settings-form__field--group-last {
+		border-bottom: none;
+		padding-bottom: 18px;
+	}
+
+	&.bb-admin-settings-form__field--grouped:has(.bb-admin-settings-form__toggle-wrapper) {
+		padding-bottom: 0;
+	}
+
+	&.bb-admin-settings-form__field--no-label {
+		padding-top: 16px;
+
+		&:has(.bb-admin-notice) {
+			padding-top: 16px;
+		}
+
+		.bb-admin-notice {
+			margin-bottom: 0;
+		}
+	}
+}

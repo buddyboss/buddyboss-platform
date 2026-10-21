@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 define( 'BP_PS_FORM', 'bp_profile_search' );
 
-require 'bps-admin.php';
+// Legacy admin metabox UI removed — now managed via Settings 2.0.
 require 'bps-directory.php';
 require 'bps-fields.php';
 require 'bps-form.php';
@@ -63,7 +63,7 @@ function bp_profile_search_register_post_type() {
 			'not_found'          => __( 'No forms found', 'buddyboss' ),
 			'not_found_in_trash' => __( 'No forms found in trash', 'buddyboss' ),
 		),
-		'show_ui'         => true,
+		'show_ui'         => false,
 		'show_in_menu'    => '',
 		'supports'        => array( 'title' ),
 		'rewrite'         => false,
@@ -98,6 +98,8 @@ function bp_profile_search_register_post_type() {
 /**
  * Remove capability to delete BuddyBoss Profile Search form post type.
  *
+ * Prevents accidental deletion of search forms via WP-CLI or direct access.
+ *
  * @since BuddyBoss 1.0.0
  */
 function bp_profile_search_prevent_delete() {
@@ -107,94 +109,28 @@ function bp_profile_search_prevent_delete() {
 	$wp_roles->remove_cap( 'editor', 'delete_bp_ps_forms' );
 	$wp_roles->remove_cap( 'editor', 'delete_published_bp_ps_forms' );
 }
-
 add_action( 'init', 'bp_profile_search_prevent_delete' );
 
-/******* post.php, post-new.php */
-
-add_filter( 'post_updated_messages', 'bp_profile_search_form_updated_messages' );
-/**
- * Returns BuddyBoss Profile Search message after form update.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_profile_search_form_updated_messages( $messages ) {
-	$messages['bp_ps_form'] = array(
-		0  => 'message 0',
-		1  => __( 'Form updated.', 'buddyboss' ),
-		2  => 'message 2',
-		3  => 'message 3',
-		4  => 'message 4',
-		5  => 'message 5',
-		6  => __( 'Form created.', 'buddyboss' ),
-		7  => 'message 7',
-		8  => 'message 8',
-		9  => 'message 9',
-		10 => 'message 10',
-	);
-	return $messages;
-}
+// Legacy admin UI functions removed (form_updated_messages, admin_head CSS,
+// admin JS enqueue, admin tab rendering, submenu highlight)
+// — Profile Search CPT admin UI is now managed via Settings 2.0.
 
 /**
- * Check if we are on the BuddyBoss Profile Search screen.
+ * Get a Profile Search option.
+ *
+ * Reads from the serialized `bp_ps_settings` option.
+ * Moved from bps-admin.php — still needed by frontend search code.
  *
  * @since BuddyBoss 1.0.0
- */
-function bp_profile_search_screen() {
-	global $current_screen;
-	return isset( $current_screen->post_type ) && $current_screen->post_type == 'bp_ps_form';
-}
-
-add_action( 'admin_head', 'bp_profile_search_admin_head' );
-/**
- * Output BuddyBoss Profile Search admin styling.
  *
- * @since BuddyBoss 1.0.0
- */
-function bp_profile_search_admin_head() {
-	global $current_screen;
-	if ( ! bp_profile_search_screen() ) {
-		return;
-	}
-
-	if ( $current_screen->id == 'bp_ps_form' ) {
-		_bp_profile_search_admin_js();
-	}
-	?>
-	<style>
-		.search-box, .actions, .view-switch {display: none;}
-		.bulkactions {display: block;}
-		#minor-publishing {display: none;}
-		.fixed .column-fields {width: 8%;}
-		.fixed .column-template {width: 15%;}
-		.fixed .column-action {width: 12%;}
-		.fixed .column-directory {width: 12%;}
-		.fixed .column-widget {width: 12%;}
-		.fixed .column-shortcode {width: 15%;}
-		.bp_ps_col1 {display: inline-block; width: 2%; cursor: move;}
-		.bp_ps_col2 {display: inline-block; width: 20%;}
-		.bp_ps_col3 {display: inline-block; width: 16%;}
-		.bp_ps_col4 {display: inline-block; width: 32%;}
-		.bp_ps_col5 {display: inline-block; width: 16%;}
-		a.delete {color: #aa0000;}
-		a.delete:hover {color: #ef3e46;}
-	</style>
-	<?php
-}
-
-/**
- * Enqueue BuddyBoss Profile Search JS.
+ * @param string $name    Option name.
+ * @param mixed  $default Default value if not set.
  *
- * @since BuddyBoss 1.0.0
+ * @return mixed Option value or default.
  */
-function _bp_profile_search_admin_js() {
-	$translations = array(
-		'drag'   => __( 'Drag & drop to reorder fields', 'buddyboss' ),
-		'field'  => __( 'Select field', 'buddyboss' ),
-		'remove' => __( 'Remove', 'buddyboss' ),
-	);
-	wp_enqueue_script( 'bp-profile-search-admin', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-admin.js', array( 'jquery-ui-sortable' ), bp_get_version() );
-	wp_localize_script( 'bp-profile-search-admin', 'bp_ps_strings', $translations );
+function bp_ps_get_option( $name, $default ) {
+	$settings = get_option( 'bp_ps_settings' );
+	return isset( $settings->{$name} ) ? $settings->{$name} : $default;
 }
 
 /**
@@ -231,52 +167,4 @@ function bp_profile_search_add_main_form() {
 	}
 }
 
-/**
- * Added Navigation tab on top of the page BuddyBoss > Group Types
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_users_admin_profile_search_listing_add_users_tab() {
-	global $pagenow ,$post;
-
-	// Check profile search enabled.
-	$is_profile_search_enabled = bp_disable_advanced_profile_search();
-
-	if ( false === $is_profile_search_enabled ) {
-
-		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
-			?>
-			<div class="wrap">
-				<?php
-				$users_tab = count( bp_core_get_users_admin_tabs() );
-				if ( $users_tab > 1 ) {
-					?>
-					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Search', 'buddyboss' ) ); ?></h2>
-																				<?php
-				}
-				?>
-			</div>
-			<?php
-		}
-	}
-}
-add_action( 'admin_notices', 'bp_users_admin_profile_search_listing_add_users_tab' );
-
-add_filter( 'parent_file', 'bp_profile_search_set_platform_tab_submenu_active' );
-/**
- * Highlights the submenu item using WordPress native styles.
- *
- * @param string $parent_file The filename of the parent menu.
- *
- * @return string $parent_file The filename of the parent menu.
- */
-function bp_profile_search_set_platform_tab_submenu_active( $parent_file ) {
-	global $pagenow, $current_screen, $post;
-
-	if ( false === bp_disable_advanced_profile_search() ) {
-		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
-			$parent_file = 'buddyboss-platform';
-		}
-	}
-	return $parent_file;
-}
+// Legacy admin tab and submenu highlight functions removed — now managed via Settings 2.0.

@@ -1099,6 +1099,15 @@ function bb_notification_avatar() {
 			break;
 	}
 
+	// `BP_Groups_Group` and `bp_get_group_permalink()` are loaded by the
+	// groups component. A stale group-related notification can outlive a
+	// groups deactivation — fall through to the default-avatar branch in
+	// that case rather than fatalling on the missing class.
+	if ( isset( $object ) && 'group' === $object && ! bp_is_active( 'groups' ) ) {
+		$object  = 'notification';
+		$item_id = 0;
+	}
+
 	if ( isset( $item_id, $object ) ) {
 
 		if ( 'notification' === $object ) {
@@ -1354,6 +1363,14 @@ function bb_get_notification_conditional_icon( $notification ) {
 			break;
 		case 'bb_groups_new_message':
 		case 'bb_messages_new':
+			// `BP_Messages_Message` and `bp_messages_get_meta()` are loaded
+			// by the messages component. A stale messages notification can
+			// outlive a messages deactivation — return a neutral icon
+			// instead of fatalling on the missing class/function.
+			if ( ! bp_is_active( 'messages' ) ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-square';
+				break;
+			}
 			$item_id = $notification->item_id;
 			// Get message thread ID.
 			$message      = new BP_Messages_Message( $item_id );
@@ -1395,6 +1412,13 @@ function bb_get_notification_conditional_icon( $notification ) {
 			break;
 		case 'bb_activity_following_post':
 		case 'bb_groups_subscribed_activity':
+			// `BP_Activity_Activity` is loaded by the activity component
+			// and is NOT in the always-on autoload list. Stale activity-
+			// related notifications can outlive an activity deactivation.
+			if ( ! bp_is_active( 'activity' ) ) {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+				break;
+			}
 			$item_id        = $notification->item_id;
 			$activity       = new BP_Activity_Activity( $item_id );
 			$activity_metas = bb_activity_get_metadata( $item_id );
@@ -2183,3 +2207,121 @@ function bb_post_new_comment_reply_add_notification( $comment_id, $commenter_id,
 
 }
 add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply_add_notification', 10, 3 );
+
+
+/**
+ * Delete the metadata for a set of notification IDs in bulk.
+ *
+ * The various notification delete paths remove rows straight from the notifications table
+ * with raw SQL, which would otherwise leave their rows in the notification meta table
+ * orphaned. This helper cleans that metadata up in a single bulk query per chunk (500 IDs)
+ * instead of one query per notification, and flushes the 'notification_meta' object cache
+ * for each ID so the metadata cache stays coherent, exactly as the metadata API would.
+ *
+ * Callers should run this after the notifications themselves have been deleted, so that a
+ * failure here can only ever leave inert orphaned meta rows, never a notification stripped
+ * of the meta it still needs.
+ *
+ * @since BuddyBoss 3.1.2
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param int[] $notification_ids Array of notification IDs whose metadata should be deleted.
+ * @return void
+ */
+function bb_notifications_delete_meta_for_ids( $notification_ids ) {
+	global $wpdb;
+
+	$notification_ids = wp_parse_id_list( $notification_ids );
+
+	if ( empty( $notification_ids ) ) {
+		return;
+	}
+
+	$bp = buddypress();
+
+	if ( empty( $bp->notifications->table_name_meta ) ) {
+		return;
+	}
+
+	foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
+		$ids_sql = implode( ',', $chunk );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM {$bp->notifications->table_name_meta} WHERE notification_id IN ({$ids_sql})" );
+
+		// Keep the metadata cache coherent for the deleted notifications.
+		foreach ( $chunk as $notification_id ) {
+			wp_cache_delete( $notification_id, 'notification_meta' );
+		}
+	}
+}
+
+/**
+ * Remove a bounded chunk of orphaned notification metadata on the daily maintenance cron.
+ *
+ * Historical raw-SQL notification deletes left rows behind in the notification meta table
+ * whose parent notification no longer exists. This is hooked to the daily background-log
+ * maintenance cron ('bb_bg_log_clear'), which is scheduled unconditionally on every site, so
+ * the cleanup runs on a fixed schedule — regardless of background-queue activity — and never
+ * happens during, and cannot lag, a plugin update, no matter how large the meta table is.
+ *
+ * (Note: the sibling 'bb_bg_log_clear_hourly' event is only scheduled/active when the log
+ * table exceeds 1 GB, so it is not a reliable hook to attach to.)
+ *
+ * Each pass deletes up to a filterable limit of rows (the notification_id column is indexed,
+ * so the orphan lookup is efficient). No completion state is stored: once the table is clean
+ * the query simply removes zero rows on each run, which is a cheap indexed no-op. Cache
+ * invalidation is unnecessary because the parent notifications are already gone.
+ *
+ * @since BuddyBoss 3.1.2
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @return void
+ */
+function bb_notifications_remove_orphaned_meta_on_cron() {
+	global $wpdb;
+
+	if ( ! bp_is_active( 'notifications' ) ) {
+		return;
+	}
+
+	$bp = buddypress();
+
+	if ( empty( $bp->notifications->table_name_meta ) || empty( $bp->core->table_name_notifications ) ) {
+		return;
+	}
+
+	$meta_table  = $bp->notifications->table_name_meta;
+	$notif_table = $bp->core->table_name_notifications;
+
+	/**
+	 * Filters the number of orphaned notification meta rows removed per cron pass.
+	 *
+	 * Runs on the daily maintenance cron, so this is sized to make steady progress on large
+	 * backlogs while keeping each delete bounded and cheap.
+	 *
+	 * @since BuddyBoss 3.1.2
+	 *
+	 * @param int $limit Number of rows to delete per pass. Default 5000.
+	 */
+	$limit = (int) apply_filters( 'bb_notifications_orphaned_meta_cron_limit', 5000 );
+	if ( $limit < 1 ) {
+		$limit = 5000;
+	}
+
+	// Delete meta rows whose parent notification no longer exists, in one query. The inner
+	// SELECT (orphans, capped by LIMIT) is wrapped in a derived table so it can drive the
+	// IN() delete: MariaDB/MySQL otherwise reject both a LIMIT inside an IN() subquery and a
+	// subquery that references the delete-target table. The derived table materialises the
+	// IDs first, sidestepping both limitations.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$meta_table} WHERE id IN ( SELECT id FROM ( SELECT m.id FROM {$meta_table} m LEFT JOIN {$notif_table} n ON m.notification_id = n.id WHERE n.id IS NULL LIMIT %d ) AS orphan )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$limit
+		)
+	);
+}
+add_action( 'bb_bg_log_clear', 'bb_notifications_remove_orphaned_meta_on_cron' );

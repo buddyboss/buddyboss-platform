@@ -133,6 +133,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( "A group's details are updated", 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_details_updated'
 		);
@@ -170,6 +171,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is promoted in a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_promoted'
 		);
@@ -207,6 +209,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives an invite to join a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_new_invite'
 		);
@@ -244,6 +247,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A group organizer receives a request to join their group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_new_request'
 		);
@@ -282,6 +286,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is accepted into a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_request_accepted'
 		);
@@ -320,6 +325,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member is rejected from joining a group', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+				'group'               => 'groups_discussions',
 			),
 			'bb_groups_request_rejected'
 		);
@@ -357,6 +363,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{{sender.name}}} from {{{group.name}}} sent you a message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+				'group'               => 'messages',
 			),
 			'bb_groups_new_message'
 		);
@@ -373,6 +380,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 					'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+					'group'               => 'messages',
 				),
 				'bb_groups_new_message'
 			);
@@ -797,6 +805,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
 					'situation_label'     => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails of new posts in groups you are subscribed to.', 'buddyboss' ),
+					'group'               => 'groups_discussions',
 				),
 				'bb_groups_subscribed_activity'
 			);
@@ -840,6 +849,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 					'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups you are subscribed to.', 'buddyboss' ),
+					'group'               => 'groups_discussions',
 				),
 				'bb_groups_subscribed_discussion'
 			);
@@ -1079,10 +1089,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Send callback function for group type notification.
 	 *
 	 * @since BuddyBoss 2.2.8
+	 * @since BuddyBoss 3.6.1 Claims the chunk before sending (concurrent re-run guard), writes the rebuilt activity back into the email tokens, and returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
-	 * @return bool|void
+	 * @return false
 	 */
 	public function bb_send_subscribed_group_notifications( $args ) {
 
@@ -1107,14 +1118,28 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			return false;
 		}
 
+		// Derive the claim key from the pristine payload once: the author is
+		// removed from user_ids below, and the claim, its refreshes and its
+		// completion marker must all hash the same shape.
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $r );
+
+		// A queue row re-run by a concurrently dispatched worker must not send
+		// this chunk a second time.
+		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
+			return false;
+		}
+
 		$data_id                 = 0;
 		$author_id               = 0;
 		$type_key                = '';
 		$email_notification_type = '';
 		$usernames               = array();
 		if ( 'bb_groups_subscribed_activity' === $r['notification_from'] ) {
-			// Bail if component is not activated.
+			// Bail if component is not activated. Release the claim on every
+			// bail below the claim so nothing holds the chunk for the TTL.
 			if ( ! bp_is_active( 'activity' ) ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
 
@@ -1126,8 +1151,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			if ( empty( $activity ) || 'groups' !== $activity->component ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
+
+			// Queued rows are compacted (the serialized activity object is stripped
+			// to keep them small) and the chunk runner restores the object before
+			// this callback runs; the email renderer requires it, so always provide
+			// the resolved one. Idempotent for rows that already carry the object.
+			$r['data']['email_tokens']['tokens']['activity'] = $activity;
 
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-activity';
@@ -1136,6 +1169,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		} elseif ( 'bb_groups_subscribed_discussion' === $r['notification_from'] ) {
 			// Bail if component is not activated.
 			if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_topic_content' ) ) {
+				bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 				return false;
 			}
 
@@ -1147,6 +1182,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		if ( empty( $data_id ) || empty( $author_id ) || empty( $type_key ) || empty( $email_notification_type ) ) {
+			bb_subscriptions_release_notification_chunk_claim( $r, $chunk_key );
+
 			return false;
 		}
 
@@ -1159,6 +1196,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			// Keep the chunk claim alive while this (possibly slow) chunk is still sending.
+			bb_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
 			$user_id           = (int) $user_id;
 			$send_mail         = true;
 			$send_notification = true;
@@ -1210,6 +1249,15 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				$email_tokens['tokens']['unsubscribe']      = esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) );
 				$email_tokens['tokens']['receiver-user.id'] = $user_id;
 
+				// The author's name was resolved once, before this fan-out, with whoever triggered the
+				// activity as the viewer - normally the author themselves, who is never denied their
+				// own name. Delivered as-is it would put a name part into every subscriber's inbox
+				// that the site withholds from them on screen. Re-resolve it for THIS recipient, the
+				// way the friends, blogs and messages fan-outs already do.
+				if ( isset( $email_tokens['tokens']['poster.name'] ) && ! empty( $author_id ) ) {
+					$email_tokens['tokens']['poster.name'] = bp_core_get_user_displayname( (int) $author_id, $user_id );
+				}
+
 				// Send notification email.
 				bp_send_email( $email_notification_type, (int) $user_id, $email_tokens );
 			}
@@ -1231,7 +1279,16 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
-		return true;
+		// Every recipient is handled: mark the chunk done so a late duplicate
+		// queue row is refused, then release the claim.
+		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
+
+		// The chunk is fully processed; false removes the queue row. A truthy
+		// return would make BB_Background_Updater::task() re-run the row with
+		// the updater object as its only argument; that pass stops at the array
+		// check in bb_subscriptions_send_notification_chunk() (or, for a row
+		// queued before the chunk runner existed, at the guards above).
+		return false;
 	}
 
 	/**

@@ -632,10 +632,40 @@ function bp_friend_friendship_id() {
 	 * @return int ID of the friendship.
 	 */
 function bp_get_friend_friendship_id() {
-	global $members_template;
+	global $wpdb, $members_template;
 
 	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), 'bp' ) ) {
 		$friendship_id = friends_get_friendship_id( $members_template->member->id, bp_loggedin_user_id() );
+
+		// Fallback: Direct DB query when moderation-filtered lookup returns empty.
+		// This handles edge cases where the moderation subquery incorrectly
+		// excludes a valid friendship from the filtered results.
+		if ( empty( $friendship_id ) ) {
+			$member_id = (int) $members_template->member->id;
+
+			// Skip fallback if the member is suspended or blocked.
+			$is_moderated = false;
+			if ( bp_is_active( 'moderation' ) ) {
+				$is_moderated = bp_moderation_is_user_suspended( $member_id ) ||
+					bp_moderation_is_user_blocked( $member_id );
+			}
+
+			if ( ! $is_moderated ) {
+				$bp          = buddypress();
+				$loggedin_id = bp_loggedin_user_id();
+
+				$friendship_id = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT id FROM {$bp->friends->table_name} WHERE ( initiator_user_id = %d AND friend_user_id = %d ) OR ( initiator_user_id = %d AND friend_user_id = %d ) LIMIT 1",
+						$member_id,
+						$loggedin_id,
+						$loggedin_id,
+						$member_id
+					)
+				);
+			}
+		}
+
 		wp_cache_set( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), $friendship_id, 'bp' );
 	}
 

@@ -304,6 +304,28 @@ function bp_helper_plugins_loaded_callback() {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
 	}
 
+	/**
+	 * SEO plugin compatibility.
+	 *
+	 * They build the document title, the Open Graph tags and the JSON-LD graph themselves, and
+	 * resolve a member's name by reading the WP_User `display_name` property rather than through
+	 * get_the_author_meta() - a read no filter can reach. Without this the full name goes into the
+	 * page source for anonymous visitors and social scrapers on a community that hides it.
+	 *
+	 * Deliberately NOT gated on detecting one of the three plugins it ships support for. The class
+	 * only registers filters, and registering a hook nobody fires costs nothing - which is the same
+	 * argument its own hook list makes for not gating that. Gating the class instead put its two
+	 * documented extension points, `bb_seo_schema_graph_filters` and `bb_seo_author_name_filters`,
+	 * out of reach of exactly the plugins they exist for: a community on SEOPress, Slim SEO, The
+	 * SEO Framework or Squirrly never loaded the class, so its listener was never called and it had
+	 * no supported way to close the leak. Returning an empty array from either filter unregisters
+	 * everything, which is the off switch.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 */
+	require buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+	BB_SEO_Helpers::instance();
+
 	if ( class_exists( 'LifterLMS' ) ) {
 		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
 	}
@@ -825,140 +847,18 @@ function bb_rest_compatibility_loader() {
 }
 add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
 
-/**
- * Remove the 'group_leader' role for Learndash group author.
- * If the author is not the leader of any gorup.
- *
- * @since BuddyBoss 1.6.3
- *
- * @param int $post_id WP Post ID.
- *
- * @uses learndash_is_admin_user()                Is the author has administrator role.
- * @uses learndash_is_group_leader_user()         Is the author has group_leader role.
- * @uses learndash_get_administrators_group_ids() Gets the list of group IDs administered by the user.
- *
- * @return void
- */
-function bb_learndash_delete_group( $post_id = 0 ) {
-	// Is Learndash active or not.
-	if ( ! defined( 'LEARNDASH_VERSION' ) ) {
-		return;
-	}
-
-	$post = get_post( $post_id );
-
-	// Is it trash or not.
-	if ( 'revision' !== $post->post_type ) {
-		return;
-	}
-
-	$post_parent = get_post( $post->post_parent );
-
-	if ( 'groups' !== $post_parent->post_type ) {
-		return;
-	}
-
-	$group_id = get_post_meta( $post_parent->ID, '_sync_group_id', true );
-
-	if ( empty( $group_id ) ) {
-		return;
-	}
-
-	$author = $post_parent->post_author;
-
-	// When the group author has already administrator role.
-	if ( learndash_is_admin_user( $author ) ) {
-		return;
-	}
-
-	// When the group author has no group_leader role.
-	if ( ! learndash_is_group_leader_user( $author ) ) {
-		return;
-	}
-
-	// Gets the list of group IDs administered by the user.
-	$group_ids = learndash_get_administrators_group_ids( $author );
-
-	if ( ! empty( $group_ids ) ) {
-		return;
-	}
-
-	$user = new \WP_User( $author );
-	// Add role.
-	$user->remove_role( 'group_leader' );
-}
-add_action( 'delete_post', 'bb_learndash_delete_group' );
-
-/**
- * Add the 'group_leader' role for Learndash group author.
- * When learndash group status change form trash to draft.
- *
- * @since BuddyBoss 1.6.3
- *
- * @param int $post_id LearnDash group id.
- *
- * @uses learndash_is_admin_user() Is the author has administrator role.
- * @uses bb_learndash_role_add()   Add group author role as 'group_leade'.
- *
- * @return void
- */
-function bb_learndash_untrash_group( $post_id ) {
-	// Is Learndash active or not.
-	if ( ! defined( 'LEARNDASH_VERSION' ) ) {
-		return;
-	}
-
-	$ldgroup = get_post( $post_id );
-
-	if ( 'groups' !== $ldgroup->post_type || 'trash' !== $ldgroup->post_status ) {
-		return;
-	}
-
-	$group_id = get_post_meta( $ldgroup->ID, '_sync_group_id', true );
-
-	if ( empty( $group_id ) ) {
-		return;
-	}
-
-	if ( ! function_exists( 'learndash_is_admin_user' ) ) {
-		return;
-	}
-
-	$author = $ldgroup->post_author;
-
-	// When the group author has administrator role.
-	if ( learndash_is_admin_user( $author ) ) {
-		return;
-	}
-
-	$user = new Buddyboss\LearndashIntegration\Library\SyncGenerator();
-	$user->promoteAsGroupLeader( $author, 'admin' );
-}
-add_action( 'untrash_post', 'bb_learndash_untrash_group' );
-
-/**
- * Add user role as 'group_leader'
- *
- * @since BuddyBoss 1.6.3
- *
- * @param int $user_id Update user id.
- *
- * @return void
- */
-function bb_learndash_role_add( $user_id, $before ) {
-	// Is Learndash active or not.
-	if ( ! defined( 'LEARNDASH_VERSION' ) ) {
-		return;
-	}
-
-	if ( ! in_array( 'group_leader', $before->roles, true ) ) {
-		return;
-	}
-
-	$user = new Buddyboss\LearndashIntegration\Library\SyncGenerator();
-	$user->promoteAsGroupLeader( $user_id, 'admin' );
-}
-add_action( 'profile_update', 'bb_learndash_role_add', 10, 2 );
+// The LearnDash-aware `group_leader` role sync used to live here as three
+// functions hooked into `delete_post`, `untrash_post`, and `profile_update`
+// (`bb_learndash_delete_group`, `bb_learndash_untrash_group`, and
+// `bb_learndash_role_add`). Two of them instantiated the addon-only class
+// `\Buddyboss\LearndashIntegration\Library\SyncGenerator`, so leaving them in
+// Platform after the extraction caused a fatal on sites that upgraded
+// Platform without installing the buddyboss-learndash addon.
+//
+// As of BuddyBoss 3.0.0 all three functions moved to the addon at
+// `buddyboss-learndash/includes/group-leader-role-sync.php` and are loaded
+// from `BP_Learndash_Integration::includes()` so the class reference can only
+// ever resolve when the addon itself is loaded.
 
 
 

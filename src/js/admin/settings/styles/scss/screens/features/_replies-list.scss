@@ -1,0 +1,441 @@
+/* ----------------------------------------------------------------
+   Replies List Screen
+   ---------------------------------------------------------------- */
+
+.bb-replies-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	&__create-btn.is-primary {
+		@include bb-button-primary;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+		}
+	}
+
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Toolbar — layout styled via .bb-admin-list-toolbar
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		select {
+			min-width: 160px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Forum Filter (searchable dropdown).
+	&__forum-filter {
+		position: relative;
+	}
+
+	&__forum-filter-btn {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		height: 32px;
+		padding: 0 12px;
+		border-radius: $bb-border-radius-md;
+		border: 1px solid $bb-border-tertiary-color;
+		background-color: $bb-background-color;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+		white-space: nowrap;
+
+		i {
+			font-size: 14px;
+		}
+
+		&:hover,
+		&:focus {
+			border-color: $bb-border-quaternary-color;
+			box-shadow: none;
+			outline: none;
+		}
+	}
+
+	&__forum-filter-arrow {
+		font-size: 10px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__forum-filter-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		z-index: 100;
+		min-width: 240px;
+		max-width: 320px;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-md;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		margin-top: 4px;
+	}
+
+	&__forum-filter-search[type="text"] {
+		@include bb-input-text;
+	}
+
+	&__forum-filter-options {
+		max-height: 240px;
+		overflow-y: auto;
+		padding: 4px 0;
+	}
+
+	&__forum-filter-option {
+		display: block;
+		width: 100%;
+		padding: 8px 12px;
+		border: none;
+		background: none;
+		text-align: left;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		&:hover {
+			background-color: $bb-background-primary-hover-color;
+		}
+
+		&.is-active {
+			background-color: $bb-background-secondary-color;
+			font-weight: 500;
+		}
+	}
+
+	// Sort select
+	&__sort-select {
+		.components-select-control__input {
+			min-width: 120px;
+			height: 36px;
+		}
+	}
+
+	// Search — styled via .bb-admin-list-search
+
+	// Table — base styled via .bb-admin-list-table
+
+	&__table {
+		border-spacing: 0;
+	}
+
+	// Column widths
+	&__col-cb {
+		width: 40px;
+
+		.components-checkbox-control__input-container {
+			margin: 0;
+		}
+	}
+
+	&__col-reply {
+		min-width: 210px;
+		max-width: 210px;
+	}
+
+	&__col-forum {
+		min-width: 140px;
+	}
+
+	&__col-discussion {
+		min-width: 140px;
+		max-width: 140px;
+	}
+
+	&__col-created {
+		min-width: 120px;
+		white-space: nowrap;
+	}
+
+	&__col-actions {
+		width: 60px;
+		text-align: center;
+	}
+
+	// Reply content
+	&__reply-content {
+		color: $bb-text-color;
+		line-height: 1.5;
+		word-break: break-word;
+	}
+
+	&__reply-link {
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	&__spam-badge {
+		display: inline-block;
+		margin: 0 0 0 8px;
+		padding: 2px 4px;
+		font-size: 11px;
+		font-weight: 500;
+		color: $bb-text-warning-primary-color;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
+		vertical-align: middle;
+
+		i {
+			display: inline-block;
+			font-size: 12px;
+			color: $bb-icon-warning-primary-color;
+			vertical-align: middle;
+			margin-right: 4px;
+		}
+	}
+
+	&__created-icon {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+		margin-right: 6px;
+		vertical-align: middle;
+	}
+
+	// Actions menu — toggle styled via .bb-admin-actions-toggle
+
+	&__action-delete {
+		color: $bb-error-color !important;
+
+		&:hover {
+			color: $bb-background-danger-secondary-hover-color !important;
+		}
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__header,
+		&__toolbar,
+		&__table,
+		&__footer {
+			min-width: 820px;
+		}
+	}
+
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-replies-list {
+		max-width: 100%;
+	}
+}
+
+.bb-reply-modal {
+
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__loading {
+		padding: 24px;
+		text-align: center;
+	}
+
+	.components-base-control {
+		margin-bottom: 16px;
+	}
+
+	.bb-admin-meta-field__select-field > .components-base-control {
+		margin-bottom: 0;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Bulk Edit Reply Modal
+   ---------------------------------------------------------------- */
+.bb-reply-bulk-edit-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
+
+		.components-input-control__label,
+		.components-base-control__label {
+			display: block;
+			text-transform: none !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
+			color: $bb-text-color;
+			margin-bottom: 8px;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+// Reply Delete Modal
+.bb-reply-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: $bb-text-inverse-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}

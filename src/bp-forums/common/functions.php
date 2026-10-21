@@ -1834,7 +1834,10 @@ function bbp_update_post_family_caches( $objects = array() ) {
 	}
 
 	// Prime post caches.
-	_prime_post_caches( $post_ids, true, true );
+	// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+	if ( function_exists( '_prime_post_caches' ) ) {
+		_prime_post_caches( $post_ids, true, true );
+	}
 
 	// Prime post author caches.
 	bbp_update_post_author_caches( $post_ids );

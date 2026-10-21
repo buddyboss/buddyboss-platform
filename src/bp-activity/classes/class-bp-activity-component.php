@@ -66,7 +66,6 @@ class BP_Activity_Component extends BP_Component {
 			'template',
 			'functions',
 			'cache',
-			'reactions',
 		);
 
 		// Notifications support.

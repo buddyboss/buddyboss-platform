@@ -23,12 +23,13 @@ $activity_comment_id = bp_get_activity_comment_id();
 			<?php bb_nouveau_activity_comment_bubble_buttons(); ?>
 			<div class="bb-rl-acomment_inner">
 				<div class="bb-rl-acomment-avatar bb-rl-item-avatar">
-					<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>">
+					<?php $user_id = bp_get_activity_comment_user_id(); ?>
+					<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>"<?php echo bb_get_hover_card_profile_attr( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						bp_activity_avatar(
 							array(
 								'type'    => 'thumb',
-								'user_id' => bp_get_activity_comment_user_id(),
+								'user_id' => $user_id,
 							)
 						);
 						?>
@@ -53,7 +54,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 						<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 						<div class="bb-rl-comment-reactions">
 							<?php
-							if ( bb_is_reaction_activity_comments_enabled() ) {
+							if ( bb_is_reaction_activity_comments_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
 								echo wp_kses_post( bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' ) );
 							}
 							if ( bp_activity_can_comment_reply() ) {
