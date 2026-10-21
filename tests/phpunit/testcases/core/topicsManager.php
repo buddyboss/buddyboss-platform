@@ -619,6 +619,132 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 		$this->assertNotNull( $this->relationship( $this->alpha, 'groups', $this->own_group ) );
 	}
 
+	public function test_organizer_cannot_delete_another_groups_topic_through_own_group() {
+		// Beta is linked to the other group only; the request names the own group.
+		$cross = array( 'topic_id' => $this->beta, 'item_type' => 'groups', 'item_id' => $this->own_group );
+
+		$this->assert_denied( $this->ajax( 'bb_delete_topic_ajax', $this->organizer, $cross, 'bb_delete_topic' ) );
+		$this->assertNotNull( $this->relationship( $this->beta, 'groups', $this->other_group ) );
+	}
+
+	public function test_organizer_cannot_migrate_from_a_topic_outside_their_group() {
+		// The new topic is in the own group, the old one is not.
+		$response = $this->ajax(
+			'bb_migrate_topic_ajax',
+			$this->organizer,
+			array(
+				'old_topic_id' => $this->beta,
+				'new_topic_id' => $this->alpha,
+				'item_type'    => 'groups',
+				'item_id'      => $this->own_group,
+				'migrate_type' => 'migrate',
+			),
+			'bb_migrate_topic'
+		);
+
+		$this->assert_denied( $response );
+		$this->assertNotNull( $this->relationship( $this->beta, 'groups', $this->other_group ) );
+	}
+
+	public function test_organizer_group_id_does_not_grant_other_item_types() {
+		$response = $this->add_ajax(
+			$this->organizer,
+			array(
+				'name'            => 'Sneaky Activity',
+				'item_type'       => 'activity',
+				'item_id'         => $this->own_group,
+				'permission_type' => 'anyone',
+			)
+		);
+
+		$this->assert_denied( $response );
+		$this->assertFalse( (bool) $this->manager->bb_get_topic_by( 'slug', 'sneaky-activity' ) );
+	}
+
+	public function test_only_activity_mode_ignores_other_groups_custom_topics() {
+		self::set_current_user( $this->admin );
+		$this->add_topic( 'Other Custom', 'groups', $this->other_group );
+
+		$response = $this->add_ajax( $this->organizer, array( 'name' => 'Other Custom' ) );
+
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'Topic name not found in activity topics.', $response['data']['error'] );
+	}
+
+	/*
+	 * Global topics linked to a group.
+	 */
+
+	public function test_global_topic_cannot_be_renamed_or_swapped_inside_a_group() {
+		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+
+		foreach ( array( 'Renamed X', 'Gamma Topic' ) as $name ) {
+			$response = $this->add_ajax( $this->organizer, array( 'name' => $name, 'topic_id' => $this->alpha ) );
+
+			$this->assertFalse( $response['success'], $name );
+			$this->assertSame( 'You cannot assign or update a global topic under a group.', $response['data']['error'], $name );
+		}
+
+		$this->assertNotNull( $this->relationship( $this->alpha, 'groups', $this->own_group ) );
+		$this->assertNull( $this->relationship( $this->gamma, 'groups', $this->own_group ) );
+		$this->assertFalse( (bool) $this->manager->bb_get_topic_by( 'slug', 'renamed-x' ) );
+	}
+
+	public function test_custom_group_topic_can_still_be_renamed() {
+		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		$custom = $this->add_topic( 'Old Custom', 'groups', $this->own_group );
+
+		$response = $this->add_ajax( $this->organizer, array( 'name' => 'New Custom', 'topic_id' => $custom ) );
+
+		$this->assert_success( $response );
+		$this->assertNull( $this->relationship( $custom, 'groups', $this->own_group ) );
+		$this->assertSame( 'New Custom', $response['data']['content']['topic']['name'] );
+	}
+
+	/*
+	 * Shared topic rows.
+	 */
+
+	public function test_activity_topic_name_wins_over_earlier_group_topic_name() {
+		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		$this->assert_success( $this->add_ajax( $this->organizer, array( 'name' => 'ANNOUNCEMENTS!!!' ) ) );
+		$this->assertSame( 'ANNOUNCEMENTS!!!', $this->manager->bb_get_topic_by( 'slug', 'announcements' )->name );
+
+		$response = $this->add_ajax( $this->admin, array( 'name' => 'Announcements', 'item_type' => 'activity', 'item_id' => 0, 'permission_type' => 'anyone' ) );
+
+		$this->assert_success( $response );
+		$this->assertSame( 'Announcements', $this->manager->bb_get_topic_by( 'slug', 'announcements' )->name );
+		$this->assertSame( 'Announcements', $response['data']['content']['topic']['name'] );
+	}
+
+	public function test_admin_can_rename_activity_topic_to_same_slug() {
+		$response = $this->add_ajax(
+			$this->admin,
+			array(
+				'name'            => 'GAMMA topic',
+				'topic_id'        => $this->gamma,
+				'item_type'       => 'activity',
+				'item_id'         => 0,
+				'permission_type' => 'anyone',
+			)
+		);
+
+		$this->assert_success( $response );
+		$this->assertSame( 'GAMMA topic', $this->manager->bb_get_topic_by( 'id', $this->gamma )->name );
+	}
+
+	public function test_group_rename_does_not_change_shared_topic_name() {
+		bp_update_option( 'bb-group-activity-topics-options', 'allow_both' );
+		self::set_current_user( $this->admin );
+		$custom = $this->add_topic( 'Shared Name', 'groups', $this->other_group );
+		$this->add_topic( 'Shared Name', 'groups', $this->own_group );
+
+		$response = $this->add_ajax( $this->organizer, array( 'name' => 'SHARED name', 'topic_id' => $custom, 'permission_type' => 'admins' ) );
+
+		$this->assert_success( $response );
+		$this->assertSame( 'Shared Name', $this->manager->bb_get_topic_by( 'id', $custom )->name );
+	}
+
 	/*
 	 * Reorder and admin.
 	 */
