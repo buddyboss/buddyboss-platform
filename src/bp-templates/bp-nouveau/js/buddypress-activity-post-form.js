@@ -1912,7 +1912,8 @@ window.bp = window.bp || {};
 			// draft budget and handed their entries back. Keep each one in
 			// localStorage, marked pending: it is now the only copy, and the
 			// composer for that key restores it and saves it again. A copy this
-			// browser already holds is never overwritten - it may be newer.
+			// browser already holds is kept only when it is the handed-back
+			// revision or was built on it; otherwise the handed-back entry wins.
 
 			this.showDraftFeedback( BP_Nouveau.activity.params.draft_evicted_message );
 		},

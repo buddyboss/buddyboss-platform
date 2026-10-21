@@ -1518,7 +1518,8 @@ window.bp = window.bp || {};
 		 * composer's shape, activity keys in the activity composer's shape.
 		 * Each copy is marked pending, because the server no longer holds it;
 		 * the activity composer reads that marker. A copy this browser already
-		 * holds is never overwritten - it may be newer.
+		 * holds is kept only when it is the handed-back revision or was built
+		 * on it; otherwise the handed-back entry wins.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
