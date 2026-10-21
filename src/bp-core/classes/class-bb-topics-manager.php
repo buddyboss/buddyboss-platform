@@ -387,6 +387,31 @@ class BB_Topics_Manager {
 			);
 		}
 
+		// Group organizers may only pick existing activity topics when the group topics option says so.
+		if (
+			'groups' === $item_type &&
+			! bp_current_user_can( 'bp_moderate' ) &&
+			function_exists( 'bb_get_group_activity_topic_options' ) &&
+			'only_from_activity_topics' === bb_get_group_activity_topic_options()
+		) {
+			$activity_topic = $this->bb_get_topics(
+				array(
+					'slug'      => $slug,
+					'item_type' => 'activity',
+					'fields'    => 'id',
+				)
+			);
+
+			if ( empty( $activity_topic['topics'] ) ) {
+				wp_send_json_error(
+					array(
+						'error' => __( 'Topic name not found in activity topics.', 'buddyboss' ),
+						'topic' => array(),
+					)
+				);
+			}
+		}
+
 		if ( empty( $previous_topic_id ) ) {
 			$topic_data = $this->bb_add_topic(
 				array(
