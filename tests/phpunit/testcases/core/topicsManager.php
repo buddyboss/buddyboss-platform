@@ -827,6 +827,30 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 
 		$this->assert_success( $this->ajax( 'bb_edit_topic_ajax', $this->admin, array( 'topic_id' => $this->beta, 'item_type' => 'groups', 'item_id' => $this->other_group ), 'bb_edit_topic' ) );
 	}
+	public function test_group_add_never_renames_a_shared_activity_topic() {
+		$response = $this->add_ajax( $this->organizer, array( 'name' => 'GAMMA topic' ) );
+
+		$this->assert_success( $response );
+		$this->assertNotNull( $this->relationship( $this->gamma, 'groups', $this->own_group ) );
+		$this->assertSame( 'Gamma Topic', $this->manager->bb_get_topic_by( 'id', $this->gamma )->name );
+	}
+
+	public function test_activity_edit_with_permission_label_is_refused() {
+		$response = $this->add_ajax(
+			$this->admin,
+			array(
+				'name'            => 'Gamma Topic',
+				'topic_id'        => $this->gamma,
+				'item_type'       => 'activity',
+				'item_id'         => 0,
+				'permission_type' => 'Anyone',
+			)
+		);
+
+		$this->assertFalse( $response['success'] );
+		$this->assertSame( 'Please choose who can post in this topic.', $response['data']['error'] );
+		$this->assertSame( 'anyone', $this->relationship( $this->gamma, 'activity', 0 )->permission_type );
+	}
 }
 
 /**
@@ -1463,5 +1487,66 @@ class BB_Tests_Topics_Manager_Scope extends BB_Topics_Manager_TestCase {
 		self::set_current_user( $this->admin );
 		$this->assertTrue( bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $restricted ) );
 	}
-}
+	/**
+	 * Number of activity/topic rows for a topic. A refused post must not add one.
+	 */
+	protected function topic_rows( $topic_id ) {
+		global $wpdb;
+		$table = bp_core_get_table_prefix() . 'bb_activity_topic_relationship';
 
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE topic_id = %d", $topic_id ) ); // phpcs:ignore
+	}
+
+	public function data_object_spellings() {
+		return array(
+			'capitalised user'  => array( 'User', 'user' ),
+			'upper-case user'   => array( 'USER', 'user' ),
+			'user with symbol'  => array( 'user!', 'user' ),
+			'capitalised group' => array( 'Group', 'group' ),
+			'upper-case group'  => array( 'GROUP', 'group' ),
+		);
+	}
+
+	/**
+	 * @dataProvider data_object_spellings
+	 */
+	public function test_object_spelling_cannot_bypass_topic_permission_check( $object, $kind ) {
+		bp_update_option( 'bb_activity_topic_required', 0 );
+		self::set_current_user( $this->admin );
+		$staff_only      = $this->add_topic( 'Staff Only Topic', 'activity', 0, 'mods_admins' );
+		$organizers_only = $this->add_topic( 'Organizers Only Topic', 'groups', $this->own_group, 'admins' );
+		$topic_id        = 'user' === $kind ? $staff_only : $organizers_only;
+		$rows_before     = $this->topic_rows( $topic_id );
+
+		$response = $this->post_update(
+			$this->member,
+			array(
+				'content'  => 'Posting with object=' . $object,
+				'object'   => $object,
+				'item_id'  => 'group' === $kind ? $this->own_group : 0,
+				'topic_id' => $topic_id,
+			)
+		);
+
+		$this->assertFalse( $response['success'], $object );
+		$this->assertSame( 'You do not have permission to post in this topic.', $response['data']['message'], $object );
+		$this->assertSame( $rows_before, $this->topic_rows( $topic_id ), $object );
+
+		if ( 'group' === $kind ) {
+			// A global topic the group does not offer is still "does not exist" for the group.
+			$rows_before = $this->topic_rows( $this->gamma );
+			$response    = $this->post_update(
+				$this->member,
+				array(
+					'content'  => 'Posting an unlinked global topic with object=' . $object,
+					'object'   => $object,
+					'item_id'  => $this->own_group,
+					'topic_id' => $this->gamma,
+				)
+			);
+			$this->assertFalse( $response['success'], $object );
+			$this->assertSame( 'The topic does not exist.', $response['data']['message'], $object );
+			$this->assertSame( $rows_before, $this->topic_rows( $this->gamma ), $object );
+		}
+	}
+}

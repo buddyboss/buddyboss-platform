@@ -785,12 +785,12 @@ window.bp = window.bp || {};
 					}
 				} else {
 					BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-content, .bb-action-popup-content' ).first().prepend( BBTopicsManager.config.errorContainer );
-					BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( response.data && response.data.error ? response.data.error : bbTopicsManagerVars.generic_error );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( response.data && response.data.error ? response.data.error : bbTopicsManagerVars.load_error );
 				}
 			} ).fail( function () {
 				BBTopicsManager.$migrateTopicContainerModalSelector.removeClass( 'is-loading' );
 				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-content, .bb-action-popup-content' ).first().prepend( BBTopicsManager.config.errorContainer );
-				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( bbTopicsManagerVars.generic_error );
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( bbTopicsManagerVars.load_error );
 			}.bind(this));
 		},
 

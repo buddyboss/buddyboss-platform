@@ -164,6 +164,7 @@ class BB_Topics_Manager {
 				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
 				'can_reorder_topics'           => bp_current_user_can( 'bp_moderate' ),
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
+				'load_error'                   => esc_html__( 'The topic could not be loaded. Please close this window and try again.', 'buddyboss' ),
 				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 				/* translators: %s: Topic name */
@@ -342,6 +343,7 @@ class BB_Topics_Manager {
 	 * Add a new global topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can add and edit the topics of their own group.
 	 */
 	public function bb_add_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
@@ -510,6 +512,7 @@ class BB_Topics_Manager {
 	 * Add a new global topic.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] When a group topic shares a row with an activity topic, the activity topic name wins.
 	 *
 	 * @param array $args {
 	 * Array of arguments for adding a topic.
@@ -695,6 +698,7 @@ class BB_Topics_Manager {
 	 * Update an existing topic.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] A global topic can no longer be renamed or swapped inside a group; only its permission changes.
 	 *
 	 * @param array $args {
 	 *     Array of arguments for updating a topic.
@@ -1625,6 +1629,7 @@ class BB_Topics_Manager {
 	 * Fetch an existing topic while the edit topic modal is open via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can load the topics of their own group for editing.
 	 */
 	public function bb_edit_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
@@ -1706,6 +1711,7 @@ class BB_Topics_Manager {
 	 * Delete an existing topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can load the topics of their own group for deletion.
 	 */
 	public function bb_delete_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
@@ -1864,6 +1870,7 @@ class BB_Topics_Manager {
 	 * Migrate a topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can delete and migrate the topics of their own group.
 	 */
 	public function bb_migrate_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.

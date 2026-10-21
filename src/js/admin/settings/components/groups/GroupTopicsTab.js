@@ -639,6 +639,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
  */
 function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permissionTypes, topicMode, globalTopics } ) {
 	var isEditing = !! topic;
+	// A global topic keeps its name inside a group (the server refuses a rename), so only its permission is editable.
+	var isGlobalLocked = isEditing && !! ( topic.is_global || topic.is_global_activity );
 	var initialName = isEditing ? ( topic.name || '' ) : '';
 	// Default to first permission type value (usually 'members') for groups.
 	var defaultPermission = permissionTypes && permissionTypes.length > 0
@@ -817,6 +819,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 							type="text"
 							className="bb-topic-modal__search-input components-text-control__input"
 							value={ searchText }
+							disabled={ isGlobalLocked }
 							placeholder={ __( 'Select a topic', 'buddyboss' ) }
 							onChange={ function ( e ) {
 								var val = e.target.value;
@@ -889,6 +892,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 							type="text"
 							className="bb-topic-modal__search-input components-text-control__input"
 							value={ searchText }
+							disabled={ isGlobalLocked }
 							placeholder={ __( 'Select a topic', 'buddyboss' ) }
 							onChange={ function ( e ) {
 								var val = e.target.value;
@@ -952,6 +956,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 			<TextControl
 				label={ __( 'Topic Name', 'buddyboss' ) }
 				value={ name }
+				disabled={ isGlobalLocked }
 				onChange={ function ( val ) {
 					setName( val );
 					if ( modalError ) {

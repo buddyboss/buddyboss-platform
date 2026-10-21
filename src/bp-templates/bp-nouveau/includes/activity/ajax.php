@@ -832,8 +832,13 @@ function bp_nouveau_ajax_post_update() {
 			empty( $existing_topic_id ) ||
 			(int) $existing_topic_id !== (int) $topic_id
 		) {
-			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+			// Resolve the object the same way the posting code below does, so the topic is checked for the feed it is saved to.
+			$object  = ! empty( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 			$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+			if ( empty( $object ) && bp_is_group() ) {
+				$object  = 'group';
+				$item_id = bp_get_current_group_id();
+			}
 
 			$args = array(
 				'topic_id'  => $topic_id,
