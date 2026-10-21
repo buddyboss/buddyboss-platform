@@ -344,14 +344,12 @@ class BB_Topics_Manager {
 	 */
 	public function bb_add_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
-		$can_manage = $this->bb_current_user_can_manage_topics(
-			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity',
-			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
-			isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0
-		);
+		$previous_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$item_id           = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
+		$item_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( ! $can_manage ) {
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, $previous_topic_id ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -371,12 +369,9 @@ class BB_Topics_Manager {
 			);
 		}
 
-		$name              = sanitize_text_field( wp_unslash( $_POST['name'] ) );
-		$slug              = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$permission_type   = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
-		$previous_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		$item_id           = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
-		$item_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
+		$name            = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
+		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
 
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
@@ -1530,14 +1525,12 @@ class BB_Topics_Manager {
 	 */
 	public function bb_edit_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
-		$can_manage = $this->bb_current_user_can_manage_topics(
-			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '',
-			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
-			isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0
-		);
+		$topic_id  = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( ! $can_manage ) {
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, $topic_id ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1556,10 +1549,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
-		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
-		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
 		$args = array(
 			'topic_id'  => $topic_id,
@@ -1617,14 +1606,12 @@ class BB_Topics_Manager {
 	 */
 	public function bb_delete_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
-		$can_manage = $this->bb_current_user_can_manage_topics(
-			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '',
-			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
-			isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0
-		);
+		$topic_id  = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( ! $can_manage ) {
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, $topic_id ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1643,10 +1630,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
-		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
-		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
 		$topic_lists = $this->bb_get_topics(
 			array(
@@ -1781,17 +1764,14 @@ class BB_Topics_Manager {
 	 */
 	public function bb_migrate_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
-		$can_manage = $this->bb_current_user_can_manage_topics(
-			isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '',
-			isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0,
-			array(
-				isset( $_POST['old_topic_id'] ) ? absint( wp_unslash( $_POST['old_topic_id'] ) ) : 0,
-				isset( $_POST['new_topic_id'] ) ? absint( wp_unslash( $_POST['new_topic_id'] ) ) : 0,
-			)
-		);
+		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
+		$old_topic_id = isset( $_POST['old_topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) ) : 0;
+		$new_topic_id = 'migrate' === $migrate_type && isset( $_POST['new_topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
+		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( ! $can_manage ) {
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, array( $old_topic_id, $new_topic_id ) ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1811,7 +1791,6 @@ class BB_Topics_Manager {
 			);
 		}
 
-		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
 		if ( 'migrate' === $migrate_type && ! isset( $_POST['new_topic_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -1820,11 +1799,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		$old_topic_id = absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) );
-		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
-		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
-		$new_topic_id = 'migrate' === $migrate_type ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
 
 		if ( 'migrate' === $migrate_type && $new_topic_id ) {
 			$result = $this->bb_migrate_topic(
