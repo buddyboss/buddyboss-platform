@@ -370,6 +370,11 @@ body.register .buddypress-wrap .page ul {
 	filter: brightness(0.8);
 }
 
+#header-cover-image a.link-change-cover-image:focus {
+	opacity: 1;
+	filter: brightness(0.8);
+}
+
 .users-header #social-networks-popup,
 .bp-widget.social #social-networks-popup {
 	display: none;
