@@ -252,7 +252,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 					setNotice( { type: 'success', message: __( 'Topic created successfully.', 'buddyboss' ) } );
 				}
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to add topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to add topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -296,7 +296,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 					setNotice( { type: 'success', message: __( 'Topic updated successfully.', 'buddyboss' ) } );
 				}
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to update topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to update topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -326,7 +326,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setIsDeleteModalOpen( true );
 				setError( '' );
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsDeleteLoading( false );
@@ -364,7 +364,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 					setNotice( { type: 'success', message: __( 'Topic deleted successfully.', 'buddyboss' ) } );
 				}
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to delete topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to delete topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
