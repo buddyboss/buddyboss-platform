@@ -1080,18 +1080,24 @@ window.bp = window.bp || {};
 			BP_Nouveau.forums.draft_fetch_retrying = true;
 			BP_Nouveau.forums.draft_retry_attempts = ( BP_Nouveau.forums.draft_retry_attempts || 0 ) + 1;
 
+			// Report stored hand-backs here too, so the server stops holding
+			// them without waiting for the next save.
+			var retry_acks = bbDraftGetAcks();
+
 			$.post(
 				BP_Nouveau.ajaxurl,
 				{
 					action: 'bb_get_topic_reply_drafts',
 					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
-					prefixes: bbDraftKeyPrefixes().join( ',' )
+					prefixes: bbDraftKeyPrefixes().join( ',' ),
+					bb_draft_evicted_ack: retry_acks.join( ',' )
 				}
 			).done(
 				function ( response ) {
 					if ( response && response.success ) {
 						BP_Nouveau.forums.draft_fetch_failed   = false;
 						BP_Nouveau.forums.draft_retry_attempts = 0;
+						bbDraftClearAcks( retry_acks );
 
 						if ( response.data && response.data.evicted_drafts ) {
 							bbDraftStoreHandback( response.data.evicted_drafts );
@@ -3069,12 +3075,18 @@ window.bp = window.bp || {};
 		var bbRunDraftFetch = function () {
 			bbDraftFetchAttempts++;
 
+			// Hand-backs this browser already stored. Without them the server
+			// keeps holding those drafts, and every forum page with a form
+			// fetches again until the member next saves.
+			var fetch_acks = bbDraftGetAcks();
+
 			$.post(
 				BP_Nouveau.ajaxurl,
 				{
 					action: 'bb_get_topic_reply_drafts',
 					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
-					prefixes: bbDraftKeyPrefixes().join( ',' )
+					prefixes: bbDraftKeyPrefixes().join( ',' ),
+					bb_draft_evicted_ack: fetch_acks.join( ',' )
 				}
 			).done(
 				function ( response ) {
@@ -3086,6 +3098,9 @@ window.bp = window.bp || {};
 
 						return;
 					}
+
+					// The server applied these before answering.
+					bbDraftClearAcks( fetch_acks );
 
 					// Evictions whose hand-back never reached this browser.
 					if ( response.data && response.data.evicted_drafts ) {
