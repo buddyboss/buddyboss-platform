@@ -59,8 +59,8 @@ class Filesystem
                 throw new IOException(\sprintf('Failed to copy "%s" to "%s".', $originFile, $targetFile), 0, null, $originFile);
             }
             if ($originIsLocal) {
-                // Like `cp`, preserve executable permission bits
-                self::box('chmod', $targetFile, \fileperms($targetFile) | \fileperms($originFile) & 0111);
+                // Like `cp`, preserve the source mode masked by the umask
+                self::box('chmod', $targetFile, \fileperms($originFile) & 0777 & ~\umask());
                 // Like `cp`, preserve the file modification time
                 self::box('touch', $targetFile, \filemtime($originFile));
                 if ($bytesCopied !== ($bytesOrigin = \filesize($originFile))) {
@@ -556,7 +556,14 @@ class Filesystem
             $tmpFile = $dir . '/' . $prefix . \uniqid(\mt_rand(), \true) . $suffix;
             // Use fopen instead of file_exists as some streams do not support stat
             // Use mode 'x+' to atomically check existence and create to avoid a TOCTOU vulnerability
-            if (!($handle = self::box('fopen', $tmpFile, 'x+'))) {
+            // Force the umask so that the file is created private, as PHP's tempnam() does
+            $umask = \umask(077);
+            try {
+                $handle = self::box('fopen', $tmpFile, 'x+');
+            } finally {
+                \umask($umask);
+            }
+            if (!$handle) {
                 continue;
             }
             // Close the file if it was successfully opened

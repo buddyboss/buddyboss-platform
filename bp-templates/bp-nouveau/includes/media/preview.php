@@ -7,10 +7,8 @@ if ( empty( get_query_var( 'bb-media-preview' ) ) && empty( get_query_var( 'id1'
 
 $encode_id       = base64_decode( get_query_var( 'bb-media-preview' ) );
 $encode_id1      = base64_decode( get_query_var( 'id1' ) );
-$receiver        = base64_decode( get_query_var( 'receiver' ) );
 $explode_arr     = explode( 'forbidden_', $encode_id );
 $explode_arr1    = explode( 'forbidden_', $encode_id1 );
-$receiver_arr    = explode( 'receiver_', $receiver );
 $size            = ( ! empty( get_query_var( 'size' ) ) ? get_query_var( 'size' ) : '' );
 $upload_dir      = wp_upload_dir();
 $upload_dir      = $upload_dir['basedir'];
@@ -19,9 +17,9 @@ $output_file_src = '';
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 &&
 	isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
 
-	// Set the receiver ID as the current user ID if it exists.
-	if ( ! empty( $receiver_arr ) && isset( $receiver_arr[1] ) && 0 < $receiver_arr[1] ) {
-		$receiver_id = $receiver_arr[1];
+	// Act as the receiver only when the URL carries a valid signature for this receiver, item and attachment.
+	$receiver_id = function_exists( 'bb_media_preview_get_receiver_id' ) ? bb_media_preview_get_receiver_id( get_query_var( 'receiver' ), $explode_arr1[1], $explode_arr[1] ) : 0;
+	if ( 0 < $receiver_id ) {
 
 		add_filter(
 			'bp_loggedin_user_id',
@@ -44,7 +42,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 
 	$attachment_id      = (int) $explode_arr[1];
 	$id1                = (int) $explode_arr1[1];
-	$media_privacy      = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'photo' ) : true;
+	$media_privacy      = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'photo', $attachment_id ) : true;
 	$can_view           = true === (bool) $media_privacy['can_view'];
 	$attached_file_info = pathinfo( get_attached_file( $attachment_id ) );
 
