@@ -208,6 +208,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * and data exists in the queue.
 		 *
 		 * @since BuddyBoss 2.5.20
+		 * @since BuddyBoss [BBVERSION] Process the queue within the cron request instead of dispatching
+		 *                              another loopback request, so the queue still runs on hosts that block loopback requests.
 		 */
 		public function handle_cron_healthcheck() {
 			if ( $this->is_processing() ) {
@@ -221,7 +223,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 				exit;
 			}
 
-			$this->dispatch();
+			// Process here: this cron run is the fallback for when the loopback dispatch failed.
+			$this->handle();
 		}
 
 		/**
