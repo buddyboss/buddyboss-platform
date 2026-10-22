@@ -226,7 +226,13 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 	}
 
 	public function test_organizer_reorders_only_their_own_group() {
-		$response = $this->reorder( $this->organizer, array( 'item_type' => 'groups', 'item_id' => $this->own_group ) );
+		$response = $this->reorder(
+			$this->organizer,
+			array(
+				'item_type' => 'groups',
+				'item_id'   => $this->own_group,
+			)
+		);
 
 		$this->assertTrue( $response['success'], $this->last_response );
 		$this->assertSame( array( $this->b, $this->a ), $this->order_of( 'groups', $this->own_group ), 'own group reordered' );
@@ -235,7 +241,13 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 	}
 
 	public function test_organizer_cannot_reorder_another_group_or_the_site_list() {
-		$response = $this->reorder( $this->organizer, array( 'item_type' => 'groups', 'item_id' => $this->other_group ) );
+		$response = $this->reorder(
+			$this->organizer,
+			array(
+				'item_type' => 'groups',
+				'item_id'   => $this->other_group,
+			)
+		);
 		$this->assertFalse( $response['success'], 'other group' );
 
 		$response = $this->reorder( $this->organizer, array( 'item_type' => 'activity' ) );
@@ -249,23 +261,48 @@ class BB_Tests_Topics_Order_Ajax extends BP_UnitTestCase {
 	}
 
 	public function test_member_and_guest_cannot_reorder_a_group() {
-		$response = $this->reorder( $this->member, array( 'item_type' => 'groups', 'item_id' => $this->own_group ) );
+		$response = $this->reorder(
+			$this->member,
+			array(
+				'item_type' => 'groups',
+				'item_id'   => $this->own_group,
+			)
+		);
 		$this->assertFalse( $response['success'], 'plain member' );
 
-		$response = $this->reorder( 0, array( 'item_type' => 'groups', 'item_id' => $this->own_group ) );
+		$response = $this->reorder(
+			0,
+			array(
+				'item_type' => 'groups',
+				'item_id'   => $this->own_group,
+			)
+		);
 		$this->assertFalse( $response['success'], 'guest' );
 
 		$this->assert_untouched( 'member/guest refused' );
 	}
 
 	public function test_organizer_needs_a_valid_nonce() {
-		$this->reorder( $this->organizer, array( 'item_type' => 'groups', 'item_id' => $this->own_group ), false );
+		$this->reorder(
+			$this->organizer,
+			array(
+				'item_type' => 'groups',
+				'item_id'   => $this->own_group,
+			),
+			false
+		);
 
 		$this->assert_untouched( 'invalid nonce' );
 	}
 
 	public function test_admin_group_reorder_leaves_other_lists_alone() {
-		$response = $this->reorder( $this->admin, array( 'item_type' => 'groups', 'item_id' => $this->other_group ) );
+		$response = $this->reorder(
+			$this->admin,
+			array(
+				'item_type' => 'groups',
+				'item_id'   => $this->other_group,
+			)
+		);
 
 		$this->assertTrue( $response['success'], $this->last_response );
 		$this->assertSame( array( $this->b, $this->a ), $this->order_of( 'groups', $this->other_group ), 'that group reordered' );
