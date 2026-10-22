@@ -18,7 +18,7 @@ import {
 	MenuItem,
 	Modal,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { getFlaggedMembers, suspendMember, unsuspendMember, flaggedMembersBulkAction } from '../utils/ajax';
 import { ViewReportModal } from '../components/modals/ViewReportModal';
 import { safeUrl } from '../utils/sanitize';
@@ -498,7 +498,11 @@ export function FlaggedMembersScreen() {
 					{ ! isLoading && total > 0 && (
 						<div className="bb-admin-flagged-members__footer">
 							<span className="bb-admin-flagged-members__item-count">
-								{ total } { total === 1 ? __( 'item', 'buddyboss' ) : __( 'items', 'buddyboss' ) }
+								{ sprintf(
+									/* translators: %s: number of items. */
+									_n( '%s item', '%s items', total, 'buddyboss' ),
+									total
+								) }
 							</span>
 
 							{ totalPages > 1 && (

@@ -58,7 +58,7 @@ add_action(
 			array(
 				'document_update_file_name' => array(
 					'function' => 'bp_nouveau_ajax_document_update_file_name',
-					'nopriv'   => true,
+					'nopriv'   => false,
 				),
 			),
 			array(
@@ -267,6 +267,11 @@ function bp_nouveau_ajax_document_get_activity() {
 	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
+	// The activity is rendered without privacy filters below, so check the viewer first.
+	if ( empty( $post_id ) || ! bb_activity_user_can_view( $post_id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// check activity is document or not.
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
 
@@ -355,7 +360,17 @@ function bp_nouveau_ajax_document_get_document_description() {
 	}
 
 	$document = new BP_Document( $document_id );
+
+	// The activity is rendered without privacy filters below, so the viewer must be able to see this document.
+	$document_access = bb_media_user_can_access( $document_id, 'document', $attachment_id );
+	if ( empty( $document->id ) || empty( $document_access['can_view'] ) ) {
+		wp_send_json_error( $response );
+	}
+
 	if ( bp_is_active( 'activity' ) && ! empty( $document->activity_id ) ) {
+		if ( ! bb_activity_user_can_view( $document->activity_id ) ) {
+			wp_send_json_error( $response );
+		}
 
 		remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_document_activity_description' );
@@ -1238,16 +1253,15 @@ function bp_nouveau_ajax_document_update_file_name() {
 	$privacy                = bb_filter_input_string( INPUT_POST, 'document_privacy' );
 
 	if ( 'document' === $type ) {
-		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
+		// filter_input() returns null or false for a missing or invalid value, so check for a positive ID.
+		if ( (int) $document_id <= 0 || (int) $attachment_document_id <= 0 || '' === $title ) {
 			wp_send_json_error( $response );
 		}
 
-		if ( (int) $document_id > 0 ) {
-			$has_access = bp_document_user_can_edit( $document_id );
-			if ( ! $has_access ) {
-				$response['feedback'] = esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
-				wp_send_json_error( $response );
-			}
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
+			wp_send_json_error( $response );
 		}
 
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );

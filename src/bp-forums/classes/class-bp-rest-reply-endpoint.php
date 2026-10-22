@@ -2121,6 +2121,16 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		} else {
 			$data['preview_data'] = bb_forums_link_preview( '', $reply->ID );
+
+			// No saved preview: fall back to the embed the web shows for the content URL.
+			if ( empty( $data['preview_data'] ) ) {
+				$legacy_embed = $this->forum_endpoint->bb_rest_forums_get_legacy_embed( $reply->ID, $reply->post_content );
+
+				if ( ! empty( $legacy_embed ) ) {
+					$data['link_embed_url'] = $legacy_embed['url'];
+					$data['preview_data']   = $legacy_embed['html'];
+				}
+			}
 		}
 
 		$forum_id = bbp_get_reply_forum_id( $reply->ID );

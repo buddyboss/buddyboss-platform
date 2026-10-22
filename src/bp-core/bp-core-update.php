@@ -570,10 +570,17 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
-		// DB version 23605 — update an active BuddyBoss Add-ons to the version this
+		// DB version 23605 — the topics and reply REST endpoints now return the
+		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
+		// their App API cache so cached empty previews are not served for 30 days.
+		if ( $raw_db_version < 23605 ) {
+			bb_purge_forums_api_cache_for_legacy_embed();
+		}
+
+		// DB version 23606 — update an active BuddyBoss Add-ons to the version this
 		// Platform requires, once, on the upgrade into this release (PROD-9995). Runs
 		// after the install step above.
-		if ( $raw_db_version < 23605 ) {
+		if ( $raw_db_version < 23606 ) {
 			bb_maybe_update_addons_bundle();
 		}
 
@@ -4698,6 +4705,25 @@ function bb_install_addons_bundle_on_upgrade() {
 }
 
 /**
+ * Purge the App API cache of forum topics and replies.
+ *
+ * The topics and reply REST endpoints now return the legacy oEmbed (`preview_data`,
+ * `link_embed_url`) for posts saved without `_link_embed` meta, as the web already shows.
+ * Responses cached before the update still hold the empty preview for up to 30 days, so
+ * clear them once on the upgrade (PROD-10630).
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @return void
+ */
+function bb_purge_forums_api_cache_for_legacy_embed() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
+	}
+}
+
+/**
  * Minimum BuddyBoss Add-ons version this Platform needs.
  *
  * Reads the floor from the version-compatibility notice so both stay in sync;
@@ -4851,7 +4877,7 @@ function bb_update_addons_bundle_to_required_version() {
 /**
  * After the Platform update to this release, update an active BuddyBoss Add-ons below the required version.
  *
- * One-time migration called from bp_version_updater() for db version 23605, so it runs only on the
+ * One-time migration called from bp_version_updater() for db version 23606, so it runs only on the
  * upgrade request (Plugins screen, auto-update or FTP alike) and never on a normal
  * admin page load. The flag keeps later releases from running it again.
  *

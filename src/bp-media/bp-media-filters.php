@@ -486,6 +486,7 @@ function bp_media_update_media_privacy( $album ) {
  * Save media when new topic or reply is saved
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved media uploads.
  *
  * @param $post_id
  */
@@ -541,6 +542,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 					$media_ids[] = $attached_media_id;
 					continue;
 				}
+			}
+
+			// Only the user's own unsaved upload can become a new media.
+			if ( ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+				continue;
 			}
 
 			$media_id = bp_media_add(
@@ -674,6 +680,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
  * Attach media to the message object
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 3.6.2 Only attaches media owned by the message sender.
  *
  * @param $message
  */
@@ -707,10 +714,16 @@ function bp_media_attach_media_to_message( &$message ) {
 				$media_id = get_post_meta( $attachment_id, 'bp_media_id', true );
 
 				if ( ! empty( $media_id ) ) {
+					// Attach already created media.
+					$media = new BP_Media( $media_id );
+
+					// Only the sender's own media can be attached to the message.
+					if ( empty( $media->id ) || ! in_array( (int) $media->user_id, array( (int) $message->sender_id, bp_loggedin_user_id() ), true ) ) {
+						continue;
+					}
+
 					$media_ids[] = $media_id;
 
-					// Attach already created media.
-					$media             = new BP_Media( $media_id );
 					$media->privacy    = 'message';
 					$media->message_id = $message->id;
 					$media->save();
@@ -737,19 +750,31 @@ function bp_media_attach_media_to_message( &$message ) {
  */
 function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 
-	if ( ! empty( $message_ids ) ) {
-		foreach ( $message_ids as $message_id ) {
+	if ( empty( $message_ids ) ) {
+		return;
+	}
 
-			// get media ids attached to message.
-			$media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+	$media_ids = array();
 
-			if ( ! empty( $media_ids ) ) {
-				$media_ids = explode( ',', $media_ids );
-				foreach ( $media_ids as $media_id ) {
-					bp_media_delete( array( 'id' => $media_id ) );
-				}
-			}
+	foreach ( $message_ids as $message_id ) {
+
+		// get media ids attached to message.
+		$message_media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+
+		if ( ! empty( $message_media_ids ) ) {
+			$media_ids = array_merge( $media_ids, wp_parse_id_list( $message_media_ids ) );
 		}
+	}
+
+	$media_ids = array_unique( array_filter( $media_ids ) );
+
+	// Keep the items that a message in another thread still uses, such as a group message sent to members individually.
+	if ( ! empty( $media_ids ) && function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
+		$media_ids = array_diff( $media_ids, bb_messages_get_attachment_ids_used_elsewhere( 'bp_media_ids', $media_ids, $thread_id ) );
+	}
+
+	foreach ( $media_ids as $media_id ) {
+		bp_media_delete( array( 'id' => $media_id ) );
 	}
 }
 

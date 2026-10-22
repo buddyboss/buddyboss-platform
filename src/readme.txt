@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.6.1
+Stable tag: 3.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 Important: Videos, Documents and Animated GIFs (GIPHY) have moved to the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans. Your existing videos, documents and GIFs are kept, but they will be hidden from members until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
 
 == Changelog ==
+
+= 3.6.2 =
+* Bug: Activity - Fixed an issue where comment reactions stopped working when reactions were turned off for activity posts
+* Bug: Activity - Fixed an issue where editing an activity comment wrongly increased the comment count
+* Bug: Core - Fixed an issue where the app could not load profile forum topics when a security plugin's username protection was turned on
+* Bug: Core - Strengthened permission checks for media previews, video thumbnails, invites, drafts and private messages
+* Bug: Email - Fixed an issue where message emails sent together could show the wrong sender avatar and profile link
+* Bug: Forums - Fixed an issue where logged-out visitors could not reply to existing replies in public discussions with anonymous posting enabled
+* Bug: Forums - Fixed an issue where videos in discussions and replies did not show a preview in the app
+* Bug: Translations - Fixed an issue where some Report text in the Turkish translation was worded incorrectly
 
 = 3.6.1 =
 * Bug: Activity - Fixed PHP warnings in activity feed caused by invalid cached activity data
