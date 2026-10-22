@@ -649,7 +649,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * These localizations require information that may not be loaded even by init.
 	 *
 	 * @since BuddyPress 3.0.0
-	 * @since BuddyBoss [BBVERSION] Adds the `invites_revoke` nonce.
+	 * @since BuddyBoss 3.6.2 Adds the `invites_revoke` nonce.
 	 */
 	public function localize_scripts() {
 

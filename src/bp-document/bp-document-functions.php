@@ -599,7 +599,7 @@ function bp_document_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
- * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved document uploads.
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved document uploads.
  */
 function bp_document_add_handler( $documents = array(), $privacy = 'public', $content = '', $group_id = false, $folder_id = false ) {
 	global $bp_document_upload_count, $bp_document_upload_activity_content;
@@ -3842,7 +3842,7 @@ function bp_document_get_forum_id( $document_id ) {
  * @return mixed|void
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Matches the exact document ID in the current user's threads.
+ * @since BuddyBoss 3.6.2 Matches the exact document ID in the current user's threads.
  */
 function bp_document_get_thread_id( $document_id ) {
 

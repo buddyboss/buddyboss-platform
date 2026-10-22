@@ -193,7 +193,7 @@ class BB_Activity extends Integration_Abstract {
 	 * Any Activity comment kept after one of its attachments was deleted.
 	 * Purges the comment, its parent comment and the activity it belongs to.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int $comment_id Activity comment id.
 	 */

@@ -547,7 +547,7 @@ function bp_document_update_document_privacy( $folder ) {
  * @param int $post_id post id of the topic or reply.
  *
  * @since BuddyBoss 1.4.0
- * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved document uploads.
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved document uploads.
  */
 function bp_document_forums_new_post_document_save( $post_id ) {
 
@@ -761,7 +761,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
  * @param $message
  *
  * @since BuddyBoss 1.4.0
- * @since BuddyBoss [BBVERSION] Only attaches documents owned by the message sender.
+ * @since BuddyBoss 3.6.2 Only attaches documents owned by the message sender.
  */
 function bp_document_attach_document_to_message( &$message ) {
 	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;

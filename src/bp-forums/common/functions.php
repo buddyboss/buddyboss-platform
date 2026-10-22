@@ -2629,7 +2629,7 @@ function bbp_get_url_scheme() {
  * Delete media, document and video attachments when a topic or reply is deleted.
  *
  * @since BuddyBoss 2.9.00
- * @since BuddyBoss [BBVERSION] Deletes stored video poster / custom thumbnails only when owned by the video owner.
+ * @since BuddyBoss 3.6.2 Deletes stored video poster / custom thumbnails only when owned by the video owner.
  *
  * @param int    $post_id Post ID (topic or reply) being deleted.
  * @param object $post    Post object.

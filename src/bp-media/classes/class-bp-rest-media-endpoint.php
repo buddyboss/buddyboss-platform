@@ -2647,7 +2647,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the Gif data's value of the activity REST Field.
 	 *
-	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 * @since BuddyBoss 3.6.2 Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object     The BuddyPress component's object that was just created/updated during the request.
 	 *                           (in this case the BP_Activity_Activity object).
@@ -3022,7 +3022,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * The function to use to update the medias's value of the topic REST Field.
 	 * - from bp_media_forums_new_post_media_save();
 	 *
-	 * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved media uploads.
+	 * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved media uploads.
 	 *
 	 * @param object $object     Value for the schema.
 	 * @param object $value      The value of the REST Field to save.
@@ -3250,7 +3250,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
 	 *
-	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 * @since BuddyBoss 3.6.2 Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object Topics as a object.
 	 * @param object $value  The value of the REST Field to save.
@@ -3562,7 +3562,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
 	 *
-	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 * @since BuddyBoss 3.6.2 Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object Message as a object.
 	 * @param object $value  The value of the REST Field to save.
