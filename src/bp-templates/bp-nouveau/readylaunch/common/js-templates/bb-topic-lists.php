@@ -4,7 +4,6 @@
  *
  * @package    BuddyBoss\Template
  * @since      BuddyBoss 2.9.00
- * @since      BuddyBoss [BBVERSION] A global topic inside a group reads "Remove from group".
  * @subpackage BP_Nouveau\ReadyLaunch
  * @version    1.0.0
  */
@@ -33,8 +32,6 @@
 			item_type : itemType,
 			nonce     : delete_nonce
 		} );
-		// A global topic adopted by a group is removed from the group, not deleted.
-		var delete_label    = ( topicData.is_global_activity && 'groups' === itemType ) ? '<?php echo esc_js( __( 'Remove from group', 'buddyboss' ) ); ?>' : '<?php echo esc_js( __( 'Delete', 'buddyboss' ) ); ?>';
 	#>
 		<div class="bb-activity-topic-item" data-topic-id="{{topicId}}">
 			<div class="bb-topic-left">
@@ -61,9 +58,9 @@
 						<span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 						<span class="edit-label"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 					</a>
-					<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="{{delete_label}}" data-topic-attr="{{delete_data}}">
-						<span class="bp-screen-reader-text">{{delete_label}}</span>
-						<span class="delete-label">{{delete_label}}</span>
+					<a href="#" class="button delete bb-delete-topic bp-secondary-action bp-tooltip" title="<?php esc_html_e( 'Delete', 'buddyboss' ); ?>" data-topic-attr="{{delete_data}}">
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+						<span class="delete-label"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
 					</a>
 					</div>
 				</div>
