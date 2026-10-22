@@ -650,6 +650,22 @@ class BB_Admin_Settings_Ajax {
 					$formatted_section['help_url'] = $this->bb_sanitize_help_url( $section['help_url'] );
 				}
 
+				/**
+				 * Filters the section data before it is returned.
+				 *
+				 * Lets a panel adjust its header (e.g. drop an upgrade badge) from runtime
+				 * state that is too costly to resolve at feature registration.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param array  $formatted_section Formatted section data.
+				 * @param array  $section           Registered section args.
+				 * @param string $feature_id        Feature ID.
+				 * @param string $side_panel_id     Side panel ID.
+				 * @param string $section_id        Section ID.
+				 */
+				$formatted_section = apply_filters( 'bb_admin_settings_format_section_data', $formatted_section, $section, $feature_id, $side_panel_id, $section_id );
+
 				$formatted_sections[] = $formatted_section;
 			}
 

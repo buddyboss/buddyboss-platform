@@ -456,3 +456,314 @@ function bb_media_get_addons_upgrade_url( $panel_id ) {
 	/** This filter is documented in bp-core/admin/bb-admin-moved-media-features-notice.php */
 	return (string) apply_filters( 'bb_moved_media_features_upgrade_url', $url, $content );
 }
+
+/**
+ * Get the BuddyBoss Add-ons module that provides a Media upsell panel's feature.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
+ *
+ * @return string Module folder name, or an empty string for an unknown panel.
+ */
+function bb_media_get_addons_module_for_panel( $panel_id ) {
+	$modules = array(
+		'videos'        => 'video',
+		'documents'     => 'documents',
+		'animated_gifs' => 'giphy',
+	);
+
+	return isset( $modules[ $panel_id ] ) ? $modules[ $panel_id ] : '';
+}
+
+/**
+ * Resolve what a Media upsell panel should offer.
+ *
+ * The plan decides first: a license whose plan does not carry BuddyBoss Add-ons
+ * (no license, Free, Lite, or an unreachable catalog) keeps the upgrade prompt.
+ * When the plan does carry it, the panel offers the step that makes the
+ * feature available instead of asking a paying customer to upgrade:
+ *
+ * - 'install'     Add-ons is not on disk.
+ * - 'activate'    Add-ons is on disk but inactive.
+ * - 'update'      Add-ons is active but older than the version this Platform
+ *                 requires, or the installed build does not ship the module.
+ * - 'unavailable' Add-ons is active and current, yet the feature did not load
+ *                 (for example the add-on's own license check locked it).
+ * - 'upgrade'     Not entitled.
+ *
+ * REMOTE CALL on a cold add-ons cache (the entitlement lookup), so it is only
+ * called from the settings AJAX formatters, never from feature registration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
+ *
+ * @return string One of 'upgrade', 'install', 'activate', 'update' or 'unavailable'.
+ */
+function bb_media_get_addons_panel_state( $panel_id ) {
+	static $states = array();
+
+	if ( isset( $states[ $panel_id ] ) ) {
+		return $states[ $panel_id ];
+	}
+
+	$state = 'upgrade';
+
+	if ( bb_is_entitled_to_addons() ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+		$plugin_path = trailingslashit( WP_PLUGIN_DIR ) . $plugin_file;
+
+		if ( ! file_exists( $plugin_path ) ) {
+			$state = 'install';
+		} elseif ( ! is_plugin_active( $plugin_file ) ) {
+			$state = 'activate';
+		} else {
+			$plugins   = get_plugins();
+			$installed = isset( $plugins[ $plugin_file ]['Version'] ) ? (string) $plugins[ $plugin_file ]['Version'] : '';
+			$module    = bb_media_get_addons_module_for_panel( $panel_id );
+			$has_code  = '' === $module || file_exists( dirname( $plugin_path ) . '/addons/' . $module . '/loader.php' );
+
+			$state = ( ! $has_code || ( '' !== $installed && version_compare( $installed, bb_get_addons_required_version(), '<' ) ) )
+				? 'update'
+				: 'unavailable';
+		}
+	}
+
+	/**
+	 * Filters the state of a Media upsell panel.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $state    One of 'upgrade', 'install', 'activate', 'update' or 'unavailable'.
+	 * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
+	 */
+	$states[ $panel_id ] = (string) apply_filters( 'bb_media_addons_panel_state', $state, $panel_id );
+
+	return $states[ $panel_id ];
+}
+
+/**
+ * Whether a newer BuddyBoss Add-ons build than the installed one is available to the license.
+ *
+ * Reads the cached add-ons catalog. Fails closed: an unknown installed version or
+ * release reads as "no update".
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_media_addons_update_available() {
+	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+		return false;
+	}
+
+	if ( ! function_exists( 'get_plugins' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	$plugins   = get_plugins();
+	$installed = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+	$product   = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+	$release   = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
+	$latest    = ( null !== $release && ! empty( $release->number ) ) ? (string) $release->number : '';
+
+	$available = '' !== $installed && '' !== $latest && version_compare( $latest, $installed, '>' );
+
+	/**
+	 * Filters whether a BuddyBoss Add-ons update is available for the Media upsell panels.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $available Whether a newer build is available.
+	 * @param string $installed Installed version, empty when unreadable.
+	 * @param string $latest    Latest release version, empty when unresolved.
+	 */
+	return (bool) apply_filters( 'bb_media_addons_update_available', $available, $installed, $latest );
+}
+
+/**
+ * Swap a Media upsell card for the step an entitled site needs.
+ *
+ * Hooked on the field formatter, which only runs while the Media settings are
+ * loaded over AJAX, so the entitlement lookup never runs on ordinary admin
+ * requests. The upgrade card registered by bb_media_register_addons_upsell_panel()
+ * stays as it is for sites whose plan does not include BuddyBoss Add-ons.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data bound for React.
+ * @param array  $field      Registered field args.
+ * @param string $feature_id Feature the field belongs to.
+ *
+ * @return array
+ */
+function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id ) {
+	if ( 'media' !== $feature_id || empty( $field['name'] ) || ! preg_match( '/^bb_media_(videos|documents|animated_gifs)_addons_upsell$/', $field['name'], $matches ) ) {
+		return $field_data;
+	}
+
+	$panel_id = $matches[1];
+	$state    = bb_media_get_addons_panel_state( $panel_id );
+
+	if ( 'upgrade' === $state ) {
+		return $field_data;
+	}
+
+	$title   = isset( $field['empty_state_title'] ) ? (string) $field['empty_state_title'] : '';
+	$actions = function_exists( 'bb_admin_settings_get_addon_ajax_actions' ) ? bb_admin_settings_get_addon_ajax_actions() : array();
+	$card    = array(
+		'button_target'    => '_self',
+		'addon_action'     => null,
+		'addon_slug'       => null,
+		'addon_nonce_key'  => null,
+		'addon_busy_label' => null,
+		// The plan already includes the feature, so the upgrade popup must not take over the button.
+		'upgrade_modal'    => null,
+	);
+
+	switch ( $state ) {
+		case 'install':
+			$card['empty_state_description'] = sprintf(
+				/* translators: %s: Feature name, e.g. "Videos". */
+				__( '%s is included in your plan. Install the BuddyBoss Add-ons plugin to use it.', 'buddyboss' ),
+				$title
+			);
+			$card['button_label']     = __( 'Install & Activate', 'buddyboss' );
+			$card['button_url']       = bp_get_admin_url( 'admin.php?page=buddyboss-addons' );
+			$card['addon_action']     = isset( $actions['install'] ) ? $actions['install'] : null;
+			$card['addon_slug']       = 'buddyboss-addons';
+			$card['addon_busy_label'] = __( 'Installing…', 'buddyboss' );
+			break;
+
+		case 'activate':
+			$card['empty_state_description'] = sprintf(
+				/* translators: %s: Feature name, e.g. "Videos". */
+				__( '%s is included in your plan. Activate the BuddyBoss Add-ons plugin to use it.', 'buddyboss' ),
+				$title
+			);
+			$card['button_label']     = __( 'Activate', 'buddyboss' );
+			$card['button_url']       = self_admin_url( 'plugins.php' );
+			$card['addon_action']     = isset( $actions['activate'] ) ? $actions['activate'] : null;
+			$card['addon_slug']       = 'buddyboss-addons';
+			$card['addon_busy_label'] = __( 'Activating…', 'buddyboss' );
+			break;
+
+		case 'update':
+			// The update handler only moves an add-on that is below the required version,
+			// so offer the one-click update only then.
+			$plugins     = get_plugins();
+			$installed   = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+			$below_floor = '' !== $installed && version_compare( $installed, bb_get_addons_required_version(), '<' );
+
+			if ( $below_floor && bb_media_addons_update_available() ) {
+				$card['empty_state_description'] = sprintf(
+					/* translators: %s: Feature name, e.g. "Videos". */
+					__( '%s is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the plugin to use it.', 'buddyboss' ),
+					$title
+				);
+				$card['button_label']     = __( 'Update Plugin', 'buddyboss' );
+				$card['button_url']       = self_admin_url( 'update-core.php' );
+				$card['addon_action']     = 'bb_media_update_addons';
+				$card['addon_slug']       = 'buddyboss-addons';
+				$card['addon_nonce_key']  = 'ajaxNonce';
+				$card['addon_busy_label'] = __( 'Updating…', 'buddyboss' );
+			} else {
+				// Nothing newer is known yet; the update check may be stale, and the
+				// WordPress updates screen can re-run it.
+				$card['empty_state_description'] = sprintf(
+					/* translators: %s: Feature name, e.g. "Videos". */
+					__( '%s is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Check for a plugin update.', 'buddyboss' ),
+					$title
+				);
+				$card['button_label'] = __( 'Go to Updates', 'buddyboss' );
+				$card['button_url']   = self_admin_url( 'update-core.php' );
+			}
+			break;
+
+		case 'unavailable':
+		default:
+			$card['empty_state_description'] = sprintf(
+				/* translators: %s: Feature name, e.g. "Videos". */
+				__( '%s is included in your plan, but the BuddyBoss Add-ons plugin has not enabled it. Check your license.', 'buddyboss' ),
+				$title
+			);
+			$card['button_label'] = __( 'Manage License', 'buddyboss' );
+			$card['button_url']   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+			break;
+	}
+
+	if ( ! empty( $card['button_url'] ) ) {
+		$card['button_url'] = esc_url_raw( $card['button_url'] );
+	}
+
+	return array_merge( $field_data, $card );
+}
+add_filter( 'bb_admin_settings_format_field_data', 'bb_media_format_addons_upsell_field', 10, 3 );
+
+/**
+ * Drop the "UPGRADE START" header badge from a Media upsell panel the plan already covers.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $section_data  Formatted section data bound for React.
+ * @param array  $section       Registered section args.
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ *
+ * @return array
+ */
+function bb_media_format_addons_upsell_section( $section_data, $section, $feature_id, $side_panel_id ) {
+	if (
+		'media' !== $feature_id ||
+		empty( $section_data['pro_notice'] ) ||
+		'' === bb_media_get_addons_module_for_panel( $side_panel_id ) ||
+		'upgrade' === bb_media_get_addons_panel_state( $side_panel_id )
+	) {
+		return $section_data;
+	}
+
+	unset( $section_data['pro_notice'] );
+
+	return $section_data;
+}
+add_filter( 'bb_admin_settings_format_section_data', 'bb_media_format_addons_upsell_section', 10, 4 );
+
+/**
+ * AJAX: update BuddyBoss Add-ons so the Media panels it provides become available.
+ *
+ * Mothership has install/activate actions but no update action, so this is
+ * Platform-owned and verifies the `bb_admin_settings` nonce (`ajaxNonce`).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_media_ajax_update_addons() {
+	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
+
+	if ( ! bp_current_user_can( 'bp_moderate' ) || ! current_user_can( 'update_plugins' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to update plugins.', 'buddyboss' ) ), 403 );
+	}
+
+	$result   = bb_update_addons_bundle_to_required_version();
+	$messages = array(
+		'inactive'     => __( 'Activate the BuddyBoss Add-ons plugin first.', 'buddyboss' ),
+		'up_to_date'   => __( 'The BuddyBoss Add-ons plugin is already up to date.', 'buddyboss' ),
+		'vcs_checkout' => __( 'The BuddyBoss Add-ons plugin is a version-control checkout. Update it manually.', 'buddyboss' ),
+		'not_entitled' => __( 'The BuddyBoss Add-ons plugin is not available under your current license.', 'buddyboss' ),
+		'no_package'   => __( 'No newer version of the BuddyBoss Add-ons plugin is available yet.', 'buddyboss' ),
+		'failed'       => __( 'Plugin update failed. Please try again.', 'buddyboss' ),
+	);
+
+	if ( 'updated' !== $result ) {
+		wp_send_json_error( array( 'message' => isset( $messages[ $result ] ) ? $messages[ $result ] : $messages['failed'] ) );
+	}
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_bb_media_update_addons', 'bb_media_ajax_update_addons' );
