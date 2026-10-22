@@ -2581,8 +2581,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The hold keeps the newest drafts within its size cap and skips forum
-	 * entries with nothing to restore.
+	 * The hold keeps the newest drafts within its size cap, the rest wait in
+	 * the overflow, and forum entries with nothing to restore are skipped.
 	 */
 	public function test_evicted_hold_is_capped_newest_first() {
 		$user_id = self::factory()->user->create();
@@ -2608,8 +2608,158 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertLessThanOrEqual( bb_draft_user_total_max_size(), strlen( maybe_serialize( $hold ) ), 'The hold stays within the per-user draft budget.' );
 		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:reply_10', $hold, 'The newest draft is kept.' );
-		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft:reply_1', $hold, 'The oldest draft is dropped first.' );
+		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft:reply_1', $hold, 'The oldest draft does not fit the hold.' );
 		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft:empty', $hold, 'An entry with nothing to restore is not held.' );
+
+		$overflow = bb_draft_get_evicted_overflow( $user_id );
+
+		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:reply_1', $overflow, 'The oldest draft waits in the overflow instead of being dropped (F-03).' );
+		$this->assertSame( 10, count( $hold ) + count( $overflow ), 'Every draft with content is held somewhere.' );
+		$this->assertSame( '2', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The flag says an overflow exists.' );
+	}
+
+	/**
+	 * Acknowledged drafts make room, and the overflow refills the hold until
+	 * every held draft was handed back (PROD-9621 F-03).
+	 */
+	public function test_evicted_overflow_refills_the_hold_as_drafts_are_acknowledged() {
+		$user_id = self::factory()->user->create();
+		$entries = array();
+
+		for ( $i = 1; $i <= 10; $i++ ) {
+			$entries[ 'bb_user_topic_reply_draft:reply_' . $i ] = array(
+				'data_key'        => 'reply_' . $i,
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'z', 50000 ) ),
+				'_draft_saved_at' => $i,
+			);
+		}
+
+		bb_draft_hold_evicted( $user_id, $entries );
+
+		$handed_back = array();
+		$owed        = bb_draft_pending_evicted( $user_id );
+
+		for ( $round = 0; $round < 10 && ! empty( $owed ); $round++ ) {
+			$handed_back = array_merge( $handed_back, array_keys( $owed ) );
+			$owed        = bb_draft_pending_evicted( $user_id, array_keys( $owed ) );
+		}
+
+		sort( $handed_back );
+		$expected = array_keys( $entries );
+		sort( $expected );
+
+		$this->assertSame( $expected, $handed_back, 'Every held draft is handed back in turn.' );
+		$this->assertEmpty( $owed );
+		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The flag clears once both options are empty.' );
+		$this->assertEmpty( bb_draft_get_evicted_overflow( $user_id, true ) );
+	}
+
+	/**
+	 * The daily prune expires overflow entries like held ones.
+	 */
+	public function test_prune_expires_overflow_entries() {
+		$user_id = self::factory()->user->create();
+		$old     = time() - bb_draft_evicted_hold_seconds() - 10;
+
+		bb_draft_set_evicted_hold(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'entry' => array( 'data' => array( 'content' => 'new' ) ),
+					'at'    => time(),
+				),
+			),
+			array(
+				'draft_group_3' => array(
+					'entry' => array( 'data' => array( 'content' => 'old' ) ),
+					'at'    => $old,
+				),
+			)
+		);
+
+		bb_drafts_prune_evicted_holds();
+
+		$this->assertArrayHasKey( 'draft_user', bb_draft_get_evicted_hold( $user_id ) );
+		$this->assertEmpty( bb_draft_get_evicted_overflow( $user_id, true ), 'The expired overflow entry is pruned.' );
+		$this->assertSame( '1', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ) );
+	}
+
+	/**
+	 * Deleting a member deletes their held drafts (PROD-9621 F-11).
+	 */
+	public function test_deleting_a_member_deletes_their_held_drafts() {
+		$user_id = self::factory()->user->create();
+
+		bb_draft_set_evicted_hold(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'entry' => array( 'data' => array( 'content' => 'private' ) ),
+					'at'    => time(),
+				),
+			),
+			array(
+				'draft_group_3' => array(
+					'entry' => array( 'data' => array( 'content' => 'private' ) ),
+					'at'    => time(),
+				),
+			)
+		);
+
+		if ( is_multisite() ) {
+			require_once ABSPATH . 'wp-admin/includes/ms.php';
+			wpmu_delete_user( $user_id );
+		} else {
+			require_once ABSPATH . 'wp-admin/includes/user.php';
+			wp_delete_user( $user_id );
+		}
+
+		$name     = bb_draft_evicted_hold_option( $user_id );
+		$overflow = bb_draft_evicted_overflow_option( $user_id );
+
+		$this->assertFalse( is_multisite() ? get_site_option( $name ) : get_option( $name ), 'The hold is deleted with the member.' );
+		$this->assertFalse( is_multisite() ? get_site_option( $overflow ) : get_option( $overflow ), 'So is the overflow.' );
+	}
+
+	/**
+	 * On multisite the root-only upgrade heal cannot mark another blog's files,
+	 * so it lists them in the network ledger, which keeps them referenced for
+	 * the retention window after the hold is gone (PROD-9621 F-04).
+	 */
+	public function test_multisite_heal_keeps_held_files_referenced_after_the_ack() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Multisite only.' );
+		}
+
+		$user_id    = self::factory()->user->create();
+		$attachment = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		$key        = 'draft_group_7';
+		$entry      = array(
+			'data_key' => $key,
+			'data'     => array( 'media' => array( array( 'id' => $attachment ) ) ),
+		);
+
+		bb_draft_hold_evicted( $user_id, array( $key => $entry ) );
+		bb_draft_protect_evicted_attachments( array( $entry ), $user_id, true );
+
+		$this->assertSame( '', (string) get_post_meta( $attachment, 'bb_draft_evicted_at', true ), 'No postmeta is written from the root-only heal (H2).' );
+
+		bb_draft_pending_evicted( $user_id, array( $key ) );
+		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'Premise: the ack dropped the hold.' );
+
+		$this->assertContains( (int) $attachment, bb_drafts_collect_held_attachment_ids(), 'The ledger still references the file.' );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		$ledger                      = get_site_option( bb_draft_eviction_file_ledger_option() );
+		$ledger[ (int) $attachment ] = time() - 2 * DAY_IN_SECONDS;
+		update_site_option( bb_draft_eviction_file_ledger_option(), $ledger );
+
+		$this->assertNotContains( (int) $attachment, bb_drafts_collect_held_attachment_ids(), 'Past the retention window it is no longer referenced.' );
+
+		bb_drafts_prune_evicted_holds();
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertFalse( get_site_option( bb_draft_eviction_file_ledger_option() ), 'The prune empties the ledger.' );
 	}
 
 	public function return_fifty() {
@@ -3185,13 +3335,17 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
 
+		// Only writes to the forum row count; holding the dropped drafts also
+		// sets the member's one-byte hold flag.
 		$writes = 0;
-		$count  = function () use ( &$writes ) {
-			++$writes;
+		$count  = function ( $meta_id, $object_id, $meta_key ) use ( &$writes ) {
+			if ( bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) === $meta_key ) {
+				++$writes;
+			}
 		};
-		add_action( 'updated_user_meta', $count );
-		add_action( 'added_user_meta', $count );
-		add_action( 'deleted_user_meta', $count );
+		add_action( 'updated_user_meta', $count, 10, 3 );
+		add_action( 'added_user_meta', $count, 10, 3 );
+		add_action( 'deleted_user_meta', $count, 10, 3 );
 
 		$disposed = bb_draft_heal_forum_row( $user_id );
 
@@ -3205,9 +3359,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Healing releases the stamps of what it dropped, keeping what survives.
+	 * Healing holds an inner draft still over the cap without its images, and
+	 * keeps the files of both drafts protected (PROD-9621 F-08).
+	 *
+	 * Deleting it lost the member's text, and on single-site releasing its
+	 * stamp let the orphan cron delete its files.
 	 */
-	public function test_forum_row_heal_releases_only_the_dropped_attachments() {
+	public function test_forum_row_heal_holds_an_oversized_draft_and_keeps_its_files() {
 		$user_id = self::factory()->user->create();
 		$dropped = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
 		$kept    = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
@@ -3246,7 +3404,13 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertArrayHasKey( 'draft_reply_small', $row, 'A legal inner draft must survive the heal.' );
 		$this->assertArrayNotHasKey( 'draft_reply_big', $row );
-		$this->assertSame( '', (string) get_post_meta( $dropped, 'bb_media_draft', true ), 'The dropped draft releases its attachment.' );
+
+		$held = bb_draft_pending_evicted( $user_id );
+
+		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:draft_reply_big', $held, 'The oversized draft is held for the member.' );
+		$this->assertSame( str_repeat( 'x', bb_draft_max_size() + 100 ), $held['bb_user_topic_reply_draft:draft_reply_big']['data']['bbp_reply_content'], 'Its text is held in full.' );
+		$this->assertSame( '1', (string) get_post_meta( $dropped, 'bb_media_draft', true ), 'The held draft keeps its attachment protected.' );
+		$this->assertNotEmpty( get_post_meta( $dropped, 'bb_draft_evicted_at', true ), 'Its file is marked like a live eviction.' );
 		$this->assertSame( '1', (string) get_post_meta( $kept, 'bb_media_draft', true ), 'The surviving draft keeps its attachment protected.' );
 	}
 
@@ -5746,6 +5910,48 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			bp_get_user_meta( $user_id, 'draft_user', true ),
 			'A row that is genuinely too large must still be disposed - the healing guarantee must not weaken.'
 		);
+
+		// It leaves usermeta but is held, without the poster frame, so the
+		// member gets the text back (PROD-9621 F-08).
+		$held = bb_draft_pending_evicted( $user_id );
+
+		$this->assertArrayHasKey( 'draft_user', $held, 'The draft is held for the member.' );
+		$this->assertSame( $entry['data']['content'], $held['draft_user']['data']['content'], 'Its text is held in full.' );
+		$this->assertArrayNotHasKey( 'js_preview', $held['draft_user']['data']['video'][0], 'The poster frame is not held.' );
+	}
+
+	/**
+	 * Stage 1 keeps the files of a draft it holds, on single-site too.
+	 */
+	public function test_oneshot_stage_one_keeps_the_files_of_an_oversized_draft() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'Single-site marks the files; multisite uses the ledger.' );
+		}
+
+		$user_id    = self::factory()->user->create();
+		$attachment = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+
+		update_post_meta( $attachment, 'bb_media_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'object'          => 'user',
+				'data_key'        => 'draft_user',
+				'data'            => array(
+					'content' => str_repeat( 'x', 150 * KB_IN_BYTES ),
+					'media'   => array( array( 'id' => $attachment ) ),
+				),
+				'_draft_saved_at' => time() - 3600,
+			)
+		);
+
+		delete_site_option( 'bb_draft_oneshot_state' );
+		bb_drafts_oneshot_batch( 0 );
+
+		$this->assertSame( '1', (string) get_post_meta( $attachment, 'bb_media_draft', true ), 'The file keeps its stamp.' );
+		$this->assertNotEmpty( get_post_meta( $attachment, 'bb_draft_evicted_at', true ), 'And is marked like a live eviction.' );
 	}
 
 	/**

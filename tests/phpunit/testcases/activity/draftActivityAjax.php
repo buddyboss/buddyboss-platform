@@ -919,4 +919,86 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 			: wp_cache_get( 'notoptions', 'options' );
 		$this->assertArrayNotHasKey( $option, (array) $notoptions, 'No notoptions entry is added for the member.' );
 	}
+
+	/**
+	 * A stored row that is not a draft is removed by its fetch, so pages stop
+	 * fetching it on every view (PROD-9621 F-12).
+	 */
+	public function test_fetch_removes_a_corrupt_draft_row() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		bp_update_user_meta( $user_id, 'draft_user', 'not a draft' );
+
+		$response = $this->invoke_handler(
+			'bb_nouveau_ajax_get_draft_activity',
+			'unused',
+			'_wpnonce_post_draft',
+			'post_draft_activity',
+			$user_id,
+			'',
+			array(
+				'data_key' => 'draft_user',
+				'object'   => 'user',
+				'item_id'  => 0,
+			)
+		);
+
+		$this->assertTrue( $response['success'] );
+		$this->assertFalse( $response['data']['draft_activity'], 'Nothing restorable is returned.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_user' ) ), 'The corrupt row is gone, so has_draft is false on the next page view.' );
+	}
+
+	/**
+	 * A held draft waiting in the overflow is still found by its composer:
+	 * the page reports a draft and the fetch hands it back (PROD-9621 F-03).
+	 */
+	public function test_fetch_hands_back_a_draft_waiting_in_the_overflow() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$group   = self::factory()->group->create( array( 'creator_id' => $user_id ) );
+		$key     = 'draft_group_' . $group;
+		$entry   = array(
+			'data_key' => $key,
+			'object'   => 'group',
+			'data'     => array( 'content' => 'waiting text' ),
+		);
+
+		bb_draft_set_evicted_hold(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'entry' => array( 'data' => array( 'content' => 'newer' ) ),
+					'at'    => time(),
+				),
+			),
+			array(
+				$key => array(
+					'entry' => $entry,
+					'at'    => time(),
+				),
+			)
+		);
+
+		$this->assertSame( $entry, bb_draft_get_held_entry( $user_id, $key ), 'The page view finds the waiting draft, so the composer fetches it.' );
+
+		$response = $this->invoke_handler(
+			'bb_nouveau_ajax_get_draft_activity',
+			'unused',
+			'_wpnonce_post_draft',
+			'post_draft_activity',
+			$user_id,
+			'',
+			array(
+				'data_key' => $key,
+				'object'   => 'group',
+				'item_id'  => $group,
+			)
+		);
+
+		$this->assertTrue( $response['success'] );
+		$this->assertSame( 'waiting text', $response['data']['draft_activity']['data']['content'], 'The waiting draft is restored.' );
+		$this->assertArrayHasKey( $key, $response['data']['evicted_drafts'], 'And handed back, so the browser keeps it pending and acknowledges it.' );
+
+		bb_draft_pending_evicted( $user_id, array( $key, 'draft_user' ) );
+		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The acknowledgement clears both.' );
+	}
 }

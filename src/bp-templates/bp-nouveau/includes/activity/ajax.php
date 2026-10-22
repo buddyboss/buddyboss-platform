@@ -1953,10 +1953,27 @@ function bb_nouveau_ajax_get_draft_activity() {
 	$draft_activity = bp_get_user_meta( $user_id, $data_key, true );
 	$owed           = bb_draft_handback( $user_id );
 
+	// A held draft of this key may still wait in the overflow (F-03).
+	if ( ! isset( $owed[ $data_key ] ) ) {
+		$owed = array_merge(
+			$owed,
+			bb_draft_promote_evicted(
+				$user_id,
+				function ( $key ) use ( $data_key ) {
+					return $key === $data_key;
+				}
+			)
+		);
+	}
+
 	// Nothing stored, but this key was evicted and its hand-back never reached
 	// the browser: restore the held copy (V06).
 	if ( ( empty( $draft_activity ) || ! is_array( $draft_activity ) ) && isset( $owed[ $data_key ] ) && is_array( $owed[ $data_key ] ) ) {
 		$draft_activity = $owed[ $data_key ];
+	} elseif ( ! is_array( $draft_activity ) || empty( $draft_activity ) ) {
+		// A row that is not a draft (corrupt, or a legacy empty value) can never
+		// be restored, but its presence makes every page view fetch it again.
+		bb_draft_dispose( $user_id, $data_key );
 	}
 
 	wp_send_json_success(

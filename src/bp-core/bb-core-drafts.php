@@ -940,6 +940,47 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 }
 
 /**
+ * Remove a draft that is over the per-draft cap even without its images, and
+ * hold it for the member's next visit.
+ *
+ * The upgrade heal used to delete such a draft with its text, and on
+ * single-site the orphan cron then deleted its files. The draft now leaves
+ * usermeta the same way, but is held like an evicted draft: the composer
+ * hands it back to the browser, which keeps it even though the server cannot
+ * store it, and its files stay protected meanwhile. A row that is not a
+ * draft array has nothing to restore and is deleted as before.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id  Owning user ID.
+ * @param string $meta_key Draft usermeta key.
+ * @return bool Whether the row was removed.
+ */
+function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
+	$user_id = (int) $user_id;
+	$stored  = bp_get_user_meta( $user_id, $meta_key, true );
+
+	if ( ! is_array( $stored ) || empty( $stored ) ) {
+		return bb_draft_dispose( $user_id, $meta_key, '', is_multisite() );
+	}
+
+	$entry = bb_draft_shed_preview_frames( $stored );
+
+	// Kept stamped: the held entry still references the files.
+	if ( ! bb_draft_dispose( $user_id, $meta_key, '', true ) ) {
+		return false;
+	}
+
+	bb_draft_hold_evicted( $user_id, array( $meta_key => $entry ) );
+	bb_draft_protect_evicted_attachments( array( $entry ), $user_id, true );
+
+	/** This action is documented in bp-core/bb-core-drafts.php */
+	do_action( 'bb_draft_evicted', $user_id, $meta_key, 'draft_cap' );
+
+	return true;
+}
+
+/**
  * Strip pasted images and poster frames from every draft a member holds.
  *
  * The upgrade heal runs this before it evicts drafts to bring a member under
@@ -1636,16 +1677,71 @@ function bb_draft_get_evicted_hold( $user_id ) {
 }
 
 /**
+ * Name of the option holding a member's held drafts that did not fit the hold.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ * @return string
+ */
+function bb_draft_evicted_overflow_option( $user_id ) {
+	return 'bb_draft_evicted_' . (int) $user_id . '_overflow';
+}
+
+/**
+ * Read a member's held drafts that wait for room in the hold.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $user_id User ID.
+ * @param bool $force   Optional. Read the option even when the member's flag
+ *                      says there is no overflow. Default false.
+ * @return array Map like {@see bb_draft_get_evicted_hold()}.
+ */
+function bb_draft_get_evicted_overflow( $user_id, $force = false ) {
+	// Only a member flagged with an overflow has one; reading the option for
+	// everyone else would record a `notoptions` miss per member.
+	if ( ! $force && 2 !== (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
+		return array();
+	}
+
+	$name     = bb_draft_evicted_overflow_option( $user_id );
+	$overflow = is_multisite() ? get_site_option( $name, array() ) : get_option( $name, array() );
+
+	return is_array( $overflow ) ? $overflow : array();
+}
+
+/**
  * Write a member's held evicted drafts.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int   $user_id User ID.
- * @param array $hold    Map as returned by {@see bb_draft_get_evicted_hold()}.
+ * @param int        $user_id  User ID.
+ * @param array      $hold     Map as returned by {@see bb_draft_get_evicted_hold()}.
+ * @param array|null $overflow Optional. Held drafts waiting for room in the hold,
+ *                             or null to leave the stored overflow as it is.
  * @return void
  */
-function bb_draft_set_evicted_hold( $user_id, $hold ) {
-	$name = bb_draft_evicted_hold_option( $user_id );
+function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
+	$name          = bb_draft_evicted_hold_option( $user_id );
+	$overflow_name = bb_draft_evicted_overflow_option( $user_id );
+	$has_overflow  = null === $overflow
+		? 2 === (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true )
+		: ! empty( $overflow );
+
+	if ( null !== $overflow ) {
+		if ( empty( $overflow ) ) {
+			if ( is_multisite() ) {
+				delete_site_option( $overflow_name );
+			} else {
+				delete_option( $overflow_name );
+			}
+		} elseif ( is_multisite() ) {
+			update_site_option( $overflow_name, $overflow );
+		} else {
+			update_option( $overflow_name, $overflow, false );
+		}
+	}
 
 	if ( empty( $hold ) ) {
 		if ( is_multisite() ) {
@@ -1653,21 +1749,38 @@ function bb_draft_set_evicted_hold( $user_id, $hold ) {
 		} else {
 			delete_option( $name );
 		}
+	} elseif ( is_multisite() ) {
+		update_site_option( $name, $hold );
+	} else {
+		update_option( $name, $hold, false );
+	}
 
+	if ( empty( $hold ) && ! $has_overflow ) {
 		delete_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold' );
 
 		return;
 	}
 
 	// A one-byte flag in the member's (already loaded) meta, so pages can ask
-	// "is anything held?" without reading the option on every view.
-	update_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', 1 );
+	// "is anything held?" without reading the option on every view. 2 means
+	// some held drafts also wait in the overflow option.
+	update_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', $has_overflow ? 2 : 1 );
+}
 
-	if ( is_multisite() ) {
-		update_site_option( $name, $hold );
-	} else {
-		update_option( $name, $hold, false );
-	}
+/**
+ * Store a member's held drafts, keeping the newest within the hold's size cap
+ * and the rest in the overflow option.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id User ID.
+ * @param array $held    Every held draft, map like {@see bb_draft_get_evicted_hold()}.
+ * @return void
+ */
+function bb_draft_store_evicted_hold( $user_id, $held ) {
+	$split = bb_draft_split_evicted_hold( $held );
+
+	bb_draft_set_evicted_hold( $user_id, $split['hold'], $split['overflow'] );
 }
 
 /**
@@ -1689,7 +1802,53 @@ function bb_draft_get_held_entry( $user_id, $key ) {
 
 	$owed = bb_draft_pending_evicted( $user_id );
 
-	return isset( $owed[ $key ] ) && is_array( $owed[ $key ] ) ? $owed[ $key ] : false;
+	if ( isset( $owed[ $key ] ) && is_array( $owed[ $key ] ) ) {
+		return $owed[ $key ];
+	}
+
+	// A draft waiting in the overflow is still the member's: the composer for
+	// its key must fetch it, or a fresh save there would replace it.
+	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
+
+	return isset( $overflow[ $key ]['entry'] ) && is_array( $overflow[ $key ]['entry'] ) ? $overflow[ $key ]['entry'] : false;
+}
+
+/**
+ * Move a member's waiting held drafts into the hold because a composer asked
+ * for them.
+ *
+ * Call after {@see bb_draft_handback()} and add the result to its return, so
+ * the drafts are handed back and acknowledged like any held draft. They may
+ * take the hold over its size cap until acknowledged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int      $user_id User ID.
+ * @param callable $wanted  Receives an evicted key, returns whether to move it.
+ * @return array The moved entries, keyed like `evicted_draft_keys`.
+ */
+function bb_draft_promote_evicted( $user_id, $wanted ) {
+	if ( 2 !== (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
+		return array();
+	}
+
+	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
+	$moved    = array();
+
+	foreach ( $overflow as $key => $held ) {
+		if ( call_user_func( $wanted, (string) $key ) ) {
+			$moved[ $key ] = $held;
+			unset( $overflow[ $key ] );
+		}
+	}
+
+	if ( empty( $moved ) ) {
+		return array();
+	}
+
+	bb_draft_set_evicted_hold( $user_id, array_merge( bb_draft_get_evicted_hold( $user_id ), $moved ), $overflow );
+
+	return wp_list_pluck( $moved, 'entry' );
 }
 
 /**
@@ -1710,7 +1869,7 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 		return;
 	}
 
-	$hold = bb_draft_get_evicted_hold( $user_id );
+	$hold = array_merge( bb_draft_get_evicted_overflow( $user_id ), bb_draft_get_evicted_hold( $user_id ) );
 	$now  = time();
 
 	foreach ( $entries as $key => $entry ) {
@@ -1726,9 +1885,7 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 		);
 	}
 
-	$hold = bb_draft_cap_evicted_hold( $hold );
-
-	bb_draft_set_evicted_hold( $user_id, $hold );
+	bb_draft_store_evicted_hold( $user_id, $hold );
 
 	// The sweep's reference set now has to include these files; a set cached
 	// before the hold was written would let it release their stamps.
@@ -1742,21 +1899,34 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 }
 
 /**
- * Keep a member's held evicted drafts within a size cap, newest drafts first.
+ * Split a member's held evicted drafts into the hold and its overflow, newest
+ * drafts first.
  *
  * The hold is read on the member's page views and re-sent with every draft
- * response until acknowledged, so it must not grow with the member's legacy
- * data. The upgrade heal can evict hundreds of drafts from one old forum row;
- * the cap keeps the newest of them. Without the hold they were all deleted.
+ * response until acknowledged, so it must stay small: a hold over the object
+ * cache's item limit is the problem this ticket fixes. The upgrade heal can
+ * evict hundreds of drafts from one old forum row, so the drafts that do not
+ * fit wait in a separate overflow option, read only when the hold has room
+ * again ({@see bb_draft_pending_evicted()}). Nothing is dropped; overflow
+ * entries expire with the hold time like any held draft.
+ *
+ * The newest draft is always kept in the hold, even alone over the cap, so a
+ * single large draft is still handed back.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $hold Map as returned by {@see bb_draft_get_evicted_hold()}.
- * @return array The hold within the cap.
+ * @return array {
+ *     @type array $hold     Drafts within the cap.
+ *     @type array $overflow Drafts waiting for room.
+ * }
  */
-function bb_draft_cap_evicted_hold( $hold ) {
+function bb_draft_split_evicted_hold( $hold ) {
 	/**
 	 * Filters the maximum size of one member's held evicted drafts.
+	 *
+	 * Drafts over this size wait in the member's overflow hold until the
+	 * browser has taken back the ones in the hold.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1765,7 +1935,10 @@ function bb_draft_cap_evicted_hold( $hold ) {
 	$max_bytes = max( 0, (int) apply_filters( 'bb_draft_evicted_hold_max_size', bb_draft_user_total_max_size() ) );
 
 	if ( strlen( maybe_serialize( $hold ) ) <= $max_bytes ) {
-		return $hold;
+		return array(
+			'hold'     => $hold,
+			'overflow' => array(),
+		);
 	}
 
 	uksort(
@@ -1782,13 +1955,15 @@ function bb_draft_cap_evicted_hold( $hold ) {
 		}
 	);
 
-	$kept  = array();
-	$bytes = strlen( maybe_serialize( array() ) );
+	$kept     = array();
+	$overflow = array();
+	$bytes    = strlen( maybe_serialize( array() ) );
 
 	foreach ( $hold as $key => $held ) {
 		$held_bytes = strlen( maybe_serialize( $held ) ) + bb_draft_serialized_key_bytes( $key );
 
-		if ( $bytes + $held_bytes > $max_bytes ) {
+		if ( ! empty( $kept ) && $bytes + $held_bytes > $max_bytes ) {
+			$overflow[ $key ] = $held;
 			continue;
 		}
 
@@ -1796,7 +1971,10 @@ function bb_draft_cap_evicted_hold( $hold ) {
 		$bytes       += $held_bytes;
 	}
 
-	return $kept;
+	return array(
+		'hold'     => $kept,
+		'overflow' => $overflow,
+	);
 }
 
 /**
@@ -1815,23 +1993,55 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
 	// Every draft save and fetch lands here. Reading the option for a member
 	// with nothing held would record a miss in the site-wide `notoptions`
 	// cache item, one key per drafting member, so check the meta flag first.
-	if ( ! get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
+	$flag = (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true );
+
+	if ( ! $flag ) {
 		return array();
 	}
 
-	$hold = bb_draft_get_evicted_hold( $user_id );
+	$hold    = bb_draft_get_evicted_hold( $user_id );
+	$unheld  = count( $hold );
+	$hold    = bb_draft_drop_settled_evicted( $user_id, $hold, $acked );
+	$changed = count( $hold ) !== $unheld;
 
-	if ( empty( $hold ) ) {
-		return array();
+	// Room was made in the hold (or it was empty): move the newest waiting
+	// drafts in, so the browser gets them back in turn. An acknowledgement
+	// can also name a waiting draft the browser got through its own fetch.
+	if ( 2 === $flag && ( $changed || empty( $hold ) || ! empty( $acked ) ) ) {
+		$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ), $acked );
+
+		bb_draft_store_evicted_hold( $user_id, array_merge( $overflow, $hold ) );
+
+		return wp_list_pluck( bb_draft_get_evicted_hold( $user_id ), 'entry' );
 	}
 
-	$cutoff  = time() - bb_draft_evicted_hold_seconds();
-	$acked   = array_map( 'strval', (array) $acked );
-	$changed = false;
-	$forum   = null;
+	if ( $changed || ( empty( $hold ) && 2 !== $flag ) ) {
+		bb_draft_set_evicted_hold( $user_id, $hold );
+	}
+
+	return wp_list_pluck( $hold, 'entry' );
+}
+
+/**
+ * Remove held drafts the member no longer needs back.
+ *
+ * Drops entries the browser acknowledged, entries past the hold time, and
+ * entries whose key holds a stored draft again (the member saved it since).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int      $user_id User ID.
+ * @param array    $hold    Map like {@see bb_draft_get_evicted_hold()}.
+ * @param string[] $acked   Keys the browser reports it has stored.
+ * @return array The remaining held drafts.
+ */
+function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
+	$cutoff = time() - bb_draft_evicted_hold_seconds();
+	$acked  = array_map( 'strval', (array) $acked );
+	$forum  = null;
 
 	foreach ( $hold as $key => $held ) {
-		$drop = ! is_array( $held ) || empty( $held['entry'] ) || (int) ( $held['at'] ?? 0 ) < $cutoff || in_array( (string) $key, $acked, true );
+		$drop = ! is_array( $held ) || empty( $held['entry'] ) || (int) ( isset( $held['at'] ) ? $held['at'] : 0 ) < $cutoff || in_array( (string) $key, $acked, true );
 
 		if ( ! $drop ) {
 			$parts = explode( ':', (string) $key, 2 );
@@ -1848,15 +2058,10 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
 
 		if ( $drop ) {
 			unset( $hold[ $key ] );
-			$changed = true;
 		}
 	}
 
-	if ( $changed ) {
-		bb_draft_set_evicted_hold( $user_id, $hold );
-	}
-
-	return wp_list_pluck( $hold, 'entry' );
+	return $hold;
 }
 
 /**
@@ -1898,23 +2103,63 @@ function bb_drafts_prune_evicted_holds() {
 		$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s LIMIT 500", $wpdb->esc_like( 'bb_draft_evicted_' ) . '%' ) );
 	}
 
-	foreach ( (array) $names as $name ) {
-		if ( ! preg_match( '/^bb_draft_evicted_(\d+)$/', $name, $match ) ) {
-			continue;
-		}
+	$user_ids = array();
 
-		$hold = bb_draft_get_evicted_hold( (int) $match[1] );
+	foreach ( (array) $names as $name ) {
+		if ( preg_match( '/^bb_draft_evicted_(\d+)(_overflow)?$/', $name, $match ) ) {
+			$user_ids[ (int) $match[1] ] = true;
+		}
+	}
+
+	foreach ( array_keys( $user_ids ) as $user_id ) {
+		$hold = array_merge( bb_draft_get_evicted_overflow( $user_id, true ), bb_draft_get_evicted_hold( $user_id ) );
 
 		foreach ( $hold as $key => $held ) {
-			if ( ! is_array( $held ) || (int) ( $held['at'] ?? 0 ) < $cutoff ) {
+			if ( ! is_array( $held ) || (int) ( isset( $held['at'] ) ? $held['at'] : 0 ) < $cutoff ) {
 				unset( $hold[ $key ] );
 			}
 		}
 
-		bb_draft_set_evicted_hold( (int) $match[1], $hold );
+		bb_draft_store_evicted_hold( $user_id, $hold );
+	}
+
+	if ( is_multisite() ) {
+		$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+
+		if ( ! empty( $ledger ) ) {
+			$kept = array_intersect_key( (array) $ledger, array_flip( bb_draft_get_evicted_attachment_ledger_ids() ) );
+
+			if ( empty( $kept ) ) {
+				delete_site_option( bb_draft_eviction_file_ledger_option() );
+			} elseif ( count( $kept ) !== count( $ledger ) ) {
+				update_site_option( bb_draft_eviction_file_ledger_option(), $kept );
+			}
+		}
 	}
 }
 add_action( 'bb_draft_cleanup_hook', 'bb_drafts_prune_evicted_holds', 20 );
+
+/**
+ * Delete a deleted member's held evicted drafts.
+ *
+ * The member's draft usermeta goes with the account, but the hold lives in
+ * options and would keep the drafts' text until the hold time ran out. Their
+ * files are released by the orphan-stamp sweep once nothing references them.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id Deleted user ID.
+ * @return void
+ */
+function bb_draft_delete_user_evicted_hold( $user_id ) {
+	bb_draft_set_evicted_hold( (int) $user_id, array(), array() );
+}
+add_action( 'wpmu_delete_user', 'bb_draft_delete_user_evicted_hold' );
+
+// On multisite wp_delete_user() only removes the member from one site.
+if ( ! is_multisite() ) {
+	add_action( 'delete_user', 'bb_draft_delete_user_evicted_hold' );
+}
 
 /**
  * Build the `evicted_drafts` hand-back for a draft response.
@@ -1996,6 +2241,95 @@ function bb_draft_mark_evicted_attachments( $entries, $user_id ) {
 			}
 		}
 	}
+}
+
+/**
+ * Name of the network option listing files of drafts evicted by the upgrade
+ * heal on multisite.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string
+ */
+function bb_draft_eviction_file_ledger_option() {
+	return 'bb_draft_eviction_file_ledger';
+}
+
+/**
+ * Keep the files of evicted drafts protected for the retention window.
+ *
+ * A live eviction runs on the blog that owns the files and marks them with
+ * `bb_draft_evicted_at` ({@see bb_draft_mark_evicted_attachments()}). The
+ * upgrade heal on multisite runs from the root blog only, where the same IDs
+ * may name another blog's attachments (H2), so it records the IDs in a
+ * network-wide ledger instead. Every blog's orphan-stamp sweep treats a
+ * ledger ID as referenced until the eviction time plus the draft retention,
+ * the window the marker gives on single-site. A same-numbered attachment on
+ * another blog is only kept longer, never released early.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $entries   Evicted entries.
+ * @param int   $user_id   Owning user ID.
+ * @param bool  $from_root Optional. The caller runs from the root-only
+ *                         one-shot and cannot write the files' postmeta on
+ *                         multisite. Default false.
+ * @return void
+ */
+function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = false ) {
+	if ( ! $from_root || ! is_multisite() ) {
+		bb_draft_mark_evicted_attachments( $entries, $user_id );
+
+		return;
+	}
+
+	$ids = array();
+
+	foreach ( (array) $entries as $entry ) {
+		$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $entry ) );
+	}
+
+	if ( empty( $ids ) ) {
+		return;
+	}
+
+	$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+	$ledger = is_array( $ledger ) ? $ledger : array();
+	$now    = time();
+
+	foreach ( $ids as $attachment_id ) {
+		$ledger[ (int) $attachment_id ] = $now;
+	}
+
+	update_site_option( bb_draft_eviction_file_ledger_option(), $ledger );
+
+	// The sweep's cached reference set must include these files now.
+	bb_draft_invalidate_referenced_cache( $ids );
+}
+
+/**
+ * Attachment IDs in the eviction file ledger that are still in their window.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int[]
+ */
+function bb_draft_get_evicted_attachment_ledger_ids() {
+	if ( ! is_multisite() ) {
+		return array();
+	}
+
+	$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+	$cutoff = time() - bb_draft_retention_seconds();
+	$ids    = array();
+
+	foreach ( is_array( $ledger ) ? $ledger : array() as $attachment_id => $evicted_at ) {
+		if ( (int) $evicted_at >= $cutoff ) {
+			$ids[] = (int) $attachment_id;
+		}
+	}
+
+	return $ids;
 }
 
 /**
@@ -2264,12 +2598,10 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		$result['evicted'][]             = $evicted_key;
 		$result['entries'][ $evicted_key ] = $candidate['entry'];
 
-		// Not for a heal on multisite: it runs on the root blog, where these
-		// IDs may name another blog's attachments (H2). Those files keep their
-		// stamps, and the sweep in their own blog applies its upload-age rule.
-		if ( 'heal' !== $context || ! is_multisite() ) {
-			bb_draft_mark_evicted_attachments( array( $candidate['entry'] ), $user_id );
-		}
+		// A heal on multisite runs on the root blog, where these IDs may name
+		// another blog's attachments (H2), so it records them in the network
+		// ledger instead of marking them.
+		bb_draft_protect_evicted_attachments( array( $candidate['entry'] ), $user_id, 'heal' === $context );
 
 		/**
 		 * Fires when a stored draft is evicted to keep a user under the draft size budget.
@@ -2278,7 +2610,9 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		 *
 		 * @param int    $user_id     User whose draft was evicted.
 		 * @param string $evicted_key Evicted draft key ("meta_key" or "meta_key:inner_key").
-		 * @param string $reason      Eviction reason. Currently always 'aggregate_cap'.
+		 * @param string $reason      Eviction reason: 'aggregate_cap', or 'draft_cap' when the
+		 *                            upgrade heal holds a single draft still over the per-draft
+		 *                            size cap after its images were removed.
 		 */
 		do_action( 'bb_draft_evicted', $user_id, $evicted_key, 'aggregate_cap' );
 	}
@@ -3257,12 +3591,12 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  *
  * The per-draft cap applies to INNER topic/reply drafts, not the aggregate
  * row - a member with several modest drafts may legally hold a row larger
- * than one draft's cap. Inner drafts over the per-draft cap are dropped
- * individually. A row still over the per-user draft budget has pasted images
- * and poster frames stripped from every inner draft, then is trimmed
- * oldest-first to the budget; trimmed drafts are held for a hand-back and
- * their files stay protected. Only a corrupt (non-array) row is disposed
- * wholesale.
+ * than one draft's cap. Inner drafts still over the per-draft cap after
+ * their poster frames are shed are removed individually. A row still over
+ * the per-user draft budget has pasted images and poster frames stripped
+ * from every inner draft, then is trimmed oldest-first to the budget. Both
+ * kinds of removed drafts are held for a hand-back and their files stay
+ * protected. Only a corrupt (non-array) row is disposed wholesale.
  *
  * Decides everything in memory and writes ONCE. Routing each inner drop
  * through {@see bb_draft_dispose()} meant a full-row read plus a full-row
@@ -3274,10 +3608,11 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int  $user_id                  Owning user ID.
- * @param bool $defer_attachment_release Optional. Skip attachment release and
- *                                        evicted-file marking, and leave both to
- *                                        the per-site sweep, which keeps held
- *                                        drafts' files (H2). Default false.
+ * @param bool $defer_attachment_release Optional. The caller is the root-only
+ *                                        one-shot: on multisite the removed
+ *                                        drafts' files are protected through
+ *                                        the network ledger instead of their
+ *                                        postmeta (H2). Default false.
  * @return int Number of inner drafts acted on - disposed plus salvaged.
  */
 function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) {
@@ -3319,7 +3654,10 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 				continue;
 			}
 
-			$removed[ (string) $inner_key ] = $inner_draft;
+			// Still too large: held for the member's next visit like a trimmed
+			// draft, without its images. The browser keeps it even though the
+			// server cannot store it.
+			$removed[ (string) $inner_key ] = $shed;
 			unset( $row[ $inner_key ] );
 			++$disposed;
 			continue;
@@ -3403,9 +3741,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 		return 0;
 	}
 
-	// One write for the whole heal, then hold what pass 2 trimmed and release
-	// the stamps of what pass 1 dropped that the surviving row no longer
-	// references.
+	// One write for the whole heal, then hold what both passes removed.
 	if ( empty( $row ) ) {
 		bp_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
 	} else {
@@ -3419,52 +3755,38 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 
 	bb_draft_flush_user_meta_sizes( $user_id );
 
-	// Drafts trimmed to fit the budget are evictions, not oversized drafts:
-	// hold them for the member's next visit and keep their files protected,
-	// as {@see bb_draft_enforce_user_budget()} does for the other rows.
-	if ( ! empty( $trimmed ) ) {
+	// Hold the removed drafts for the member's next visit and keep their files
+	// protected, as {@see bb_draft_enforce_user_budget()} does for the other
+	// rows. Deleting an oversized draft lost its text and, on single-site,
+	// let the orphan cron delete its files (F-08).
+	if ( ! empty( $removed ) || ! empty( $trimmed ) ) {
 		$held = array();
 
-		foreach ( $trimmed as $inner_key => $inner_draft ) {
-			$evicted_key          = 'bb_user_topic_reply_draft:' . $inner_key;
-			$held[ $evicted_key ] = $inner_draft;
+		$removed_by_reason = array(
+			'draft_cap'     => $removed,
+			'aggregate_cap' => $trimmed,
+		);
 
-			/** This action is documented in bp-core/bb-core-drafts.php */
-			do_action( 'bb_draft_evicted', $user_id, $evicted_key, 'aggregate_cap' );
+		foreach ( $removed_by_reason as $reason => $drafts ) {
+			foreach ( $drafts as $inner_key => $inner_draft ) {
+				$evicted_key          = 'bb_user_topic_reply_draft:' . $inner_key;
+				$held[ $evicted_key ] = $inner_draft;
+
+				/** This action is documented in bp-core/bb-core-drafts.php */
+				do_action( 'bb_draft_evicted', $user_id, $evicted_key, $reason );
+			}
 		}
 
 		bb_draft_hold_evicted( $user_id, $held );
 
-		// Skipped when deferring on multisite: the IDs may name another blog's
-		// attachments (H2).
-		if ( ! $defer_attachment_release ) {
-			bb_draft_mark_evicted_attachments( $trimmed, $user_id );
-		}
+		// Deferring means healing from the root-only one-shot, where the IDs
+		// may name another blog's attachments on multisite (H2).
+		bb_draft_protect_evicted_attachments( array_values( $held ), $user_id, $defer_attachment_release );
 	}
 
-	// Same-row survivors PLUS every attachment the user's OTHER draft rows still
-	// reference, or healing/trimming this forum row would strip the stamp of a
-	// file a different row still holds (L7 fan-out).
-	$surviving = bb_draft_collect_other_row_referenced_ids( $user_id, 'bb_user_topic_reply_draft' );
-
-	// The trimmed drafts are held, so their files are still referenced.
-	foreach ( array_merge( $row, $trimmed ) as $surviving_entry ) {
-		$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
-	}
-
-	// Skipped on multisite when healing from the root-only one-shot: these
-	// IDs resolve against the current blog and could release a same-numbered
-	// attachment on the wrong blog (H2). The per-site orphan-stamp sweep reaps.
-	if ( ! $defer_attachment_release ) {
-		foreach ( $removed as $removed_entry ) {
-			foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
-				if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
-					delete_post_meta( $attachment_id, 'bb_media_draft' );
-					delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
-				}
-			}
-		}
-	}
+	// Nothing is released here: every removed draft is held, so its files are
+	// still referenced, and the orphan-stamp sweep releases them once the hold
+	// and the retention window have passed.
 
 	// Salvages count as work done: a caller summing this into a healed
 	// total would otherwise report a row it did rewrite as untouched.
@@ -3596,7 +3918,9 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 						// unpublished text to reclaim space the poster alone was
 						// using (Q6).
 						++$healed;
-					} elseif ( bb_draft_dispose( $row_user, $row['meta_key'], '', is_multisite() ) ) {
+					} elseif ( bb_draft_hold_oversized_draft( $row_user, $row['meta_key'] ) ) {
+						// Still over the cap: removed from usermeta but held for
+						// the member's next visit, with its files protected.
 						++$healed;
 					}
 				}
@@ -4513,14 +4837,16 @@ function bb_drafts_collect_held_attachment_ids() {
 	}
 
 	$cutoff = time() - bb_draft_evicted_hold_seconds();
-	$ids    = array();
+	$ids    = bb_draft_get_evicted_attachment_ledger_ids();
 
 	foreach ( (array) $names as $name ) {
-		if ( ! preg_match( '/^bb_draft_evicted_(\d+)$/', $name, $match ) ) {
+		if ( ! preg_match( '/^bb_draft_evicted_(\d+)(_overflow)?$/', $name, $match ) ) {
 			continue;
 		}
 
-		foreach ( bb_draft_get_evicted_hold( (int) $match[1] ) as $held ) {
+		$held_drafts = empty( $match[2] ) ? bb_draft_get_evicted_hold( (int) $match[1] ) : bb_draft_get_evicted_overflow( (int) $match[1], true );
+
+		foreach ( $held_drafts as $held ) {
 			if ( is_array( $held ) && ! empty( $held['entry'] ) && isset( $held['at'] ) && (int) $held['at'] >= $cutoff ) {
 				$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $held['entry'] ) );
 			}

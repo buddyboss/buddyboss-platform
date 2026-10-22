@@ -374,10 +374,13 @@ window.bp = window.bp || {};
 					var stored_owner  = ( 'undefined' !== typeof draft_activity_local_data.bb_draft_owner ) ? parseInt( draft_activity_local_data.bb_draft_owner, 10 ) : 0;
 					var current_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
 
-					// An ownerless copy is foreign too: every copy this pack writes
-					// is stamped, so one without an owner came from an older client
-					// and cannot be attributed to this member (V22).
-					if ( current_owner && stored_owner !== current_owner ) {
+					// Only a copy stamped with ANOTHER member is foreign. An ownerless
+					// copy was written by the release client, which never stamped an
+					// owner; dropping it deleted the member's unsynced forum draft on
+					// the first load after the update (F-05). It is restored, as the
+					// release client did and as the activity packs do, and is stamped
+					// with this member on its next local save.
+					if ( stored_owner && current_owner && stored_owner !== current_owner ) {
 						localStorage.removeItem( this.topic_reply_draft.data_key );
 					} else {
 						this.topic_reply_draft.data                          = draft_activity_local_data.data;
@@ -1777,32 +1780,24 @@ window.bp = window.bp || {};
 			}
 
 			$form.on( 'paste.bbDraftImageGuard', '[contenteditable="true"]', function ( event ) {
-				var clipboard    = event.originalEvent ? event.originalEvent.clipboardData : null,
-					hasImageFile = false,
-					hasText      = false,
-					i;
-
-				if ( ! clipboard || ! clipboard.items ) {
-					return;
-				}
-
-				for ( i = 0; i < clipboard.items.length; i++ ) {
-					if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
-						hasImageFile = true;
-					} else if ( 'string' === clipboard.items[ i ].kind && ( 'text/plain' === clipboard.items[ i ].type || 'text/html' === clipboard.items[ i ].type ) ) {
-						hasText = true;
-					}
-				}
-
 				// Office-suite copies put a bitmap rendition NEXT TO the text -
 				// the member is pasting text, so let it through (embedded data:
-				// URLs are stripped server-side). Only a pure image paste is
-				// refused.
-				if ( hasImageFile && ! hasText ) {
+				// URLs are stripped server-side). Only a paste with no text is
+				// refused, including a browser "Copy image", which carries the
+				// image as HTML too ({@see bbDraftClipboardIsImageOnly}).
+				if ( bbDraftClipboardIsImageOnly( event.originalEvent ? event.originalEvent.clipboardData : null ) ) {
 					event.preventDefault();
 					self.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
 				}
 			} );
+
+			// Remember which composer a keyboard paste comes from: MediumEditor
+			// moves it into a body-level paste bin, outside this form.
+			$form.on( 'focusin.bbDraftImageGuard', '[contenteditable="true"]', function () {
+				bbDraftPasteComposer = self;
+			} );
+
+			bbDraftBindPasteBinGuard();
 
 			// A keyboard Cmd/Ctrl+V is routed through MediumEditor's body-level
 			// paste bin, which the listener above never sees. The editor refuses
@@ -2599,6 +2594,16 @@ window.bp = window.bp || {};
 		 */
 		this.discardTopicReplyDraftForm = function () {
 
+			// After a conflict or a "not loaded" outcome no request is sent for
+			// this key (postTopicReplyDraft() stops there), so clearing the form
+			// and local copy here only hid a draft the server still holds, and
+			// it came back on the next visit. Keep everything and say so (F-09).
+			if ( this.draft_conflict_keys[ this.topic_reply_draft.data_key ] || this.draft_blocked_keys[ this.topic_reply_draft.data_key ] ) {
+				this.showDraftFeedback( ( 'undefined' !== typeof BP_Nouveau.forums && BP_Nouveau.forums.draft_discard_failed_message ) ? BP_Nouveau.forums.draft_discard_failed_message : '' );
+
+				return;
+			}
+
 			var forum_topic = this.currentForm.find( 'a[data-modal-id]' ),
 				forum_reply = this.currentForm.find( '.bbp-reply-to-link' );
 
@@ -2791,13 +2796,76 @@ window.bp = window.bp || {};
 	};
 
 	/**
+	 * Whether a hand-back may keep the copy this browser already holds for its key.
+	 *
+	 * The handed-back entry is acknowledged right after this, and the server
+	 * then drops its held copy, so keeping the wrong local copy loses the
+	 * draft. A copy stamped with another member (bb_draft_owner on a forum
+	 * copy, data.user_id on an activity copy) is never kept: on a shared
+	 * browser it is someone else's draft. Otherwise the copy is kept only when
+	 * it is at least as new as the entry:
+	 * - the entry carries a revision and the copy is that revision or was built
+	 *   on it - a revision is unique to this member's stored draft, so this
+	 *   proves the copy is theirs even without an owner stamp;
+	 * - or the entry has no revision (upgrade and heal holds never carry one),
+	 *   the copy is stamped with this member - an ownerless copy cannot be
+	 *   attributed - and it has the same content, was edited after the entry
+	 *   was saved, or is itself still waiting to sync.
+	 * Otherwise the handed-back entry wins (F-02).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object|null} existing  Copy stored under the key, parsed.
+	 * @param {Object}      entry     Handed-back entry.
+	 * @param {string}      entry_rev Entry revision, or ''.
+	 * @param {boolean}     is_forum  Whether the key is a forum inner key.
+	 * @param {number}      owner_id  Current member ID.
+	 * @return {boolean}
+	 */
+	var bbDraftKeepsLocalCopy = function ( existing, entry, entry_rev, is_forum, owner_id ) {
+		var existing_owner, local_at, saved_at;
+
+		if ( ! existing || 'object' !== typeof existing || ! owner_id ) {
+			return false;
+		}
+
+		if ( is_forum ) {
+			existing_owner = existing.bb_draft_owner ? parseInt( existing.bb_draft_owner, 10 ) : 0;
+		} else {
+			existing_owner = ( existing.data && existing.data.user_id ) ? parseInt( existing.data.user_id, 10 ) : 0;
+		}
+
+		if ( existing_owner && existing_owner !== owner_id ) {
+			return false;
+		}
+
+		if ( entry_rev ) {
+			return String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( bbDraftBaseFrom( existing ), entry_rev );
+		}
+
+		if ( existing_owner !== owner_id ) {
+			return false;
+		}
+
+		if ( true === existing.bb_draft_pending_sync || _.isEqual( existing.data, entry.data ) ) {
+			return true;
+		}
+
+		local_at = existing._draft_local_at ? parseInt( existing._draft_local_at, 10 ) : 0;
+		saved_at = entry._draft_saved_at ? parseInt( entry._draft_saved_at, 10 ) : 0;
+
+		return 0 < local_at && local_at > saved_at;
+	};
+
+	/**
 	 * Keep drafts the server evicted from the draft budget in localStorage.
 	 *
 	 * Forum inner keys ("meta_key:inner_key") are stored in this composer's
 	 * shape, activity keys in the activity composer's shape. Each copy is
 	 * marked pending, because the server no longer holds it. A copy this
-	 * browser already holds keeps its content only when it is the handed-back
-	 * revision or was built on it; it is marked pending too, so no composer
+	 * browser already holds keeps its content only when it is this member's
+	 * and at least as new as the handed-back entry
+	 * ({@see bbDraftKeepsLocalCopy}); it is marked pending too, so no composer
 	 * close wipes what is now the only copy. A key is acknowledged only once
 	 * its copy is stored.
 	 *
@@ -2834,11 +2902,7 @@ window.bp = window.bp || {};
 				}
 
 				try {
-					// Keep this browser's copy only when it is the handed-back
-					// revision or was built on it - it is then at least as new.
-					// Any other copy is older than a save made elsewhere, so the
-					// handed-back entry wins.
-					if ( existing && 'object' === typeof existing && ( ! entry_rev || String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( bbDraftBaseFrom( existing ), entry_rev ) ) ) {
+					if ( bbDraftKeepsLocalCopy( existing, entry, entry_rev, -1 !== String( key ).indexOf( ':' ), owner_id ) ) {
 						existing.bb_draft_pending_sync = true;
 						localStorage.setItem( storage_key, JSON.stringify( existing ) );
 					} else {
@@ -3075,6 +3139,269 @@ window.bp = window.bp || {};
 		return false;
 	};
 
+	/**
+	 * Draft key a form drafts under, the same rule setupTopicReplyDraftKeys() applies.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {jQuery} $form Topic or reply form.
+	 * @return {string} The key, or '' for a form that drafts nothing.
+	 */
+	var bbDraftFormKey = function ( $form ) {
+		var forum_id, topic_id, reply_to;
+
+		if ( $form.find( '#bbp_forum_id' ).length ) {
+			forum_id = parseInt( $form.find( '#bbp_forum_id' ).val(), 10 );
+
+			return 0 < forum_id ? 'draft_discussion_' + forum_id : 'draft_topic';
+		}
+
+		if ( $form.find( '#bbp_topic_id' ).length ) {
+			topic_id = parseInt( $form.find( '#bbp_topic_id' ).val(), 10 );
+			reply_to = parseInt( $form.find( '#bbp_reply_to' ).val(), 10 );
+
+			if ( 0 < topic_id && 0 < reply_to ) {
+				return 'draft_reply_' + topic_id + '_' + reply_to;
+			}
+
+			return 0 < topic_id ? 'draft_reply_' + topic_id : 'draft_reply';
+		}
+
+		return '';
+	};
+
+	// Identifies the local copies written by bbDraftStashTypedDuringFetch() on
+	// THIS page view, so the fetch can drop exactly those once it resolves.
+	var bbDraftInterimToken = String( Math.floor( Date.now() / 1000 ) ) + '-' + Math.random().toString( 36 ).slice( 2, 10 );
+
+	/**
+	 * Keep in localStorage what the member types while the draft fetch is in flight.
+	 *
+	 * The forms start (and bind their local autosave and page-unload save) only
+	 * once the fetch resolves, so text typed during a slow fetch was lost if
+	 * the tab closed first (F-10). Until then this stores each form the member
+	 * typed into, in the composer's own shape. The copy is based on nothing
+	 * (`_draft_base` ['none']), the same as text typed while the stored draft
+	 * was not loaded: after a reload it is restored into the form, and its next
+	 * server save is refused as a conflict instead of replacing a stored draft
+	 * it never saw. A local copy this page did not write is left alone.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {void}
+	 */
+	var bbDraftStashTypedDuringFetch = function () {
+		var owner_id = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
+
+		if ( ! owner_id ) {
+			return;
+		}
+
+		forms.each(
+			function () {
+				var $form = $( this ),
+					key   = bbDraftFormKey( $form ),
+					meta  = {},
+					existing;
+
+				if ( ! key || bbDraftFormSnapshot( $form ) === $form.data( 'bbDraftInitialSnapshot' ) ) {
+					return;
+				}
+
+				try {
+					existing = JSON.parse( localStorage.getItem( key ) || 'null' );
+				} catch ( e ) {
+					existing = null;
+				}
+
+				if ( existing && 'object' === typeof existing && bbDraftInterimToken !== existing.bb_draft_interim ) {
+					return;
+				}
+
+				_.each(
+					$form.serializeArray(),
+					function ( pair ) {
+						var name = pair.name.replace( '[]', '' );
+
+						if ( -1 !== _.indexOf( [ '_wpnonce', '_wp_http_referer', '_bbp_unfiltered_html_reply', 'redirect_to', '_bbp_unfiltered_html_topic' ], name ) ) {
+							return;
+						}
+
+						if ( 'undefined' === typeof meta[ name ] ) {
+							meta[ name ] = pair.value;
+						} else {
+							if ( ! _.isArray( meta[ name ] ) ) {
+								meta[ name ] = [ meta[ name ] ];
+							}
+
+							meta[ name ].push( pair.value );
+						}
+					}
+				);
+
+				try {
+					localStorage.setItem(
+						key,
+						JSON.stringify(
+							{
+								object: $form.find( '#bbp_forum_id' ).length ? 'topic' : 'reply',
+								data_key: key,
+								post_action: 'update',
+								data: meta,
+								bb_draft_owner: owner_id,
+								_draft_base: [ 'none' ],
+								_draft_local_at: Math.floor( Date.now() / 1000 ),
+								bb_draft_interim: bbDraftInterimToken
+							}
+						)
+					);
+				} catch ( e ) {
+					// Over quota: nothing more this page can keep.
+				}
+			}
+		);
+	};
+
+	/**
+	 * Drop the copies bbDraftStashTypedDuringFetch() wrote on this page view.
+	 *
+	 * Once the fetch resolves the forms start with the typed text still on
+	 * screen, and the existing restore logic decides what happens to it;
+	 * a stash left in place would be read as the member's saved draft instead.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {void}
+	 */
+	var bbDraftDropInterimStash = function () {
+		forms.each(
+			function () {
+				var key = bbDraftFormKey( $( this ) ),
+					existing;
+
+				if ( ! key ) {
+					return;
+				}
+
+				try {
+					existing = JSON.parse( localStorage.getItem( key ) || 'null' );
+
+					if ( existing && 'object' === typeof existing && bbDraftInterimToken === existing.bb_draft_interim ) {
+						localStorage.removeItem( key );
+					}
+				} catch ( e ) {
+					// Unreadable copy: leave it to the normal restore path.
+				}
+			}
+		);
+	};
+
+	/**
+	 * Whether a clipboard holds an image and no text.
+	 *
+	 * A browser "Copy image" puts the image file next to an HTML copy that is
+	 * only an <img>, so the presence of text/html alone does not mean text: the
+	 * editor strips the <img> and inserted nothing, with no notice (F-06). The
+	 * HTML is parsed into an inert document, never the page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {DataTransfer|null} clipboard Paste event clipboard data.
+	 * @return {boolean}
+	 */
+	var bbDraftClipboardIsImageOnly = function ( clipboard ) {
+		var has_image = false,
+			plain, html, i;
+
+		if ( ! clipboard || ! clipboard.items ) {
+			return false;
+		}
+
+		for ( i = 0; i < clipboard.items.length; i++ ) {
+			if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
+				has_image = true;
+			}
+		}
+
+		if ( ! has_image ) {
+			return false;
+		}
+
+		plain = clipboard.getData( 'text/plain' ) || '';
+
+		if ( '' !== $.trim( plain ) ) {
+			return false;
+		}
+
+		html = clipboard.getData( 'text/html' ) || '';
+
+		if ( '' !== html && 'function' === typeof window.DOMParser ) {
+			html = new window.DOMParser().parseFromString( html, 'text/html' ).body.textContent || '';
+		}
+
+		return '' === $.trim( html );
+	};
+
+	// The draft composer a keyboard paste belongs to; see setupPasteImageGuard().
+	var bbDraftPasteComposer = null,
+		bbDraftPasteBinGuardBound = false;
+
+	/**
+	 * Refuse an image-only keyboard paste in MediumEditor's paste bin.
+	 *
+	 * Cmd/Ctrl+V lands in a body-level paste bin, where the form's own paste
+	 * listener never sees it. MediumEditor reports an image-only clipboard from
+	 * there only when it has no HTML, so a "Copy image" paste inserted nothing
+	 * and showed no notice (F-06). Listening in the capture phase lets the
+	 * paste bin's handler see the paste as refused and clean up. Bound once.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {void}
+	 */
+	var bbDraftBindPasteBinGuard = function () {
+		if ( bbDraftPasteBinGuardBound || ! document.addEventListener ) {
+			return;
+		}
+
+		bbDraftPasteBinGuardBound = true;
+
+		// Focus in any other editor (another composer's, or one outside a
+		// draft form) ends this composer's claim on the next keyboard paste.
+		document.addEventListener(
+			'focusin',
+			function ( event ) {
+				var target = event.target;
+
+				if ( target && target.id && 0 === String( target.id ).indexOf( 'medium-editor-pastebin-' ) ) {
+					return;
+				}
+
+				if ( ! $( target ).closest( 'form[name="new-post"]' ).length ) {
+					bbDraftPasteComposer = null;
+				}
+			},
+			true
+		);
+
+		document.addEventListener(
+			'paste',
+			function ( event ) {
+				var target = event.target;
+
+				if ( ! bbDraftPasteComposer || ! target || ! target.id || 0 !== String( target.id ).indexOf( 'medium-editor-pastebin-' ) ) {
+					return;
+				}
+
+				if ( bbDraftClipboardIsImageOnly( event.clipboardData ) ) {
+					event.preventDefault();
+					bbDraftPasteComposer.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
+				}
+			},
+			true
+		);
+	};
+
 	var bbInitTopicReplyDrafts = function () {
 		forms.each( function () {
 			var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
@@ -3111,6 +3438,22 @@ window.bp = window.bp || {};
 		//.
 		var bbDraftFetchAttempts = 0;
 
+		// Local save while the fetch is in flight (F-10). Stopped, and its
+		// copies dropped, just before the forms start; start() binds the
+		// composer's own local autosave and page-unload save.
+		// A listener, not window.onbeforeunload, so another script's handler
+		// is neither replaced nor cleared.
+		var bbDraftInterimInterval = window.setInterval( bbDraftStashTypedDuringFetch, 3000 );
+
+		window.addEventListener( 'beforeunload', bbDraftStashTypedDuringFetch );
+
+		var bbDraftStartForms = function () {
+			window.clearInterval( bbDraftInterimInterval );
+			window.removeEventListener( 'beforeunload', bbDraftStashTypedDuringFetch );
+			bbDraftDropInterimStash();
+			bbInitTopicReplyDrafts();
+		};
+
 		// Shared by both ways the read can fail. A transport error lands in
 		// .fail(), but a REJECTED read lands in .done(): bb_get_topic_reply_drafts()
 		// answers an expired nonce or a dropped session with wp_send_json_error(),
@@ -3130,7 +3473,7 @@ window.bp = window.bp || {};
 			// works, but flag the failure so postTopicReplyDraft() refuses to
 			// overwrite the draft we could not read, and tells the member why.
 			BP_Nouveau.forums.draft_fetch_failed = true;
-			bbInitTopicReplyDrafts();
+			bbDraftStartForms();
 		};
 
 		var bbRunDraftFetch = function () {
@@ -3141,13 +3484,19 @@ window.bp = window.bp || {};
 			// fetches again until the member next saves.
 			var fetch_acks = bbDraftGetAcks();
 
-			$.post(
-				BP_Nouveau.ajaxurl,
+			// Bounded, so a hung request reaches the retry and the forms start
+			// instead of waiting on it for the whole page view (F-10).
+			$.ajax(
 				{
-					action: 'bb_get_topic_reply_drafts',
-					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
-					prefixes: bbDraftKeyPrefixes().join( ',' ),
-					bb_draft_evicted_ack: fetch_acks.join( ',' )
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					timeout: 15000,
+					data: {
+						action: 'bb_get_topic_reply_drafts',
+						_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
+						prefixes: bbDraftKeyPrefixes().join( ',' ),
+						bb_draft_evicted_ack: fetch_acks.join( ',' )
+					}
 				}
 			).done(
 				function ( response ) {
@@ -3185,7 +3534,7 @@ window.bp = window.bp || {};
 					}
 
 					BP_Nouveau.forums.draft_fetch_failed = false;
-					bbInitTopicReplyDrafts();
+					bbDraftStartForms();
 				}
 			).fail( bbDraftFetchFailed );
 		};

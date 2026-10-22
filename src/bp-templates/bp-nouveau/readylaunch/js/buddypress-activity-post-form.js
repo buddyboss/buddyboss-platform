@@ -1127,6 +1127,9 @@ window.bp = window.bp || {};
 			var activity_data = bp.draft_activity.data,
 				$this         = this;
 
+			// The composer was opened in this page view (collectDraftActivity()).
+			bp.draft_composer_opened = true;
+
 			// The local copy of the draft is member-editable storage - scrub
 			// scriptable markup before it reaches listeners or the editor.
 			if ( activity_data && activity_data.content ) {
@@ -1324,6 +1327,14 @@ window.bp = window.bp || {};
 					// Restore video posters by ID (M20) - parity with the Nouveau pack.
 					bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bp.old_draft_data );
 
+					// A held draft handed back with this response is the server's
+					// only copy, and the acknowledgement for it is already queued.
+					// Keep the local copy marked pending, or closing the page
+					// without opening the composer removes it (F-01).
+					if ( self.isLocalDraftPending( bp.draft_activity.data_key ) || ( response.evicted_drafts && response.evicted_drafts[ bp.draft_activity.data_key ] ) ) {
+						bp.draft_pending_sync = true;
+					}
+
 					// Routed through the shedding helper (ported from the nouveau
 					// pack) rather than a bare setItem: a large video draft can
 					// exceed the localStorage quota, and without shedding the
@@ -1377,7 +1388,7 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * Block pure-image clipboard pastes into the composer; embedded data URLs are stripped server-side.
+		 * Block image-only clipboard pastes into the composer; embedded data URLs are stripped server-side.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1386,43 +1397,138 @@ window.bp = window.bp || {};
 		setupPasteImageGuard: function () {
 			var self = this;
 
+			if ( bp.draft_paste_guard_bound || ! document.addEventListener ) {
+				return;
+			}
+
+			bp.draft_paste_guard_bound = true;
+
+			// A keyboard Cmd/Ctrl+V moves the paste into MediumEditor's body-level
+			// paste bin, outside this form, so note that it started here.
+			document.addEventListener(
+				'keydown',
+				function ( event ) {
+					if ( ( event.metaKey || event.ctrlKey ) && 86 === event.keyCode && $( event.target ).closest( '#bb-rl-whats-new-form [contenteditable="true"]' ).length ) {
+						bp.draft_keyboard_paste_at = Date.now();
+					}
+				},
+				true
+			);
+
 			// Interim guard: a pasted bitmap becomes an inline base64
 			// image of 1MB+, which the draft and publish pipelines strip anyway.
 			// Refuse it at the moment of intent instead of silently losing it.
-			$( document ).on( 'paste.bbDraftImageGuard', '#bb-rl-whats-new-form [contenteditable="true"]', function ( event ) {
-				var clipboard = event.originalEvent ? event.originalEvent.clipboardData : null,
-					hasImageFile = false,
-					hasText = false,
-					i;
+			// Capture phase, so it runs before MediumEditor's own paste handlers
+			// on the editable and on the paste bin, which then skip the paste.
+			document.addEventListener(
+				'paste',
+				function ( event ) {
+					var $target     = $( event.target && 1 === event.target.nodeType ? event.target : ( event.target ? event.target.parentNode : null ) ),
+						in_composer = $target.closest( '#bb-rl-whats-new-form [contenteditable="true"]' ).length,
+						in_bin      = $target.closest( '[id^="medium-editor-pastebin-"]' ).length && bp.draft_keyboard_paste_at && 2000 > ( Date.now() - bp.draft_keyboard_paste_at );
 
-				if ( ! clipboard || ! clipboard.items ) {
-					return;
-				}
-
-				for ( i = 0; i < clipboard.items.length; i++ ) {
-					if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
-						hasImageFile = true;
-					} else if ( 'string' === clipboard.items[ i ].kind && ( 'text/plain' === clipboard.items[ i ].type || 'text/html' === clipboard.items[ i ].type ) ) {
-						hasText = true;
+					if ( ! in_composer && ! in_bin ) {
+						return;
 					}
-				}
 
-				// Office-suite copies (spreadsheet cells, rich text) put a bitmap
-				// rendition on the clipboard NEXT TO the text - the member is
-				// pasting text, so let it through (embedded data: URLs are
-				// stripped server-side). Only a pure image paste is refused.
-				if ( hasImageFile && ! hasText ) {
-					event.preventDefault();
-					self.showDraftFeedback( bbRlActivity.params.paste_image_blocked_message );
-				}
-			} );
+					bp.draft_keyboard_paste_at = 0;
 
-			// A keyboard Cmd/Ctrl+V is routed through MediumEditor's body-level
-			// paste bin, which the listener above never sees. The editor refuses
-			// the image there and reports it with this event (V03).
+					if ( self.isImageOnlyPaste( event.clipboardData ) ) {
+						event.preventDefault();
+						self.showDraftFeedback( bbRlActivity.params.paste_image_blocked_message );
+					}
+				},
+				true
+			);
+
+			// A keyboard Cmd/Ctrl+V the listener above did not attribute to this
+			// form is still refused by the editor, which reports it with this
+			// event (V03).
 			$( document ).on( 'bb-image-paste-blocked.bbDraftImageGuard', '#bb-rl-whats-new-form', function () {
 				self.showDraftFeedback( bbRlActivity.params.paste_image_blocked_message );
 			} );
+		},
+
+		/**
+		 * Whether a paste carries an image and no text.
+		 *
+		 * Office-suite copies (spreadsheet cells, rich text) put a bitmap
+		 * rendition on the clipboard NEXT TO the text - the member is pasting
+		 * text, so that goes through (embedded data: URLs are stripped
+		 * server-side). A browser's "Copy image" puts the image file next to
+		 * HTML that holds only an <img>, which the editor strips: nothing would
+		 * be inserted, so it counts as an image paste (F-06).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {DataTransfer} clipboard The paste event's clipboard data.
+		 *
+		 * @return {boolean}
+		 */
+		isImageOnlyPaste: function( clipboard ) {
+			var has_image = false,
+				html      = '',
+				html_text = '',
+				plain     = '',
+				doc,
+				i;
+
+			if ( ! clipboard || ! clipboard.items ) {
+				return false;
+			}
+
+			for ( i = 0; i < clipboard.items.length; i++ ) {
+				if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
+					has_image = true;
+				}
+			}
+
+			if ( ! has_image ) {
+				return false;
+			}
+
+			try {
+				plain = clipboard.getData( 'text/plain' ) || '';
+				html  = clipboard.getData( 'text/html' ) || '';
+			} catch ( e ) {
+				return false;
+			}
+
+			if ( html ) {
+				if ( 'function' !== typeof window.DOMParser ) {
+					return false;
+				}
+
+				// An inert document: nothing in the pasted markup loads or runs.
+				doc = ( new window.DOMParser() ).parseFromString( html, 'text/html' );
+				$( doc ).find( 'style, script, title, meta' ).remove();
+				html_text = doc.body ? ( doc.body.textContent || '' ) : '';
+			}
+
+			return '' === $.trim( plain.replace( /\u00a0/g, ' ' ) ) && '' === $.trim( html_text.replace( /\u00a0/g, ' ' ) );
+		},
+
+		/**
+		 * Paste rewrites that keep the text of a pasted spreadsheet range.
+		 *
+		 * The composer's paste cleanup removes table markup together with its
+		 * text, so a range copied from a spreadsheet pasted nothing (F-07).
+		 * MediumEditor applies these to the pasted HTML before that cleanup:
+		 * cells become space-separated text and rows become lines.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {Array}
+		 */
+		tablePasteReplacements: function() {
+			return [
+				[ new RegExp( /<style[\s\S]*?<\/style>/gi ), '' ],
+				[ new RegExp( /<\/?(?:colgroup|col)\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/?google-sheets-html-origin\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/t[dh]>\s*(?=<t[dh]\b)/gi ), ' ' ],
+				[ new RegExp( /<\/tr>\s*(?=<tr\b)/gi ), '<br>' ],
+				[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|tr|td|th|caption)\b[^>]*>/gi ), '' ]
+			];
 		},
 
 		/**
@@ -1610,6 +1716,125 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * The member a local draft copy belongs to, or 0 when it carries no owner.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object}  copy     Local draft copy.
+		 * @param {boolean} is_forum Whether it is a forum composer copy.
+		 *
+		 * @return {number}
+		 */
+		localCopyOwner: function( copy, is_forum ) {
+			if ( ! copy || 'object' !== typeof copy ) {
+				return 0;
+			}
+
+			if ( is_forum ) {
+				return parseInt( copy.bb_draft_owner, 10 ) || 0;
+			}
+
+			return ( copy.data && ! _.isUndefined( copy.data.user_id ) ) ? ( parseInt( copy.data.user_id, 10 ) || 0 ) : 0;
+		},
+
+		/**
+		 * When a draft copy was last saved or written in this browser, in seconds.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} copy Draft entry or local copy.
+		 *
+		 * @return {number}
+		 */
+		draftCopyTime: function( copy ) {
+			return Math.max( parseInt( copy._draft_saved_at, 10 ) || 0, parseInt( copy._draft_local_at, 10 ) || 0 );
+		},
+
+		/**
+		 * JSON with object keys sorted, so equal drafts compare equal.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} value Draft data.
+		 *
+		 * @return {string}
+		 */
+		canonicalDraftJson: function( value ) {
+			var self = this;
+
+			if ( _.isArray( value ) ) {
+				return '[' + _.map(
+					value,
+					function ( item ) {
+						return self.canonicalDraftJson( item );
+					}
+				).join( ',' ) + ']';
+			}
+
+			if ( value && 'object' === typeof value ) {
+				return '{' + _.map(
+					_.keys( value ).sort(),
+					function ( name ) {
+						return JSON.stringify( name ) + ':' + self.canonicalDraftJson( value[ name ] );
+					}
+				).join( ',' ) + '}';
+			}
+
+			return JSON.stringify( _.isUndefined( value ) ? null : value );
+		},
+
+		/**
+		 * Whether this browser's copy of a key should win over a handed-back draft.
+		 *
+		 * The hand-back is the server's only remaining copy, and the key is
+		 * acknowledged once one of the two is stored, so a wrong choice loses the
+		 * draft. The local copy wins only when it is this member's and:
+		 * - the hand-back carries a revision and the local copy is that revision
+		 *   or was built on it; or
+		 * - the hand-back has no revision (upgrade or heal holds, legacy rows)
+		 *   and the local copy has the same content, is itself unsynced
+		 *   (pending), or is not older.
+		 * Another member's copy (a shared browser) never wins, and neither does
+		 * an ownerless one unless the revision proves it is this draft.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object|null} existing This browser's copy of the key.
+		 * @param {Object}      entry    The handed-back draft.
+		 * @param {number}      owner_id The current member.
+		 * @param {boolean}     is_forum Whether the key is a forum composer key.
+		 *
+		 * @return {boolean}
+		 */
+		keepLocalCopyOverHandback: function( existing, entry, owner_id, is_forum ) {
+			var owner, entry_rev;
+
+			if ( ! existing || 'object' !== typeof existing ) {
+				return false;
+			}
+
+			owner = this.localCopyOwner( existing, is_forum );
+
+			if ( owner && owner !== owner_id ) {
+				return false;
+			}
+
+			entry_rev = entry._draft_rev ? String( entry._draft_rev ) : '';
+
+			if ( entry_rev ) {
+				return String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( this.draftBaseFrom( existing ), entry_rev );
+			}
+
+			if ( ! owner ) {
+				return false;
+			}
+
+			return this.canonicalDraftJson( existing.data ) === this.canonicalDraftJson( entry.data ) ||
+				true === existing.bb_draft_pending_sync ||
+				this.draftCopyTime( existing ) >= this.draftCopyTime( entry );
+		},
+
+		/**
 		 * Keep drafts the server evicted from the draft budget in localStorage.
 		 *
 		 * Activity keys are stored in this composer's own shape, forum inner
@@ -1639,7 +1864,7 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					var entry_rev = entry._draft_rev ? String( entry._draft_rev ) : '',
+					var is_forum = -1 !== String( key ).indexOf( ':' ),
 						existing;
 
 					try {
@@ -1649,18 +1874,21 @@ window.bp = window.bp || {};
 					}
 
 					try {
-						// Keep this browser's copy only when it is the handed-back
-						// revision or was built on it - it is then at least as new.
+						// Keep this browser's copy only when it is at least as new as
+						// the hand-back and is this member's (keepLocalCopyOverHandback).
 						// Mark it pending, or another tab's composer close wipes
-						// what is now the only copy (V07). Any other copy is older
-						// than a save made elsewhere, so the handed-back entry wins.
-						if ( existing && 'object' === typeof existing && ( ! entry_rev || String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( bp.Nouveau.Activity.postForm.draftBaseFrom( existing ), entry_rev ) ) ) {
+						// what is now the only copy (V07). Otherwise the handed-back
+						// entry wins, stamped with its owner, so the composer for that
+						// key does not drop it as another member's copy (F-02).
+						if ( bp.Nouveau.Activity.postForm.keepLocalCopyOverHandback( existing, entry, owner_id, is_forum ) ) {
 							existing.bb_draft_pending_sync = true;
 							localStorage.setItem( storage_key, JSON.stringify( existing ) );
 						} else {
 							copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
-							if ( -1 !== String( key ).indexOf( ':' ) ) {
+							if ( is_forum ) {
 								copy.bb_draft_owner = owner_id;
+							} else if ( owner_id && copy.data && 'object' === typeof copy.data && _.isUndefined( copy.data.user_id ) ) {
+								copy.data = _.extend( {}, copy.data, { user_id: owner_id } );
 							}
 
 							localStorage.setItem( storage_key, JSON.stringify( copy ) );
@@ -2154,7 +2382,10 @@ window.bp = window.bp || {};
 					// The composer is just closed, not emptied by the member. A
 					// pending copy is the ONLY copy of this draft, so keep it -
 					// whether this tab or another one marked it pending (V07).
-					if ( ! bp.draft_pending_sync && ! bp.Nouveau.Activity.postForm.isLocalDraftPending( bp.draft_activity.data_key ) ) {
+					// A composer never opened in this page view was never shown
+					// the draft, so its empty form says nothing about it; keep
+					// the copy, or every later page load fetches it again (F-12).
+					if ( bp.draft_composer_opened && ! bp.draft_pending_sync && ! bp.Nouveau.Activity.postForm.isLocalDraftPending( bp.draft_activity.data_key ) ) {
 						localStorage.removeItem( bp.draft_activity.data_key );
 					}
 				}
@@ -4329,6 +4560,7 @@ window.bp = window.bp || {};
 										paste: {
 											forcePlainText: false,
 											cleanPastedHTML: true,
+											preCleanReplacements: bp.Nouveau.Activity.postForm.tablePasteReplacements(),
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
@@ -7330,6 +7562,16 @@ window.bp = window.bp || {};
 			},
 
 			discardDraftActivity: function () {
+
+				// A conflict or a "not loaded" outcome stops every request for this
+				// key in this page view, a discard included: the composer is not
+				// based on the stored draft. Clearing it anyway hid a draft that came
+				// back on the next load, so keep the composer and say why (F-09).
+				if ( bp.draft_conflict || bp.draft_save_blocked ) {
+					bp.Nouveau.Activity.postForm.showDraftFeedback( bbRlActivity.params.draft_discard_failed_message || '' );
+
+					return;
+				}
 
 				// Reset view data.
 				_.each(

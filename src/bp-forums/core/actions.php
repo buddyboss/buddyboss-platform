@@ -1653,6 +1653,34 @@ function bb_get_topic_reply_drafts() {
 
 	$owed = bb_draft_handback( bp_loggedin_user_id() );
 
+	// Held forum drafts of this page's forms that still wait in the overflow
+	// are handed back with the rest, so a form here never saves over one
+	// (F-03). Only those: all of them at once is the size the hold's cap
+	// keeps out of a response.
+	if ( ! empty( $prefixes ) ) {
+		$owed = array_merge(
+			$owed,
+			bb_draft_promote_evicted(
+				bp_loggedin_user_id(),
+				function ( $key ) use ( $prefixes ) {
+					if ( 0 !== strpos( $key, 'bb_user_topic_reply_draft:' ) ) {
+						return false;
+					}
+
+					$inner_key = substr( $key, strlen( 'bb_user_topic_reply_draft:' ) );
+
+					foreach ( $prefixes as $prefix ) {
+						if ( $prefix === $inner_key || 0 === strpos( $inner_key, $prefix . '_' ) ) {
+							return true;
+						}
+					}
+
+					return false;
+				}
+			)
+		);
+	}
+
 	// Evicted forum drafts whose hand-back never reached the browser are
 	// restored like stored ones, within the same prefixes (V06).
 	foreach ( $owed as $owed_key => $owed_entry ) {
