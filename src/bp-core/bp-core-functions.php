@@ -4803,6 +4803,7 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
+ * @since BuddyBoss [BBVERSION] Skips avatar images when collecting the page images.
  */
 function bp_core_parse_url( $url ) {
 
@@ -4962,6 +4963,12 @@ function bp_core_parse_url( $url ) {
 			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
+
+				// Skip avatars (get_avatar() and BuddyBoss avatars carry an "avatar" class token),
+				// so a member photo is not used as the preview image when the page has no og:image.
+				if ( preg_match( '/(^|\s)avatar(\s|$)/i', $image->getAttribute( 'class' ) ) ) {
+					continue;
+				}
 
 				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
 					$images[] = $src;
