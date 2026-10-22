@@ -2243,6 +2243,7 @@ class BB_Topics_Manager {
 		$item_type = 'groups' === $item_type ? 'groups' : 'activity';
 		$item_id   = 'groups' === $item_type ? (int) $item_id : 0;
 
+		$updated = true;
 		foreach ( $topic_ids as $position => $topic_id ) {
 			$result = $this->wpdb->update(
 				$this->topic_rel_table,
@@ -2257,14 +2258,26 @@ class BB_Topics_Manager {
 			);
 
 			if ( false === $result ) {
-				return false;
+				$updated = false;
+				break;
 			}
 		}
 
 		// Invalidate topics cache so ordering changes are reflected immediately.
 		bp_core_reset_incrementor( self::$topic_cache_group );
 
-		return true;
+		/**
+		 * Fires after the topic order of one list was written, also when a write failed part way.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int[]  $topic_ids Topic IDs in the requested order.
+		 * @param int    $item_id   Group ID for group topics, 0 for activity topics.
+		 * @param string $item_type `groups` or `activity`.
+		 */
+		do_action( 'bb_topics_order_updated', $topic_ids, $item_id, $item_type );
+
+		return $updated;
 	}
 
 	/**

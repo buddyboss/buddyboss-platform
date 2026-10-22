@@ -10,11 +10,9 @@ class BB_Tests_Activity_Topics_Delete extends BP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 
-		// The manager registers its hooks in its constructor at plugin load; the test case restores the
-		// hook table after every test, so re-arm the delete hook the same way the plugin does.
-		$manager = bb_activity_topics_manager_instance();
-		if ( ! has_action( 'bp_activity_after_delete', array( $manager, 'bb_delete_activity_topic_relationship_on_activity_delete' ) ) ) {
-			add_action( 'bp_activity_after_delete', array( $manager, 'bb_delete_activity_topic_relationship_on_activity_delete' ), 10, 1 );
+		// bp-activity-filters.php registers the cleanup at load; re-arm it in case a test removed it.
+		if ( ! has_action( 'bp_activity_after_delete', 'bb_delete_topic_relationships_of_deleted_activities' ) ) {
+			add_action( 'bp_activity_after_delete', 'bb_delete_topic_relationships_of_deleted_activities' );
 		}
 
 		// Site-wide topics can only be added by a moderator (bb_topic_before_added validation).
@@ -89,9 +87,25 @@ class BB_Tests_Activity_Topics_Delete extends BP_UnitTestCase {
 		$this->assertSame( 1, $this->relationship_count( $activity_id ) );
 	}
 
-	public function test_manager_registers_the_activity_delete_hook() {
+	public function test_the_cleanup_is_hooked_outside_the_topics_manager() {
+		$this->assertSame( 10, has_action( 'bp_activity_after_delete', 'bb_delete_topic_relationships_of_deleted_activities' ) );
+
+		// The topics manager (only built while topics are on) no longer owns the cleanup.
 		$manager = new BB_Activity_Topics_Manager();
-		$this->assertSame( 10, has_action( 'bp_activity_after_delete', array( $manager, 'bb_delete_activity_topic_relationship_on_activity_delete' ) ) );
+		$this->assertFalse( method_exists( $manager, 'bb_delete_activity_topic_relationship_on_activity_delete' ) );
+	}
+
+	public function test_deleting_an_activity_removes_its_topic_relationship_while_topics_are_off() {
+		$u     = self::factory()->user->create();
+		$topic = $this->create_topic();
+		$a     = $this->create_tagged_activity( $topic, $u );
+
+		$enabled = bp_get_option( 'bb_enable_activity_topics' );
+		bp_update_option( 'bb_enable_activity_topics', 0 );
+		$this->assertTrue( bp_activity_delete( array( 'id' => $a ) ) );
+		bp_update_option( 'bb_enable_activity_topics', $enabled );
+
+		$this->assertSame( 0, $this->relationship_count( $a ), 'No orphan row is left while topics are off.' );
 	}
 
 	public function test_deleting_an_activity_removes_its_topic_relationship() {
@@ -105,7 +119,7 @@ class BB_Tests_Activity_Topics_Delete extends BP_UnitTestCase {
 		$this->assertEmpty( bb_activity_topics_manager_instance()->bb_get_activity_topic( $a ) );
 	}
 
-	public function test_bulk_delete_removes_every_relationship_and_fires_the_after_action_per_row() {
+	public function test_bulk_delete_removes_every_relationship_without_per_row_actions() {
 		$u     = self::factory()->user->create();
 		$topic = $this->create_topic();
 		$ids   = array(
@@ -115,27 +129,18 @@ class BB_Tests_Activity_Topics_Delete extends BP_UnitTestCase {
 		);
 		$other = $this->create_tagged_activity( $topic, self::factory()->user->create() );
 
-		$seen = array();
-		$cb   = function ( $deleted, $data, $args ) use ( &$seen ) {
-			$seen[] = array( (int) $data['activity_id'], (int) $args['activity_id'], (int) $args['topic_id'] );
-		};
-		add_action( 'bb_after_delete_activity_topic_relationship', $cb, 10, 3 );
+		$before = did_action( 'bb_before_delete_activity_topic_relationship' );
+		$after  = did_action( 'bb_after_delete_activity_topic_relationship' );
 		bp_activity_delete( array( 'user_id' => $u ) );
-		remove_action( 'bb_after_delete_activity_topic_relationship', $cb, 10 );
 
 		foreach ( $ids as $a ) {
 			$this->assertSame( 0, $this->relationship_count( $a ) );
 		}
 		$this->assertSame( 1, $this->relationship_count( $other ), 'Another member\'s post keeps its topic.' );
 
-		$seen_ids = wp_list_pluck( $seen, 0 );
-		sort( $seen_ids );
-		sort( $ids );
-		$this->assertSame( $ids, $seen_ids, 'The after action fires once per removed row with the activity id.' );
-		foreach ( $seen as $row ) {
-			$this->assertSame( $row[0], $row[1] );
-			$this->assertSame( $topic, $row[2] );
-		}
+		// Each per-row action used to purge whole cache groups (App API cache); the activity delete purges them once.
+		$this->assertSame( $before, did_action( 'bb_before_delete_activity_topic_relationship' ) );
+		$this->assertSame( $after, did_action( 'bb_after_delete_activity_topic_relationship' ) );
 	}
 
 	public function test_orphan_repair_removes_rows_in_batches_and_keeps_live_rows() {
