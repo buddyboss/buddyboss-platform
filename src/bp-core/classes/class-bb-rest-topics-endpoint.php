@@ -33,14 +33,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Register the fields for the activity object.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] Enforces "Require users to select a topic" on activity create/update.
 	 */
 	public function bp_rest_activity_support() {
-		// A registered field's update callback only runs when the request carries the field, so the
-		// "topic required" rule has to be checked before the activity is written, like the website does.
-		add_filter( 'bp_rest_activity_create_item_permissions_check', array( $this, 'bb_rest_activity_topic_required_check' ), 10, 2 );
-		add_filter( 'bp_rest_activity_update_item_permissions_check', array( $this, 'bb_rest_activity_topic_required_check' ), 10, 2 );
-
 		bp_rest_register_field(
 			'activity',
 			'bb_topic',
@@ -1260,167 +1254,6 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
-	 * Whether the current user may delete (or remove from the group) a group topic.
-	 *
-	 * Mirrors the group branch of delete_item_permissions_check(): a logged-in site administrator
-	 * or an organizer of that group, while group activity topics are enabled.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int $group_id Group ID.
-	 *
-	 * @return bool
-	 */
-	protected function bb_rest_can_delete_group_topic( $group_id ) {
-		$group_id = (int) $group_id;
-
-		if ( empty( $group_id ) || ! is_user_logged_in() ) {
-			return false;
-		}
-
-		if (
-			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
-			! bb_is_enabled_group_activity_topics()
-		) {
-			return false;
-		}
-
-		return bp_current_user_can( 'administrator' ) || groups_is_user_admin( bp_loggedin_user_id(), $group_id );
-	}
-
-	/**
-	 * Refuse an activity create/update without a topic while "Require users to select a topic" is on.
-	 *
-	 * Same rule as the website composer (bp_nouveau_ajax_post_update): the post is an activity update
-	 * on the news feed or a group feed, the feed offers at least one topic the user can post to, and no
-	 * topic was chosen (or the chosen topic does not exist for that feed). A feed without a usable topic
-	 * keeps accepting topic-less posts. An update that does not send `bb_topic_id` keeps the stored
-	 * topic and is not checked.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param bool|WP_Error   $retval  Result of the endpoint's own permission check.
-	 * @param WP_REST_Request $request Full details about the request.
-	 *
-	 * @return bool|WP_Error
-	 */
-	public function bb_rest_activity_topic_required_check( $retval, $request ) {
-		if ( true !== $retval ) {
-			return $retval;
-		}
-
-		if (
-			! function_exists( 'bb_is_enabled_activity_topics' ) ||
-			! bb_is_enabled_activity_topics() ||
-			! function_exists( 'bb_is_activity_topic_required' ) ||
-			! bb_is_activity_topic_required()
-		) {
-			return $retval;
-		}
-
-		$topic_id = (int) $request->get_param( 'bb_topic_id' );
-
-		// The item id comes from the route, never from the body, so a create cannot pose as an update.
-		$url_params  = $request->get_url_params();
-		$activity_id = isset( $url_params['id'] ) ? (int) $url_params['id'] : 0;
-		if ( ! empty( $activity_id ) ) {
-			// Update: only a request that clears the topic is checked.
-			if ( ! isset( $request['bb_topic_id'] ) ) {
-				return $retval;
-			}
-
-			$activity = new BP_Activity_Activity( $activity_id );
-			if ( empty( $activity->id ) || 'activity_update' !== $activity->type ) {
-				return $retval;
-			}
-
-			$component = $activity->component;
-			$item_id   = (int) $activity->item_id;
-		} else {
-			$type = $request->get_param( 'type' );
-			if ( ! empty( $type ) && 'activity_update' !== $type ) {
-				return $retval;
-			}
-
-			// create_item() posts to a group whenever primary_item_id is sent and groups are active.
-			$primary_item_id = $request->get_param( 'primary_item_id' );
-			$component       = bp_is_active( 'groups' ) && ! is_null( $primary_item_id ) ? 'groups' : 'activity';
-			$item_id         = (int) $primary_item_id;
-		}
-
-		if ( ! in_array( $component, array( 'groups', 'activity' ), true ) ) {
-			return $retval;
-		}
-
-		if ( ! $this->bb_rest_feed_offers_topic( $component, $item_id ) ) {
-			return $retval;
-		}
-
-		if ( $topic_id > 0 ) {
-			// The chosen topic has to exist for this feed; checking it here keeps a bogus id from creating a topic-less post.
-			$topic_args = array( 'topic_id' => $topic_id, 'item_type' => 'activity' );
-			if ( 'groups' === $component ) {
-				$topic_args['item_id']   = $item_id;
-				$topic_args['item_type'] = 'groups';
-			}
-			$topic = bb_topics_manager_instance()->bb_get_topic( $topic_args );
-			if ( empty( $topic ) ) {
-				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss' ), array( 'status' => 404 ) );
-			}
-
-			return $retval;
-		}
-
-		return new WP_Error(
-			'bp_rest_topic_id_required',
-			__( 'Please select a topic before posting.', 'buddyboss' ),
-			array( 'status' => 400 )
-		);
-	}
-
-	/**
-	 * Whether a feed offers the current user at least one topic to post in.
-	 *
-	 * Uses the same lists the website composer renders its topic selector from.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $component `groups` or `activity`.
-	 * @param int    $item_id   Group ID for the groups component.
-	 *
-	 * @return bool
-	 */
-	protected function bb_rest_feed_offers_topic( $component, $item_id ) {
-		if ( 'groups' === $component ) {
-			if (
-				! bp_is_active( 'groups' ) ||
-				empty( $item_id ) ||
-				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
-				! bb_is_enabled_group_activity_topics() ||
-				! function_exists( 'bb_get_group_activity_topics' )
-			) {
-				return false;
-			}
-
-			$topics = bb_get_group_activity_topics(
-				array(
-					'item_id'  => (int) $item_id,
-					'can_post' => true,
-				)
-			);
-		} else {
-			$topics = bb_activity_topics_manager_instance()->bb_get_activity_topics(
-				array(
-					'item_type' => 'activity',
-					'can_post'  => true,
-				)
-			);
-		}
-
-		return ! empty( $topics );
-	}
-
-	/**
 	 * Get the endpoint arguments for the item schema.
 	 *
 	 * @since 2.8.80
@@ -1592,7 +1425,6 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Prepare a topic for response.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] `is_delete` follows the delete permission instead of being always true.
 	 *
 	 * @param stdClass        $item    Topic object.
 	 * @param WP_REST_Request $request Request object.
@@ -1617,7 +1449,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		$item_id   = $request->get_param( 'item_id' );
 		$item_type = $request->get_param( 'item_type' );
 		if ( bp_is_active( 'groups' ) && ! empty( $item_id ) && ! empty( $item_type ) && 'groups' === $item_type ) {
-			$data['is_delete'] = $this->bb_rest_can_delete_group_topic( $item_id );
+			$data['is_delete'] = true;
 
 			$data['can_post'] = false;
 			if (
