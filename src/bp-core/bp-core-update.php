@@ -570,6 +570,13 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
+		// DB version 23605 — the topics and reply REST endpoints now return the
+		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
+		// their App API cache so cached empty previews are not served for 30 days.
+		if ( $raw_db_version < 23605 ) {
+			bb_purge_forums_api_cache_for_legacy_embed();
+		}
+
 		// Heal oversized/aggregate-oversized draft usermeta rows and
 		// start the draft retention machinery.
 		if ( $raw_db_version < 23621 ) {
@@ -4693,6 +4700,25 @@ function bb_install_addons_bundle_on_upgrade() {
 	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
 		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
+}
+
+/**
+ * Purge the App API cache of forum topics and replies.
+ *
+ * The topics and reply REST endpoints now return the legacy oEmbed (`preview_data`,
+ * `link_embed_url`) for posts saved without `_link_embed` meta, as the web already shows.
+ * Responses cached before the update still hold the empty preview for up to 30 days, so
+ * clear them once on the upgrade (PROD-10630).
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @return void
+ */
+function bb_purge_forums_api_cache_for_legacy_embed() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
 	}
 }
 

@@ -60,7 +60,8 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
-	if ( bp_is_activity_like_active() ) {
+	// The "who reacted" popup serves both post and comment reactions.
+	if ( bb_is_reaction_activity_posts_enabled() || bb_is_reaction_activity_comments_enabled() ) {
 		wp_enqueue_script( 'bp-nouveau-activity-reacted' );
 	}
 	wp_enqueue_script( 'bp-medium-editor' );
