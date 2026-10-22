@@ -547,6 +547,7 @@ function bp_document_update_document_privacy( $folder ) {
  * @param int $post_id post id of the topic or reply.
  *
  * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved document uploads.
  */
 function bp_document_forums_new_post_document_save( $post_id ) {
 
@@ -603,6 +604,11 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 					$document_ids[] = $attached_document_id;
 					continue;
 				}
+			}
+
+			// Only the user's own unsaved upload can become a new document.
+			if ( ! bb_user_can_adopt_attachment( $attachment_id ) ) {
+				continue;
 			}
 
 			if ( 0 === $reply_id && bbp_get_reply_post_type() === get_post_type( $post_id ) ) {
@@ -755,6 +761,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
  * @param $message
  *
  * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 3.6.2 Only attaches documents owned by the message sender.
  */
 function bp_document_attach_document_to_message( &$message ) {
 	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
@@ -788,10 +795,16 @@ function bp_document_attach_document_to_message( &$message ) {
 
 				if ( ! empty( $document_id ) ) {
 
+					// Attach already created media.
+					$document = new BP_Document( $document_id );
+
+					// Only the sender's own document can be attached to the message.
+					if ( empty( $document->id ) || ! in_array( (int) $document->user_id, array( (int) $message->sender_id, bp_loggedin_user_id() ), true ) ) {
+						continue;
+					}
+
 					$document_ids[] = $document_id;
 
-					// Attach already created media.
-					$document             = new BP_Document( $document_id );
 					$document->privacy    = 'message';
 					$document->message_id = $message->id;
 					$document->save();
@@ -819,19 +832,31 @@ function bp_document_attach_document_to_message( &$message ) {
  */
 function bp_document_messages_delete_attached_document( $thread_id, $message_ids ) {
 
-	if ( ! empty( $message_ids ) ) {
-		foreach ( $message_ids as $message_id ) {
+	if ( empty( $message_ids ) ) {
+		return;
+	}
 
-			// get document ids attached to message.
-			$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+	$document_ids = array();
 
-			if ( ! empty( $document_ids ) ) {
-				$document_ids = explode( ',', $document_ids );
-				foreach ( $document_ids as $document_id ) {
-					bp_document_delete( array( 'id' => $document_id ) );
-				}
-			}
+	foreach ( $message_ids as $message_id ) {
+
+		// get document ids attached to message.
+		$message_document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+
+		if ( ! empty( $message_document_ids ) ) {
+			$document_ids = array_merge( $document_ids, wp_parse_id_list( $message_document_ids ) );
 		}
+	}
+
+	$document_ids = array_unique( array_filter( $document_ids ) );
+
+	// Keep the items that a message in another thread still uses, such as a group message sent to members individually.
+	if ( ! empty( $document_ids ) && function_exists( 'bb_messages_get_attachment_ids_used_elsewhere' ) ) {
+		$document_ids = array_diff( $document_ids, bb_messages_get_attachment_ids_used_elsewhere( 'bp_document_ids', $document_ids, $thread_id ) );
+	}
+
+	foreach ( $document_ids as $document_id ) {
+		bp_document_delete( array( 'id' => $document_id ) );
 	}
 }
 
