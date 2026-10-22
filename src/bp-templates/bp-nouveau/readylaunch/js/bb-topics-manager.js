@@ -351,9 +351,6 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * Make the topics sortable.
-		 */
-		/**
 		 * Make the topic list sortable.
 		 *
 		 * @since BuddyBoss [BBVERSION] The order request carries the item (group or site-wide list).
