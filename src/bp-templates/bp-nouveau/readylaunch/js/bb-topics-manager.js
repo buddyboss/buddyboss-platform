@@ -926,7 +926,23 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Filter the stream by the clicked topic, or follow the label's link where there is no filter bar.
+		 *
+		 * @since BuddyBoss [BBVERSION] Topic labels on single-activity pages navigate instead of filtering in place.
+		 *
+		 * @param {Event} event - The click event.
+		 */
 		topicActivityFilter : function ( event ) {
+			// A topic label outside a feed page (single-activity permalink pages have no filter bar) is a plain
+			// link to the topic feed; the in-place filter below only makes sense where the bar exists.
+			if (
+				$( event.currentTarget ).hasClass( 'bb-topic-url' ) &&
+				( 0 === $( '.activity-topic-selector' ).length || $( 'body' ).hasClass( 'activity-permalink' ) )
+			) {
+				return;
+			}
+
 			event.preventDefault();
 			event.stopPropagation();
 
