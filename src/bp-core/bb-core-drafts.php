@@ -1520,7 +1520,7 @@ function bb_draft_base_matches( $stored, $base ) {
  * @return string
  */
 function bb_draft_conflict_message() {
-	return __( 'This draft was changed in another tab or device. Copy your text, then reload the page to see the latest version.', 'buddyboss' );
+	return __( 'A different version of this draft is already saved. Copy your text, then reload the page to see it.', 'buddyboss' );
 }
 
 /**

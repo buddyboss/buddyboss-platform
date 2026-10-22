@@ -1105,7 +1105,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// localized separately because the activity params are not present on
 	// forum-only pages.
 	$params['forums']['paste_image_blocked_message'] = __( 'Pasting images isn\'t supported. Please use the photo button to attach images.', 'buddyboss' );
-	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
+	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss' );
 
 	// The lazy fetch can fail on a flaky connection. When it does, the member
 	// sees an empty composer even though a draft exists, and anything they type
@@ -1116,7 +1116,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// own - a bare wp_send_json_error() carries none, which is what the nonce
 	// check and the authorization gate emit. Without it those rejections were
 	// indistinguishable from a successful save (H1).
-	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
+	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' );
 
 	// Shown when a DISCARD is refused (e.g. an expired nonce, or the forum made
 	// private mid-session). The save message would wrongly say the draft "could

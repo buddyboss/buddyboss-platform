@@ -1384,9 +1384,11 @@ function bb_nouveau_ajax_post_draft_activity() {
 		$submitted_item_id  = ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) && isset( $draft_activity['data']['item_id'] ) ) ? $draft_activity['data']['item_id'] : 0;
 
 		if ( ! bb_draft_validate_activity_data_key( $submitted_data_key, $submitted_object, $submitted_item_id, $draft_user_id, $draft_context ) ) {
+			// Reached by a member who lost posting rights mid-session, so it
+			// carries the same approved save-failed text as the composers.
 			wp_send_json_error(
 				array(
-					'message' => __( 'This draft could not be saved.', 'buddyboss' ),
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' ),
 				)
 			);
 		}

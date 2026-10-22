@@ -341,7 +341,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// success. The forum packs already fall back to these strings; the activity
 	// packs surfaced only a server-provided message and were silent otherwise
 	// (M3 parity).
-	$activity_params['draft_save_failed_message']    = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
+	$activity_params['draft_save_failed_message']    = __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' );
 	$activity_params['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss' );
 
 	// The lazy restore is suppressed when the member has already started typing
@@ -366,7 +366,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 
 	// Budget eviction removes an OLDER draft to make room for this save. The
 	// member must be told, or drafts appear to vanish at random.
-	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
+	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft is now saved only in this browser.', 'buddyboss' );
 
 	// The per-draft cap, so the composer can decide what to drop from an
 	// oversized payload instead of guessing at a threshold.
