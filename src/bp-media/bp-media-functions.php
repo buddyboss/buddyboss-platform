@@ -610,7 +610,7 @@ function bp_media_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.2.0
- * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved media uploads.
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved media uploads.
  */
 function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_media_upload_count, $bp_media_upload_activity_content;
@@ -2630,7 +2630,7 @@ function bp_media_default_scope( $scope = 'all' ) {
  * Return the thread id if media belongs to message.
  *
  * @since BuddyBoss 1.4.4
- * @since BuddyBoss [BBVERSION] Matches the exact media ID in the current user's threads.
+ * @since BuddyBoss 3.6.2 Matches the exact media ID in the current user's threads.
  *
  * @param int|string $media_id Media id to fetch the thread id.
  *
@@ -3600,7 +3600,7 @@ function bp_media_delete_symlinks( $media ) {
  * Return the preview url of the file.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Uses a signed receiver segment.
+ * @since BuddyBoss 3.6.2 Uses a signed receiver segment.
  *
  * @param int    $media_id      Media ID.
  * @param int    $attachment_id Attachment ID.

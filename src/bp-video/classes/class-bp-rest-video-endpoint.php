@@ -2241,7 +2241,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * The function to use to update the videos's value of the topic REST Field.
 	 * - from bp_video_forums_new_post_video_save();
 	 *
-	 * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved video uploads.
+	 * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved video uploads.
 	 *
 	 * @param object $object Value for the schema.
 	 * @param object $value  The value of the REST Field to save.

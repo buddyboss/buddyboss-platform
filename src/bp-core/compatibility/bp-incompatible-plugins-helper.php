@@ -346,7 +346,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Wordfence Security.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 */
 	if ( class_exists( 'wordfence' ) ) {
 		add_filter( 'request', 'bb_core_wordfence_rest_author_scan_compatibility', 5 );
@@ -1254,7 +1254,7 @@ add_action( 'init', 'bb_om_compatibility_helper', 10 );
  * the main query. Front-end `?author=N` scans and the WP core users endpoints
  * are untouched, so Wordfence's username-enumeration protection stays intact.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param array $query_vars The array of requested query variables.
  *
@@ -1269,7 +1269,7 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 	/**
 	 * Filters the REST namespaces exempted from Wordfence's author-scan block.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param array $namespaces REST namespaces whose requests keep working
 	 *                          with an `author` parameter.

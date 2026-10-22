@@ -2930,7 +2930,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * The function to use to update the document's value of the topic REST Field.
 	 * - from bp_document_forums_new_post_document_save();
 	 *
-	 * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved document uploads.
+	 * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved document uploads.
 	 *
 	 * @param object $object     Value for the schema.
 	 * @param object $value      The value of the REST Field to save.

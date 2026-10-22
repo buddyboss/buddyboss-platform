@@ -449,7 +449,7 @@ function bp_media_delete_activity_media( $activities ) {
  * Delete media gif when related activity is deleted.
  *
  * @since BuddyBoss 1.4.9
- * @since BuddyBoss [BBVERSION] Only deletes legacy GIF attachments uploaded by the activity author.
+ * @since BuddyBoss 3.6.2 Only deletes legacy GIF attachments uploaded by the activity author.
  *
  * @param array $activities Array of activities.
  */
@@ -528,7 +528,7 @@ function bp_media_update_media_privacy( $album ) {
  * Save media when new topic or reply is saved
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved media uploads.
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved media uploads.
  *
  * @param $post_id
  */
@@ -803,7 +803,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
  * save gif data for forum, topic, reply
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+ * @since BuddyBoss 3.6.2 Stores the GIF still and mp4 values only when they are http(s) URLs.
  *
  * @param $post_id
  */
@@ -862,7 +862,7 @@ function bp_media_forums_save_gif_data( $post_id ) {
  * Attach media to the message object
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Only attaches media owned by the message sender.
+ * @since BuddyBoss 3.6.2 Only attaches media owned by the message sender.
  *
  * @param $message
  */
@@ -993,7 +993,7 @@ if ( ! function_exists( 'bb_media_get_message_sender_id' ) ) {
 	 * A whole-thread delete removes the message rows before `bp_messages_thread_after_delete`
 	 * fires, so the senders are remembered on `bp_messages_thread_before_delete`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int   $message_id  Message ID to look up. Pass 0 to only remember senders.
 	 * @param array $message_ids Optional. Message IDs whose senders should be remembered.
@@ -1041,7 +1041,7 @@ if ( ! function_exists( 'bb_media_messages_remember_gif_senders' ) ) {
 	/**
 	 * Remember message senders before a thread's messages are deleted.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int   $thread_id   ID of the thread being deleted.
 	 * @param array $message_ids IDs of messages being deleted.
@@ -1057,7 +1057,7 @@ if ( ! function_exists( 'bb_media_messages_remember_gif_senders' ) ) {
  * Delete gif attached to thread messages.
  *
  * @since BuddyBoss 1.2.9
- * @since BuddyBoss [BBVERSION] Only deletes legacy GIF attachments uploaded by the message sender.
+ * @since BuddyBoss 3.6.2 Only deletes legacy GIF attachments uploaded by the message sender.
  *
  * @param int   $thread_id   ID of the thread being deleted.
  * @param array $message_ids IDs of messages being deleted.
@@ -1091,7 +1091,7 @@ function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
  * Delete gif attached to messages.
  *
  * @since BuddyBoss 1.4.9
- * @since BuddyBoss [BBVERSION] Only deletes legacy GIF attachments uploaded by the message sender.
+ * @since BuddyBoss 3.6.2 Only deletes legacy GIF attachments uploaded by the message sender.
  *
  * @param int   $thread_id          ID of the thread being deleted.
  * @param array $message_ids        IDs of messages being deleted.
@@ -1127,7 +1127,7 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
  * Save gif data into messages meta key "_gif_data"
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+ * @since BuddyBoss 3.6.2 Stores the GIF still and mp4 values only when they are http(s) URLs.
  *
  * @param $message
  */
@@ -1322,7 +1322,7 @@ function bp_media_comment_embed_gif( $comment_id ) {
  * Save gif data into activity meta key "_gif_attachment_id"
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Stores only http(s) GIF URLs and deletes only the author's legacy GIF attachments.
+ * @since BuddyBoss 3.6.2 Stores only http(s) GIF URLs and deletes only the author's legacy GIF attachments.
  *
  * @param $activity
  */

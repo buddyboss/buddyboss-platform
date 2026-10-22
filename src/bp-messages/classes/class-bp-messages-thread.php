@@ -440,7 +440,7 @@ class BP_Messages_Thread {
 	 * Get all messages associated with a thread.
 	 *
 	 * @since BuddyPress 2.3.0
-	 * @since BuddyBoss [BBVERSION] Checks thread access before reading the cache and no longer caches denials.
+	 * @since BuddyBoss 3.6.2 Checks thread access before reading the cache and no longer caches denials.
 	 *
 	 * @param int  $thread_id The message thread ID.
 	 * @param null $before    Messages to get before a specific date.
@@ -673,7 +673,7 @@ class BP_Messages_Thread {
 	 * @since BuddyPress 1.0.0
 	 * @since BuddyPress 2.7.0 The $user_id parameter was added. Previously the current user
 	 *              was always assumed.
-	 * @since BuddyBoss [BBVERSION] Deletes the meta of every message in the thread, not only the first.
+	 * @since BuddyBoss 3.6.2 Deletes the meta of every message in the thread, not only the first.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread to mark messages as

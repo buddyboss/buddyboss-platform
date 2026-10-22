@@ -129,7 +129,7 @@ class BB_Tests_Messages_Digest_Email_Cron extends BP_UnitTestCase_Emails {
 	}
 
 	/**
-	 * Repair — a site that lost the event (e.g. a Settings 2.0 save from 3.0.0 until [BBVERSION]) gets it back
+	 * Repair — a site that lost the event (e.g. a Settings 2.0 save from 3.0.0 until 3.6.2) gets it back
 	 * on the next load, with the saved interval.
 	 */
 	public function test_missing_digest_event_is_recreated_on_load() {

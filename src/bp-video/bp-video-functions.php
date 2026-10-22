@@ -805,7 +805,7 @@ function bp_video_add( $args = '' ) {
  *
  * @return mixed|void
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Only adopts the user's own unsaved video uploads.
+ * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved video uploads.
  */
 function bp_video_add_handler( $videos = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
 	global $bp_video_upload_count, $bp_video_upload_activity_content;
@@ -2382,7 +2382,7 @@ function bp_video_default_scope( $scope = 'all' ) {
 /**
  * Get the thread id based on video.
  *
- * @since BuddyBoss [BBVERSION] Matches the exact video ID in the current user's threads.
+ * @since BuddyBoss 3.6.2 Matches the exact video ID in the current user's threads.
  *
  * @param string|int $video_id video id.
  *
@@ -3603,7 +3603,7 @@ function bp_video_delete_video_previews() {
  * Return the preview url of the file.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Uses a signed receiver segment.
+ * @since BuddyBoss 3.6.2 Uses a signed receiver segment.
  *
  * @param int    $video_id      Video ID.
  * @param int    $attachment_id Attachment ID.
@@ -4596,7 +4596,7 @@ function bb_video_add_thumb_image_remove_upload_filters() {
  * @return array|false|string|string[]|void
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Only creates public symlinks for the video's trusted thumbnails.
+ * @since BuddyBoss 3.6.2 Only creates public symlinks for the video's trusted thumbnails.
  */
 function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $generate = true ) {
 

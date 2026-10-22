@@ -11858,7 +11858,7 @@ function bb_is_feature_provided( $feature ) {
  * carries an HMAC bound to the receiver, the item and the attachment, so it cannot be
  * forged or reused for another user or file.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param int        $receiver_id   Receiver user ID.
  * @param int|string $item_id       Media or video ID (a `forbidden_` prefix is ignored).
@@ -11879,7 +11879,7 @@ function bb_media_preview_receiver_segment( $receiver_id, $item_id, $attachment_
 /**
  * Validate a "receiver" URL segment of a media or video preview URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param string     $segment       Base64-encoded segment taken from the URL.
  * @param int|string $item_id       Media or video ID from the same URL.
@@ -11912,7 +11912,7 @@ function bb_media_preview_get_receiver_id( $segment, $item_id, $attachment_id ) 
 /**
  * Compute the signature used in preview receiver segments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param int        $receiver_id   Receiver user ID.
  * @param int|string $item_id       Media or video ID.
@@ -11940,7 +11940,7 @@ if ( ! function_exists( 'bb_video_get_thumbnail_editable_video' ) ) {
 	 * The video must exist, belong to the given video attachment, and the current user
 	 * must have the requested permission on it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int    $video_id            Video ID.
 	 * @param int    $video_attachment_id Attachment ID of the video file.
@@ -11977,7 +11977,7 @@ if ( ! function_exists( 'bb_video_is_trusted_thumbnail' ) ) {
 	 * image or default images), or came through the video thumbnail uploader. Any other
 	 * attachment, including other attachments of the video owner, is never served.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param BP_Video $video         Video object.
 	 * @param int      $attachment_id Thumbnail attachment ID.
@@ -12041,7 +12041,7 @@ if ( ! function_exists( 'bb_video_can_delete_stored_thumbnail' ) ) {
 	 * that is stored on this video and that no other video uses. The video's own file
 	 * is never deleted through this path.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param BP_Video|object $video        Video object or row with `id`, `user_id` and `attachment_id`.
 	 * @param int             $thumbnail_id Stored thumbnail attachment ID.
@@ -12119,7 +12119,7 @@ if ( ! function_exists( 'bb_video_is_valid_thumbnail_for_video' ) ) {
 	 * not yet saved as a thumbnail of any video, and this video's stored custom thumbnail /
 	 * poster only when bb_video_can_delete_stored_thumbnail() allows deleting it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param BP_Video $video                Video object.
 	 * @param int      $thumbnail_id         Attachment ID of the thumbnail.
@@ -12249,7 +12249,7 @@ if ( ! function_exists( 'bb_user_can_adopt_attachment' ) ) {
 	 * A new item may only wrap the user's own upload that went through the BuddyBoss
 	 * uploader and is not yet bound to a media, video or document item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int $attachment_id Attachment ID from the request.
 	 * @param int $user_id       User ID. Default the logged-in user.
@@ -12288,7 +12288,7 @@ if ( ! function_exists( 'bb_user_can_adopt_attachment' ) ) {
 		/**
 		 * Filters whether a user may wrap an attachment in a new media, video or document item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.6.2
 		 *
 		 * @param bool $can_adopt     Whether the user may use the attachment.
 		 * @param int  $attachment_id Attachment ID.
@@ -12305,7 +12305,7 @@ if ( ! function_exists( 'bb_media_sanitize_gif_url' ) ) {
 	 * GIF values come from Giphy and are always http(s) URLs. Anything else, such as an
 	 * integer that the delete-time handlers would treat as an attachment ID, is dropped.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param mixed $value GIF value from the request.
 	 *
@@ -12328,7 +12328,7 @@ if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
 	 * Only such an integer ID is deleted, and only when the attachment was uploaded by the
 	 * author of the activity or post that holds the GIF.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param mixed $value     The `still` or `mp4` value from `_gif_data`.
 	 * @param int   $author_id User ID of the activity or post author.
