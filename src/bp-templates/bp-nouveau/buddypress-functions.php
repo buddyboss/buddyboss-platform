@@ -768,6 +768,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Add localize variable for more menu text.
 		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
 
+		// Add localize variable for the link preview error when the request fails.
+		$params['link_preview_error'] = esc_html__( 'There was a problem generating a link preview.', 'buddyboss' );
+
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *
