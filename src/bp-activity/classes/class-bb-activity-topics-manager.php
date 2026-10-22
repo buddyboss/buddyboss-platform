@@ -111,6 +111,9 @@ class BB_Activity_Topics_Manager {
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_activity_topic_get_js_strings' ), 10, 1 );
 		add_action( 'bp_after_member_activity_post_form', array( $this, 'bb_user_activity_topics_after_post_form' ), 10, 1 );
 		add_filter( 'bp_before_has_activities_parse_args', array( $this, 'bb_get_activity_topic_from_url' ) );
+
+		// Remove the topic relationship of deleted activities, like media, documents and link previews.
+		add_action( 'bp_activity_after_delete', array( $this, 'bb_delete_activity_topic_relationship_on_activity_delete' ), 10, 1 );
 	}
 
 	/**
@@ -440,6 +443,121 @@ class BB_Activity_Topics_Manager {
 		do_action( 'bb_after_delete_activity_topic_relationship', $deleted, $get_activity_relationship, $args );
 
 		return $deleted;
+	}
+
+	/**
+	 * Delete the topic relationship rows of activities that were just deleted.
+	 *
+	 * Runs on `bp_activity_after_delete`, which every delete path (front end, admin bulk, REST,
+	 * group/user cascades) reaches through BP_Activity_Activity::delete(). One SELECT and one
+	 * DELETE per chunk; the existing before/after actions fire per row with their usual payload.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $activities Deleted activity objects (or ids).
+	 *
+	 * @return int Number of relationship rows deleted.
+	 */
+	public function bb_delete_activity_topic_relationship_on_activity_delete( $activities ) {
+		if ( empty( $activities ) || ! is_array( $activities ) ) {
+			return 0;
+		}
+
+		$first = reset( $activities );
+		if ( is_object( $first ) || is_array( $first ) ) {
+			$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+		} else {
+			// Plain id lists.
+			$activity_ids = wp_parse_id_list( $activities );
+		}
+		if ( empty( $activity_ids ) ) {
+			return 0;
+		}
+
+		$deleted = 0;
+		foreach ( array_chunk( $activity_ids, 500 ) as $chunk ) {
+			$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%d' ) );
+
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- placeholders built above, table name is internal.
+			$rows = $this->wpdb->get_results(
+				$this->wpdb->prepare( "SELECT id, topic_id, activity_id, component, item_id FROM `{$this->activity_topic_rel_table}` WHERE activity_id IN ({$placeholders})", $chunk ),
+				ARRAY_A
+			);
+			if ( empty( $rows ) ) {
+				continue;
+			}
+
+			foreach ( $rows as $row ) {
+				$args = array(
+					'topic_id'    => (int) $row['topic_id'],
+					'item_id'     => (int) $row['item_id'],
+					'item_type'   => $row['component'],
+					'activity_id' => (int) $row['activity_id'],
+				);
+				/** This action is documented in bp-activity/classes/class-bb-activity-topics-manager.php */
+				do_action( 'bb_before_delete_activity_topic_relationship', $args );
+			}
+
+			$row_ids      = wp_list_pluck( $rows, 'id' );
+			$placeholders = implode( ',', array_fill( 0, count( $row_ids ), '%d' ) );
+			$result       = $this->wpdb->query(
+				$this->wpdb->prepare( "DELETE FROM `{$this->activity_topic_rel_table}` WHERE id IN ({$placeholders})", $row_ids )
+			);
+			// phpcs:enable
+			if ( false === $result ) {
+				continue;
+			}
+			$deleted += (int) $result;
+
+			foreach ( $rows as $row ) {
+				$args = array(
+					'topic_id'    => (int) $row['topic_id'],
+					'item_id'     => (int) $row['item_id'],
+					'item_type'   => $row['component'],
+					'activity_id' => (int) $row['activity_id'],
+				);
+				/** This action is documented in bp-activity/classes/class-bb-activity-topics-manager.php */
+				do_action( 'bb_after_delete_activity_topic_relationship', (int) $row['id'], $row, $args );
+			}
+		}
+
+		return $deleted;
+	}
+
+	/**
+	 * Delete one batch of relationship rows whose activity no longer exists.
+	 *
+	 * Idempotent; callers loop until it returns 0 (see the "Activity topics" repair tool).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $limit Rows per batch.
+	 *
+	 * @return int Rows deleted in this batch.
+	 */
+	public function bb_delete_orphan_activity_topic_relationships( $limit = 500 ) {
+		$bp    = buddypress();
+		$limit = max( 1, (int) $limit );
+
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- placeholders built below, table names are internal.
+		$orphan_ids = $this->wpdb->get_col(
+			$this->wpdb->prepare(
+				"SELECT atr.id FROM `{$this->activity_topic_rel_table}` atr LEFT JOIN `{$bp->activity->table_name}` a ON a.id = atr.activity_id WHERE a.id IS NULL ORDER BY atr.id ASC LIMIT %d",
+				$limit
+			)
+		);
+		if ( empty( $orphan_ids ) ) {
+			return 0;
+		}
+
+		$orphan_ids   = wp_parse_id_list( $orphan_ids );
+		$placeholders = implode( ',', array_fill( 0, count( $orphan_ids ), '%d' ) );
+		$result       = $this->wpdb->query(
+			$this->wpdb->prepare( "DELETE FROM `{$this->activity_topic_rel_table}` WHERE id IN ({$placeholders})", $orphan_ids )
+		);
+		// phpcs:enable
+
+		return false === $result ? 0 : (int) $result;
 	}
 
 	/**
