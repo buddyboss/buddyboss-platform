@@ -107,6 +107,44 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 		$this->assertTrue( $m->bb_can_update_topics_order( $g, 'groups' ) );
 		$this->assertTrue( $m->bb_can_update_topics_order( 0, 'activity' ) );
 	}
+
+	public function test_reorder_refreshes_the_cached_site_topic_list() {
+		$a = $this->add_topic( 'Alpha' );
+		$b = $this->add_topic( 'Beta' );
+
+		// Members read this cached list (feed filter bar, composer, REST /bb-topics).
+		$list = function () {
+			return array_map( 'intval', wp_list_pluck( bb_activity_topics_manager_instance()->bb_get_activity_topics( array( 'item_type' => 'activity' ) ), 'topic_id' ) );
+		};
+		$this->assertSame( array( $a, $b ), $list(), 'list primed in the cache' );
+
+		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' ) );
+
+		$this->assertSame( array( $b, $a ), $list(), 'members see the new order' );
+	}
+
+	public function test_group_reorder_flushes_the_topic_list_cache() {
+		$organizer = self::factory()->user->create();
+		$g         = self::factory()->group->create( array( 'creator_id' => $organizer ) );
+		$a         = $this->add_topic( 'Alpha', 'groups', $g );
+		$b         = $this->add_topic( 'Beta', 'groups', $g );
+
+		// Pro caches the group list in the same group; the Platform suite runs without Pro.
+		wp_cache_set( 'bb_activity_topics_group_probe', array( $a, $b ), 'bb_activity_topics' );
+
+		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g, 'groups' ) );
+
+		$this->assertFalse( wp_cache_get( 'bb_activity_topics_group_probe', 'bb_activity_topics' ) );
+	}
+
+	public function test_rest_reorder_flushes_the_topic_list_cache() {
+		wp_cache_set( 'bb_activity_topics_rest_probe', array( 1, 2 ), 'bb_activity_topics' );
+
+		// The API plugin's PATCH /bb-topics/order writes its own SQL and then fires this action.
+		do_action( 'bp_rest_topics_update_order', new WP_REST_Response( array() ), new WP_REST_Request( 'PATCH', '/buddyboss/v1/bb-topics/order' ) );
+
+		$this->assertFalse( wp_cache_get( 'bb_activity_topics_rest_probe', 'bb_activity_topics' ) );
+	}
 }
 
 /**

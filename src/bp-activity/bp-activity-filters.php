@@ -207,6 +207,9 @@ add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' )
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
 add_action( 'bp_init', 'bb_load_activity_topics_manager' );
 
+// Remove the topic relationship of deleted activities, also while activity topics are switched off.
+add_action( 'bp_activity_after_delete', 'bb_delete_topic_relationships_of_deleted_activities' );
+
 add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
 add_filter( 'bp_activity_get_join_sql', 'bb_activity_unanswered_only_join_sql_filter', 11, 2 );
 
