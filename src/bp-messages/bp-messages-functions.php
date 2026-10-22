@@ -2327,7 +2327,7 @@ function bb_messages_is_thread_exists_by_recipients( $recipients = array(), $use
  * Send digest email into background.
  *
  * @since BuddyBoss 2.1.4
- * @since BuddyBoss [BBVERSION] Derives each recipient's email type from their own unread count.
+ * @since BuddyBoss 3.6.2 Derives each recipient's email type from their own unread count.
  *
  * @param array $recipient_messages Message array.
  * @param int   $thread_id          ID of the thread.
@@ -3429,7 +3429,7 @@ function bb_messages_migration() {
  * The AJAX handler and the "Delete conversation" action in the templates both use this,
  * so the action is only shown to users the server will accept.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @return bool True if the current user can delete the whole conversation.
  */
@@ -3450,7 +3450,7 @@ function bb_messages_user_can_delete_conversation() {
 	/**
 	 * Filters whether the current user can delete an entire conversation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param bool $can_delete Whether the current user can delete the whole conversation.
 	 */
@@ -3464,7 +3464,7 @@ function bb_messages_user_can_delete_conversation() {
  * document IDs on the message in every member's own thread. When one of those
  * threads is deleted, the items that another thread still shows must be kept.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param string $meta_key  Message meta key that holds the comma-separated item IDs.
  *                          Accepts 'bp_media_ids', 'bp_video_ids' or 'bp_document_ids'.

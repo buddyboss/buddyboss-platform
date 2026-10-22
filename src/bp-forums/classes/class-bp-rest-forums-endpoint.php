@@ -1533,7 +1533,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * previews existed) carry no `_link_embed` meta. The web then embeds the first embeddable URL in
 	 * the content (see bbp_topic_content_autoembed_paragraph()), so the API does the same here.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int    $post_id Topic or reply id.
 	 * @param string $content Topic or reply content.

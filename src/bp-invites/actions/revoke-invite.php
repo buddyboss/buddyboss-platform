@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Member revoke email invite.
  *
  * @since BuddyBoss 1.0.0
- * @since BuddyBoss [BBVERSION] Only the inviter or a moderator may revoke an invite, with a valid nonce.
+ * @since BuddyBoss 3.6.2 Only the inviter or a moderator may revoke an invite, with a valid nonce.
  */
 function bp_member_revoke_invite() {
 

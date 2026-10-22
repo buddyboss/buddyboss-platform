@@ -1277,7 +1277,7 @@ function bp_nouveau_ajax_media_update_privacy() {
  * Update media activity description.
  *
  * @since BuddyBoss 1.3.5
- * @since BuddyBoss [BBVERSION] Requires edit permission on the item that owns the attachment.
+ * @since BuddyBoss 3.6.2 Requires edit permission on the item that owns the attachment.
  */
 function bp_nouveau_ajax_media_description_save() {
 	$response = array(

@@ -152,7 +152,7 @@ defined( 'ABSPATH' ) || exit;
 		 * bbp_current_user_can_publish_replies(), so build the link first and only
 		 * render the "Reply" button when a link is actually returned.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.6.2
 		 */
 		if ( ! is_user_logged_in() ) {
 

@@ -1009,7 +1009,7 @@ class BP_Video {
 	 * Otherwise use the filters.
 	 *
 	 * @since BuddyBoss 1.7.0
-	 * @since BuddyBoss [BBVERSION] Deletes stored poster / custom thumbnails only when owned by the video owner.
+	 * @since BuddyBoss 3.6.2 Deletes stored poster / custom thumbnails only when owned by the video owner.
 	 *
 	 * @param array $args          {
 	 *                             An array of arguments.
