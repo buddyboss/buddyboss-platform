@@ -780,6 +780,32 @@ function bb_topic_deleted_cache_reset( $relationships_ids, $topic_id ) {
 
 add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
 
+/**
+ * Reset cache when the topic order of a list changes.
+ *
+ * The feed filter bar, the composer and REST `/bb-topics` read cached topic lists from the
+ * `bb_activity_topics` group, so a new order is only visible once that group is flushed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_topics_order_updated_cache_reset() {
+	bp_core_reset_incrementor( 'bb_topics' );
+
+	// Clear activity topics cache for list of topics.
+	if (
+		function_exists( 'wp_cache_flush_group' ) &&
+		function_exists( 'wp_cache_supports' ) &&
+		wp_cache_supports( 'flush_group' )
+	) {
+		wp_cache_flush_group( 'bb_activity_topics' );
+	} else {
+		wp_cache_flush();
+	}
+}
+
+add_action( 'bb_topics_order_updated', 'bb_topics_order_updated_cache_reset' );
+add_action( 'bp_rest_topics_update_order', 'bb_topics_order_updated_cache_reset' );
+
 
 /**
  * Reset cache when a topic relationship is updated.

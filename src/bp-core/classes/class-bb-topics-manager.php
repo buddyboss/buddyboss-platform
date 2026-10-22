@@ -167,6 +167,7 @@ class BB_Topics_Manager {
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 				/* translators: %s: Topic name */
 				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
+				'can_reorder_topics'           => $this->bb_can_update_topics_order( bp_is_active( 'groups' ) && bp_is_group() ? bp_get_current_group_id() : 0, bp_is_active( 'groups' ) && bp_is_group() ? 'groups' : 'activity' ),
 				'topics_limit'                 => $this->bb_topics_limit(),
 			)
 		);
@@ -2023,12 +2024,108 @@ class BB_Topics_Manager {
 	}
 
 	/**
-	 * Update the order of topics.
+	 * Whether the current user may reorder the topics of an item.
+	 *
+	 * Site moderators may reorder any list; a group organizer may reorder their own group's list
+	 * (the same rule the REST `/bb-topics/order` route applies).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $item_id   Group ID for group topics, 0 for activity topics.
+	 * @param string $item_type `groups` or `activity`.
+	 *
+	 * @return bool
+	 */
+	public function bb_can_update_topics_order( $item_id = 0, $item_type = 'activity' ) {
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			return true;
+		}
+
+		$item_id = (int) $item_id;
+		if (
+			'groups' === $item_type &&
+			$item_id > 0 &&
+			is_user_logged_in() &&
+			bp_is_active( 'groups' ) &&
+			function_exists( 'bb_is_enabled_group_activity_topics' ) &&
+			bb_is_enabled_group_activity_topics() &&
+			groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Store a new order for the topics of one item.
+	 *
+	 * Only the relationship rows of that item are touched; the same topic adopted by another
+	 * group, or the site-wide copy, keeps its own position.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int[]  $topic_ids Topic IDs in the new order.
+	 * @param int    $item_id   Group ID for group topics, 0 for activity topics.
+	 * @param string $item_type `groups` or `activity`.
+	 *
+	 * @return bool False when a write failed.
+	 */
+	public function bb_update_topics_order( $topic_ids, $item_id = 0, $item_type = 'activity' ) {
+		$topic_ids = wp_parse_id_list( $topic_ids );
+		$item_type = 'groups' === $item_type ? 'groups' : 'activity';
+		$item_id   = 'groups' === $item_type ? (int) $item_id : 0;
+
+		$updated = true;
+		foreach ( $topic_ids as $position => $topic_id ) {
+			$result = $this->wpdb->update(
+				$this->topic_rel_table,
+				array( 'menu_order' => $position + 1 ),
+				array(
+					'topic_id'  => $topic_id,
+					'item_id'   => $item_id,
+					'item_type' => $item_type,
+				),
+				array( '%d' ),
+				array( '%d', '%d', '%s' )
+			);
+
+			if ( false === $result ) {
+				$updated = false;
+				break;
+			}
+		}
+
+		// Invalidate topics cache so ordering changes are reflected immediately.
+		bp_core_reset_incrementor( self::$topic_cache_group );
+
+		/**
+		 * Fires after the topic order of one list was written, also when a write failed part way.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int[]  $topic_ids Topic IDs in the requested order.
+		 * @param int    $item_id   Group ID for group topics, 0 for activity topics.
+		 * @param string $item_type `groups` or `activity`.
+		 */
+		do_action( 'bb_topics_order_updated', $topic_ids, $item_id, $item_type );
+
+		return $updated;
+	}
+
+	/**
+	 * Update the order of topics via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers may reorder their own group's topics; the order is stored per item.
 	 */
 	public function bb_update_topics_order_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// The list being reordered. Callers that send no item (older scripts) are the site-wide list.
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_key( wp_unslash( $_POST['item_type'] ) ) : 'activity'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified below.
+		$item_type = 'groups' === $item_type ? 'groups' : 'activity';
+		$item_id   = 'groups' === $item_type && isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified below.
+
+		if ( ! $this->bb_can_update_topics_order( $item_id, $item_type ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -2050,27 +2147,7 @@ class BB_Topics_Manager {
 
 		$topic_ids = wp_parse_id_list( wp_unslash( $_POST['topic_ids'] ) );
 
-		$success = true;
-
-		// Update each topic with its new order in the relationship table.
-		foreach ( $topic_ids as $position => $topic_id ) {
-			$result = $this->wpdb->update(
-				$this->topic_rel_table,
-				array( 'menu_order' => $position + 1 ),
-				array( 'topic_id' => $topic_id ),
-				array( '%d' ),
-				array( '%d' )
-			);
-
-			if ( false === $result ) {
-				$success = false;
-				break;
-			}
-		}
-
-		if ( $success ) {
-			// Invalidate topics cache so ordering changes are reflected immediately.
-			bp_core_reset_incrementor( self::$topic_cache_group );
+		if ( $this->bb_update_topics_order( $topic_ids, $item_id, $item_type ) ) {
 			wp_send_json_success( array( 'message' => __( 'Topic order updated successfully.', 'buddyboss' ) ) );
 		} else {
 			wp_send_json_error( array( 'error' => __( 'Failed to update topic order.', 'buddyboss' ) ) );

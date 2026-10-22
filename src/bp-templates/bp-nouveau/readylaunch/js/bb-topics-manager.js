@@ -351,7 +351,9 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * Make the topics sortable.
+		 * Make the topic list sortable.
+		 *
+		 * @since BuddyBoss [BBVERSION] The order request carries the item (group or site-wide list).
 		 */
 		makeTopicsSortable : function () {
 			var self = this;
@@ -363,13 +365,19 @@ window.bp = window.bp || {};
 					var $container = $( event.target );
 					$container.addClass( 'is-loading' );
 
-					// Get the sorted topic IDs.
+					// Get the sorted topic IDs, and the list they belong to (group or site-wide).
 					var topicIds = [];
+					var itemId   = 0;
+					var itemType = 'activity';
 					$container.find( '.bb-activity-topic-item' ).find( '.bb-edit-topic' ).each( function () {
 						var $topicData = $( this ).data( 'topic-attr' );
 						var topicId    = $topicData.topic_id;
 						if ( topicId ) {
 							topicIds.push( topicId );
+						}
+						if ( $topicData.item_type ) {
+							itemType = $topicData.item_type;
+							itemId   = $topicData.item_id || 0;
 						}
 					} );
 
@@ -377,6 +385,8 @@ window.bp = window.bp || {};
 					var data = {
 						action    : 'bb_update_topics_order',
 						topic_ids : topicIds,
+						item_id   : itemId,
+						item_type : itemType,
 						nonce     : bbTopicsManagerVars.bb_update_topics_order_nonce
 					};
 
@@ -926,7 +936,23 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Filter the stream by the clicked topic, or follow the label's link where there is no filter bar.
+		 *
+		 * @since BuddyBoss [BBVERSION] Topic labels on single-activity pages navigate instead of filtering in place.
+		 *
+		 * @param {Event} event - The click event.
+		 */
 		topicActivityFilter : function ( event ) {
+			// A topic label outside a feed page (single-activity permalink pages have no filter bar) is a plain
+			// link to the topic feed; the in-place filter below only makes sense where the bar exists.
+			if (
+				$( event.currentTarget ).hasClass( 'bb-topic-url' ) &&
+				( 0 === $( '.activity-topic-selector' ).length || $( 'body' ).hasClass( 'activity-permalink' ) )
+			) {
+				return;
+			}
+
 			event.preventDefault();
 			event.stopPropagation();
 
