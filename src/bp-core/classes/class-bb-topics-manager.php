@@ -167,8 +167,6 @@ class BB_Topics_Manager {
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 				/* translators: %s: Topic name */
 				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
-				/* translators: %s: Topic name */
-				'remove_topic_text'            => esc_html__( 'Remove "%s" from this group?', 'buddyboss' ),
 				'can_reorder_topics'           => $this->bb_can_update_topics_order( bp_is_active( 'groups' ) && bp_is_group() ? bp_get_current_group_id() : 0, bp_is_active( 'groups' ) && bp_is_group() ? 'groups' : 'activity' ),
 				'topics_limit'                 => $this->bb_topics_limit(),
 			)
@@ -1590,20 +1588,11 @@ class BB_Topics_Manager {
 		$existing_topic_name = $this->bb_get_topic_by( 'id', $topic_id );
 		$header_text         = __( 'Deleting', 'buddyboss' );
 		if ( ! empty( $existing_topic_name->name ) ) {
-			// A global topic inside a group is only removed from that group.
-			if ( 'groups' === $item_type && $this->bb_is_topic_global( $topic_id ) ) {
-				$header_text = sprintf(
-				/* translators: %s: topic name */
-					__( 'Remove "%s" from this group?', 'buddyboss' ),
-					$existing_topic_name->name
-				);
-			} else {
-				$header_text = sprintf(
-				/* translators: %s: topic name */
-					__( 'Deleting "%s"?', 'buddyboss' ),
-					$existing_topic_name->name
-				);
-			}
+			$header_text = sprintf(
+			/* translators: %s: topic name */
+				__( 'Deleting "%s"?', 'buddyboss' ),
+				$existing_topic_name->name
+			);
 		}
 
 		wp_send_json_success(

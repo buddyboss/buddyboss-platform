@@ -28,11 +28,10 @@
 			nonce     : edit_nonce
 		} );
 		var delete_data     = JSON.stringify( {
-			topic_id           : topicId,
-			item_id            : itemId,
-			item_type          : itemType,
-			is_global_activity : !! topicData.is_global_activity,
-			nonce              : delete_nonce
+			topic_id  : topicId,
+			item_id   : itemId,
+			item_type : itemType,
+			nonce     : delete_nonce
 		} );
 		// A global topic adopted by a group is removed from the group, not deleted.
 		var delete_label    = ( topicData.is_global_activity && 'groups' === itemType ) ? '<?php echo esc_js( __( 'Remove from group', 'buddyboss' ) ); ?>' : '<?php echo esc_js( __( 'Delete', 'buddyboss' ) ); ?>';

@@ -701,8 +701,6 @@ window.bp = window.bp || {};
 		/**
 		 * Handle deleting a topic
 		 *
-		 * @since BuddyBoss [BBVERSION] Passes whether the topic is only removed from the group.
-		 *
 		 * @param {Event} event - The click event
 		 */
 		handleDeleteTopic : function ( event ) {
@@ -718,8 +716,6 @@ window.bp = window.bp || {};
 			var itemId         = topicAttr.item_id;
 			var itemType       = topicAttr.item_type;
 			var topicName      = $topicItem.find( '.bb-topic-title' ).text().trim();
-			// A global topic inside a group is only removed from the group, never deleted.
-			var isRemoveOnly   = 'groups' === itemType && true === topicAttr.is_global_activity;
 
 			var $radioValue    = $( 'input[name="bb_migrate_existing_topic"]:checked' ).val();
 			var $dropdownValue = $( '#bb_existing_topic_id' ).val();
@@ -732,15 +728,12 @@ window.bp = window.bp || {};
 				nonce      : nonce,
 				itemId     : itemId,
 				itemType   : itemType,
-				isRemoveOnly : isRemoveOnly,
 				$topicItem : $topicItem
 			} );
 		},
 
 		/**
 		 * Check if topic has existing posts before deletion.
-		 *
-		 * @since BuddyBoss [BBVERSION] "Remove from group" wording for a global topic inside a group.
 		 *
 		 * @param {Object} args - Arguments object containing topic data.
 		 */
@@ -753,20 +746,13 @@ window.bp = window.bp || {};
 				item_type : args.itemType
 			};
 
-			var topicName    = args.topicName || '';
-			var isRemoveOnly = true === args.isRemoveOnly && ! _.isUndefined( bbTopicsManagerVars.remove_topic_text );
-			var headerText   = ( isRemoveOnly ? bbTopicsManagerVars.remove_topic_text : bbTopicsManagerVars.delete_topic_text ).replace( '%s', topicName );
+			var topicName = args.topicName || '';
 			if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).length ) {
-				BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).text( headerText );
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '#bb-hello-title' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
 			}
 			if ( BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).length ) {
-				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).text( headerText );
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
 			}
-			// The "No, delete the topic" choice reads "remove from this group" for a global topic; the template carries both texts.
-			BBTopicsManager.$migrateTopicContainerModalSelector.find( 'label[data-remove-text][data-delete-text]' ).each( function () {
-				var $label = $( this );
-				$label.text( isRemoveOnly ? $label.data( 'remove-text' ) : $label.data( 'delete-text' ) );
-			} );
 
 			// Show loader
 			this.$migrateTopicContainerModalSelector.addClass( 'is-loading' );
