@@ -2315,18 +2315,17 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
-	 * F1 (single-site leg): bb_draft_enforce_user_budget() derives
-	 * $defer_attachment_release = 'heal' === $context && is_multisite(). On a
-	 * single-site install is_multisite() is false, so even the 'heal' context
-	 * must NOT defer - it releases the evicted draft's attachment stamp
-	 * immediately, in the (only) blog. This guards the derivation against
-	 * over-deferring on single-site; the multisite branch (defer = true) is
-	 * exercised only under a multisite test env (see
-	 * test_dispose_defers_attachment_release_when_asked for the flag itself).
+	 * F1 (single-site leg), revised for PROD-9621 comment 155508.
+	 *
+	 * A heal eviction now keeps the evicted draft's attachment stamp and marks
+	 * it evicted, the same as a live eviction: the draft is held for a
+	 * hand-back, so its files must outlive the 6-hour orphan-media cron. It
+	 * used to release the stamp immediately on single-site, which let that
+	 * cron delete the member's uploads.
 	 */
-	public function test_heal_eviction_releases_attachment_immediately_on_single_site() {
+	public function test_heal_eviction_keeps_attachment_protected_on_single_site() {
 		if ( is_multisite() ) {
-			$this->markTestSkipped( 'This leg asserts the single-site (non-deferred) derivation; run the multisite leg under a multisite suite.' );
+			$this->markTestSkipped( 'This leg asserts the single-site marker; the multisite leg defers without marking.' );
 		}
 
 		$user_id = self::factory()->user->create();
@@ -2346,11 +2345,271 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
 
 		$this->assertContains( 'draft_group_1', $heal['evicted'], 'Premise: heal evicted the draft that held the attachment.' );
-		$this->assertSame(
-			'',
-			(string) get_post_meta( $att, 'bb_media_draft', true ),
-			'F1: on single-site the heal context must NOT defer - the evicted draft\'s attachment stamp is released immediately.'
+		$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'The evicted draft\'s file keeps its draft stamp.' );
+		$this->assertGreaterThan( 0, (int) get_post_meta( $att, 'bb_draft_evicted_at', true ), 'The file is marked evicted, so the sweep protects it for the retention counted from now.' );
+	}
+
+	/**
+	 * Upgrade stage 2 strips pasted images from every draft of an
+	 * over-budget member before it evicts anything (PROD-9621 comment 155508).
+	 */
+	public function test_oneshot_stage_two_strips_images_before_evicting() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$image   = '<img src="data:image/png;base64,' . str_repeat( 'A', 80000 ) . '">';
+
+		// Four ~85KB drafts: each under the 100KB per-draft cap, so stage 1
+		// leaves them alone, but ~340KB together. Text survives a strip.
+		for ( $i = 1; $i <= 4; $i++ ) {
+			add_user_meta(
+				$user_id,
+				'draft_group_' . $i,
+				wp_slash(
+					array(
+						'data_key'        => 'draft_group_' . $i,
+						'data'            => array( 'content' => 'Text ' . $i . ' C:\\temp\\notes ' . str_repeat( 'y', 2000 ) . $image ),
+						'_draft_saved_at' => $i,
+					)
+				)
+			);
+		}
+
+		$result = bb_drafts_oneshot_batch( 0 );
+
+		$this->assertTrue( $result['complete'] );
+
+		for ( $i = 1; $i <= 4; $i++ ) {
+			$draft = bp_get_user_meta( $user_id, 'draft_group_' . $i, true );
+
+			$this->assertIsArray( $draft, 'Draft ' . $i . ' survives: stripping the image was enough.' );
+			$this->assertStringStartsWith( 'Text ' . $i . ' C:\\temp\\notes ', $draft['data']['content'], 'The member\'s text is kept, backslashes included.' );
+			$this->assertStringNotContainsString( 'base64', $draft['data']['content'], 'The pasted image is stripped.' );
+		}
+
+		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'Nothing was evicted, so nothing is held.' );
+	}
+
+	/**
+	 * When stripping is not enough, stage 2 evicts the oldest draft and holds
+	 * it for the 7-day hand-back, with its file kept protected.
+	 */
+	public function test_oneshot_stage_two_holds_evicted_drafts_and_protects_their_files() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$att     = $this->make_stamped_unsaved_attachment( $user_id );
+
+		for ( $i = 1; $i <= 6; $i++ ) {
+			$data = array( 'content' => str_repeat( 'x', 60000 ) );
+
+			if ( 1 === $i ) {
+				$data['media'] = array( array( 'id' => $att ) );
+			}
+
+			add_user_meta(
+				$user_id,
+				'draft_group_' . $i,
+				array(
+					'data_key'        => 'draft_group_' . $i,
+					'data'            => $data,
+					'_draft_saved_at' => $i,
+				)
+			);
+		}
+
+		$result = bb_drafts_oneshot_batch( 0 );
+
+		$this->assertTrue( $result['complete'] );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'Premise: the oldest draft was evicted.' );
+
+		$hold = bb_draft_get_evicted_hold( $user_id );
+
+		$this->assertArrayHasKey( 'draft_group_1', $hold, 'The evicted draft is held for a hand-back.' );
+		$this->assertSame( str_repeat( 'x', 60000 ), $hold['draft_group_1']['entry']['data']['content'], 'The held copy is the whole draft.' );
+		$this->assertNotEmpty( get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The member is flagged, so the composer asks for the hand-back.' );
+		$this->assertNotFalse( bb_draft_get_held_entry( $user_id, 'draft_group_1' ), 'Opening that composer finds the held draft.' );
+
+		if ( ! is_multisite() ) {
+			$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'The held draft\'s file keeps its stamp.' );
+			$this->assertGreaterThan( 0, (int) get_post_meta( $att, 'bb_draft_evicted_at', true ), 'The file is marked evicted.' );
+		}
+	}
+
+	/**
+	 * The forum row's own over-budget trim during the upgrade strips first,
+	 * then holds what it still removes.
+	 */
+	public function test_forum_row_heal_strips_then_holds_what_it_trims() {
+		$user_id = self::factory()->user->create();
+		$image   = '<img src="data:image/png;base64,' . str_repeat( 'A', 80000 ) . '">';
+		$row     = array();
+
+		// Four inner drafts of ~85KB with a pasted image: stripping alone
+		// fits them.
+		for ( $i = 1; $i <= 4; $i++ ) {
+			$row[ 'topic_' . $i ] = array(
+				'data_key'        => 'topic_' . $i,
+				'data'            => array( 'bbp_topic_content' => 'Topic ' . $i . $image ),
+				'_draft_saved_at' => 10 + $i,
+			);
+		}
+
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+
+		bb_draft_heal_forum_row( $user_id );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		for ( $i = 1; $i <= 4; $i++ ) {
+			$this->assertArrayHasKey( 'topic_' . $i, $stored, 'Inner draft ' . $i . ' survives: stripping was enough.' );
+			$this->assertSame( 'Topic ' . $i, $stored[ 'topic_' . $i ]['data']['bbp_topic_content'] );
+		}
+
+		// Now plain text that stripping cannot reduce: the oldest is trimmed
+		// and held.
+		$row = array();
+
+		$att = $this->make_stamped_unsaved_attachment( $user_id );
+
+		for ( $i = 1; $i <= 4; $i++ ) {
+			$row[ 'reply_' . $i ] = array(
+				'data_key'        => 'reply_' . $i,
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'z', 90000 ) ),
+				'_draft_saved_at' => $i,
+			);
+		}
+
+		$row['reply_1']['data']['bbp_media'] = wp_json_encode( array( array( 'id' => $att ) ) );
+
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+
+		bb_draft_heal_forum_row( $user_id );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$hold   = bb_draft_get_evicted_hold( $user_id );
+
+		$this->assertArrayNotHasKey( 'reply_1', $stored, 'Premise: the oldest inner draft was trimmed.' );
+		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:reply_1', $hold, 'The trimmed inner draft is held for a hand-back.' );
+
+		if ( ! is_multisite() ) {
+			$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'The trimmed draft\'s file keeps its stamp.' );
+			$this->assertGreaterThan( 0, (int) get_post_meta( $att, 'bb_draft_evicted_at', true ), 'The trimmed draft\'s file is marked evicted.' );
+		}
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'The sweep keeps the held draft\'s file.' );
+	}
+
+	/**
+	 * The sweep keeps the files of held evicted drafts even without the
+	 * evicted marker, which the upgrade heal cannot write on multisite.
+	 */
+	public function test_sweep_keeps_files_of_held_drafts_without_the_evicted_marker() {
+		$user_id = self::factory()->user->create();
+		$held    = $this->make_stamped_unsaved_attachment( $user_id, 40 );
+		$plain   = $this->make_stamped_unsaved_attachment( $user_id, 40 );
+
+		bb_draft_hold_evicted(
+			$user_id,
+			array(
+				'draft_group_9' => array(
+					'data_key' => 'draft_group_9',
+					'data'     => array( 'media' => array( array( 'id' => $held ) ) ),
+				),
+			)
 		);
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '', (string) get_post_meta( $held, 'bb_draft_evicted_at', true ), 'Premise: the file carries no evicted marker.' );
+		$this->assertSame( '1', (string) get_post_meta( $held, 'bb_media_draft', true ), 'A held draft\'s file keeps its stamp.' );
+		$this->assertSame( '', (string) get_post_meta( $plain, 'bb_media_draft', true ), 'Control: an old unreferenced stamp is still released.' );
+
+		// Once the hold expires, the file is no longer protected by it.
+		$hold                         = bb_draft_get_evicted_hold( $user_id );
+		$hold['draft_group_9']['at'] = time() - 8 * DAY_IN_SECONDS;
+		bb_draft_set_evicted_hold( $user_id, $hold );
+
+		// A shrinking hold leaves the cached reference set a safe superset, so
+		// only a fresh scan sees the expiry.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '', (string) get_post_meta( $held, 'bb_media_draft', true ), 'An expired hold no longer keeps the file.' );
+	}
+
+	/**
+	 * Holding a draft refreshes a reference set the sweep already cached, so
+	 * a sweep right after the upgrade heal still keeps the held file.
+	 */
+	public function test_hold_invalidates_a_cached_reference_set() {
+		$user_id = self::factory()->user->create();
+
+		// Warm the cached reference set with nothing held.
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertIsArray( get_site_transient( 'bb_draft_referenced_stamp_ids' ), 'Premise: the sweep cached its reference set.' );
+
+		$held = $this->make_stamped_unsaved_attachment( $user_id, 40 );
+
+		bb_draft_hold_evicted(
+			$user_id,
+			array(
+				'draft_group_8' => array(
+					'data_key' => 'draft_group_8',
+					'data'     => array( 'media' => array( array( 'id' => $held ) ) ),
+				),
+			)
+		);
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '1', (string) get_post_meta( $held, 'bb_media_draft', true ), 'The held draft\'s file keeps its stamp after a cached sweep.' );
+	}
+
+	/**
+	 * The hold keeps the newest drafts within its size cap and skips forum
+	 * entries with nothing to restore.
+	 */
+	public function test_evicted_hold_is_capped_newest_first() {
+		$user_id = self::factory()->user->create();
+		$entries = array();
+
+		for ( $i = 1; $i <= 10; $i++ ) {
+			$entries[ 'bb_user_topic_reply_draft:reply_' . $i ] = array(
+				'data_key'        => 'reply_' . $i,
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'z', 50000 ) ),
+				'_draft_saved_at' => $i,
+			);
+		}
+
+		$entries['bb_user_topic_reply_draft:empty'] = array(
+			'data_key'        => 'empty',
+			'data'            => array( 'bbp_reply_content' => '' ),
+			'_draft_saved_at' => 99,
+		);
+
+		bb_draft_hold_evicted( $user_id, $entries );
+
+		$hold = bb_draft_get_evicted_hold( $user_id );
+
+		$this->assertLessThanOrEqual( bb_draft_user_total_max_size(), strlen( maybe_serialize( $hold ) ), 'The hold stays within the per-user draft budget.' );
+		$this->assertArrayHasKey( 'bb_user_topic_reply_draft:reply_10', $hold, 'The newest draft is kept.' );
+		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft:reply_1', $hold, 'The oldest draft is dropped first.' );
+		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft:empty', $hold, 'An entry with nothing to restore is not held.' );
 	}
 
 	public function return_fifty() {
