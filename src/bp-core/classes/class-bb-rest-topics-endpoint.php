@@ -33,7 +33,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Register the fields for the activity object.
 	 *
 	 * @since 2.8.80
-	 */
+		 */
 	public function bp_rest_activity_support() {
 		bp_rest_register_field(
 			'activity',
@@ -1254,6 +1254,35 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Whether the current user may delete (or remove from the group) a group topic.
+	 *
+	 * Mirrors the group branch of delete_item_permissions_check(): a logged-in site administrator
+	 * or an organizer of that group, while group activity topics are enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $group_id Group ID.
+	 *
+	 * @return bool
+	 */
+	protected function bb_rest_can_delete_group_topic( $group_id ) {
+		$group_id = (int) $group_id;
+
+		if ( empty( $group_id ) || ! is_user_logged_in() ) {
+			return false;
+		}
+
+		if (
+			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+			! bb_is_enabled_group_activity_topics()
+		) {
+			return false;
+		}
+
+		return bp_current_user_can( 'administrator' ) || groups_is_user_admin( bp_loggedin_user_id(), $group_id );
+	}
+
+	/**
 	 * Get the endpoint arguments for the item schema.
 	 *
 	 * @since 2.8.80
@@ -1425,6 +1454,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Prepare a topic for response.
 	 *
 	 * @since 2.8.80
+	 * @since BuddyBoss [BBVERSION] `is_delete` follows the delete permission instead of being always true.
 	 *
 	 * @param stdClass        $item    Topic object.
 	 * @param WP_REST_Request $request Request object.
@@ -1449,7 +1479,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		$item_id   = $request->get_param( 'item_id' );
 		$item_type = $request->get_param( 'item_type' );
 		if ( bp_is_active( 'groups' ) && ! empty( $item_id ) && ! empty( $item_type ) && 'groups' === $item_type ) {
-			$data['is_delete'] = true;
+			$data['is_delete'] = $this->bb_rest_can_delete_group_topic( $item_id );
 
 			$data['can_post'] = false;
 			if (
