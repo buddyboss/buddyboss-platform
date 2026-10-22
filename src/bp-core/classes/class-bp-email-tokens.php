@@ -25,7 +25,7 @@ class BP_Email_Tokens {
 	 * several senders.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] No longer written from email tokens; read only as the last fallback.
+	 * @since BuddyBoss 3.6.2 No longer written from email tokens; read only as the last fallback.
 	 */
 	protected $_message_sender_id = false;
 
@@ -1020,7 +1020,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token message
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] Resolves the sender per email instead of caching the first sender of the request.
+	 * @since BuddyBoss 3.6.2 Resolves the sender per email instead of caching the first sender of the request.
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
@@ -1393,7 +1393,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token sender.url
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @since BuddyBoss [BBVERSION] Resolves the sender per email instead of caching the first sender of the request.
+	 * @since BuddyBoss 3.6.2 Resolves the sender per email instead of caching the first sender of the request.
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
@@ -1998,7 +1998,7 @@ class BP_Email_Tokens {
 	 *
 	 * @return string html for the output.
 	 *
-	 * @since BuddyBoss [BBVERSION] Reads the stored sender through the memoised message lookup.
+	 * @since BuddyBoss 3.6.2 Reads the stored sender through the memoised message lookup.
 	 */
 	public function token__sender_name( $bp_email, $formatted_tokens, $tokens ) {
 		$output = $tokens['sender.name'] ?? '';
@@ -2823,7 +2823,7 @@ class BP_Email_Tokens {
 	 * Generate the output of media/document/video/GIF preview for the notification.
 	 *
 	 * @since BuddyBoss 2.4.40
-	 * @since BuddyBoss [BBVERSION] Message media previews use the signed receiver preview URL.
+	 * @since BuddyBoss 3.6.2 Message media previews use the signed receiver preview URL.
 	 *
 	 * @param int    $object_id Post ID.
 	 * @param array  $tokens    Token array.
@@ -3108,7 +3108,7 @@ class BP_Email_Tokens {
 	 * token, then the sender stored for the `message_id` token, then the sender primed by
 	 * `messages_message_sent` for producers that pass neither.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param array $tokens Email tokens.
 	 *
@@ -3133,7 +3133,7 @@ class BP_Email_Tokens {
 	 * token__message() needs both for the same message, so they are read in one query. A
 	 * message's thread and sender never change, so the memo needs no invalidation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int $message_id Message ID.
 	 *

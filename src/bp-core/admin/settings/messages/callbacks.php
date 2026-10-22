@@ -44,7 +44,7 @@ function bb_messages_sanitize_delay_time( $value ) {
  * option values from the database.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss [BBVERSION] Schedules the event directly; bp_core_schedule_cron() cannot schedule after `bp_init`.
+ * @since BuddyBoss 3.6.2 Schedules the event directly; bp_core_schedule_cron() cannot schedule after `bp_init`.
  *                               Schedules only while delayed emails are in effect (bb_check_delay_email_notification()).
  *                               Clears every scheduled occurrence before rescheduling.
  *

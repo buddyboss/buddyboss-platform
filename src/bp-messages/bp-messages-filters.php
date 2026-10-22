@@ -1127,7 +1127,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  * Re-create the delayed message email event when it is missing.
  *
  * With delayed emails on, new-message emails are only sent by this event, so a site
- * without it sends none. Saving the Settings 2.0 Messages panel from 3.0.0 until [BBVERSION] removed
+ * without it sends none. Saving the Settings 2.0 Messages panel from 3.0.0 until 3.6.2 removed
  * the event without re-adding it, and nothing repaired it on upgrade. This checks on every
  * load and schedules the event only when none exists, so an existing schedule is never
  * changed. Only the root blog, where the delay settings live, gets the event.
@@ -1137,7 +1137,7 @@ add_action( 'bp_init', 'bb_schedule_event_on_update_notification_settings', 2 );
  * directly rather than through bp_core_schedule_cron(), so the BP_Core_Cron singleton is not
  * built earlier than on release, which would start scheduling unrelated declared crons.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  */
 function bb_messages_maybe_schedule_digest_email_notifications() {
 
@@ -1194,7 +1194,7 @@ add_action( 'bp_init', 'bb_messages_maybe_schedule_digest_email_notifications', 
  * values are compared through the same filter bb_delay_email_notifications_enabled() applies,
  * so nothing is recorded when a site forces the delay on or off with that filter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param mixed $old_value Previous value of the delay option.
  * @param mixed $value     New value of the delay option.
@@ -1221,7 +1221,7 @@ add_action( 'update_option_delay_email_notification', 'bb_messages_record_delay_
  * Without this, bb_digest_message_email_notifications() would treat everything before the delay
  * was turned back on as off, and skip messages that were still waiting for the digest.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param string $option Option name.
  * @param mixed  $value  Value of the added option.
@@ -1236,7 +1236,7 @@ add_action( 'add_option_delay_email_notification', 'bb_messages_record_delay_ema
  * Prepare the email notification content.
  *
  * @since BuddyBoss 2.1.4
- * @since BuddyBoss [BBVERSION] Sends nothing while delayed emails are not in effect, and skips
+ * @since BuddyBoss 3.6.2 Sends nothing while delayed emails are not in effect, and skips
  *                              messages sent while the delay was last turned off.
  */
 function bb_digest_message_email_notifications() {

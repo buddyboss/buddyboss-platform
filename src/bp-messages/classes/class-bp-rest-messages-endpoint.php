@@ -1335,7 +1335,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] Honours another user_id only for moderators and deletes the meta of every message.
+	 * @since BuddyBoss 3.6.2 Honours another user_id only for moderators and deletes the meta of every message.
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/messages/:id Delete Thread
 	 * @apiName        DeleteBBThread

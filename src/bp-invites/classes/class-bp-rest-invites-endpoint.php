@@ -582,7 +582,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] Only the inviter or a moderator may revoke an invite.
+	 * @since BuddyBoss 3.6.2 Only the inviter or a moderator may revoke an invite.
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(

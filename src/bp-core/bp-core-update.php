@@ -4704,7 +4704,7 @@ function bb_install_addons_bundle_on_upgrade() {
  * Responses cached before the update still hold the empty preview for up to 30 days, so
  * clear them once on the upgrade (PROD-10630).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @return void
  */

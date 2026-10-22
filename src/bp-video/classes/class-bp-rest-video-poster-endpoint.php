@@ -347,7 +347,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	 * Create Video poster.
 	 *
 	 * @since          0.1.0
-	 * @since BuddyBoss [BBVERSION] Only accepts this video's previews or the user's uploaded thumbnails.
+	 * @since BuddyBoss 3.6.2 Only accepts this video's previews or the user's uploaded thumbnails.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -525,7 +525,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	 * Delete Video poster.
 	 *
 	 * @since          0.1.0
-	 * @since BuddyBoss [BBVERSION] Only deletes this video's custom thumbnail or the user's unsaved upload.
+	 * @since BuddyBoss 3.6.2 Only deletes this video's custom thumbnail or the user's unsaved upload.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *

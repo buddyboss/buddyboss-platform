@@ -3661,7 +3661,7 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
  * are read from the database (not from the cached helpers or the
  * `bp_media_ids` meta) so the check reflects the delete that just happened.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param BP_Activity_Activity|int $comment Activity comment object or ID.
  *
@@ -3718,7 +3718,7 @@ function bb_activity_comment_has_remaining_content( $comment ) {
 	 * Filters whether an activity comment still has content after one of its
 	 * attachments was deleted. Return true to keep the comment.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param bool                 $has_content Whether the comment still has text or attachments.
 	 * @param BP_Activity_Activity $comment     The activity comment.
@@ -3738,7 +3738,7 @@ function bb_activity_comment_has_remaining_content( $comment ) {
  * all three keys are deleted. Meta for the other attachment types is not
  * touched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.6.2
  *
  * @param int    $comment_id  Activity comment ID.
  * @param string $type        Attachment type: 'media', 'video' or 'document'.
@@ -3776,7 +3776,7 @@ function bb_activity_comment_remove_deleted_attachment_meta( $comment_id, $type,
 	 * refresh anything that shows the comment or its thread, such as the
 	 * App API cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int    $comment_id  Activity comment ID.
 	 * @param string $type        Attachment type: 'media', 'video' or 'document'.
@@ -7551,7 +7551,7 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 * and `show_hidden => true` must call this first. Comments are checked against their root post,
 	 * and the hidden media/video/document sub-activities of a multi-item post against their parent.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.6.2
 	 *
 	 * @param int|BP_Activity_Activity $activity Activity ID or object.
 	 * @param int                      $user_id  User ID. Default the logged-in user.
@@ -7623,7 +7623,7 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 		/**
 		 * Filters whether a user may view an activity item.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.6.2
 		 *
 		 * @param bool                 $can_view Whether the user may view the activity.
 		 * @param BP_Activity_Activity $activity Activity object.
