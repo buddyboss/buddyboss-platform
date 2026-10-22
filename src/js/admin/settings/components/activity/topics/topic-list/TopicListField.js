@@ -289,6 +289,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 			} );
 			ajaxRequest( 'bb_update_topics_order', {
 				topic_ids: topicIds,
+				item_type: 'activity',
 				nonce: nonces.order || '',
 			} ).then( function ( response ) {
 				if ( ! response.success ) {

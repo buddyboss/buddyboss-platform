@@ -413,6 +413,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			} );
 			topicAjaxFetch( 'bb_update_topics_order', {
 				topic_ids: topicIds,
+				item_id: groupId,
+				item_type: 'groups',
 			}, noncesRef.current.reorder || '' ).then( function ( response ) {
 				if ( ! response.success ) {
 					setTopics( previousTopics );
