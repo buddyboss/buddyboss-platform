@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from '@wordpress/element';
 import { Button, Modal, Spinner } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { getMemberReport } from '../../utils/ajax';
 import { safeUrl } from '../../utils/sanitize';
 
@@ -117,11 +117,19 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 							<div className="bb-admin-view-report-modal__stats">
 								<span className="bb-admin-view-report-modal__stat">
 									<i className="bb-icons-rl bb-icons-rl-flag"></i>
-									{ report.reports + ' ' + ( report.reports === 1 ? __( 'report', 'buddyboss' ) : __( 'reports', 'buddyboss' ) ) }
+									{ sprintf(
+										/* translators: %s: number of reports. */
+										_n( '%s report', '%s reports', report.reports, 'buddyboss' ),
+										report.reports
+									) }
 								</span>
 								<span className="bb-admin-view-report-modal__stat">
 									<i className="bb-icons-rl bb-icons-rl-prohibit"></i>
-									{ report.blocks + ' ' + ( report.blocks === 1 ? __( 'block', 'buddyboss' ) : __( 'blocks', 'buddyboss' ) ) }
+									{ sprintf(
+										/* translators: %s: number of blocks. */
+										_n( '%s block', '%s blocks', report.blocks, 'buddyboss' ),
+										report.blocks
+									) }
 								</span>
 								{ report.is_suspended && (
 									<span className="bb-admin-view-report-modal__suspended-badge">

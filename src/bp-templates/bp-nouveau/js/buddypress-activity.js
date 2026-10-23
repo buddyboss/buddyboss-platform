@@ -1169,7 +1169,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'delete-activity' ) || target.hasClass( 'acomment-delete' ) || target.hasClass( 'spam-activity' ) || target.hasClass( 'spam-activity-comment' ) ) {
 				var activity_comment_li = target.closest( '[data-bp-activity-comment-id]' ),
 					activity_comment_id = activity_comment_li.data( 'bp-activity-comment-id' ),
-					li_parent, comment_count_span, comment_count, show_all_a, deleted_comments_count = 0;
+					li_parent, comment_count_span, comment_count, show_all_a;
 
 				commentsList = target.closest( '.activity-comments' );
 				commentsList.addClass( 'active' );
@@ -1234,45 +1234,43 @@ window.bp = window.bp || {};
 							}
 
 							if ( activity_comment_id ) {
-								deleted_comments_count = 1;
-								var hidden_comments_count = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' );
+								self.updateCommentCountOnDelete( activity_comment_li, activity_item, activity_state, comments_text );
+							}
 
-								// Move the form if needed.
-								activity_item.append( activity_comment_li.find( 'form' ) );
+							// Deleting the activity from inside the "view more comments"
+							// modal removes only the modal's copy of the entry below -
+							// the feed's copy stays stale and the modal is left open as
+							// an empty shell. Drop the feed copy, close the modal through
+							// its real close button, and anchor the feed on the deleted
+							// post's neighbor so the user lands at the right position.
+							// The close empties the modal list, so the slideUp below runs
+							// on a detached node for this path - intentional no-op.
+							if ( ! ajaxData.is_comment && li_parent.closest( '#activity-modal' ).length ) {
+								var $feedCopy   = $( '#activity-stream li.activity-item[data-bp-activity-id="' + ajaxData.id + '"]' );
+								var $feedAnchor = $feedCopy.prevAll( 'li.activity-item:not(.activity-popup)' ).first();
+								if ( ! $feedAnchor.length ) {
+									$feedAnchor = $feedCopy.nextAll( 'li.activity-item:not(.activity-popup)' ).first();
+								}
 
-								// Count child comments if there are some.
-								$.each(
-									activity_comment_li.find( 'li.comment-item' ),
-									function() {
-										deleted_comments_count += 1;
-									}
-								);
+								// A pin toggled from inside the modal is moot once the post
+								// is deleted - left set, the close-button's sync handler
+								// reloads the whole feed over the anchor scroll below.
+								bp.Nouveau.Activity.activityPinHasUpdates = false;
 
-								deleted_comments_count += hidden_comments_count !== undefined ? parseFloat( hidden_comments_count ) : 0;
+								$feedCopy.remove();
 
-								// Update the button count.
-								comment_count_span = activity_state.find( 'span.comments-count' );
-								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
-								comment_count      = Number( comment_count - deleted_comments_count );
-
-								if ( comments_text.length ) {
-									var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-									comments_text.text( label.replace( '%d', comment_count ) );
+								var $modalCloseButton = $( '#activity-modal .bb-modal-activity-header .bb-close-action-popup' );
+								if ( $modalCloseButton.length ) {
+									$modalCloseButton.trigger( 'click' );
 								} else {
-									comment_count_span.parent( '.has-comments' ).removeClass( 'has-comments' );
+									// A theme override may rename the close control - never
+									// leave the emptied modal open.
+									$( '#activity-modal' ).closest( '.bb-activity-model-wrapper' ).hide();
 								}
 
-								// Update the show all count.
-								show_all_a = activity_item.find( 'li.show-all a' );
-								if ( show_all_a.length ) {
-									show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
-								}
-
-								// Clean up the parent activity classes.
-								if ( 0 === comment_count ) {
-									activity_item.removeClass( 'has-comments' );
-									activity_state.removeClass( 'has-comments' );
-									comments_text.empty();
+								if ( $feedAnchor.length ) {
+									var adminBar = $( '#wpadminbar' ).length !== 0 ? $( '#wpadminbar' ).innerHeight() : 0;
+									$( 'html, body' ).animate( { scrollTop: parseInt( $feedAnchor.offset().top ) - ( 80 + adminBar ) }, 300 );
 								}
 							}
 
@@ -1766,7 +1764,11 @@ window.bp = window.bp || {};
 
 				comment_data.content = comment_data.content.replace( /&nbsp;/g, ' ' );
 
-				if ( form.hasClass( 'acomment-edit' ) ) {
+				// Read the edit state now: cancelling while the request is in flight resets the form.
+				var wasCommentEdit = form.hasClass( 'acomment-edit' );
+				var form_item_id   = form.attr( 'data-item-id' );
+
+				if ( wasCommentEdit ) {
 					comment_data.edit_comment = true;
 				}
 
@@ -1822,8 +1824,7 @@ window.bp = window.bp || {};
 							}
 							form.find( '#ac-input-' + form_activity_id ).html( '' );
 
-							if ( form.hasClass( 'acomment-edit' ) ) {
-								var form_item_id = form.attr( 'data-item-id' );
+							if ( wasCommentEdit ) {
 								form.closest( '.activity-comments' ).append( form );
 								if ( isInsideModal ) {
 									$( '#activity-modal' ).find( 'li#acomment-' + form_item_id ).replaceWith( the_comment );
@@ -1878,7 +1879,7 @@ window.bp = window.bp || {};
 							// Trigger GIF autoplay check for newly added content
 							bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
-							if ( ! form.hasClass( 'acomment-edit' ) ) {
+							if ( ! wasCommentEdit ) {
 								// Set the new count.
 								comment_count_span = activity_state.find( 'span.comments-count' );
 								comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
@@ -2422,6 +2423,90 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+
+		/**
+		 * Take a deleted activity comment out of its parent activity's comment
+		 * count, comment label and "Show all X comments" link.
+		 *
+		 * Counts the comment itself, its rendered replies and the replies still
+		 * hidden behind "View more replies". Call it before the comment `li` is
+		 * removed from the DOM.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityCommentLi The comment `li` being removed.
+		 * @param {jQuery} activityItem      The parent activity `li`.
+		 * @param {jQuery} activityState     The parent activity's `.activity-state`.
+		 * @param {jQuery} commentsText      The parent activity's `.comments-count`.
+		 *
+		 * @return {number} The updated comment count.
+		 */
+		updateCommentCountOnDelete: function( activityCommentLi, activityItem, activityState, commentsText ) {
+			// Move the form if needed.
+			activityItem.append( activityCommentLi.find( 'form' ) );
+
+			return this.decreaseActivityCommentCount( activityItem, activityState, commentsText, this.getDeletedCommentsCount( activityCommentLi ) );
+		},
+
+		/**
+		 * Number of comments a comment delete removes: the comment itself, its
+		 * rendered replies and the replies still hidden behind "View more replies".
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityCommentLi The comment `li` being removed.
+		 *
+		 * @return {number} The number of deleted comments.
+		 */
+		getDeletedCommentsCount: function( activityCommentLi ) {
+			var hiddenCommentsCount = activityCommentLi.find( '.acomments-view-more' ).data( 'child-count' );
+
+			return 1 + activityCommentLi.find( 'li.comment-item' ).length + ( hiddenCommentsCount !== undefined ? parseFloat( hiddenCommentsCount ) : 0 );
+		},
+
+		/**
+		 * Lower an activity's comment count, comment label and "Show all X
+		 * comments" link by the given number of deleted comments.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityItem         The parent activity `li`.
+		 * @param {jQuery} activityState        The parent activity's `.activity-state`.
+		 * @param {jQuery} commentsText         The parent activity's `.comments-count`.
+		 * @param {number} deletedCommentsCount The number of deleted comments.
+		 *
+		 * @return {number} The updated comment count.
+		 */
+		decreaseActivityCommentCount: function( activityItem, activityState, commentsText, deletedCommentsCount ) {
+			var commentCountSpan, commentCount, showAllLink, label;
+
+			// Update the button count.
+			commentCountSpan = activityState.find( 'span.comments-count' );
+			commentCount     = commentCountSpan.text().length ? commentCountSpan.text().match( /\d+/ )[0] : 0;
+			commentCount     = Number( commentCount - deletedCommentsCount );
+
+			if ( commentsText.length ) {
+				label = commentCount > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
+				commentsText.text( label.replace( '%d', commentCount ) );
+			} else {
+				commentCountSpan.parent( '.has-comments' ).removeClass( 'has-comments' );
+			}
+
+			// Update the show all count.
+			showAllLink = activityItem.find( 'li.show-all a' );
+			if ( showAllLink.length ) {
+				showAllLink.html( BP_Nouveau.show_x_comments.replace( '%d', commentCount ) );
+			}
+
+			// Clean up the parent activity classes.
+			if ( 0 === commentCount ) {
+				activityItem.removeClass( 'has-comments' );
+				activityState.removeClass( 'has-comments' );
+				commentsText.empty();
+			}
+
+			return commentCount;
 		},
 
 		/**
