@@ -121,6 +121,7 @@ window.bp = window.bp || {};
 			this.draft_unstored_keys        = {};
 			this.draft_shown_handback       = {};
 			this.draft_held_retry_keys      = {};
+			this.draft_unconfirmed_keys     = {};
 			this.bbp_lead_topic_tags        = '';
 			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};
 			this.topic_reply_draft          = {
@@ -1357,6 +1358,13 @@ window.bp = window.bp || {};
 				// What this save sends, to mark the local copy synced once stored.
 				var draft_sent_data = ( is_discard_request || ! draft_payload.data ) ? null : $.extend( true, {}, draft_payload.data );
 
+				// Until the server confirms this save, its text counts as typed
+				// here (guardHandbackCopy()): draft_content_changed is reset when
+				// a save is sent, not when it is stored.
+				if ( ! is_discard_request ) {
+					this.draft_unconfirmed_keys[ draft_key ] = true;
+				}
+
 				// Send data to server.
 				this.draft_ajax_request = $.ajax(
 					{
@@ -1439,6 +1447,7 @@ window.bp = window.bp || {};
 
 							if ( ! is_discard_request ) {
 								delete self.draft_held_retry_keys[ draft_key ];
+								delete self.draft_unconfirmed_keys[ draft_key ];
 								self.markLocalDraftSynced( draft_key, draft_sent_data );
 							}
 
@@ -1810,9 +1819,15 @@ window.bp = window.bp || {};
 		 * stored a handed-back draft under this form's key, marked with its
 		 * revision (`_draft_handback`). A form that did not show it is not built
 		 * on it, and its local save would replace the only copy this browser
-		 * holds (V-09). The form's text is added to that copy instead and saving
-		 * stops, with the conflict notice. With nothing typed, the copy is left
-		 * alone.
+		 * holds (V-09). When the member changed the form since this page
+		 * restored or last sent its draft, or a sent save is not confirmed yet
+		 * (`draft_unconfirmed_keys`), that text is added to the copy instead and
+		 * saving stops, with the conflict notice. Otherwise the form only shows
+		 * a draft this browser already holds (another tab showing the same
+		 * restored draft, say): the copy is left alone, with no notice, and
+		 * nothing is sent, because the autosave sends only changed text
+		 * (NEW-HF-2). The member's next change takes the conflict path above;
+		 * a reload restores the copy.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1829,7 +1844,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( bbDraftDataHasPayload( data ) ) {
+			if ( bbDraftDataHasPayload( data ) && ( this.draft_content_changed || this.draft_unconfirmed_keys[ key ] ) ) {
 				this.draft_conflict_keys[ key ] = true;
 				delete this.draft_pending_keys[ key ];
 				this.clearTopicReplyDraftIntervals();
@@ -3285,6 +3300,8 @@ window.bp = window.bp || {};
 			base_blocks,
 			extra_blocks,
 			tail,
+			start,
+			run,
 			shared    = 0;
 
 		if ( ! bbDraftHtmlHasContent( extra ) || extra === base_html || -1 !== base_html.indexOf( extra ) ) {
@@ -3301,15 +3318,24 @@ window.bp = window.bp || {};
 			return extra;
 		}
 
-		// Leading blocks both texts share are not repeated, and nothing is
-		// added when the rest already ends the handed-back text (an earlier
-		// merge of the same local text).
+		// The longest run of the local text's leading blocks that the
+		// handed-back text already holds is not repeated: at its start (both
+		// texts begin with the same restored draft) or further in (the
+		// handed-back text is a merge that already holds an older copy of
+		// this local text, NEW-HF-1). Nothing is added when the rest already
+		// ends the handed-back text (an earlier merge of the same local text).
 		base_blocks  = bbDraftHtmlBlocks( base_html );
 		extra_blocks = bbDraftHtmlBlocks( extra );
 
 		if ( base_blocks && extra_blocks ) {
-			while ( shared < base_blocks.length && shared < extra_blocks.length && base_blocks[ shared ] === extra_blocks[ shared ] ) {
-				shared++;
+			for ( start = 0; start < base_blocks.length; start++ ) {
+				run = 0;
+
+				while ( run < extra_blocks.length && start + run < base_blocks.length && base_blocks[ start + run ] === extra_blocks[ run ] ) {
+					run++;
+				}
+
+				shared = Math.max( shared, run );
 			}
 
 			tail = extra_blocks.slice( shared );
@@ -3497,9 +3523,12 @@ window.bp = window.bp || {};
 	 *
 	 * The entry keeps its revision; the local text is appended after its text
 	 * and the attachment lists are joined by ID. The result is marked pending
-	 * and based on nothing (`_draft_base` ['none']): it matches no stored
-	 * draft, so a save over a newer stored one is refused instead of replacing
-	 * it.
+	 * and based on the entry's revision (and the entry's own base, when the
+	 * entry is a local copy): a save of it goes through while the entry is
+	 * held, and is refused over any other stored version. It also carries the
+	 * held revision (`_draft_handback`) and the held draft's own data
+	 * (`_draft_handback_data`), so a composer that never showed it does not
+	 * write over it, and publishing other text keeps it.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

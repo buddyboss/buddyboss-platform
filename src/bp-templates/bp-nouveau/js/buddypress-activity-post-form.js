@@ -81,6 +81,11 @@ window.bp = window.bp || {};
 	bp.draft_shown_handback    = '';
 	bp.draft_held_retry        = false;
 
+	// A save sent from this page that the server has not confirmed yet. Its
+	// text counts as typed here (guardHandbackCopy()): bp.draft_content_changed
+	// is reset when a save is sent, not when it is stored.
+	bp.draft_save_unconfirmed = false;
+
 	/**
 	 * [Activity description]
 	 *
@@ -1971,9 +1976,14 @@ window.bp = window.bp || {};
 		 * revision (`_draft_handback`). A composer that did not show it is not
 		 * built on it, and its local save would replace the only copy this
 		 * browser holds, before the acknowledgement it queued lets the server
-		 * drop its own (V-09). The composer's text is added to that copy
-		 * instead and saving stops, with the conflict notice. With nothing
-		 * typed, the copy is just left alone.
+		 * drop its own (V-09). When the member changed the composer since this
+		 * page restored or last sent its draft, that text is added to the copy
+		 * instead and saving stops, with the conflict notice. Otherwise the
+		 * composer only shows a draft this browser already holds (another tab
+		 * showing the same restored draft, say): the copy is left alone, with
+		 * no notice, and nothing is sent, because the autosave sends only
+		 * changed text (NEW-HF-2). The member's next change takes the conflict
+		 * path above; a reload restores the copy.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1989,7 +1999,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( this.draftDataHasPayload( draft.data ) ) {
+			if ( this.draftDataHasPayload( draft.data ) && ( bp.draft_content_changed || bp.draft_save_unconfirmed ) ) {
 				bp.draft_conflict     = true;
 				bp.draft_pending_sync = false;
 				this.clearDraftInterval();
@@ -2426,6 +2436,8 @@ window.bp = window.bp || {};
 				base_blocks,
 				extra_blocks,
 				tail,
+				start,
+				run,
 				shared    = 0;
 
 			if ( ! this.draftHtmlHasContent( extra ) || extra === base_html || -1 !== base_html.indexOf( extra ) ) {
@@ -2442,15 +2454,24 @@ window.bp = window.bp || {};
 				return extra;
 			}
 
-			// Leading blocks both texts share are not repeated, and nothing is
-			// added when the rest already ends the handed-back text (an earlier
-			// merge of the same local text).
+			// The longest run of the local text's leading blocks that the
+			// handed-back text already holds is not repeated: at its start (both
+			// texts begin with the same restored draft) or further in (the
+			// handed-back text is a merge that already holds an older copy of
+			// this local text, NEW-HF-1). Nothing is added when the rest already
+			// ends the handed-back text (an earlier merge of the same local text).
 			base_blocks  = this.draftHtmlBlocks( base_html );
 			extra_blocks = this.draftHtmlBlocks( extra );
 
 			if ( base_blocks && extra_blocks ) {
-				while ( shared < base_blocks.length && shared < extra_blocks.length && base_blocks[ shared ] === extra_blocks[ shared ] ) {
-					shared++;
+				for ( start = 0; start < base_blocks.length; start++ ) {
+					run = 0;
+
+					while ( run < extra_blocks.length && start + run < base_blocks.length && base_blocks[ start + run ] === extra_blocks[ run ] ) {
+						run++;
+					}
+
+					shared = Math.max( shared, run );
 				}
 
 				tail = extra_blocks.slice( shared );
@@ -3609,6 +3630,10 @@ window.bp = window.bp || {};
 				// What this save sends, to mark the local copy synced once stored.
 				var draft_sent_json = isDiscardRequest ? '' : bp.Nouveau.Activity.postForm.canonicalDraftJson( draft_payload.data );
 
+				if ( ! isDiscardRequest ) {
+					bp.draft_save_unconfirmed = true;
+				}
+
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
 					function ( response ) {
@@ -3628,7 +3653,8 @@ window.bp = window.bp || {};
 						}
 
 						if ( ! isDiscardRequest ) {
-							bp.draft_held_retry = false;
+							bp.draft_held_retry       = false;
+							bp.draft_save_unconfirmed = false;
 							bp.Nouveau.Activity.postForm.markLocalDraftSynced( draft_inflight.key, draft_sent_json );
 						}
 					}
