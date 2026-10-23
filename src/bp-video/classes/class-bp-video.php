@@ -1009,6 +1009,7 @@ class BP_Video {
 	 * Otherwise use the filters.
 	 *
 	 * @since BuddyBoss 1.7.0
+	 * @since BuddyBoss 3.6.2 Deletes stored poster / custom thumbnails only when owned by the video owner.
 	 *
 	 * @param array $args          {
 	 *                             An array of arguments.
@@ -1180,23 +1181,26 @@ class BP_Video {
 					}
 				}
 
+				// The video row that owns this attachment, used to validate stored thumbnail IDs.
+				$attachment_video = current( wp_list_filter( $videos, array( 'attachment_id' => $attachment_id ) ) );
+
 				// Delete poster images.
 				$get_auto_generated_thumbnails = get_post_meta( $attachment_id, 'video_preview_thumbnails', true );
-				if ( ! empty( $get_auto_generated_thumbnails ) ) {
+				if ( ! empty( $get_auto_generated_thumbnails ) && is_array( $get_auto_generated_thumbnails ) ) {
 					foreach ( $get_auto_generated_thumbnails as $key => $attachment ) {
 						if ( is_array( $attachment ) && ! empty( $attachment ) ) {
 							foreach ( $attachment as $thumb_id ) {
 								wp_delete_attachment( $thumb_id, true );
 							}
-						} elseif ( ! empty( $attachment ) ) {
-							wp_delete_attachment( $attachment, true );
+						} elseif ( ! empty( $attachment ) && $attachment_video && bb_video_can_delete_stored_thumbnail( $attachment_video, $attachment ) ) {
+							wp_delete_attachment( absint( $attachment ), true );
 						}
 					}
 				}
 
 				$get_existing = get_post_meta( $attachment_id, 'bp_video_preview_thumbnail_id', true );
-				if ( ! $get_existing ) {
-					wp_delete_attachment( $get_existing, true );
+				if ( ! empty( $get_existing ) && $attachment_video && bb_video_can_delete_stored_thumbnail( $attachment_video, $get_existing ) ) {
+					wp_delete_attachment( absint( $get_existing ), true );
 				}
 
 				if ( empty( $from ) || 'activity' === $from ) {
@@ -1208,23 +1212,25 @@ class BP_Video {
 		// delete related activity.
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) && ! $bb_activity_comment_edit ) {
 
-			foreach ( $activity_ids as $activity_id ) {
+			// The same activity can be listed twice: once from the item's own
+			// activity and once from its attachment's parent activity.
+			foreach ( array_unique( $activity_ids ) as $activity_id ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 
 				// Check access.
 				if ( bp_activity_user_can_delete( $activity ) ) {
+
+					// Keep an activity comment that still has text or other attachments.
+					if ( 'activity_comment' === $activity->type && bb_activity_comment_has_remaining_content( $activity ) ) {
+						bb_activity_comment_remove_deleted_attachment_meta( $activity->id, 'video', $video_ids );
+						continue;
+					}
+
 					/** This action is documented in bp-activity/bp-activity-actions.php */
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 					// Deleting an activity comment.
 					if ( 'activity_comment' === $activity->type ) {
-
-						// Do not delete the activity if activity type is comment & have a multiple videos attached.
-						$video_ids = self::get_activity_video_id( $activity_id );
-						if ( ! empty( $video_ids ) && self::get_activity_attachment_id( $activity_id ) > 0 ) {
-							continue;
-						}
-
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );

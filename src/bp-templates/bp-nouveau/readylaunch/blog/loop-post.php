@@ -145,7 +145,8 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 			<?php endif; ?>
 		</div>
 		<div class="bb-rl-blog-card__author">
-			<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" class="item-avatar bb-rl-author-avatar">
+			<?php $bb_rl_blog_hp_attr = bb_get_hover_card_profile_attr( $bb_rl_blog_author_id ); ?>
+			<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" class="item-avatar bb-rl-author-avatar"<?php echo $bb_rl_blog_hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in bb_get_hover_card_profile_attr(). ?>>
 				<?php
 				if ( function_exists( 'bp_core_fetch_avatar' ) ) {
 					echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
@@ -159,10 +160,11 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 			</a>
 			<span class="bb-rl-author-name">
 				<?php
+				$bb_rl_blog_author_link = '<a href="' . esc_url( $bb_rl_blog_author_url ) . '"' . $bb_rl_blog_hp_attr . '>' . esc_html( $bb_rl_blog_author_name ) . '</a>';
 				printf(
 					/* translators: %s: linked author display name. */
 					esc_html__( 'By %s', 'buddyboss' ),
-					'<a href="' . esc_url( $bb_rl_blog_author_url ) . '">' . esc_html( $bb_rl_blog_author_name ) . '</a>'
+					$bb_rl_blog_author_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Anchor assembled from esc_url()/esc_html() parts; the hover attribute is escaped in bb_get_hover_card_profile_attr().
 				);
 				?>
 			</span>
