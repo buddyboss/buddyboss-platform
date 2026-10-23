@@ -494,8 +494,8 @@ class BP_Groups_Component extends BP_Component {
 			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
 		}
 
-		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab || 'videos' === $default_tab ) {
-			$default_tab = bp_is_active( 'media' ) ? $default_tab : 'members';
+		if ( in_array( $default_tab, array( 'photos', 'albums', 'documents', 'videos' ), true ) ) {
+			$default_tab = $this->bb_is_media_default_tab_available( $default_tab ) ? $default_tab : 'members';
 		} else {
 			$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
 		}
@@ -509,6 +509,14 @@ class BP_Groups_Component extends BP_Component {
 				$nav_order   = bp_nouveau_get_appearance_settings( 'group_nav_order' );
 				if ( is_array( $nav_order ) ) {
 					foreach ( $nav_order as $slug ) {
+						// Skip media tabs whose component or group support is unavailable.
+						if (
+							in_array( $slug, array( 'photos', 'albums', 'documents', 'videos' ), true ) &&
+							! $this->bb_is_media_default_tab_available( $slug )
+						) {
+							continue;
+						}
+
 						if ( ! in_array( $slug, $hidden_tabs, true ) ) {
 							$default_tab = $slug;
 							break;
@@ -560,6 +568,38 @@ class BP_Groups_Component extends BP_Component {
 		if ( bp_is_current_action( $this->default_extension ) && empty( $bp->action_variables ) ) {
 			unset( $bp->canonical_stack['action'] );
 		}
+	}
+
+	/**
+	 * Whether a media-family group tab can be used as the group's default tab.
+	 *
+	 * Videos and Documents are provided by the BuddyBoss Add-ons plugin, so they can be
+	 * unavailable while Media stays active. A default tab pointing at a missing sub-nav
+	 * would send every group home page to a 404.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $tab Tab slug: 'photos', 'albums', 'documents' or 'videos'.
+	 *
+	 * @return bool True when the tab's sub-nav is registered for groups.
+	 */
+	private function bb_is_media_default_tab_available( $tab ) {
+		if ( ! bp_is_active( 'media' ) ) {
+			return false;
+		}
+
+		switch ( $tab ) {
+			case 'photos':
+				return bp_is_group_media_support_enabled();
+			case 'albums':
+				return bp_is_group_media_support_enabled() && bp_is_group_albums_support_enabled();
+			case 'documents':
+				return bp_is_active( 'document' ) && bp_is_group_document_support_enabled();
+			case 'videos':
+				return bp_is_active( 'video' ) && bp_is_group_video_support_enabled();
+		}
+
+		return false;
 	}
 
 	/**
@@ -799,7 +839,7 @@ class BP_Groups_Component extends BP_Component {
 				}
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+			if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && bp_is_group_document_support_enabled() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Documents', 'buddyboss' ),
 					'slug'            => 'documents',
@@ -813,7 +853,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+			if ( bp_is_active( 'media' ) && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
 				// Checked if order already set before, New menu(video) will be added at last
 				$video_menu_position = 22;
 				$orders              = get_option( 'bp_nouveau_appearance' );

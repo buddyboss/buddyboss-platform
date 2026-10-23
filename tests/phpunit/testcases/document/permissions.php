@@ -17,6 +17,11 @@ class BP_Tests_Document_Permissions extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		// Document folders ship in BuddyBoss Add-ons.
+		if ( ! function_exists( 'bp_folder_add' ) ) {
+			$this->markTestSkipped( 'Document folders are provided by BuddyBoss Add-ons, which is not loaded.' );
+		}
+
 		bp_update_option( 'bp_media_group_document_support', 1 );
 		add_filter( 'bp_is_active', array( $this, 'force_components_active' ), 10, 2 );
 	}

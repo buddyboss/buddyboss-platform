@@ -780,6 +780,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		}
 
 		if (
+			bp_is_active( 'video' ) &&
 			bp_has_video(
 				array(
 					'include'  => implode( ',', $media_ids ),
@@ -1294,6 +1295,11 @@ function bp_nouveau_ajax_media_description_save() {
 		wp_send_json_error( $response );
 	}
 
+	// Only logged-in owners can edit a description; the logged-out nonce is shared.
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
 	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
 	$description   = sanitize_textarea_field( wp_unslash( $_POST['description'] ) );
 
@@ -1344,18 +1350,20 @@ function bp_nouveau_ajax_media_description_save() {
 		}
 	}
 
-	// The attachment must belong to an existing media, video or document item the user can edit.
+	// Deny by default: the attachment must belong to an existing media, video or document
+	// item the user can edit. Video and document items are only editable while their
+	// component (provided by BuddyBoss Add-ons) is active and loaded.
 	$can_edit           = false;
 	$permission_message = esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' );
 
 	if ( ! empty( $media_id ) ) {
 		$media    = new BP_Media( $media_id );
 		$can_edit = ! empty( $media->id ) && (int) $media->attachment_id === (int) $attachment_id && bp_media_user_can_edit( $media );
-	} elseif ( ! empty( $video_id ) && class_exists( 'BP_Video' ) ) {
+	} elseif ( ! empty( $video_id ) && bp_is_active( 'video' ) && class_exists( 'BP_Video' ) && function_exists( 'bp_video_user_can_edit' ) ) {
 		$video              = new BP_Video( $video_id );
 		$can_edit           = ! empty( $video->id ) && (int) $video->attachment_id === (int) $attachment_id && bp_video_user_can_edit( $video );
 		$permission_message = esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' );
-	} elseif ( ! empty( $document_id ) && class_exists( 'BP_Document' ) ) {
+	} elseif ( ! empty( $document_id ) && bp_is_active( 'document' ) && class_exists( 'BP_Document' ) && function_exists( 'bp_document_user_can_edit' ) ) {
 		$document           = new BP_Document( $document_id );
 		$can_edit           = ! empty( $document->id ) && (int) $document->attachment_id === (int) $attachment_id && bp_document_user_can_edit( $document );
 		$permission_message = esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' );

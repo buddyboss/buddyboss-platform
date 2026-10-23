@@ -2629,7 +2629,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 		 * call, before the module loads at bp_include:20.
 		 */
 		$provider_available =
-			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			bb_addons_provides_module( 'pinned-posts' )
 			|| (
 				function_exists( 'bb_activity_pin_unpin_post' )
 				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' )
@@ -2858,7 +2858,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 		// licensed site would report emotions "available" with nothing behind it.
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
-			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| bb_addons_provides_module( 'reactions' )
 			|| (
 				function_exists( 'bp_register_reaction' )
 				&& function_exists( 'bbp_pro_is_license_valid' )
