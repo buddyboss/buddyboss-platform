@@ -287,8 +287,14 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 						'visibility' => xprofile_get_field_visibility_level( $field_id, $user_id ),
 					);
 
-					// Update the field data and visibility level.
-					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+					// Update the visibility level, but only for fields the current user
+					// may actually change. The renderer gates the visibility control on the
+					// same capability, so an ungated save here would let a hidden control's
+					// 'public' fallback (or a crafted POST) overwrite a locked field's
+					// admin-set level. The field value itself always saves.
+					if ( bb_xprofile_can_change_field_visibility( $field_id ) ) {
+						xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+					}
 					$field_updated = xprofile_set_field_data( $field_id, $user_id, $value, $is_required[ $field_id ] );
 
 					// We need to pass post value here.

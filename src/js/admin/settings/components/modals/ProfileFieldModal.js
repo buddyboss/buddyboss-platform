@@ -170,12 +170,18 @@ export function ProfileFieldModal( {
 	var allowCustomVisibility = allowCustomVisibilityState[ 0 ];
 	var setAllowCustomVisibility = allowCustomVisibilityState[ 1 ];
 
-	// Mirrors legacy `BP_XProfile_Field::is_default_field()` — true when the
-	// field is the Nickname (or First/Last when fullname format needs them).
-	// Hides Type, Required, Visibility, Profile Types, and Placeholder to
-	// match the legacy editor; loaded state values are preserved so the save
-	// payload still carries the locked-in defaults the server expects.
-	var isDefaultField = isEditing && !! field.is_default_field;
+	// Per-field section locks resolved server-side to mirror the LEGACY editor
+	// (PROD-10439): `is_settings_locked` (Nickname always; First Name when the
+	// display-name format needs it) hides Type, Required, Visibility and
+	// Placeholder; `hide_member_types` (primary field, undeletable fields, the
+	// Profile Type field) hides the Profile Types selector. These are narrower
+	// than `is_default_field` (a superset used for move/delete protection) —
+	// notably Last Name keeps its Visibility/Enforce, Requirement, Type and
+	// Profile Types controls under the "First Name & Last Name" format, as the
+	// legacy editor always offered them. Loaded state values are preserved so
+	// the save payload still carries the locked-in values the server expects.
+	var isSettingsLocked = isEditing && !! field.is_settings_locked;
+	var hideMemberTypes = isEditing && !! field.hide_member_types;
 
 	// Member types.
 	var memberTypeModeState = useState( function () {
@@ -772,7 +778,7 @@ export function ProfileFieldModal( {
 					/>
 				</div>
 
-				{ ! isDefaultField && (
+				{ ! isSettingsLocked && (
 				<div className="bb-admin-settings--divided-section">
 					{ /* Type */ }
 					<CustomSelectControl
@@ -1145,7 +1151,7 @@ export function ProfileFieldModal( {
 				/>
 
 				{ /* Placeholder (for text-like types) */ }
-				{ showPlaceholder && ! isDefaultField && (
+				{ showPlaceholder && ! isSettingsLocked && (
 					<TextControl
 						label={ __( 'Placeholder Text (Optional)', 'buddyboss' ) }
 						value={ placeholder }
@@ -1165,7 +1171,7 @@ export function ProfileFieldModal( {
 				/>
 
 				{ /* Member Types */ }
-				{ memberTypes.length > 0 && ! isDefaultField && (
+				{ memberTypes.length > 0 && ! hideMemberTypes && (
 					<div className="bb-pf-field-member-types">
 						<SelectControl
 							label={ __( 'Profile Types', 'buddyboss' ) }
@@ -1196,7 +1202,7 @@ export function ProfileFieldModal( {
 				) }
 
 				{ /* Visibility */ }
-				{ visibilityLevels.length > 0 && ! isDefaultField && (
+				{ visibilityLevels.length > 0 && ! isSettingsLocked && (
 					<div className="bb-pf-field-visibility bb-admin-settings--divided-section">
 						<SelectControl
 							label={ __( 'Visibility', 'buddyboss' ) }
@@ -1218,7 +1224,7 @@ export function ProfileFieldModal( {
 				) }
 
 				{ /* Required */ }
-				{ ! isDefaultField && (
+				{ ! isSettingsLocked && (
 					<CheckboxControl
 						label={ __( 'Make this field required', 'buddyboss' ) }
 						checked={ isRequired }
