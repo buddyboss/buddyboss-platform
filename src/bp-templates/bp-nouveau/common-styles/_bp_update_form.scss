@@ -226,8 +226,10 @@
 	}
 }
 
-// The same for the forum topic and reply forms.
-.bb-draft-save-feedback ~ .bb-draft-retention-note {
+// The same for the forum topic and reply forms. `.bp-feedback` raises this to
+// (0,3,0): at (0,2,0) it tied with `.bp-feedback:not(.custom-homepage-info)`
+// (_bp_info_messages.scss), which compiles later and so showed both notices.
+.bb-draft-save-feedback ~ .bb-draft-retention-note.bp-feedback {
 	display: none;
 }
 

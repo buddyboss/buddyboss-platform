@@ -1676,7 +1676,7 @@ a.layout-grid-view {
   display: none;
 }
 
-.bb-draft-save-feedback ~ .bb-draft-retention-note {
+.bb-draft-save-feedback ~ .bb-draft-retention-note.bp-feedback {
   display: none;
 }
 
