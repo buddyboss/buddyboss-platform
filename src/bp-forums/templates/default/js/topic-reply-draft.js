@@ -46,6 +46,13 @@ window.bp = window.bp || {};
 			this.snapshotInitialContent();
 			this.addListeners();
 			this.setupPasteImageGuard();
+
+			// The read failed and the input lock was just released: say so now,
+			// not at the first autosave tick 20 s later, when the member has
+			// already typed into a form whose saves will be refused (N-2).
+			if ( true === BP_Nouveau.forums.draft_fetch_failed ) {
+				this.showDraftFeedback( BP_Nouveau.forums.draft_fetch_failed_message || '' );
+			}
 		};
 
 		/**
@@ -3513,6 +3520,24 @@ window.bp = window.bp || {};
 		return '';
 	};
 
+	/**
+	 * Whether a local copy is stamped with another member.
+	 *
+	 * Same rule as the restore (#7): an ownerless copy is the release client's
+	 * and belongs to this member.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} copy Parsed local copy.
+	 * @return {boolean}
+	 */
+	var bbDraftCopyIsForeign = function ( copy ) {
+		var stored_owner  = copy && copy.bb_draft_owner ? parseInt( copy.bb_draft_owner, 10 ) : 0,
+			current_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
+
+		return !! ( stored_owner && current_owner && stored_owner !== current_owner );
+	};
+
 	// Identifies the local copies written by bbDraftStashTypedDuringFetch() on
 	// THIS page view, so the fetch can drop exactly those once it resolves.
 	var bbDraftInterimToken = String( Math.floor( Date.now() / 1000 ) ) + '-' + Math.random().toString( 36 ).slice( 2, 10 );
@@ -3558,7 +3583,7 @@ window.bp = window.bp || {};
 					existing = null;
 				}
 
-				if ( existing && 'object' === typeof existing && bbDraftInterimToken !== existing.bb_draft_interim ) {
+				if ( existing && 'object' === typeof existing && bbDraftInterimToken !== existing.bb_draft_interim && ! bbDraftCopyIsForeign( existing ) ) {
 					return;
 				}
 
@@ -3660,7 +3685,10 @@ window.bp = window.bp || {};
 	 */
 	var bbDraftLockFormsWithLocalCopy = function ( lock ) {
 		if ( ! lock ) {
-			forms.removeData( 'bbDraftLocked' );
+			forms.removeData( 'bbDraftLocked' )
+				.removeAttr( 'aria-busy' )
+				.removeClass( 'bb-draft-loading' )
+				.find( '.bb-draft-loading-note' ).remove();
 
 			return;
 		}
@@ -3681,8 +3709,23 @@ window.bp = window.bp || {};
 					existing = null;
 				}
 
-				if ( existing && 'object' === typeof existing && bbDraftInterimToken !== existing.bb_draft_interim ) {
-					$form.data( 'bbDraftLocked', true );
+				// Another member's copy is dropped, not restored, when the form
+				// starts (#7), so typing over it is kept: no lock (V-02).
+				if ( existing && 'object' === typeof existing && bbDraftInterimToken !== existing.bb_draft_interim && ! bbDraftCopyIsForeign( existing ) ) {
+					$form.data( 'bbDraftLocked', true )
+						.attr( 'aria-busy', 'true' )
+						.addClass( 'bb-draft-loading' );
+
+					// Say why typing is refused. The constructor only binds
+					// methods; start() is what wires the form up.
+					if ( BP_Nouveau.forums.draft_loading_message && ! $form.find( '.bb-draft-loading-note' ).length ) {
+						( new bp.Nouveau.TopicReplyDraft( $form ) ).insertDraftNotice(
+							$form,
+							$( '<div class="bb-draft-loading-note bp-messages bp-feedback info" role="status"></div>' )
+								.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
+								.append( $( '<p></p>' ).text( BP_Nouveau.forums.draft_loading_message ) )
+						);
+					}
 				}
 			}
 		);
