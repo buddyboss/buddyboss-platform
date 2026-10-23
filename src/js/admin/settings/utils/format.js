@@ -5,6 +5,8 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { getRichTextEditorContent } from '../components/common/RichTextEditor';
+
 /**
  * Format a number with comma-separated thousands.
  *
@@ -322,12 +324,10 @@ export function buildRegisteredFieldPayload( fields, values, itemId ) {
 
 		var val = values[ field.id ];
 
-		// For richtext fields, pull latest content from TinyMCE.
-		if ( 'richtext' === field.type && window.tinymce ) {
-			var editor = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + itemId );
-			if ( editor ) {
-				val = editor.getContent();
-			}
+		// For richtext fields, pull latest content from the editor. This also
+		// returns edits made in the Code tab, where TinyMCE's content is stale.
+		if ( 'richtext' === field.type ) {
+			val = getRichTextEditorContent( 'bb-admin-edit-' + field.id + '-' + itemId, val );
 		}
 
 		var safeVal = null !== val && undefined !== val ? val : '';
