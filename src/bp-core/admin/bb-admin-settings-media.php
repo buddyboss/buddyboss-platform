@@ -131,7 +131,7 @@ function bb_admin_settings_register_media_feature() {
 			'videos',
 			__( 'Videos', 'buddyboss' ),
 			'bb-icons-rl bb-icons-rl-video-camera',
-			__( 'Let members upload and share videos on their profiles, in groups, messages and forums. Available with the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans.', 'buddyboss' ),
+			__( 'Let members upload and share videos on their profiles, in groups, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss' ),
 			20
 		);
 	}
@@ -164,7 +164,7 @@ function bb_admin_settings_register_media_feature() {
 			'documents',
 			__( 'Documents', 'buddyboss' ),
 			'bb-icons-rl bb-icons-rl-file-text',
-			__( 'Let members upload, organize and share documents and folders on their profiles, in groups, messages and forums. Available with the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans.', 'buddyboss' ),
+			__( 'Let members upload, organize and share documents and folders on their profiles, in groups, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss' ),
 			30
 		);
 	}
@@ -200,7 +200,7 @@ function bb_admin_settings_register_media_feature() {
 			'animated_gifs',
 			__( 'Animated GIFs', 'buddyboss' ),
 			'bb-icons-rl bb-icons-rl-gif',
-			__( 'Let members search and post animated GIFs from GIPHY in activity posts, comments, messages and forums. Available with the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans.', 'buddyboss' ),
+			__( 'Let members search and post animated GIFs from GIPHY in activity posts, comments, messages and forums. Requires the BuddyBoss Add-ons plugin. Available on the Start plan and above.', 'buddyboss' ),
 			50
 		);
 	}

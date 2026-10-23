@@ -4220,9 +4220,14 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
  * A simple function that uses mtime to delete files older than a given age (in seconds)
  * Very handy to rotate backup or log files, for example...
  *
- * @return array|void the list of deleted files
+ * Also expires the document and video preview symlinks while the BuddyBoss Add-ons
+ * cleanup for them is not loaded, so their preview URLs do not outlive the usual age.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Also expires document and video preview symlinks when
+ *                              their Add-ons cleanup is not loaded.
+ *
+ * @return array|void the list of deleted files
  */
 function bb_media_delete_older_symlinks() {
 
@@ -4233,34 +4238,42 @@ function bb_media_delete_older_symlinks() {
 	// Get media previews symlink directory path.
 	$dir     = bp_media_symlink_path();
 	$max_age = apply_filters( 'bb_media_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
-	$list    = array();
-	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
 
 	if ( ! is_dir( $dir ) ) {
 		return;
 	}
 
-	$dh = opendir( $dir );
-	if ( false === $dh ) {
-		return;
-	}
+	$list = bb_media_delete_older_files_in_dir( $dir, time() - $max_age );
 
-	while ( ( $file = readdir( $dh ) ) !== false ) {
-		if ( $file === '.' || $file === '..' ) {
+	/*
+	 * Document and video previews are created by BuddyBoss Add-ons, which also schedules
+	 * their cleanup. When that code is not loaded (no entitlement, Add-ons inactive or
+	 * outdated), the symlinks it created earlier would never expire. Expire them here,
+	 * only while the Add-ons cleanup is missing, so the two never run side by side.
+	 */
+	$previews_dir = wp_upload_dir();
+	$previews_dir = $previews_dir['basedir'] . '/bb-platform-previews';
+	$unowned      = array(
+		'bb_document_delete_older_symlinks' => md5( 'bb-documents' ),
+		'bb_video_delete_older_symlinks'    => md5( 'bb-videos' ),
+	);
+
+	foreach ( $unowned as $addons_cleanup => $folder ) {
+		if ( function_exists( $addons_cleanup ) ) {
 			continue;
 		}
 
-		$file      = $dir . '/' . $file;
-		$file_time = lstat( $file );
-		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
-
-		if ( file_exists( $file ) && $file_time < $limit ) {
-			$list[] = $file;
-			unlink( $file );
+		$type_dir = realpath( $previews_dir . '/' . $folder );
+		if ( false === $type_dir || ! is_dir( $type_dir ) ) {
+			continue;
 		}
+
+		/** This filter is documented in BuddyBoss Add-ons, where the matching cleanup lives. */
+		$type_max_age = apply_filters( $addons_cleanup . '_time', 3600 * 24 * 15 );
+
+		$list = array_merge( $list, bb_media_delete_older_files_in_dir( $type_dir, time() - $type_max_age, true ) );
 	}
-	closedir( $dh );
 
 	if ( ! empty( $list ) ) {
 		do_action( 'bb_media_delete_older_symlinks' );
@@ -4268,6 +4281,55 @@ function bb_media_delete_older_symlinks() {
 
 	return $list;
 
+}
+
+/**
+ * Delete the entries of one preview directory that are older than a given time.
+ *
+ * Reads a single directory, without recursion.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $dir        Absolute directory path.
+ * @param int    $limit      Unix time. Entries changed before it are deleted.
+ * @param bool   $links_only Whether to delete symlinks only and leave real files alone.
+ *                           Dangling symlinks are deleted too.
+ *
+ * @return array The deleted paths.
+ */
+function bb_media_delete_older_files_in_dir( $dir, $limit, $links_only = false ) {
+	$list = array();
+	$dh   = opendir( $dir );
+	if ( false === $dh ) {
+		return $list;
+	}
+
+	while ( ( $file = readdir( $dh ) ) !== false ) {
+		if ( $file === '.' || $file === '..' ) {
+			continue;
+		}
+
+		$file = $dir . '/' . $file;
+
+		if ( $links_only ) {
+			if ( ! is_link( $file ) ) {
+				continue;
+			}
+		} elseif ( ! file_exists( $file ) ) {
+			continue;
+		}
+
+		$file_time = lstat( $file );
+		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
+
+		if ( $file_time < $limit ) {
+			$list[] = $file;
+			unlink( $file );
+		}
+	}
+	closedir( $dh );
+
+	return $list;
 }
 
 add_action(

@@ -284,7 +284,7 @@ function bb_moved_media_features_render_notice() {
 			'url'   => $addons_url,
 		);
 	} else {
-		$message   = __( 'Install the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans, to show them to your members again.', 'buddyboss' );
+		$message   = __( 'Install the BuddyBoss Add-ons plugin to show them to your members again. Available on the Start plan and above.', 'buddyboss' );
 		$primary   = array(
 			'label'    => __( 'View plans', 'buddyboss' ),
 			'url'      => $upgrade_url,

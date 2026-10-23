@@ -577,9 +577,9 @@ function bp_version_updater() {
 			bb_purge_forums_api_cache_for_legacy_embed();
 		}
 
-		// DB version 23606 — update an active BuddyBoss Add-ons to the version this
-		// Platform requires, once, on the upgrade into this release (PROD-9995). Runs
-		// after the install step above.
+		// DB version 23606 — schedule a WP-cron update of an active BuddyBoss Add-ons to
+		// the version this Platform requires, once, on the upgrade into this release
+		// (PROD-9995). Runs after the install step above.
 		if ( $raw_db_version < 23606 ) {
 			bb_maybe_update_addons_bundle();
 		}
@@ -4726,15 +4726,20 @@ function bb_purge_forums_api_cache_for_legacy_embed() {
 /**
  * Minimum BuddyBoss Add-ons version this Platform needs.
  *
- * Reads the floor from the version-compatibility notice so both stay in sync;
- * that file is admin-only, hence the fallback.
+ * Reads the floor from the version-compatibility notice so both stay in sync.
+ * That file is loaded only in the admin, so it is loaded here on demand for
+ * WP-cron and front-end callers; it only defines functions and admin-notice hooks.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return string Minimum Add-ons version.
  */
 function bb_get_addons_required_version() {
-	return function_exists( 'bb_platform_3_addons_required_version' ) ? bb_platform_3_addons_required_version() : '1.2.3';
+	if ( ! function_exists( 'bb_platform_3_addons_required_version' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
+	}
+
+	return bb_platform_3_addons_required_version();
 }
 
 /**
@@ -4780,7 +4785,7 @@ function bb_update_addons_bundle_to_required_version() {
 	// Plan check: only a license whose plan carries the add-on product can download it.
 	if ( ! bb_is_entitled_to_addons() ) {
 		// For an activated license a catalog outage also reads as "not entitled"; report
-		// it as a failure so it is retried.
+		// it as a failure so the post-update cron retries it (bb_addons_bundle_update_cron_callback()).
 		if (
 			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) &&
 			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) &&
@@ -4875,11 +4880,13 @@ function bb_update_addons_bundle_to_required_version() {
 }
 
 /**
- * After the Platform update to this release, update an active BuddyBoss Add-ons below the required version.
+ * After the Platform update to this release, schedule the BuddyBoss Add-ons update.
  *
  * One-time migration called from bp_version_updater() for db version 23606, so it runs only on the
- * upgrade request (Plugins screen, auto-update or FTP alike) and never on a normal
- * admin page load. The flag keeps later releases from running it again.
+ * upgrade request (Plugins screen, auto-update or FTP alike) and never on a normal admin page load.
+ * The update itself runs in a single WP-cron event (bb_addons_bundle_update_cron_callback()): under
+ * cron WordPress keeps the plugin active and in maintenance mode while it is replaced, instead of
+ * deactivating it for the length of the upgrade request, and a failed attempt can be retried.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -4890,8 +4897,79 @@ function bb_maybe_update_addons_bundle() {
 		return;
 	}
 
-	// Set first so a fatal inside the upgrader can never make it run again.
-	bp_update_option( 'bb_addons_bundle_update_done', 1 );
-
-	bb_update_addons_bundle_to_required_version();
+	if ( ! wp_next_scheduled( 'bb_addons_bundle_update_cron' ) ) {
+		wp_schedule_single_event( time(), 'bb_addons_bundle_update_cron' );
+	}
 }
+
+/**
+ * Mark the post-update BuddyBoss Add-ons update as finished.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_addons_bundle_update_finish() {
+	bp_update_option( 'bb_addons_bundle_update_done', 1 );
+	bp_delete_option( 'bb_addons_bundle_update_attempts' );
+	wp_clear_scheduled_hook( 'bb_addons_bundle_update_cron' );
+}
+
+/**
+ * WP-cron callback: update an active BuddyBoss Add-ons below the required version.
+ *
+ * Scheduled once by bb_maybe_update_addons_bundle(). Runs bb_update_addons_bundle_to_required_version()
+ * under an upgrader lock, at most three times:
+ * - 'failed' (download/install error or a catalog outage) is retried an hour later;
+ * - any other result ('updated', 'up_to_date', 'inactive', 'vcs_checkout', 'not_entitled',
+ *   'no_package') is final.
+ * The attempt is counted, and the next retry scheduled, before the upgrader runs, so a fatal inside
+ * the upgrader still ends after three attempts instead of looping.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_addons_bundle_update_cron_callback() {
+	if ( bp_get_option( 'bb_addons_bundle_update_done', false ) ) {
+		return;
+	}
+
+	$max_attempts = 3;
+	$attempt      = (int) bp_get_option( 'bb_addons_bundle_update_attempts', 0 ) + 1;
+
+	if ( $attempt > $max_attempts ) {
+		bb_addons_bundle_update_finish();
+
+		return;
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	// Another run holds the lock (it expires after an hour): try again later without counting an attempt.
+	if ( ! WP_Upgrader::create_lock( 'bb_addons_bundle_update' ) ) {
+		if ( ! wp_next_scheduled( 'bb_addons_bundle_update_cron' ) ) {
+			wp_schedule_single_event( time() + HOUR_IN_SECONDS, 'bb_addons_bundle_update_cron' );
+		}
+
+		return;
+	}
+
+	try {
+		bp_update_option( 'bb_addons_bundle_update_attempts', $attempt );
+
+		// Schedule the retry first, so a fatal in the upgrader is retried too.
+		if ( $attempt < $max_attempts && ! wp_next_scheduled( 'bb_addons_bundle_update_cron' ) ) {
+			wp_schedule_single_event( time() + HOUR_IN_SECONDS, 'bb_addons_bundle_update_cron' );
+		}
+
+		$result = bb_update_addons_bundle_to_required_version();
+
+		if ( 'failed' !== $result || $attempt >= $max_attempts ) {
+			bb_addons_bundle_update_finish();
+		}
+	} finally {
+		WP_Upgrader::release_lock( 'bb_addons_bundle_update' );
+	}
+}
+add_action( 'bb_addons_bundle_update_cron', 'bb_addons_bundle_update_cron_callback' );

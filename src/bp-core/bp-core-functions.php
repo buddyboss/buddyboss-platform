@@ -12406,3 +12406,30 @@ if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
 		return (bool) wp_delete_attachment( $value, true );
 	}
 }
+
+/**
+ * Whether the BuddyBoss Add-ons plugin provides a given module on this site.
+ *
+ * The plugin-wide lock (bb_addons_should_lock_features()) only says the plan
+ * entitles the site to at least one add-on module. A plan can carry some
+ * modules and not others (Legacy Free carries Video, Documents and GIFs
+ * only), so callers that stand in for one module must also check that module.
+ * Add-ons builds without the per-module API fall back to the plugin-wide lock.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $module_id Add-ons module ID, e.g. 'reactions' or 'pinned-posts'.
+ *
+ * @return bool True when the add-on is unlocked and entitled to the module.
+ */
+function bb_addons_provides_module( $module_id ) {
+	if ( ! function_exists( 'bb_addons_should_lock_features' ) || bb_addons_should_lock_features() ) {
+		return false;
+	}
+
+	if ( function_exists( 'bb_addons_is_module_entitled' ) ) {
+		return (bool) bb_addons_is_module_entitled( $module_id );
+	}
+
+	return true;
+}

@@ -183,7 +183,14 @@ add_action(
 		 * directory page is created at the same time, as the Media toggle did
 		 * when it owned these components.
 		 */
-		$auto_enabled  = (array) bp_get_option( 'bb_media_auto_enabled_components', array() );
+		$auto_enabled = bp_get_option( 'bb_media_auto_enabled_components', false );
+		if ( false === $auto_enabled ) {
+			// Seed it so later reads come from autoloaded options instead of a query per request.
+			$auto_enabled = array();
+			bp_update_option( 'bb_media_auto_enabled_components', $auto_enabled );
+		}
+
+		$auto_enabled  = (array) $auto_enabled;
 		$updated       = false;
 		$added         = array();
 		$added_or_seen = array();
