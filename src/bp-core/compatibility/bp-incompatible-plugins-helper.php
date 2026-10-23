@@ -1376,6 +1376,26 @@ function bb_register_theme_document_meta_compat() {
 	) {
 		add_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10, 4 );
 		add_filter( 'bb_activity_get_metadata', 'bb_theme_document_activity_cached_meta_compat', 10, 2 );
+
+		/*
+		 * The Elementor Activity widget of these builds also treats every activity
+		 * as a document one when the request has `action=document_get_activity`,
+		 * and then calls BP_Document. That action is an Add-ons AJAX handler and is
+		 * not registered while Documents is off, so drop it from other requests.
+		 */
+		if ( ! wp_doing_ajax() ) {
+			// phpcs:disable WordPress.Security.NonceVerification
+			if ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
+				unset( $_REQUEST['action'] );
+			}
+			if ( isset( $_GET['action'] ) && 'document_get_activity' === $_GET['action'] ) {
+				unset( $_GET['action'] );
+			}
+			if ( isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
+				unset( $_POST['action'] );
+			}
+			// phpcs:enable WordPress.Security.NonceVerification
+		}
 	}
 }
 

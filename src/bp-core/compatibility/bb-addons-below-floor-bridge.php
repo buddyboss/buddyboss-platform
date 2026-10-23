@@ -119,7 +119,8 @@ function bb_addons_below_floor_bridge_get_rest_folder_id( $request ) {
 		return 0;
 	}
 
-	$pattern = '#^/' . preg_quote( bp_rest_namespace() . '/' . bp_rest_version(), '#' ) . '/document/folder/(\d+)$#';
+	// WordPress matches REST routes case-insensitively, so this match must too.
+	$pattern = '#^/' . preg_quote( bp_rest_namespace() . '/' . bp_rest_version(), '#' ) . '/document/folder/(\d+)$#i';
 
 	if ( ! preg_match( $pattern, (string) $request->get_route(), $matches ) ) {
 		return 0;

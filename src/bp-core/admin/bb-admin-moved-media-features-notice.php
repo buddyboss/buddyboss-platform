@@ -332,7 +332,15 @@ function bb_moved_media_features_render_notice() {
 			'url'      => $upgrade_url,
 			'external' => true,
 		);
-	} elseif ( 'active' === $state && bb_is_addons_below_required_version() ) {
+	} elseif (
+		'active' === $state &&
+		bb_is_addons_below_required_version() &&
+		(
+			bb_moved_media_features_is_entitled_from_cache() ||
+			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+		)
+	) {
+		// Only an entitled site is helped by an update; otherwise the licence copy below applies.
 		$message   = __( 'Your BuddyBoss Add-ons plugin is out of date. Update it to show them to your members again.', 'buddyboss' );
 		$primary   = array(
 			'label' => __( 'Update BuddyBoss Add-ons', 'buddyboss' ),

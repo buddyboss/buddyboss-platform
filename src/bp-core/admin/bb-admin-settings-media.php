@@ -528,7 +528,7 @@ function bb_media_get_addons_panel_state( $panel_id ) {
 /**
  * Whether a newer BuddyBoss Add-ons build than the installed one is available to the license.
  *
- * Reads the cached add-ons catalog. Fails closed: an unknown installed version or
+ * Only a build at or above the required version counts. Reads the cached add-ons catalog. Fails closed: an unknown installed version or
  * release reads as "no update".
  *
  * @since BuddyBoss [BBVERSION]
@@ -545,7 +545,8 @@ function bb_media_addons_update_available() {
 	$release   = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
 	$latest    = ( null !== $release && ! empty( $release->number ) ) ? (string) $release->number : '';
 
-	$available = '' !== $installed && '' !== $latest && version_compare( $latest, $installed, '>' );
+	// A newer build that is still below the floor is refused by the updater, so it does not count.
+	$available = '' !== $installed && '' !== $latest && version_compare( $latest, $installed, '>' ) && ! bb_is_addons_below_required_version( $latest );
 
 	/**
 	 * Filters whether a BuddyBoss Add-ons update is available for the Media upsell panels.

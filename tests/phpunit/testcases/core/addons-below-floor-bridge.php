@@ -264,6 +264,13 @@ class BP_Tests_Addons_Below_Floor_Bridge extends BP_UnitTestCase {
 		);
 		$this->assertTrue( bb_addons_below_floor_bridge_folder_update_permissions( true, $renamed ) );
 
+		// WordPress routes match case-insensitively, so a mixed-case route is still checked.
+		$mixed_case = new WP_REST_Request( 'PATCH', '/' . strtoupper( bp_rest_namespace() ) . '/' . strtoupper( bp_rest_version() ) . '/Document/Folder/' . $folder_id );
+		$mixed_case->set_param( 'id', $folder_id );
+		$mixed_case->set_param( 'group_id', $group_id );
+		$this->assertSame( $folder_id, bb_addons_below_floor_bridge_get_rest_folder_id( $mixed_case ) );
+		$this->assertWPError( bb_addons_below_floor_bridge_folder_update_permissions( true, $mixed_case ) );
+
 		$document = $this->folder_request(
 			'PATCH',
 			'/document/' . $folder_id,
