@@ -91,18 +91,20 @@ function bb_platform_3_pro_required_version() {
  * Minimum BuddyBoss Add-ons version required by this Platform.
  *
  * Platform no longer ships Video and Documents, so the Add-ons copies are
- * the only live code. 1.2.3 is the first Add-ons build with the fixes that
+ * the only live code. 1.2.4 is the first Add-ons build with the fixes that
  * shipped in Platform's own copies: the Private Website download guard
- * (bb_private_network_restrict_download()) and the REST document-folder
- * permission rules. 1.2.1 added bb_document_user_can_add_to_folder().
+ * (bb_private_network_restrict_download()), the REST document-folder
+ * permission rules and the group peer-folder upload rule. It also stops
+ * locking these modules on sites without an activated licence. The
+ * released 1.2.3 has none of these.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return string Minimum Add-ons version.
  */
 function bb_platform_3_addons_required_version() {
-	// @todo: Update when release. Confirm against the Add-ons release that ships PROD-9995 and the PROD-10594 security ports (1.2.2 does not have them).
-	return '1.2.3';
+	// @todo: Update when release. Set to the Add-ons release that ships the PROD-9995 branch (the released 1.2.3 does not have its security ports).
+	return '1.2.4';
 }
 
 /**
@@ -119,7 +121,7 @@ function bb_platform_3_addons_required_version() {
  */
 function bb_platform_3_offload_media_required_version() {
 	// @todo: Update when release. Set to the Offload Media version that ships the PROD-9995 BP_Video/BP_Document guards (2.1.4 does not have them).
-	return '2.0.0';
+	return '2.1.5';
 }
 
 /**

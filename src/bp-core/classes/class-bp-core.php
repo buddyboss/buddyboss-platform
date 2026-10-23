@@ -263,6 +263,18 @@ class BP_Core extends BP_Component {
 			$stored_components = (array) bp_get_option( 'bp-active-components', array() );
 			$restored          = false;
 
+			/*
+			 * Keep Media stored as the string '1' while components are scrubbed.
+			 * Platform 3.6.x and older re-enable video and document on `bp_init`
+			 * only when `'1' === media`, but Settings 2.0 stores the integer 1.
+			 * Without this, rolling back to an older Platform leaves Videos and
+			 * Documents permanently off. Every version reads both values the same.
+			 */
+			if ( ! empty( $stored_components['media'] ) && '1' !== $stored_components['media'] ) {
+				$stored_components['media'] = '1';
+				$restored                   = true;
+			}
+
 			foreach ( $scrub_memory as $scrubbed_component => $stored_value ) {
 				if ( ! bb_is_component_directory_available( $scrubbed_component ) ) {
 					continue;
@@ -331,6 +343,11 @@ class BP_Core extends BP_Component {
 		$stored_components   = (array) bp_get_option( 'bp-active-components', array() );
 		$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
 		if ( $scrubbed_components !== $stored_components ) {
+			// See the Media note in the self-heal block above.
+			if ( ! empty( $scrubbed_components['media'] ) ) {
+				$scrubbed_components['media'] = '1';
+			}
+
 			bp_update_option( 'bp-active-components', $scrubbed_components );
 
 			// Remember WHY these were removed (code unavailable, not an admin

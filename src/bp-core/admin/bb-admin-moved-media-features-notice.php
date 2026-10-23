@@ -47,8 +47,8 @@ const BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_n
  * Count the stored videos, documents and GIFs on this site.
  *
  * The feature code is not loaded when this matters, so the counts are read
- * straight from the tables. They only change while the features are active
- * (which hides the notice), so the result is cached for 12 hours.
+ * straight from the tables and cached for 12 hours; the cache is cleared when
+ * the providing plugins or the active components change.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -99,6 +99,25 @@ function bb_moved_media_features_get_stored_counts() {
 
 	return $counts;
 }
+
+/**
+ * Clear the cached stored-item counts when the plugins providing the features change.
+ *
+ * The counts are only computed while the features are unavailable; clearing them
+ * when Add-ons is activated, deactivated or updated makes the next unavailable
+ * window start from fresh numbers.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_moved_media_features_clear_stored_counts() {
+	delete_transient( 'bb_moved_media_features_stored_counts' );
+}
+add_action( 'activated_plugin', 'bb_moved_media_features_clear_stored_counts' );
+add_action( 'deactivated_plugin', 'bb_moved_media_features_clear_stored_counts' );
+add_action( 'upgrader_process_complete', 'bb_moved_media_features_clear_stored_counts' );
+add_action( 'update_option_bp-active-components', 'bb_moved_media_features_clear_stored_counts' );
 
 /**
  * Whether a database table exists.
@@ -281,7 +300,7 @@ function bb_moved_media_features_render_notice() {
 		);
 		$secondary = array(
 			'label' => __( 'Manage license', 'buddyboss' ),
-			'url'   => $addons_url,
+			'url'   => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
 		);
 	} else {
 		$message   = __( 'Install the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans, to show them to your members again.', 'buddyboss' );
@@ -312,7 +331,7 @@ function bb_moved_media_features_render_notice() {
 			<?php
 			printf(
 				/* translators: 1: Item counts, e.g. "12 videos, 3 documents and 5 GIFs". 2: Call to action sentence. */
-				esc_html__( 'Your community has %1$s that are currently hidden from members. %2$s', 'buddyboss' ),
+				esc_html__( 'Hidden from your members right now: %1$s. %2$s', 'buddyboss' ),
 				'<strong>' . esc_html( wp_sprintf( '%l', $items ) ) . '</strong>',
 				esc_html( $message )
 			);

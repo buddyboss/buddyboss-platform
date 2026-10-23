@@ -577,11 +577,11 @@ function bp_version_updater() {
 			bb_purge_forums_api_cache_for_legacy_embed();
 		}
 
-		// DB version 23606 — update an active BuddyBoss Add-ons to the version this
-		// Platform requires, once, on the upgrade into this release (PROD-9995). Runs
-		// after the install step above.
+		// DB version 23606 — queue the update of an active BuddyBoss Add-ons to the
+		// version this Platform requires (PROD-9995). Queuing is cheap: the download
+		// runs later, on a regular admin page load by a user who can update plugins.
 		if ( $raw_db_version < 23606 ) {
-			bb_maybe_update_addons_bundle();
+			bb_queue_addons_bundle_update();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -4734,7 +4734,7 @@ function bb_purge_forums_api_cache_for_legacy_embed() {
  * @return string Minimum Add-ons version.
  */
 function bb_get_addons_required_version() {
-	return function_exists( 'bb_platform_3_addons_required_version' ) ? bb_platform_3_addons_required_version() : '1.2.3';
+	return function_exists( 'bb_platform_3_addons_required_version' ) ? bb_platform_3_addons_required_version() : '1.2.4';
 }
 
 /**
@@ -4875,23 +4875,76 @@ function bb_update_addons_bundle_to_required_version() {
 }
 
 /**
- * After the Platform update to this release, update an active BuddyBoss Add-ons below the required version.
+ * Queue the update of an active BuddyBoss Add-ons below the required version.
  *
- * One-time migration called from bp_version_updater() for db version 23606, so it runs only on the
- * upgrade request (Plugins screen, auto-update or FTP alike) and never on a normal
- * admin page load. The flag keeps later releases from running it again.
+ * Called once from bp_version_updater() for db version 23606. It only records
+ * that the update is due; {@see bb_maybe_run_queued_addons_bundle_update()}
+ * performs it, so the upgrade request itself (which can be any front-end
+ * admin-ajax call) never downloads or replaces a plugin.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
-function bb_maybe_update_addons_bundle() {
-	if ( bp_get_option( 'bb_addons_bundle_update_done', false ) ) {
+function bb_queue_addons_bundle_update() {
+	bp_update_option( 'bb_addons_bundle_update_queued', 1 );
+	bp_delete_option( 'bb_addons_bundle_update_attempts' );
+}
+
+/**
+ * Run the queued BuddyBoss Add-ons update.
+ *
+ * Runs on a regular wp-admin GET page load (not AJAX, cron or REST) by a user
+ * who can update plugins, under a lock so concurrent page loads never run the
+ * upgrader twice. Final results clear the queue. A failed download, or no
+ * newer build being available yet (Mothership not serving the required
+ * version), is retried at most every 12 hours, up to 10 attempts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_maybe_run_queued_addons_bundle_update() {
+	if (
+		! bp_get_option( 'bb_addons_bundle_update_queued', false ) ||
+		wp_doing_ajax() ||
+		wp_doing_cron() ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+		! isset( $_SERVER['REQUEST_METHOD'] ) ||
+		'GET' !== $_SERVER['REQUEST_METHOD'] ||
+		! current_user_can( 'update_plugins' ) ||
+		false !== get_transient( 'bb_addons_bundle_update_retry_wait' )
+	) {
 		return;
 	}
 
-	// Set first so a fatal inside the upgrader can never make it run again.
-	bp_update_option( 'bb_addons_bundle_update_done', 1 );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
-	bb_update_addons_bundle_to_required_version();
+	if ( ! WP_Upgrader::create_lock( 'bb_addons_bundle_update', 15 * MINUTE_IN_SECONDS ) ) {
+		return;
+	}
+
+	// Count the attempt and start the wait before running, so a fatal inside the
+	// upgrader is retried later instead of on every admin page load.
+	$attempts = (int) bp_get_option( 'bb_addons_bundle_update_attempts', 0 ) + 1;
+	bp_update_option( 'bb_addons_bundle_update_attempts', $attempts );
+	set_transient( 'bb_addons_bundle_update_retry_wait', 1, 12 * HOUR_IN_SECONDS );
+
+	$result = bb_update_addons_bundle_to_required_version();
+
+	if ( ! in_array( $result, array( 'failed', 'no_package' ), true ) || $attempts >= 10 ) {
+		bp_delete_option( 'bb_addons_bundle_update_queued' );
+		bp_delete_option( 'bb_addons_bundle_update_attempts' );
+		delete_transient( 'bb_addons_bundle_update_retry_wait' );
+	}
+
+	WP_Upgrader::release_lock( 'bb_addons_bundle_update' );
+
+	// The old Add-ons build is already loaded in this request; reload so the rest
+	// of the page runs against the new files only.
+	if ( 'updated' === $result && ! headers_sent() && isset( $_SERVER['REQUEST_URI'] ) ) {
+		wp_safe_redirect( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+		exit;
+	}
 }
+add_action( 'admin_init', 'bb_maybe_run_queued_addons_bundle_update', 100 );
