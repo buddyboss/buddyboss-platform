@@ -87,25 +87,6 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Skip the current test when the video or document code is not loaded.
-	 *
-	 * Video and document ship in the BuddyBoss Add-ons plugin, which this
-	 * suite does not load. Tests that only need photos keep running.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $type 'video' or 'document'.
-	 */
-	protected function skip_unless_type_available( $type ) {
-		$class    = 'video' === $type ? 'BP_Video' : 'BP_Document';
-		$function = 'video' === $type ? 'bp_video_delete' : 'bp_document_delete';
-
-		if ( ! class_exists( $class ) || ! function_exists( $function ) ) {
-			$this->markTestSkipped( ucfirst( $type ) . ' code ships in the BuddyBoss Add-ons plugin.' );
-		}
-	}
-
-	/**
 	 * Attach a photo or video to an activity the way the uploader does: a media
 	 * row pointing at the activity, the parent meta on the attachment, and the
 	 * ID list on the activity.
@@ -115,10 +96,6 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	 * @return int Media ID.
 	 */
 	protected function attach_media( $activity_id, $type = 'photo' ) {
-		if ( 'video' === $type ) {
-			$this->skip_unless_type_available( 'video' );
-		}
-
 		$attachment_id = self::factory()->attachment->create_object(
 			'p9606-' . wp_generate_password( 6, false ) . ( 'video' === $type ? '.mp4' : '.jpg' ),
 			0,
@@ -127,6 +104,10 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 				'post_type'      => 'attachment',
 			)
 		);
+
+		if ( 'video' === $type && ! class_exists( 'BP_Video' ) ) {
+			$this->markTestSkipped( 'The video component is not loaded (it ships in BuddyBoss Add-ons).' );
+		}
 
 		$media                = 'video' === $type ? new BP_Video() : new BP_Media();
 		$media->blog_id       = get_current_blog_id();
@@ -157,8 +138,6 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 	 * @return int Document ID.
 	 */
 	protected function attach_document( $activity_id ) {
-		$this->skip_unless_type_available( 'document' );
-
 		$attachment_id = self::factory()->attachment->create_object(
 			'p9606-' . wp_generate_password( 6, false ) . '.pdf',
 			0,
@@ -167,6 +146,10 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 				'post_type'      => 'attachment',
 			)
 		);
+
+		if ( ! class_exists( 'BP_Document' ) ) {
+			$this->markTestSkipped( 'The document component is not loaded (it ships in BuddyBoss Add-ons).' );
+		}
 
 		$document                = new BP_Document();
 		$document->blog_id       = get_current_blog_id();

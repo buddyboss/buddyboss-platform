@@ -1278,3 +1278,105 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 
 	return $query_vars;
 }
+
+/**
+ * Minimum BuddyBoss Theme version for this Platform.
+ *
+ * Theme builds before PROD-9995 build `BP_Document` objects from activity
+ * meta in the Elementor Activity widget without checking that the Documents
+ * component is loaded. Documents now ship in BuddyBoss Add-ons, so on a site
+ * without it those builds fatal. {@see bb_theme_document_activity_meta_compat()}
+ * keeps them working until the theme is updated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum BuddyBoss Theme version.
+ */
+function bb_platform_3_theme_required_version() {
+	// @todo: Update when release. Set to the BuddyBoss Theme version that ships the PROD-9995 document guards (2.22.4 does not have them).
+	return '2.22.5';
+}
+
+/**
+ * Get the version of the active BuddyBoss Theme, or the parent of the active child theme.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Theme version, or an empty string when BuddyBoss Theme is not in use.
+ */
+function bb_get_active_buddyboss_theme_version() {
+	$theme = wp_get_theme();
+
+	if ( 'buddyboss-theme' !== $theme->get_template() ) {
+		return '';
+	}
+
+	$parent = $theme->parent();
+
+	return (string) ( $parent ? $parent->get( 'Version' ) : $theme->get( 'Version' ) );
+}
+
+/**
+ * Hide document activity meta from BuddyBoss Theme builds that cannot handle a missing Documents component.
+ *
+ * Applies only when an older BuddyBoss Theme is active and `BP_Document` is not
+ * loaded. Nothing else can use these keys then: the code that reads them ships
+ * in BuddyBoss Add-ons. The stored meta is untouched, so documents reappear
+ * once Add-ons is active again.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $value     Short-circuit value; null to read the meta normally.
+ * @param int    $object_id Activity ID.
+ * @param string $meta_key  Meta key, or an empty string for all meta.
+ * @param bool   $single    Whether a single value was requested.
+ *
+ * @return mixed
+ */
+function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
+	static $in_progress = false;
+
+	$document_keys = array( 'bp_document_ids', 'bp_document_folder_activity', 'bp_document_id' );
+
+	if ( null !== $value || $in_progress || class_exists( 'BP_Document' ) || ( '' !== $meta_key && ! in_array( $meta_key, $document_keys, true ) ) ) {
+		return $value;
+	}
+
+	if ( '' !== $meta_key ) {
+		return $single ? array( '' ) : array();
+	}
+
+	// All meta was requested: read it once, then drop the document keys.
+	$in_progress = true;
+	$meta        = get_metadata_raw( 'activity', $object_id );
+	$in_progress = false;
+
+	if ( ! is_array( $meta ) ) {
+		return $value;
+	}
+
+	$meta = array_diff_key( $meta, array_flip( $document_keys ) );
+
+	// get_metadata() returns `$check[0]` for single requests.
+	return $single ? array( $meta ) : $meta;
+}
+
+/**
+ * Register the document meta compatibility filter for older BuddyBoss Theme builds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_register_theme_document_meta_compat() {
+	$theme_version = bb_get_active_buddyboss_theme_version();
+
+	if (
+		'' !== $theme_version &&
+		version_compare( $theme_version, bb_platform_3_theme_required_version(), '<' ) &&
+		! class_exists( 'BP_Document' )
+	) {
+		add_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10, 4 );
+	}
+}
+add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );

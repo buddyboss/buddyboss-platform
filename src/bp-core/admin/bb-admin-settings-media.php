@@ -430,6 +430,46 @@ function bb_media_get_addons_module_for_panel( $panel_id ) {
 }
 
 /**
+ * Get the component behind a Media upsell panel.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
+ *
+ * @return string Component ID, or an empty string when the panel has no component (Animated GIFs).
+ */
+function bb_media_get_addons_component_for_panel( $panel_id ) {
+	$components = array(
+		'videos'    => 'video',
+		'documents' => 'document',
+	);
+
+	return isset( $components[ $panel_id ] ) ? $components[ $panel_id ] : '';
+}
+
+/**
+ * Get the installed BuddyBoss Add-ons version.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Version, or an empty string when it is not installed or unreadable.
+ */
+function bb_media_get_installed_addons_version() {
+	static $version = null;
+
+	if ( null === $version ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugins = get_plugins();
+		$version = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+	}
+
+	return $version;
+}
+
+/**
  * Resolve what a Media upsell panel should offer.
  *
  * The plan decides first: a license whose plan does not carry BuddyBoss Add-ons
@@ -445,6 +485,9 @@ function bb_media_get_addons_module_for_panel( $panel_id ) {
  *                 (for example the add-on's own license check locked it).
  * - 'upgrade'     Not entitled.
  *
+ * Checked before the plan: 'disabled' means BuddyBoss Add-ons provides the
+ * component (Videos or Documents) but an admin turned it off.
+ *
  * REMOTE CALL on a cold add-ons cache (the entitlement lookup), so it is only
  * called from the settings AJAX formatters, never from feature registration.
  *
@@ -452,7 +495,7 @@ function bb_media_get_addons_module_for_panel( $panel_id ) {
  *
  * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
  *
- * @return string One of 'upgrade', 'install', 'activate', 'update' or 'unavailable'.
+ * @return string One of 'upgrade', 'install', 'activate', 'update', 'unavailable' or 'disabled'.
  */
 function bb_media_get_addons_panel_state( $panel_id ) {
 	static $states = array();
@@ -461,12 +504,17 @@ function bb_media_get_addons_panel_state( $panel_id ) {
 		return $states[ $panel_id ];
 	}
 
-	$state = 'upgrade';
+	$state     = 'upgrade';
+	$component = bb_media_get_addons_component_for_panel( $panel_id );
 
-	if ( bb_is_entitled_to_addons() ) {
-		if ( ! function_exists( 'get_plugins' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
+	if ( ! function_exists( 'get_plugins' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	if ( '' !== $component && bb_is_component_directory_available( $component ) && ! bp_is_active( $component ) ) {
+		// Add-ons provides the component, so only the admin's toggle keeps it off.
+		$state = 'disabled';
+	} elseif ( bb_is_entitled_to_addons() ) {
 
 		$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
 		$plugin_path = trailingslashit( WP_PLUGIN_DIR ) . $plugin_file;
@@ -476,8 +524,7 @@ function bb_media_get_addons_panel_state( $panel_id ) {
 		} elseif ( ! is_plugin_active( $plugin_file ) ) {
 			$state = 'activate';
 		} else {
-			$plugins   = get_plugins();
-			$installed = isset( $plugins[ $plugin_file ]['Version'] ) ? (string) $plugins[ $plugin_file ]['Version'] : '';
+			$installed = bb_media_get_installed_addons_version();
 			$module    = bb_media_get_addons_module_for_panel( $panel_id );
 			$has_code  = '' === $module || file_exists( dirname( $plugin_path ) . '/addons/' . $module . '/loader.php' );
 
@@ -492,7 +539,7 @@ function bb_media_get_addons_panel_state( $panel_id ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $state    One of 'upgrade', 'install', 'activate', 'update' or 'unavailable'.
+	 * @param string $state    One of 'upgrade', 'install', 'activate', 'update', 'unavailable' or 'disabled'.
 	 * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
 	 */
 	$states[ $panel_id ] = (string) apply_filters( 'bb_media_addons_panel_state', $state, $panel_id );
@@ -515,12 +562,7 @@ function bb_media_addons_update_available() {
 		return false;
 	}
 
-	if ( ! function_exists( 'get_plugins' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	}
-
-	$plugins   = get_plugins();
-	$installed = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+	$installed = bb_media_get_installed_addons_version();
 	$product   = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
 	$release   = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
 	$latest    = ( null !== $release && ! empty( $release->number ) ) ? (string) $release->number : '';
@@ -583,7 +625,7 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 		case 'install':
 			$card['empty_state_description'] = sprintf(
 				/* translators: %s: Feature name, e.g. "Videos". */
-				__( '%s is included in your plan. Install the BuddyBoss Add-ons plugin to use it.', 'buddyboss' ),
+				__( 'Your plan includes %s. Install the BuddyBoss Add-ons plugin to use this feature.', 'buddyboss' ),
 				$title
 			);
 			$card['button_label']     = __( 'Install & Activate', 'buddyboss' );
@@ -596,7 +638,7 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 		case 'activate':
 			$card['empty_state_description'] = sprintf(
 				/* translators: %s: Feature name, e.g. "Videos". */
-				__( '%s is included in your plan. Activate the BuddyBoss Add-ons plugin to use it.', 'buddyboss' ),
+				__( 'Your plan includes %s. Activate the BuddyBoss Add-ons plugin to use this feature.', 'buddyboss' ),
 				$title
 			);
 			$card['button_label']     = __( 'Activate', 'buddyboss' );
@@ -609,14 +651,13 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 		case 'update':
 			// The update handler only moves an add-on that is below the required version,
 			// so offer the one-click update only then.
-			$plugins     = get_plugins();
-			$installed   = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+			$installed   = bb_media_get_installed_addons_version();
 			$below_floor = '' !== $installed && version_compare( $installed, bb_get_addons_required_version(), '<' );
 
 			if ( $below_floor && bb_media_addons_update_available() ) {
 				$card['empty_state_description'] = sprintf(
 					/* translators: %s: Feature name, e.g. "Videos". */
-					__( '%s is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the plugin to use it.', 'buddyboss' ),
+					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Update the plugin to use it.', 'buddyboss' ),
 					$title
 				);
 				$card['button_label']     = __( 'Update Plugin', 'buddyboss' );
@@ -630,7 +671,7 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 				// WordPress updates screen can re-run it.
 				$card['empty_state_description'] = sprintf(
 					/* translators: %s: Feature name, e.g. "Videos". */
-					__( '%s is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Check for a plugin update.', 'buddyboss' ),
+					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Check for a plugin update.', 'buddyboss' ),
 					$title
 				);
 				$card['button_label'] = __( 'Go to Updates', 'buddyboss' );
@@ -638,11 +679,25 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 			}
 			break;
 
+		case 'disabled':
+			$card['empty_state_description'] = __( 'This feature is turned off on your site. Turn it on to let members use it again.', 'buddyboss' );
+			$card['button_label']            = sprintf(
+				/* translators: %s: Feature name, e.g. "Videos". */
+				__( 'Turn On %s', 'buddyboss' ),
+				$title
+			);
+			$card['button_url']       = bp_get_admin_url( 'admin.php?page=bb-settings&tab=media' );
+			$card['addon_action']     = 'bb_media_enable_component';
+			$card['addon_slug']       = bb_media_get_addons_component_for_panel( $panel_id );
+			$card['addon_nonce_key']  = 'ajaxNonce';
+			$card['addon_busy_label'] = __( 'Turning on…', 'buddyboss' );
+			break;
+
 		case 'unavailable':
 		default:
 			$card['empty_state_description'] = sprintf(
 				/* translators: %s: Feature name, e.g. "Videos". */
-				__( '%s is included in your plan, but the BuddyBoss Add-ons plugin has not enabled it. Check your license.', 'buddyboss' ),
+				__( 'Your plan includes %s, but the BuddyBoss Add-ons plugin has not enabled this feature. Check your license.', 'buddyboss' ),
 				$title
 			);
 			$card['button_label'] = __( 'Manage License', 'buddyboss' );
@@ -667,12 +722,15 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_media_format_addons_upsel
  * @param array  $section       Registered section args.
  * @param string $feature_id    Feature ID.
  * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
  *
  * @return array
  */
-function bb_media_format_addons_upsell_section( $section_data, $section, $feature_id, $side_panel_id ) {
+function bb_media_format_addons_upsell_section( $section_data, $section, $feature_id, $side_panel_id, $section_id = '' ) {
+	// Only the upsell section, which shares its ID with the panel, carries this badge.
 	if (
 		'media' !== $feature_id ||
+		$section_id !== $side_panel_id ||
 		empty( $section_data['pro_notice'] ) ||
 		'' === bb_media_get_addons_module_for_panel( $side_panel_id ) ||
 		'upgrade' === bb_media_get_addons_panel_state( $side_panel_id )
@@ -684,7 +742,56 @@ function bb_media_format_addons_upsell_section( $section_data, $section, $featur
 
 	return $section_data;
 }
-add_filter( 'bb_admin_settings_format_section_data', 'bb_media_format_addons_upsell_section', 10, 4 );
+add_filter( 'bb_admin_settings_format_section_data', 'bb_media_format_addons_upsell_section', 10, 5 );
+
+/**
+ * AJAX: turn a Media child component (Videos or Documents) back on.
+ *
+ * Offered by the 'disabled' panel state: BuddyBoss Add-ons provides the
+ * component, but it was turned off. Settings 2.0 has no separate toggle for
+ * these components, so this is the way back.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_media_ajax_enable_component() {
+	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
+
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to change this setting.', 'buddyboss' ) ), 403 );
+	}
+
+	$component = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
+
+	if ( ! in_array( $component, array( 'video', 'document' ), true ) || ! bp_is_active( 'media' ) || ! bb_is_component_directory_available( $component ) ) {
+		wp_send_json_error( array( 'message' => __( 'This feature cannot be turned on right now.', 'buddyboss' ) ) );
+	}
+
+	$active_components = (array) bp_get_option( 'bp-active-components', array() );
+
+	if ( empty( $active_components[ $component ] ) ) {
+		$active_components[ $component ] = '1';
+		bp_update_option( 'bp-active-components', $active_components );
+
+		// Create the directory page if it is missing, as the Media toggle does.
+		if ( ! function_exists( 'post_exists' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/post.php';
+		}
+		bp_core_add_page_mappings( array( $component => 1 ), 'keep', false );
+		add_action( 'shutdown', 'flush_rewrite_rules' );
+	}
+
+	// Remember it as seen, so the bp_init media sync treats a later manual disable as the admin's choice.
+	$auto_enabled = (array) bp_get_option( 'bb_media_auto_enabled_components', array() );
+	if ( ! in_array( $component, $auto_enabled, true ) ) {
+		$auto_enabled[] = $component;
+		bp_update_option( 'bb_media_auto_enabled_components', $auto_enabled );
+	}
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_bb_media_enable_component', 'bb_media_ajax_enable_component' );
 
 /**
  * AJAX: update BuddyBoss Add-ons so the Media panels it provides become available.

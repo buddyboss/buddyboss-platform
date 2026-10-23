@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.6.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-10-23 08:00:04+00:00\n"
+"POT-Creation-Date: 2026-10-23 09:45:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -899,7 +899,7 @@ msgid "Activate Plugin"
 msgstr ""
 
 #: bb-features/community/blogging/admin/member-blogs-addon.php:347
-#: bp-core/admin/bb-admin-settings-media.php:606
+#: bp-core/admin/bb-admin-settings-media.php:648
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:548
 msgid "Activating…"
 msgstr ""
@@ -909,13 +909,13 @@ msgid "Member Blogging is included in your plan. Install the add-on to let your 
 msgstr ""
 
 #: bb-features/community/blogging/admin/member-blogs-addon.php:354
-#: bp-core/admin/bb-admin-settings-media.php:589
+#: bp-core/admin/bb-admin-settings-media.php:631
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:587
 msgid "Install & Activate"
 msgstr ""
 
 #: bb-features/community/blogging/admin/member-blogs-addon.php:358
-#: bp-core/admin/bb-admin-settings-media.php:593
+#: bp-core/admin/bb-admin-settings-media.php:635
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:591
 msgid "Installing…"
 msgstr ""
@@ -5464,7 +5464,7 @@ msgstr ""
 msgid "Install LearnDash Add-on"
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:245
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:264
 #: bp-core/admin/bb-admin-settings-media.php:112
 #: bp-core/admin/bb-admin-settings-media.php:132
 #: bp-core/admin/bp-core-admin-slugs.php:57
@@ -5485,7 +5485,7 @@ msgstr ""
 
 #. translators: %s: Number of videos.
 #. translators: Photos count.
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:247
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:266
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:53
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:68
 #: bp-templates/bp-nouveau/readylaunch/search/loop/albums.php:77
@@ -5495,7 +5495,7 @@ msgid_plural "%s videos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:250
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:269
 #: bp-core/admin/bb-admin-settings-media.php:145
 #: bp-core/admin/bb-admin-settings-media.php:165
 #: bp-core/admin/bp-core-admin-slugs.php:53
@@ -5517,69 +5517,69 @@ msgid "Documents"
 msgstr ""
 
 #. translators: %s: Number of documents.
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:252
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:271
 #, php-format
 msgid "%s document"
 msgid_plural "%s documents"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:255
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:274
 #: bp-core/admin/bb-admin-settings-media.php:201
 msgid "Animated GIFs"
 msgstr ""
 
 #. translators: %s: Number of posts, comments and messages with a GIF.
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:257
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:276
 #, php-format
 msgid "%s GIF"
 msgid_plural "%s GIFs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:265
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:284
 msgid "Activate the BuddyBoss Add-ons plugin to show them to your members again."
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:267
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:286
 msgid "Activate BuddyBoss Add-ons"
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:271
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:289
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:290
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:308
 msgid "View plans"
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:276
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:295
 msgid "Your current BuddyBoss license does not include them. Check your license or upgrade your plan to show them to your members again."
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:278
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:297
 msgid "Upgrade plan"
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:283
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:302
 msgid "Manage license"
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:287
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:306
 msgid "Install the BuddyBoss Add-ons plugin to show them to your members again. Available on the Start plan and above."
 msgstr ""
 
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:294
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:313
 msgid "Already have a plan? Install BuddyBoss Add-ons"
 msgstr ""
 
 #. translators: %s: Feature names, e.g. "Videos, Documents and Animated GIFs".
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:305
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:324
 #, php-format
 msgid "%s now come from the BuddyBoss Add-ons plugin"
 msgstr ""
 
 #. translators: 1: Item counts, e.g. "12 videos, 3 documents and 5 GIFs". 2: Call to action sentence.
-#: bp-core/admin/bb-admin-moved-media-features-notice.php:315
+#: bp-core/admin/bb-admin-moved-media-features-notice.php:334
 #, php-format
-msgid "Your community has %1$s that are currently hidden from members. %2$s"
+msgid "Hidden from your members right now: %1$s. %2$s"
 msgstr ""
 
 #: bp-core/admin/bb-admin-register-banner.php:193
@@ -5995,18 +5995,18 @@ msgid "Upgrade to Start"
 msgstr ""
 
 #. translators: %s: Feature name, e.g. "Videos".
-#: bp-core/admin/bb-admin-settings-media.php:586
+#: bp-core/admin/bb-admin-settings-media.php:628
 #, php-format
-msgid "%s is included in your plan. Install the BuddyBoss Add-ons plugin to use it."
+msgid "Your plan includes %s. Install the BuddyBoss Add-ons plugin to use this feature."
 msgstr ""
 
 #. translators: %s: Feature name, e.g. "Videos".
-#: bp-core/admin/bb-admin-settings-media.php:599
+#: bp-core/admin/bb-admin-settings-media.php:641
 #, php-format
-msgid "%s is included in your plan. Activate the BuddyBoss Add-ons plugin to use it."
+msgid "Your plan includes %s. Activate the BuddyBoss Add-ons plugin to use this feature."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:602
+#: bp-core/admin/bb-admin-settings-media.php:644
 #: bp-core/admin/bp-core-admin-functions.php:296
 #: bp-core/admin/mothership/class-bb-addons-manager.php:737
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:544
@@ -6022,67 +6022,89 @@ msgid "Activate"
 msgstr ""
 
 #. translators: %s: Feature name, e.g. "Videos".
-#: bp-core/admin/bb-admin-settings-media.php:619
+#: bp-core/admin/bb-admin-settings-media.php:660
 #, php-format
-msgid "%s is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the plugin to use it."
+msgid "Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Update the plugin to use it."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:622
+#: bp-core/admin/bb-admin-settings-media.php:663
 msgid "Update Plugin"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:627
+#: bp-core/admin/bb-admin-settings-media.php:668
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:571
 msgid "Updating…"
 msgstr ""
 
 #. translators: %s: Feature name, e.g. "Videos".
-#: bp-core/admin/bb-admin-settings-media.php:633
+#: bp-core/admin/bb-admin-settings-media.php:674
 #, php-format
-msgid "%s is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Check for a plugin update."
+msgid "Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Check for a plugin update."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:636
+#: bp-core/admin/bb-admin-settings-media.php:677
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:701
 msgid "Go to Updates"
 msgstr ""
 
-#. translators: %s: Feature name, e.g. "Videos".
-#: bp-core/admin/bb-admin-settings-media.php:645
-#, php-format
-msgid "%s is included in your plan, but the BuddyBoss Add-ons plugin has not enabled it. Check your license."
+#: bp-core/admin/bb-admin-settings-media.php:683
+msgid "This feature is turned off on your site. Turn it on to let members use it again."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:648
-msgid "Manage License"
+#. translators: %s: Feature name, e.g. "Videos".
+#: bp-core/admin/bb-admin-settings-media.php:686
+#, php-format
+msgid "Turn On %s"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-media.php:693
+msgid "Turning on…"
+msgstr ""
+
+#. translators: %s: Feature name, e.g. "Videos".
+#: bp-core/admin/bb-admin-settings-media.php:700
+#, php-format
+msgid "Your plan includes %s, but the BuddyBoss Add-ons plugin has not enabled this feature. Check your license."
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-media.php:703
+msgid "Manage License"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-media.php:762
+msgid "Sorry, you are not allowed to change this setting."
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-media.php:768
+msgid "This feature cannot be turned on right now."
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-media.php:810
 msgid "Sorry, you are not allowed to update plugins."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:708
+#: bp-core/admin/bb-admin-settings-media.php:815
 msgid "Activate the BuddyBoss Add-ons plugin first."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:709
+#: bp-core/admin/bb-admin-settings-media.php:816
 msgid "The BuddyBoss Add-ons plugin is already up to date."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:710
+#: bp-core/admin/bb-admin-settings-media.php:817
 msgid "The BuddyBoss Add-ons plugin is a version-control checkout. Update it manually."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:711
+#: bp-core/admin/bb-admin-settings-media.php:818
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:760
 msgid "The BuddyBoss Add-ons plugin is not available under your current license."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:712
+#: bp-core/admin/bb-admin-settings-media.php:819
 msgid "No newer version of the BuddyBoss Add-ons plugin is available yet."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-media.php:713
+#: bp-core/admin/bb-admin-settings-media.php:820
 #: bp-core/admin/settings/emails/email-digest-placeholder.php:794
 msgid "Plugin update failed. Please try again."
 msgstr ""
@@ -6462,24 +6484,24 @@ msgstr ""
 msgid "BuddyBoss Sharing"
 msgstr ""
 
-#: bp-core/admin/bb-admin-version-compatibility-notices.php:164
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:163
 #: bp-core/classes/class-bp-admin.php:3691
 msgid "BuddyBoss Theme"
 msgstr ""
 
 #. translators: %s: Platform version
-#: bp-core/admin/bb-admin-version-compatibility-notices.php:310
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:309
 #, php-format
 msgid "BuddyBoss Platform %s requires updates to the following plugins:"
 msgstr ""
 
 #. translators: 1: Plugin name. 2: Required version. 3: Currently installed version.
-#: bp-core/admin/bb-admin-version-compatibility-notices.php:322
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:321
 #, php-format
 msgid "%1$s (%2$s or higher) — currently %3$s"
 msgstr ""
 
-#: bp-core/admin/bb-admin-version-compatibility-notices.php:333
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:332
 msgid "Update plugins now"
 msgstr ""
 
@@ -17321,11 +17343,11 @@ msgid_plural "%d groups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/classes/class-bp-core.php:582
+#: bp-core/classes/class-bp-core.php:599
 msgid "BuddyBoss emails"
 msgstr ""
 
-#: bp-core/classes/class-bp-core.php:605
+#: bp-core/classes/class-bp-core.php:622
 msgid "BuddyBoss group type"
 msgstr ""
 
