@@ -1804,6 +1804,12 @@ window.bp = window.bp || {};
 				return forums.draft_not_restored_message || '';
 			}
 
+			// The draft read failed, so saves are refused until it is retried:
+			// say so again on reopen, as the autosave guard does on its tick.
+			if ( true === forums.draft_fetch_failed ) {
+				return forums.draft_fetch_failed_message || '';
+			}
+
 			return '';
 		};
 
