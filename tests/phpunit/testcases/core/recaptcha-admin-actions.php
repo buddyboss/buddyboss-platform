@@ -80,14 +80,39 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 		$this->assertWPError( bb_recaptcha_validate_activate( true ) );
 	}
 
+	/**
+	 * Create an administrator who can edit other users, on single site and multisite.
+	 *
+	 * @return int
+	 */
+	protected function create_admin() {
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		if ( is_multisite() ) {
+			grant_super_admin( $admin );
+		}
+
+		return $admin;
+	}
+
 	public function test_lost_password_skips_verification_for_an_admin_resetting_another_user() {
-		$admin  = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$admin  = $this->create_admin();
+		$member = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		self::set_current_user( $admin );
+		set_current_screen( 'users' );
+
+		$errors = $this->validate_lost_password( get_userdata( $member ) );
+
+		$this->assertFalse( $errors->has_errors() );
+	}
+
+	public function test_lost_password_is_verified_for_an_admin_on_the_front_end_form() {
+		$admin  = $this->create_admin();
 		$member = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		self::set_current_user( $admin );
 
 		$errors = $this->validate_lost_password( get_userdata( $member ) );
 
-		$this->assertFalse( $errors->has_errors() );
+		$this->assertContains( 'bb_recaptcha', $errors->get_error_codes() );
 	}
 
 	public function test_lost_password_is_verified_for_an_admin_resetting_their_own_account() {

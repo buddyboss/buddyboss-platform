@@ -185,13 +185,16 @@ function bb_recaptcha_validate_lost_password( $errors, $user_data = false ) {
 	}
 
 	/*
-	 * Bypass a reset sent by a logged-in user for another account they can edit:
-	 * wp-admin Users → "Send password reset" (row and bulk) and user-edit.php
+	 * Bypass a reset sent from wp-admin by a logged-in user for another account
+	 * they can edit: Users → "Send password reset" (row and bulk) and user-edit.php
 	 * "Send Reset Link" (admin-ajax). These never render the widget. WordPress
 	 * offers these tools for other accounts only, so self-service and logged-out
-	 * requests, including admin-ajax ones, stay protected.
+	 * requests, including admin-ajax ones, stay protected. is_admin() keeps the
+	 * wp-login.php form, which has no nonce, verified even for a logged-in admin,
+	 * so a cross-site POST cannot skip the check on the admin's cookie.
 	 */
 	if (
+		is_admin() &&
 		$user_data instanceof WP_User &&
 		is_user_logged_in() &&
 		get_current_user_id() !== $user_data->ID &&
