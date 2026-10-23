@@ -1689,6 +1689,41 @@ function bb_draft_evicted_overflow_option( $user_id ) {
 }
 
 /**
+ * Name of the option listing the keys in a member's overflow hold.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ * @return string
+ */
+function bb_draft_evicted_overflow_keys_option( $user_id ) {
+	return 'bb_draft_evicted_' . (int) $user_id . '_overflow_keys';
+}
+
+/**
+ * Keys of a member's held drafts waiting in the overflow.
+ *
+ * Page views ask only whether a key waits there, so they read this short
+ * list instead of the overflow itself, which can hold a large legacy forum
+ * row's drafts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ * @return string[]
+ */
+function bb_draft_get_evicted_overflow_keys( $user_id ) {
+	if ( 2 !== (int) get_user_meta( (int) $user_id, 'bb_draft_has_evicted_hold', true ) ) {
+		return array();
+	}
+
+	$name = bb_draft_evicted_overflow_keys_option( $user_id );
+	$keys = is_multisite() ? get_site_option( $name, array() ) : get_option( $name, array() );
+
+	return is_array( $keys ) ? array_map( 'strval', $keys ) : array();
+}
+
+/**
  * Read a member's held drafts that wait for room in the hold.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1730,16 +1765,22 @@ function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
 		: ! empty( $overflow );
 
 	if ( null !== $overflow ) {
+		$keys_name = bb_draft_evicted_overflow_keys_option( $user_id );
+
 		if ( empty( $overflow ) ) {
 			if ( is_multisite() ) {
 				delete_site_option( $overflow_name );
+				delete_site_option( $keys_name );
 			} else {
 				delete_option( $overflow_name );
+				delete_option( $keys_name );
 			}
 		} elseif ( is_multisite() ) {
 			update_site_option( $overflow_name, $overflow );
+			update_site_option( $keys_name, array_map( 'strval', array_keys( $overflow ) ) );
 		} else {
 			update_option( $overflow_name, $overflow, false );
+			update_option( $keys_name, array_map( 'strval', array_keys( $overflow ) ), false );
 		}
 	}
 
@@ -1807,7 +1848,12 @@ function bb_draft_get_held_entry( $user_id, $key ) {
 	}
 
 	// A draft waiting in the overflow is still the member's: the composer for
-	// its key must fetch it, or a fresh save there would replace it.
+	// its key must fetch it, or a fresh save there would replace it. The key
+	// list is checked first, so the overflow is read only for such a key.
+	if ( ! in_array( (string) $key, bb_draft_get_evicted_overflow_keys( $user_id ), true ) ) {
+		return false;
+	}
+
 	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
 
 	return isset( $overflow[ $key ]['entry'] ) && is_array( $overflow[ $key ]['entry'] ) ? $overflow[ $key ]['entry'] : false;
@@ -1910,8 +1956,8 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
  * again ({@see bb_draft_pending_evicted()}). Nothing is dropped; overflow
  * entries expire with the hold time like any held draft.
  *
- * The newest draft is always kept in the hold, even alone over the cap, so a
- * single large draft is still handed back.
+ * A single draft larger than the cap waits in the overflow too, and its
+ * composer's fetch hands it back ({@see bb_draft_promote_evicted()}).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1962,7 +2008,7 @@ function bb_draft_split_evicted_hold( $hold ) {
 	foreach ( $hold as $key => $held ) {
 		$held_bytes = strlen( maybe_serialize( $held ) ) + bb_draft_serialized_key_bytes( $key );
 
-		if ( ! empty( $kept ) && $bytes + $held_bytes > $max_bytes ) {
+		if ( $bytes + $held_bytes > $max_bytes ) {
 			$overflow[ $key ] = $held;
 			continue;
 		}
@@ -2004,10 +2050,12 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
 	$hold    = bb_draft_drop_settled_evicted( $user_id, $hold, $acked );
 	$changed = count( $hold ) !== $unheld;
 
-	// Room was made in the hold (or it was empty): move the newest waiting
-	// drafts in, so the browser gets them back in turn. An acknowledgement
-	// can also name a waiting draft the browser got through its own fetch.
-	if ( 2 === $flag && ( $changed || empty( $hold ) || ! empty( $acked ) ) ) {
+	// Room was made in the hold: move the newest waiting drafts in, so the
+	// browser gets them back in turn. An acknowledgement can also name a
+	// waiting draft the browser got through its own fetch. Not on every page
+	// view: an overflow left only with drafts larger than the hold waits for
+	// its composer's fetch ({@see bb_draft_promote_evicted()}).
+	if ( 2 === $flag && ( $changed || ! empty( $acked ) ) ) {
 		$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ), $acked );
 
 		bb_draft_store_evicted_hold( $user_id, array_merge( $overflow, $hold ) );

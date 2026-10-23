@@ -1271,6 +1271,22 @@ window.bp = window.bp || {};
 					bp.draft_fetch_in_progress = false;
 
 					// Evictions whose hand-back never reached this browser.
+					// Typing in this composer before its draft loaded: a hand-back for
+					// this key would be replaced by that text, so it stays held on the
+					// server and the text is not saved over it in this page view.
+					if (
+						response && response.evicted_drafts && response.evicted_drafts[ bp.draft_activity.data_key ] &&
+						(
+							( bp.draft_activity.data && '' !== bp.draft_activity.data ) ||
+							bp.draft_content_changed ||
+							( ! _.isUndefined( self.postForm ) && self.postForm.$el && '' !== $.trim( self.postForm.$el.find( '#bb-rl-whats-new' ).text().replace( /\u00a0/g, ' ' ) ) )
+						)
+					) {
+						window.bbDraftHandbackSkipKeys = window.bbDraftHandbackSkipKeys || {};
+						window.bbDraftHandbackSkipKeys[ bp.draft_activity.data_key ] = true;
+						bp.draft_save_blocked = true;
+					}
+
 					self.handleEvictedDrafts( response );
 
 					// A successful read clears any earlier failure state, so a
@@ -1514,7 +1530,8 @@ window.bp = window.bp || {};
 		 * The composer's paste cleanup removes table markup together with its
 		 * text, so a range copied from a spreadsheet pasted nothing (F-07).
 		 * MediumEditor applies these to the pasted HTML before that cleanup:
-		 * cells become space-separated text and rows become lines.
+		 * cells become space-separated text and each row a paragraph, the same
+		 * as the forum and message editors.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1525,9 +1542,11 @@ window.bp = window.bp || {};
 				[ new RegExp( /<style[\s\S]*?<\/style>/gi ), '' ],
 				[ new RegExp( /<\/?(?:colgroup|col)\b[^>]*>/gi ), '' ],
 				[ new RegExp( /<\/?google-sheets-html-origin\b[^>]*>/gi ), '' ],
-				[ new RegExp( /<\/t[dh]>\s*(?=<t[dh]\b)/gi ), ' ' ],
-				[ new RegExp( /<\/tr>\s*(?=<tr\b)/gi ), '<br>' ],
-				[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|tr|td|th|caption)\b[^>]*>/gi ), '' ]
+				[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|caption)\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<tr\b[^>]*>/gi ), '<p>' ],
+				[ new RegExp( /<\/tr>/gi ), '</p>' ],
+				[ new RegExp( /<t[dh]\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/t[dh]>/gi ), ' ' ]
 			];
 		},
 
@@ -1738,16 +1757,36 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * When a draft copy was last saved or written in this browser, in seconds.
+		 * The `_draft_edit_at` stamp for a draft about to be stored locally.
+		 *
+		 * Kept from the stored copy while the content is unchanged. A first copy
+		 * of a draft read from the server takes the server's save time; any other
+		 * new or changed content is stamped now.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param {Object} copy Draft entry or local copy.
+		 * @param {Object} draft Draft about to be stored.
 		 *
 		 * @return {number}
 		 */
-		draftCopyTime: function( copy ) {
-			return Math.max( parseInt( copy._draft_saved_at, 10 ) || 0, parseInt( copy._draft_local_at, 10 ) || 0 );
+		draftEditTime: function( draft ) {
+			var previous = null;
+
+			try {
+				previous = JSON.parse( localStorage.getItem( draft.data_key ) || 'null' );
+			} catch ( e ) {
+				previous = null;
+			}
+
+			if ( previous && 'object' === typeof previous ) {
+				if ( this.canonicalDraftJson( previous.data ) === this.canonicalDraftJson( draft.data ) ) {
+					return parseInt( previous._draft_edit_at, 10 ) || 0;
+				}
+
+				return Math.floor( Date.now() / 1000 );
+			}
+
+			return parseInt( draft._draft_saved_at, 10 ) || Math.floor( Date.now() / 1000 );
 		},
 
 		/**
@@ -1784,18 +1823,24 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * Whether this browser's copy of a key should win over a handed-back draft.
+		 * What to keep when a draft is handed back for a key this browser may
+		 * already hold: 'local', 'entry' or 'merge'.
 		 *
 		 * The hand-back is the server's only remaining copy, and the key is
-		 * acknowledged once one of the two is stored, so a wrong choice loses the
-		 * draft. The local copy wins only when it is this member's and:
-		 * - the hand-back carries a revision and the local copy is that revision
-		 *   or was built on it; or
-		 * - the hand-back has no revision (upgrade or heal holds, legacy rows)
-		 *   and the local copy has the same content, is itself unsynced
-		 *   (pending), or is not older.
-		 * Another member's copy (a shared browser) never wins, and neither does
-		 * an ownerless one unless the revision proves it is this draft.
+		 * acknowledged once the result is stored, so neither the handed-back
+		 * draft nor the member's local text may be lost:
+		 * 1. no local copy, or one stamped with another member (a shared
+		 *    browser): the entry;
+		 * 2. the entry carries a revision and the local copy is that revision
+		 *    or was built on it: the local copy, which is at least as new;
+		 * 3. an ownerless local copy: the entry - text whose owner is unproven
+		 *    is never merged into this member's draft;
+		 * 4. the same content: the local copy;
+		 * 5. the local copy is unsynced (pending) or was edited after the entry
+		 *    was saved: both, merged ({@see mergeHandback});
+		 * 6. otherwise the local copy is an older copy: the entry.
+		 * Stored drafts carry no base list, so an entry never proves the local
+		 * copy is its ancestor beyond rule 6.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1804,43 +1849,254 @@ window.bp = window.bp || {};
 		 * @param {number}      owner_id The current member.
 		 * @param {boolean}     is_forum Whether the key is a forum composer key.
 		 *
-		 * @return {boolean}
+		 * @return {string} 'local', 'entry' or 'merge'.
 		 */
-		keepLocalCopyOverHandback: function( existing, entry, owner_id, is_forum ) {
+		handbackDecision: function( existing, entry, owner_id, is_forum ) {
 			var owner, entry_rev;
 
 			if ( ! existing || 'object' !== typeof existing ) {
-				return false;
+				return 'entry';
 			}
 
 			owner = this.localCopyOwner( existing, is_forum );
 
 			if ( owner && owner !== owner_id ) {
-				return false;
+				return 'entry';
 			}
 
 			entry_rev = entry._draft_rev ? String( entry._draft_rev ) : '';
 
-			if ( entry_rev ) {
-				return String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( this.draftBaseFrom( existing ), entry_rev );
+			if ( entry_rev && ( String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( this.draftBaseFrom( existing ), entry_rev ) ) ) {
+				return 'local';
 			}
 
 			if ( ! owner ) {
-				return false;
+				return 'entry';
 			}
 
-			return this.canonicalDraftJson( existing.data ) === this.canonicalDraftJson( entry.data ) ||
-				true === existing.bb_draft_pending_sync ||
-				this.draftCopyTime( existing ) >= this.draftCopyTime( entry );
+			if ( this.canonicalDraftJson( existing.data ) === this.canonicalDraftJson( entry.data ) ) {
+				return 'local';
+			}
+
+			if ( true === existing.bb_draft_pending_sync || ( parseInt( existing._draft_edit_at, 10 ) || 0 ) > ( parseInt( entry._draft_saved_at, 10 ) || 0 ) ) {
+				return 'merge';
+			}
+
+			return 'entry';
+		},
+
+		/**
+		 * Whether draft HTML holds anything to keep (text or an image).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} html Draft HTML.
+		 *
+		 * @return {boolean}
+		 */
+		draftHtmlHasContent: function( html ) {
+			return 'string' === typeof html && '' !== $.trim( html.replace( /<(?!img\b)[^>]*>/gi, '' ).replace( /&nbsp;| /g, ' ' ) );
+		},
+
+		/**
+		 * Append the local text to the handed-back text, unless it adds nothing.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} base  Handed-back HTML.
+		 * @param {*} extra Local HTML.
+		 *
+		 * @return {*} The merged HTML, or the handed-back value unchanged.
+		 */
+		appendDraftHtml: function( base, extra ) {
+			var base_html = 'string' === typeof base ? base : '';
+
+			if ( ! this.draftHtmlHasContent( extra ) || extra === base_html || -1 !== base_html.indexOf( extra ) ) {
+				return base;
+			}
+
+			if ( ! this.draftHtmlHasContent( base_html ) ) {
+				return extra;
+			}
+
+			return base_html + ( /<\/(?:p|div|ul|ol|li|blockquote|pre|h[1-6]|table)>\s*$/i.test( base_html ) ? '' : '<br>' ) + extra;
+		},
+
+		/**
+		 * Whether a draft field is empty (unset, blank, or an empty list).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} value Field value.
+		 *
+		 * @return {boolean}
+		 */
+		isBlankDraftValue: function( value ) {
+			if ( _.isUndefined( value ) || null === value || false === value ) {
+				return true;
+			}
+
+			if ( 'string' === typeof value ) {
+				return -1 !== _.indexOf( [ '', '[]', '{}' ], $.trim( value ) );
+			}
+
+			return 'object' === typeof value && _.isEmpty( value );
+		},
+
+		/**
+		 * Add the local copy's attachments to the handed-back ones, by ID.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*}       base    Handed-back list.
+		 * @param {*}       extra   Local list.
+		 * @param {boolean} as_json Whether the lists are JSON strings (forum).
+		 *
+		 * @return {*} The merged list, or the handed-back value unchanged.
+		 */
+		unionDraftAttachments: function( base, extra, as_json ) {
+			var parse = function ( value ) {
+					if ( as_json ) {
+						if ( ! value ) {
+							return [];
+						}
+
+						try {
+							value = JSON.parse( value );
+						} catch ( e ) {
+							return null;
+						}
+					}
+
+					if ( _.isArray( value ) ) {
+						return value.slice( 0 );
+					}
+
+					return value ? null : [];
+				},
+				list  = parse( base ),
+				more  = parse( extra ),
+				ids   = [],
+				added = false;
+
+			if ( null === list || null === more || ! more.length ) {
+				return base;
+			}
+
+			_.each(
+				list,
+				function ( item ) {
+					if ( item && item.id ) {
+						ids.push( String( item.id ) );
+					}
+				}
+			);
+
+			_.each(
+				more,
+				function ( item ) {
+					var id = ( item && item.id ) ? String( item.id ) : '';
+
+					if ( id && -1 === _.indexOf( ids, id ) ) {
+						list.push( item );
+						ids.push( id );
+						added = true;
+					}
+				}
+			);
+
+			if ( ! added ) {
+				return base;
+			}
+
+			return as_json ? JSON.stringify( list ) : list;
+		},
+
+		/**
+		 * The handed-back draft with the member's local text and attachments added.
+		 *
+		 * The entry keeps its revision; the local text is appended after its
+		 * text and the attachment lists are joined by ID. The result is marked
+		 * pending and based on nothing (`_draft_base` ['none']): it matches no
+		 * stored draft, so a save over a newer stored one is refused instead of
+		 * replacing it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object}  existing This browser's copy of the key.
+		 * @param {Object}  entry    The handed-back draft.
+		 * @param {number}  owner_id The current member.
+		 * @param {boolean} is_forum Whether the key is a forum composer key.
+		 *
+		 * @return {Object}
+		 */
+		mergeHandback: function( existing, entry, owner_id, is_forum ) {
+			var self   = this,
+				merged = $.extend( true, {}, entry ),
+				local  = ( existing.data && 'object' === typeof existing.data ) ? existing.data : {},
+				data   = ( merged.data && 'object' === typeof merged.data ) ? merged.data : {},
+				now    = Math.floor( Date.now() / 1000 ),
+				fields = is_forum ?
+					{ html: [ 'bbp_topic_content', 'bbp_reply_content' ], fill: [ 'bbp_topic_title', 'bbp_topic_tags', 'bbp_media_gif' ], lists: [ 'bbp_media', 'bbp_document', 'bbp_video' ] } :
+					{ html: [ 'content' ], fill: [ 'post_title', 'gif_data' ], lists: [ 'media', 'document', 'video' ] };
+
+			_.each(
+				fields.html,
+				function ( field ) {
+					var value = self.appendDraftHtml( data[ field ], local[ field ] );
+
+					if ( ! _.isUndefined( value ) ) {
+						data[ field ] = value;
+					}
+				}
+			);
+
+			_.each(
+				fields.fill,
+				function ( field ) {
+					if ( self.isBlankDraftValue( data[ field ] ) && ! self.isBlankDraftValue( local[ field ] ) ) {
+						data[ field ] = local[ field ];
+					}
+				}
+			);
+
+			_.each(
+				fields.lists,
+				function ( field ) {
+					var value = self.unionDraftAttachments( data[ field ], local[ field ], is_forum );
+
+					if ( ! _.isUndefined( value ) ) {
+						data[ field ] = value;
+					}
+				}
+			);
+
+			if ( is_forum ) {
+				merged.bb_draft_owner = owner_id;
+			} else if ( owner_id ) {
+				data.user_id = owner_id;
+			}
+
+			merged.data                  = data;
+			merged.bb_draft_pending_sync = true;
+			merged._draft_local_at       = now;
+			merged._draft_edit_at        = now;
+			merged._draft_base           = [ 'none' ];
+			delete merged.bb_draft_interim;
+
+			return merged;
 		},
 
 		/**
 		 * Keep drafts the server evicted from the draft budget in localStorage.
 		 *
 		 * Activity keys are stored in this composer's own shape, forum inner
-		 * keys ("meta_key:inner_key") in the forum composer's shape. Each copy
-		 * is marked pending, because the server no longer holds it, and a key
-		 * is acknowledged only once its copy is stored.
+		 * keys ("meta_key:inner_key") in the forum composer's shape. A copy this
+		 * browser already holds is kept, replaced or merged with the hand-back
+		 * ({@see handbackDecision}). Each stored copy is marked pending, because
+		 * the server no longer holds it, and a key is acknowledged only once its
+		 * copy is stored. A key the member is typing over unloaded is skipped
+		 * (window.bbDraftHandbackSkipKeys) and stays held on the server.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1865,7 +2121,16 @@ window.bp = window.bp || {};
 					}
 
 					var is_forum = -1 !== String( key ).indexOf( ':' ),
-						existing;
+						existing,
+						decision;
+
+					// The member is typing in this key's composer over a draft that
+					// was not loaded: storing the hand-back there would be replaced
+					// by their text. Leave it held on the server, unacknowledged; it
+					// is merged with their text on the next visit.
+					if ( window.bbDraftHandbackSkipKeys && window.bbDraftHandbackSkipKeys[ storage_key ] ) {
+						return;
+					}
 
 					try {
 						existing = JSON.parse( localStorage.getItem( storage_key ) || 'null' );
@@ -1874,15 +2139,19 @@ window.bp = window.bp || {};
 					}
 
 					try {
-						// Keep this browser's copy only when it is at least as new as
-						// the hand-back and is this member's (keepLocalCopyOverHandback).
-						// Mark it pending, or another tab's composer close wipes
-						// what is now the only copy (V07). Otherwise the handed-back
-						// entry wins, stamped with its owner, so the composer for that
-						// key does not drop it as another member's copy (F-02).
-						if ( bp.Nouveau.Activity.postForm.keepLocalCopyOverHandback( existing, entry, owner_id, is_forum ) ) {
+						decision = bp.Nouveau.Activity.postForm.handbackDecision( existing, entry, owner_id, is_forum );
+
+						// The local copy is kept, or merged with the hand-back, only
+						// when it is this member's (handbackDecision). Either is
+						// marked pending, or another tab's composer close wipes what
+						// is now the only copy (V07). Otherwise the handed-back entry
+						// wins, stamped with its owner, so the composer for that key
+						// does not drop it as another member's copy (F-02).
+						if ( 'local' === decision ) {
 							existing.bb_draft_pending_sync = true;
 							localStorage.setItem( storage_key, JSON.stringify( existing ) );
+						} else if ( 'merge' === decision ) {
+							localStorage.setItem( storage_key, JSON.stringify( bp.Nouveau.Activity.postForm.mergeHandback( existing, entry, owner_id, is_forum ) ) );
 						} else {
 							copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
 							if ( is_forum ) {
@@ -1931,8 +2200,8 @@ window.bp = window.bp || {};
 			// draft budget and handed their entries back. Keep each one in
 			// localStorage, marked pending: it is now the only copy, and the
 			// composer for that key restores it and saves it again. A copy this
-			// browser already holds is kept only when it is the handed-back
-			// revision or was built on it; otherwise the handed-back entry wins.
+			// browser already holds is kept, replaced or merged with the
+			// hand-back (handbackDecision), so neither text is lost.
 
 			this.showDraftFeedback( bbRlActivity.params.draft_evicted_message );
 		},
@@ -2054,7 +2323,15 @@ window.bp = window.bp || {};
 			}
 
 			if ( draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
-				draft_activity = _.extend( {}, draft_activity, { _draft_base: bp.draft_base, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+				draft_activity = _.extend(
+					{},
+					draft_activity,
+					{
+						_draft_base: bp.draft_base,
+						_draft_local_at: Math.floor( Date.now() / 1000 ),
+						_draft_edit_at: bp.Nouveau.Activity.postForm.draftEditTime( draft_activity )
+					}
+				);
 			}
 
 			try {

@@ -1973,7 +1973,13 @@ function bb_nouveau_ajax_get_draft_activity() {
 	} elseif ( ! is_array( $draft_activity ) || empty( $draft_activity ) ) {
 		// A row that is not a draft (corrupt, or a legacy empty value) can never
 		// be restored, but its presence makes every page view fetch it again.
-		bb_draft_dispose( $user_id, $data_key );
+		// Read again first, bypassing the cache: a save to this key from another
+		// tab may have just replaced it with a real draft.
+		$fresh_draft = bb_draft_fresh_value( $user_id, $data_key );
+
+		if ( null !== $fresh_draft && ( ! is_array( $fresh_draft ) || empty( $fresh_draft ) ) ) {
+			bb_draft_dispose( $user_id, $data_key );
+		}
 	}
 
 	wp_send_json_success(

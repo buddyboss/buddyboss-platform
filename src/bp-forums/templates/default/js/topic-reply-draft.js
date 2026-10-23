@@ -452,6 +452,25 @@ window.bp = window.bp || {};
 			this.topic_reply_draft._draft_base    = this.draft_blocked_keys[ this.topic_reply_draft.data_key ] ? [ 'none' ] : this.draftBaseFor( this.topic_reply_draft.data_key );
 			this.topic_reply_draft._draft_local_at = Math.floor( Date.now() / 1000 );
 
+			// When the content last changed, which the page-unload save does not
+			// move: bbDraftHandbackDecision() compares it with a handed-back draft.
+			// A first copy read from the server takes the server's save time.
+			var bb_previous_copy = null;
+
+			try {
+				bb_previous_copy = JSON.parse( localStorage.getItem( this.topic_reply_draft.data_key ) || 'null' );
+			} catch ( e ) {
+				bb_previous_copy = null;
+			}
+
+			if ( bb_previous_copy && 'object' === typeof bb_previous_copy ) {
+				this.topic_reply_draft._draft_edit_at = _.isEqual( bb_previous_copy.data, this.topic_reply_draft.data ) ?
+					( parseInt( bb_previous_copy._draft_edit_at, 10 ) || 0 ) :
+					Math.floor( Date.now() / 1000 );
+			} else {
+				this.topic_reply_draft._draft_edit_at = parseInt( this.topic_reply_draft._draft_saved_at, 10 ) || Math.floor( Date.now() / 1000 );
+			}
+
 			if ( this.draft_pending_keys[ this.topic_reply_draft.data_key ] ) {
 				this.topic_reply_draft.bb_draft_pending_sync = true;
 			} else {
@@ -1128,7 +1147,8 @@ window.bp = window.bp || {};
 
 			// Report stored hand-backs here too, so the server stops holding
 			// them without waiting for the next save.
-			var retry_acks = bbDraftGetAcks();
+			var retry_acks = bbDraftGetAcks(),
+				retry_self = this;
 
 			$.post(
 				BP_Nouveau.ajaxurl,
@@ -1149,6 +1169,17 @@ window.bp = window.bp || {};
 						bbDraftClearAcks( retry_acks );
 
 						if ( response.data && response.data.evicted_drafts ) {
+							// The open form already holds what the member wrote after
+							// the failed read. A hand-back for its key stays held on
+							// the server and is not saved over in this page view.
+							var retry_key = retry_self.topic_reply_draft ? retry_self.topic_reply_draft.data_key : '';
+
+							if ( retry_key && retry_self.draft_content_changed && ( response.data.evicted_drafts[ 'bb_user_topic_reply_draft:' + retry_key ] || response.data.evicted_drafts[ retry_key ] ) ) {
+								window.bbDraftHandbackSkipKeys              = window.bbDraftHandbackSkipKeys || {};
+								window.bbDraftHandbackSkipKeys[ retry_key ] = true;
+								retry_self.draft_blocked_keys[ retry_key ]  = true;
+							}
+
 							bbDraftStoreHandback( response.data.evicted_drafts );
 						}
 					}
@@ -1237,7 +1268,7 @@ window.bp = window.bp || {};
 			}
 
 			var self = this,
-				draft_payload = _.omit( this.topic_reply_draft, [ '_draft_base', '_draft_local_at', 'bb_draft_pending_sync', 'bb_draft_owner' ] );
+				draft_payload = _.omit( this.topic_reply_draft, [ '_draft_base', '_draft_local_at', '_draft_edit_at', 'bb_draft_pending_sync', 'bb_draft_owner' ] );
 
 			// The server strips inline base64 images anyway; stripping them here
 			// stops every autosave tick uploading them (V27).
@@ -1547,8 +1578,8 @@ window.bp = window.bp || {};
 		 * composer's shape, activity keys in the activity composer's shape.
 		 * Each copy is marked pending, because the server no longer holds it;
 		 * the activity composer reads that marker. A copy this browser already
-		 * holds is kept only when it is the handed-back revision or was built
-		 * on it; otherwise the handed-back entry wins.
+		 * holds is kept, replaced or merged with the hand-back
+		 * ({@see bbDraftHandbackDecision}).
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -2804,22 +2835,26 @@ window.bp = window.bp || {};
 	};
 
 	/**
-	 * Whether a hand-back may keep the copy this browser already holds for its key.
+	 * What to keep when a draft is handed back for a key this browser may
+	 * already hold: 'local', 'entry' or 'merge'.
 	 *
-	 * The handed-back entry is acknowledged right after this, and the server
-	 * then drops its held copy, so keeping the wrong local copy loses the
-	 * draft. A copy stamped with another member (bb_draft_owner on a forum
-	 * copy, data.user_id on an activity copy) is never kept: on a shared
-	 * browser it is someone else's draft. Otherwise the copy is kept only when
-	 * it is at least as new as the entry:
-	 * - the entry carries a revision and the copy is that revision or was built
-	 *   on it - a revision is unique to this member's stored draft, so this
-	 *   proves the copy is theirs even without an owner stamp;
-	 * - or the entry has no revision (upgrade and heal holds never carry one),
-	 *   the copy is stamped with this member - an ownerless copy cannot be
-	 *   attributed - and it has the same content, was edited after the entry
-	 *   was saved, or is itself still waiting to sync.
-	 * Otherwise the handed-back entry wins (F-02).
+	 * The handed-back entry is acknowledged right after it is stored, and the
+	 * server then drops its held copy, so neither the handed-back draft nor the
+	 * member's local text may be lost:
+	 * 1. no local copy, or one stamped with another member (bb_draft_owner on a
+	 *    forum copy, data.user_id on an activity copy - a shared browser): the
+	 *    entry;
+	 * 2. the entry carries a revision and the copy is that revision or was
+	 *    built on it - a revision is unique to this member's stored draft, so
+	 *    this proves the copy is theirs even without an owner stamp: the copy;
+	 * 3. an ownerless copy: the entry - text whose owner is unproven is never
+	 *    merged into this member's draft;
+	 * 4. the same content: the copy;
+	 * 5. the copy is unsynced (pending) or was edited after the entry was
+	 *    saved: both, merged ({@see bbDraftMergeHandback});
+	 * 6. otherwise the copy is an older copy: the entry.
+	 * Stored drafts carry no base list, so an entry never proves the copy is
+	 * its ancestor beyond rule 6.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -2828,13 +2863,13 @@ window.bp = window.bp || {};
 	 * @param {string}      entry_rev Entry revision, or ''.
 	 * @param {boolean}     is_forum  Whether the key is a forum inner key.
 	 * @param {number}      owner_id  Current member ID.
-	 * @return {boolean}
+	 * @return {string} 'local', 'entry' or 'merge'.
 	 */
-	var bbDraftKeepsLocalCopy = function ( existing, entry, entry_rev, is_forum, owner_id ) {
-		var existing_owner, local_at, saved_at;
+	var bbDraftHandbackDecision = function ( existing, entry, entry_rev, is_forum, owner_id ) {
+		var existing_owner;
 
 		if ( ! existing || 'object' !== typeof existing || ! owner_id ) {
-			return false;
+			return 'entry';
 		}
 
 		if ( is_forum ) {
@@ -2844,25 +2879,258 @@ window.bp = window.bp || {};
 		}
 
 		if ( existing_owner && existing_owner !== owner_id ) {
-			return false;
+			return 'entry';
 		}
 
-		if ( entry_rev ) {
-			return String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( bbDraftBaseFrom( existing ), entry_rev );
+		if ( entry_rev && ( String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( bbDraftBaseFrom( existing ), entry_rev ) ) ) {
+			return 'local';
 		}
 
 		if ( existing_owner !== owner_id ) {
-			return false;
+			return 'entry';
 		}
 
-		if ( true === existing.bb_draft_pending_sync || _.isEqual( existing.data, entry.data ) ) {
+		if ( _.isEqual( existing.data, entry.data ) ) {
+			return 'local';
+		}
+
+		// The last edit, not the last write: the page-unload save rewrites an
+		// unchanged copy, which must not make a stale copy look newer.
+		if ( true === existing.bb_draft_pending_sync || ( parseInt( existing._draft_edit_at, 10 ) || 0 ) > ( parseInt( entry._draft_saved_at, 10 ) || 0 ) ) {
+			return 'merge';
+		}
+
+		return 'entry';
+	};
+
+	/**
+	 * Whether draft HTML holds anything to keep (text or an image).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {*} html Draft HTML.
+	 * @return {boolean}
+	 */
+	var bbDraftHtmlHasContent = function ( html ) {
+		return 'string' === typeof html && '' !== $.trim( html.replace( /<(?!img\b)[^>]*>/gi, '' ).replace( /&nbsp;| /g, ' ' ) );
+	};
+
+	/**
+	 * Append the local text to the handed-back text, unless it adds nothing.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {*} base  Handed-back HTML.
+	 * @param {*} extra Local HTML.
+	 * @return {*} The merged HTML, or the handed-back value unchanged.
+	 */
+	var bbDraftAppendHtml = function ( base, extra ) {
+		var base_html = 'string' === typeof base ? base : '';
+
+		if ( ! bbDraftHtmlHasContent( extra ) || extra === base_html || -1 !== base_html.indexOf( extra ) ) {
+			return base;
+		}
+
+		if ( ! bbDraftHtmlHasContent( base_html ) ) {
+			return extra;
+		}
+
+		return base_html + ( /<\/(?:p|div|ul|ol|li|blockquote|pre|h[1-6]|table)>\s*$/i.test( base_html ) ? '' : '<br>' ) + extra;
+	};
+
+	/**
+	 * Whether a draft field is empty (unset, blank, or an empty list).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {*} value Field value.
+	 * @return {boolean}
+	 */
+	var bbDraftIsBlankValue = function ( value ) {
+		if ( _.isUndefined( value ) || null === value || false === value ) {
 			return true;
 		}
 
-		local_at = existing._draft_local_at ? parseInt( existing._draft_local_at, 10 ) : 0;
-		saved_at = entry._draft_saved_at ? parseInt( entry._draft_saved_at, 10 ) : 0;
+		if ( 'string' === typeof value ) {
+			return -1 !== _.indexOf( [ '', '[]', '{}' ], $.trim( value ) );
+		}
 
-		return 0 < local_at && local_at > saved_at;
+		return 'object' === typeof value && _.isEmpty( value );
+	};
+
+	/**
+	 * Add the local copy's attachments to the handed-back ones, by ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {*}       base    Handed-back list.
+	 * @param {*}       extra   Local list.
+	 * @param {boolean} as_json Whether the lists are JSON strings (forum).
+	 * @return {*} The merged list, or the handed-back value unchanged.
+	 */
+	var bbDraftUnionAttachments = function ( base, extra, as_json ) {
+		var parse = function ( value ) {
+				if ( as_json ) {
+					if ( ! value ) {
+						return [];
+					}
+
+					try {
+						value = JSON.parse( value );
+					} catch ( e ) {
+						return null;
+					}
+				}
+
+				if ( _.isArray( value ) ) {
+					return value.slice( 0 );
+				}
+
+				return value ? null : [];
+			},
+			list  = parse( base ),
+			more  = parse( extra ),
+			ids   = [],
+			added = false;
+
+		if ( null === list || null === more || ! more.length ) {
+			return base;
+		}
+
+		_.each(
+			list,
+			function ( item ) {
+				if ( item && item.id ) {
+					ids.push( String( item.id ) );
+				}
+			}
+		);
+
+		_.each(
+			more,
+			function ( item ) {
+				var id = ( item && item.id ) ? String( item.id ) : '';
+
+				if ( id && -1 === _.indexOf( ids, id ) ) {
+					list.push( item );
+					ids.push( id );
+					added = true;
+				}
+			}
+		);
+
+		if ( ! added ) {
+			return base;
+		}
+
+		return as_json ? JSON.stringify( list ) : list;
+	};
+
+	/**
+	 * The handed-back draft with the member's local text and attachments added.
+	 *
+	 * The entry keeps its revision; the local text is appended after its text
+	 * and the attachment lists are joined by ID. The result is marked pending
+	 * and based on nothing (`_draft_base` ['none']): it matches no stored
+	 * draft, so a save over a newer stored one is refused instead of replacing
+	 * it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object}  existing Copy stored under the key, parsed.
+	 * @param {Object}  entry    Handed-back entry.
+	 * @param {boolean} is_forum Whether the key is a forum inner key.
+	 * @param {number}  owner_id Current member ID.
+	 * @return {Object}
+	 */
+	var bbDraftMergeHandback = function ( existing, entry, is_forum, owner_id ) {
+		var merged = $.extend( true, {}, entry ),
+			local  = ( existing.data && 'object' === typeof existing.data ) ? existing.data : {},
+			data   = ( merged.data && 'object' === typeof merged.data ) ? merged.data : {},
+			now    = Math.floor( Date.now() / 1000 ),
+			fields = is_forum ?
+				{ html: [ 'bbp_topic_content', 'bbp_reply_content' ], fill: [ 'bbp_topic_title', 'bbp_topic_tags', 'bbp_media_gif' ], lists: [ 'bbp_media', 'bbp_document', 'bbp_video' ] } :
+				{ html: [ 'content' ], fill: [ 'post_title', 'gif_data' ], lists: [ 'media', 'document', 'video' ] };
+
+		_.each(
+			fields.html,
+			function ( field ) {
+				var value = bbDraftAppendHtml( data[ field ], local[ field ] );
+
+				if ( ! _.isUndefined( value ) ) {
+					data[ field ] = value;
+				}
+			}
+		);
+
+		_.each(
+			fields.fill,
+			function ( field ) {
+				if ( bbDraftIsBlankValue( data[ field ] ) && ! bbDraftIsBlankValue( local[ field ] ) ) {
+					data[ field ] = local[ field ];
+				}
+			}
+		);
+
+		_.each(
+			fields.lists,
+			function ( field ) {
+				var value = bbDraftUnionAttachments( data[ field ], local[ field ], is_forum );
+
+				if ( ! _.isUndefined( value ) ) {
+					data[ field ] = value;
+				}
+			}
+		);
+
+		if ( is_forum ) {
+			merged.bb_draft_owner = owner_id;
+		} else if ( owner_id ) {
+			data.user_id = owner_id;
+		}
+
+		merged.data                  = data;
+		merged.bb_draft_pending_sync = true;
+		merged._draft_local_at       = now;
+		merged._draft_edit_at        = now;
+		merged._draft_base           = [ 'none' ];
+		delete merged.bb_draft_interim;
+
+		return merged;
+	};
+
+	/**
+	 * Skip hand-backs for the keys of forms the member typed into before the
+	 * draft fetch resolved.
+	 *
+	 * Stored there, the hand-back would be replaced by the form's text on the
+	 * next local save, and its acknowledgement would let the server drop it.
+	 * Left unacknowledged it stays held, the form's text is not saved over it
+	 * (the not-restored state blocks the key), and the next visit merges the
+	 * two ({@see bbDraftHandbackDecision}).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {jQuery} $forms Forum forms on the page.
+	 * @param {Object} drafts Evicted entries keyed like `evicted_draft_keys`.
+	 * @return {void}
+	 */
+	var bbDraftSkipHandbackForTypedForms = function ( $forms, drafts ) {
+		$forms.each(
+			function () {
+				var $form = $( this ),
+					key   = bbDraftFormKey( $form );
+
+				if ( ! key || ! drafts || ( ! drafts[ 'bb_user_topic_reply_draft:' + key ] && ! drafts[ key ] ) ) {
+					return;
+				}
+
+				if ( bbDraftFormSnapshot( $form ) !== $form.data( 'bbDraftInitialSnapshot' ) ) {
+					window.bbDraftHandbackSkipKeys        = window.bbDraftHandbackSkipKeys || {};
+					window.bbDraftHandbackSkipKeys[ key ] = true;
+				}
+			}
+		);
 	};
 
 	/**
@@ -2871,11 +3139,12 @@ window.bp = window.bp || {};
 	 * Forum inner keys ("meta_key:inner_key") are stored in this composer's
 	 * shape, activity keys in the activity composer's shape. Each copy is
 	 * marked pending, because the server no longer holds it. A copy this
-	 * browser already holds keeps its content only when it is this member's
-	 * and at least as new as the handed-back entry
-	 * ({@see bbDraftKeepsLocalCopy}); it is marked pending too, so no composer
-	 * close wipes what is now the only copy. A key is acknowledged only once
-	 * its copy is stored.
+	 * browser already holds is kept, replaced or merged with the hand-back
+	 * ({@see bbDraftHandbackDecision}); a kept copy is marked pending too, so
+	 * no composer close wipes what is now the only copy. A key is acknowledged
+	 * only once its copy is stored. A key the member is typing over unloaded
+	 * is skipped and stays held on the server
+	 * ({@see bbDraftSkipHandbackForTypedForms}).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -2901,7 +3170,16 @@ window.bp = window.bp || {};
 				}
 
 				var entry_rev = entry._draft_rev ? String( entry._draft_rev ) : '',
-					existing;
+					is_forum  = -1 !== String( key ).indexOf( ':' ),
+					existing,
+					decision;
+
+				// The member is typing in this key's form over a draft that was
+				// not loaded: left held on the server, unacknowledged
+				// ({@see bbDraftSkipHandbackForTypedForms}).
+				if ( window.bbDraftHandbackSkipKeys && window.bbDraftHandbackSkipKeys[ storage_key ] ) {
+					return;
+				}
 
 				try {
 					existing = JSON.parse( localStorage.getItem( storage_key ) || 'null' );
@@ -2910,13 +3188,19 @@ window.bp = window.bp || {};
 				}
 
 				try {
-					if ( bbDraftKeepsLocalCopy( existing, entry, entry_rev, -1 !== String( key ).indexOf( ':' ), owner_id ) ) {
+					decision = bbDraftHandbackDecision( existing, entry, entry_rev, is_forum, owner_id );
+
+					if ( 'local' === decision ) {
 						existing.bb_draft_pending_sync = true;
 						localStorage.setItem( storage_key, JSON.stringify( existing ) );
+					} else if ( 'merge' === decision ) {
+						localStorage.setItem( storage_key, JSON.stringify( bbDraftMergeHandback( existing, entry, is_forum, owner_id ) ) );
 					} else {
 						copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
-						if ( -1 !== String( key ).indexOf( ':' ) ) {
+						if ( is_forum ) {
 							copy.bb_draft_owner = owner_id;
+						} else if ( owner_id && copy.data && 'object' === typeof copy.data && _.isUndefined( copy.data.user_id ) ) {
+							copy.data = _.extend( {}, copy.data, { user_id: owner_id } );
 						}
 
 						localStorage.setItem( storage_key, JSON.stringify( copy ) );
@@ -3192,7 +3476,8 @@ window.bp = window.bp || {};
 	 * (`_draft_base` ['none']), the same as text typed while the stored draft
 	 * was not loaded: after a reload it is restored into the form, and its next
 	 * server save is refused as a conflict instead of replacing a stored draft
-	 * it never saw. A local copy this page did not write is left alone.
+	 * it never saw. A form whose key has a local copy this page did not write
+	 * is locked instead ({@see bbDraftLockFormsWithLocalCopy}).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -3259,6 +3544,9 @@ window.bp = window.bp || {};
 								bb_draft_owner: owner_id,
 								_draft_base: [ 'none' ],
 								_draft_local_at: Math.floor( Date.now() / 1000 ),
+								// Real typing: a later hand-back for this key is
+								// merged with it, not stored over it.
+								_draft_edit_at: Math.floor( Date.now() / 1000 ),
 								bb_draft_interim: bbDraftInterimToken
 							}
 						)
@@ -3300,6 +3588,79 @@ window.bp = window.bp || {};
 				} catch ( e ) {
 					// Unreadable copy: leave it to the normal restore path.
 				}
+			}
+		);
+	};
+
+	/**
+	 * Keep forms that already have a local copy read-only while the fetch runs.
+	 *
+	 * bbDraftStashTypedDuringFetch() cannot store typing over a local copy it
+	 * did not write: that copy may be the member's only one. Such a form is
+	 * filled from its copy once the forms start, so text typed into it before
+	 * then could not be kept anyway (F-10). Input is refused at the document,
+	 * so it holds whenever the editor itself starts. The lock lasts until the
+	 * fetch resolves, or until its retries fail and the forms start regardless.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {boolean} lock True to lock, false to release.
+	 * @return {void}
+	 */
+	var bbDraftLockFormsWithLocalCopy = function ( lock ) {
+		if ( ! lock ) {
+			forms.removeData( 'bbDraftLocked' );
+
+			return;
+		}
+
+		forms.each(
+			function () {
+				var $form = $( this ),
+					key   = bbDraftFormKey( $form ),
+					existing;
+
+				if ( ! key ) {
+					return;
+				}
+
+				try {
+					existing = JSON.parse( localStorage.getItem( key ) || 'null' );
+				} catch ( e ) {
+					existing = null;
+				}
+
+				if ( existing && 'object' === typeof existing && bbDraftInterimToken !== existing.bb_draft_interim ) {
+					$form.data( 'bbDraftLocked', true );
+				}
+			}
+		);
+
+		if ( ! document.addEventListener || window.bbDraftLockBound ) {
+			return;
+		}
+
+		window.bbDraftLockBound = true;
+
+		// keydown too: a keyboard Cmd/Ctrl+V is moved into MediumEditor's paste
+		// bin outside the form and inserted without a beforeinput event.
+		_.each(
+			[ 'beforeinput', 'keypress', 'keydown', 'paste', 'drop' ],
+			function ( type ) {
+				document.addEventListener(
+					type,
+					function ( event ) {
+						if ( 'keydown' === type && ! ( ( event.metaKey || event.ctrlKey ) && 86 === event.keyCode ) ) {
+							return;
+						}
+
+						if ( event.target && $( event.target ).closest( 'form' ).data( 'bbDraftLocked' ) ) {
+							event.preventDefault();
+							event.stopImmediatePropagation();
+						}
+					},
+					true
+				);
 			}
 		);
 	};
@@ -3454,10 +3815,12 @@ window.bp = window.bp || {};
 		var bbDraftInterimInterval = window.setInterval( bbDraftStashTypedDuringFetch, 3000 );
 
 		window.addEventListener( 'beforeunload', bbDraftStashTypedDuringFetch );
+		bbDraftLockFormsWithLocalCopy( true );
 
 		var bbDraftStartForms = function () {
 			window.clearInterval( bbDraftInterimInterval );
 			window.removeEventListener( 'beforeunload', bbDraftStashTypedDuringFetch );
+			bbDraftLockFormsWithLocalCopy( false );
 			bbDraftDropInterimStash();
 			bbInitTopicReplyDrafts();
 		};
@@ -3520,8 +3883,10 @@ window.bp = window.bp || {};
 					// The server applied these before answering.
 					bbDraftClearAcks( fetch_acks );
 
-					// Evictions whose hand-back never reached this browser.
+					// Evictions whose hand-back never reached this browser, except
+					// for forms the member already typed into.
 					if ( response.data && response.data.evicted_drafts ) {
+						bbDraftSkipHandbackForTypedForms( forms, response.data.evicted_drafts );
 						bbDraftStoreHandback( response.data.evicted_drafts );
 					}
 

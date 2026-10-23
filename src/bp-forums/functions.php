@@ -1072,7 +1072,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// forum page, since that fetch is also what hands it back.
 	if ( get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ) ) {
 		// Drafts waiting in the overflow count too; the fetch hands them back.
-		$held_keys = array_merge( array_keys( bb_draft_pending_evicted( $user_id ) ), array_keys( bb_draft_get_evicted_overflow( $user_id ) ) );
+		$held_keys = array_merge( array_keys( bb_draft_pending_evicted( $user_id ) ), bb_draft_get_evicted_overflow_keys( $user_id ) );
 
 		foreach ( $held_keys as $held_key ) {
 			if ( 0 === strpos( (string) $held_key, 'bb_user_topic_reply_draft:' ) ) {

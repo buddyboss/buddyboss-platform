@@ -2655,6 +2655,54 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Page views find a waiting draft through the key list, never by reading
+	 * the overflow, and a single draft larger than the hold waits there until
+	 * its composer fetches it (PROD-9621 R2 F-2).
+	 */
+	public function test_overflow_is_read_only_for_a_key_that_waits_there() {
+		$user_id = self::factory()->user->create();
+		$big     = array(
+			'data_key'        => 'draft_group_5',
+			'data'            => array( 'content' => str_repeat( 'q', bb_draft_user_total_max_size() + 1000 ) ),
+			'_draft_saved_at' => time(),
+		);
+
+		bb_draft_hold_evicted( $user_id, array( 'draft_group_5' => $big ) );
+
+		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'A draft larger than the hold does not sit in it.' );
+		$this->assertSame( array( 'draft_group_5' ), bb_draft_get_evicted_overflow_keys( $user_id ), 'Its key is listed.' );
+
+		$reads = 0;
+		$count = function ( $value ) use ( &$reads ) {
+			++$reads;
+			return $value;
+		};
+		$name  = bb_draft_evicted_overflow_option( $user_id );
+		$hook  = is_multisite() ? 'site_option_' . $name : 'option_' . $name;
+		add_filter( $hook, $count );
+
+		$this->assertFalse( bb_draft_get_held_entry( $user_id, 'draft_user' ), 'Another key is not held.' );
+		bb_draft_pending_evicted( $user_id );
+		$this->assertSame( 0, $reads, 'An ordinary page view does not read the overflow.' );
+
+		$this->assertSame( $big, bb_draft_get_held_entry( $user_id, 'draft_group_5' ), 'Its own composer finds it.' );
+
+		$moved = bb_draft_promote_evicted(
+			$user_id,
+			function ( $key ) {
+				return 'draft_group_5' === $key;
+			}
+		);
+		remove_filter( $hook, $count );
+
+		$this->assertArrayHasKey( 'draft_group_5', $moved, 'The fetch hands it back.' );
+
+		bb_draft_pending_evicted( $user_id, array( 'draft_group_5' ) );
+		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'Acknowledged, nothing is left.' );
+		$this->assertSame( array(), bb_draft_get_evicted_overflow_keys( $user_id ) );
+	}
+
+	/**
 	 * The daily prune expires overflow entries like held ones.
 	 */
 	public function test_prune_expires_overflow_entries() {
@@ -2749,6 +2797,27 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertContains( (int) $attachment, bb_drafts_collect_held_attachment_ids(), 'The ledger still references the file.' );
 
+		// End to end: an old, stamped, unsaved upload of the held draft survives
+		// the real stamp sweep, so the orphan cron cannot delete it.
+		$old = gmdate( 'Y-m-d H:i:s', time() - 3 * DAY_IN_SECONDS );
+		wp_update_post(
+			array(
+				'ID'            => $attachment,
+				'post_date'     => $old,
+				'post_date_gmt' => $old,
+			)
+		);
+		update_post_meta( $attachment, 'bb_media_draft', 1 );
+		update_post_meta( $attachment, 'bp_media_saved', '0' );
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+		delete_option( 'bb_draft_stamp_sweep_cursor' );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '1', (string) get_post_meta( $attachment, 'bb_media_draft', true ), 'The sweep keeps the stamp while the ledger window runs.' );
+
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 		$ledger                      = get_site_option( bb_draft_eviction_file_ledger_option() );
 		$ledger[ (int) $attachment ] = time() - 2 * DAY_IN_SECONDS;
@@ -2760,6 +2829,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
 		$this->assertFalse( get_site_option( bb_draft_eviction_file_ledger_option() ), 'The prune empties the ledger.' );
+
+		// Past the window and with nothing else referencing it, the sweep
+		// releases the stamp as it would for any orphaned draft upload.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+		delete_option( 'bb_draft_stamp_sweep_cursor' );
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( '', (string) get_post_meta( $attachment, 'bb_media_draft', true ), 'Control: without the ledger the stamp is released.' );
 	}
 
 	public function return_fifty() {
