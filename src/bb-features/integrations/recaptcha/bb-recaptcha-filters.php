@@ -144,6 +144,17 @@ function bb_recaptcha_validate_activate( $retval ) {
 		return $retval;
 	}
 
+	// Bypass in wp-admin: BuddyBoss never renders the activation widget there (Users → Pending Signups).
+	// Exclude admin-ajax.php, where is_admin() is also true for anonymous nopriv requests.
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		return $retval;
+	}
+
+	// Bypass for WP-CLI (`wp bp signup activate`), which has no browser to render the widget.
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		return $retval;
+	}
+
 	$verified = bb_recaptcha_connection_status();
 
 	// If the connection is unverified and activation is not enabled, proceed to bypass the captcha.
