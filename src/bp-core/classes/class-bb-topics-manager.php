@@ -162,7 +162,6 @@ class BB_Topics_Manager {
 				/* translators: %s: Topic name */
 				'delete_topic_confirm'         => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
 				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
-				'can_reorder_topics'           => bp_current_user_can( 'bp_moderate' ),
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
 				'load_error'                   => esc_html__( 'The topic could not be loaded. Please close this window and try again.', 'buddyboss' ),
 				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
