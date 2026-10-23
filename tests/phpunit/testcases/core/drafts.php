@@ -10503,4 +10503,206 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'The activity save must drop the referenced-set cache AFTER the row write - before it, a sweep can rebuild and pin a set that does not yet contain this draft.'
 		);
 	}
+
+	/**
+	 * A budget eviction holds the draft before it removes the row, so a
+	 * request that dies right after the row went (a fatal, a killed worker)
+	 * still leaves the draft in the hold for the next hand-back.
+	 */
+	public function test_budget_eviction_holds_the_draft_before_removing_the_row() {
+		$user_id = self::factory()->user->create();
+		$oldest  = array(
+			'data_key'        => 'draft_group_1',
+			'data'            => array( 'content' => 'Oldest draft ' . str_repeat( 'a', 200 ) ),
+			'_draft_saved_at' => 100,
+		);
+
+		bp_update_user_meta( $user_id, 'draft_group_1', $oldest );
+
+		$cap = function () {
+			return 400;
+		};
+
+		$held_when_removed = null;
+		$die_after_delete  = function ( $meta_ids, $object_id, $meta_key ) use ( $user_id, &$held_when_removed ) {
+			if ( (int) $object_id !== $user_id || bp_get_user_meta_key( 'draft_group_1' ) !== $meta_key ) {
+				return;
+			}
+
+			// The hold and its overflow: this test's small budget also caps the hold.
+			$held_when_removed = array_key_exists( 'draft_group_1', array_merge( bb_draft_get_evicted_overflow( $user_id, true ), bb_draft_get_evicted_hold( $user_id ) ) );
+
+			// The request dies between removing the row and anything after it.
+			throw new RuntimeException( 'request killed after the row was removed' );
+		};
+
+		add_filter( 'bb_draft_user_total_max_size', $cap );
+		add_action( 'deleted_user_meta', $die_after_delete, 10, 3 );
+
+		$died = false;
+
+		try {
+			bb_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
+		} catch ( RuntimeException $e ) {
+			$died = true;
+		}
+
+		remove_action( 'deleted_user_meta', $die_after_delete, 10 );
+		remove_filter( 'bb_draft_user_total_max_size', $cap );
+
+		$this->assertTrue( $died, 'Premise: the request died right after the row was removed.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'Premise: the draft row is gone.' );
+		$this->assertTrue( $held_when_removed, 'The draft is already held when its row is removed.' );
+
+		$held = bb_draft_get_held_entry( $user_id, 'draft_group_1' );
+
+		$this->assertIsArray( $held, 'The next request still finds the draft to hand back.' );
+		$this->assertSame( $oldest['data'], $held['data'], 'The held copy is the whole draft.' );
+	}
+
+	/**
+	 * When the row is already gone by the time it is removed - a parallel
+	 * request evicted and held the same draft - the hold written ahead of
+	 * the removal stays, so the draft is still handed back and never ends up
+	 * in no store.
+	 */
+	public function test_budget_eviction_keeps_the_hold_when_the_row_is_already_gone() {
+		$user_id = self::factory()->user->create();
+		$entry   = array(
+			'data_key'        => 'draft_group_1',
+			'data'            => array( 'content' => str_repeat( 'a', 200 ) ),
+			'_draft_saved_at' => 100,
+		);
+
+		bp_update_user_meta( $user_id, 'draft_group_1', $entry );
+
+		$cap = function () {
+			return 400;
+		};
+
+		// A parallel request evicts the same draft between this request's hold
+		// write and its removal: it removes the row and holds the draft itself.
+		$parallel_eviction = function ( $meta_id, $object_id, $meta_key ) use ( $user_id, $entry ) {
+			if ( (int) $object_id === $user_id && 'bb_draft_has_evicted_hold' === $meta_key && metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_group_1' ) ) ) {
+				bp_delete_user_meta( $user_id, 'draft_group_1' );
+				bb_draft_hold_evicted( $user_id, array( 'draft_group_1' => $entry ) );
+			}
+		};
+
+		add_filter( 'bb_draft_user_total_max_size', $cap );
+		add_action( 'added_user_meta', $parallel_eviction, 10, 3 );
+
+		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 400 );
+
+		remove_action( 'added_user_meta', $parallel_eviction, 10 );
+		remove_filter( 'bb_draft_user_total_max_size', $cap );
+
+		$this->assertSame( array(), $result['evicted'], 'Premise: this request removed nothing itself.' );
+		$this->assertSame( '', bp_get_user_meta( $user_id, 'draft_group_1', true ), 'Premise: the row is gone.' );
+
+		$held = bb_draft_get_held_entry( $user_id, 'draft_group_1' );
+
+		$this->assertIsArray( $held, 'The draft is still held, so it is not lost.' );
+		$this->assertSame( $entry['data'], $held['data'], 'The held copy is the whole draft.' );
+	}
+
+	/**
+	 * The forum row heal holds what it removes before it writes the row, so
+	 * a request that dies right after the write loses nothing.
+	 */
+	public function test_forum_row_heal_holds_before_writing_the_row() {
+		$user_id = self::factory()->user->create();
+		$row     = array();
+
+		for ( $i = 1; $i <= 4; $i++ ) {
+			$row[ 'reply_' . $i ] = array(
+				'data_key'        => 'reply_' . $i,
+				'data'            => array( 'bbp_reply_content' => 'Reply ' . $i . ' ' . str_repeat( 'z', 90000 ) ),
+				'_draft_saved_at' => $i,
+			);
+		}
+
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+
+		$held_when_written = null;
+		$die_after_write   = function ( $meta_id, $object_id, $meta_key ) use ( $user_id, &$held_when_written ) {
+			if ( (int) $object_id !== $user_id || bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) !== $meta_key ) {
+				return;
+			}
+
+			$held_when_written = array_key_exists( 'bb_user_topic_reply_draft:reply_1', bb_draft_get_evicted_hold( $user_id ) );
+
+			throw new RuntimeException( 'request killed after the row was written' );
+		};
+
+		add_action( 'updated_user_meta', $die_after_write, 10, 3 );
+
+		$died = false;
+
+		try {
+			bb_draft_heal_forum_row( $user_id );
+		} catch ( RuntimeException $e ) {
+			$died = true;
+		}
+
+		remove_action( 'updated_user_meta', $die_after_write, 10 );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertTrue( $died, 'Premise: the request died right after the row write.' );
+		$this->assertArrayNotHasKey( 'reply_1', $stored, 'Premise: the written row no longer holds the oldest reply.' );
+		$this->assertTrue( $held_when_written, 'The trimmed reply is already held when the row is written without it.' );
+
+		$held = bb_draft_get_held_entry( $user_id, 'bb_user_topic_reply_draft:reply_1' );
+
+		$this->assertIsArray( $held, 'The next request still finds the reply to hand back.' );
+		$this->assertSame( $row['reply_1']['data'], $held['data'], 'The held copy is the whole reply.' );
+	}
+
+	/**
+	 * The upgrade's oversized-draft hold writes the hold before it removes
+	 * the row, like the budget eviction.
+	 */
+	public function test_oversized_draft_hold_is_written_before_the_row_is_removed() {
+		$user_id = self::factory()->user->create();
+		$draft   = array(
+			'data_key'        => 'draft_group_7',
+			'data'            => array( 'content' => 'Oversized ' . str_repeat( 'o', 2000 ) ),
+			'_draft_saved_at' => 100,
+		);
+
+		bp_update_user_meta( $user_id, 'draft_group_7', $draft );
+
+		$held_when_removed = null;
+		$die_after_delete  = function ( $meta_ids, $object_id, $meta_key ) use ( $user_id, &$held_when_removed ) {
+			if ( (int) $object_id !== $user_id || bp_get_user_meta_key( 'draft_group_7' ) !== $meta_key ) {
+				return;
+			}
+
+			$held_when_removed = array_key_exists( 'draft_group_7', array_merge( bb_draft_get_evicted_overflow( $user_id, true ), bb_draft_get_evicted_hold( $user_id ) ) );
+
+			throw new RuntimeException( 'request killed after the row was removed' );
+		};
+
+		add_action( 'deleted_user_meta', $die_after_delete, 10, 3 );
+
+		$died = false;
+
+		try {
+			bb_draft_hold_oversized_draft( $user_id, 'draft_group_7' );
+		} catch ( RuntimeException $e ) {
+			$died = true;
+		}
+
+		remove_action( 'deleted_user_meta', $die_after_delete, 10 );
+
+		$this->assertTrue( $died, 'Premise: the request died right after the row was removed.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_7' ), 'Premise: the draft row is gone.' );
+		$this->assertTrue( $held_when_removed, 'The draft is already held when its row is removed.' );
+
+		$held = bb_draft_get_held_entry( $user_id, 'draft_group_7' );
+
+		$this->assertIsArray( $held, 'The next visit still finds the draft to hand back.' );
+		$this->assertSame( $draft['data'], $held['data'], 'The held copy is the whole draft.' );
+	}
 }

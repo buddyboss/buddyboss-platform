@@ -1467,6 +1467,21 @@ function bb_post_topic_reply_draft() {
 				}
 			}
 
+			// Hold the drafts the row trim removed BEFORE the row is written
+			// without them, so a fatal or a killed worker between the two
+			// steps cannot lose them. A row left unwritten still holds them,
+			// which settles their hold ({@see bb_draft_drop_settled_evicted()});
+			// the hand-back below holds them again, which only refreshes it.
+			if ( ! empty( $trimmed_entries ) ) {
+				$trimmed_held = array();
+
+				foreach ( $trimmed_entries as $trimmed_inner_key => $trimmed_entry ) {
+					$trimmed_held[ $usermeta_key . ':' . $trimmed_inner_key ] = $trimmed_entry;
+				}
+
+				bb_draft_hold_evicted( $user_id, $trimmed_held );
+			}
+
 			// wp_slash(): the row is uniformly unslashed in memory (see the
 			// merge above), and update_metadata() unslashes once before
 			// storing - this is the single slash that cancels it, so storage

@@ -966,12 +966,19 @@ function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
 
 	$entry = bb_draft_shed_preview_frames( $stored );
 
-	// Kept stamped: the held entry still references the files.
+	// Held before the row goes, so a fatal between the two steps cannot lose
+	// the draft ({@see bb_draft_enforce_user_budget()}).
+	bb_draft_hold_evicted( $user_id, array( $meta_key => $entry ) );
+
+	// Kept stamped: the held entry still references the files. A failed
+	// removal means the row is already gone - a parallel eviction that holds
+	// it too, or a discard - so the hold stays: dropping it could leave the
+	// draft in no store, while keeping it at worst offers a discarded draft
+	// back once.
 	if ( ! bb_draft_dispose( $user_id, $meta_key, '', true ) ) {
 		return false;
 	}
 
-	bb_draft_hold_evicted( $user_id, array( $meta_key => $entry ) );
 	bb_draft_protect_evicted_attachments( array( $entry ), $user_id, true );
 
 	/** This action is documented in bp-core/bb-core-drafts.php */
@@ -2050,6 +2057,7 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 	bb_draft_invalidate_referenced_cache( $held_ids );
 }
 
+
 /**
  * Give every held or handed-back draft entry a revision id.
  *
@@ -2766,17 +2774,48 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 	// blog - H2 verbatim (F1).
 	$defer_attachment_release = true;
 
+	// Every draft this loop is about to remove is held BEFORE its row goes,
+	// so a fatal or a killed worker between the two steps can never leave a
+	// draft in neither store. The reverse failure leaves it in both, which is
+	// harmless: a stored draft settles its own hold
+	// ({@see bb_draft_drop_settled_evicted()}), and the caller's hand-back
+	// holds the entries again, which only refreshes them. Held in one write
+	// for the drafts the cap needs gone; only a removal that fails (below)
+	// makes the loop reach, and hold, one more.
+	$planned   = array();
+	$remaining = $draft_total;
+
+	foreach ( $candidates as $candidate ) {
+		if ( $remaining <= $total_cap ) {
+			break;
+		}
+
+		$planned[ '' !== $candidate['inner_key'] ? $candidate['meta_key'] . ':' . $candidate['inner_key'] : $candidate['meta_key'] ] = $candidate['entry'];
+		$remaining -= $candidate['bytes'];
+	}
+
+	bb_draft_hold_evicted( $user_id, $planned );
+
 	foreach ( $candidates as $candidate ) {
 		if ( $draft_total <= $total_cap ) {
 			break;
 		}
 
+		$evicted_key = '' !== $candidate['inner_key'] ? $candidate['meta_key'] . ':' . $candidate['inner_key'] : $candidate['meta_key'];
+
+		if ( ! isset( $planned[ $evicted_key ] ) ) {
+			bb_draft_hold_evicted( $user_id, array( $evicted_key => $candidate['entry'] ) );
+		}
+
 		if ( ! bb_draft_dispose( $user_id, $candidate['meta_key'], $candidate['inner_key'], $defer_attachment_release ) ) {
+			// The row is already gone: a parallel request evicted it (and holds
+			// it too) or another tab discarded it. The hold stays - taking it
+			// back could leave a parallel-evicted draft in no store, while
+			// keeping it at worst offers a just-discarded draft back once.
 			continue;
 		}
 
 		$draft_total -= $candidate['bytes'];
-		$evicted_key  = '' !== $candidate['inner_key'] ? $candidate['meta_key'] . ':' . $candidate['inner_key'] : $candidate['meta_key'];
 
 		$result['evicted'][]             = $evicted_key;
 		$result['entries'][ $evicted_key ] = $candidate['entry'];
@@ -3924,7 +3963,20 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 		return 0;
 	}
 
-	// One write for the whole heal, then hold what both passes removed.
+	$held = array();
+
+	foreach ( array( $removed, $trimmed ) as $drafts ) {
+		foreach ( $drafts as $inner_key => $inner_draft ) {
+			$held[ 'bb_user_topic_reply_draft:' . $inner_key ] = $inner_draft;
+		}
+	}
+
+	// Hold what both passes removed BEFORE the one write for the whole heal,
+	// so a fatal between the two cannot lose those drafts. A row left
+	// unwritten still holds them, which settles their hold
+	// ({@see bb_draft_drop_settled_evicted()}).
+	bb_draft_hold_evicted( $user_id, $held );
+
 	if ( empty( $row ) ) {
 		bp_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
 	} else {
@@ -3938,29 +3990,22 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 
 	bb_draft_flush_user_meta_sizes( $user_id );
 
-	// Hold the removed drafts for the member's next visit and keep their files
-	// protected, as {@see bb_draft_enforce_user_budget()} does for the other
-	// rows. Deleting an oversized draft lost its text and, on single-site,
+	// The removed drafts are held (above) for the member's next visit; keep
+	// their files protected too, as {@see bb_draft_enforce_user_budget()}
+	// does for the other rows. Deleting an oversized draft lost its text and, on single-site,
 	// let the orphan cron delete its files (F-08).
-	if ( ! empty( $removed ) || ! empty( $trimmed ) ) {
-		$held = array();
-
+	if ( ! empty( $held ) ) {
 		$removed_by_reason = array(
 			'draft_cap'     => $removed,
 			'aggregate_cap' => $trimmed,
 		);
 
 		foreach ( $removed_by_reason as $reason => $drafts ) {
-			foreach ( $drafts as $inner_key => $inner_draft ) {
-				$evicted_key          = 'bb_user_topic_reply_draft:' . $inner_key;
-				$held[ $evicted_key ] = $inner_draft;
-
+			foreach ( array_keys( $drafts ) as $inner_key ) {
 				/** This action is documented in bp-core/bb-core-drafts.php */
-				do_action( 'bb_draft_evicted', $user_id, $evicted_key, $reason );
+				do_action( 'bb_draft_evicted', $user_id, 'bb_user_topic_reply_draft:' . $inner_key, $reason );
 			}
 		}
-
-		bb_draft_hold_evicted( $user_id, $held );
 
 		// Deferring means healing from the root-only one-shot, where the IDs
 		// may name another blog's attachments on multisite (H2).
