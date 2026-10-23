@@ -1030,6 +1030,9 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$this->assertSame( 'held text', $refused['data']['evicted_drafts']['draft_user']['data']['content'], 'The held draft is handed back.' );
 		$this->assertFalse( metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_user' ) ), 'Nothing was stored.' );
 
+		$held_rev = $refused['data']['evicted_drafts']['draft_user']['_draft_rev'];
+		$this->assertMatchesRegularExpression( '/^[A-Za-z0-9]{8,32}$/', (string) $held_rev, 'A held draft saved without a revision is given one.' );
+
 		$accepted = $this->invoke_draft_handler(
 			$user_id,
 			array(
@@ -1039,10 +1042,13 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 				'_draft_rev'  => 'revMERGED001',
 				'data'        => array( 'content' => 'held text typed text' ),
 			),
-			array( 'bb_draft_evicted_ack' => 'draft_user' )
+			array(
+				'bb_draft_evicted_ack' => 'draft_user',
+				'bb_draft_base'        => $held_rev,
+			)
 		);
 
-		$this->assertTrue( $accepted['success'], 'The save that acknowledges the hand-back goes through.' );
+		$this->assertTrue( $accepted['success'], 'The save built on the handed-back draft goes through.' );
 		$this->assertSame( 'held text typed text', bp_get_user_meta( $user_id, 'draft_user', true )['data']['content'] );
 		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'The hold is done.' );
 	}
@@ -1079,10 +1085,141 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertFalse( is_array( $row ) && isset( $row[ $key ] ), 'Nothing was stored for the key.' );
 
-		$accepted = $this->invoke_forum_draft_handler( $user_id, $entry( 'held topic typed topic', 'revMERGED001' ), array( 'bb_draft_evicted_ack' => 'bb_user_topic_reply_draft:' . $key ) );
-		$this->assertTrue( $accepted['success'] );
+		// Acknowledged by another tab, but not built on the held draft (V-09).
+		$stale = $this->invoke_forum_draft_handler(
+			$user_id,
+			$entry( 'stale tab topic', 'revSTALE0001' ),
+			array(
+				'bb_draft_evicted_ack' => 'bb_user_topic_reply_draft:' . $key,
+				'bb_draft_base'        => 'revOTHER0001',
+			)
+		);
+		$this->assertFalse( $stale['success'], 'A shared acknowledgement does not let a save that never showed the held draft through.' );
+		$this->assertSame( 'held topic', $stale['data']['evicted_drafts'][ 'bb_user_topic_reply_draft:' . $key ]['data']['bbp_topic_content'], 'The held draft is handed back again.' );
+		$this->assertNotFalse( bb_draft_get_held_entry( $user_id, 'bb_user_topic_reply_draft:' . $key ), 'The refused request\'s acknowledgement did not end the hold.' );
+
+		$accepted = $this->invoke_forum_draft_handler( $user_id, $entry( 'held topic typed topic', 'revMERGED001' ), array( 'bb_draft_base' => 'revHELD00001' ) );
+		$this->assertTrue( $accepted['success'], 'A save built on the held revision goes through.' );
 
 		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 		$this->assertSame( 'held topic typed topic', $row[ $key ]['data']['bbp_topic_content'] );
+	}
+
+	/**
+	 * A composer built on the held revision saves without a refusal, even
+	 * before any acknowledgement (V-05: its own text was held, so refusing
+	 * stopped saving and lost what was typed next).
+	 */
+	public function test_save_built_on_the_held_revision_is_not_refused() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		bb_draft_hold_evicted(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'data_key'   => 'draft_user',
+					'object'     => 'user',
+					'_draft_rev' => 'revHELDHELD1',
+					'data'       => array( 'content' => 'base text' ),
+				),
+			)
+		);
+
+		$saved = $this->save_rev_draft( $user_id, 'base text X', 'revNEXTNEXT1', 'revHELDHELD1' );
+
+		$this->assertTrue( $saved['success'], 'The composer showed the held draft, so nothing is dropped unseen.' );
+		$this->assertSame( 'base text X', bp_get_user_meta( $user_id, 'draft_user', true )['data']['content'] );
+		$this->assertArrayNotHasKey( 'draft_user', (array) $saved['data']['evicted_drafts'], 'Nothing to hand back: the stored draft ends the hold.' );
+		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ) );
+	}
+
+	/**
+	 * A second tab that never showed the held draft is refused even when the
+	 * request carries the acknowledgement the first tab queued, and that
+	 * acknowledgement does not end the hold in the refusal (V-09).
+	 */
+	public function test_shared_acknowledgement_does_not_let_a_stale_tab_drop_the_hold() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		bb_draft_hold_evicted(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'data_key'   => 'draft_user',
+					'object'     => 'user',
+					'_draft_rev' => 'revHELDHELD1',
+					'data'       => array( 'content' => 'held text from device B' ),
+				),
+			)
+		);
+
+		$refused = $this->invoke_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => 'draft_user',
+				'object'      => 'user',
+				'post_action' => 'update',
+				'_draft_rev'  => 'revTAB2TAB21',
+				'data'        => array( 'content' => 'stale tab text' ),
+			),
+			array(
+				'bb_draft_base'        => 'revSTALEOLD1',
+				'bb_draft_evicted_ack' => 'draft_user',
+			)
+		);
+
+		$this->assertFalse( $refused['success'] );
+		$this->assertTrue( $refused['data']['held'] );
+		$this->assertSame( 'held text from device B', $refused['data']['evicted_drafts']['draft_user']['data']['content'], 'Handed back to the stale tab.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_user' ) ), 'The stale text was not stored over it.' );
+		$this->assertNotFalse( bb_draft_get_held_entry( $user_id, 'draft_user' ), 'The hold survives the refusal.' );
+
+		// A later request delivering the acknowledgement still ends it.
+		$_POST['bb_draft_evicted_ack'] = 'draft_user';
+		bb_draft_pending_evicted( $user_id, bb_draft_request_acked_evictions() );
+		unset( $_POST['bb_draft_evicted_ack'] );
+		$this->assertFalse( bb_draft_get_held_entry( $user_id, 'draft_user' ) );
+	}
+
+	/**
+	 * A held entry written without a revision (before held drafts were
+	 * stamped) still accepts the acknowledgement, so it can never block a key.
+	 */
+	public function test_legacy_unstamped_hold_still_accepts_the_acknowledgement() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		bb_draft_set_evicted_hold(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'entry' => array(
+						'data_key' => 'draft_user',
+						'object'   => 'user',
+						'data'     => array( 'content' => 'legacy held' ),
+					),
+					'at'    => time(),
+				),
+			)
+		);
+
+		$refused = $this->save_rev_draft( $user_id, 'typed', 'revTYPED0001', 'none' );
+		$this->assertFalse( $refused['success'], 'Premise: without the acknowledgement the save waits.' );
+
+		$accepted = $this->invoke_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => 'draft_user',
+				'object'      => 'user',
+				'post_action' => 'update',
+				'_draft_rev'  => 'revMERGED001',
+				'data'        => array( 'content' => 'legacy held typed' ),
+			),
+			array(
+				'bb_draft_base'        => 'none',
+				'bb_draft_evicted_ack' => 'draft_user',
+			)
+		);
+
+		$this->assertTrue( $accepted['success'] );
 	}
 }

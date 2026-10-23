@@ -73,6 +73,14 @@ window.bp = window.bp || {};
 	bp.draft_conflict        = false;
 	bp.draft_save_blocked    = false;
 
+	// Held-draft hand-back state (handleHeldRefusal()): keys whose hand-back
+	// this browser could not store, whether the conflict is that case, the
+	// held revision this composer showed, and the one silent re-send.
+	bp.draft_handback_unstored = {};
+	bp.draft_conflict_unstored = false;
+	bp.draft_shown_handback    = '';
+	bp.draft_held_retry        = false;
+
 	/**
 	 * [Activity description]
 	 *
@@ -1141,6 +1149,7 @@ window.bp = window.bp || {};
 							// it may only replace one of those (bb_draft_base).
 							bp.draft_base               = bp.Nouveau.Activity.postForm.draftBaseFrom( draft_activity_local_data );
 							bp.draft_activity._draft_rev = draft_activity_local_data._draft_rev;
+							bp.draft_shown_handback      = draft_activity_local_data._draft_handback ? String( draft_activity_local_data._draft_handback ) : '';
 						}
 					} else {
 						$.removeCookie( bp.draft_activity.data_key );
@@ -1541,6 +1550,7 @@ window.bp = window.bp || {};
 					bp.old_draft_data      = response.draft_activity.data;
 					bp.draft_activity      = response.draft_activity;
 					bp.draft_base   = [ response.draft_activity._draft_rev || '' ];
+					bp.draft_shown_handback = String( response.draft_activity._draft_rev || '' );
 					bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bp.old_draft_data );
 
 					// A held draft handed back with this response is the server's
@@ -1830,16 +1840,24 @@ window.bp = window.bp || {};
 		handleDraftConflict: function( response ) {
 			var stored = response.draft_activity;
 
+			// A held refusal of a composer whose text already is the held draft
+			// is no conflict: saving carries on (handleHeldRefusal()).
+			if ( response.held && this.handleHeldRefusal( response ) ) {
+				return;
+			}
+
 			bp.draft_conflict     = true;
 			bp.draft_pending_sync = false;
 			this.clearDraftInterval();
 
 			try {
 				// Refused because a held draft of this key had not reached this
-				// browser: handleEvictedDrafts() has just stored it merged with the
-				// member's text, and that copy is what a reload restores.
+				// composer: handleEvictedDrafts() stored it and handleHeldRefusal()
+				// added the member's text to that copy, which is what a reload
+				// restores. When this browser could not store it, the notice says
+				// the text was not saved (draftBlockMessage()).
 				if ( response.held ) {
-					this.showDraftFeedback( BP_Nouveau.activity.params.draft_conflict_message || response.message || '' );
+					this.showDraftFeedback( this.draftBlockMessage() || response.message || '' );
 
 					return;
 				}
@@ -1854,6 +1872,264 @@ window.bp = window.bp || {};
 			}
 
 			this.showDraftFeedback( BP_Nouveau.activity.params.draft_conflict_message || response.message || '' );
+		},
+
+		/**
+		 * Settle a save refused because a held draft of its key had not reached
+		 * this composer ({@see bb_draft_save_waits_for_handback()}).
+		 *
+		 * handleEvictedDrafts() has already stored the handed-back draft for the
+		 * key: kept, replaced or merged with this browser's copy. When that copy
+		 * holds exactly what the composer shows, the composer's text is the held
+		 * draft or a later edit of it: the held revision joins the base and the
+		 * save is sent again once, with no notice (V-05). Otherwise the
+		 * composer's text is added to the stored copy, so the reload the
+		 * conflict notice asks for shows both, and the caller stops saving.
+		 * When this browser could not store the hand-back at all, nothing is
+		 * added and the caller shows the save-failed notice; the server keeps
+		 * the held draft (V-11).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} response The held refusal.
+		 *
+		 * @return {boolean} True when saving carries on.
+		 */
+		handleHeldRefusal: function( response ) {
+			var key   = bp.draft_activity.data_key,
+				entry = ( response.evicted_drafts && response.evicted_drafts[ key ] ) ? response.evicted_drafts[ key ] : null,
+				rev   = ( entry && entry._draft_rev ) ? String( entry._draft_rev ) : '',
+				copy  = this.localDraftCopy( key );
+
+			if ( bp.draft_handback_unstored[ key ] ) {
+				bp.draft_conflict_unstored = true;
+
+				return false;
+			}
+
+			if ( ! copy ) {
+				return false;
+			}
+
+			// The stored copy must itself be built on the held draft: a hand-back
+			// that was skipped or not stored leaves this tab's own copy, which
+			// is not.
+			if ( rev && ! bp.draft_held_retry && -1 !== _.indexOf( [ String( copy._draft_rev || '' ) ].concat( this.draftBaseFrom( copy ) ), rev ) && this.canonicalDraftJson( copy.data ) === this.canonicalDraftJson( bp.draft_activity.data ) ) {
+				bp.draft_held_retry     = true;
+				bp.draft_shown_handback = rev;
+				bp.draft_base           = _.uniq( bp.draft_base.concat( [ rev ] ) ).slice( -8 );
+				bp.draft_pending_sync   = true;
+
+				setTimeout(
+					function () {
+						bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
+					},
+					0
+				);
+
+				return true;
+			}
+
+			this.absorbIntoHandback( copy );
+
+			return false;
+		},
+
+		/**
+		 * Add the composer's text to this browser's copy of a held draft the
+		 * composer was not built on.
+		 *
+		 * The copy is the handed-back draft, or this browser's merge with it. The
+		 * member's text is appended ({@see mergeHandback}), so a reload shows
+		 * both, and the copy keeps the held revision as its base, so its save
+		 * goes through.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} copy This browser's copy of the composer's key.
+		 *
+		 * @return {void}
+		 */
+		absorbIntoHandback: function( copy ) {
+			if ( ! this.draftDataHasPayload( bp.draft_activity.data ) || this.canonicalDraftJson( copy.data ) === this.canonicalDraftJson( bp.draft_activity.data ) ) {
+				return;
+			}
+
+			try {
+				localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( this.mergeHandback( { data: bp.draft_activity.data }, copy, parseInt( BP_Nouveau.activity.params.user_id, 10 ), false ) ) );
+			} catch ( e ) {
+				// Over quota: the text stays on screen and the notice says it was not saved.
+				bp.draft_conflict_unstored = true;
+			}
+		},
+
+		/**
+		 * Stop this composer writing over a held draft it never showed.
+		 *
+		 * Another tab, or the response to a save of another key, may have
+		 * stored a handed-back draft under this composer's key, marked with its
+		 * revision (`_draft_handback`). A composer that did not show it is not
+		 * built on it, and its local save would replace the only copy this
+		 * browser holds, before the acknowledgement it queued lets the server
+		 * drop its own (V-09). The composer's text is added to that copy
+		 * instead and saving stops, with the conflict notice. With nothing
+		 * typed, the copy is just left alone.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} draft The composer's draft about to be stored.
+		 *
+		 * @return {boolean} True when the local save must not run.
+		 */
+		guardHandbackCopy: function( draft ) {
+			var copy = this.localDraftCopy( draft.data_key ),
+				rev  = ( copy && copy._draft_handback ) ? String( copy._draft_handback ) : '';
+
+			if ( ! rev || true !== copy.bb_draft_pending_sync || rev === bp.draft_shown_handback || -1 !== _.indexOf( bp.draft_base, rev ) ) {
+				return false;
+			}
+
+			if ( this.draftDataHasPayload( draft.data ) ) {
+				bp.draft_conflict     = true;
+				bp.draft_pending_sync = false;
+				this.clearDraftInterval();
+				this.absorbIntoHandback( copy );
+				this.showDraftFeedback( this.draftBlockMessage() );
+			}
+
+			return true;
+		},
+
+		/**
+		 * The held draft to keep in this browser when the composer publishes.
+		 *
+		 * Publishing removes the key's local copy. When that copy is a held
+		 * draft the composer never showed, or this browser's merge with one,
+		 * the post did not include it, and removing the copy leaves it in no
+		 * store once the queued acknowledgement reaches the server (V-08). The
+		 * held draft alone is kept instead, pending, so the next visit restores
+		 * it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key localStorage key.
+		 *
+		 * @return {Object|null} The copy to store again, or null.
+		 */
+		heldCopyToKeep: function( key ) {
+			var copy = this.localDraftCopy( key ),
+				rev  = ( copy && copy._draft_handback ) ? String( copy._draft_handback ) : '';
+
+			if ( ! rev || rev === bp.draft_shown_handback || -1 !== _.indexOf( bp.draft_base, rev ) ) {
+				return null;
+			}
+
+			copy = _.extend( {}, copy, { bb_draft_pending_sync: true, _draft_unsynced: true } );
+
+			if ( copy._draft_handback_data && 'object' === typeof copy._draft_handback_data ) {
+				copy.data = copy._draft_handback_data;
+			}
+
+			return _.omit( copy, '_draft_handback_data' );
+		},
+
+		/**
+		 * This browser's parsed copy of a draft key, or null.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key localStorage key.
+		 *
+		 * @return {Object|null}
+		 */
+		localDraftCopy: function( key ) {
+			var copy = null;
+
+			try {
+				copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+			} catch ( e ) {
+				copy = null;
+			}
+
+			return ( copy && 'object' === typeof copy ) ? copy : null;
+		},
+
+		/**
+		 * Whether draft data holds anything to keep (text, a title, a GIF or an attachment).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} data Draft data.
+		 *
+		 * @return {boolean}
+		 */
+		draftDataHasPayload: function( data ) {
+			var self = this;
+
+			if ( ! data || 'object' !== typeof data ) {
+				return false;
+			}
+
+			return this.draftHtmlHasContent( data.content ) || _.some(
+				[ 'post_title', 'gif_data', 'media', 'document', 'video' ],
+				function ( field ) {
+					return ! self.isBlankDraftValue( data[ field ] );
+				}
+			);
+		},
+
+		/**
+		 * The `_draft_unsynced` mark for a draft about to be stored locally.
+		 *
+		 * False only while the copy holds what the server confirmed it stored: a
+		 * first copy read from the server, or one marked after a confirmed save
+		 * ({@see markLocalDraftSynced}). Any change makes it true. Unlike an edit
+		 * time it compares no clocks, so a skewed device clock cannot make a
+		 * copy with unsaved text look older than a handed-back draft (V-10).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} draft Draft about to be stored.
+		 *
+		 * @return {boolean}
+		 */
+		draftUnsynced: function( draft ) {
+			var previous = this.localDraftCopy( draft.data_key );
+
+			if ( previous ) {
+				return this.canonicalDraftJson( previous.data ) === this.canonicalDraftJson( draft.data ) ? false !== previous._draft_unsynced : true;
+			}
+
+			return ! draft._draft_saved_at;
+		},
+
+		/**
+		 * Mark the local copy synced after the server confirmed storing it.
+		 *
+		 * Only when the copy still holds what was sent: text typed while the
+		 * save was in flight stays unsynced.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key       localStorage key.
+		 * @param {string} sent_json canonicalDraftJson() of the data the save sent.
+		 *
+		 * @return {void}
+		 */
+		markLocalDraftSynced: function( key, sent_json ) {
+			var copy = this.localDraftCopy( key );
+
+			if ( ! copy || true === copy.bb_draft_pending_sync || false === copy._draft_unsynced || this.canonicalDraftJson( copy.data ) !== sent_json ) {
+				return;
+			}
+
+			copy._draft_unsynced = false;
+
+			try {
+				localStorage.setItem( key, JSON.stringify( copy ) );
+			} catch ( e ) {
+				// Left unsynced: a later hand-back is merged with it, never dropped.
+			}
 		},
 
 		/**
@@ -2069,9 +2345,13 @@ window.bp = window.bp || {};
 		 * 3. an ownerless local copy: the entry - text whose owner is unproven
 		 *    is never merged into this member's draft;
 		 * 4. the same content: the local copy;
-		 * 5. the local copy is unsynced (pending) or was edited after the entry
-		 *    was saved: both, merged ({@see mergeHandback});
-		 * 6. otherwise the local copy is an older copy: the entry.
+		 * 5. the local copy is pending, or holds text the server has not
+		 *    confirmed storing (`_draft_unsynced`, {@see draftUnsynced}): both,
+		 *    merged ({@see mergeHandback}). No clocks are compared: the device's
+		 *    edit time and the server's save time are on different clocks
+		 *    (V-10);
+		 * 6. otherwise the local copy is a stored version the entry replaced:
+		 *    the entry.
 		 * Stored drafts carry no base list, so an entry never proves the local
 		 * copy is its ancestor beyond rule 6.
 		 *
@@ -2111,7 +2391,7 @@ window.bp = window.bp || {};
 				return 'local';
 			}
 
-			if ( true === existing.bb_draft_pending_sync || ( parseInt( existing._draft_edit_at, 10 ) || 0 ) > ( parseInt( entry._draft_saved_at, 10 ) || 0 ) ) {
+			if ( true === existing.bb_draft_pending_sync || false !== existing._draft_unsynced ) {
 				return 'merge';
 			}
 
@@ -2142,7 +2422,11 @@ window.bp = window.bp || {};
 		 * @return {*} The merged HTML, or the handed-back value unchanged.
 		 */
 		appendDraftHtml: function( base, extra ) {
-			var base_html = 'string' === typeof base ? base : '';
+			var base_html = 'string' === typeof base ? base : '',
+				base_blocks,
+				extra_blocks,
+				tail,
+				shared    = 0;
 
 			if ( ! this.draftHtmlHasContent( extra ) || extra === base_html || -1 !== base_html.indexOf( extra ) ) {
 				return base;
@@ -2152,7 +2436,86 @@ window.bp = window.bp || {};
 				return extra;
 			}
 
+			// The local text already holds the handed-back text (typed on after
+			// it was restored): the local text alone, never both (V-05).
+			if ( /^\s*</.test( base_html ) && />\s*$/.test( base_html ) && -1 !== extra.indexOf( base_html ) ) {
+				return extra;
+			}
+
+			// Leading blocks both texts share are not repeated, and nothing is
+			// added when the rest already ends the handed-back text (an earlier
+			// merge of the same local text).
+			base_blocks  = this.draftHtmlBlocks( base_html );
+			extra_blocks = this.draftHtmlBlocks( extra );
+
+			if ( base_blocks && extra_blocks ) {
+				while ( shared < base_blocks.length && shared < extra_blocks.length && base_blocks[ shared ] === extra_blocks[ shared ] ) {
+					shared++;
+				}
+
+				tail = extra_blocks.slice( shared );
+
+				if ( ! tail.length || ( tail.length <= base_blocks.length && base_blocks.slice( -tail.length ).join( '' ) === tail.join( '' ) ) ) {
+					return base;
+				}
+
+				if ( shared ) {
+					extra = tail.join( '' );
+
+					if ( ! this.draftHtmlHasContent( extra ) ) {
+						return base;
+					}
+				}
+			}
+
 			return base_html + ( /<\/(?:p|div|ul|ol|li|blockquote|pre|h[1-6]|table)>\s*$/i.test( base_html ) ? '' : '<br>' ) + extra;
+		},
+
+		/**
+		 * The top-level blocks of draft HTML, each serialised, or null when the
+		 * browser cannot parse it.
+		 *
+		 * Parsed in an inert document (DOMParser), so nothing in the draft loads
+		 * or runs.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} html Draft HTML.
+		 *
+		 * @return {Array|null}
+		 */
+		draftHtmlBlocks: function( html ) {
+			var blocks = [],
+				doc;
+
+			if ( 'function' !== typeof window.DOMParser ) {
+				return null;
+			}
+
+			try {
+				doc = new window.DOMParser().parseFromString( '<!DOCTYPE html><body>' + html + '</body>', 'text/html' );
+			} catch ( e ) {
+				return null;
+			}
+
+			if ( ! doc || ! doc.body ) {
+				return null;
+			}
+
+			_.each(
+				_.toArray( doc.body.childNodes ),
+				function ( node ) {
+					var wrap = doc.createElement( 'div' );
+
+					wrap.appendChild( node.cloneNode( true ) );
+
+					if ( '' !== $.trim( wrap.innerHTML ) ) {
+						blocks.push( wrap.innerHTML );
+					}
+				}
+			);
+
+			return blocks;
 		},
 
 		/**
@@ -2250,9 +2613,14 @@ window.bp = window.bp || {};
 		 *
 		 * The entry keeps its revision; the local text is appended after its
 		 * text and the attachment lists are joined by ID. The result is marked
-		 * pending and based on nothing (`_draft_base` ['none']): it matches no
-		 * stored draft, so a save over a newer stored one is refused instead of
-		 * replacing it.
+		 * pending and based on the entry's revision (and the entry's own base,
+		 * when the entry is a local copy): a save of it goes through while the
+		 * entry is held ({@see bb_draft_save_waits_for_handback()}), and is
+		 * refused over any other stored version. It also carries the held
+		 * revision (`_draft_handback`) and the held draft's own data
+		 * (`_draft_handback_data`), so a composer that never showed it does not
+		 * write over it, and publishing other text keeps it
+		 * ({@see guardHandbackCopy}, {@see heldCopyToKeep}).
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -2269,6 +2637,7 @@ window.bp = window.bp || {};
 				local  = ( existing.data && 'object' === typeof existing.data ) ? existing.data : {},
 				data   = ( merged.data && 'object' === typeof merged.data ) ? merged.data : {},
 				now    = Math.floor( Date.now() / 1000 ),
+				entry_base = _.compact( _.uniq( ( entry._draft_rev ? [ String( entry._draft_rev ) ] : [] ).concat( _.isArray( entry._draft_base ) ? entry._draft_base : [] ) ) ).slice( -8 ),
 				fields = is_forum ?
 					{ html: [ 'bbp_topic_content', 'bbp_reply_content' ], fill: [ 'bbp_topic_title', 'bbp_topic_tags', 'bbp_media_gif' ], lists: [ 'bbp_media', 'bbp_document', 'bbp_video' ] } :
 					{ html: [ 'content' ], fill: [ 'post_title', 'gif_data' ], lists: [ 'media', 'document', 'video' ] };
@@ -2314,8 +2683,14 @@ window.bp = window.bp || {};
 			merged.bb_draft_pending_sync = true;
 			merged._draft_local_at       = now;
 			merged._draft_edit_at        = now;
-			merged._draft_base           = [ 'none' ];
+			merged._draft_unsynced       = true;
+			merged._draft_base           = entry_base.length ? entry_base : [ 'none' ];
+			merged._draft_handback_data  = entry._draft_handback_data || entry.data;
 			delete merged.bb_draft_interim;
+
+			if ( entry._draft_handback || entry._draft_rev ) {
+				merged._draft_handback = String( entry._draft_handback || entry._draft_rev );
+			}
 
 			return merged;
 		},
@@ -2380,13 +2755,21 @@ window.bp = window.bp || {};
 						// is now the only copy (V07). Otherwise the handed-back entry
 						// wins, stamped with its owner, so the composer for that key
 						// does not drop it as another member's copy (F-02).
+						// A kept copy is the held revision or a later edit of it, so
+						// the held revision joins its base: its save goes through.
 						if ( 'local' === decision ) {
 							existing.bb_draft_pending_sync = true;
+							if ( entry._draft_rev ) {
+								existing._draft_base = _.uniq( bp.Nouveau.Activity.postForm.draftBaseFrom( existing ).concat( [ String( entry._draft_rev ) ] ) ).slice( -8 );
+							}
 							localStorage.setItem( storage_key, JSON.stringify( existing ) );
 						} else if ( 'merge' === decision ) {
 							localStorage.setItem( storage_key, JSON.stringify( bp.Nouveau.Activity.postForm.mergeHandback( existing, entry, owner_id, is_forum ) ) );
 						} else {
 							copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+							if ( entry._draft_rev ) {
+								copy._draft_handback = String( entry._draft_rev );
+							}
 							if ( is_forum ) {
 								copy.bb_draft_owner = owner_id;
 							} else if ( owner_id && copy.data && 'object' === typeof copy.data && _.isUndefined( copy.data.user_id ) ) {
@@ -2397,8 +2780,16 @@ window.bp = window.bp || {};
 						}
 					} catch ( e ) {
 						// Over quota: not acknowledged, so the server keeps holding
-						// it and hands it back again on the next request.
+						// it and hands it back again on the next request. Its
+						// composer says the text was not saved (V-11).
+						bp.draft_handback_unstored                = bp.draft_handback_unstored || {};
+						bp.draft_handback_unstored[ storage_key ] = true;
+
 						return;
+					}
+
+					if ( bp.draft_handback_unstored ) {
+						delete bp.draft_handback_unstored[ storage_key ];
 					}
 
 					// Acknowledge only a copy this browser actually stored.
@@ -2494,6 +2885,11 @@ window.bp = window.bp || {};
 		 * @return {string} The message, or '' when saving is not stopped.
 		 */
 		draftBlockMessage: function() {
+			// The hand-back could not be stored in this browser (V-11).
+			if ( bp.draft_conflict && bp.draft_conflict_unstored ) {
+				return BP_Nouveau.activity.params.draft_save_failed_message || '';
+			}
+
 			if ( bp.draft_conflict ) {
 				return BP_Nouveau.activity.params.draft_conflict_message || '';
 			}
@@ -3210,6 +3606,9 @@ window.bp = window.bp || {};
 				var draft_inflight = isDiscardRequest ? null : { key: bp.draft_activity.data_key, rev: draft_rev };
 				bp.draft_inflight  = draft_inflight;
 
+				// What this save sends, to mark the local copy synced once stored.
+				var draft_sent_json = isDiscardRequest ? '' : bp.Nouveau.Activity.postForm.canonicalDraftJson( draft_payload.data );
+
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
 					function ( response ) {
@@ -3226,6 +3625,11 @@ window.bp = window.bp || {};
 							if ( null !== localStorage.getItem( bp.draft_activity.data_key ) ) {
 								bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 							}
+						}
+
+						if ( ! isDiscardRequest ) {
+							bp.draft_held_retry = false;
+							bp.Nouveau.Activity.postForm.markLocalDraftSynced( draft_inflight.key, draft_sent_json );
 						}
 					}
 				).fail(
@@ -3373,7 +3777,8 @@ window.bp = window.bp || {};
 		},
 
 		resetDraftActivity: function( is_send_server ) {
-			var self = this;
+			var self      = this,
+				held_copy = is_send_server ? null : this.heldCopyToKeep( bp.draft_activity.data_key );
 
 			// Delete the activity from the database.
 			$.cookie( bp.draft_activity.data_key, 'deleted' );
@@ -3401,6 +3806,19 @@ window.bp = window.bp || {};
 			// would never fire again for the rest of the page load (M7).
 			bp.draft_fetch_settled = true;
 			localStorage.removeItem( bp.draft_activity.data_key );
+
+			// Published text that did not include a held draft: keep the held
+			// draft for the next visit (heldCopyToKeep()). The deleted marker
+			// guards the published draft, not this one.
+			if ( held_copy ) {
+				try {
+					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( held_copy ) );
+					$.removeCookie( bp.draft_activity.data_key );
+				} catch ( e ) {
+					// Over quota: the server still holds it until the acknowledgement arrives.
+				}
+			}
+
 			self.postForm.$el.removeClass( 'has-draft' );
 			self.showDraftRetentionNotice( false );
 			bp.draft_activity.post_action  = 'update';
@@ -3492,6 +3910,11 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// Never write over a held draft this composer did not show (V-09).
+			if ( draft_activity.data_key === bp.draft_activity.data_key && bp.Nouveau.Activity.postForm.guardHandbackCopy( draft_activity ) ) {
+				return;
+			}
+
 			if ( draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
 				draft_activity = _.extend(
 					{},
@@ -3499,7 +3922,8 @@ window.bp = window.bp || {};
 					{
 						_draft_base: bp.draft_base,
 						_draft_local_at: Math.floor( Date.now() / 1000 ),
-						_draft_edit_at: bp.Nouveau.Activity.postForm.draftEditTime( draft_activity )
+						_draft_edit_at: bp.Nouveau.Activity.postForm.draftEditTime( draft_activity ),
+						_draft_unsynced: bp.Nouveau.Activity.postForm.draftUnsynced( draft_activity )
 					}
 				);
 			}

@@ -1866,8 +1866,19 @@ function bb_draft_get_held_entry( $user_id, $key ) {
  * A stored draft for a key ends its hold ({@see bb_draft_drop_settled_evicted()}),
  * so saving text the member typed without having received the held draft
  * would drop that draft unseen. The save is refused instead and the held
- * draft handed back; the browser merges the two and its next save, which
- * acknowledges the key, goes through.
+ * draft handed back.
+ *
+ * A save goes through only when it was built on the held draft: its
+ * `bb_draft_base` names the held revision, so the composer showed that draft
+ * (or this browser's merge with it). An acknowledgement is not enough. It is
+ * shared by every tab of the browser, so it also arrives with a save from a
+ * tab that never showed the held draft and has since written over the copy
+ * the acknowledgement was for. A held entry without a revision (held before
+ * revisions were stamped on held drafts) still goes through on the
+ * acknowledgement, as before.
+ *
+ * A refused save keeps its own acknowledgement of the key from ending the
+ * hold in the same request ({@see bb_draft_withhold_request_ack()}).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1876,11 +1887,52 @@ function bb_draft_get_held_entry( $user_id, $key ) {
  * @return bool True when the save must be refused.
  */
 function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
-	if ( in_array( (string) $evicted_key, bb_draft_request_acked_evictions(), true ) ) {
+	$held = bb_draft_get_held_entry( $user_id, (string) $evicted_key );
+
+	if ( false === $held ) {
 		return false;
 	}
 
-	return false !== bb_draft_get_held_entry( $user_id, (string) $evicted_key );
+	$held_rev = ( isset( $held['_draft_rev'] ) && is_string( $held['_draft_rev'] ) ) ? $held['_draft_rev'] : '';
+
+	if ( '' !== $held_rev ) {
+		$base = bb_draft_request_base();
+
+		if ( is_array( $base ) && in_array( $held_rev, $base, true ) ) {
+			return false;
+		}
+	} elseif ( in_array( (string) $evicted_key, bb_draft_request_acked_evictions(), true ) ) {
+		return false;
+	}
+
+	bb_draft_withhold_request_ack( $evicted_key );
+
+	return true;
+}
+
+/**
+ * Keep the current request's acknowledgement of a key from ending its hold.
+ *
+ * Called when a save of the key is refused because its held draft never
+ * reached the composer. The refusal hands that draft back in the same
+ * response; applying an acknowledgement the request also carries (queued by
+ * another tab, for a copy this tab may have written over) would end the hold
+ * in that very response, and the held draft would be in no store. Only the
+ * request is changed: the browser keeps the acknowledgement queued and sends
+ * it again with a later request, once the hand-back is stored.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $evicted_key Key like `evicted_draft_keys`.
+ * @return void
+ */
+function bb_draft_withhold_request_ack( $evicted_key ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside nonce-checked handlers.
+	if ( empty( $_POST['bb_draft_evicted_ack'] ) ) {
+		return;
+	}
+
+	$_POST['bb_draft_evicted_ack'] = implode( ',', array_diff( bb_draft_request_acked_evictions(), array( (string) $evicted_key ) ) );
 }
 
 /**
@@ -1968,7 +2020,8 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 		return;
 	}
 
-	$hold = array_merge( bb_draft_get_evicted_overflow( $user_id ), bb_draft_get_evicted_hold( $user_id ) );
+	$entries = bb_draft_stamp_handback_revs( $entries );
+	$hold    = array_merge( bb_draft_get_evicted_overflow( $user_id ), bb_draft_get_evicted_hold( $user_id ) );
 	$now  = time();
 
 	foreach ( $entries as $key => $entry ) {
@@ -1995,6 +2048,31 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 	}
 
 	bb_draft_invalidate_referenced_cache( $held_ids );
+}
+
+/**
+ * Give every held or handed-back draft entry a revision id.
+ *
+ * A draft saved before revisions existed (a release-era row the upgrade
+ * holds) carries none. Without one the browser cannot tell its own copy of
+ * that draft from another version and merges the two, repeating the text,
+ * and a save built on the held draft cannot be told from one that never saw
+ * it ({@see bb_draft_save_waits_for_handback()}). The id is generated once,
+ * when the entry is first held or handed back, and stays with it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $entries Entries keyed like `evicted_draft_keys`.
+ * @return array The entries, each array entry with a `_draft_rev`.
+ */
+function bb_draft_stamp_handback_revs( $entries ) {
+	foreach ( (array) $entries as $key => $entry ) {
+		if ( is_array( $entry ) && ( empty( $entry['_draft_rev'] ) || ! is_string( $entry['_draft_rev'] ) ) ) {
+			$entries[ $key ]['_draft_rev'] = bb_draft_sanitize_rev( null );
+		}
+	}
+
+	return (array) $entries;
 }
 
 /**
@@ -2277,6 +2355,10 @@ if ( ! is_multisite() ) {
  */
 function bb_draft_handback( $user_id, $fresh = array() ) {
 	$owed = bb_draft_pending_evicted( $user_id, bb_draft_request_acked_evictions() );
+
+	// Stamped before it is held, so the hold and this response carry the
+	// same revision ({@see bb_draft_stamp_handback_revs()}).
+	$fresh = bb_draft_stamp_handback_revs( $fresh );
 
 	bb_draft_hold_evicted( $user_id, $fresh );
 

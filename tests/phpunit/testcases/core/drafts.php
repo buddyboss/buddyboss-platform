@@ -2685,7 +2685,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		bb_draft_pending_evicted( $user_id );
 		$this->assertSame( 0, $reads, 'An ordinary page view does not read the overflow.' );
 
-		$this->assertSame( $big, bb_draft_get_held_entry( $user_id, 'draft_group_5' ), 'Its own composer finds it.' );
+		$found = bb_draft_get_held_entry( $user_id, 'draft_group_5' );
+		$this->assertSame( $big['data'], $found['data'], 'Its own composer finds it.' );
+		$this->assertNotEmpty( $found['_draft_rev'], 'Held with a revision, so a save built on it can be told apart.' );
 
 		$moved = bb_draft_promote_evicted(
 			$user_id,
