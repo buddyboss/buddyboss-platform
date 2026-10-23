@@ -3008,6 +3008,17 @@ window.bp = window.bp || {};
 			// Never over a copy the member has written since the discard.
 			if ( copy && null === localStorage.getItem( draft_key ) ) {
 				try {
+					// The copy can predate the last successful save, which only
+					// refreshes pending copies. Re-base it on the revision this
+					// page last saved, or the next page view refuses the
+					// member's own draft as a conflict.
+					var restored = JSON.parse( copy );
+
+					if ( restored && 'object' === typeof restored && ! this.draft_blocked_keys[ draft_key ] ) {
+						restored._draft_base = this.draftBaseFor( draft_key );
+						copy                 = JSON.stringify( restored );
+					}
+
 					localStorage.setItem( draft_key, copy );
 				} catch ( e ) {
 					// Full storage: the server copy still comes back on reload.

@@ -3569,6 +3569,12 @@ window.bp = window.bp || {};
 									var discard_restore = JSON.parse( discard_copy );
 
 									discard_restore.bb_draft_pending_sync = true;
+									// Re-base on the revision this page last saved: the copy
+									// can predate that save, and a stale base gets the
+									// member's own draft refused as a conflict next time.
+									if ( _.isArray( draft_base ) && draft_base.length && 'none' !== draft_base[0] ) {
+										discard_restore._draft_base = draft_base.slice( 0 );
+									}
 									localStorage.setItem( discard_key, JSON.stringify( discard_restore ) );
 								} catch ( e ) {
 									// Unreadable copy or full storage: the server copy
