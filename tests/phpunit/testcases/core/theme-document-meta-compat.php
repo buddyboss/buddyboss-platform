@@ -1,11 +1,18 @@
 <?php
 /**
+ * Tests for the document activity meta shim used by older BuddyBoss Theme builds.
+ *
+ * @package BuddyBoss\Tests
+ * @since   BuddyBoss [BBVERSION]
+ */
+
+/**
  * Older BuddyBoss Theme builds: document activity meta is hidden while Documents is not loaded.
  *
  * Theme builds before PROD-9995 build BP_Document objects from activity meta in the
  * Elementor Activity widget. bb_register_theme_document_meta_compat() hides those keys
- * on both read paths: get_metadata() (bp_activity_get_meta()) and the cached array
- * returned by bb_activity_get_metadata() once the activity loop primed the cache.
+ * on single-key get_metadata() reads (bp_activity_get_meta()) and on the array returned
+ * by bb_activity_get_metadata(), cold or primed, without caching a stripped copy.
  *
  * @package BuddyBoss
  * @group core
@@ -20,6 +27,11 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 	 */
 	protected $activity_id;
 
+	/**
+	 * Create an activity with document meta and add the compatibility filters.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	public function setUp(): void {
 		parent::setUp();
 
@@ -37,6 +49,11 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 		add_filter( 'bb_activity_get_metadata', 'bb_theme_document_activity_cached_meta_compat', 10, 2 );
 	}
 
+	/**
+	 * Remove the compatibility filters.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	public function tearDown(): void {
 		remove_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10 );
 		remove_filter( 'bb_activity_get_metadata', 'bb_theme_document_activity_cached_meta_compat', 10 );
@@ -45,12 +62,19 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Cold read: the get_activity_metadata filter hides the document keys.
+	 * Cold read: the returned array hides the document keys, but the cache keeps the raw rows.
+	 *
+	 * A stripped array in a persistent object cache would hide the documents after Add-ons is back.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function test_cold_read_hides_document_keys() {
 		wp_cache_delete( $this->activity_id, 'activity_meta' );
 
 		$meta = bb_activity_get_metadata( $this->activity_id );
+
+		$cached = wp_cache_get( $this->activity_id, 'activity_meta' );
+		$this->assertArrayHasKey( 'bp_document_ids', $cached );
 
 		$this->assertArrayNotHasKey( 'bp_document_ids', $meta );
 		$this->assertArrayNotHasKey( 'bp_document_folder_activity', $meta );
@@ -59,6 +83,8 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 
 	/**
 	 * Warm read: after the activity loop primes the cache, the cached array is filtered too.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function test_primed_cache_read_hides_document_keys() {
 		wp_cache_delete( $this->activity_id, 'activity_meta' );
@@ -77,6 +103,8 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 
 	/**
 	 * Single-key reads return the empty value, so the theme never builds a BP_Document.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function test_single_key_read_is_empty() {
 		$this->assertSame( '', bp_activity_get_meta( $this->activity_id, 'bp_document_ids', true ) );
@@ -85,6 +113,8 @@ class BP_Tests_Theme_Document_Meta_Compat extends BP_UnitTestCase {
 
 	/**
 	 * The stored meta is untouched, so documents come back once Add-ons is active again.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function test_stored_meta_is_untouched() {
 		remove_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10 );

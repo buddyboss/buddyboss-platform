@@ -192,6 +192,47 @@ function bb_moved_media_features_get_addons_state() {
 }
 
 /**
+ * Whether the site is known to be entitled to BuddyBoss Add-ons without a remote call.
+ *
+ * The notice renders on every admin page, so it must not trigger the Mothership
+ * products lookup. The entitlement is only resolved when the license is activated
+ * and the add-ons list is already cached; on a cold cache this returns false and
+ * the notice keeps its plan copy.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when the site is entitled and that is known from local data.
+ */
+function bb_moved_media_features_is_entitled_from_cache() {
+	if ( ! function_exists( 'bb_is_entitled_to_addons' ) ) {
+		return false;
+	}
+
+	/** This filter is documented in bp-core/bp-core-update.php */
+	if ( null !== apply_filters( 'bb_pre_is_entitled_to_addons', null ) ) {
+		return bb_is_entitled_to_addons();
+	}
+
+	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+		return false;
+	}
+
+	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+
+	if ( ! $connector->getLicenseActivationStatus() ) {
+		return false;
+	}
+
+	// The vendor add-ons cache (AddonsManager::CACHE_KEY_ADDONS). When it is warm,
+	// bb_is_entitled_to_addons() reads it instead of calling the API.
+	if ( ! is_array( get_transient( $connector->getCurrentPluginId() . '-mosh-addons' ) ) ) {
+		return false;
+	}
+
+	return bb_is_entitled_to_addons();
+}
+
+/**
  * Get the pricing URL used by the moved media features upsells.
  *
  * @since BuddyBoss [BBVERSION]
@@ -291,6 +332,16 @@ function bb_moved_media_features_render_notice() {
 			'url'      => $upgrade_url,
 			'external' => true,
 		);
+	} elseif ( 'active' === $state && bb_is_addons_below_required_version() ) {
+		$message   = __( 'Your BuddyBoss Add-ons plugin is out of date. Update it to show them to your members again.', 'buddyboss' );
+		$primary   = array(
+			'label' => __( 'Update BuddyBoss Add-ons', 'buddyboss' ),
+			'url'   => self_admin_url( 'update-core.php' ),
+		);
+		$secondary = array(
+			'label' => __( 'Manage license', 'buddyboss' ),
+			'url'   => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+		);
 	} elseif ( 'active' === $state ) {
 		$message   = __( 'Your current BuddyBoss license does not include them. Check your license or upgrade your plan to show them to your members again.', 'buddyboss' );
 		$primary   = array(
@@ -301,6 +352,17 @@ function bb_moved_media_features_render_notice() {
 		$secondary = array(
 			'label' => __( 'Manage license', 'buddyboss' ),
 			'url'   => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+		);
+	} elseif ( bb_moved_media_features_is_entitled_from_cache() ) {
+		$message   = __( 'Your BuddyBoss plan includes the BuddyBoss Add-ons plugin. Install it to show them to your members again.', 'buddyboss' );
+		$primary   = array(
+			'label' => __( 'Install BuddyBoss Add-ons', 'buddyboss' ),
+			'url'   => $addons_url,
+		);
+		$secondary = array(
+			'label'    => __( 'View plans', 'buddyboss' ),
+			'url'      => $upgrade_url,
+			'external' => true,
 		);
 	} else {
 		$message   = __( 'Install the BuddyBoss Add-ons plugin to show them to your members again. Available on the Start plan and above.', 'buddyboss' );

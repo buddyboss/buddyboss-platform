@@ -4239,12 +4239,12 @@ function bb_media_delete_older_symlinks() {
 	$dir     = bp_media_symlink_path();
 	$max_age = apply_filters( 'bb_media_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
 	$dir     = realpath( $dir );
+	$list    = array();
 
-	if ( ! is_dir( $dir ) ) {
-		return;
+	// A missing photo folder skips only the photo sweep, not the preview cleanup below.
+	if ( false !== $dir && is_dir( $dir ) ) {
+		$list = bb_media_delete_older_files_in_dir( $dir, time() - $max_age );
 	}
-
-	$list = bb_media_delete_older_files_in_dir( $dir, time() - $max_age );
 
 	/*
 	 * Document and video previews are created by BuddyBoss Add-ons, which also schedules

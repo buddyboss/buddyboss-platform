@@ -131,9 +131,8 @@ function bb_platform_3_offload_media_required_version() {
 /**
  * Required-theme-version map for this Platform.
  *
- * Keyed by theme directory (stylesheet). A row is checked only when that
- * theme is installed; wp_get_theme() returns the parent theme by its
- * directory, so a BuddyBoss child theme is covered through its parent.
+ * Keyed by theme directory (template). A row is checked only when that
+ * theme is active, or is the parent of the active child theme.
  * The floor comes from bb_platform_3_theme_required_version()
  * (bp-incompatible-plugins-helper.php), which also gates the document
  * meta shim for older theme builds.
@@ -180,7 +179,7 @@ function bb_platform_3_get_addon_version( $plugin_file ) {
 }
 
 /**
- * Collect every active addon, and every installed BuddyBoss theme, whose
+ * Collect every active addon, and the active BuddyBoss theme, whose
  * installed version is below the 3.0 compatibility floor.
  *
  * "Active" follows the same rule WP core uses for `is_plugin_active()`
@@ -223,13 +222,12 @@ function bb_platform_3_get_lagging_addons() {
 		);
 	}
 
-	// Themes: checked when installed (a child theme is covered through its parent).
+	// Themes: checked only when active, or the parent of the active child theme.
 	foreach ( bb_platform_3_required_themes() as $stylesheet => $row ) {
-		$theme = wp_get_theme( $stylesheet );
-		if ( ! $theme->exists() ) {
+		if ( get_template() !== $stylesheet ) {
 			continue;
 		}
-		$installed = (string) $theme->get( 'Version' );
+		$installed = 'buddyboss-theme' === $stylesheet ? bb_get_active_buddyboss_theme_version() : (string) wp_get_theme( $stylesheet )->get( 'Version' );
 		if ( '' === $installed || version_compare( $installed, $row['version'], '>=' ) ) {
 			continue;
 		}

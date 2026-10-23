@@ -448,28 +448,6 @@ function bb_media_get_addons_component_for_panel( $panel_id ) {
 }
 
 /**
- * Get the installed BuddyBoss Add-ons version.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Version, or an empty string when it is not installed or unreadable.
- */
-function bb_media_get_installed_addons_version() {
-	static $version = null;
-
-	if ( null === $version ) {
-		if ( ! function_exists( 'get_plugins' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		$plugins = get_plugins();
-		$version = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
-	}
-
-	return $version;
-}
-
-/**
  * Resolve what a Media upsell panel should offer.
  *
  * The plan decides first: a license whose plan does not carry BuddyBoss Add-ons
@@ -524,11 +502,11 @@ function bb_media_get_addons_panel_state( $panel_id ) {
 		} elseif ( ! is_plugin_active( $plugin_file ) ) {
 			$state = 'activate';
 		} else {
-			$installed = bb_media_get_installed_addons_version();
+			$installed = bb_get_installed_addons_version();
 			$module    = bb_media_get_addons_module_for_panel( $panel_id );
 			$has_code  = '' === $module || file_exists( dirname( $plugin_path ) . '/addons/' . $module . '/loader.php' );
 
-			$state = ( ! $has_code || ( '' !== $installed && version_compare( $installed, bb_get_addons_required_version(), '<' ) ) )
+			$state = ( ! $has_code || ( '' !== $installed && bb_is_addons_below_required_version( $installed ) ) )
 				? 'update'
 				: 'unavailable';
 		}
@@ -562,7 +540,7 @@ function bb_media_addons_update_available() {
 		return false;
 	}
 
-	$installed = bb_media_get_installed_addons_version();
+	$installed = bb_get_installed_addons_version();
 	$product   = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
 	$release   = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
 	$latest    = ( null !== $release && ! empty( $release->number ) ) ? (string) $release->number : '';
@@ -651,8 +629,8 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 		case 'update':
 			// The update handler only moves an add-on that is below the required version,
 			// so offer the one-click update only then.
-			$installed   = bb_media_get_installed_addons_version();
-			$below_floor = '' !== $installed && version_compare( $installed, bb_get_addons_required_version(), '<' );
+			$installed   = bb_get_installed_addons_version();
+			$below_floor = '' !== $installed && bb_is_addons_below_required_version( $installed );
 
 			if ( $below_floor && bb_media_addons_update_available() ) {
 				$card['empty_state_description'] = sprintf(
@@ -810,13 +788,22 @@ function bb_media_ajax_update_addons() {
 		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to update plugins.', 'buddyboss' ) ), 403 );
 	}
 
-	$result   = bb_update_addons_bundle_to_required_version();
+	// Share the queued runner's lock, so the two never run the upgrader at the same time.
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	if ( ! WP_Upgrader::create_lock( 'bb_addons_bundle_update', 15 * MINUTE_IN_SECONDS ) ) {
+		wp_send_json_error( array( 'message' => __( 'The BuddyBoss Add-ons plugin is already being updated. Please try again in a few minutes.', 'buddyboss' ) ) );
+	}
+
+	$result = bb_update_addons_bundle_to_required_version();
+	WP_Upgrader::release_lock( 'bb_addons_bundle_update' );
+
 	$messages = array(
 		'inactive'     => __( 'Activate the BuddyBoss Add-ons plugin first.', 'buddyboss' ),
 		'up_to_date'   => __( 'The BuddyBoss Add-ons plugin is already up to date.', 'buddyboss' ),
 		'vcs_checkout' => __( 'The BuddyBoss Add-ons plugin is a version-control checkout. Update it manually.', 'buddyboss' ),
 		'not_entitled' => __( 'The BuddyBoss Add-ons plugin is not available under your current license.', 'buddyboss' ),
-		'no_package'   => __( 'No newer version of the BuddyBoss Add-ons plugin is available yet.', 'buddyboss' ),
+		'no_package'   => __( 'The required version of the BuddyBoss Add-ons plugin is not available yet.', 'buddyboss' ),
 		'failed'       => __( 'Plugin update failed. Please try again.', 'buddyboss' ),
 	);
 

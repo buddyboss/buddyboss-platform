@@ -367,9 +367,10 @@ function bp_is_forums_video_support_enabled( $default = 0 ) {
  */
 function bp_document_extensions_list() {
 
-	$default = bp_media_allowed_document_type();
+	// The default-type helper loads with the document component (BuddyBoss Add-ons), so fall back to the stored option.
+	$default = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
 	$saved   = bp_get_option( 'bp_document_extensions_support', $default );
-	$merge   = array_merge( $default, $saved );
+	$merge   = array_merge( (array) $default, (array) $saved );
 	$final   = array_unique( $merge, SORT_REGULAR );
 
 	/**
@@ -454,5 +455,8 @@ function bp_media_allowed_upload_document_per_batch() {
  * @since BuddyBoss 1.7.0
  */
 function bp_video_extensions_list() {
-	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', bp_video_allowed_video_type() ) );
+	// The default-type helper loads with the video component (BuddyBoss Add-ons), so fall back to the stored option.
+	$default = function_exists( 'bp_video_allowed_video_type' ) ? bp_video_allowed_video_type() : array();
+
+	return apply_filters( 'bp_video_extensions_list', bp_get_option( 'bp_video_extensions_support', $default ) );
 }

@@ -1612,20 +1612,38 @@ class BB_Admin_Settings_Ajax {
 		// Sentinel for "this option row does not exist"; compared by identity in the repair branch below.
 		$absent = new stdClass();
 
+		// Add-ons module that owns each add-on-provided pro_only field hosted by a
+		// Platform feature (the Reactions feature's own fields map to 'reactions').
+		// A plan can carry some modules and not others, so the plugin-wide Add-ons
+		// lock alone is not enough; bb_addons_provides_module() falls back to it on
+		// Add-ons builds without the per-module API.
+		$addons_field_modules = array(
+			'bb-social-login'                  => 'social-login',
+			'_bb-sso-providers'                => 'social-login',
+			'_bb_enable_activity_post_polls'   => 'polls',
+			'_bb_enable_activity_pinned_posts' => 'pinned-posts',
+		);
+
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
 
 			// Skip pro_only fields only when NO provider is available — defense-in-depth
 			// against crafted AJAX requests. The UI already disables these fields.
 			// Either provider makes the field legitimately saveable: BuddyBoss
-			// Platform Pro (legacy) OR the BuddyBoss Addons plugin, which now owns
-			// features such as reactions/polls/SSO. Without the addon check, an
+			// Platform Pro (legacy) OR the BuddyBoss Addons module that owns it
+			// (reactions/polls/SSO/pinned posts). Without the addon check, an
 			// addon-only site could never persist a pro_only field (e.g. the
 			// reactions mode), because bb_platform_pro() does not exist there.
+			if ( isset( $addons_field_modules[ $name ] ) ) {
+				$field_module = $addons_field_modules[ $name ];
+			} else {
+				$field_module = 'reactions' === $feature_id ? 'reactions' : '';
+			}
+
 			if (
 				! empty( $field['pro_only'] )
 				&& ! function_exists( 'bb_platform_pro' )
-				&& ! ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+				&& ! ( '' !== $field_module && bb_addons_provides_module( $field_module ) )
 			) {
 				continue;
 			}

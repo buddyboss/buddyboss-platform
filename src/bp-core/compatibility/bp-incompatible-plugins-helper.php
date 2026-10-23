@@ -1330,8 +1330,9 @@ function bb_theme_document_activity_meta_keys() {
 /**
  * Hide document activity meta from BuddyBoss Theme builds that cannot handle a missing Documents component.
  *
- * Applies only when an older BuddyBoss Theme is active and `BP_Document` is not
- * loaded. Nothing else can use these keys then: the code that reads them ships
+ * Handles single-key reads; full reads are filtered by
+ * bb_theme_document_activity_cached_meta_compat(). Applies only when an older
+ * BuddyBoss Theme is active and `BP_Document` is not loaded. Nothing else can use these keys then: the code that reads them ships
  * in BuddyBoss Add-ons. The stored meta is untouched, so documents reappear
  * once Add-ons is active again.
  *
@@ -1345,31 +1346,17 @@ function bb_theme_document_activity_meta_keys() {
  * @return mixed
  */
 function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
-	static $in_progress = false;
-
-	$document_keys = bb_theme_document_activity_meta_keys();
-
-	if ( null !== $value || $in_progress || class_exists( 'BP_Document' ) || ( '' !== $meta_key && ! in_array( $meta_key, $document_keys, true ) ) ) {
+	/*
+	 * Full reads are left alone: bb_activity_get_metadata() caches what it reads
+	 * in `activity_meta`, and a stripped array kept in a persistent object cache
+	 * would hide the documents after Add-ons is back. That path is filtered on
+	 * return by bb_theme_document_activity_cached_meta_compat() instead.
+	 */
+	if ( null !== $value || '' === $meta_key || class_exists( 'BP_Document' ) || ! in_array( $meta_key, bb_theme_document_activity_meta_keys(), true ) ) {
 		return $value;
 	}
 
-	if ( '' !== $meta_key ) {
-		return $single ? array( '' ) : array();
-	}
-
-	// All meta was requested: read it once, then drop the document keys.
-	$in_progress = true;
-	$meta        = get_metadata_raw( 'activity', $object_id );
-	$in_progress = false;
-
-	if ( ! is_array( $meta ) ) {
-		return $value;
-	}
-
-	$meta = array_diff_key( $meta, array_flip( $document_keys ) );
-
-	// get_metadata() returns `$check[0]` for single requests.
-	return $single ? array( $meta ) : $meta;
+	return $single ? array( '' ) : array();
 }
 
 /**
@@ -1393,12 +1380,14 @@ function bb_register_theme_document_meta_compat() {
 }
 
 /**
- * Hide document activity meta from older BuddyBoss Theme builds on cached reads.
+ * Hide document activity meta from older BuddyBoss Theme builds on full reads.
  *
- * bb_activity_get_metadata() returns the `activity_meta` cache entry directly once
- * the activity loop has primed it (bp_update_meta_cache()), so the
- * `get_activity_metadata` filter in bb_theme_document_activity_meta_compat()
- * never runs there. The theme's Elementor Activity widget reads that way.
+ * The theme's Elementor Activity widget reads all meta through
+ * bb_activity_get_metadata(). That function caches what it reads in
+ * `activity_meta`, and returns the cache entry directly once the activity loop
+ * has primed it (bp_update_meta_cache()). Filtering its return value, cold or
+ * cached, hides the keys without ever caching a stripped copy, which a
+ * persistent object cache would keep after Add-ons is back.
  *
  * @since BuddyBoss [BBVERSION]
  *

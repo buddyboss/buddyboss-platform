@@ -240,6 +240,7 @@ class BP_Core extends BP_Component {
 		 * the component's code loaded for the rest of this request. The
 		 * restored component comes fully alive on the next request.
 		 */
+
 		/*
 		 * Both options live on the root blog (bp_get_option()), but a provider's
 		 * claim depends on the plugins active on the CURRENT site. On multisite,

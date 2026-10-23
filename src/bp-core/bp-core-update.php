@@ -4742,6 +4742,43 @@ function bb_get_addons_required_version() {
 }
 
 /**
+ * Get the installed BuddyBoss Add-ons version, read from the plugin header on disk.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Version, or an empty string when it is not installed or unreadable.
+ */
+function bb_get_installed_addons_version() {
+	static $version = null;
+
+	if ( null === $version ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugins = get_plugins();
+		$version = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+	}
+
+	return $version;
+}
+
+/**
+ * Whether a BuddyBoss Add-ons version is below the version this Platform requires.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $version Optional. Version to check. Default: the installed version.
+ *
+ * @return bool False when the version is unknown (not installed or unreadable).
+ */
+function bb_is_addons_below_required_version( $version = null ) {
+	$version = null === $version ? bb_get_installed_addons_version() : (string) $version;
+
+	return '' !== $version && version_compare( $version, bb_get_addons_required_version(), '<' );
+}
+
+/**
  * Update an active BuddyBoss Add-ons below the required version.
  *
  * The package comes from the Mothership catalog of the activated license, so the
@@ -4765,10 +4802,9 @@ function bb_update_addons_bundle_to_required_version() {
 		return 'inactive';
 	}
 
-	$plugins   = get_plugins();
-	$installed = isset( $plugins[ $plugin_file ]['Version'] ) ? (string) $plugins[ $plugin_file ]['Version'] : '';
+	$installed = bb_get_installed_addons_version();
 
-	if ( '' !== $installed && version_compare( $installed, bb_get_addons_required_version(), '>=' ) ) {
+	if ( '' !== $installed && ! bb_is_addons_below_required_version( $installed ) ) {
 		return 'up_to_date';
 	}
 
@@ -4824,7 +4860,14 @@ function bb_update_addons_bundle_to_required_version() {
 	$download_url = isset( $package['url'] ) ? (string) $package['url'] : '';
 	$latest       = isset( $package['version'] ) ? (string) $package['version'] : '';
 
-	if ( '' === $download_url || '' === $latest || version_compare( $latest, $installed, '<=' ) ) {
+	// A build that is newer but still below the required version is not installed: the
+	// queue is kept and retried until Mothership serves the required build.
+	if (
+		'' === $download_url ||
+		'' === $latest ||
+		version_compare( $latest, $installed, '<=' ) ||
+		bb_is_addons_below_required_version( $latest )
+	) {
 		return 'no_package';
 	}
 
@@ -4904,8 +4947,11 @@ function bb_queue_addons_bundle_update() {
  * option lives, so the lock, retry wait and plugin check use the same site and
  * a subsite page load can neither clear the queue nor spend its attempts.
  * Final results clear the queue. A failed download, or no
- * newer build being available yet (Mothership not serving the required
- * version), is retried at most every 12 hours, up to 10 attempts.
+ * build at the required version being available yet (Mothership not serving
+ * it), is retried at most every 12 hours, up to 10 attempts. An inactive or
+ * not-entitled Add-ons keeps the update queued without spending an attempt; it
+ * is checked again after the same wait, or sooner once Add-ons or a license is
+ * activated ({@see bb_retry_queued_addons_bundle_update_soon()}).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -4940,7 +4986,10 @@ function bb_maybe_run_queued_addons_bundle_update() {
 
 	$result = bb_update_addons_bundle_to_required_version();
 
-	if ( ! in_array( $result, array( 'failed', 'no_package' ), true ) || $attempts >= 10 ) {
+	// Nothing was tried: keep the update queued for when Add-ons is active and entitled.
+	if ( in_array( $result, array( 'inactive', 'not_entitled' ), true ) ) {
+		bp_update_option( 'bb_addons_bundle_update_attempts', $attempts - 1 );
+	} elseif ( ! in_array( $result, array( 'failed', 'no_package' ), true ) || $attempts >= 10 ) {
 		bp_delete_option( 'bb_addons_bundle_update_queued' );
 		bp_delete_option( 'bb_addons_bundle_update_attempts' );
 		delete_transient( 'bb_addons_bundle_update_retry_wait' );
@@ -4956,3 +5005,27 @@ function bb_maybe_run_queued_addons_bundle_update() {
 	}
 }
 add_action( 'admin_init', 'bb_maybe_run_queued_addons_bundle_update', 100 );
+
+/**
+ * Let a queued BuddyBoss Add-ons update run on the next admin page load.
+ *
+ * Ends the retry wait once Add-ons is activated, or a license is activated, so an
+ * update kept queued while Add-ons was inactive or not entitled does not wait up
+ * to 12 hours. Does nothing when no update is queued.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $plugin Optional. Activated plugin basename; empty for a license activation.
+ *
+ * @return void
+ */
+function bb_retry_queued_addons_bundle_update_soon( $plugin = '' ) {
+	if ( '' !== $plugin && 'buddyboss-addons/buddyboss-addons.php' !== $plugin ) {
+		return;
+	}
+
+	if ( bp_get_option( 'bb_addons_bundle_update_queued', false ) ) {
+		delete_transient( 'bb_addons_bundle_update_retry_wait' );
+	}
+}
+add_action( 'activated_plugin', 'bb_retry_queued_addons_bundle_update_soon' );
