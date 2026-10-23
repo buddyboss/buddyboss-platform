@@ -144,8 +144,14 @@ function bb_recaptcha_validate_activate( $retval ) {
 		return $retval;
 	}
 
-	// Bypass for wp-admin "Accept" bulk action, which never renders the widget.
-	if ( is_admin() ) {
+	// Bypass in wp-admin: BuddyBoss never renders the activation widget there (Users → Pending Signups).
+	// Exclude admin-ajax.php, where is_admin() is also true for anonymous nopriv requests.
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		return $retval;
+	}
+
+	// Bypass for WP-CLI (`wp bp signup activate`), which has no browser to render the widget.
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		return $retval;
 	}
 

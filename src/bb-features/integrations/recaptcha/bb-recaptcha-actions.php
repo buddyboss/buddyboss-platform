@@ -13,7 +13,7 @@ add_action( 'wp_ajax_bb_recaptcha_verification_admin_settings', 'bb_recaptcha_ve
 add_action( 'login_form', 'bb_recaptcha_login', 99 );
 add_filter( 'login_form_middle', 'bb_recaptcha_wp_login_form', 99 );
 add_action( 'lostpassword_form', 'bb_recaptcha_lost_password' );
-add_action( 'lostpassword_post', 'bb_recaptcha_validate_lost_password', 10, 1 );
+add_action( 'lostpassword_post', 'bb_recaptcha_validate_lost_password', 10, 2 );
 add_action( 'bp_before_registration_submit_buttons', 'bb_recaptcha_registration' );
 add_action( 'bp_signup_validate', 'bb_recaptcha_validate_registration' );
 add_action( 'bb_before_activate_submit_buttons', 'bb_recaptcha_activate_form' );
@@ -155,14 +155,16 @@ function bb_recaptcha_lost_password() {
  * Validate recaptcha for a lost password form.
  *
  * @since  BuddyBoss 2.5.60
+ * @since  BuddyBoss [BBVERSION] Added the `$user_data` parameter and skip admin-initiated resets.
  *
- * @param WP_Error $errors A WP_Error object containing any errors generated
- *                         by using invalid credentials.
+ * @param WP_Error      $errors    A WP_Error object containing any errors generated
+ *                                 by using invalid credentials.
+ * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
  *
  * @return WP_Error $errors A WP_Error object containing any errors generated
  *                  by using invalid credentials.
  */
-function bb_recaptcha_validate_lost_password( $errors ) {
+function bb_recaptcha_validate_lost_password( $errors, $user_data = false ) {
 	/**
 	 * Filters whether reCAPTCHA validation should be bypassed for the
 	 * current request. Default: true on REST requests, false otherwise.
@@ -179,6 +181,22 @@ function bb_recaptcha_validate_lost_password( $errors ) {
 	 * @param bool $bypass Default: bb_is_rest().
 	 */
 	if ( apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ) {
+		return $errors;
+	}
+
+	/*
+	 * Bypass a reset sent by a logged-in user for another account they can edit:
+	 * wp-admin Users → "Send password reset" (row and bulk) and user-edit.php
+	 * "Send Reset Link" (admin-ajax). These never render the widget. WordPress
+	 * offers these tools for other accounts only, so self-service and logged-out
+	 * requests, including admin-ajax ones, stay protected.
+	 */
+	if (
+		$user_data instanceof WP_User &&
+		is_user_logged_in() &&
+		get_current_user_id() !== $user_data->ID &&
+		current_user_can( 'edit_user', $user_data->ID )
+	) {
 		return $errors;
 	}
 
