@@ -1115,8 +1115,9 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// would otherwise overwrite the draft they were never shown.
 	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
 
-	// Shown on a form that waits for the draft read before it accepts input.
-	$params['forums']['draft_loading_message'] = __( 'Loading your saved draft…', 'buddyboss' );
+	// Shown on a form that waits for the draft read before it accepts input,
+	// so a member whose typing is ignored knows why and that it is brief.
+	$params['forums']['draft_loading_message'] = __( 'Loading your saved draft. You can start writing in a moment.', 'buddyboss' );
 
 	// Shown when a draft SAVE is refused and the server sent no message of its
 	// own - a bare wp_send_json_error() carries none, which is what the nonce
