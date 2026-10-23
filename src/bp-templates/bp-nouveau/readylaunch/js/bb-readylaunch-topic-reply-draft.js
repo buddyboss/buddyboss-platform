@@ -246,6 +246,13 @@ window.bp = window.bp || {};
 			this.syncTopicReplyDraftData();
 			this.setupTopicReplyDraftIntervals();
 			this.displayTopicReplyDraft();
+
+			// Saving stopped earlier in this page view (conflict / not loaded):
+			// closing took the notice down, so say it again on every open, even
+			// with an empty composer - new text here is not saved either.
+			if ( this.draftBlockMessage() ) {
+				this.showDraftFeedback( this.draftBlockMessage() );
+			}
 		};
 
 		/**
@@ -359,6 +366,15 @@ window.bp = window.bp || {};
 		 * @return {Object} The current topic/reply draft object.
 		 */
 		this.getTopicReplyDraftData = function() {
+			// After a conflict the local copy is the newer STORED draft
+			// (handleDraftConflict()), not what the member wrote. Their text lives
+			// only in all_draft_data (collectTopicReplyDraftActivity() on close),
+			// so reading the local copy here put the other version in the
+			// composer on reopen and the member's text was gone.
+			if ( this.draft_conflict_keys[ this.topic_reply_draft.data_key ] ) {
+				return this.topic_reply_draft;
+			}
+
 			if ( ! this.topic_reply_draft.data_key || '' !== this.topic_reply_draft.data_key ) {
 				var draft_data = localStorage.getItem( this.topic_reply_draft.data_key );
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
@@ -526,6 +542,10 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.syncTopicReplyDraftData = function() {
+			if ( this.draft_conflict_keys[ this.topic_reply_draft.data_key ] ) {
+				return;
+			}
+
 			if (
 				'undefined' === typeof this.bp_nouveau_forums_data ||
 				'undefined' === typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key]
@@ -1740,6 +1760,28 @@ window.bp = window.bp || {};
 		};
 
 		/**
+		 * The refusal notice that must stay on screen while saving is stopped.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string} The message, or '' when saving is not stopped for this key.
+		 */
+		this.draftBlockMessage = function () {
+			var key    = this.topic_reply_draft ? this.topic_reply_draft.data_key : '',
+				forums = ( 'undefined' !== typeof BP_Nouveau.forums ) ? BP_Nouveau.forums : {};
+
+			if ( key && this.draft_conflict_keys[ key ] ) {
+				return forums.draft_conflict_message || '';
+			}
+
+			if ( key && this.draft_blocked_keys[ key ] ) {
+				return forums.draft_not_restored_message || '';
+			}
+
+			return '';
+		};
+
+		/**
 		 * Show the draft-retention notice on the composer.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1764,6 +1806,15 @@ window.bp = window.bp || {};
 			// days." stayed on screen, describing a draft that no longer existed,
 			// until the next page load. The activity packs have had this branch
 			// from the start; the forum packs shipped show-only.
+			// Saving is stopped: the refusal notice is the one notice, never
+			// "Drafts are kept for N days." over text that is not being kept.
+			if ( false !== show && this.draftBlockMessage() ) {
+				$note.remove();
+				this.showDraftFeedback( this.draftBlockMessage() );
+
+				return;
+			}
+
 			if ( false === show || ! message ) {
 				$note.remove();
 

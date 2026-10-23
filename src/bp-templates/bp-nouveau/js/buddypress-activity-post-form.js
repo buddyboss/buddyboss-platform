@@ -2482,6 +2482,30 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * The refusal notice that must stay on screen while saving is stopped.
+		 *
+		 * bp.draft_conflict / bp.draft_save_blocked stop saving for the whole page
+		 * view, but the notice that says so is torn down with the composer. Every
+		 * open re-shows it from here, so the member is never left typing into a
+		 * composer that silently saves nothing.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string} The message, or '' when saving is not stopped.
+		 */
+		draftBlockMessage: function() {
+			if ( bp.draft_conflict ) {
+				return BP_Nouveau.activity.params.draft_conflict_message || '';
+			}
+
+			if ( bp.draft_save_blocked ) {
+				return BP_Nouveau.activity.params.draft_not_restored_message || '';
+			}
+
+			return '';
+		},
+
+		/**
 		 * Toggle the draft-retention notice on the composer.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -2500,6 +2524,14 @@ window.bp = window.bp || {};
 			}
 
 			$note = $form.find( '.bb-draft-retention-note' );
+
+			// Saving is stopped: the refusal notice is the one notice, never
+			// "Drafts are kept for N days." over text that is not being kept.
+			if ( show && this.draftBlockMessage() ) {
+				$note.remove();
+				this.showDraftFeedback( this.draftBlockMessage() );
+				return;
+			}
 
 			// Expiry disabled (empty message) or no draft on screen - say nothing.
 			if ( ! show || ! message ) {
@@ -7350,7 +7382,13 @@ window.bp = window.bp || {};
 				// after the composer was already on screen and shove it down. The
 				// cold path still shows it when the fetched draft arrives; this
 				// call is idempotent.
-				if ( ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data ) {
+				//
+				// Saving stopped earlier in this page view (conflict / not loaded):
+				// closing took the notice down, so say it again on every open, even
+				// with an empty composer - new text here is not saved either.
+				if ( bp.Nouveau.Activity.postForm.draftBlockMessage() ) {
+					bp.Nouveau.Activity.postForm.showDraftFeedback( bp.Nouveau.Activity.postForm.draftBlockMessage() );
+				} else if ( ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data ) {
 					bp.Nouveau.Activity.postForm.showDraftRetentionNotice( true );
 				}
 
