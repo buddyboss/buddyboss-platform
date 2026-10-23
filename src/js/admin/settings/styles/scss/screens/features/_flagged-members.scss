@@ -541,9 +541,8 @@
 		font-weight: 400;
 		color: $bb-text-tertiary-color;
 		line-height: 16px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		white-space: normal;
+		word-break: break-word;
 	}
 
 	&__list-item-date {
