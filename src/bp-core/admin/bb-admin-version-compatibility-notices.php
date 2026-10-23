@@ -129,29 +129,14 @@ function bb_platform_3_offload_media_required_version() {
 }
 
 /**
- * Minimum BuddyBoss Theme version required by this Platform.
- *
- * Video and Documents now ship in BuddyBoss Add-ons, so BP_Document and the
- * bp_document_* functions can be missing. BuddyBoss Theme 2.22.5 carries the
- * bp_is_active( 'document' ) guards (Theme #2826) in the Elementor activity
- * privacy function, bb_theme_elementor_bp_nouveau_activity_privacy();
- * 2.22.4 and older fatal on the Elementor activity widget without Add-ons.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Minimum BuddyBoss Theme version.
- */
-function bb_platform_3_theme_required_version() {
-	// @todo: Update when release. Set to the BuddyBoss Theme version that ships the PROD-9995 bp_is_active( 'document' ) guards (2.22.4 does not have them).
-	return '2.22.5';
-}
-
-/**
  * Required-theme-version map for this Platform.
  *
  * Keyed by theme directory (stylesheet). A row is checked only when that
  * theme is installed; wp_get_theme() returns the parent theme by its
  * directory, so a BuddyBoss child theme is covered through its parent.
+ * The floor comes from bb_platform_3_theme_required_version()
+ * (bp-incompatible-plugins-helper.php), which also gates the document
+ * meta shim for older theme builds.
  *
  * @since BuddyBoss [BBVERSION]
  *
