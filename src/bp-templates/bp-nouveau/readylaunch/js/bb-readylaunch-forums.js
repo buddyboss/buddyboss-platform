@@ -6,6 +6,27 @@ window.bp = window.bp || {};
 ( function ( exports, $ ) {
 
 	/**
+	 * Paste replacements that keep the text of a pasted table.
+	 *
+	 * Spreadsheet copies (Google Sheets, Excel, Numbers) are an HTML table, and
+	 * the table tags are in this editor's cleanTags, which removes them WITH
+	 * their text: the paste inserted nothing (F-07). Run before MediumEditor's
+	 * own clean-up, these turn each row into a paragraph and separate cells
+	 * with a space, and drop the sheet's inline <style> block.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var bbTablePasteReplacements = [
+		[ new RegExp( /<style[^>]*>[\s\S]*?<\/style>/gi ), '' ],
+		[ new RegExp( /<\/?(?:colgroup|col)\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|caption)\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<tr\b[^>]*>/gi ), '<p>' ],
+		[ new RegExp( /<\/tr>/gi ), '</p>' ],
+		[ new RegExp( /<t[dh]\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<\/t[dh]>/gi ), ' ' ]
+	];
+
+	/**
 	 * [ReadLaunch description]
 	 *
 	 * @type {Object}
@@ -260,6 +281,7 @@ window.bp = window.bp || {};
 										[new RegExp(/<\/h[1-6]/gi), '</b'],
 									],
 									cleanAttrs: ['class', 'style', 'dir', 'id'],
+									preCleanReplacements: bbTablePasteReplacements,
 									cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 									unwrapTags: []
 								},
@@ -391,6 +413,7 @@ window.bp = window.bp || {};
 										[new RegExp(/<\/h[1-6]/gi), '</b'],
 									],
 									cleanAttrs: ['class', 'style', 'dir', 'id'],
+									preCleanReplacements: bbTablePasteReplacements,
 									cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 									unwrapTags: []
 								},
@@ -567,6 +590,7 @@ window.bp = window.bp || {};
 										[new RegExp(/<\/h[1-6]/gi), '</b'],
 									],
 									cleanAttrs: ['class', 'style', 'dir', 'id'],
+									preCleanReplacements: bbTablePasteReplacements,
 									cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 									unwrapTags: []
 								},
@@ -987,6 +1011,12 @@ window.bp = window.bp || {};
 							$element.removeData( 'emojioneArea' );
 						}
 
+						// In standalone mode emojioneArea's init() writes the
+						// editor's text() back into this contenteditable source,
+						// which strips its markup (`<p>One</p><p>Two</p>` became
+						// `OneTwo`). Keep the HTML so `ready` can put it back.
+						var contentBeforeEmojiInit = element.innerHTML;
+
 						jQuery( '#' + elem_id ).emojioneArea(
 							{
 								standalone: true,
@@ -998,6 +1028,27 @@ window.bp = window.bp || {};
 								useInternalCDN: false,
 								events: {
 									ready: function () {
+										// Unlike the default pack - which initialises
+										// emoji ONCE on document ready - this runs on
+										// every `bbp_after_load_reply_form` /
+										// `bbp_after_load_topic_form`, i.e. the same
+										// event the draft restore uses, 100ms behind it.
+										// resetContent() reverts a MediumEditor element
+										// to the content captured when it was
+										// initialised (empty), so it wiped the draft the
+										// composer had just restored: on ReadyLaunch the
+										// member saw `has-draft` over an empty editor
+										// and their draft never came back
+										// (Q12).
+										if ( $element.closest( 'form' ).hasClass( 'has-draft' ) ) {
+											// Undo the markup strip done by the
+											// re-initialisation (see above).
+											if ( element.innerHTML !== contentBeforeEmojiInit ) {
+												element.innerHTML = contentBeforeEmojiInit;
+											}
+											return;
+										}
+
 										if ( typeof window.bb_rl_forums_medium_topic_editor !== 'undefined' && typeof window.bb_rl_forums_medium_topic_editor[ key ] !== 'undefined' ) {
 											window.bb_rl_forums_medium_topic_editor[ key ].resetContent();
 										}

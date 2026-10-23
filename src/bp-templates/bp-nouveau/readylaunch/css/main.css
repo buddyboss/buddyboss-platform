@@ -13290,6 +13290,10 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
   }
 }
 
+.bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
+}
+
 [class*="bb-rl-activity-form"] {
   background-color: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-tertiary-color);
@@ -13423,6 +13427,28 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
 
 .bb-rl-activity-form.bb-rl-focus-in {
   position: relative;
+}
+.bb-rl-activity-form .bb-draft-save-feedback,
+.bb-rl-activity-form .bb-draft-retention-note {
+  display: none;
+}
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-save-feedback,
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-retention-note {
+  display: flex;
+  margin: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-save-feedback.error {
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-retention-note.info {
+  border-color: var(--bb-rl-border-info-secondary-color);
+}
+.bb-rl-activity-form.bb-rl-focus-in .bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
 }
 
 .bb-rl-activity-form.bb-rl-focus-in .bb-rl-bb-model-header {

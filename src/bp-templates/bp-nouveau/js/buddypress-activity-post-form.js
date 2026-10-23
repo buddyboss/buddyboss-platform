@@ -1,10 +1,35 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager, BBActivityPostFeatureImage */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager, BBActivityPostFeatureImage, unescape */
 /* @version 3.1.0 */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
 
 ( function ( exports, $ ) {
+
+	/**
+	 * UTF-8 byte length of a string.
+	 *
+	 * The draft cap is a BYTE budget measured server-side with strlen().
+	 * String.length counts UTF-16 code units, which undercounts every
+	 * non-ASCII script - measured in-browser at 2.93x for CJK, 1.96x for
+	 * emoji and 1.81x for Arabic. Comparing that against a byte cap meant the
+	 * poster shed never fired on those communities: the payload looked small,
+	 * js_preview stayed in, and the server refused the whole save instead - so
+	 * the member simply lost the draft.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} str String to measure.
+	 * @return {number} Length in bytes.
+	 */
+	var bbDraftByteLength = function ( str ) {
+		try {
+			return new Blob( [ str ] ).size;
+		} catch ( e ) {
+			// No Blob: encodeURIComponent percent-escapes each non-ASCII byte.
+			return unescape( encodeURIComponent( str ) ).length;
+		}
+	};
 	bp.Nouveau = bp.Nouveau || {};
 
 	// Bail if not set.
@@ -30,6 +55,7 @@ window.bp = window.bp || {};
 	bp.group_id              = 0;
 	bp.privacy               = 'public';
 	bp.draft_ajax_request    = null;
+	bp.draft_inflight        = null;
 	bp.old_draft_data        = false;
 	bp.draft_activity        = {
 		object: false,
@@ -42,6 +68,10 @@ window.bp = window.bp || {};
 	bp.draft_local_interval  = false;
 	bp.draft_ajax_interval   = false;
 	bp.draft_content_changed = false;
+	bp.draft_pending_sync    = false;
+	bp.draft_base            = [ 'none' ];
+	bp.draft_conflict        = false;
+	bp.draft_save_blocked    = false;
 
 	/**
 	 * [Activity description]
@@ -63,6 +93,7 @@ window.bp = window.bp || {};
 			// Get current draft activity.
 			this.getCurrentDraftActivity();
 			this.syncDraftActivity();
+			this.setupPasteImageGuard();
 			this.reloadWindow();
 		},
 
@@ -742,6 +773,11 @@ window.bp = window.bp || {};
 					if ( self.dropzone ) {
 						self.dropzone.files.push( doc_file );
 						self.dropzone.emit( 'addedfile', doc_file );
+						// A draft keeps the upload response's formatted size ("14 KB"), which
+						// Dropzone's numeric formatter shows as "0 b"; show the stored text.
+						if ( doc_file.previewElement && doc_file.size && ! _.isFinite( Number( doc_file.size ) ) ) {
+							$( doc_file.previewElement ).find( '[data-dz-size]' ).text( String( doc_file.size ) );
+						}
 						self.dropzone.emit( 'complete', doc_file );
 					}
 				}
@@ -1047,6 +1083,8 @@ window.bp = window.bp || {};
 		},
 
 		getCurrentDraftActivity: function () {
+			this.sweepExpiredLocalDrafts();
+
 			if ( $( 'body' ).hasClass( 'activity' ) && ! _.isUndefined( BP_Nouveau.activity.params.object ) ) {
 				bp.draft_activity.object = BP_Nouveau.activity.params.object;
 
@@ -1062,8 +1100,48 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
 					if ( 'deleted' !== $.cookie( bp.draft_activity.data_key ) ) {
 				 		// Parse data with JSON.
-						var draft_activity_local_data = JSON.parse( draft_data );
-						bp.draft_activity.data        = draft_activity_local_data.data;
+						// A corrupted value - a partial write from a crashed/killed
+						// tab, a leftover from an incompatible older client, or
+						// tampering - would otherwise throw a SyntaxError that aborts
+						// the rest of start(): syncDraftActivity() (the server
+						// fallback), the paste guard and the save-on-close handlers
+						// would never wire up, silently. Treat a parse failure as
+						// "no local draft" - drop the bad key and carry on (M13).
+						var draft_activity_local_data = null;
+						try {
+							draft_activity_local_data = JSON.parse( draft_data );
+						} catch ( e ) {
+							localStorage.removeItem( bp.draft_activity.data_key );
+							$.removeCookie( bp.draft_activity.data_key );
+						}
+
+						// The localStorage key is not scoped per user, so on a
+						// shared/kiosk browser it can hold a DIFFERENT member's
+						// draft (they logged out without clearing storage). Server
+						// storage is per-user, but this cache is per-browser -
+						// restoring it would leak one member's draft into another's
+						// composer. Drop it when the stored owner is not the current
+						// member (privacy).
+						var draft_owner   = ( draft_activity_local_data && draft_activity_local_data.data && ! _.isUndefined( draft_activity_local_data.data.user_id ) ) ? parseInt( draft_activity_local_data.data.user_id, 10 ) : 0;
+						var current_owner = parseInt( BP_Nouveau.activity.params.user_id, 10 );
+
+						if ( draft_owner && current_owner && draft_owner !== current_owner ) {
+							localStorage.removeItem( bp.draft_activity.data_key );
+							$.removeCookie( bp.draft_activity.data_key );
+						} else if ( draft_activity_local_data ) {
+							bp.draft_activity.data = draft_activity_local_data.data;
+
+							// A copy the server may not hold - handed back by an
+							// eviction, or last sent by an unload beacon whose
+							// response nobody read. It stays protected until a
+							// save is confirmed (see postDraftActivity()).
+							bp.draft_pending_sync = true === draft_activity_local_data.bb_draft_pending_sync;
+
+							// The revisions this copy was built on; a save from
+							// it may only replace one of those (bb_draft_base).
+							bp.draft_base               = bp.Nouveau.Activity.postForm.draftBaseFrom( draft_activity_local_data );
+							bp.draft_activity._draft_rev = draft_activity_local_data._draft_rev;
+						}
 					} else {
 						$.removeCookie( bp.draft_activity.data_key );
 					}
@@ -1081,13 +1159,19 @@ window.bp = window.bp || {};
 			return true;
 		},
 
-		displayDraftActivity: function () {
-			var activity_data = bp.draft_activity.data,
-				$this         = this;
+		/**
+		 * Fire the public bb_activity_draft_loaded event for the restored draft.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object|boolean} activity_data The restored draft data, or false when no draft exists.
+		 * @param {jQuery} $whatsNewForm The composer form element.
+		 *
+		 * @return {void}
+		 */
+		triggerDraftLoadedEvent: function ( activity_data, $whatsNewForm ) {
+			bp.draft_loaded_event_deferred = false;
 
-			bp.draft_activity.allow_delete_media = true;
-
-			var $whatsNewForm = $( '#whats-new-form' );
 			// Trigger custom event for draft activity loaded.
 			$( 'body' ).trigger( 'bb_activity_event',
 				{
@@ -1098,6 +1182,139 @@ window.bp = window.bp || {};
 					$whatsNewForm  : $whatsNewForm
 				}
 			);
+		},
+
+		/**
+		 * Strip scriptable markup from a restored draft's content.
+		 *
+		 * The localStorage copy of a draft is member-editable storage that
+		 * never passes through the server's kses sanitization, so a tampered
+		 * local copy could otherwise inject script-capable markup into the
+		 * composer when the draft is restored. The content is parsed in an
+		 * inert document, so nothing executes or loads during the cleanup;
+		 * normal composer markup passes through untouched.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} content Draft HTML content.
+		 *
+		 * @return {string} The content with scriptable markup removed.
+		 */
+		sanitizeDraftContent: function ( content ) {
+			if ( ! content || 'string' !== typeof content ) {
+				return content;
+			}
+
+			var doc            = document.implementation.createHTMLDocument( '' );
+			doc.body.innerHTML = content;
+
+			// Elements that can execute script, restyle the page, or hijack the host form.
+			var blocked = doc.body.querySelectorAll( 'script, style, iframe, frame, frameset, object, embed, applet, form, input, button, textarea, select, link, meta, base, template, noscript, svg, math' );
+			for ( var i = 0; i < blocked.length; i++ ) {
+				if ( blocked[ i ].parentNode ) {
+					blocked[ i ].parentNode.removeChild( blocked[ i ] );
+				}
+			}
+
+			var nodes = doc.body.querySelectorAll( '*' );
+			for ( var j = 0; j < nodes.length; j++ ) {
+				var attrs = nodes[ j ].attributes;
+				for ( var k = attrs.length - 1; 0 <= k; k-- ) {
+					var attr_name = attrs[ k ].name.toLowerCase();
+
+					// Drop non-printable characters so schemes like "java\nscript:" can't hide from the test below.
+					var attr_value = attrs[ k ].value.replace( /[^\x21-\x7E]/g, '' ).toLowerCase();
+
+					if (
+						0 === attr_name.indexOf( 'on' ) ||
+						// A style attribute can position an overlay for UI-redress and load
+						// remote URLs via url(...), so it is dropped like the <style> element.
+						'style' === attr_name ||
+						(
+							-1 !== [ 'href', 'src', 'srcset', 'poster' ].indexOf( attr_name ) &&
+							/(^|,)(javascript|vbscript|data):/.test( attr_value )
+						)
+					) {
+						nodes[ j ].removeAttribute( attrs[ k ].name );
+					}
+				}
+			}
+
+			return doc.body.innerHTML;
+		},
+
+		/**
+		 * Scrub a URL taken from a restored draft before it is concatenated into
+		 * an img `src` attribute.
+		 *
+		 * `group_image` / `group_avatar` come from the same member-editable
+		 * localStorage copy as the draft body, and the restore path builds
+		 * `'<img src="' + url + '"'` by string concatenation, so a value carrying
+		 * a quote or angle bracket would break out of the attribute and a
+		 * scriptable scheme would run. Anything unsafe collapses to a blank URL
+		 * (M1). Legitimate http(s) avatar URLs pass through untouched.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} url Draft-supplied URL.
+		 *
+		 * @return {string} The URL, or '' when it is unsafe to inline.
+		 */
+		sanitizeDraftUrl: function ( url ) {
+			if ( ! url || 'string' !== typeof url ) {
+				return '';
+			}
+
+			var probe = url.replace( /[^\x21-\x7E]/g, '' ).toLowerCase();
+
+			if ( /[<>"']/.test( url ) || /^(javascript|vbscript|data):/.test( probe ) ) {
+				return '';
+			}
+
+			return url;
+		},
+
+		displayDraftActivity: function () {
+			var activity_data = bp.draft_activity.data,
+				$this         = this;
+
+			// The composer was opened in this page view (collectDraftActivity()).
+			bp.draft_composer_opened = true;
+
+			// The local copy of the draft is member-editable storage - scrub
+			// scriptable markup before it reaches listeners or the editor.
+			if ( activity_data && activity_data.content ) {
+				activity_data.content = this.sanitizeDraftContent( activity_data.content );
+			}
+
+			// Same untrusted source: the group avatar URL is concatenated into an
+			// img src on restore, so scrub it before any sink reads it (M1).
+			if ( activity_data ) {
+				if ( activity_data.group_image ) {
+					activity_data.group_image = this.sanitizeDraftUrl( activity_data.group_image );
+				}
+				if ( activity_data.group_avatar ) {
+					activity_data.group_avatar = this.sanitizeDraftUrl( activity_data.group_avatar );
+				}
+			}
+
+			bp.draft_activity.allow_delete_media = true;
+
+			var $whatsNewForm = $( '#whats-new-form' );
+
+			// The draft is fetched lazily, so this method can run once before the
+			// server copy arrives and again after. Firing the public event on
+			// that empty priming pass would hand listeners a falsy activity_data
+			// and then fire again with the real draft - they were built for a
+			// single fire. Defer it instead; fetchServerDraftActivity() replays
+			// the empty event if no draft ever materialises, so no path loses it
+			//.
+			if ( ! activity_data && true === BP_Nouveau.activity.params.has_draft && ! bp.draft_fetch_settled ) {
+				bp.draft_loaded_event_deferred = true;
+				return;
+			}
+
+			this.triggerDraftLoadedEvent( activity_data, $whatsNewForm );
 
 			// Checked the draft is available or doesn't edit activity.
 			if ( ! activity_data || $whatsNewForm.hasClass( 'bp-activity-edit' ) ) {
@@ -1172,6 +1389,7 @@ window.bp = window.bp || {};
 
 						// Add loader.
 						$this.postForm.$el.addClass( 'loading' ).addClass( 'has-draft' );
+						$this.showDraftRetentionNotice( true );
 
 						var bpActivityEvent = new Event( 'bp_activity_edit' );
 
@@ -1185,14 +1403,21 @@ window.bp = window.bp || {};
 
 		syncDraftActivity: function() {
 			var self = this;
-			if ( ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) && ! _.isUndefined( BP_Nouveau.activity.params.draft_activity.data_key ) ) {
+			if ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) {
 
 				if ( 'deleted' === $.cookie( bp.draft_activity.data_key ) ) {
+					// A discard whose server delete may not have landed yet - never
+					// resurrect the draft from any source on this load.
 					bp.draft_activity.data                    = false;
 					BP_Nouveau.activity.params.draft_activity = '';
 					localStorage.removeItem( bp.draft_activity.data_key );
 					$.removeCookie( bp.draft_activity.data_key );
-				} else {
+
+					// No lazy fetch is issued on this branch, so nothing would ever
+					// settle a deferred draft-loaded event and the public event would
+					// never fire at all. Mark it settled here.
+					bp.draft_fetch_settled = true;
+				} else if ( ! _.isUndefined( BP_Nouveau.activity.params.draft_activity.data_key ) ) {
 					bp.old_draft_data = BP_Nouveau.activity.params.draft_activity.data;
 					bp.draft_activity = BP_Nouveau.activity.params.draft_activity;
 
@@ -1201,9 +1426,1226 @@ window.bp = window.bp || {};
 
 					// Check size of data before storing it.
 					self.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+				} else if ( true === BP_Nouveau.activity.params.has_draft ) {
+					// The draft is no longer echoed into page HTML - fetch the
+					// server copy once when localStorage held nothing.
+					self.fetchServerDraftActivity();
 				}
 
 			}
+		},
+
+		/**
+		 * Fetch the server draft copy once when localStorage held nothing, then settle the draft-loaded event.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		fetchServerDraftActivity: function() {
+			var self = this;
+
+			// An in-flight fetch will settle on its own; a missing data_key means no
+			// request is ever made, so settle here or the deferred event is stranded.
+			if ( ! bp.draft_activity.data_key ) {
+				self.settleDeferredDraftLoadedEvent();
+
+				return;
+			}
+
+			if ( bp.draft_fetch_in_progress ) {
+				return;
+			}
+
+			bp.draft_fetch_in_progress = true;
+
+			bp.ajax.post(
+				'bb_get_draft_activity',
+				{
+					_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
+					data_key: bp.draft_activity.data_key,
+					object: bp.draft_activity.object,
+					item_id: BP_Nouveau.activity.params.item_id
+				}
+			).done(
+				function ( response ) {
+					bp.draft_fetch_in_progress = false;
+
+					// Evictions whose hand-back never reached this browser.
+					// Typing in this composer before its draft loaded: a hand-back for
+					// this key would be replaced by that text, so it stays held on the
+					// server and the text is not saved over it in this page view.
+					if (
+						response && response.evicted_drafts && response.evicted_drafts[ bp.draft_activity.data_key ] &&
+						(
+							( bp.draft_activity.data && '' !== bp.draft_activity.data ) ||
+							bp.draft_content_changed ||
+							( ! _.isUndefined( self.postForm ) && self.postForm.$el && '' !== $.trim( self.postForm.$el.find( '#whats-new' ).text().replace( /\u00a0/g, ' ' ) ) )
+						)
+					) {
+						window.bbDraftHandbackSkipKeys = window.bbDraftHandbackSkipKeys || {};
+						window.bbDraftHandbackSkipKeys[ bp.draft_activity.data_key ] = true;
+						bp.draft_save_blocked = true;
+					}
+
+					self.handleEvictedDrafts( response );
+
+					// A successful read clears any earlier failure state, so a
+					// transient network blip at page load no longer disables server
+					// sync for the rest of the page view - postDraftActivity()
+					// re-attempts the read while the flag is set (M12).
+					bp.draft_fetch_failed        = false;
+					bp.draft_fetch_attempts      = 0;
+					bp.draft_tick_retry_attempts = 0;
+
+					if ( ! response.draft_activity || ! response.draft_activity.data ) {
+						self.settleDeferredDraftLoadedEvent();
+						return;
+					}
+
+					// The member may have started typing while the fetch was in
+					// flight - never clobber newer local content with the older
+					// server copy the fetch was only needed to seed.
+					//
+					// bp.draft_content_changed is only raised by the 3s autosave
+					// interval, so it misses typing in the first ~3s of a slow
+					// fetch. Read the composer's live content directly - the same
+					// content check the forum packs use - so a keystroke in that
+					// window is respected (M11).
+					var bbTypedContent = ( ! _.isUndefined( self.postForm ) && self.postForm.$el ) ?
+						$.trim( self.postForm.$el.find( '#whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
+
+					var hasLocalDraftData    = bp.draft_activity.data && '' !== bp.draft_activity.data,
+						memberStartedWriting = bp.draft_content_changed || '' !== bbTypedContent;
+
+					if ( hasLocalDraftData || memberStartedWriting ) {
+						self.settleDeferredDraftLoadedEvent();
+
+						// Suppressed because the member typed while the fetch was in
+						// flight: the stored draft is intact but not loaded. Silence
+						// reads as a lost draft, so tell them - the same notice the
+						// forum packs show (M11 parity). Not shown when a local draft
+						// was already present, since that draft stays on screen and
+						// nothing was withheld.
+						if ( ! hasLocalDraftData && memberStartedWriting && BP_Nouveau.activity.params.draft_not_restored_message ) {
+							self.showDraftFeedback( BP_Nouveau.activity.params.draft_not_restored_message );
+
+							// What the member typed is not based on the stored draft,
+							// so it must not be saved over it in this page view.
+							bp.draft_save_blocked = true;
+						}
+
+						return;
+					}
+
+					bp.old_draft_data      = response.draft_activity.data;
+					bp.draft_activity      = response.draft_activity;
+					bp.draft_base   = [ response.draft_activity._draft_rev || '' ];
+					bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bp.old_draft_data );
+
+					// A held draft handed back with this response is the server's
+					// only copy, and the acknowledgement for it is already queued.
+					// Keep the local copy marked pending, or closing the page
+					// without opening the composer removes it (F-01).
+					if ( self.isLocalDraftPending( bp.draft_activity.data_key ) || ( response.evicted_drafts && response.evicted_drafts[ bp.draft_activity.data_key ] ) ) {
+						bp.draft_pending_sync = true;
+					}
+
+					self.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+
+					// When the composer opened before the fetch resolved, restore
+					// into the open form now (fires bb_activity_draft_loaded).
+					if ( $( 'body' ).hasClass( 'activity-modal-open' ) && ! _.isUndefined( self.postForm ) && ! self.postForm.$el.hasClass( 'bp-activity-edit' ) ) {
+						self.displayDraftActivity();
+					}
+				}
+			).fail(
+				function () {
+					bp.draft_fetch_in_progress = false;
+
+					// One bounded retry, then refuse to overwrite. A failed read
+					// used to settle silently, leaving the composer empty over a
+					// draft that still exists on the server: the member assumes
+					// nothing was saved, retypes, and the next autosave replaces
+					// the draft the fetch could not read. The forum packs got this
+					// protection; the activity packs created the same lazy-fetch
+					// window and did not.
+					bp.draft_fetch_attempts = ( bp.draft_fetch_attempts || 0 ) + 1;
+
+					if ( bp.draft_fetch_attempts < 2 ) {
+						window.setTimeout(
+							function () {
+								self.fetchServerDraftActivity();
+							},
+							2000
+						);
+
+						return;
+					}
+
+					bp.draft_fetch_failed = true;
+					self.settleDeferredDraftLoadedEvent();
+
+					if ( BP_Nouveau.activity.params.draft_fetch_failed_message ) {
+						self.showDraftFeedback( BP_Nouveau.activity.params.draft_fetch_failed_message );
+					}
+				}
+			);
+		},
+
+		/**
+		 * Mark the lazy fetch settled and replay the draft-loaded event deferred during the empty priming pass.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		settleDeferredDraftLoadedEvent: function() {
+			// No server draft arrived: mark the fetch settled and replay the
+			// event displayDraftActivity() deferred, so listeners still receive
+			// exactly one fire - the empty one they got before the lazy path.
+			bp.draft_fetch_settled = true;
+
+			if ( ! bp.draft_loaded_event_deferred ) {
+				return;
+			}
+
+			this.triggerDraftLoadedEvent( false, $( '#whats-new-form' ) );
+		},
+
+		/**
+		 * Block image-only clipboard pastes into the composer; embedded data URLs are stripped server-side.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		setupPasteImageGuard: function() {
+			var self = this;
+
+			if ( bp.draft_paste_guard_bound || ! document.addEventListener ) {
+				return;
+			}
+
+			bp.draft_paste_guard_bound = true;
+
+			// A keyboard Cmd/Ctrl+V moves the paste into MediumEditor's body-level
+			// paste bin, outside this form, so note that it started here.
+			document.addEventListener(
+				'keydown',
+				function ( event ) {
+					if ( ( event.metaKey || event.ctrlKey ) && 86 === event.keyCode && $( event.target ).closest( '#whats-new-form [contenteditable="true"]' ).length ) {
+						bp.draft_keyboard_paste_at = Date.now();
+					}
+				},
+				true
+			);
+
+			// Interim guard: a pasted bitmap becomes an inline base64
+			// image of 1MB+, which the draft and publish pipelines strip anyway.
+			// Refuse it at the moment of intent instead of silently losing it.
+			// Capture phase, so it runs before MediumEditor's own paste handlers
+			// on the editable and on the paste bin, which then skip the paste.
+			document.addEventListener(
+				'paste',
+				function ( event ) {
+					var $target     = $( event.target && 1 === event.target.nodeType ? event.target : ( event.target ? event.target.parentNode : null ) ),
+						in_composer = $target.closest( '#whats-new-form [contenteditable="true"]' ).length,
+						in_bin      = $target.closest( '[id^="medium-editor-pastebin-"]' ).length && bp.draft_keyboard_paste_at && 2000 > ( Date.now() - bp.draft_keyboard_paste_at );
+
+					if ( ! in_composer && ! in_bin ) {
+						return;
+					}
+
+					bp.draft_keyboard_paste_at = 0;
+
+					if ( self.isImageOnlyPaste( event.clipboardData ) ) {
+						event.preventDefault();
+						self.showDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
+					}
+				},
+				true
+			);
+
+			// A keyboard Cmd/Ctrl+V the listener above did not attribute to this
+			// form is still refused by the editor, which reports it with this
+			// event (V03).
+			$( document ).on( 'bb-image-paste-blocked.bbDraftImageGuard', '#whats-new-form', function () {
+				self.showDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
+			} );
+		},
+
+		/**
+		 * Whether a paste carries an image and no text.
+		 *
+		 * Office-suite copies (spreadsheet cells, rich text) put a bitmap
+		 * rendition on the clipboard NEXT TO the text - the member is pasting
+		 * text, so that goes through (embedded data: URLs are stripped
+		 * server-side). A browser's "Copy image" puts the image file next to
+		 * HTML that holds only an <img>, which the editor strips: nothing would
+		 * be inserted, so it counts as an image paste (F-06).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {DataTransfer} clipboard The paste event's clipboard data.
+		 *
+		 * @return {boolean}
+		 */
+		isImageOnlyPaste: function( clipboard ) {
+			var has_image = false,
+				html      = '',
+				html_text = '',
+				plain     = '',
+				doc,
+				i;
+
+			if ( ! clipboard || ! clipboard.items ) {
+				return false;
+			}
+
+			for ( i = 0; i < clipboard.items.length; i++ ) {
+				if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
+					has_image = true;
+				}
+			}
+
+			if ( ! has_image ) {
+				return false;
+			}
+
+			try {
+				plain = clipboard.getData( 'text/plain' ) || '';
+				html  = clipboard.getData( 'text/html' ) || '';
+			} catch ( e ) {
+				return false;
+			}
+
+			if ( html ) {
+				if ( 'function' !== typeof window.DOMParser ) {
+					return false;
+				}
+
+				// An inert document: nothing in the pasted markup loads or runs.
+				doc = ( new window.DOMParser() ).parseFromString( html, 'text/html' );
+				$( doc ).find( 'style, script, title, meta' ).remove();
+				html_text = doc.body ? ( doc.body.textContent || '' ) : '';
+			}
+
+			return '' === $.trim( plain.replace( /\u00a0/g, ' ' ) ) && '' === $.trim( html_text.replace( /\u00a0/g, ' ' ) );
+		},
+
+		/**
+		 * Paste rewrites that keep the text of a pasted spreadsheet range.
+		 *
+		 * The composer's paste cleanup removes table markup together with its
+		 * text, so a range copied from a spreadsheet pasted nothing (F-07).
+		 * MediumEditor applies these to the pasted HTML before that cleanup:
+		 * cells become space-separated text and each row a paragraph, the same
+		 * as the forum and message editors.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {Array}
+		 */
+		tablePasteReplacements: function() {
+			return [
+				[ new RegExp( /<style[\s\S]*?<\/style>/gi ), '' ],
+				[ new RegExp( /<\/?(?:colgroup|col)\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/?google-sheets-html-origin\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|caption)\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<tr\b[^>]*>/gi ), '<p>' ],
+				[ new RegExp( /<\/tr>/gi ), '</p>' ],
+				[ new RegExp( /<t[dh]\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/t[dh]>/gi ), ' ' ]
+			];
+		},
+
+		/**
+		 * A new random revision id for one draft save.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string}
+		 */
+		newDraftRev: function() {
+			var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+				rev   = '',
+				i;
+
+			for ( i = 0; i < 16; i++ ) {
+				rev += chars.charAt( Math.floor( Math.random() * chars.length ) );
+			}
+
+			return rev;
+		},
+
+		/**
+		 * The revisions a stored or local draft copy was built on.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} copy Draft entry or local copy.
+		 *
+		 * @return {Array}
+		 */
+		draftBaseFrom: function( copy ) {
+			if ( copy && _.isArray( copy._draft_base ) && copy._draft_base.length ) {
+				return copy._draft_base.slice( -8 );
+			}
+
+			return [ ( copy && copy._draft_rev ) ? String( copy._draft_rev ) : '' ];
+		},
+
+		/**
+		 * Whether this browser's copy of a draft key is marked pending.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key localStorage key.
+		 *
+		 * @return {boolean}
+		 */
+		isLocalDraftPending: function( key ) {
+			try {
+				var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+
+				return !! ( copy && true === copy.bb_draft_pending_sync );
+			} catch ( e ) {
+				return false;
+			}
+		},
+
+		/**
+		 * Keep the newer stored draft after the server refused a save over it.
+		 *
+		 * The stored draft becomes the local copy, so a reload shows it; the
+		 * member's text stays in the composer; saving stops for the page view.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} response The refusal, carrying `draft_activity`.
+		 *
+		 * @return {void}
+		 */
+		handleDraftConflict: function( response ) {
+			var stored = response.draft_activity;
+
+			bp.draft_conflict     = true;
+			bp.draft_pending_sync = false;
+			this.clearDraftInterval();
+
+			try {
+				// Refused because a held draft of this key had not reached this
+				// browser: handleEvictedDrafts() has just stored it merged with the
+				// member's text, and that copy is what a reload restores.
+				if ( response.held ) {
+					this.showDraftFeedback( BP_Nouveau.activity.params.draft_conflict_message || response.message || '' );
+
+					return;
+				}
+
+				if ( stored && 'object' === typeof stored && stored.data_key ) {
+					localStorage.setItem( stored.data_key, JSON.stringify( _.extend( {}, stored, { _draft_local_at: Math.floor( Date.now() / 1000 ) } ) ) );
+				} else {
+					localStorage.removeItem( bp.draft_activity.data_key );
+				}
+			} catch ( e ) {
+				// Over quota: the server still holds the stored draft.
+			}
+
+			this.showDraftFeedback( BP_Nouveau.activity.params.draft_conflict_message || response.message || '' );
+		},
+
+		/**
+		 * Drop local draft copies older than the draft retention.
+		 *
+		 * The server deletes drafts untouched for that long; a local copy of
+		 * one (a hand-back, for instance) goes at the same age.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		sweepExpiredLocalDrafts: function() {
+			var days   = parseInt( BP_Nouveau.activity.params.draft_retention_days, 10 ),
+				cutoff = Math.floor( Date.now() / 1000 ) - ( days * 86400 ),
+				keys   = [],
+				i;
+
+			if ( ! days || 1 > days ) {
+				return;
+			}
+
+			try {
+				for ( i = 0; i < localStorage.length; i++ ) {
+					if ( /^draft_/.test( localStorage.key( i ) ) ) {
+						keys.push( localStorage.key( i ) );
+					}
+				}
+
+				_.each(
+					keys,
+					function ( key ) {
+						var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+
+						if ( copy && copy._draft_local_at && parseInt( copy._draft_local_at, 10 ) < cutoff ) {
+							localStorage.removeItem( key );
+						}
+					}
+				);
+			} catch ( e ) {
+				// Storage unavailable or a corrupt copy: the composer repairs its own key.
+			}
+		},
+
+		/**
+		 * Hand-back keys this browser stored and has not reported to the server yet.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {Array}
+		 */
+		getEvictionAcks: function() {
+			try {
+				return _.compact( String( localStorage.getItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey() ) || '' ).split( ',' ) );
+			} catch ( e ) {
+				return [];
+			}
+		},
+
+		/**
+		 * Record a stored hand-back so the next request acknowledges it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} key Evicted key.
+		 *
+		 * @return {void}
+		 */
+		addEvictionAck: function( key ) {
+			try {
+				localStorage.setItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey(), _.uniq( this.getEvictionAcks().concat( [ String( key ) ] ) ).slice( -50 ).join( ',' ) );
+			} catch ( e ) {
+				// Without the acknowledgement the server simply sends it again.
+			}
+		},
+
+		/**
+		 * Forget acknowledgements a request delivered.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Array} sent Keys the request carried.
+		 *
+		 * @return {void}
+		 */
+		clearEvictionAcks: function( sent ) {
+			try {
+				var left = _.difference( this.getEvictionAcks(), sent || [] );
+
+				if ( left.length ) {
+					localStorage.setItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey(), left.join( ',' ) );
+				} else {
+					localStorage.removeItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey() );
+				}
+			} catch ( e ) {
+				// Harmless: the server drops entries it already holds again.
+			}
+		},
+
+		/**
+		 * localStorage key of the hand-back keys this browser still has to
+		 * acknowledge, per member: on a shared browser another member's
+		 * pending acknowledgement must never be sent with this member's
+		 * requests, or it ends this member's hold for the same key unseen.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string}
+		 */
+		evictionAckStorageKey: function() {
+			return 'bb_draft_evicted_ack_' + ( parseInt( BP_Nouveau.activity.params.user_id, 10 ) || 0 );
+		},
+
+		/**
+		 * The member a local draft copy belongs to, or 0 when it carries no owner.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object}  copy     Local draft copy.
+		 * @param {boolean} is_forum Whether it is a forum composer copy.
+		 *
+		 * @return {number}
+		 */
+		localCopyOwner: function( copy, is_forum ) {
+			if ( ! copy || 'object' !== typeof copy ) {
+				return 0;
+			}
+
+			if ( is_forum ) {
+				return parseInt( copy.bb_draft_owner, 10 ) || 0;
+			}
+
+			return ( copy.data && ! _.isUndefined( copy.data.user_id ) ) ? ( parseInt( copy.data.user_id, 10 ) || 0 ) : 0;
+		},
+
+		/**
+		 * The `_draft_edit_at` stamp for a draft about to be stored locally.
+		 *
+		 * Kept from the stored copy while the content is unchanged. A first copy
+		 * of a draft read from the server takes the server's save time; any other
+		 * new or changed content is stamped now.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} draft Draft about to be stored.
+		 *
+		 * @return {number}
+		 */
+		draftEditTime: function( draft ) {
+			var previous = null;
+
+			try {
+				previous = JSON.parse( localStorage.getItem( draft.data_key ) || 'null' );
+			} catch ( e ) {
+				previous = null;
+			}
+
+			if ( previous && 'object' === typeof previous ) {
+				if ( this.canonicalDraftJson( previous.data ) === this.canonicalDraftJson( draft.data ) ) {
+					return parseInt( previous._draft_edit_at, 10 ) || 0;
+				}
+
+				return Math.floor( Date.now() / 1000 );
+			}
+
+			return parseInt( draft._draft_saved_at, 10 ) || Math.floor( Date.now() / 1000 );
+		},
+
+		/**
+		 * JSON with object keys sorted, so equal drafts compare equal.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} value Draft data.
+		 *
+		 * @return {string}
+		 */
+		canonicalDraftJson: function( value ) {
+			var self = this;
+
+			if ( _.isArray( value ) ) {
+				return '[' + _.map(
+					value,
+					function ( item ) {
+						return self.canonicalDraftJson( item );
+					}
+				).join( ',' ) + ']';
+			}
+
+			if ( value && 'object' === typeof value ) {
+				return '{' + _.map(
+					_.keys( value ).sort(),
+					function ( name ) {
+						return JSON.stringify( name ) + ':' + self.canonicalDraftJson( value[ name ] );
+					}
+				).join( ',' ) + '}';
+			}
+
+			return JSON.stringify( _.isUndefined( value ) ? null : value );
+		},
+
+		/**
+		 * What to keep when a draft is handed back for a key this browser may
+		 * already hold: 'local', 'entry' or 'merge'.
+		 *
+		 * The hand-back is the server's only remaining copy, and the key is
+		 * acknowledged once the result is stored, so neither the handed-back
+		 * draft nor the member's local text may be lost:
+		 * 1. no local copy, or one stamped with another member (a shared
+		 *    browser): the entry;
+		 * 2. the entry carries a revision and the local copy is that revision
+		 *    or was built on it: the local copy, which is at least as new;
+		 * 3. an ownerless local copy: the entry - text whose owner is unproven
+		 *    is never merged into this member's draft;
+		 * 4. the same content: the local copy;
+		 * 5. the local copy is unsynced (pending) or was edited after the entry
+		 *    was saved: both, merged ({@see mergeHandback});
+		 * 6. otherwise the local copy is an older copy: the entry.
+		 * Stored drafts carry no base list, so an entry never proves the local
+		 * copy is its ancestor beyond rule 6.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object|null} existing This browser's copy of the key.
+		 * @param {Object}      entry    The handed-back draft.
+		 * @param {number}      owner_id The current member.
+		 * @param {boolean}     is_forum Whether the key is a forum composer key.
+		 *
+		 * @return {string} 'local', 'entry' or 'merge'.
+		 */
+		handbackDecision: function( existing, entry, owner_id, is_forum ) {
+			var owner, entry_rev;
+
+			if ( ! existing || 'object' !== typeof existing ) {
+				return 'entry';
+			}
+
+			owner = this.localCopyOwner( existing, is_forum );
+
+			if ( owner && owner !== owner_id ) {
+				return 'entry';
+			}
+
+			entry_rev = entry._draft_rev ? String( entry._draft_rev ) : '';
+
+			if ( entry_rev && ( String( existing._draft_rev || '' ) === entry_rev || -1 !== _.indexOf( this.draftBaseFrom( existing ), entry_rev ) ) ) {
+				return 'local';
+			}
+
+			if ( ! owner ) {
+				return 'entry';
+			}
+
+			if ( this.canonicalDraftJson( existing.data ) === this.canonicalDraftJson( entry.data ) ) {
+				return 'local';
+			}
+
+			if ( true === existing.bb_draft_pending_sync || ( parseInt( existing._draft_edit_at, 10 ) || 0 ) > ( parseInt( entry._draft_saved_at, 10 ) || 0 ) ) {
+				return 'merge';
+			}
+
+			return 'entry';
+		},
+
+		/**
+		 * Whether draft HTML holds anything to keep (text or an image).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} html Draft HTML.
+		 *
+		 * @return {boolean}
+		 */
+		draftHtmlHasContent: function( html ) {
+			return 'string' === typeof html && '' !== $.trim( html.replace( /<(?!img\b)[^>]*>/gi, '' ).replace( /&nbsp;| /g, ' ' ) );
+		},
+
+		/**
+		 * Append the local text to the handed-back text, unless it adds nothing.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} base  Handed-back HTML.
+		 * @param {*} extra Local HTML.
+		 *
+		 * @return {*} The merged HTML, or the handed-back value unchanged.
+		 */
+		appendDraftHtml: function( base, extra ) {
+			var base_html = 'string' === typeof base ? base : '';
+
+			if ( ! this.draftHtmlHasContent( extra ) || extra === base_html || -1 !== base_html.indexOf( extra ) ) {
+				return base;
+			}
+
+			if ( ! this.draftHtmlHasContent( base_html ) ) {
+				return extra;
+			}
+
+			return base_html + ( /<\/(?:p|div|ul|ol|li|blockquote|pre|h[1-6]|table)>\s*$/i.test( base_html ) ? '' : '<br>' ) + extra;
+		},
+
+		/**
+		 * Whether a draft field is empty (unset, blank, or an empty list).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} value Field value.
+		 *
+		 * @return {boolean}
+		 */
+		isBlankDraftValue: function( value ) {
+			if ( _.isUndefined( value ) || null === value || false === value ) {
+				return true;
+			}
+
+			if ( 'string' === typeof value ) {
+				return -1 !== _.indexOf( [ '', '[]', '{}' ], $.trim( value ) );
+			}
+
+			return 'object' === typeof value && _.isEmpty( value );
+		},
+
+		/**
+		 * Add the local copy's attachments to the handed-back ones, by ID.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*}       base    Handed-back list.
+		 * @param {*}       extra   Local list.
+		 * @param {boolean} as_json Whether the lists are JSON strings (forum).
+		 *
+		 * @return {*} The merged list, or the handed-back value unchanged.
+		 */
+		unionDraftAttachments: function( base, extra, as_json ) {
+			var parse = function ( value ) {
+					if ( as_json ) {
+						if ( ! value ) {
+							return [];
+						}
+
+						try {
+							value = JSON.parse( value );
+						} catch ( e ) {
+							return null;
+						}
+					}
+
+					if ( _.isArray( value ) ) {
+						return value.slice( 0 );
+					}
+
+					return value ? null : [];
+				},
+				list  = parse( base ),
+				more  = parse( extra ),
+				ids   = [],
+				added = false;
+
+			if ( null === list || null === more || ! more.length ) {
+				return base;
+			}
+
+			_.each(
+				list,
+				function ( item ) {
+					if ( item && item.id ) {
+						ids.push( String( item.id ) );
+					}
+				}
+			);
+
+			_.each(
+				more,
+				function ( item ) {
+					var id = ( item && item.id ) ? String( item.id ) : '';
+
+					if ( id && -1 === _.indexOf( ids, id ) ) {
+						list.push( item );
+						ids.push( id );
+						added = true;
+					}
+				}
+			);
+
+			if ( ! added ) {
+				return base;
+			}
+
+			return as_json ? JSON.stringify( list ) : list;
+		},
+
+		/**
+		 * The handed-back draft with the member's local text and attachments added.
+		 *
+		 * The entry keeps its revision; the local text is appended after its
+		 * text and the attachment lists are joined by ID. The result is marked
+		 * pending and based on nothing (`_draft_base` ['none']): it matches no
+		 * stored draft, so a save over a newer stored one is refused instead of
+		 * replacing it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object}  existing This browser's copy of the key.
+		 * @param {Object}  entry    The handed-back draft.
+		 * @param {number}  owner_id The current member.
+		 * @param {boolean} is_forum Whether the key is a forum composer key.
+		 *
+		 * @return {Object}
+		 */
+		mergeHandback: function( existing, entry, owner_id, is_forum ) {
+			var self   = this,
+				merged = $.extend( true, {}, entry ),
+				local  = ( existing.data && 'object' === typeof existing.data ) ? existing.data : {},
+				data   = ( merged.data && 'object' === typeof merged.data ) ? merged.data : {},
+				now    = Math.floor( Date.now() / 1000 ),
+				fields = is_forum ?
+					{ html: [ 'bbp_topic_content', 'bbp_reply_content' ], fill: [ 'bbp_topic_title', 'bbp_topic_tags', 'bbp_media_gif' ], lists: [ 'bbp_media', 'bbp_document', 'bbp_video' ] } :
+					{ html: [ 'content' ], fill: [ 'post_title', 'gif_data' ], lists: [ 'media', 'document', 'video' ] };
+
+			_.each(
+				fields.html,
+				function ( field ) {
+					var value = self.appendDraftHtml( data[ field ], local[ field ] );
+
+					if ( ! _.isUndefined( value ) ) {
+						data[ field ] = value;
+					}
+				}
+			);
+
+			_.each(
+				fields.fill,
+				function ( field ) {
+					if ( self.isBlankDraftValue( data[ field ] ) && ! self.isBlankDraftValue( local[ field ] ) ) {
+						data[ field ] = local[ field ];
+					}
+				}
+			);
+
+			_.each(
+				fields.lists,
+				function ( field ) {
+					var value = self.unionDraftAttachments( data[ field ], local[ field ], is_forum );
+
+					if ( ! _.isUndefined( value ) ) {
+						data[ field ] = value;
+					}
+				}
+			);
+
+			if ( is_forum ) {
+				merged.bb_draft_owner = owner_id;
+			} else if ( owner_id ) {
+				data.user_id = owner_id;
+			}
+
+			merged.data                  = data;
+			merged.bb_draft_pending_sync = true;
+			merged._draft_local_at       = now;
+			merged._draft_edit_at        = now;
+			merged._draft_base           = [ 'none' ];
+			delete merged.bb_draft_interim;
+
+			return merged;
+		},
+
+		/**
+		 * Keep drafts the server evicted from the draft budget in localStorage.
+		 *
+		 * Activity keys are stored in this composer's own shape, forum inner
+		 * keys ("meta_key:inner_key") in the forum composer's shape. A copy this
+		 * browser already holds is kept, replaced or merged with the hand-back
+		 * ({@see handbackDecision}). Each stored copy is marked pending, because
+		 * the server no longer holds it, and a key is acknowledged only once its
+		 * copy is stored. A key the member is typing over unloaded is skipped
+		 * (window.bbDraftHandbackSkipKeys) and stays held on the server.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} drafts   Evicted entries keyed like `evicted_draft_keys`.
+		 * @param {number} owner_id The current member, stamped on forum copies.
+		 *
+		 * @return {void}
+		 */
+		storeEvictedDrafts: function( drafts, owner_id ) {
+			if ( ! drafts || 'object' !== typeof drafts ) {
+				return;
+			}
+
+			_.each(
+				drafts,
+				function ( entry, key ) {
+					var storage_key = String( key ).split( ':' ).pop(),
+						copy;
+
+					if ( ! entry || 'object' !== typeof entry || ! storage_key ) {
+						return;
+					}
+
+					var is_forum = -1 !== String( key ).indexOf( ':' ),
+						existing,
+						decision;
+
+					// The member is typing in this key's composer over a draft that
+					// was not loaded: storing the hand-back there would be replaced
+					// by their text. Leave it held on the server, unacknowledged; it
+					// is merged with their text on the next visit.
+					if ( window.bbDraftHandbackSkipKeys && window.bbDraftHandbackSkipKeys[ storage_key ] ) {
+						return;
+					}
+
+					try {
+						existing = JSON.parse( localStorage.getItem( storage_key ) || 'null' );
+					} catch ( e ) {
+						existing = null;
+					}
+
+					try {
+						decision = bp.Nouveau.Activity.postForm.handbackDecision( existing, entry, owner_id, is_forum );
+
+						// The local copy is kept, or merged with the hand-back, only
+						// when it is this member's (handbackDecision). Either is
+						// marked pending, or another tab's composer close wipes what
+						// is now the only copy (V07). Otherwise the handed-back entry
+						// wins, stamped with its owner, so the composer for that key
+						// does not drop it as another member's copy (F-02).
+						if ( 'local' === decision ) {
+							existing.bb_draft_pending_sync = true;
+							localStorage.setItem( storage_key, JSON.stringify( existing ) );
+						} else if ( 'merge' === decision ) {
+							localStorage.setItem( storage_key, JSON.stringify( bp.Nouveau.Activity.postForm.mergeHandback( existing, entry, owner_id, is_forum ) ) );
+						} else {
+							copy = _.extend( {}, entry, { bb_draft_pending_sync: true, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+							if ( is_forum ) {
+								copy.bb_draft_owner = owner_id;
+							} else if ( owner_id && copy.data && 'object' === typeof copy.data && _.isUndefined( copy.data.user_id ) ) {
+								copy.data = _.extend( {}, copy.data, { user_id: owner_id } );
+							}
+
+							localStorage.setItem( storage_key, JSON.stringify( copy ) );
+						}
+					} catch ( e ) {
+						// Over quota: not acknowledged, so the server keeps holding
+						// it and hands it back again on the next request.
+						return;
+					}
+
+					// Acknowledge only a copy this browser actually stored.
+					bp.Nouveau.Activity.postForm.addEvictionAck( key );
+				}
+			);
+		},
+
+		/**
+		 * Tell the member the server evicted older drafts from the draft budget.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} response The autosave AJAX response carrying any evicted draft keys.
+		 *
+		 * @return {void}
+		 */
+		handleEvictedDrafts: function( response ) {
+			var keys = ( response && response.evicted_draft_keys ) ? response.evicted_draft_keys : [];
+
+			// Store every hand-back, including ones re-sent because an earlier
+			// response was lost; announce only this request's evictions.
+			if ( response && response.evicted_drafts ) {
+				bp.Nouveau.Activity.postForm.storeEvictedDrafts( response.evicted_drafts, parseInt( BP_Nouveau.activity.params.user_id, 10 ) );
+			}
+
+			if ( ! keys || ! keys.length ) {
+				return;
+			}
+
+			// The server evicted older drafts to keep this member under the
+			// draft budget and handed their entries back. Keep each one in
+			// localStorage, marked pending: it is now the only copy, and the
+			// composer for that key restores it and saves it again. A copy this
+			// browser already holds is kept, replaced or merged with the
+			// hand-back (handbackDecision), so neither text is lost.
+
+			this.showDraftFeedback( BP_Nouveau.activity.params.draft_evicted_message );
+		},
+
+		/**
+		 * Put a draft notice at the top of the composer BODY, below the header.
+		 *
+		 * Not `$form.prepend()`, which placed the notice above the modal title and
+		 * outside the modal's rounded top edge. Core solves the same problem by
+		 * absolutely positioning `#message-feedabck` at the header's height;
+		 * inserting after the header in normal flow reaches the same spot without
+		 * pinning to a hard-coded 58px.
+		 *
+		 * The header's depth differs by composer, so both levels are searched. In
+		 * the activity composers it is a direct child of the form; in every forum
+		 * composer it is a grandchild wrapped in `fieldset.bbp-form` - a `legend`
+		 * on the default pack, `.bb-rl-forum-modal-header` on ReadyLaunch. An
+		 * earlier revision of this docblock claimed forum composers had no header
+		 * at all; they do, and `.children()` alone could never see it.
+		 *
+		 * The fallback still matters: a composer rendered without a header, or one
+		 * a theme has restructured, prepends as before.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} $form The composer form.
+		 * @param {jQuery} $node The notice node to insert.
+		 *
+		 * @return {void}
+		 */
+		insertDraftNotice: function ( $form, $node ) {
+			var headerSelector = '#activity-header, #bb-rl-activity-header, .bb-model-header, .bb-rl-bb-model-header',
+				forumSelector  = 'fieldset.bbp-form > legend, fieldset.bbp-form > .bb-rl-forum-modal-header, fieldset.bbp-form > .bbp_topic_title_wrapper',
+				$header        = $form.children( headerSelector ).first();
+
+			if ( ! $header.length ) {
+				$header = $form.find( forumSelector ).first();
+			}
+
+			if ( $header.length ) {
+				$node.insertAfter( $header );
+			} else {
+				$form.prepend( $node );
+			}
+		},
+
+		/**
+		 * The refusal notice that must stay on screen while saving is stopped.
+		 *
+		 * bp.draft_conflict / bp.draft_save_blocked stop saving for the whole page
+		 * view, but the notice that says so is torn down with the composer. Every
+		 * open re-shows it from here, so the member is never left typing into a
+		 * composer that silently saves nothing.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string} The message, or '' when saving is not stopped.
+		 */
+		draftBlockMessage: function() {
+			if ( bp.draft_conflict ) {
+				return BP_Nouveau.activity.params.draft_conflict_message || '';
+			}
+
+			if ( bp.draft_save_blocked ) {
+				return BP_Nouveau.activity.params.draft_not_restored_message || '';
+			}
+
+			return '';
+		},
+
+		/**
+		 * Toggle the draft-retention notice on the composer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {boolean} show Whether to show (true) or hide (false) the notice.
+		 *
+		 * @return {void}
+		 */
+		showDraftRetentionNotice: function( show ) {
+			var $form = $( '#whats-new-form' ),
+				message = BP_Nouveau.activity.params.draft_retention_message,
+				$note;
+
+			if ( ! $form.length ) {
+				return;
+			}
+
+			$note = $form.find( '.bb-draft-retention-note' );
+
+			// Saving is stopped: the refusal notice is the one notice, never
+			// "Drafts are kept for N days." over text that is not being kept.
+			if ( show && this.draftBlockMessage() ) {
+				$note.remove();
+				this.showDraftFeedback( this.draftBlockMessage() );
+				return;
+			}
+
+			// Expiry disabled (empty message) or no draft on screen - say nothing.
+			if ( ! show || ! message ) {
+				$note.remove();
+				return;
+			}
+
+			if ( $note.length ) {
+				$note.find( 'p' ).text( message );
+
+				return;
+			}
+
+			// Text set before insertion, and placed BELOW any refusal notice, so
+			// the two notices keep one fixed order whichever is created first.
+			$note = $( '<div class="bb-draft-retention-note bp-messages bp-feedback info"></div>' )
+				.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
+				.append( $( '<p></p>' ).text( message ) );
+
+			var $feedback = $form.find( '.bb-draft-save-feedback' );
+
+			if ( $feedback.length ) {
+				$note.insertAfter( $feedback );
+			} else {
+				this.insertDraftNotice( $form, $note );
+			}
+		},
+
+		/**
+		 * Display a transient feedback message on the draft composer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} message The feedback message to display.
+		 *
+		 * @return {void}
+		 */
+		showDraftFeedback: function( message ) {
+			var $form = $( '#whats-new-form' );
+
+			if ( ! $form.length ) {
+				return;
+			}
+
+			var $notice = $form.find( '.bb-draft-save-feedback' );
+
+			if ( ! message ) {
+				$notice.remove();
+				this.lastSpokenDraftFeedback = '';
+				return;
+			}
+
+			// The visible notice is CSS-gated to the OPEN composer, so one raised
+			// while the composer is shut renders display:none - and a role="alert"
+			// that is hidden at insertion is never announced, nor is it announced
+			// by being revealed later. M2 and M3 are raised by the page-load draft
+			// fetch, with the composer still closed, so without this a screen-reader
+			// user is never told the draft failed to load.
+			//
+			// Only while the composer is SHUT: when it is open the visible alert
+			// announces on its own and speaking as well would say it twice.
+			// Deduped because the fetch retries on later autosave ticks, and
+			// feature-guarded because wp-a11y can be dequeued by a site.
+			if ( ! $form.hasClass( 'focus-in' ) ) {
+				if (
+					message !== this.lastSpokenDraftFeedback &&
+					window.wp && wp.a11y && _.isFunction( wp.a11y.speak )
+				) {
+					wp.a11y.speak( message, 'assertive' );
+				}
+
+				this.lastSpokenDraftFeedback = message;
+			}
+
+			if ( $notice.length ) {
+				$notice.find( 'p' ).text( message );
+
+				return;
+			}
+
+			// Built with its text already in place: an empty role="alert" node
+			// inserted first and filled afterwards is not announced by several
+			// screen readers, and this is the only signal a member gets that a
+			// save was refused.
+			this.insertDraftNotice(
+				$form,
+				$( '<div class="bb-draft-save-feedback bp-messages bp-feedback error" role="alert"></div>' )
+					.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
+					.append( $( '<p></p>' ).text( message ) )
+			);
+		},
+
+		/**
+		 * Tear down both draft notices.
+		 *
+		 * Called from the one statement that actually hides the composer, so the
+		 * notices disappear in the SAME frame as the modal. Clearing them from
+		 * the close handlers instead left a ~190ms window in which the member
+		 * watched the notice vanish and only then the modal close - two steps
+		 * where there is one action.
+		 *
+		 * Closing is not discarding, so this must never be routed through
+		 * resetDraftActivity(): the stored draft has to survive. The notices
+		 * belong to the OPEN composer; the draft does not.
+		 *
+		 * Both calls are no-ops when the nodes are absent.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		clearDraftNotices: function() {
+			this.showDraftRetentionNotice( false );
+			this.showDraftFeedback( '' );
 		},
 
 		collectDraftActivity: function() {
@@ -1237,7 +2679,32 @@ window.bp = window.bp || {};
 			);
 
 			// Add valid line breaks.
-			var content = $.trim( self.postForm.$el.find( '#whats-new' )[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+			// Convert emoji images to their unicode character before storing, the
+			// same way the publish path does. The stored draft otherwise keeps the
+			// raw <img class="emojioneemoji">, and bp_activity_filter_kses() strips
+			// data-emoji-char on save - so after a restore the publish path finds no
+			// character to substitute and jQuery drops the image, losing the emoji
+			// from the published post.
+			//
+			// Done on a CLONE: this runs from a 20s autosave while the member is
+			// still typing, and rewriting the live editor would move their caret.
+			var $draftContent = self.postForm.$el.find( '#whats-new' ).clone();
+
+			$draftContent.find( 'img.emoji' ).each(
+				function ( index, Obj ) {
+					$( Obj ).addClass( 'emojioneemoji' ).attr( 'data-emoji-char', $( Obj ).attr( 'alt' ) ).removeClass( 'emoji' );
+				}
+			);
+
+			$draftContent.find( 'img.emojioneemoji' ).replaceWith(
+				function () {
+					// alt survives kses, so it is the reliable fallback for an image
+					// restored from a previously stored draft.
+					return this.dataset.emojiChar || $( this ).attr( 'alt' ) || '';
+				}
+			);
+
+			var content = $.trim( $draftContent[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 			content     = content.replace( /&nbsp;/g, ' ' );
 
 			self.postForm.model.set( 'content', content, {silent: true} );
@@ -1352,12 +2819,27 @@ window.bp = window.bp || {};
 					)
 				)
 			) {
-				if ( bp.draft_content_changed ) {
+				if ( bp.draft_content_changed && ( bp.draft_fetch_failed || bp.draft_save_blocked || bp.draft_conflict ) ) {
+					// The composer is not based on the stored draft (it failed to
+					// load, was not loaded, or is older than a stored version).
+					// Emptying it is not a discard of that draft - only the
+					// Discard button is - so touch neither copy (V08).
+					bp.draft_activity.data = false;
+				} else if ( bp.draft_content_changed ) {
 					localStorage.removeItem( bp.draft_activity.data_key );
 					bp.Nouveau.Activity.postForm.resetDraftActivity( true );
 				} else {
 					bp.draft_activity.data = false;
-					localStorage.removeItem( bp.draft_activity.data_key );
+
+					// The composer is just closed, not emptied by the member. A
+					// pending copy is the ONLY copy of this draft, so keep it -
+					// whether this tab or another one marked it pending (V07).
+					// A composer never opened in this page view was never shown
+					// the draft, so its empty form says nothing about it; keep
+					// the copy, or every later page load fetches it again (F-12).
+					if ( bp.draft_composer_opened && ! bp.draft_pending_sync && ! bp.Nouveau.Activity.postForm.isLocalDraftPending( bp.draft_activity.data_key ) ) {
+						localStorage.removeItem( bp.draft_activity.data_key );
+					}
 				}
 
 				return false;
@@ -1542,6 +3024,59 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// The lazy fetch could not read the stored draft, so whatever is in
+			// this composer is not based on it. Writing would replace a draft the
+			// member was never shown, which is the loss this refusal exists to
+			// prevent. A DISCARD is still allowed: refusing a deliberate delete
+			// would trap the member with a draft they cannot clear.
+			if (
+				bp.draft_fetch_failed &&
+				( _.isUndefined( bp.draft_activity ) || 'delete' !== bp.draft_activity.post_action )
+			) {
+				// The earlier read failed, so this composer is not based on the
+				// stored draft and overwriting it would lose the draft the member was
+				// never shown. But the network may have recovered since page load, so
+				// re-attempt the read now (this runs on the periodic autosave tick)
+				// instead of refusing for the whole page view - a success clears
+				// draft_fetch_failed in fetchServerDraftActivity()'s done handler and
+				// the next tick saves normally (M12).
+				// Ceiling on the per-tick re-attempt so a DURABLE failure (an
+				// expired nonce that never recovers on a long-open tab, a 403, a
+				// dead endpoint) does not fire a request every autosave tick
+				// forever. Without it the inner budget below is reset on each
+				// tick and can never be exhausted, so the composer retries for as
+				// long as the tab stays open. A success clears the flag and
+				// resets this counter in fetchServerDraftActivity()'s done
+				// handler, so a later fresh failure gets its own budget.
+				//
+				// The budget, stated exactly because it is NOT the same as the
+				// forum packs': this allows up to 5 re-attempt ticks, and each one
+				// resets draft_fetch_attempts, so fetchServerDraftActivity() may
+				// still make its own second try within that tick - up to 2
+				// requests per permitted tick, 10 across the five. The forum
+				// twin's retryDraftFetch() issues exactly ONE request per
+				// permitted attempt. The inner reset is kept deliberately, so a
+				// re-attempt gets a real chance rather than a single shot against
+				// a blip; the point of this gate is that the total is BOUNDED, not
+				// that it matches the twin (M16).
+				if (
+					! bp.draft_fetch_in_progress &&
+					! _.isUndefined( bp.draft_activity ) &&
+					bp.draft_activity.data_key &&
+					( bp.draft_tick_retry_attempts || 0 ) < 5
+				) {
+					bp.draft_tick_retry_attempts = ( bp.draft_tick_retry_attempts || 0 ) + 1;
+					bp.draft_fetch_attempts      = 0;
+					this.fetchServerDraftActivity();
+				}
+
+				if ( BP_Nouveau.activity.params.draft_fetch_failed_message ) {
+					this.showDraftFeedback( BP_Nouveau.activity.params.draft_fetch_failed_message );
+				}
+
+				return;
+			}
+
 			if ( ! is_force_saved && ( _.isUndefined( bp.draft_activity ) || ( ! _.isUndefined( bp.draft_activity ) && ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) ) ) ) {
 				return;
 			}
@@ -1551,14 +3086,114 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// A delete never needs the draft data - the server disposes from its
+			// stored copy. The slim payload also fits the sendBeacon quota that a
+			// full multi-hundred-KB draft exceeds, which silently dropped discard
+			// requests for exactly the oversized drafts that most needed deleting.
+			// A conflict or a "not loaded" outcome stops saving this key for the
+			// page view, and nothing is sent while the stored draft is still
+			// being read - the composer is not based on it yet (V02).
+			if ( bp.draft_conflict || bp.draft_save_blocked || ( bp.draft_fetch_in_progress && 'delete' !== bp.draft_activity.post_action ) ) {
+				return;
+			}
+
+			// Each save carries a new revision id and the revisions it was built
+			// on; the server refuses to replace any other stored version.
+			var draft_rev  = this.newDraftRev(),
+				draft_base = bp.draft_base.slice( 0 ),
+				draft_acks = this.getEvictionAcks();
+
+			// A save of this key still in flight is cancelled below, but PHP
+			// finishes a request it already received, so it may be stored. Keep
+			// its revision an acceptable stored version, or this save is refused
+			// as a conflict with the member's own earlier save (D-01).
+			if ( bp.draft_inflight && bp.draft_inflight.key === bp.draft_activity.data_key ) {
+				draft_base    = _.uniq( draft_base.concat( [ bp.draft_inflight.rev ] ) ).slice( -8 );
+				bp.draft_base = draft_base.slice( 0 );
+			}
+
+			if ( 'delete' !== bp.draft_activity.post_action ) {
+				bp.draft_activity._draft_rev = draft_rev;
+			}
+
+			var draft_payload = bp.draft_activity;
+
+			if ( 'delete' === bp.draft_activity.post_action ) {
+				draft_payload = _.omit( bp.draft_activity, 'data' );
+			} else if ( bp.draft_activity.data && bp.draft_activity.data.video && bp.draft_activity.data.video.length ) {
+				// js_preview is a canvas.toDataURL() frame grab, tens to hundreds
+				// of KB of base64 per video. It is NOT a throwaway: on publish the
+				// server feeds it to bp_video_base64_to_jpeg() to build the video's
+				// real thumbnail (bp-video-functions.php), so dropping it means a
+				// cold-restored video draft publishes with no generated thumbnail.
+				//
+				// But left in, it can single-handedly push a video draft past the
+				// per-draft cap and get the whole save REFUSED. So keep it whenever
+				// it fits and shed it only when that is the difference between
+				// saving and being rejected - a missing poster beats a lost draft
+				//.
+				var draft_cap = ( BP_Nouveau.activity.params && BP_Nouveau.activity.params.draft_max_size ) ?
+					parseInt( BP_Nouveau.activity.params.draft_max_size, 10 ) : 0;
+
+				// The server enforces the cap on strlen( maybe_serialize() ),
+				// which is systematically WIDER than JSON.stringify() (every
+				// string carries s:LEN:"...", every key likewise), and it adds
+				// _draft_saved_at plus a bb_media_draft flag per attachment AFTER
+				// the client has measured. Measuring JSON bytes against the raw
+				// cap therefore under-fires: a draft just under by JSON can be
+				// over by serialize, so the shed does not run and the server
+				// refuses the whole save with the poster still attached. Shed at
+				// a margin below the cap to stay under the server's measurement -
+				// a missing poster beats a lost draft (M8). The margin is 15%:
+				// measured serialize-over-JSON overhead reaches ~9% on
+				// attachment-heavy drafts (the media Upload Limit allows up to
+				// 100), and the server adds _draft_saved_at plus a bb_media_draft
+				// flag per attachment on top, so 5% under-covered that case.
+				var draft_cap_margin = draft_cap > 0 ? Math.floor( draft_cap * 0.85 ) : 0;
+
+				if ( draft_cap > 0 && bbDraftByteLength( JSON.stringify( bp.draft_activity ) ) > draft_cap_margin ) {
+					draft_payload      = _.clone( bp.draft_activity );
+					draft_payload.data = _.clone( bp.draft_activity.data );
+
+					draft_payload.data.video = _.map(
+						bp.draft_activity.data.video,
+						function ( item ) {
+							return _.omit( item, 'js_preview' );
+						}
+					);
+				}
+			}
+
+			// The server strips inline base64 images anyway; stripping them here
+			// stops every autosave tick uploading them (V27).
+			if ( draft_payload.data && 'string' === typeof draft_payload.data.content && /data:[^"']*base64/i.test( draft_payload.data.content ) ) {
+				draft_payload = JSON.parse( JSON.stringify( draft_payload ) );
+				draft_payload.data.content = draft_payload.data.content.replace(
+					/(\s(?:src|href)\s*=\s*)(["'])data:[^"']*base64[^"']*\2/gi,
+					'$1$2$2'
+				);
+			}
+
 			if ( ! is_reload_window ) {
+				// A discard sends post_action 'delete'; a save sends 'update'. The
+				// fail handler needs this to pick the right message when the server
+				// rejects with no message of its own (M3).
+				var isDiscardRequest = ! _.isUndefined( bp.draft_activity ) && 'delete' === bp.draft_activity.post_action;
+
+				// What a failed discard has to put back. Read here because
+				// resetDraftActivity() removes the local copy right after this call.
+				var discard_key  = isDiscardRequest ? bp.draft_activity.data_key : '',
+					discard_copy = isDiscardRequest ? localStorage.getItem( discard_key ) : null;
+
 				if ( bp.draft_ajax_request ) {
 					bp.draft_ajax_request.abort();
 				}
 
 				var draft_data = {
 					_wpnonce_post_draft: BP_Nouveau.activity.params.post_draft_nonce,
-					draft_activity: bp.draft_activity
+					draft_activity: draft_payload,
+					bb_draft_base: draft_base.join( ',' ),
+					bb_draft_evicted_ack: draft_acks.join( ',' )
 				};
 
 				// Some firewalls restrict iframe tag in form post like wordfence.
@@ -1572,19 +3207,164 @@ window.bp = window.bp || {};
 					draft_data.draft_activity.data.link_description = '';
 				}
 
+				var draft_inflight = isDiscardRequest ? null : { key: bp.draft_activity.data_key, rev: draft_rev };
+				bp.draft_inflight  = draft_inflight;
+
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
-					function () {}
+					function ( response ) {
+						bp.Nouveau.Activity.postForm.showDraftFeedback( '' );
+						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
+
+						bp.draft_base = isDiscardRequest ? [ 'none' ] : [ draft_rev ];
+						bp.Nouveau.Activity.postForm.clearEvictionAcks( draft_acks );
+
+						// The server now holds this draft, so its local copy is an
+						// ordinary cache again.
+						if ( ! isDiscardRequest && bp.draft_pending_sync ) {
+							bp.draft_pending_sync = false;
+							if ( null !== localStorage.getItem( bp.draft_activity.data_key ) ) {
+								bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+							}
+						}
+					}
 				).fail(
-					function () {}
+					function ( response, textStatus ) {
+						// An abort is not a failure. This pack aborts its own
+						// in-flight autosave before each new save and before the
+						// unload beacon (M14), so treating an abort as a failed save
+						// showed the member a data-loss warning on the way out of a
+						// page that had saved perfectly well.
+						//
+						// `readyState === 0` is deliberately NOT part of this test. It is true
+						// for a real abort AND for any request the client kills before it
+						// completes - an ad blocker or privacy extension targeting
+						// admin-ajax.php, a corporate proxy, a connection dropping mid-save.
+						// Those are genuine failures, reported as `statusText: 'error'`, and
+						// swallowing them left the member typing into a composer that had
+						// silently stopped saving: the exact regression this notice exists to
+						// prevent. jQuery sets BOTH textStatus and statusText to 'abort' on a
+						// real abort, so the checks below already cover that case.
+						if (
+							'abort' === textStatus ||
+							( response && 'abort' === response.statusText )
+						) {
+							return;
+						}
+
+						// A budget refusal may have evicted older drafts before it
+						// gave up; keep their hand-back (H1). No-op when the
+						// response carries none.
+						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
+
+						// A newer version is stored: keep it, keep the member's text
+						// on screen, and stop saving this key (bb_draft_base).
+						if ( response && response.conflict ) {
+							bp.Nouveau.Activity.postForm.handleDraftConflict( response );
+
+							return;
+						}
+
+						// The stored draft survived the failed discard (or its fate is
+						// unknown). Undo the local half of the discard so the reload the
+						// notice asks for offers the draft, with its Discard button,
+						// again: drop the reload guard and put the local copy back,
+						// pending, so closing the composer does not delete it (N-1).
+						if ( isDiscardRequest && discard_key ) {
+							$.removeCookie( discard_key );
+
+							if ( discard_copy && null === localStorage.getItem( discard_key ) ) {
+								try {
+									var discard_restore = JSON.parse( discard_copy );
+
+									discard_restore.bb_draft_pending_sync = true;
+									localStorage.setItem( discard_key, JSON.stringify( discard_restore ) );
+								} catch ( e ) {
+									// Unreadable copy or full storage: the server copy
+									// still comes back on reload now the guard is gone.
+								}
+							}
+						}
+
+						// The outcome is unknown when the response was lost - the
+						// server may have stored this save - so its revision stays an
+						// acceptable stored version. Without it, every later save
+						// of this key was a false conflict (NEW-2).
+						if ( ! isDiscardRequest ) {
+							bp.draft_base = _.uniq( draft_base.concat( [ draft_rev ] ) ).slice( -8 );
+						}
+
+						// Any other refusal leaves the server without this text, so
+						// the local copy must survive closing the composer (V12).
+						if ( ! isDiscardRequest ) {
+							bp.draft_pending_sync = true;
+							bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+						}
+
+						// Surface guardrail rejections (draft too large, too many
+						// drafts) with the server's message when it sends one;
+						// otherwise fall back to the generic save/discard-failed
+						// notice so a message-less rejection (an expired nonce, lost
+						// posting rights) is not read as success (M3).
+						var message = ( response && response.message ) ? response.message :
+							( isDiscardRequest ?
+								( BP_Nouveau.activity.params.draft_discard_failed_message || '' ) :
+								( BP_Nouveau.activity.params.draft_save_failed_message || '' ) );
+
+						if ( message ) {
+							bp.Nouveau.Activity.postForm.showDraftFeedback( message );
+						}
+					}
 				);
 
+				// Settled, or cancelled after its revision was read above.
+				if ( 'function' === typeof bp.draft_ajax_request.always ) {
+					bp.draft_ajax_request.always(
+						function () {
+							if ( bp.draft_inflight === draft_inflight ) {
+								bp.draft_inflight = null;
+							}
+						}
+					);
+				}
+
 			} else {
+				// Abort any in-flight autosave XHR before the unload beacon,
+				// mirroring the in-page branch. A slow 20s autosave still uploading
+				// when the tab closes carries OLDER content; without this it could
+				// reach the server AFTER this newer beacon and overwrite it - the
+				// server does not order writes by recency - silently reverting the
+				// member's last edits. Aborting cancels a request still in flight;
+				// one already being processed server-side is a narrower residual
+				// race (M14).
+				if ( bp.draft_ajax_request ) {
+					bp.draft_ajax_request.abort();
+				}
+
 				const formData = new FormData();
 				formData.append( '_wpnonce_post_draft', BP_Nouveau.activity.params.post_draft_nonce );
 				formData.append( 'action', 'post_draft_activity' );
-				formData.append( 'draft_activity', JSON.stringify( bp.draft_activity ) );
+				formData.append( 'draft_activity', JSON.stringify( draft_payload ) );
 
+				// The server never evicts on a beacon save, because this
+				// response is never read and an evicted draft could not be
+				// handed back. It may refuse instead, so keep the local copy
+				// pending until a later save is confirmed.
+				formData.append( 'bb_draft_beacon', '1' );
+				formData.append( 'bb_draft_base', draft_base.join( ',' ) );
+				formData.append( 'bb_draft_evicted_ack', draft_acks.join( ',' ) );
+				if ( 'delete' !== bp.draft_activity.post_action ) {
+					// Either outcome is acceptable as the stored version later:
+					// the beacon's revision if it landed, the old one if not.
+					bp.draft_base         = _.uniq( draft_base.concat( [ draft_rev ] ) ).slice( -8 );
+					bp.draft_pending_sync = true;
+					bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
+				}
+
+				// Known limitation: browsers cap sendBeacon payloads (~64KB). An
+				// at-cap UPDATE draft can exceed that and this unload sync is then
+				// silently skipped; the periodic XHR saves remain the durable path.
+				// Slim DELETE payloads always fit.
 				navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
 			}
 
@@ -1597,13 +3377,32 @@ window.bp = window.bp || {};
 
 			// Delete the activity from the database.
 			$.cookie( bp.draft_activity.data_key, 'deleted' );
+			bp.draft_pending_sync = false;
 			bp.draft_activity.post_action = 'delete';
 			if ( is_send_server ) {
-				bp.Nouveau.Activity.postForm.postDraftActivity( true, true );
+				// In-page discard goes over XHR; the beacon transport is reserved
+				// for actual page unloads (and refuses oversized payloads).
+				bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
 			}
 			bp.draft_activity.data = false;
+			// Also reset the previous-content snapshot. resetDraftActivity(false) -
+			// the post-publish path - does not call postDraftActivity(), the only
+			// other place old_draft_data is cleared, so without this the next
+			// collectDraftActivity() compares the just-published content against the
+			// now-blank composer, flips draft_content_changed true, and saves a
+			// near-empty "update" draft the member never asked for - recreating the
+			// row publish just cleared (M15).
+			bp.old_draft_data = false;
+			// Settle the deferred draft-loaded event. On the warm-localStorage
+			// path no fetch runs, so draft_fetch_settled stays undefined; once a
+			// publish/discard clears the draft here, displayDraftActivity()'s
+			// deferral ( ! activity_data && has_draft && ! settled ) would become
+			// permanently true and the public bb_activity_draft_loaded event
+			// would never fire again for the rest of the page load (M7).
+			bp.draft_fetch_settled = true;
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
+			self.showDraftRetentionNotice( false );
 			bp.draft_activity.post_action  = 'update';
 			bp.draft_activity.display_post = '';
 
@@ -1681,7 +3480,49 @@ window.bp = window.bp || {};
 		},
 
 		checkAndStoreDraftToLocalStorage: function( draft_activity ) {
+			// No key yet (the composer's default `data_key: false`): storing would
+			// write a stray localStorage entry literally named "false".
+			if ( ! draft_activity || ! draft_activity.data_key ) {
+				return;
+			}
+
+			// After a conflict the local copy is the newer STORED draft; the
+			// composer's text must not replace it (bb_draft_base).
+			if ( bp.draft_conflict && draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
+				return;
+			}
+
+			if ( draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
+				draft_activity = _.extend(
+					{},
+					draft_activity,
+					{
+						_draft_base: bp.draft_base,
+						_draft_local_at: Math.floor( Date.now() / 1000 ),
+						_draft_edit_at: bp.Nouveau.Activity.postForm.draftEditTime( draft_activity )
+					}
+				);
+			}
+
 			try {
+				// Strip inline base64 data: URLs before storing. The paste guard
+				// converts pasted images to uploads, but a drag-and-drop drops a raw
+				// base64 <img> straight into the editor, outside that guard - a single
+				// dropped photo can be several MB and blow the per-origin localStorage
+				// quota, whose failure the catch below silently swallows, disabling
+				// local persistence for every draft on the origin. The server strips
+				// these on save too, so neither store persists the blob (M19).
+				if ( draft_activity && draft_activity.data && 'string' === typeof draft_activity.data.content && /data:[^"']*base64/i.test( draft_activity.data.content ) ) {
+					draft_activity = JSON.parse( JSON.stringify( draft_activity ) );
+					draft_activity.data.content = draft_activity.data.content.replace(
+						/(\s(?:src|href)\s*=\s*)(["'])data:[^"']*base64[^"']*\2/gi,
+						'$1$2$2'
+					);
+				}
+
+				if ( bp.draft_pending_sync && draft_activity && draft_activity.data_key === bp.draft_activity.data_key ) {
+					draft_activity = _.extend( {}, draft_activity, { bb_draft_pending_sync: true } );
+				}
 				var json_data     = JSON.stringify( draft_activity );
 				var encoder       = new TextEncoder();
 				var data_size_mb  = encoder.encode( json_data ).length / ( 1024 * 1024 );
@@ -3788,6 +5629,7 @@ window.bp = window.bp || {};
 										paste: {
 											forcePlainText: false,
 											cleanPastedHTML: true,
+											preCleanReplacements: bp.Nouveau.Activity.postForm.tablePasteReplacements(),
 											cleanReplacements: [
 												[ new RegExp( /<div/gi ), '<p' ],
 												[ new RegExp( /<\/div/gi ), '</p' ],
@@ -5559,6 +7401,23 @@ window.bp = window.bp || {};
 			initialize: function () {
 				$( '#whats-new-form' ).addClass( 'focus-in' ).parent().addClass( 'modal-popup' ).closest( 'body' ).addClass( 'activity-modal-open' ); // add some class to form so that DOM knows about focus.
 
+				// When the draft is already in hand - the warm localStorage path,
+				// which is the common one - render the retention note with the
+				// modal rather than waiting for displayDraftActivity()'s deferred
+				// pass. That pass lands ~60ms later, so the note used to drop in
+				// after the composer was already on screen and shove it down. The
+				// cold path still shows it when the fetched draft arrives; this
+				// call is idempotent.
+				//
+				// Saving stopped earlier in this page view (conflict / not loaded):
+				// closing took the notice down, so say it again on every open, even
+				// with an empty composer - new text here is not saved either.
+				if ( bp.Nouveau.Activity.postForm.draftBlockMessage() ) {
+					bp.Nouveau.Activity.postForm.showDraftFeedback( bp.Nouveau.Activity.postForm.draftBlockMessage() );
+				} else if ( ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data ) {
+					bp.Nouveau.Activity.postForm.showDraftRetentionNotice( true );
+				}
+
 				//Show placeholder form
 				$( '#bp-nouveau-activity-form-placeholder' ).show();
 
@@ -6060,6 +7919,10 @@ window.bp = window.bp || {};
 
 				$( '#whats-new-form' ).removeClass( 'focus-in focus-in--privacy focus-in--group focus-in--scroll has-draft' ).parent().removeClass( 'modal-popup' ).closest( 'body' ).removeClass( 'activity-modal-open' ); // remove class when reset.
 
+				// Same frame as the hide above: the notices belong to the open
+				// composer, and the member must not watch them leave separately.
+				bp.Nouveau.Activity.postForm.clearDraftNotices();
+
 				// Remove Post title tooltip on reset.
 				$( 'body' ).removeClass( 'ac-title-required' );
 				$( '#whats-new-submit' ).find( '.bb-title-tooltip-wrapper' ).remove();
@@ -6217,7 +8080,11 @@ window.bp = window.bp || {};
 				// Transform emoji image into emoji unicode.
 				$whatsNew.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
-						return this.dataset.emojiChar;
+						// alt is in bp_get_allowedtags() and data-emoji-char is not,
+						// so a draft stored before the draft-side conversion landed
+						// comes back with only alt. Fall back to it or the emoji is
+						// dropped from the published post.
+						return this.dataset.emojiChar || $( this ).attr( 'alt' ) || '';
 					}
 				);
 
@@ -6828,6 +8695,16 @@ window.bp = window.bp || {};
 			},
 
 			discardDraftActivity: function() {
+
+				// A conflict or a "not loaded" outcome stops every request for this
+				// key in this page view, a discard included: the composer is not
+				// based on the stored draft. Clearing it anyway hid a draft that came
+				// back on the next load, so keep the composer and say why (F-09).
+				if ( bp.draft_conflict || bp.draft_save_blocked ) {
+					bp.Nouveau.Activity.postForm.showDraftFeedback( BP_Nouveau.activity.params.draft_discard_failed_message || '' );
+
+					return;
+				}
 
 				// Set is_discard_draft_activity flag to true.
 				bp.draft_activity.is_discard_draft_activity = true;
