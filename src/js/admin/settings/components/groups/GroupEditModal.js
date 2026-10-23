@@ -19,6 +19,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { getRichTextEditorContent } from '../common/RichTextEditor';
 import { GroupMembersTab } from './GroupMembersTab';
 import { GroupTopicsTab } from './GroupTopicsTab';
 
@@ -322,12 +323,9 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 
 				var val = registeredValues[ field.id ];
 
-				// For richtext fields, pull latest content from TinyMCE.
-				if ( 'richtext' === field.type && window.tinymce ) {
-					var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + group.id );
-					if ( editorInstance ) {
-						val = editorInstance.getContent();
-					}
+				// For richtext fields, pull latest content from the editor.
+				if ( 'richtext' === field.type ) {
+					val = getRichTextEditorContent( 'bb-admin-edit-' + field.id + '-' + group.id, val );
 				}
 
 				payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
