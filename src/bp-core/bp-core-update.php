@@ -4900,7 +4900,10 @@ function bb_queue_addons_bundle_update() {
  *
  * Runs on a regular wp-admin GET page load (not AJAX, cron or REST) by a user
  * who can update plugins, under a lock so concurrent page loads never run the
- * upgrader twice. Final results clear the queue. A failed download, or no
+ * upgrader twice. On multisite it runs only on the root blog, where the queue
+ * option lives, so the lock, retry wait and plugin check use the same site and
+ * a subsite page load can neither clear the queue nor spend its attempts.
+ * Final results clear the queue. A failed download, or no
  * newer build being available yet (Mothership not serving the required
  * version), is retried at most every 12 hours, up to 10 attempts.
  *
@@ -4911,6 +4914,7 @@ function bb_queue_addons_bundle_update() {
 function bb_maybe_run_queued_addons_bundle_update() {
 	if (
 		! bp_get_option( 'bb_addons_bundle_update_queued', false ) ||
+		( is_multisite() && ! bp_is_root_blog() ) ||
 		wp_doing_ajax() ||
 		wp_doing_cron() ||
 		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||

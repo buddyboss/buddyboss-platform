@@ -1317,6 +1317,17 @@ function bb_get_active_buddyboss_theme_version() {
 }
 
 /**
+ * Activity meta keys that older BuddyBoss Theme builds turn into `BP_Document` objects.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string[] Meta keys.
+ */
+function bb_theme_document_activity_meta_keys() {
+	return array( 'bp_document_ids', 'bp_document_folder_activity', 'bp_document_id' );
+}
+
+/**
  * Hide document activity meta from BuddyBoss Theme builds that cannot handle a missing Documents component.
  *
  * Applies only when an older BuddyBoss Theme is active and `BP_Document` is not
@@ -1336,7 +1347,7 @@ function bb_get_active_buddyboss_theme_version() {
 function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, $single ) {
 	static $in_progress = false;
 
-	$document_keys = array( 'bp_document_ids', 'bp_document_folder_activity', 'bp_document_id' );
+	$document_keys = bb_theme_document_activity_meta_keys();
 
 	if ( null !== $value || $in_progress || class_exists( 'BP_Document' ) || ( '' !== $meta_key && ! in_array( $meta_key, $document_keys, true ) ) ) {
 		return $value;
@@ -1377,6 +1388,30 @@ function bb_register_theme_document_meta_compat() {
 		! class_exists( 'BP_Document' )
 	) {
 		add_filter( 'get_activity_metadata', 'bb_theme_document_activity_meta_compat', 10, 4 );
+		add_filter( 'bb_activity_get_metadata', 'bb_theme_document_activity_cached_meta_compat', 10, 2 );
 	}
+}
+
+/**
+ * Hide document activity meta from older BuddyBoss Theme builds on cached reads.
+ *
+ * bb_activity_get_metadata() returns the `activity_meta` cache entry directly once
+ * the activity loop has primed it (bp_update_meta_cache()), so the
+ * `get_activity_metadata` filter in bb_theme_document_activity_meta_compat()
+ * never runs there. The theme's Elementor Activity widget reads that way.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|mixed $meta_data   All metadata of the activity.
+ * @param int         $activity_id Activity ID.
+ *
+ * @return array|mixed
+ */
+function bb_theme_document_activity_cached_meta_compat( $meta_data, $activity_id ) {
+	if ( ! is_array( $meta_data ) || class_exists( 'BP_Document' ) ) {
+		return $meta_data;
+	}
+
+	return array_diff_key( $meta_data, array_flip( bb_theme_document_activity_meta_keys() ) );
 }
 add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
