@@ -3061,6 +3061,11 @@ window.bp = window.bp || {};
 				// rejects with no message of its own (M3).
 				var isDiscardRequest = ! _.isUndefined( bp.draft_activity ) && 'delete' === bp.draft_activity.post_action;
 
+				// What a failed discard has to put back. Read here because
+				// resetDraftActivity() removes the local copy right after this call.
+				var discard_key  = isDiscardRequest ? bp.draft_activity.data_key : '',
+					discard_copy = isDiscardRequest ? localStorage.getItem( discard_key ) : null;
+
 				if ( bp.draft_ajax_request ) {
 					bp.draft_ajax_request.abort();
 				}
@@ -3139,6 +3144,27 @@ window.bp = window.bp || {};
 							bp.Nouveau.Activity.postForm.handleDraftConflict( response );
 
 							return;
+						}
+
+						// The stored draft survived the failed discard (or its fate is
+						// unknown). Undo the local half of the discard so the reload the
+						// notice asks for offers the draft, with its Discard button,
+						// again: drop the reload guard and put the local copy back,
+						// pending, so closing the composer does not delete it (N-1).
+						if ( isDiscardRequest && discard_key ) {
+							$.removeCookie( discard_key );
+
+							if ( discard_copy && null === localStorage.getItem( discard_key ) ) {
+								try {
+									var discard_restore = JSON.parse( discard_copy );
+
+									discard_restore.bb_draft_pending_sync = true;
+									localStorage.setItem( discard_key, JSON.stringify( discard_restore ) );
+								} catch ( e ) {
+									// Unreadable copy or full storage: the server copy
+									// still comes back on reload now the guard is gone.
+								}
+							}
 						}
 
 						// The outcome is unknown when the response was lost - the

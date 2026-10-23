@@ -118,6 +118,7 @@ window.bp = window.bp || {};
 			this.draft_pending_keys         = {};
 			this.draft_conflict_keys        = {};
 			this.draft_blocked_keys         = {};
+			this.draft_discard_copies       = {};
 			this.bbp_lead_topic_tags        = '';
 			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};
 			this.topic_reply_draft          = {
@@ -1395,12 +1396,12 @@ window.bp = window.bp || {};
 											( BP_Nouveau.forums.draft_save_failed_message || '' ) )
 								);
 
-								// Deliberately NOT clearing the discard marker here.
-								// discardTopicReplyDraftForm() sets it before the
-								// request and tears down the local copy; un-marking it
-								// on a REFUSED discard erases the guard that stops a
-								// reload re-offering a draft whose server row is still
-								// there.
+								// A refused discard leaves the server row in place, so
+								// the reload the notice asks for must offer it again.
+								if ( is_discard_request ) {
+									self.undoFailedDiscard( draft_key );
+								}
+
 								return;
 							}
 
@@ -1432,6 +1433,10 @@ window.bp = window.bp || {};
 							// A stored draft exists again (or the discard has
 							// landed), so the reload guard has served its purpose.
 							bp.Nouveau.TopicReplyDraft.markDiscarded( draft_payload.data_key, false );
+
+							if ( is_discard_request ) {
+								delete self.draft_discard_copies[ draft_key ];
+							}
 						},
 						error: function ( jqXHR, textStatus ) {
 							// The response was lost, not necessarily the save: keep this
@@ -1465,6 +1470,12 @@ window.bp = window.bp || {};
 								( jqXHR && 'abort' === jqXHR.statusText )
 							) {
 								return;
+							}
+
+							// The outcome of a lost discard is unknown; keeping the
+							// draft is the side that cannot lose it.
+							if ( is_discard_request ) {
+								self.undoFailedDiscard( draft_key );
 							}
 
 							self.showDraftFeedback(
@@ -2708,6 +2719,9 @@ window.bp = window.bp || {};
 			forum_reply.css( 'pointer-events', 'none' );
 
 			this.topic_reply_draft.post_action = 'delete';
+			// Kept until the server answers: resetLocalTopicReplyDraft() below
+			// removes the local copy, and a failed discard puts it back (N-1).
+			this.draft_discard_copies[ this.topic_reply_draft.data_key ] = localStorage.getItem( this.topic_reply_draft.data_key );
 			// Marked before the request goes out: a reload racing the discard
 			// must not be offered this draft again.
 			bp.Nouveau.TopicReplyDraft.markDiscarded( this.topic_reply_draft.data_key, true );
@@ -2726,6 +2740,34 @@ window.bp = window.bp || {};
 
 			forum_topic.css( 'pointer-events', '' );
 			forum_reply.css( 'pointer-events', '' );
+		};
+
+		/**
+		 * Undo the local half of a discard the server did not confirm.
+		 *
+		 * Clears the reload guard and puts the local copy back, so reopening the
+		 * composer or reloading offers the draft and its Discard button again.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} draft_key The discarded draft's key.
+		 *
+		 * @return {void}
+		 */
+		this.undoFailedDiscard = function ( draft_key ) {
+			var copy = this.draft_discard_copies[ draft_key ];
+
+			delete this.draft_discard_copies[ draft_key ];
+			bp.Nouveau.TopicReplyDraft.markDiscarded( draft_key, false );
+
+			// Never over a copy the member has written since the discard.
+			if ( copy && null === localStorage.getItem( draft_key ) ) {
+				try {
+					localStorage.setItem( draft_key, copy );
+				} catch ( e ) {
+					// Full storage: the server copy still comes back on reload.
+				}
+			}
 		};
 
 		/**
