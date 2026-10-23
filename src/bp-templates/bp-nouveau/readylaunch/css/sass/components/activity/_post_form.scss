@@ -1,3 +1,9 @@
+// One draft notice at a time in every composer, the forum forms included:
+// the retention note always follows a refusal notice.
+.bb-draft-save-feedback ~ .bb-draft-retention-note {
+	display: none;
+}
+
 // Activity Post Form default view
 [class*="bb-rl-activity-form"] {
 	background-color: var(--bb-rl-background-color);
@@ -151,6 +157,25 @@
 		.bb-draft-save-feedback,
 		.bb-draft-retention-note {
 			display: flex;
+			margin: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+			border-radius: var(--bb-rl-radius-md);
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 400;
+		}
+
+		.bb-draft-save-feedback.error {
+			border-color: var(--bb-rl-border-danger-secondary-color);
+		}
+
+		.bb-draft-retention-note.info {
+			border-color: var(--bb-rl-border-info-secondary-color);
+		}
+
+		// One notice at a time: the retention note always follows a refusal
+		// notice, so it waits until that notice is cleared.
+		.bb-draft-save-feedback ~ .bb-draft-retention-note {
+			display: none;
 		}
 	}
 

@@ -1011,6 +1011,12 @@ window.bp = window.bp || {};
 							$element.removeData( 'emojioneArea' );
 						}
 
+						// In standalone mode emojioneArea's init() writes the
+						// editor's text() back into this contenteditable source,
+						// which strips its markup (`<p>One</p><p>Two</p>` became
+						// `OneTwo`). Keep the HTML so `ready` can put it back.
+						var contentBeforeEmojiInit = element.innerHTML;
+
 						jQuery( '#' + elem_id ).emojioneArea(
 							{
 								standalone: true,
@@ -1035,6 +1041,11 @@ window.bp = window.bp || {};
 										// and their draft never came back
 										// (Q12).
 										if ( $element.closest( 'form' ).hasClass( 'has-draft' ) ) {
+											// Undo the markup strip done by the
+											// re-initialisation (see above).
+											if ( element.innerHTML !== contentBeforeEmojiInit ) {
+												element.innerHTML = contentBeforeEmojiInit;
+											}
 											return;
 										}
 

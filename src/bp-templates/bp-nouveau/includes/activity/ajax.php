@@ -1436,6 +1436,23 @@ function bb_nouveau_ajax_post_draft_activity() {
 				);
 			}
 
+			// A held draft of this key that this browser has not received yet
+			// would be dropped unseen by this save. Hand it back instead: the
+			// browser merges it with the member's text and saves again.
+			if ( bb_draft_save_waits_for_handback( $draft_user_id, $draft_activity['data_key'] ) ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bb_draft_conflict_message(),
+						'conflict'       => true,
+						'held'           => true,
+						'evicted_drafts' => bb_draft_handback_for_key( $draft_user_id, $draft_activity['data_key'] ),
+					)
+				);
+			}
+
 			// The client attachment lists arrive as JSON and each entry costs a
 			// per-ID ownership lookup, so they must be bounded. This REFUSES an
 			// over-bound list instead of silently storing a truncated one: the

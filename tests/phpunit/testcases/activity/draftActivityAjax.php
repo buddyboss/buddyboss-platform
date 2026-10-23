@@ -1001,4 +1001,88 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		bb_draft_pending_evicted( $user_id, array( $key, 'draft_user' ) );
 		$this->assertSame( '', (string) get_user_meta( $user_id, 'bb_draft_has_evicted_hold', true ), 'The acknowledgement clears both.' );
 	}
+
+	/**
+	 * A save to a key whose held draft never reached this browser is refused
+	 * and the held draft handed back; the save that acknowledges it is stored
+	 * (PROD-9621: a stored draft ends the hold, so the held text was dropped
+	 * unseen).
+	 */
+	public function test_save_waits_for_the_handback_of_a_held_draft() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		bb_draft_hold_evicted(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'data_key' => 'draft_user',
+					'object'   => 'user',
+					'data'     => array( 'content' => 'held text' ),
+				),
+			)
+		);
+
+		$refused = $this->save_rev_draft( $user_id, 'typed text', 'revTYPED0001' );
+
+		$this->assertFalse( $refused['success'], 'The save would drop the held draft unseen.' );
+		$this->assertTrue( $refused['data']['conflict'] );
+		$this->assertTrue( $refused['data']['held'], 'Flagged, so the browser keeps the merged copy.' );
+		$this->assertSame( 'held text', $refused['data']['evicted_drafts']['draft_user']['data']['content'], 'The held draft is handed back.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'draft_user' ) ), 'Nothing was stored.' );
+
+		$accepted = $this->invoke_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => 'draft_user',
+				'object'      => 'user',
+				'post_action' => 'update',
+				'_draft_rev'  => 'revMERGED001',
+				'data'        => array( 'content' => 'held text typed text' ),
+			),
+			array( 'bb_draft_evicted_ack' => 'draft_user' )
+		);
+
+		$this->assertTrue( $accepted['success'], 'The save that acknowledges the hand-back goes through.' );
+		$this->assertSame( 'held text typed text', bp_get_user_meta( $user_id, 'draft_user', true )['data']['content'] );
+		$this->assertEmpty( bb_draft_get_evicted_hold( $user_id ), 'The hold is done.' );
+	}
+
+	/**
+	 * The forum save waits for a held draft's hand-back the same way.
+	 */
+	public function test_forum_save_waits_for_the_handback_of_a_held_draft() {
+		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+			$this->markTestSkipped( 'Forums component is not loaded.' );
+		}
+
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$key     = 'draft_discussion_' . $forum;
+		$entry   = function ( $text, $rev ) use ( $key ) {
+			return array(
+				'data_key'    => $key,
+				'object'      => 'topic',
+				'post_action' => 'update',
+				'_draft_rev'  => $rev,
+				'data'        => array( 'bbp_topic_content' => $text ),
+			);
+		};
+
+		bb_draft_hold_evicted( $user_id, array( 'bb_user_topic_reply_draft:' . $key => $entry( 'held topic', 'revHELD00001' ) ) );
+
+		$refused = $this->invoke_forum_draft_handler( $user_id, $entry( 'typed topic', 'revTYPED0001' ) );
+
+		$this->assertFalse( $refused['success'] );
+		$this->assertTrue( $refused['data']['held'] );
+		$this->assertSame( 'held topic', $refused['data']['evicted_drafts'][ 'bb_user_topic_reply_draft:' . $key ]['data']['bbp_topic_content'] );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertFalse( is_array( $row ) && isset( $row[ $key ] ), 'Nothing was stored for the key.' );
+
+		$accepted = $this->invoke_forum_draft_handler( $user_id, $entry( 'held topic typed topic', 'revMERGED001' ), array( 'bb_draft_evicted_ack' => 'bb_user_topic_reply_draft:' . $key ) );
+		$this->assertTrue( $accepted['success'] );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertSame( 'held topic typed topic', $row[ $key ]['data']['bbp_topic_content'] );
+	}
 }

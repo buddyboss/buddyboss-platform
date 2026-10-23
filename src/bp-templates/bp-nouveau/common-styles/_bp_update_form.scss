@@ -217,7 +217,18 @@
 		.bb-draft-retention-note {
 			display: flex;
 		}
+
+		// One notice at a time: the retention note always follows a refusal
+		// notice, so it waits until that notice is cleared.
+		.bb-draft-save-feedback ~ .bb-draft-retention-note {
+			display: none;
+		}
 	}
+}
+
+// The same for the forum topic and reply forms.
+.bb-draft-save-feedback ~ .bb-draft-retention-note {
+	display: none;
 }
 
 #whats-new-form.focus-in--privacy {

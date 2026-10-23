@@ -2798,7 +2798,7 @@ window.bp = window.bp || {};
 	 */
 	var bbDraftGetAcks = function () {
 		try {
-			return _.compact( String( localStorage.getItem( 'bb_draft_evicted_ack' ) || '' ).split( ',' ) );
+			return _.compact( String( localStorage.getItem( bbDraftAckStorageKey() ) || '' ).split( ',' ) );
 		} catch ( e ) {
 			return [];
 		}
@@ -2817,9 +2817,9 @@ window.bp = window.bp || {};
 			var left = _.difference( bbDraftGetAcks(), sent || [] );
 
 			if ( left.length ) {
-				localStorage.setItem( 'bb_draft_evicted_ack', left.join( ',' ) );
+				localStorage.setItem( bbDraftAckStorageKey(), left.join( ',' ) );
 			} else {
-				localStorage.removeItem( 'bb_draft_evicted_ack' );
+				localStorage.removeItem( bbDraftAckStorageKey() );
 			}
 		} catch ( e ) {
 			// Harmless: the server drops entries it already holds again.
@@ -3209,7 +3209,7 @@ window.bp = window.bp || {};
 		);
 
 		try {
-			localStorage.setItem( 'bb_draft_evicted_ack', _.uniq( acks ).slice( -50 ).join( ',' ) );
+			localStorage.setItem( bbDraftAckStorageKey(), _.uniq( acks ).slice( -50 ).join( ',' ) );
 		} catch ( e ) {
 			// Without the acknowledgement the server simply sends it again.
 		}
@@ -3656,6 +3656,20 @@ window.bp = window.bp || {};
 			}
 		);
 	};
+
+	/**
+	 * localStorage key of the hand-back keys this browser still has to
+	 * acknowledge, per member: on a shared browser another member's pending
+	 * acknowledgement must never be sent with this member's requests, or it
+	 * ends this member's hold for the same key unseen.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return {string}
+	 */
+	function bbDraftAckStorageKey() {
+		return 'bb_draft_evicted_ack_' + ( parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 ) || 0 );
+	}
 
 	/**
 	 * Whether a clipboard holds an image and no text.

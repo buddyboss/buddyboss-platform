@@ -667,6 +667,28 @@ function bb_post_topic_reply_draft() {
 					'conflict'       => true,
 					'draft_activity' => $existing_draft[ $draft_topic_reply['data_key'] ],
 				);
+			} elseif ( bb_draft_save_waits_for_handback( $user_id, $usermeta_key . ':' . $draft_topic_reply['data_key'] ) ) {
+				// A held draft of this key that this browser has not received yet
+				// would be dropped unseen by this save (see the activity handler).
+				// Moved into the hold first, so the hand-back below includes it.
+				$held_key = $usermeta_key . ':' . $draft_topic_reply['data_key'];
+
+				bb_draft_promote_evicted(
+					$user_id,
+					function ( $key ) use ( $held_key ) {
+						return $key === $held_key;
+					}
+				);
+
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $user_id, $held_key );
+
+				$primary_rejected  = true;
+				$primary_rejection = array(
+					'message'  => bb_draft_conflict_message(),
+					'conflict' => true,
+					'held'     => true,
+				);
 			}
 		}
 

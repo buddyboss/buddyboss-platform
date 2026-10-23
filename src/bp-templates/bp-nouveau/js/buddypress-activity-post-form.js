@@ -1835,6 +1835,15 @@ window.bp = window.bp || {};
 			this.clearDraftInterval();
 
 			try {
+				// Refused because a held draft of this key had not reached this
+				// browser: handleEvictedDrafts() has just stored it merged with the
+				// member's text, and that copy is what a reload restores.
+				if ( response.held ) {
+					this.showDraftFeedback( BP_Nouveau.activity.params.draft_conflict_message || response.message || '' );
+
+					return;
+				}
+
 				if ( stored && 'object' === typeof stored && stored.data_key ) {
 					localStorage.setItem( stored.data_key, JSON.stringify( _.extend( {}, stored, { _draft_local_at: Math.floor( Date.now() / 1000 ) } ) ) );
 				} else {
@@ -1898,7 +1907,7 @@ window.bp = window.bp || {};
 		 */
 		getEvictionAcks: function() {
 			try {
-				return _.compact( String( localStorage.getItem( 'bb_draft_evicted_ack' ) || '' ).split( ',' ) );
+				return _.compact( String( localStorage.getItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey() ) || '' ).split( ',' ) );
 			} catch ( e ) {
 				return [];
 			}
@@ -1915,7 +1924,7 @@ window.bp = window.bp || {};
 		 */
 		addEvictionAck: function( key ) {
 			try {
-				localStorage.setItem( 'bb_draft_evicted_ack', _.uniq( this.getEvictionAcks().concat( [ String( key ) ] ) ).slice( -50 ).join( ',' ) );
+				localStorage.setItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey(), _.uniq( this.getEvictionAcks().concat( [ String( key ) ] ) ).slice( -50 ).join( ',' ) );
 			} catch ( e ) {
 				// Without the acknowledgement the server simply sends it again.
 			}
@@ -1935,13 +1944,27 @@ window.bp = window.bp || {};
 				var left = _.difference( this.getEvictionAcks(), sent || [] );
 
 				if ( left.length ) {
-					localStorage.setItem( 'bb_draft_evicted_ack', left.join( ',' ) );
+					localStorage.setItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey(), left.join( ',' ) );
 				} else {
-					localStorage.removeItem( 'bb_draft_evicted_ack' );
+					localStorage.removeItem( bp.Nouveau.Activity.postForm.evictionAckStorageKey() );
 				}
 			} catch ( e ) {
 				// Harmless: the server drops entries it already holds again.
 			}
+		},
+
+		/**
+		 * localStorage key of the hand-back keys this browser still has to
+		 * acknowledge, per member: on a shared browser another member's
+		 * pending acknowledgement must never be sent with this member's
+		 * requests, or it ends this member's hold for the same key unseen.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {string}
+		 */
+		evictionAckStorageKey: function() {
+			return 'bb_draft_evicted_ack_' + ( parseInt( BP_Nouveau.activity.params.user_id, 10 ) || 0 );
 		},
 
 		/**

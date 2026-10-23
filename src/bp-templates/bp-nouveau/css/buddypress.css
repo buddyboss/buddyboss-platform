@@ -1672,6 +1672,13 @@ a.layout-grid-view {
 #whats-new-form.focus-in .bb-draft-retention-note {
   display: flex;
 }
+#whats-new-form.focus-in .bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
+}
+
+.bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
+}
 
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;

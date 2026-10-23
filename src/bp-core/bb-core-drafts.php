@@ -1860,6 +1860,59 @@ function bb_draft_get_held_entry( $user_id, $key ) {
 }
 
 /**
+ * Whether a save to a key must wait because a held draft for it was not
+ * handed back yet.
+ *
+ * A stored draft for a key ends its hold ({@see bb_draft_drop_settled_evicted()}),
+ * so saving text the member typed without having received the held draft
+ * would drop that draft unseen. The save is refused instead and the held
+ * draft handed back; the browser merges the two and its next save, which
+ * acknowledges the key, goes through.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id     User ID.
+ * @param string $evicted_key Key like `evicted_draft_keys` ("meta_key" or "meta_key:inner_key").
+ * @return bool True when the save must be refused.
+ */
+function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
+	if ( in_array( (string) $evicted_key, bb_draft_request_acked_evictions(), true ) ) {
+		return false;
+	}
+
+	return false !== bb_draft_get_held_entry( $user_id, (string) $evicted_key );
+}
+
+/**
+ * The hand-back for a save refused by {@see bb_draft_save_waits_for_handback()}.
+ *
+ * Includes the held draft even when it waits in the overflow.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id     User ID.
+ * @param string $evicted_key The refused key.
+ * @return array Entries keyed like `evicted_draft_keys`.
+ */
+function bb_draft_handback_for_key( $user_id, $evicted_key ) {
+	$owed = bb_draft_handback( $user_id );
+
+	if ( ! isset( $owed[ $evicted_key ] ) ) {
+		$owed = array_merge(
+			$owed,
+			bb_draft_promote_evicted(
+				$user_id,
+				function ( $key ) use ( $evicted_key ) {
+					return $key === $evicted_key;
+				}
+			)
+		);
+	}
+
+	return $owed;
+}
+
+/**
  * Move a member's waiting held drafts into the hold because a composer asked
  * for them.
  *
