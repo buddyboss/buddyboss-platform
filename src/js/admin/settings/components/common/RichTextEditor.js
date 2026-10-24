@@ -147,6 +147,19 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 								editor.on( 'change keyup', function () {
 									onChangeRef.current( editor.getContent() );
 								} );
+
+								// Edits in the Code tab don't fire TinyMCE events: typing
+								// fires input and the Code tab buttons fire change on the
+								// textarea. Send them too, converted with autop() to the
+								// same HTML format as the Visual tab, so the value is kept
+								// when the modal switches to another tab before Save.
+								var onCodeTabChange = function () {
+									if ( editor.isHidden() && window.wp.editor.autop ) {
+										onChangeRef.current( window.wp.editor.autop( textarea.value ) );
+									}
+								};
+								textarea.addEventListener( 'input', onCodeTabChange );
+								textarea.addEventListener( 'change', onCodeTabChange );
 							},
 						},
 						quicktags: {
