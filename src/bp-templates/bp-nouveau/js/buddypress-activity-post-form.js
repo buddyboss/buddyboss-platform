@@ -1835,6 +1835,11 @@ window.bp = window.bp || {};
 		 *
 		 * The stored draft becomes the local copy, so a reload shows it; the
 		 * member's text stays in the composer; saving stops for the page view.
+		 * When the composer shows a held draft this browser restored and no
+		 * save has stored yet, that local copy is the only one outside the
+		 * screen: the composer's text is added to the stored draft instead
+		 * ({@see mergeHandback}), so the reload shows both and saves them over
+		 * the stored version, which the merge holds (NEW-HF-3).
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1843,7 +1848,9 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		handleDraftConflict: function( response ) {
-			var stored = response.draft_activity;
+			var stored        = response.draft_activity,
+				keep_handback = bp.draft_pending_sync && '' !== bp.draft_shown_handback && this.draftDataHasPayload( bp.draft_activity.data ),
+				copy;
 
 			// A held refusal of a composer whose text already is the held draft
 			// is no conflict: saving carries on (handleHeldRefusal()).
@@ -1868,7 +1875,19 @@ window.bp = window.bp || {};
 				}
 
 				if ( stored && 'object' === typeof stored && stored.data_key ) {
-					localStorage.setItem( stored.data_key, JSON.stringify( _.extend( {}, stored, { _draft_local_at: Math.floor( Date.now() / 1000 ) } ) ) );
+					copy = _.extend( {}, stored, { _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+
+					// Keep the held revision this composer showed, not the stored
+					// one, so a tab that shows the stored version does not write
+					// over the merge (guardHandbackCopy()). The held draft's own
+					// data is dropped: a publish elsewhere keeps the whole merge
+					// (heldCopyToKeep()).
+					if ( keep_handback ) {
+						copy                 = _.omit( this.mergeHandback( { data: bp.draft_activity.data }, stored, parseInt( BP_Nouveau.activity.params.user_id, 10 ), false ), '_draft_handback_data' );
+						copy._draft_handback = bp.draft_shown_handback;
+					}
+
+					localStorage.setItem( stored.data_key, JSON.stringify( copy ) );
 				} else {
 					localStorage.removeItem( bp.draft_activity.data_key );
 				}
@@ -1947,7 +1966,15 @@ window.bp = window.bp || {};
 		 * The copy is the handed-back draft, or this browser's merge with it. The
 		 * member's text is appended ({@see mergeHandback}), so a reload shows
 		 * both, and the copy keeps the held revision as its base, so its save
-		 * goes through.
+		 * goes through. The merge holds the composer's draft too, so it is also
+		 * based on the revisions the composer was built on: a composer that
+		 * showed a version saved after the held one (another device saved over
+		 * the key once this browser had acknowledged the hand-back) would
+		 * otherwise get the merge refused as a conflict on the next page view,
+		 * and the conflict would replace it with that version (NEW-HF-3). Not
+		 * when the composer is not based on the stored draft, or the merge kept
+		 * the held draft's title or GIF over the composer's
+		 * ({@see mergeKeepsComposerFields}).
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1956,16 +1983,54 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		absorbIntoHandback: function( copy ) {
+			var merged;
+
 			if ( ! this.draftDataHasPayload( bp.draft_activity.data ) || this.canonicalDraftJson( copy.data ) === this.canonicalDraftJson( bp.draft_activity.data ) ) {
 				return;
 			}
 
 			try {
-				localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( this.mergeHandback( { data: bp.draft_activity.data }, copy, parseInt( BP_Nouveau.activity.params.user_id, 10 ), false ) ) );
+				merged = this.mergeHandback( { data: bp.draft_activity.data }, copy, parseInt( BP_Nouveau.activity.params.user_id, 10 ), false );
+
+				if ( ! bp.draft_save_blocked && ! bp.draft_fetch_failed && this.mergeKeepsComposerFields( merged.data, bp.draft_activity.data ) ) {
+					merged._draft_base = _.uniq( bp.draft_base.concat( merged._draft_base ) ).slice( -8 );
+				}
+
+				localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( merged ) );
 			} catch ( e ) {
 				// Over quota: the text stays on screen and the notice says it was not saved.
 				bp.draft_conflict_unstored = true;
 			}
+		},
+
+		/**
+		 * Whether a hand-back merge kept the composer's title and GIF.
+		 *
+		 * mergeHandback() appends the composer's text and joins its attachment
+		 * lists by ID, but keeps the held draft's title or GIF over a different
+		 * one from the composer. A merge that did so does not hold the
+		 * composer's whole draft, so a save of it must not replace the version
+		 * the composer was built on.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} merged_data The merged draft data.
+		 * @param {Object} local_data  The composer's draft data.
+		 *
+		 * @return {boolean}
+		 */
+		mergeKeepsComposerFields: function( merged_data, local_data ) {
+			var self = this;
+
+			merged_data = ( merged_data && 'object' === typeof merged_data ) ? merged_data : {};
+			local_data  = ( local_data && 'object' === typeof local_data ) ? local_data : {};
+
+			return _.every(
+				[ 'post_title', 'gif_data' ],
+				function ( field ) {
+					return self.isBlankDraftValue( local_data[ field ] ) || self.canonicalDraftJson( local_data[ field ] ) === self.canonicalDraftJson( merged_data[ field ] );
+				}
+			);
 		},
 
 		/**
@@ -2273,39 +2338,6 @@ window.bp = window.bp || {};
 			}
 
 			return ( copy.data && ! _.isUndefined( copy.data.user_id ) ) ? ( parseInt( copy.data.user_id, 10 ) || 0 ) : 0;
-		},
-
-		/**
-		 * The `_draft_edit_at` stamp for a draft about to be stored locally.
-		 *
-		 * Kept from the stored copy while the content is unchanged. A first copy
-		 * of a draft read from the server takes the server's save time; any other
-		 * new or changed content is stamped now.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param {Object} draft Draft about to be stored.
-		 *
-		 * @return {number}
-		 */
-		draftEditTime: function( draft ) {
-			var previous = null;
-
-			try {
-				previous = JSON.parse( localStorage.getItem( draft.data_key ) || 'null' );
-			} catch ( e ) {
-				previous = null;
-			}
-
-			if ( previous && 'object' === typeof previous ) {
-				if ( this.canonicalDraftJson( previous.data ) === this.canonicalDraftJson( draft.data ) ) {
-					return parseInt( previous._draft_edit_at, 10 ) || 0;
-				}
-
-				return Math.floor( Date.now() / 1000 );
-			}
-
-			return parseInt( draft._draft_saved_at, 10 ) || Math.floor( Date.now() / 1000 );
 		},
 
 		/**
@@ -2703,7 +2735,6 @@ window.bp = window.bp || {};
 			merged.data                  = data;
 			merged.bb_draft_pending_sync = true;
 			merged._draft_local_at       = now;
-			merged._draft_edit_at        = now;
 			merged._draft_unsynced       = true;
 			merged._draft_base           = entry_base.length ? entry_base : [ 'none' ];
 			merged._draft_handback_data  = entry._draft_handback_data || entry.data;
@@ -3954,7 +3985,6 @@ window.bp = window.bp || {};
 					{
 						_draft_base: bp.draft_base,
 						_draft_local_at: Math.floor( Date.now() / 1000 ),
-						_draft_edit_at: bp.Nouveau.Activity.postForm.draftEditTime( draft_activity ),
 						_draft_unsynced: bp.Nouveau.Activity.postForm.draftUnsynced( draft_activity )
 					}
 				);

@@ -490,23 +490,12 @@ window.bp = window.bp || {};
 			this.topic_reply_draft._draft_base    = this.draft_blocked_keys[ this.topic_reply_draft.data_key ] ? [ 'none' ] : this.draftBaseFor( this.topic_reply_draft.data_key );
 			this.topic_reply_draft._draft_local_at = Math.floor( Date.now() / 1000 );
 
-			// When the content last changed, which the page-unload save does not
-			// move: bbDraftHandbackDecision() compares it with a handed-back draft.
-			// A first copy read from the server takes the server's save time.
 			var bb_previous_copy = null;
 
 			try {
 				bb_previous_copy = JSON.parse( localStorage.getItem( this.topic_reply_draft.data_key ) || 'null' );
 			} catch ( e ) {
 				bb_previous_copy = null;
-			}
-
-			if ( bb_previous_copy && 'object' === typeof bb_previous_copy ) {
-				this.topic_reply_draft._draft_edit_at = _.isEqual( bb_previous_copy.data, this.topic_reply_draft.data ) ?
-					( parseInt( bb_previous_copy._draft_edit_at, 10 ) || 0 ) :
-					Math.floor( Date.now() / 1000 );
-			} else {
-				this.topic_reply_draft._draft_edit_at = parseInt( this.topic_reply_draft._draft_saved_at, 10 ) || Math.floor( Date.now() / 1000 );
 			}
 
 			// Whether the copy holds text the server has not confirmed storing:
@@ -1318,6 +1307,8 @@ window.bp = window.bp || {};
 				this.topic_reply_draft._draft_rev = draft_rev;
 			}
 
+			// `_draft_edit_at` is no longer written, but a copy stored by an
+			// earlier build can still carry it into this object.
 			var self = this,
 				draft_payload = _.omit( this.topic_reply_draft, [ '_draft_base', '_draft_local_at', '_draft_edit_at', '_draft_unsynced', 'bb_draft_pending_sync', 'bb_draft_owner' ] );
 
@@ -1692,6 +1683,12 @@ window.bp = window.bp || {};
 		/**
 		 * Keep the newer stored draft after the server refused a save over it.
 		 *
+		 * When the form shows a held draft this browser restored and no save
+		 * has stored yet, that local copy is the only one outside the screen:
+		 * the form's text is added to the stored draft instead
+		 * ({@see bbDraftMergeHandback}), so the reload shows both and saves
+		 * them over the stored version, which the merge holds (NEW-HF-3).
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param {string} key     Inner draft key.
@@ -1702,6 +1699,11 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.handleDraftConflict = function ( key, stored, message, data ) {
+			var typed         = ( key === this.topic_reply_draft.data_key ) ? this.topic_reply_draft.data : this.all_draft_data[ key ],
+				keep_handback = !! ( this.draft_pending_keys[ key ] && this.draft_shown_handback[ key ] && bbDraftDataHasPayload( typed ) ),
+				owner_id      = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 ),
+				copy;
+
 			// A held refusal of a form whose text already is the held draft is
 			// no conflict: saving carries on (handleHeldRefusal()).
 			if ( data && data.held && this.handleHeldRefusal( key, data ) ) {
@@ -1721,7 +1723,19 @@ window.bp = window.bp || {};
 
 			try {
 				if ( stored && 'object' === typeof stored ) {
-					localStorage.setItem( key, JSON.stringify( _.extend( {}, stored, { bb_draft_owner: parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 ), _draft_local_at: Math.floor( Date.now() / 1000 ) } ) ) );
+					copy = _.extend( {}, stored, { bb_draft_owner: owner_id, _draft_local_at: Math.floor( Date.now() / 1000 ) } );
+
+					// Keep the held revision this form showed, not the stored one,
+					// so a tab that shows the stored version does not write over
+					// the merge (guardHandbackCopy()). The held draft's own data is
+					// dropped: a submit elsewhere keeps the whole merge
+					// (heldCopyToKeep()).
+					if ( keep_handback ) {
+						copy                 = _.omit( bbDraftMergeHandback( { data: typed }, stored, true, owner_id ), '_draft_handback_data' );
+						copy._draft_handback = this.draft_shown_handback[ key ];
+					}
+
+					localStorage.setItem( key, JSON.stringify( copy ) );
 				}
 			} catch ( e ) {
 				// Over quota: the server still holds the stored draft.
@@ -1799,6 +1813,15 @@ window.bp = window.bp || {};
 		 * Add the form's text to this browser's copy of a held draft the form
 		 * was not built on ({@see bbDraftMergeHandback}), so a reload shows both.
 		 *
+		 * The merge holds the form's draft too, so it is also based on the
+		 * revisions the form was built on: a form that showed a version saved
+		 * after the held one (another device saved over the key once this
+		 * browser had acknowledged the hand-back) would otherwise get the merge
+		 * refused as a conflict on the next page view, and the conflict would
+		 * replace it with that version (NEW-HF-3). Not when the form is not
+		 * based on the stored draft, or the merge kept the held draft's title,
+		 * tags or GIF over the form's ({@see bbDraftMergeKeepsFormFields}).
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param {string} key   Inner draft key.
@@ -1808,12 +1831,20 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.absorbIntoHandback = function ( key, copy, typed ) {
+			var merged;
+
 			if ( ! bbDraftDataHasPayload( typed ) || _.isEqual( copy.data, typed ) ) {
 				return;
 			}
 
 			try {
-				localStorage.setItem( key, JSON.stringify( bbDraftMergeHandback( { data: typed }, copy, true, parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 ) ) ) );
+				merged = bbDraftMergeHandback( { data: typed }, copy, true, parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 ) );
+
+				if ( ! this.draft_blocked_keys[ key ] && bbDraftMergeKeepsFormFields( merged.data, typed ) ) {
+					merged._draft_base = _.uniq( this.draftBaseFor( key ).concat( merged._draft_base ) ).slice( -8 );
+				}
+
+				localStorage.setItem( key, JSON.stringify( merged ) );
 			} catch ( e ) {
 				// Over quota: the text stays on screen and the notice says it was not saved.
 				this.draft_unstored_keys[ key ] = true;
@@ -3596,7 +3627,6 @@ window.bp = window.bp || {};
 		merged.data                  = data;
 		merged.bb_draft_pending_sync = true;
 		merged._draft_local_at       = now;
-		merged._draft_edit_at        = now;
 		merged._draft_unsynced       = true;
 		merged._draft_base           = entry_base.length ? entry_base : [ 'none' ];
 		merged._draft_handback_data  = entry._draft_handback_data || entry.data;
@@ -3607,6 +3637,33 @@ window.bp = window.bp || {};
 		}
 
 		return merged;
+	};
+
+	/**
+	 * Whether a hand-back merge kept the form's title, tags and GIF.
+	 *
+	 * bbDraftMergeHandback() appends the form's text and joins its attachment
+	 * lists by ID, but keeps the held draft's title, tags or GIF over a
+	 * different one from the form. A merge that did so does not hold the
+	 * form's whole draft, so a save of it must not replace the version the
+	 * form was built on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} merged_data The merged draft data.
+	 * @param {Object} local_data  The form's draft data.
+	 * @return {boolean}
+	 */
+	var bbDraftMergeKeepsFormFields = function ( merged_data, local_data ) {
+		merged_data = ( merged_data && 'object' === typeof merged_data ) ? merged_data : {};
+		local_data  = ( local_data && 'object' === typeof local_data ) ? local_data : {};
+
+		return _.every(
+			[ 'bbp_topic_title', 'bbp_topic_tags', 'bbp_media_gif' ],
+			function ( field ) {
+				return bbDraftIsBlankValue( local_data[ field ] ) || _.isEqual( local_data[ field ], merged_data[ field ] );
+			}
+		);
 	};
 
 	/**
@@ -4087,7 +4144,7 @@ window.bp = window.bp || {};
 								_draft_local_at: Math.floor( Date.now() / 1000 ),
 								// Real typing: a later hand-back for this key is
 								// merged with it, not stored over it.
-								_draft_edit_at: Math.floor( Date.now() / 1000 ),
+								_draft_unsynced: true,
 								bb_draft_interim: bbDraftInterimToken
 							}
 						)
