@@ -1762,8 +1762,8 @@ window.bp = window.bp || {};
 		 * the key once this browser had acknowledged the hand-back) would
 		 * otherwise get the merge refused as a conflict on the next page view,
 		 * and the conflict would replace it with that version (NEW-HF-3). Not
-		 * when the composer is not based on the stored draft, or the merge kept
-		 * the held draft's title or GIF over the composer's
+		 * when the composer is not based on the stored draft, or the merge does
+		 * not hold every other field of the composer's draft
 		 * ({@see mergeKeepsComposerFields}).
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -1794,13 +1794,16 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * Whether a hand-back merge kept the composer's title and GIF.
+		 * Whether a hand-back merge holds every field of the composer's draft.
 		 *
 		 * mergeHandback() appends the composer's text and joins its attachment
-		 * lists by ID, but keeps the held draft's title or GIF over a different
-		 * one from the composer. A merge that did so does not hold the
+		 * lists by ID. Every other field of the merge is the held draft's: its
+		 * title, GIF, poll, topic, privacy, schedule and link preview, and any
+		 * field a third party adds to the draft. A merge that dropped one of
+		 * the composer's (a poll the held draft lacks, say) does not hold the
 		 * composer's whole draft, so a save of it must not replace the version
-		 * the composer was built on.
+		 * the composer was built on (H3-1): that version survives as the
+		 * conflict instead. Fields blank in the composer have nothing to lose.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1810,17 +1813,44 @@ window.bp = window.bp || {};
 		 * @return {boolean}
 		 */
 		mergeKeepsComposerFields: function( merged_data, local_data ) {
-			var self = this;
+			var self = this,
+				// What mergeHandback() merges from the composer: its text, its
+				// attachment lists, and the owner it stamps.
+				merged_fields = [ 'content', 'media', 'document', 'video', 'user_id' ];
 
 			merged_data = ( merged_data && 'object' === typeof merged_data ) ? merged_data : {};
 			local_data  = ( local_data && 'object' === typeof local_data ) ? local_data : {};
 
 			return _.every(
-				[ 'post_title', 'gif_data' ],
+				_.keys( local_data ),
 				function ( field ) {
-					return self.isBlankDraftValue( local_data[ field ] ) || self.canonicalDraftJson( local_data[ field ] ) === self.canonicalDraftJson( merged_data[ field ] );
+					return -1 !== _.indexOf( merged_fields, field ) || self.isBlankDraftValue( local_data[ field ] ) || self.sameStoredDraftValue( local_data[ field ], merged_data[ field ] );
 				}
 			);
+		},
+
+		/**
+		 * Whether two draft field values are stored as the same value.
+		 *
+		 * The server stores a draft form-encoded, so its copy carries numbers
+		 * and booleans as strings and drops empty lists and objects. Values
+		 * are compared in that shape, with object keys sorted. A value that
+		 * cannot be encoded counts as different, which keeps the caller on
+		 * its safe path.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {*} first  A draft field value.
+		 * @param {*} second Another draft field value.
+		 *
+		 * @return {boolean}
+		 */
+		sameStoredDraftValue: function( first, second ) {
+			try {
+				return $.param( { v: JSON.parse( this.canonicalDraftJson( first ) ) } ) === $.param( { v: JSON.parse( this.canonicalDraftJson( second ) ) } );
+			} catch ( e ) {
+				return false;
+			}
 		},
 
 		/**
@@ -3250,6 +3280,7 @@ window.bp = window.bp || {};
 		},
 
 		checkedActivityDataChanged: function ( old_data, new_data ) {
+			var self = this;
 
 			if ( bp.draft_content_changed ) {
 				return;
@@ -3297,6 +3328,18 @@ window.bp = window.bp || {};
 			_.each(
 				draft_data_keys,
 				function ( pair ) {
+
+					// Missing and empty are the same draft field. The server
+					// stores the draft form-encoded, so its copy has no empty
+					// lists or objects (media: [], topics: {}, poll: {}) and
+					// carries null as ''. Counting that as a change marked a
+					// composer the member only opened as typed, so the
+					// hand-back guard showed the conflict notice
+					// (guardHandbackCopy()). A field cleared from a value to
+					// empty is not blank on both sides and still counts below.
+					if ( self.isBlankDraftValue( old_data[ pair ] ) && self.isBlankDraftValue( new_data[ pair ] ) ) {
+						return;
+					}
 
 					if ( ! _.isUndefined( old_data[ pair ] ) && _.isUndefined( new_data[ pair ] ) ) {
 						bp.draft_content_changed = true;
@@ -3448,6 +3491,17 @@ window.bp = window.bp || {};
 
 			if ( 'delete' !== bp.draft_activity.post_action ) {
 				bp.draft_activity._draft_rev = draft_rev;
+
+				// The member wrote this after any discard of the key in this page
+				// view (a discard empties the composer), so the deleted marker no
+				// longer guards anything: the local copy now holds this text, or
+				// a merge of it with a held draft. Left set, the next load skips
+				// that copy, shows the server's draft, and stores it over the copy
+				// (NEW-HF-4). A reload racing the discard itself still sees the
+				// marker, because it is cleared only once new text is sent.
+				if ( 'deleted' === $.cookie( bp.draft_activity.data_key ) ) {
+					$.removeCookie( bp.draft_activity.data_key );
+				}
 			}
 
 			var draft_payload = bp.draft_activity;

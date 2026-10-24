@@ -1811,8 +1811,8 @@ window.bp = window.bp || {};
 		 * browser had acknowledged the hand-back) would otherwise get the merge
 		 * refused as a conflict on the next page view, and the conflict would
 		 * replace it with that version (NEW-HF-3). Not when the form is not
-		 * based on the stored draft, or the merge kept the held draft's title,
-		 * tags or GIF over the form's ({@see bbDraftMergeKeepsFormFields}).
+		 * based on the stored draft, or the merge does not hold every other
+		 * field of the form's draft ({@see bbDraftMergeKeepsFormFields}).
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -3632,13 +3632,36 @@ window.bp = window.bp || {};
 	};
 
 	/**
-	 * Whether a hand-back merge kept the form's title, tags and GIF.
+	 * Whether two draft field values are stored as the same value.
+	 *
+	 * The server stores a draft form-encoded, so values are compared in that
+	 * shape. A value that cannot be encoded counts as different, which keeps
+	 * the caller on its safe path.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {*} first  A draft field value.
+	 * @param {*} second Another draft field value.
+	 * @return {boolean}
+	 */
+	var bbDraftSameStoredValue = function ( first, second ) {
+		try {
+			return $.param( { v: first } ) === $.param( { v: second } );
+		} catch ( e ) {
+			return false;
+		}
+	};
+
+	/**
+	 * Whether a hand-back merge holds every field of the form's draft.
 	 *
 	 * bbDraftMergeHandback() appends the form's text and joins its attachment
-	 * lists by ID, but keeps the held draft's title, tags or GIF over a
-	 * different one from the form. A merge that did so does not hold the
-	 * form's whole draft, so a save of it must not replace the version the
-	 * form was built on.
+	 * lists by ID. Every other field of the merge is the held draft's: its
+	 * title, tags, GIF, forum, subscription and link preview, and any field
+	 * a third party adds to the form. A merge that dropped one of the form's
+	 * does not hold the form's whole draft, so a save of it must not replace
+	 * the version the form was built on (H3-1): that version survives as the
+	 * conflict instead. Fields blank in the form have nothing to lose.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -3647,13 +3670,17 @@ window.bp = window.bp || {};
 	 * @return {boolean}
 	 */
 	var bbDraftMergeKeepsFormFields = function ( merged_data, local_data ) {
+		// What bbDraftMergeHandback() merges from the form: its text and its
+		// attachment lists.
+		var merged_fields = [ 'bbp_topic_content', 'bbp_reply_content', 'bbp_media', 'bbp_document', 'bbp_video' ];
+
 		merged_data = ( merged_data && 'object' === typeof merged_data ) ? merged_data : {};
 		local_data  = ( local_data && 'object' === typeof local_data ) ? local_data : {};
 
 		return _.every(
-			[ 'bbp_topic_title', 'bbp_topic_tags', 'bbp_media_gif' ],
+			_.keys( local_data ),
 			function ( field ) {
-				return bbDraftIsBlankValue( local_data[ field ] ) || _.isEqual( local_data[ field ], merged_data[ field ] );
+				return -1 !== _.indexOf( merged_fields, field ) || bbDraftIsBlankValue( local_data[ field ] ) || bbDraftSameStoredValue( local_data[ field ], merged_data[ field ] );
 			}
 		);
 	};
