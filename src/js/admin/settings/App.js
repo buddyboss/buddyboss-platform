@@ -62,13 +62,19 @@ function fixAdminMenuHighlight( route ) {
 		activity: [ 'all_activities' ],
 		members: [ 'profile_fields', 'profile_types', 'profile_search', 'profile_navigation' ],
 		forums: [ 'all_forums', 'discussions', 'discussion_tags', 'replies' ],
-		emails: [ 'all_emails' ],
 	};
 
-	// Settings tabs that have their own dedicated submenu item (e.g. "Help" at
-	// page=bb-settings&tab=help). These must highlight their own item, not the
-	// generic "Settings" item — matched below via the `tab={feature}` rule.
-	var standaloneSettingsTabs = [ 'help' ];
+	// Settings tabs that have their own dedicated submenu item — "Help" at
+	// page=bb-settings&tab=help, "Emails" at page=bb-settings&tab=emails. These
+	// must highlight their own item, not the generic "Settings" item — matched
+	// below via the `tab={feature}` rule.
+	//
+	// Matched on the FEATURE, never on a panel allowlist: these features are
+	// hidden from the features grid, so they have no home under "Settings" and
+	// every panel they own belongs to their submenu item. Listing panel names
+	// here would silently mis-highlight the moment an add-on registers a new
+	// panel on the tab (e.g. Emails → Email Digest).
+	var standaloneSettingsTabs = [ 'help', 'emails' ];
 
 	var isListing = false;
 	if ( listingPanels[ feature ] ) {

@@ -103,7 +103,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 						?>
 
 						<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 								<?php bp_member_avatar(); ?>
 								<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 							</a>
@@ -160,7 +160,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 						?>
 
 						<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 								<?php bp_member_avatar(); ?>
 								<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 							</a>
@@ -390,7 +390,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 				?>
 
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php bp_member_avatar(); ?>
 						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 					</a>
@@ -441,7 +441,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 				?>
 
 				<div class="item-avatar item-avatar-<?php echo esc_attr( bp_get_member_user_id() ); ?>">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>">
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip <?php echo esc_attr( $moderation_class ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_member_name() ); ?>"<?php echo bb_get_hover_card_profile_attr( bp_get_member_user_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php bp_member_avatar(); ?>
 						<?php bb_user_presence_html( bp_get_member_user_id() ); ?>
 					</a>
