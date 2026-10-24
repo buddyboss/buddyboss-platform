@@ -2013,7 +2013,9 @@ window.bp = window.bp || {};
 		 * the composer's (a poll the held draft lacks, say) does not hold the
 		 * composer's whole draft, so a save of it must not replace the version
 		 * the composer was built on (H3-1): that version survives as the
-		 * conflict instead. Fields blank in the composer have nothing to lose.
+		 * conflict instead. Fields blank in the composer have nothing to lose,
+		 * and fields it derives from the group ({@see isDerivedDraftField}) are
+		 * derived again on reload.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -2034,7 +2036,19 @@ window.bp = window.bp || {};
 			return _.every(
 				_.keys( local_data ),
 				function ( field ) {
-					return -1 !== _.indexOf( merged_fields, field ) || self.isBlankDraftValue( local_data[ field ] ) || self.sameStoredDraftValue( local_data[ field ], merged_data[ field ] );
+					var local_value;
+
+					// What the merge takes from the composer, or what the
+					// composer derives from the group (isDerivedDraftField()):
+					// a restore adds those, so the held draft may lack them,
+					// and a reload derives them again (NEW-HF-5).
+					if ( -1 !== _.indexOf( merged_fields, field ) || self.isDerivedDraftField( field ) ) {
+						return true;
+					}
+
+					local_value = self.draftFieldCompareValue( field, local_data[ field ] );
+
+					return self.isBlankDraftValue( local_value ) || self.sameStoredDraftValue( local_value, self.draftFieldCompareValue( field, merged_data[ field ] ) );
 				}
 			);
 		},
@@ -2044,9 +2058,9 @@ window.bp = window.bp || {};
 		 *
 		 * The server stores a draft form-encoded, so its copy carries numbers
 		 * and booleans as strings and drops empty lists and objects. Values
-		 * are compared in that shape, with object keys sorted. A value that
-		 * cannot be encoded counts as different, which keeps the caller on
-		 * its safe path.
+		 * are compared in that shape, with object keys sorted and empty
+		 * members left out. A value that cannot be encoded counts as
+		 * different, which keeps the caller on its safe path.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -2056,11 +2070,82 @@ window.bp = window.bp || {};
 		 * @return {boolean}
 		 */
 		sameStoredDraftValue: function( first, second ) {
+			var self = this,
+				// Encoded as a save sends it, without the members that carry
+				// nothing: undefined, null and '' are all sent as an empty
+				// value, and a member the stored copy never had is absent, so
+				// the composer's `topics.topic_lists: undefined` and a stored
+				// copy without the key are the same value (NEW-HF-5).
+				stored = function ( value ) {
+					return _.reject(
+						$.param( { v: JSON.parse( self.canonicalDraftJson( value ) ) } ).split( '&' ),
+						function ( pair ) {
+							return '' === pair || '=' === pair.charAt( pair.length - 1 );
+						}
+					).join( '&' );
+				};
+
 			try {
-				return $.param( { v: JSON.parse( this.canonicalDraftJson( first ) ) } ) === $.param( { v: JSON.parse( this.canonicalDraftJson( second ) ) } );
+				return stored( first ) === stored( second );
 			} catch ( e ) {
 				return false;
 			}
+		},
+
+		/**
+		 * Whether a draft field is derived by the composer rather than set by the member.
+		 *
+		 * The composer sets these from the group it posts to: whether the
+		 * group allows scheduled posts and polls (`schedule_allowed`,
+		 * `polls_allowed`, read from the group option or set to 'disabled'
+		 * when a group draft is restored), and the group's name, avatar and
+		 * selector id (`group_name`, `group_avatar`, `group-privacy`), all of
+		 * which follow `item_id`. They change only with the group, which
+		 * `item_id` already tracks, and a restore can add them although the
+		 * stored draft lacks them. The member's own choices (`privacy`,
+		 * `object`, `item_id`, the schedule date, the poll, the topic) are
+		 * not derived.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} field Draft field name.
+		 *
+		 * @return {boolean}
+		 */
+		isDerivedDraftField: function( field ) {
+			return -1 !== _.indexOf( [ 'schedule_allowed', 'polls_allowed', 'group_name', 'group_avatar', 'group-privacy' ], field );
+		},
+
+		/**
+		 * A draft field's value in the form two drafts are compared in.
+		 *
+		 * `topics` holds the member's choice (`topic_id`) next to the label
+		 * and list of topics the composer loads (`topic_name`, `topic_lists`),
+		 * so only the chosen ID counts, and no topic (0) is blank. `object`
+		 * is 'group' in the composer and 'groups' once restored. Any other
+		 * value is returned unchanged.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} field Draft field name.
+		 * @param {*}      value Field value.
+		 *
+		 * @return {*}
+		 */
+		draftFieldCompareValue: function( field, value ) {
+			var topic_id;
+
+			if ( 'topics' === field ) {
+				topic_id = ( value && 'object' === typeof value ) ? parseInt( value.topic_id, 10 ) : 0;
+
+				return topic_id ? String( topic_id ) : undefined;
+			}
+
+			if ( 'object' === field && 'group' === value ) {
+				return 'groups';
+			}
+
+			return value;
 		},
 
 		/**
@@ -3401,6 +3486,10 @@ window.bp = window.bp || {};
 				'object',
 				'user_id',
 				'content',
+				// The title is the member's text too. Missing here, a title-only
+				// edit of a restored draft was saved only while another field
+				// (an equal topic object) wrongly counted as changed (NEW-HF-5).
+				'post_title',
 				'item_id',
 				'item_name',
 				'group_image',
@@ -3439,6 +3528,20 @@ window.bp = window.bp || {};
 			_.each(
 				draft_data_keys,
 				function( pair ) {
+					var old_value, new_value;
+
+					// Fields the composer derives from the group it is in, not
+					// from the member, carry no member content
+					// (isDerivedDraftField()). Restoring a group draft sets them
+					// on the composer although the stored draft may lack them,
+					// so comparing them marked a composer the member only
+					// opened as typed (NEW-HF-5).
+					if ( bp.draft_content_changed || self.isDerivedDraftField( pair ) ) {
+						return;
+					}
+
+					old_value = self.draftFieldCompareValue( pair, old_data[ pair ] );
+					new_value = self.draftFieldCompareValue( pair, new_data[ pair ] );
 
 					// Missing and empty are the same draft field. The server
 					// stores the draft form-encoded, so its copy has no empty
@@ -3448,52 +3551,22 @@ window.bp = window.bp || {};
 					// hand-back guard showed the conflict notice
 					// (guardHandbackCopy()). A field cleared from a value to
 					// empty is not blank on both sides and still counts below.
-					if ( self.isBlankDraftValue( old_data[ pair ] ) && self.isBlankDraftValue( new_data[ pair ] ) ) {
+					if ( self.isBlankDraftValue( old_value ) && self.isBlankDraftValue( new_value ) ) {
 						return;
 					}
 
-					if ( ! _.isUndefined( old_data[ pair ] ) && _.isUndefined( new_data[ pair ] ) ) {
+					if ( _.isUndefined( old_value ) !== _.isUndefined( new_value ) ) {
 						bp.draft_content_changed = true;
-					} else if ( _.isUndefined( old_data[ pair ] ) && ! _.isUndefined( new_data[ pair ] ) ) {
+					} else if (
+						-1 === _.indexOf( [ 'media', 'document', 'video', 'gif_data' ], pair ) &&
+						! self.sameStoredDraftValue( old_value, new_value )
+					) {
+						// Compared as stored, not with !==: two equal objects
+						// (a restored topic or poll) are never identical, and
+						// the server's copy carries numbers as strings. The
+						// attachment lists and the GIF are tracked by their own
+						// add/remove handlers, as before.
 						bp.draft_content_changed = true;
-					}
-
-					if ( - 1 === _.indexOf(
-						[
-							'media',
-							'document',
-							'video',
-							'gif_data',
-						],
-						pair
-					) && ! _.isUndefined( old_data[ pair ] ) && ! _.isUndefined( new_data[ pair ] ) ) {
-
-						if ( 'object' === pair ) {
-
-							if ( -1 !== _.indexOf( [ 'groups', 'group' ], new_data[ pair ] ) && -1 !== _.indexOf( [ 'groups', 'group' ], old_data[ pair ] ) ) {
-								bp.draft_content_changed = false;
-							} else if ( -1 !== _.indexOf( [ 'user' ], new_data[ pair ] ) && -1 !== _.indexOf( [ 'user' ], old_data[ pair ] ) ) {
-								bp.draft_content_changed = false;
-							} else {
-								bp.draft_content_changed = true;
-							}
-
-						} else if ( 'user_id' === pair || 'item_id' === pair ) {
-
-							if ( parseInt( old_data[ pair ] ) !== parseInt( new_data[ pair ] ) ) {
-								bp.draft_content_changed = true;
-							}
-
-						} else if ( 'link_embed' === pair ) {
-
-							if ( JSON.parse( old_data[ pair ] ) !== JSON.parse( new_data[ pair ] ) ) {
-								bp.draft_content_changed = true;
-							}
-
-						} else if ( old_data[ pair ] !== new_data[ pair ] ) {
-							bp.draft_content_changed = true;
-						}
-
 					}
 				}
 			);
