@@ -81,10 +81,11 @@
 	&__table th.bb-groups-list__th--name {
 		font-size: 14px;
 		color: $bb-text-color;
-		// No fixed width - with table-layout:fixed and every other column
-		// pinned to a px width below, this one absorbs whatever space is
-		// left, so long names get the most room instead of being clipped
-		// to an arbitrary 30%.
+		// Keep the release column width. With table-layout:fixed, leaving
+		// this unpinned makes the name column absorb all leftover width and
+		// squeezes the other columns. Long names wrap inside this width
+		// instead of being clipped (see __group-name).
+		width: 30%;
 	}
 
 	&__th--checkbox {
