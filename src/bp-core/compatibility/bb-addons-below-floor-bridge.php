@@ -21,6 +21,10 @@
  * at/above the floor, so current builds keep their own checks and nothing runs
  * twice.
  *
+ * The Videos and GIFs checks at the end look for the moved player and GIPHY
+ * libraries instead of the version, so they also cover builds at the floor that
+ * were cut before those libraries moved into Add-ons.
+ *
  * Remove once the Add-ons floor makes these builds unsupported.
  *
  * @package BuddyBoss\Core
@@ -308,3 +312,65 @@ function bb_addons_below_floor_bridge_folder_update_args( $args, $request ) {
 	return $args;
 }
 add_filter( 'bp_rest_document_folder_update_items_query_args', 'bb_addons_below_floor_bridge_folder_update_args', 1, 2 );
+
+/**
+ * Whether the active Add-ons build is missing a player or picker library that moved into it.
+ *
+ * The video.js player and the GIPHY library moved from Platform into Add-ons.
+ * Add-ons builds without them still provide Videos and GIFs, so those features
+ * would render with no library behind them. This checks the running code, not the
+ * version number, so any build without the assets is matched.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $register_function Add-ons function that registers the library.
+ *
+ * @return bool True when Add-ons is active and does not ship the library.
+ */
+function bb_addons_lacks_moved_assets( $register_function ) {
+	return defined( 'BB_ADDONS_PLUGIN_VERSION' ) && ! function_exists( $register_function );
+}
+
+/**
+ * GIFs: keep the GIF picker off while Add-ons runs without the GIPHY library.
+ *
+ * GIFs stay off until Add-ons is updated; saved GIFs are kept.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $available Whether a GIF provider is loaded.
+ *
+ * @return bool
+ */
+function bb_addons_below_floor_bridge_gif_provider( $available ) {
+	if ( $available && bb_addons_lacks_moved_assets( 'bb_addons_giphy_register_scripts' ) ) {
+		return false;
+	}
+
+	return $available;
+}
+add_filter( 'bb_giphy_module_active', 'bb_addons_below_floor_bridge_gif_provider' );
+
+/**
+ * Videos: keep video uploads off while Add-ons runs without the video.js player.
+ *
+ * Without the player the upload buttons would have no script behind them. Video
+ * uploads stay off until Add-ons is updated; existing videos are kept.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $enabled Whether video support is enabled.
+ *
+ * @return bool
+ */
+function bb_addons_below_floor_bridge_video_support( $enabled ) {
+	if ( $enabled && bb_addons_lacks_moved_assets( 'bb_addons_video_register_scripts' ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profile_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );
+add_filter( 'bp_is_group_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );
+add_filter( 'bp_is_messages_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );
+add_filter( 'bp_is_forums_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );

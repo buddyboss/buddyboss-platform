@@ -4324,7 +4324,7 @@ function bb_media_delete_older_files_in_dir( $dir, $limit, $links_only = false )
 
 		if ( $file_time < $limit ) {
 			$list[] = $file;
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 	}
 	closedir( $dh );

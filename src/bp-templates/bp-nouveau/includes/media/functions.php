@@ -58,7 +58,7 @@ function bp_nouveau_media_enqueue_scripts() {
 	) {
 
 		$gif = false;
-		if ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() || bp_is_messages_gif_support_enabled() ) {
+		if ( wp_script_is( 'giphy', 'registered' ) && ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() || bp_is_messages_gif_support_enabled() ) ) {
 			wp_enqueue_script( 'giphy' );
 			$gif = true;
 		}
