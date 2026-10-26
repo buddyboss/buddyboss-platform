@@ -472,6 +472,38 @@ function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = arra
 }
 
 /**
+ * Get WP Fusion's BuddyPress integration when it is loaded and enabled.
+ *
+ * WP Fusion registers the integration object even when the admin has turned
+ * the BuddyPress integration off, and only skips its `init()` (so the classic
+ * group metabox and its save are not hooked). Both the field registration and
+ * the save replay use this, so the modal shows and saves the group settings
+ * exactly when the classic screen would. `is_integration_active()` is missing
+ * before WP Fusion 3.42.6, where the integration cannot be turned off.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return object|null The integration object, or null when unavailable or disabled.
+ */
+function bb_legacy_wpf_buddypress_integration() {
+	if ( ! function_exists( 'wp_fusion' ) || empty( wp_fusion()->integrations->buddypress ) ) {
+		return null;
+	}
+
+	$integration = wp_fusion()->integrations->buddypress;
+
+	if ( ! is_object( $integration ) || ! method_exists( $integration, 'save_groups_data' ) ) {
+		return null;
+	}
+
+	if ( method_exists( $integration, 'is_integration_active' ) && ! $integration->is_integration_active() ) {
+		return null;
+	}
+
+	return $integration;
+}
+
+/**
  * Replay WP Fusion's group save from the values staged by the 3 fields.
  *
  * The Settings 2.0 save fires `bp_group_admin_edit_after`, but its POST has
@@ -480,6 +512,13 @@ function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = arra
  * save these settings. `save_groups_data()` (3.47.14: meta writer only) is
  * called here instead, with those fields set for this call only.
  * `wpf-settings` (group visibility) is re-fed so the handler doesn't delete it.
+ *
+ * The injected values are slashed like a real form submission: WP Fusion
+ * reads `$_POST` raw and its meta write unslashes once, so unslashed values
+ * would lose a backslash level on every save. The call runs inside the same
+ * wp_die/exception/output guard as the other third-party saves in this
+ * request, so a misbehaving handler cannot break the already-saved group's
+ * AJAX response.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -500,11 +539,8 @@ function bb_legacy_wpf_replay_group_save( $group_id, $group ) {
 		return;
 	}
 
-	if (
-		! function_exists( 'wp_fusion' ) ||
-		empty( wp_fusion()->integrations->buddypress ) ||
-		! method_exists( wp_fusion()->integrations->buddypress, 'save_groups_data' )
-	) {
+	$integration = bb_legacy_wpf_buddypress_integration();
+	if ( null === $integration ) {
 		return;
 	}
 
@@ -517,12 +553,29 @@ function bb_legacy_wpf_replay_group_save( $group_id, $group ) {
 	$post_backup = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 	$_POST['bp-groups-slug']          = 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- handler's own guard.
-	$_POST['wpf-settings-buddypress'] = $settings; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-	$_POST['wpf-settings']            = is_array( $visibility ) ? $visibility : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$_POST['wpf-settings-buddypress'] = wp_slash( $settings ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$_POST['wpf-settings']            = wp_slash( is_array( $visibility ) ? $visibility : array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+	$ob_level = ob_get_level();
+	ob_start();
 
 	try {
-		wp_fusion()->integrations->buddypress->save_groups_data( $group_id );
+		bb_legacy_with_wp_die_safety(
+			function () use ( $integration, $group_id ) {
+				$integration->save_groups_data( $group_id );
+			}
+		);
+	} catch ( Throwable $e ) {
+		// Don't let the third-party handler break the React save. Log only
+		// class + file:line, never the message.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated behind WP_DEBUG; intentional debug-only log.
+			error_log( 'bb_legacy_wpf: save_groups_data threw ' . get_class( $e ) . ' at ' . $e->getFile() . ':' . $e->getLine() );
+		}
 	} finally {
+		while ( ob_get_level() > $ob_level ) {
+			ob_end_clean();
+		}
 		$_POST = $post_backup; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	}
 }
@@ -653,10 +706,10 @@ function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
  */
 function bb_legacy_wpf_register_group_fields( $registry, $component ) {
 	// `groups_get_groupmeta()` only confirms BuddyPress groups are active, not
-	// that WP Fusion's own BuddyPress module is loaded — `WPF_BuddyPress`
-	// (includes/integrations/class-buddypress.php) is the class that owns
-	// `wpf-settings-buddypress` and is what these fields bridge against.
-	if ( 'groups' !== $component || ! function_exists( 'groups_get_groupmeta' ) || ! class_exists( 'WPF_BuddyPress' ) ) {
+	// that WP Fusion's own BuddyPress integration is loaded and enabled — it
+	// owns `wpf-settings-buddypress` and is what these fields bridge against.
+	// Same check as the save replay, so a shown field is always saved.
+	if ( 'groups' !== $component || ! function_exists( 'groups_get_groupmeta' ) || null === bb_legacy_wpf_buddypress_integration() ) {
 		return;
 	}
 
