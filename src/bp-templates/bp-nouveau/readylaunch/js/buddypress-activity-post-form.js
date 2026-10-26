@@ -759,8 +759,11 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( activity_data ) ) {
 				var typeSupport = $( '#bb-rl-whats-new-toolbar' ),
 					$postEmoji  = $( '#bb-rl-editor-toolbar .bb-rl-post-emoji' ),
+					// Same rule as isProfileDraftActivity(): a "Post in group" draft
+					// with no group chosen (item_id 0) is restored in profile
+					// context, so its toolbar must not offer the group's uploads.
 					context     = (
-						! _.isUndefined( activity_data.object ) && 'groups' === activity_data.object
+						! _.isUndefined( activity_data.object ) && 'groups' === activity_data.object && 0 < parseInt( activity_data.item_id, 10 )
 					) ? 'group' : 'profile',
 					types       = ['media', 'document', 'video'];
 
@@ -774,7 +777,12 @@ window.bp = window.bp || {};
 								typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 								$( '.bb-rl-edit-activity-content-wrap #bb-rl-whats-new-attachments .bb-rl-activity-' + type + '-container #bb-rl-activity-post-' + type + '-uploader .dz-default.dz-message' ).hide();
 							} else {
-								typeSupport.removeClass( 'bb-rl-' + type + '-support-hide' );
+								// Un-hide the button the hide branch above hides, not
+								// the toolbar container, which never carries this
+								// class. A button hidden in the composer's starting
+								// context stayed hidden after a restored draft or
+								// edited post switched to a context that allows it.
+								typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
 							}
 						} else {
 							var activityContainerElem = $( '.bb-rl-activity-' + type + '-container' );
@@ -784,7 +792,7 @@ window.bp = window.bp || {};
 								activityContainerElem.css( 'pointer-events', 'none' );
 							} else {
 								activityContainerElem.css( 'pointer-events', 'auto' );
-								typeSupport.removeClass( 'bb-rl-' + type + '-support-hide' );
+								typeSupport.find( '.bb-rl-post-' + subtype + '.bb-rl-' + type + '-support' ).removeClass( 'bb-rl-' + type + '-support-hide' );
 							}
 						}
 					}
@@ -996,8 +1004,16 @@ window.bp = window.bp || {};
 		},
 
 		isProfileDraftActivity: function ( activity_data ) {
+			// A stored draft carries the composer model's object, 'group'. Only
+			// edit data, or a draft already passed through
+			// displayEditDraftActivityData(), carries the component name
+			// 'groups'. Matching 'groups' alone treated every restored group
+			// draft as a profile draft, so the profile media settings stripped
+			// its attachments. A group draft also needs a real group ID, the
+			// same rule the server uses for a group draft key: "Post in: Group"
+			// with no group chosen (item_id 0) stays a profile draft.
 			return ! (
-				! _.isUndefined( activity_data ) && ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object
+				! _.isUndefined( activity_data ) && ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && ( 'group' === activity_data.object || 'groups' === activity_data.object ) && 0 < parseInt( activity_data.item_id, 10 )
 			);
 		},
 
@@ -3946,17 +3962,21 @@ window.bp = window.bp || {};
 		},
 
 		syncMediaDocVideo : function ( activity_data, type, is_profile_activity ) {
-			var $whatsNewToolbarElem = $( '#whats-new-toolbar' ),
+			// ReadyLaunch renders the toolbar as #bb-rl-whats-new-toolbar with
+			// .bb-rl-post-<type>.bb-rl-<type>-support buttons (document has its
+			// own .bb-rl-post-document button). The default pack's
+			// #whats-new-toolbar selectors matched nothing here, so this
+			// toolbar update never ran.
+			var $whatsNewToolbarElem = $( '#bb-rl-whats-new-toolbar' ),
 				profileKey           = 'profile_' + type,
 				groupKey             = 'group_' + type,
-				subToolbarSelector   = '.post-' + type + '.' + type + '-support';
+				subToolbarSelector   = '.bb-rl-post-' + type + '.bb-rl-' + type + '-support';
 
 			activity_data[ profileKey ] = BP_Nouveau[ type ][ profileKey ];
 			activity_data[ groupKey ]   = BP_Nouveau[ type ][ groupKey ];
 			if ( 'document' === type ) {
-				// Change type for class name and localize var for a document.
+				// A document reads its settings from the media localize var.
 				var changeType              = 'media';
-				subToolbarSelector          = '.post-' + changeType + ' .' + type + '-support';
 				activity_data[ profileKey ] = BP_Nouveau[ changeType ][ profileKey ];
 				activity_data[ groupKey ]   = BP_Nouveau[ changeType ][ groupKey ];
 			}
@@ -3969,12 +3989,19 @@ window.bp = window.bp || {};
 				delete activity_data[ type ];
 			}
 
-			// Update toolbar UI based on settings.
-			if ( BP_Nouveau[ type ][ profileKey ] === false ) {
-				$( toolbarSelector ).removeClass( 'active' ).addClass( type + '-support-hide' );
+			// Update toolbar UI based on the setting of the draft's own context,
+			// the same one the sync above used. Checking profileKey for every
+			// draft closed the uploader of a group draft that may use
+			// attachments, and left it open for a group draft that may not.
+			// Read the value the sync stored on activity_data: BP_Nouveau.document
+			// carries no profile_document/group_document (they live on
+			// BP_Nouveau.media), so reading BP_Nouveau[ type ] would always
+			// show the document button.
+			if ( activity_data[ is_profile_activity ? profileKey : groupKey ] === false ) {
+				$( toolbarSelector ).removeClass( 'active' ).addClass( 'bb-rl-' + type + '-support-hide' );
 				Backbone.trigger( 'activity_' + type + '_close' );
 			} else {
-				$( toolbarSelector ).removeClass( type + '-support-hide' );
+				$( toolbarSelector ).removeClass( 'bb-rl-' + type + '-support-hide' );
 			}
 		},
 

@@ -1166,7 +1166,15 @@ window.bp = window.bp || {};
 		},
 
 		isProfileDraftActivity: function ( activity_data ) {
-			if ( ! _.isUndefined( activity_data ) && ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
+			// A stored draft carries the composer model's object, 'group'. Only
+			// edit data, or a draft already passed through
+			// displayEditDraftActivityData(), carries the component name
+			// 'groups'. Matching 'groups' alone treated every restored group
+			// draft as a profile draft, so the profile media settings stripped
+			// its attachments. A group draft also needs a real group ID, the
+			// same rule the server uses for a group draft key: "Post in: Group"
+			// with no group chosen (item_id 0) stays a profile draft.
+			if ( ! _.isUndefined( activity_data ) && ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && ( 'group' === activity_data.object || 'groups' === activity_data.object ) && 0 < parseInt( activity_data.item_id, 10 ) ) {
 				return false;
 			}
 
@@ -1372,24 +1380,30 @@ window.bp = window.bp || {};
 				$( '#whats-new' ).attr( 'data-suggestions-group-id', activity_data.item_id ).data( 'suggestions-group-id', activity_data.item_id );
 			}
 
-			// check media is enabled in profile or not.
-			if ( ! _.isUndefined( bbRlMedia ) && false === bbRlMedia.profile_media ) {
+			// Hide the toolbar buttons and close the uploaders by the setting of
+			// the draft's own context, the same one the sync above used:
+			// profile_* for a profile draft, group_* for a group draft. Checking
+			// profile_* for every draft hid the button and closed the uploader of
+			// a group draft that may use attachments, and left them open for a
+			// group draft that may not.
+			// check media is enabled in the draft's context or not.
+			if ( ! _.isUndefined( bbRlMedia ) && false === ( is_profile_activity ? bbRlMedia.profile_media : bbRlMedia.group_media ) ) {
 				$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'active' ).addClass( 'media-support-hide' );
 				Backbone.trigger( 'activity_media_close' );
 			} else {
 				$( '#whats-new-toolbar .post-media.media-support' ).removeClass( 'media-support-hide' );
 			}
 
-			// check media is enable in profile or not.
-			if ( ! _.isUndefined( bbRlMedia ) && false === bbRlMedia.profile_document ) {
+			// check document is enabled in the draft's context or not.
+			if ( ! _.isUndefined( bbRlMedia ) && false === ( is_profile_activity ? bbRlMedia.profile_document : bbRlMedia.group_document ) ) {
 				$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'active' ).addClass( 'document-support-hide' );
 				Backbone.trigger( 'activity_document_close' );
 			} else {
 				$( '#whats-new-toolbar .post-media.document-support' ).removeClass( 'document-support-hide' );
 			}
 
-			// check video is enable in profile or not.
-			if ( ! _.isUndefined( bbRlVideo ) && false === bbRlVideo.profile_video ) {
+			// check video is enabled in the draft's context or not.
+			if ( ! _.isUndefined( bbRlVideo ) && false === ( is_profile_activity ? bbRlVideo.profile_video : bbRlVideo.group_video ) ) {
 				$( '#whats-new-toolbar .post-video.video-support' ).removeClass( 'active' ).addClass( 'video-support-hide' );
 				Backbone.trigger( 'activity_video_close' );
 			} else {
