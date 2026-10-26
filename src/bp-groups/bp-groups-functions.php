@@ -4708,7 +4708,7 @@ add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position'
  * Check whether a user is allowed to manage video in a given group.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Returns false when the `bb_video_uploads_available` filter is false.
+ * @since BuddyBoss [BBVERSION] Returns false when the `bb_group_video_uploads_available` filter is false.
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -4722,7 +4722,7 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 	}
 
 	/**
-	 * Filters whether video uploads are available on this site.
+	 * Filters whether video uploads are available in groups.
 	 *
 	 * Return false to stop every user, site admins included, from adding or
 	 * managing videos in groups, for example while the video player library is
@@ -4730,9 +4730,9 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param bool $available Whether video uploads are available. Default true.
+	 * @param bool $available Whether group video uploads are available. Default true.
 	 */
-	if ( ! bp_is_active( 'video' ) || ! bp_is_group_video_support_enabled() || ! (bool) apply_filters( 'bb_video_uploads_available', true ) ) {
+	if ( ! bp_is_active( 'video' ) || ! bp_is_group_video_support_enabled() || ! (bool) apply_filters( 'bb_group_video_uploads_available', true ) ) {
 		return false;
 	}
 

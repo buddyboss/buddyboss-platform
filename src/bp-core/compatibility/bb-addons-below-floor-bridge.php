@@ -341,4 +341,4 @@ function bb_addons_below_floor_bridge_video_uploads( $can_upload ) {
 	return $can_upload;
 }
 add_filter( 'bb_user_can_create_video', 'bb_addons_below_floor_bridge_video_uploads' );
-add_filter( 'bb_video_uploads_available', 'bb_addons_below_floor_bridge_video_uploads' );
+add_filter( 'bb_group_video_uploads_available', 'bb_addons_below_floor_bridge_video_uploads' );
