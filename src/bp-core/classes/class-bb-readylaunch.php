@@ -1381,6 +1381,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/wp-includes/' ) &&
 					false === strpos( $src, '/buddyboss-platform/' ) &&
 					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+					false === strpos( $src, '/buddyboss-addons/' ) &&
 					false === strpos( $src, '/sfwd-lms/' ) &&
 					false === strpos( $src, '/learndash-course-reviews/' ) &&
 					false === strpos( $src, '/instructor-role/' ) &&
@@ -1400,6 +1401,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/wp-includes/' ) &&
 						false === strpos( $src, '/buddyboss-platform/' ) &&
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+						false === strpos( $src, '/buddyboss-addons/' ) &&
 						false === strpos( $src, '/sfwd-lms/' ) &&
 						false === strpos( $src, '/instructor-role/' ) &&
 						false === strpos( $src, 'wp-content/plugins/' ) &&
@@ -3502,9 +3504,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_style( 'bp-medium-editor' );
 			wp_enqueue_style( 'bp-medium-editor-beagle' );
 
-			if ( wp_script_is( 'giphy', 'registered' ) ) {
-				wp_enqueue_script( 'giphy' );
-			}
+			wp_enqueue_script( 'giphy' );
 
 			// Enqueue Forum ReadyLaunch styles.
 			wp_enqueue_style(

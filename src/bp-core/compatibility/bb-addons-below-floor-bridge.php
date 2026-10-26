@@ -21,9 +21,9 @@
  * at/above the floor, so current builds keep their own checks and nothing runs
  * twice.
  *
- * The Videos and GIFs checks at the end look for the moved player and GIPHY
- * libraries instead of the version, so they also cover builds at the floor that
- * were cut before those libraries moved into Add-ons.
+ * The Videos check at the end looks for the moved player library instead of the
+ * version, so it also covers builds at the floor that were cut before the library
+ * moved into Add-ons.
  *
  * Remove once the Add-ons floor makes these builds unsupported.
  *
@@ -332,45 +332,25 @@ function bb_addons_lacks_moved_assets( $register_function ) {
 }
 
 /**
- * GIFs: keep the GIF picker off while Add-ons runs without the GIPHY library.
+ * Videos: block new video uploads while Add-ons runs without the video.js player.
  *
- * GIFs stay off until Add-ons is updated; saved GIFs are kept.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param bool $available Whether a GIF provider is loaded.
- *
- * @return bool
- */
-function bb_addons_below_floor_bridge_gif_provider( $available ) {
-	if ( $available && bb_addons_lacks_moved_assets( 'bb_addons_giphy_register_scripts' ) ) {
-		return false;
-	}
-
-	return $available;
-}
-add_filter( 'bb_giphy_module_active', 'bb_addons_below_floor_bridge_gif_provider' );
-
-/**
- * Videos: keep video uploads off while Add-ons runs without the video.js player.
- *
- * Without the player the upload buttons would have no script behind them. Video
- * uploads stay off until Add-ons is updated; existing videos are kept.
+ * Without the player the Nouveau video scripts are not loaded, so the upload and
+ * album tools would have no script behind them. Existing videos keep showing:
+ * Add-ons renders them as HTML5 video and does not need the player for that.
+ * Uploads come back once Add-ons is updated.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $enabled Whether video support is enabled.
+ * @param bool $can_upload Whether the user can upload videos.
  *
  * @return bool
  */
-function bb_addons_below_floor_bridge_video_support( $enabled ) {
-	if ( $enabled && bb_addons_lacks_moved_assets( 'bb_addons_video_register_scripts' ) ) {
+function bb_addons_below_floor_bridge_video_uploads( $can_upload ) {
+	if ( $can_upload && bb_addons_lacks_moved_assets( 'bb_addons_video_register_scripts' ) ) {
 		return false;
 	}
 
-	return $enabled;
+	return $can_upload;
 }
-add_filter( 'bp_is_profile_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );
-add_filter( 'bp_is_group_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );
-add_filter( 'bp_is_messages_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );
-add_filter( 'bp_is_forums_video_support_enabled', 'bb_addons_below_floor_bridge_video_support' );
+add_filter( 'bb_user_can_create_video', 'bb_addons_below_floor_bridge_video_uploads' );
+add_filter( 'bb_video_uploads_available', 'bb_addons_below_floor_bridge_video_uploads' );

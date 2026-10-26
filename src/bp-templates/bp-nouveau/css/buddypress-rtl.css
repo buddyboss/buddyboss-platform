@@ -28847,6 +28847,17 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 * @section 15.0 - Media Dropzone
 *-------------------------------------------------------------------------------
 */
+div.dropzone.dz-started {
+  margin: 0 0 20px;
+}
+div.dropzone.dz-started .dz-default.dz-message {
+  flex-basis: 100%;
+  max-width: 130px !important;
+  min-height: 130px !important;
+  margin: 0 4px 10px;
+  padding: 0 5px;
+}
+
 .dropzone,
 .dropzone * {
   box-sizing: border-box;
