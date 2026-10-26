@@ -590,9 +590,12 @@ window.bp = window.bp || {};
 
 			// Inject GIF.
 			if ( ! _.isUndefined( activity_data.gif ) && Object.keys( activity_data.gif ).length ) {
-				// close and destroy existing media instance.
-				self.activityToolbar.toggleGifSelector( bpActivityEvent );
-				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
+				// Open the GIF picker when it is available. The saved GIF goes on the form model either
+				// way, so it is kept on save without a GIF provider.
+				if ( ! _.isUndefined( self.activityToolbar ) ) {
+					self.activityToolbar.toggleGifSelector( bpActivityEvent );
+				}
+				self.postForm.model.set( 'gif_data', activity_data.gif );
 
 				// Make tool box button disable.
 				self.bbMakeToolBoxButtonDisabled(
