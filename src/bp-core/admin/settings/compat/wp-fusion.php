@@ -59,12 +59,13 @@
  *   organizer_tag  Link with Tag - Group Organizer    (single tag; see note below)
  *
  * Single-tag note: the classic select2 enforces its "pick one" limit purely
- * client-side (`data-limit="1"` read by WP Fusion's own admin JS).
- * `AjaxMultiSelectField` (the React component `ajax_multiselect` renders) has
- * no such cap, so `tag_link`/`organizer_tag` sanitize down to at most one
- * element server-side (`bb_legacy_wpf_sanitize_group_tag_ids()`) — a user
- * could transiently see more than one chip selected before saving, but only
- * the most-recently-added tag persists.
+ * client-side (`data-limit="1"` read by WP Fusion's own admin JS). The modal
+ * mirrors it with `extra_data.max_selection = 1`, which `AjaxMultiSelectField`
+ * enforces by replacing the previous chip, and
+ * `bb_legacy_wpf_sanitize_group_tag_ids()` keeps at most one id server-side.
+ *
+ * Clearing note: all three fields set `extra_data.send_empty_as_clear`, so an
+ * emptied picker is posted as '' (not omitted) and the leaf can be cleared.
  *
  * Loaded once from the bottom of legacy-meta-bridge-utils.php, gated by the
  * same `WP_FUSION_VERSION`/`WPF_VERSION`/`wp_fusion()` detection used for the
@@ -473,8 +474,11 @@ function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = arra
 /**
  * Replay WP Fusion's group save from the values staged by the 3 fields.
  *
- * Settings 2.0 never fires `bp_group_admin_edit_after`, so WP Fusion's
- * `save_groups_data()` (3.47.14: meta writer only) is called here instead.
+ * The Settings 2.0 save fires `bp_group_admin_edit_after`, but its POST has
+ * none of the classic group form fields (`bp-groups-slug`,
+ * `wpf-settings-buddypress`), so WP Fusion's handler on that hook does not
+ * save these settings. `save_groups_data()` (3.47.14: meta writer only) is
+ * called here instead, with those fields set for this call only.
  * `wpf-settings` (group visibility) is re-fed so the handler doesn't delete it.
  *
  * @since BuddyBoss [BBVERSION]
@@ -597,14 +601,18 @@ function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
  * @return array Extra data for the `ajax_multiselect` field type.
  */
 function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
+	// `send_empty_as_clear`: post an emptied picker as '' so the leaf can be
+	// cleared (see the file docblock "Clearing note"); the sanitizer maps ''
+	// to array().
 	$extra = array(
-		'ajax_action'        => 'bb_legacy_ajax_select_search',
-		'ajax_nonce'         => wp_create_nonce( 'bb_admin_settings' ),
-		'nonce_param'        => 'nonce',
-		'search_placeholder' => 1 === (int) $max ? __( 'Select tag', 'buddyboss' ) : __( 'Select tags', 'buddyboss' ),
-		'string_ids'         => true,
-		'resolver'           => 'wpf_tags',
-		'selected_items'     => array(),
+		'ajax_action'         => 'bb_legacy_ajax_select_search',
+		'ajax_nonce'          => wp_create_nonce( 'bb_admin_settings' ),
+		'nonce_param'         => 'nonce',
+		'search_placeholder'  => 1 === (int) $max ? __( 'Select tag', 'buddyboss' ) : __( 'Select tags', 'buddyboss' ),
+		'string_ids'          => true,
+		'resolver'            => 'wpf_tags',
+		'selected_items'      => array(),
+		'send_empty_as_clear' => true,
 	);
 
 	if ( null !== $max && $max > 0 ) {

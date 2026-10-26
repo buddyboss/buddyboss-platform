@@ -172,7 +172,7 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 			// plugin behaviour to dispatch to). Reserved keys consumed by
 			// this component are skipped so they don't leak into the query.
 			Object.keys( extraData ).forEach( function ( key ) {
-				if ( -1 !== [ 'selected_items', 'ajax_action', 'ajax_nonce', 'nonce_param', 'search_placeholder', 'string_ids' ].indexOf( key ) ) {
+				if ( -1 !== [ 'selected_items', 'ajax_action', 'ajax_nonce', 'nonce_param', 'search_placeholder', 'string_ids', 'max_selection', 'send_empty_as_clear' ].indexOf( key ) ) {
 					return;
 				}
 				params.append( key, extraData[ key ] );
