@@ -314,25 +314,6 @@ function bb_addons_below_floor_bridge_folder_update_args( $args, $request ) {
 add_filter( 'bp_rest_document_folder_update_items_query_args', 'bb_addons_below_floor_bridge_folder_update_args', 1, 2 );
 
 /**
- * Whether the active Add-ons build is missing a player or picker library that moved into it.
- *
- * The video.js player and the GIPHY library moved from Platform into Add-ons.
- * Add-ons builds without them still provide Videos and GIFs, so the upload tools
- * and the GIF picker would have no library behind them. Used by the video upload
- * gate below and by bb_media_gif_picker_available(). This checks the running code,
- * not the version number, so any build without the assets is matched.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $register_function Add-ons function that registers the library.
- *
- * @return bool True when Add-ons is active and does not ship the library.
- */
-function bb_addons_lacks_moved_assets( $register_function ) {
-	return defined( 'BB_ADDONS_PLUGIN_VERSION' ) && ! function_exists( $register_function );
-}
-
-/**
  * Videos: pause video uploads on the web while Add-ons runs without the video.js player.
  *
  * Without the player the Nouveau video scripts are not loaded, so the upload,
