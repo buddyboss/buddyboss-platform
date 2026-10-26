@@ -4726,7 +4726,7 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 	 *
 	 * Return false to stop every user, site admins included, from adding or
 	 * managing videos in groups, for example while the video player library is
-	 * not loaded. Existing videos keep showing.
+	 * not loaded. Videos already posted in groups are not removed.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

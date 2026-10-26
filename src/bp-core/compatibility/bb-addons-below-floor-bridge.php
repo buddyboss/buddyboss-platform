@@ -318,10 +318,11 @@ add_filter( 'bp_rest_document_folder_update_items_query_args', 'bb_addons_below_
  *
  * Without the player the Nouveau video scripts are not loaded, so the upload,
  * edit and album tools would have no script behind them. On the web this pauses
- * new uploads, and group organizers' edits of members' group videos. Existing
- * videos keep showing: Add-ons renders them as HTML5 video and does not need the
- * player for that. REST requests (the BuddyBoss App) do not use the player and
- * are not affected. Everything comes back once Add-ons is updated.
+ * new uploads, and group organizers' edits of members' group videos. Videos
+ * already posted still play as plain HTML5 video, but without their styles, and
+ * thumbnails do not open the video theatre. REST requests (the BuddyBoss App) do
+ * not use the player and are not affected. Everything comes back once Add-ons is
+ * updated.
  *
  * @since BuddyBoss [BBVERSION]
  *
