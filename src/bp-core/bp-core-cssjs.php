@@ -951,19 +951,26 @@ function bb_load_emoji_detection_script() {
 	// Check if the WordPress version is above 6.0.
 	if ( version_compare( $wp_version, '6.0', '>' ) ) {
 
+		// Pinned to the emoji set in WP core's _print_emoji_detection_script(); bump it when core bumps twemoji.
+		$emoji_cdn_url = 'https://s.w.org/images/core/emoji/17.0.2/';
+
+		// Respect core's emoji filters, but ignore the falsey values that "disable emojis" options return to drop the DNS prefetch.
+		$emoji_url     = apply_filters( 'emoji_url', $emoji_cdn_url . '72x72/' );
+		$emoji_url     = ( ! empty( $emoji_url ) && is_string( $emoji_url ) ) ? $emoji_url : $emoji_cdn_url . '72x72/';
+		$emoji_svg_url = apply_filters( 'emoji_svg_url', $emoji_cdn_url . 'svg/' );
+		$emoji_svg_url = ( ! empty( $emoji_svg_url ) && is_string( $emoji_svg_url ) ) ? $emoji_svg_url : $emoji_cdn_url . 'svg/';
+
 		$settings = array(
 			/**
 			 * Filters the URL where emoji png images are hosted.
 			 *
-			 * Defaults to WordPress core's own `emoji_url` filter so the
-			 * base URL always matches the emoji set bundled with the
-			 * site's current WordPress version instead of a hardcoded one.
+			 * Defaults to the value of WordPress core's `emoji_url` filter.
 			 *
 			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for png images.
 			 */
-			'baseUrl' => apply_filters( 'bb_emoji_url', apply_filters( 'emoji_url', 'https://s.w.org/images/core/emoji/17.0.2/72x72/' ) ),
+			'baseUrl' => apply_filters( 'bb_emoji_url', $emoji_url ),
 
 			/**
 			 * Filters the extension of the emoji png files.
@@ -977,15 +984,13 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the URL where emoji SVG images are hosted.
 			 *
-			 * Defaults to WordPress core's own `emoji_svg_url` filter so the
-			 * base URL always matches the emoji set bundled with the
-			 * site's current WordPress version instead of a hardcoded one.
+			 * Defaults to the value of WordPress core's `emoji_svg_url` filter.
 			 *
 			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for svg images.
 			 */
-			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/17.0.2/svg/' ) ),
+			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', $emoji_svg_url ),
 
 			/**
 			 * Filters the extension of the emoji SVG files.
