@@ -317,9 +317,10 @@ add_filter( 'bp_rest_document_folder_update_items_query_args', 'bb_addons_below_
  * Whether the active Add-ons build is missing a player or picker library that moved into it.
  *
  * The video.js player and the GIPHY library moved from Platform into Add-ons.
- * Add-ons builds without them still provide Videos and GIFs, so those features
- * would render with no library behind them. This checks the running code, not the
- * version number, so any build without the assets is matched.
+ * Add-ons builds without them still provide Videos and GIFs, so the upload tools
+ * and the GIF picker would have no library behind them. Used by the video upload
+ * gate below and by bb_media_gif_picker_available(). This checks the running code,
+ * not the version number, so any build without the assets is matched.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -332,12 +333,14 @@ function bb_addons_lacks_moved_assets( $register_function ) {
 }
 
 /**
- * Videos: block new video uploads while Add-ons runs without the video.js player.
+ * Videos: pause video uploads on the web while Add-ons runs without the video.js player.
  *
- * Without the player the Nouveau video scripts are not loaded, so the upload and
- * album tools would have no script behind them. Existing videos keep showing:
- * Add-ons renders them as HTML5 video and does not need the player for that.
- * Uploads come back once Add-ons is updated.
+ * Without the player the Nouveau video scripts are not loaded, so the upload,
+ * edit and album tools would have no script behind them. On the web this pauses
+ * new uploads, and group organizers' edits of members' group videos. Existing
+ * videos keep showing: Add-ons renders them as HTML5 video and does not need the
+ * player for that. REST requests (the BuddyBoss App) do not use the player and
+ * are not affected. Everything comes back once Add-ons is updated.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -346,6 +349,10 @@ function bb_addons_lacks_moved_assets( $register_function ) {
  * @return bool
  */
 function bb_addons_below_floor_bridge_video_uploads( $can_upload ) {
+	if ( bb_is_rest() ) {
+		return $can_upload;
+	}
+
 	if ( $can_upload && bb_addons_lacks_moved_assets( 'bb_addons_video_register_scripts' ) ) {
 		return false;
 	}

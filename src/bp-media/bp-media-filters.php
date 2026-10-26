@@ -2452,12 +2452,10 @@ add_filter( 'bp_is_messages_gif_support_enabled', 'bb_media_gifs_force_disable' 
 add_filter( 'bp_is_forums_gif_support_enabled', 'bb_media_gifs_force_disable' );
 
 /**
- * Turn the GIF picker off in the front-end scripts when the GIPHY library is not registered.
+ * Turn the GIF picker off in the front-end scripts when the GIPHY library is not available.
  *
- * The GIPHY library ships with BuddyBoss Add-ons. A GIF provider can be loaded
- * without it (an Add-ons build from before the library moved), and the picker
- * would then fail. The scripts hide the picker when these flags are false and the
- * key is empty. Saved GIFs, the REST API and the settings are not affected.
+ * The scripts hide the picker when these flags are false and the key is empty.
+ * Saved GIFs, the REST API and the settings are not affected.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2466,7 +2464,7 @@ add_filter( 'bp_is_forums_gif_support_enabled', 'bb_media_gifs_force_disable' );
  * @return array
  */
 function bb_media_hide_gif_picker_without_library( $params ) {
-	if ( ! isset( $params['media']['gif'] ) || ! is_array( $params['media']['gif'] ) || wp_script_is( 'giphy', 'registered' ) ) {
+	if ( ! isset( $params['media']['gif'] ) || ! is_array( $params['media']['gif'] ) || bb_media_gif_picker_available() ) {
 		return $params;
 	}
 

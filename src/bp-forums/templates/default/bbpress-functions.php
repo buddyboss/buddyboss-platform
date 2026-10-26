@@ -249,7 +249,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			if ( bp_is_active( 'media' ) ) {
 
 				$gif = false;
-				if ( wp_script_is( 'giphy', 'registered' ) && ( bp_is_forums_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) ) {
+				if ( bb_media_gif_picker_available() && ( bp_is_forums_gif_support_enabled() || bp_is_groups_gif_support_enabled() ) ) {
 					wp_enqueue_script( 'giphy' );
 					$gif = true;
 				}

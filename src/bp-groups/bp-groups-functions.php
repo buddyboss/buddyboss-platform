@@ -4724,9 +4724,9 @@ function groups_can_user_manage_video( $user_id, $group_id ) {
 	/**
 	 * Filters whether video uploads are available on this site.
 	 *
-	 * Return false to stop every user, site admins included, from adding videos,
-	 * for example while the video player library is not loaded. Existing videos
-	 * are not affected.
+	 * Return false to stop every user, site admins included, from adding or
+	 * managing videos in groups, for example while the video player library is
+	 * not loaded. Existing videos keep showing.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

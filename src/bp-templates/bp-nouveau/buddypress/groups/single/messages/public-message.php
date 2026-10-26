@@ -228,7 +228,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							<?php
 						endif;
 
-						if ( $is_media_active && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
+						if ( $is_media_active && bb_media_gif_picker_available() && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0 ) ) :
 							?>
 							<div class="post-elements-buttons-item post-gif">
 								<div class="gif-media-search">

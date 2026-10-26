@@ -162,7 +162,7 @@ $video_extensions = bp_is_active( 'video' ) && function_exists( 'bp_video_get_al
 		<?php
 	endif;
 
-	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
+	if ( bp_is_active( 'media' ) && bb_media_gif_picker_available() && bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 			<div class="bb-rl-gif-media-search">
