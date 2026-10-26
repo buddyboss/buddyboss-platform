@@ -2923,6 +2923,11 @@ window.bp = window.bp || {};
 				description   = $descInput.val(),
 				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
 
+			// The media script binds the same button; only save descriptions inside the video wrapper.
+			if ( ! parent_wrap.length ) {
+				return;
+			}
+
 			var data = {
 				'action'        : 'video_description_save',
 				'description'   : description,
