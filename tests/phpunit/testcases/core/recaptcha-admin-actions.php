@@ -116,8 +116,9 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 	}
 
 	public function test_lost_password_is_verified_for_an_admin_resetting_their_own_account() {
-		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$admin = $this->create_admin();
 		self::set_current_user( $admin );
+		set_current_screen( 'users' );
 
 		$errors = $this->validate_lost_password( get_userdata( $admin ) );
 
@@ -128,6 +129,7 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 		$member = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		$other  = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		self::set_current_user( $member );
+		set_current_screen( 'profile' );
 
 		$errors = $this->validate_lost_password( get_userdata( $other ) );
 
@@ -137,6 +139,8 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 	public function test_lost_password_is_verified_for_a_logged_out_request() {
 		$member = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		self::set_current_user( 0 );
+		set_current_screen( 'users' );
+		add_filter( 'wp_doing_ajax', '__return_true' );
 
 		$errors = $this->validate_lost_password( get_userdata( $member ) );
 
@@ -144,8 +148,9 @@ class BB_Tests_Core_Recaptcha_Admin_Actions extends BP_UnitTestCase {
 	}
 
 	public function test_lost_password_is_verified_for_an_unknown_account() {
-		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$admin = $this->create_admin();
 		self::set_current_user( $admin );
+		set_current_screen( 'users' );
 
 		$errors = $this->validate_lost_password( false );
 
