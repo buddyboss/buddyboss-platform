@@ -893,7 +893,9 @@ export function GroupsListScreen( { onNavigate } ) {
 									{ __( 'Warning', 'buddyboss' ) }
 								</span>
 								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes selected groups from the community and cannot be undone.', 'buddyboss' ) }
+									{ 1 === deleteTargetIds.length
+										? __( 'This permanently deletes the group from the community and cannot be undone.', 'buddyboss' )
+										: __( 'This permanently deletes selected groups from the community and cannot be undone.', 'buddyboss' ) }
 								</span>
 							</div>
 						</div>
@@ -907,7 +909,11 @@ export function GroupsListScreen( { onNavigate } ) {
 								: __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
 						</p>
 						<CheckboxControl
-							label={ __( 'I understand this will permanently delete the group.', 'buddyboss' ) }
+							label={
+								1 === deleteTargetIds.length
+									? __( 'I understand this will permanently delete the group.', 'buddyboss' )
+									: __( 'I understand this will permanently delete the groups.', 'buddyboss' )
+							}
 							checked={ deleteConfirmChecked }
 							onChange={ setDeleteConfirmChecked }
 							__nextHasNoMarginBottom

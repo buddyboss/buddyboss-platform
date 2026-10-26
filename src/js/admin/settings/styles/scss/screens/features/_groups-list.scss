@@ -81,10 +81,6 @@
 	&__table th.bb-groups-list__th--name {
 		font-size: 14px;
 		color: $bb-text-color;
-		// Keep the release column width. With table-layout:fixed, leaving
-		// this unpinned makes the name column absorb all leftover width and
-		// squeezes the other columns. Long names wrap inside this width
-		// instead of being clipped (see __group-name).
 		width: 30%;
 	}
 
@@ -136,7 +132,6 @@
 		line-height: 20px;
 		// Wrap instead of clipping with ellipsis - the full name should be
 		// readable directly in the list, not just via the title tooltip.
-		flex: 1;
 		min-width: 0;
 		white-space: normal;
 		word-break: break-word;
