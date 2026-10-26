@@ -45,10 +45,18 @@ function bp_nouveau_video_enqueue_scripts() {
 
 	if ( bp_is_user_video() || bp_is_single_video_album() || bp_is_single_album() || bp_is_video_directory() || bp_is_activity_component() || bp_is_group_activity() || bp_is_group_video() || bp_is_group_video_albums() || bp_is_group_messages() || bp_is_messages_component() || bp_is_forums_video_support_enabled() ) {
 
-		// The video.js player ships with BuddyBoss Add-ons; without it the video scripts would fail.
-		if ( wp_script_is( 'bp-media-videojs', 'registered' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_video_support_enabled() || bp_is_group_messages() ) ) {
+		$video_support = ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_video_support_enabled() || bp_is_group_messages() );
 
+		if ( $video_support ) {
+
+			// Dropzone stays loaded without the video.js player: the activity form needs it to keep
+			// attached videos on edit, otherwise the saved post drops them.
 			wp_enqueue_script( 'bp-media-dropzone' );
+		}
+
+		// The video.js player ships with BuddyBoss Add-ons; without it the video scripts would fail.
+		if ( $video_support && wp_script_is( 'bp-media-videojs', 'registered' ) ) {
+
 			wp_enqueue_style( 'bp-media-videojs-css' );
 			wp_enqueue_script( 'bp-media-videojs' );
 			wp_enqueue_script( 'bp-media-videojs-seek-buttons' );
