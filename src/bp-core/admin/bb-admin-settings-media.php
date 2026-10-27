@@ -8,8 +8,8 @@
  * The Media feature maps to the bp-media (photos) component only. The
  * bp-video (videos) and bp-document (documents) components are managed
  * independently — they are not activated or deactivated by the Media
- * toggle, and their settings panels are only registered when the
- * corresponding component is active and present in the build.
+ * toggle. Their settings panels ship with them in BuddyBoss Add-ons; this
+ * file only shows an upsell panel in their place when they are not active.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -66,15 +66,6 @@ function bb_admin_settings_register_media_feature() {
 	require_once __DIR__ . '/settings/media/settings-security.php';
 	require_once __DIR__ . '/settings/media/settings-access-controls.php';
 
-	// Videos and Documents are independent components (paid-only); only load
-	// their settings panels when the component is active in this build.
-	if ( bp_is_active( 'video' ) ) {
-		require_once __DIR__ . '/settings/media/settings-videos.php';
-	}
-	if ( bp_is_active( 'document' ) ) {
-		require_once __DIR__ . '/settings/media/settings-documents.php';
-	}
-
 	// =========================================================================
 	// SIDE PANELS
 	// =========================================================================
@@ -103,30 +94,10 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
-	// Side Panel 2: Videos (only when the video component is active).
-	if ( bp_is_active( 'video' ) ) {
-		bb_register_side_panel(
-			'media',
-			'videos',
-			array(
-				'title'    => __( 'Videos', 'buddyboss' ),
-				'icon'     => array(
-					'type'  => 'font',
-					'class' => 'bb-icons-rl bb-icons-rl-video-camera',
-				),
-				'help_url' => bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 124807,
-						),
-						'admin.php'
-					)
-				),
-				'order'    => 20,
-			)
-		);
-	} else {
+	// Side Panel 2: Videos. BuddyBoss Add-ons registers the panel and its fields
+	// with the component (bb_media_register_videos_panel_fields()); without it,
+	// show the upsell in its place.
+	if ( ! bp_is_active( 'video' ) ) {
 		bb_media_register_addons_upsell_panel(
 			'videos',
 			__( 'Videos', 'buddyboss' ),
@@ -136,30 +107,10 @@ function bb_admin_settings_register_media_feature() {
 		);
 	}
 
-	// Side Panel 3: Documents (only when the document component is active).
-	if ( bp_is_active( 'document' ) ) {
-		bb_register_side_panel(
-			'media',
-			'documents',
-			array(
-				'title'    => __( 'Documents', 'buddyboss' ),
-				'icon'     => array(
-					'type'  => 'font',
-					'class' => 'bb-icons-rl bb-icons-rl-file-text',
-				),
-				'help_url' => bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 87466,
-						),
-						'admin.php'
-					)
-				),
-				'order'    => 30,
-			)
-		);
-	} else {
+	// Side Panel 3: Documents. BuddyBoss Add-ons registers the panel and its
+	// fields with the component (bb_media_register_documents_panel_fields());
+	// without it, show the upsell in its place.
+	if ( ! bp_is_active( 'document' ) ) {
 		bb_media_register_addons_upsell_panel(
 			'documents',
 			__( 'Documents', 'buddyboss' ),
@@ -272,12 +223,12 @@ function bb_admin_settings_register_media_feature() {
 	// Panel 1: Photos.
 	bb_media_register_photos_panel_fields();
 
-	// Panel 2: Videos (only when the video component is active).
+	// Panel 2: Videos (registered by BuddyBoss Add-ons with the component).
 	if ( bp_is_active( 'video' ) && function_exists( 'bb_media_register_videos_panel_fields' ) ) {
 		bb_media_register_videos_panel_fields();
 	}
 
-	// Panel 3: Documents (only when the document component is active).
+	// Panel 3: Documents (registered by BuddyBoss Add-ons with the component).
 	if ( bp_is_active( 'document' ) && function_exists( 'bb_media_register_documents_panel_fields' ) ) {
 		bb_media_register_documents_panel_fields();
 	}

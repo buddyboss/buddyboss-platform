@@ -520,9 +520,6 @@ class BuddyPress {
 		// Load the compatibility helpers for third party plugins.
 		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
 
-		// Security rules for BuddyBoss Add-ons builds below the required version.
-		require $this->compatibility_dir . '/bb-addons-below-floor-bridge.php';
-
 		// Load the WP abstraction file so BuddyPress can run on all WordPress setups.
 		require $this->plugin_dir . 'bp-core/bp-core-wpabstraction.php';
 

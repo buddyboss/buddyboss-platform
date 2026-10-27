@@ -97,6 +97,11 @@ function bb_platform_3_pro_required_version() {
  * locking these modules on sites without an activated licence. The
  * released 1.2.3 has none of these.
  *
+ * Platform 3.7.0 also moved the Video and Documents template pack code,
+ * settings panels and group screens into Add-ons 1.3.0, so an
+ * older Add-ons build cannot run them: bb_is_component_directory_available()
+ * keeps both components off (their data is kept) until Add-ons is updated.
+ *
  * This is the single source of the floor: bb_get_addons_required_version()
  * reads it for the post-update Add-ons update and the Media settings panels.
  *

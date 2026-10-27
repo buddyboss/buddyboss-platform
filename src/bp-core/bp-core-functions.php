@@ -2517,7 +2517,9 @@ function bp_core_get_minified_asset_suffix() {
  * Optional components can be stripped from a distribution (e.g. the video and
  * document components moved to the BuddyBoss Add-ons plugin). This checks for
  * the component's loader file on disk, and lets a provider plugin claim the
- * component through the `bb_component_directory_available` filter.
+ * component through the `bb_component_directory_available` filter. Video and
+ * Documents are not available from a BuddyBoss Add-ons build below the version
+ * this Platform requires.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2549,6 +2551,22 @@ function bb_is_component_directory_available( $component ) {
 	 */
 	$is_available = (bool) apply_filters( 'bb_component_directory_available', $exists, $component );
 
+	/*
+	 * Videos and Documents moved their template pack code, settings panels and
+	 * group screens from Platform into BuddyBoss Add-ons. An older Add-ons
+	 * build still claims the components but lacks that code, so they stay off
+	 * (their data is kept) until Add-ons is updated to the required version.
+	 */
+	if (
+		$is_available &&
+		! $exists &&
+		in_array( $component, array( 'video', 'document' ), true ) &&
+		defined( 'BB_ADDONS_PLUGIN_VERSION' ) &&
+		bb_is_addons_below_required_version( (string) BB_ADDONS_PLUGIN_VERSION )
+	) {
+		$is_available = false;
+	}
+
 	// Providers register their claims on `bp_loaded`, so only memoise once it
 	// has finished — an earlier call must not freeze a premature `false`.
 	if ( did_action( 'bp_loaded' ) && ! doing_action( 'bp_loaded' ) ) {
@@ -2557,6 +2575,41 @@ function bb_is_component_directory_available( $component ) {
 
 	return $is_available;
 }
+
+/**
+ * Record that Videos or Documents are not available on this site.
+ *
+ * Their cleanup and moderation hooks ship in BuddyBoss Add-ons, so members,
+ * posts and messages deleted, and members suspended, while they are off leave
+ * their files behind. BuddyBoss Add-ons reads this record when the components
+ * are back and repairs the data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_media_record_unavailable_components() {
+	// The record lives on the root blog, like the active components option.
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		return;
+	}
+
+	$pending = bp_get_option( 'bb_media_reconcile_pending', false );
+	$changed = false === $pending;
+	$pending = $changed ? array() : (array) $pending;
+
+	foreach ( array( 'video', 'document' ) as $component ) {
+		if ( ! bp_is_active( $component ) && empty( $pending[ $component ] ) ) {
+			$pending[ $component ] = time();
+			$changed               = true;
+		}
+	}
+
+	if ( $changed ) {
+		bp_update_option( 'bb_media_reconcile_pending', $pending );
+	}
+}
+add_action( 'bp_init', 'bb_media_record_unavailable_components', 20 );
 
 /**
  * Return a list of component information.
