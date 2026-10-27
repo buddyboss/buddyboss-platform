@@ -21,7 +21,7 @@ class BP_Tests_Video_Thumb_Size_Unavailable extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! class_exists( 'BP_Video' ) || ! function_exists( 'bb_video_is_thumb_size_unavailable' ) || empty( buddypress()->video->table_name ) ) {
+		if ( ! class_exists( 'BP_Video' ) || empty( buddypress()->video->table_name ) ) {
 			$this->markTestSkipped( 'The video component is not loaded.' );
 		}
 

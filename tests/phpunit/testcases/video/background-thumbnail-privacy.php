@@ -13,7 +13,7 @@ class BP_Tests_Video_Background_Thumbnail_Privacy extends BP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		if ( ! function_exists( 'bb_video_privacy_skips_background_thumbnail' ) ) {
+		if ( ! class_exists( 'BP_Video' ) || empty( buddypress()->video->table_name ) ) {
 			$this->markTestSkipped( 'The video component is not loaded.' );
 		}
 	}
