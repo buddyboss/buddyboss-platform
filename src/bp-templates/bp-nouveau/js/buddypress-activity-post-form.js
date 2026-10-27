@@ -5315,11 +5315,16 @@ window.bp = window.bp || {};
 					this.activityMedia = new bp.Views.ActivityMedia( { model: this.model } );
 					this.views.add( this.activityMedia );
 
-					this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
-					this.views.add( this.activityDocument );
+					// The document and video templates ship with BuddyBoss Add-ons; skip their views without them.
+					if ( document.getElementById( 'tmpl-activity-document' ) ) {
+						this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
+						this.views.add( this.activityDocument );
+					}
 
-					this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
-					this.views.add( this.activityVideo );
+					if ( document.getElementById( 'tmpl-activity-video' ) ) {
+						this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
+						this.views.add( this.activityVideo );
+					}
 				}
 
 				this.activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: this.model } );
