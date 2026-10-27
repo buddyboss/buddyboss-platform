@@ -1209,6 +1209,11 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
 			continue;
 		}
 
+		// An evicted draft handed back to the browser may still use it.
+		if ( bb_draft_attachment_is_eviction_protected( $attachment_id ) ) {
+			continue;
+		}
+
 		if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 			continue;
 		}
@@ -1264,6 +1269,11 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
 	$affected = array();
 
 	foreach ( $released as $attachment_id ) {
+		// An evicted draft handed back to the browser may still use it.
+		if ( bb_draft_attachment_is_eviction_protected( $attachment_id ) ) {
+			continue;
+		}
+
 		if ( ! bb_user_can_manage_draft_attachment( $attachment_id, false, $user_id ) ) {
 			continue;
 		}
@@ -2521,6 +2531,53 @@ function bb_draft_get_evicted_attachment_ledger_ids() {
 	}
 
 	return $ids;
+}
+
+/**
+ * Whether an attachment is still protected because an evicted draft uses it.
+ *
+ * An evicted draft is handed back to the browser and keeps referencing its
+ * files there, but it is no longer in usermeta, so the stored-row retain sets
+ * cannot see it. Discarding a sibling draft that shares the file must not
+ * release the file's stamp, or the orphan-attachment crons delete a file the
+ * handed-back draft still needs. This applies the same window the
+ * orphan-stamp sweep uses ({@see bb_drafts_release_orphaned_draft_stamps()}):
+ * the eviction time plus the draft retention, or for ever when expiry is off.
+ * The sweep releases the stamp once that window ends.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $attachment_id Attachment ID.
+ * @return bool True when the file must keep its draft stamp.
+ */
+function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
+	$attachment_id = (int) $attachment_id;
+
+	if ( $attachment_id <= 0 ) {
+		return false;
+	}
+
+	$retention_seconds = bb_draft_retention_seconds();
+	$cutoff            = time() - $retention_seconds;
+	$evicted_at        = (int) get_post_meta( $attachment_id, 'bb_draft_evicted_at', true );
+
+	if ( $evicted_at > 0 && ( 1 > $retention_seconds || $evicted_at >= $cutoff ) ) {
+		return true;
+	}
+
+	// The multisite upgrade heal records its evictions in the network ledger
+	// instead of the marker ({@see bb_draft_protect_evicted_attachments()}).
+	if ( ! is_multisite() ) {
+		return false;
+	}
+
+	$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+
+	if ( ! is_array( $ledger ) || ! isset( $ledger[ $attachment_id ] ) ) {
+		return false;
+	}
+
+	return 1 > $retention_seconds || (int) $ledger[ $attachment_id ] >= $cutoff;
 }
 
 /**

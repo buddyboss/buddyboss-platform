@@ -1887,7 +1887,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// member still references. Ownership alone is not enough - the member owns
 				// the file, but another of their drafts may still need it, and this is a
 				// PERMANENT wp_delete_attachment(). Matches the cross-row retain every
-				// stamp-release path applies (L7/L11).
+				// stamp-release path applies (L7/L11). The same goes for a file an
+				// evicted draft, handed back to the browser, still uses.
 				$discard_retained_ids = bb_draft_collect_other_row_referenced_ids( $draft_user_id, $draft_activity['data_key'] );
 
 				// Delete media when discard the activity.
@@ -1900,6 +1901,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 							if (
 								! empty( $stored_attachment['id'] ) &&
 								! in_array( (int) $stored_attachment['id'], $discard_retained_ids, true ) &&
+								! bb_draft_attachment_is_eviction_protected( $stored_attachment['id'] ) &&
 								bb_user_can_manage_draft_attachment( $stored_attachment['id'], true, $draft_user_id )
 							) {
 								wp_delete_attachment( (int) $stored_attachment['id'], true );
@@ -1912,6 +1914,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				if (
 					! empty( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
 					! in_array( (int) $stored_draft['data']['bb_activity_post_feature_image']['id'], $discard_retained_ids, true ) &&
+					! bb_draft_attachment_is_eviction_protected( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
 					isset( $draft_activity['allow_delete_post_feature_image'] ) &&
 					true === (bool) $draft_activity['allow_delete_post_feature_image'] &&
 					bb_user_can_manage_draft_attachment( $stored_draft['data']['bb_activity_post_feature_image']['id'], true, $draft_user_id )

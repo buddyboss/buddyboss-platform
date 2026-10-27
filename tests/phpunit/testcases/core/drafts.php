@@ -10705,4 +10705,230 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertIsArray( $held, 'The next visit still finds the draft to hand back.' );
 		$this->assertSame( $draft['data'], $held['data'], 'The held copy is the whole draft.' );
 	}
+
+	/**
+	 * Build a forum row where two inner drafts share one attachment.
+	 *
+	 * Draft A is large and older, so a large save evicts it first; draft B is
+	 * small. Both reference `$attachment_id`.
+	 *
+	 * @param int $user_id       Owner.
+	 * @param int $attachment_id Shared attachment.
+	 * @return string[] Inner keys A, B and a third, unused key C.
+	 */
+	protected function seed_forum_row_sharing_attachment( $user_id, $attachment_id ) {
+		$keys = array();
+
+		foreach ( array( 'a', 'b', 'c' ) as $name ) {
+			$keys[ $name ] = 'draft_discussion_' . self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		}
+
+		$media = wp_json_encode( array( array( 'id' => $attachment_id ) ) );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$keys['a'] => array(
+						'data_key'        => $keys['a'],
+						'object'          => 'topic',
+						'data'            => array(
+							'bbp_topic_content' => str_repeat( 'o', 60 * KB_IN_BYTES ),
+							'bbp_media'         => $media,
+						),
+						'_draft_saved_at' => 100,
+					),
+					$keys['b'] => array(
+						'data_key'        => $keys['b'],
+						'object'          => 'topic',
+						'data'            => array(
+							'bbp_topic_content' => 'small B',
+							'bbp_media'         => $media,
+						),
+						'_draft_saved_at' => 200,
+					),
+				)
+			)
+		);
+
+		return array( $keys['a'], $keys['b'], $keys['c'] );
+	}
+
+	/**
+	 * Run the orphaned-media cron against an attachment aged past its window.
+	 *
+	 * @param int $attachment_id Attachment ID.
+	 * @return bool Whether the cron deleted it.
+	 */
+	protected function orphan_cron_deletes( $attachment_id ) {
+		global $wpdb;
+
+		$old = gmdate( 'Y-m-d H:i:s', time() - 7 * HOUR_IN_SECONDS );
+		$wpdb->update( $wpdb->posts, array( 'post_date_gmt' => $old, 'post_date' => $old ), array( 'ID' => $attachment_id ) );
+		clean_post_cache( $attachment_id );
+
+		bp_media_delete_orphaned_attachments();
+		clean_post_cache( $attachment_id );
+
+		return null === get_post( $attachment_id );
+	}
+
+	/**
+	 * Discarding a forum draft must not release the stamp of a file that an
+	 * evicted sibling draft, handed back to the browser, still references.
+	 *
+	 * The budget evicts draft A (stamps kept, `bb_draft_evicted_at` set), then
+	 * the member discards draft B, which shares the file. The stored-row retain
+	 * set no longer sees A, so before the fix the stamp was released and the
+	 * orphan cron hard-deleted the file the handed-back draft A still used.
+	 *
+	 * Mutation check: remove the bb_draft_attachment_is_eviction_protected()
+	 * skip from bb_draft_release_replaced_attachments() and this goes red.
+	 */
+	public function test_discard_keeps_file_an_evicted_sibling_still_uses() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$shared = $this->make_draft_attachment( $user_id );
+		update_post_meta( $shared, 'bb_media_draft', 1 );
+
+		list( $key_a, $key_b, $key_c ) = $this->seed_forum_row_sharing_attachment( $user_id, $shared );
+
+		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
+		$saved = $this->drive_forum_draft_save_response( $key_c, array( 'bbp_topic_content' => str_repeat( 'n', 60 * KB_IN_BYTES ) ) );
+		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
+
+		$this->assertTrue( $saved['success'] );
+		$this->assertContains( 'bb_user_topic_reply_draft:' . $key_a, $saved['data']['evicted_draft_keys'], 'Premise: the budget evicts draft A.' );
+		$this->assertNotEmpty( get_post_meta( $shared, 'bb_draft_evicted_at', true ), 'Premise: the eviction marks the file.' );
+
+		$this->drive_forum_draft_discard( $key_b );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertArrayNotHasKey( $key_b, (array) $row, 'Premise: draft B was discarded.' );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'A file the evicted draft A still uses must keep its draft stamp.'
+		);
+		$this->assertFalse( $this->orphan_cron_deletes( $shared ), 'The orphan cron must not delete a file the evicted draft A still uses.' );
+	}
+
+	/**
+	 * Control for the eviction protection: a file only the discarded draft
+	 * used, with no eviction marker, is still released and reaped. The
+	 * protection must not keep every discarded file for ever.
+	 */
+	public function test_discard_still_releases_a_file_no_evicted_draft_uses() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$only = $this->make_draft_attachment( $user_id );
+		update_post_meta( $only, 'bb_media_draft', 1 );
+
+		$key = 'draft_discussion_' . self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$key => array(
+						'data_key'        => $key,
+						'object'          => 'topic',
+						'data'            => array(
+							'bbp_topic_content' => 'B',
+							'bbp_media'         => wp_json_encode( array( array( 'id' => $only ) ) ),
+						),
+						'_draft_saved_at' => 200,
+					),
+				)
+			)
+		);
+
+		$this->drive_forum_draft_discard( $key );
+
+		$this->assertSame( '', (string) get_post_meta( $only, 'bb_media_draft', true ), 'A file nothing else uses loses its stamp.' );
+		$this->assertTrue( $this->orphan_cron_deletes( $only ), 'The orphan cron reaps it as before.' );
+	}
+
+	/**
+	 * The activity discard's delete_media branch must not hard-delete a file
+	 * an evicted draft, handed back to the browser, still references.
+	 *
+	 * Mutation check: remove the bb_draft_attachment_is_eviction_protected()
+	 * condition from the delete_media loop in bb_nouveau_ajax_post_draft_activity()
+	 * and this goes red - the file is permanently deleted.
+	 */
+	public function test_activity_discard_delete_media_spares_an_evicted_drafts_file() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$shared = $this->make_draft_attachment( $user_id );
+		update_post_meta( $shared, 'bb_media_draft', 1 );
+		// Another draft using the file was evicted and handed back moments ago.
+		update_post_meta( $shared, 'bb_draft_evicted_at', time() );
+
+		bp_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		$this->drive_activity_draft_raw(
+			array(
+				'data_key'     => 'draft_user',
+				'object'       => 'user',
+				'post_action'  => 'delete',
+				'delete_media' => 'true',
+			)
+		);
+
+		$this->assertEmpty( bp_get_user_meta( $user_id, 'draft_user', true ), 'Premise: the draft was discarded.' );
+		$this->assertInstanceOf( 'WP_Post', get_post( $shared ), 'delete_media must not hard-delete a file an evicted draft still uses.' );
+		$this->assertSame( '1', (string) get_post_meta( $shared, 'bb_media_draft', true ), 'The file keeps its draft stamp.' );
+	}
+
+	/**
+	 * The eviction window matches the orphan-stamp sweep: protected while the
+	 * marker is inside the retention, released after it, kept for ever when
+	 * expiry is off, and never for a file without a marker.
+	 */
+	public function test_eviction_protection_window_matches_the_sweep() {
+		$user_id       = self::factory()->user->create();
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		$this->assertFalse( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'No marker, no protection.' );
+
+		update_post_meta( $attachment_id, 'bb_draft_evicted_at', time() - DAY_IN_SECONDS );
+		$this->assertTrue( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'Inside the retention window.' );
+
+		update_post_meta( $attachment_id, 'bb_draft_evicted_at', time() - bb_draft_retention_seconds() - HOUR_IN_SECONDS );
+		$this->assertFalse( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'Past the retention window.' );
+
+		add_filter( 'bb_draft_retention_days', '__return_zero' );
+		$this->assertTrue( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'Expiry off keeps it for ever.' );
+		remove_filter( 'bb_draft_retention_days', '__return_zero' );
+
+		$this->assertFalse( bb_draft_attachment_is_eviction_protected( 0 ), 'An empty ID is never protected.' );
+	}
+
+	/**
+	 * On multisite the upgrade heal records evicted files in the network
+	 * ledger instead of the marker; that ledger protects them too.
+	 */
+	public function test_eviction_protection_reads_the_multisite_ledger() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'The eviction ledger is multisite only.' );
+		}
+
+		$user_id       = self::factory()->user->create();
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		update_site_option( bb_draft_eviction_file_ledger_option(), array( $attachment_id => time() ) );
+		$this->assertTrue( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'A fresh ledger entry protects the file.' );
+
+		update_site_option( bb_draft_eviction_file_ledger_option(), array( $attachment_id => time() - bb_draft_retention_seconds() - HOUR_IN_SECONDS ) );
+		$this->assertFalse( bb_draft_attachment_is_eviction_protected( $attachment_id ), 'An expired ledger entry does not.' );
+
+		delete_site_option( bb_draft_eviction_file_ledger_option() );
+	}
 }
