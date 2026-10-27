@@ -316,12 +316,18 @@ class BP_Groups_Member {
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $this->group_id );
 
-		// Create a group subscription.
-		if ( $is_member_add && 1 === (int) $this->is_confirmed ) {
-			self::bb_create_group_subscription( $this->user_id, $this->group_id, null );
-		} else {
-			self::bb_create_group_subscription( $this->user_id, $this->group_id, $this->is_banned );
-		}
+		/**
+		 * Fires after a group membership row has been saved.
+		 *
+		 * Group subscriptions moved to BuddyBoss Add-ons, which creates or updates the
+		 * member's subscription here.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param BP_Groups_Member $member        The saved membership.
+		 * @param bool             $is_member_add True when the row was inserted, false when it was updated.
+		 */
+		do_action( 'bb_groups_member_after_membership_save', $this, $is_member_add );
 
 		/**
 		 * Fires after the current group membership item has been saved.
@@ -467,8 +473,17 @@ class BP_Groups_Member {
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $this->group_id );
 
-		// Delete group subscription.
-		self::bb_remove_group_subscription( $this->user_id, $this->group_id );
+		/**
+		 * Fires after a member has been removed from a group.
+		 *
+		 * Group subscriptions moved to BuddyBoss Add-ons, which removes the member's
+		 * subscription here.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param BP_Groups_Member $member The removed membership.
+		 */
+		do_action( 'bb_groups_member_after_membership_remove', $this );
 
 		/**
 		 * Fires after a member is removed from a group.
@@ -543,8 +558,18 @@ class BP_Groups_Member {
 		// Update the group's member count.
 		self::refresh_total_member_count_for_group( $group_id );
 
-		// Delete group subscription.
-		self::bb_remove_group_subscription( $user_id, $group_id );
+		/**
+		 * Fires after a group membership row has been deleted.
+		 *
+		 * Group subscriptions moved to BuddyBoss Add-ons, which removes the member's
+		 * subscription here.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $user_id  ID of the user.
+		 * @param int $group_id ID of the group.
+		 */
+		do_action( 'bb_groups_member_after_membership_delete', $user_id, $group_id );
 
 		/**
 		 * Fires after a member is removed from a group.

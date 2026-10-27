@@ -2616,8 +2616,10 @@ function bb_update_to_2_2_8() {
 	// Install new group subscription email templates.
 	bb_migrate_group_subscription_email_templates();
 
-	// Migrate group subscriptions.
-	bb_migrate_group_subscription( true );
+	// Migrate group subscriptions. The migration ships with BuddyBoss Add-ons, which also offers it as a repair tool.
+	if ( function_exists( 'bb_migrate_group_subscription' ) ) {
+		bb_migrate_group_subscription( true );
+	}
 }
 
 /**
