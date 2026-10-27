@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.6.2
+Stable tag: 3.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,7 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Upgrade Notice ==
 
-= [BBVERSION] =
+= 3.7.0 =
 Important: Videos, Documents and Animated GIFs (GIPHY) have moved to the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans. Your existing videos, documents and GIFs are kept, but they will be hidden from members until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
 
 == Changelog ==

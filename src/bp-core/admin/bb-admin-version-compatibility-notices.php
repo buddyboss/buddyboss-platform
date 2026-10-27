@@ -83,15 +83,14 @@ function bb_platform_3_required_addons() {
  * @return string Minimum Platform Pro version.
  */
 function bb_platform_3_pro_required_version() {
-	// @todo: Update when release. Set to the Platform Pro version that ships the PROD-9995 access-control changes (3.3.3 does not have them).
-	return '3.3.5';
+	return '3.4.0';
 }
 
 /**
  * Minimum BuddyBoss Add-ons version required by this Platform.
  *
  * Platform no longer ships Video and Documents, so the Add-ons copies are
- * the only live code. 1.2.4 is the first Add-ons build with the fixes that
+ * the only live code. 1.3.0 is the first Add-ons release with the fixes that
  * shipped in Platform's own copies: the Private Website download guard
  * (bb_private_network_restrict_download()), the REST document-folder
  * permission rules and the group peer-folder upload rule. It also stops
@@ -106,15 +105,14 @@ function bb_platform_3_pro_required_version() {
  * @return string Minimum Add-ons version.
  */
 function bb_platform_3_addons_required_version() {
-	// @todo: Update when release. Set to the Add-ons release that ships the PROD-9995 branch (the released 1.2.3 does not have its security ports).
-	return '1.2.4';
+	return '1.3.0';
 }
 
 /**
  * Minimum BuddyBoss Offload Media version required by this Platform.
  *
  * Video and Documents now ship in BuddyBoss Add-ons, so BP_Video and
- * BP_Document can be missing. Offload Media 2.1.5 carries the
+ * BP_Document can be missing. Offload Media 2.2.0 carries the
  * class_exists() guards from Offload Media #25 around its BP_Video and
  * BP_Document use (video store handler, bucket helper); 2.1.4 and older
  * fatal while processing existing videos or documents without Add-ons.
@@ -124,8 +122,7 @@ function bb_platform_3_addons_required_version() {
  * @return string Minimum Offload Media version.
  */
 function bb_platform_3_offload_media_required_version() {
-	// @todo: Update when release. Set to the Offload Media version that ships the PROD-9995 BP_Video/BP_Document guards (2.1.4 does not have them).
-	return '2.1.5';
+	return '2.2.0';
 }
 
 /**

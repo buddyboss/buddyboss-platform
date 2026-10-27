@@ -136,7 +136,7 @@ function bb_addons_below_floor_bridge_get_rest_folder_id( $request ) {
 /**
  * Apply the newer document-folder update permission rules for old Add-ons.
  *
- * Mirrors update_item_permissions_check() of Add-ons 1.2.4 / Platform 3.6.2 on
+ * Mirrors update_item_permissions_check() of Add-ons 1.3.0 / Platform 3.6.2 on
  * top of the 1.2.3 result. Only a passing result is tightened: the upload check
  * uses the folder's own group (never the request's), a `group_id` other than the
  * folder's is rejected, and group folders need document-manage rights in their
@@ -208,7 +208,7 @@ add_filter( 'bp_rest_document_update_item_permissions_check', 'bb_addons_below_f
 /**
  * Apply the newer document-folder create rule for old Add-ons.
  *
- * Mirrors create_item_permissions_check() of Add-ons 1.2.4 / Platform 3.6.2:
+ * Mirrors create_item_permissions_check() of Add-ons 1.3.0 / Platform 3.6.2:
  * a `group_id` that differs from the parent folder's group is rejected.
  *
  * @since BuddyBoss [BBVERSION]
@@ -250,7 +250,7 @@ add_filter( 'bp_rest_document_folder_create_items_permissions_check', 'bb_addons
  *
  * Add-ons 1.2.3 update_item() copies `group_id` from the request (forcing
  * 'grouponly'), applies any requested privacy, and then cascades
- * `$request['privacy']` to the folder tree. Add-ons 1.2.4 / Platform 3.6.2 never
+ * `$request['privacy']` to the folder tree. Add-ons 1.3.0 / Platform 3.6.2 never
  * take the group from the request and change privacy only for a personal root
  * folder whose privacy actually changes (not to 'grouponly'); a new parent
  * still sets the parent's privacy without a cascade.

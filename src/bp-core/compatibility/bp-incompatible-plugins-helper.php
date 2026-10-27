@@ -1293,8 +1293,7 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
  * @return string Minimum BuddyBoss Theme version.
  */
 function bb_platform_3_theme_required_version() {
-	// @todo: Update when release. Set to the BuddyBoss Theme version that ships the PROD-9995 document guards (2.22.4 does not have them).
-	return '2.22.5';
+	return '2.23.0';
 }
 
 /**
