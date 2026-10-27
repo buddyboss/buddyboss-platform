@@ -36,6 +36,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public $settings = array();
 
 		/**
+		 * Whether ReadyLaunch owns the forum page of this request.
+		 *
+		 * Taken from the main query before bbPress renders anything, so a forum
+		 * shortcode on an ordinary page cannot change it. Null until then.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 * @var bool|null
+		 */
+		private $bb_rl_owns_forum_page = null;
+
+		/**
 		 * Get the instance of this class.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -116,6 +127,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// `template_include` callback. A filter added there is registered
 				// too late to see the only pass that matters.
 				add_filter( 'bbp_default_scripts', array( $this, 'bb_rl_remove_default_topic_reply_draft_script' ) );
+
+				// Before bbPress (priority 10) so the decision reads the main
+				// query, not a forum shortcode rendered inside a theme page.
+				add_filter( 'template_include', array( $this, 'bb_rl_capture_forum_page_ownership' ), 1 );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -3514,9 +3529,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 *
 		 * `bb_is_readylaunch_forums()` is the same predicate that decides
 		 * whether ReadyLaunch takes the page over at all, so the two decisions
-		 * cannot drift apart. It is also narrower than it looks: bbPress only
-		 * adds this handle on a single forum or single topic, which is exactly
-		 * where the ReadyLaunch pack replaces it.
+		 * cannot drift apart. It is read from the main query, captured by
+		 * {@see bb_rl_capture_forum_page_ownership()} before bbPress renders:
+		 * a topic or forum shortcode on an ordinary page also makes bbPress add
+		 * this handle, but that page stays on the theme template and must keep
+		 * the default pack.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -3528,11 +3545,37 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $scripts;
 			}
 
-			if ( $this->bb_is_readylaunch_forums() ) {
+			// A `[bbp-single-topic]` or `[bbp-single-forum]` shortcode on an
+			// ordinary page makes bb_is_readylaunch_forums() true while it renders,
+			// but that page keeps the theme template and never loads the
+			// ReadyLaunch pack. Decide from the main query instead, so such a page
+			// keeps the default pack and its drafts.
+			$readylaunch_owns_page = null === $this->bb_rl_owns_forum_page ? $this->bb_is_readylaunch_forums() : $this->bb_rl_owns_forum_page;
+
+			if ( $readylaunch_owns_page ) {
 				unset( $scripts['bb-topic-reply-draft'] );
 			}
 
 			return $scripts;
+		}
+
+		/**
+		 * Record whether ReadyLaunch owns this request's forum page.
+		 *
+		 * Runs on `template_include` before bbPress renders the page, so the
+		 * check reads the main query. {@see bb_rl_remove_default_topic_reply_draft_script()}
+		 * uses it to keep the default forum draft pack on an ordinary page that
+		 * embeds a topic or forum by shortcode.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $template Template path.
+		 * @return string Unchanged template path.
+		 */
+		public function bb_rl_capture_forum_page_ownership( $template ) {
+			$this->bb_rl_owns_forum_page = (bool) $this->bb_is_readylaunch_forums();
+
+			return $template;
 		}
 
 		/**
