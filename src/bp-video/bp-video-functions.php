@@ -1009,6 +1009,21 @@ function bp_video_preview_image_by_js( $video ) {
 }
 
 /**
+ * Check whether videos with this privacy skip the background thumbnail job.
+ *
+ * Forum and message videos are skipped. Activity post and comment videos are queued.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $privacy Video privacy.
+ *
+ * @return bool True when the background thumbnail job is skipped.
+ */
+function bb_video_privacy_skips_background_thumbnail( $privacy ) {
+	return in_array( $privacy, array( 'forums', 'message' ), true );
+}
+
+/**
  * Put the video in background process to create thumbnails.
  *
  * @param int $video_id Video id.
@@ -1028,14 +1043,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 		$video = new BP_Video( $video_id );
 
-		if ( ! empty( $video->privacy ) && in_array(
-			$video->privacy,
-			array(
-				'forums',
-				'message',
-			),
-			true
-		) ) {
+		if ( ! empty( $video->privacy ) && bb_video_privacy_skips_background_thumbnail( $video->privacy ) ) {
 			return;
 		}
 
