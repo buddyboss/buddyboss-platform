@@ -1014,6 +1014,7 @@ function bp_video_preview_image_by_js( $video ) {
  * @param int $video_id Video id.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Also queues videos attached to activity comments.
  */
 function bp_video_add_generate_thumb_background_process( $video_id ) {
 
@@ -4409,6 +4410,90 @@ function bb_video_get_image_sizes() {
 }
 
 /**
+ * Get the registered dimensions of a video thumbnail size.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size Image size name, as registered by bb_video_register_image_sizes().
+ *
+ * @return array Array with `width` and `height`, or an empty array when the size is not registered.
+ */
+function bb_video_get_image_size_dimensions( $size ) {
+	foreach ( bb_video_get_image_sizes() as $name => $image_size ) {
+		if ( sanitize_key( $name ) === $size && ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) ) {
+			return array(
+				'width'  => (int) $image_size['width'],
+				'height' => (int) $image_size['height'],
+			);
+		}
+	}
+
+	return array();
+}
+
+/**
+ * Check whether a poster was found too small to produce a thumbnail size.
+ *
+ * The record holds the size's dimensions at the time it was made, so it stops applying
+ * when the size is registered with different dimensions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $attachment_id Poster attachment ID.
+ * @param string $size          Image size name.
+ *
+ * @return bool True when the size should not be regenerated for this poster.
+ */
+function bb_video_is_thumb_size_unavailable( $attachment_id, $size ) {
+	$target = bb_video_get_image_size_dimensions( $size );
+
+	if ( empty( $target ) ) {
+		return false;
+	}
+
+	$recorded = get_post_meta( $attachment_id, '_bb_video_thumb_unavailable_' . $size, true );
+
+	return $recorded === $target['width'] . 'x' . $target['height'];
+}
+
+/**
+ * Record that a poster is too small to produce a thumbnail size.
+ *
+ * WordPress does not create a size when the source is not larger than it on either axis,
+ * so regenerating can never produce it. Any other reason for a missing size (memory or time
+ * limits, no image editor, a source file that is not readable yet) is not recorded, so it is
+ * retried on the next request. Each size has its own meta key, so concurrent requests
+ * cannot overwrite each other's record.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $attachment_id Poster attachment ID.
+ * @param string $size          Image size name.
+ *
+ * @return bool True when the size was recorded.
+ */
+function bb_video_maybe_mark_thumb_size_unavailable( $attachment_id, $size ) {
+	$target   = bb_video_get_image_size_dimensions( $size );
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	$width    = ! empty( $metadata['width'] ) ? (int) $metadata['width'] : 0;
+	$height   = ! empty( $metadata['height'] ) ? (int) $metadata['height'] : 0;
+
+	if (
+		empty( $target ) ||
+		$width <= 0 ||
+		$height <= 0 ||
+		$width > $target['width'] ||
+		$height > $target['height']
+	) {
+		return false;
+	}
+
+	update_post_meta( $attachment_id, '_bb_video_thumb_unavailable_' . $size, $target['width'] . 'x' . $target['height'] );
+
+	return true;
+}
+
+/**
  * Add video upload filters.
  *
  * @since BuddyBoss 1.7.0
@@ -4558,6 +4643,7 @@ function bb_video_add_thumb_image_remove_upload_filters() {
  * @return array|false|string|string[]|void
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Skips regenerating a thumbnail size the poster is too small to produce.
  */
 function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $generate = true ) {
 
@@ -4618,47 +4704,14 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 				}
 			} elseif ( ! $file ) {
 
-				$unavailable_sizes = get_post_meta( $attachment_id, '_bb_video_thumb_unavailable_sizes', true );
-				if ( ! is_array( $unavailable_sizes ) ) {
-					$unavailable_sizes = array();
-				}
-
-				if ( ! in_array( $size, $unavailable_sizes, true ) ) {
+				// Skip the regeneration when an earlier attempt showed the poster is too small for this size.
+				if ( ! bb_video_is_thumb_size_unavailable( $attachment_id, $size ) ) {
 					bp_video_regenerate_attachment_thumbnails( $attachment_id );
 
 					$file = image_get_intermediate_size( $attachment_id, $size );
 
-					// Only permanently skip this size when the source poster image is verifiably
-					// smaller than (or equal to) the registered target dimensions on both axes --
-					// that is the one failure WP's own non-cropped resize can never recover from on
-					// a later attempt. Any other cause of a missing $file (memory exhaustion during
-					// wp_generate_attachment_metadata(), a source file that isn't readable or fully
-					// flushed yet, no available image editor, a timeout mid-regeneration) is
-					// transient, so it's left off the blacklist and simply retried next request.
 					if ( ! $file ) {
-						$target_size = array();
-						foreach ( bb_video_get_image_sizes() as $registered_name => $registered_size ) {
-							if ( sanitize_key( $registered_name ) === $size ) {
-								$target_size = $registered_size;
-								break;
-							}
-						}
-
-						$source_meta   = wp_get_attachment_metadata( $attachment_id );
-						$source_width  = ! empty( $source_meta['width'] ) ? (int) $source_meta['width'] : 0;
-						$source_height = ! empty( $source_meta['height'] ) ? (int) $source_meta['height'] : 0;
-
-						if (
-							! empty( $target_size['width'] ) &&
-							! empty( $target_size['height'] ) &&
-							$source_width > 0 &&
-							$source_height > 0 &&
-							$source_width <= (int) $target_size['width'] &&
-							$source_height <= (int) $target_size['height']
-						) {
-							$unavailable_sizes[] = $size;
-							update_post_meta( $attachment_id, '_bb_video_thumb_unavailable_sizes', $unavailable_sizes );
-						}
+						bb_video_maybe_mark_thumb_size_unavailable( $attachment_id, $size );
 					}
 				}
 

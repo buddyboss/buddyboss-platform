@@ -4284,13 +4284,16 @@ window.bp = window.bp || {};
 
 							if ( ! response.data.js_preview ) {
 								var thumbnailCheckAttempts = 0;
+								// Poll until the capture settles, the preview leaves the page (file removed or
+								// comment submitted), or 60s pass, so the interval never outlives the form.
 								var thumbnailCheck = setInterval(
 									function () {
+										var $thumbnailPreview = $( file.previewElement ).closest( '.dz-preview' );
 										thumbnailCheckAttempts++;
-										if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+										if ( $thumbnailPreview.hasClass( 'dz-has-no-thumbnail' ) || $thumbnailPreview.hasClass( 'dz-has-thumbnail' ) ) {
 											response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
 											clearInterval( thumbnailCheck );
-										} else if ( thumbnailCheckAttempts >= 50 ) {
+										} else if ( ! file.previewElement || ! document.body.contains( file.previewElement ) || thumbnailCheckAttempts >= 300 ) {
 											clearInterval( thumbnailCheck );
 										}
 									},
