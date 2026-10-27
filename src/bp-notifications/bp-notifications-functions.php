@@ -1881,6 +1881,8 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * then this notification will only for read purpose.
  *
  * @since BuddyBoss 2.2.7
+ * @since BuddyBoss [BBVERSION] Resolve the triggering user from item_id for the legacy
+ *                              'friendship_request' and 'friendship_accepted' actions.
  *
  * @param object $notification Notification item.
  *
@@ -1888,10 +1890,12 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  */
 function bb_notification_is_read_only( $notification ) {
 	static $cache = array();
-	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
+	// item_id is the triggering user_id and secondary_item_id is the friendship_id for the below component actions.
 	$allowed_component_action = array(
 		'bb_connections_request_accepted',
 		'bb_connections_new_request',
+		'friendship_accepted',
+		'friendship_request',
 	);
 
 	if ( empty( $notification->id ) ) {
@@ -1905,12 +1909,12 @@ function bb_notification_is_read_only( $notification ) {
 	}
 
 	/*
-	 * Resolve the ID that actually represents the user who triggered the
-	 * notification. For the allowed connection actions the triggering user is
-	 * stored in item_id; for every other notification type it is stored in
-	 * secondary_item_id. Using the wrong field means bp_is_user_inactive() would
-	 * receive a non-user ID (post, group, activity, etc.) and return false
-	 * positives, incorrectly marking active notifications as read-only.
+	 * Resolve the ID of the user who triggered the notification. Connection
+	 * notifications (modern and legacy) store that user in item_id and the
+	 * friendship ID in secondary_item_id; every other notification type stores
+	 * the triggering user in secondary_item_id. Passing the friendship ID to
+	 * bp_is_user_inactive() would mark the notification read-only whenever no
+	 * user with that ID exists.
 	 */
 	if ( in_array( $notification->component_action, $allowed_component_action, true ) ) {
 		$triggering_user_id = ! empty( $notification->item_id ) ? (int) $notification->item_id : 0;
