@@ -243,7 +243,7 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = (int) filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+	$group_id = bp_is_active( 'groups' ) ? (int) filter_input( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT ) : 0;
 
 	if (
 		( ( bp_is_my_profile() || bp_is_user_media() ) && empty( bb_user_can_create_media() ) ) ||
@@ -327,6 +327,36 @@ function bp_nouveau_ajax_media_save() {
 			);
 			wp_send_json_error( $response );
 		}
+	}
+
+	// A destination album must be one the user can add to, and must belong to the checked group (or none).
+	if ( ! empty( $album_id ) ) {
+		$destination_album = new BP_Media_Album( $album_id );
+		$album_access      = empty( $group_id ) ? bb_media_user_can_access( $album_id, 'album' ) : array();
+
+		if (
+			empty( $destination_album->id ) ||
+			(int) $destination_album->group_id !== $group_id ||
+			( empty( $group_id ) && empty( $album_access['can_add'] ) )
+		) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You do not have permission to add media to this album.', 'buddyboss' )
+			);
+			wp_send_json_error( $response );
+		}
+	}
+
+	// Save every photo into the group and album checked above; never trust the per-item values from the request.
+	foreach ( $medias as $key => $media ) {
+		if ( ! is_array( $media ) ) {
+			unset( $medias[ $key ] );
+			continue;
+		}
+
+		$medias[ $key ]['group_id']   = $group_id;
+		$medias[ $key ]['album_id']   = (int) $album_id;
+		$medias[ $key ]['message_id'] = 0;
 	}
 
 	$privacy = bb_filter_input_string( INPUT_POST, 'privacy' );
@@ -891,8 +921,9 @@ function bp_nouveau_ajax_media_album_save() {
 			wp_send_json_error( $response );
 		}
 
-		$album   = new BP_Media_Album( $id );
-		$user_id = $album->user_id;
+		$album    = new BP_Media_Album( $id );
+		$user_id  = $album->user_id;
+		$group_id = ! empty( $album->group_id ) ? (int) $album->group_id : false; // An edit never moves the album to another group.
 	}
 
 	if (
@@ -932,9 +963,16 @@ function bp_nouveau_ajax_media_album_save() {
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	if ( ! empty( $medias ) ) {
-		// set album id for media.
+		// Save every photo into this album and its group; never trust the per-item values from the request.
 		foreach ( $medias as $key => $media ) {
-			$medias[ $key ]['album_id'] = $album_id;
+			if ( ! is_array( $media ) ) {
+				unset( $medias[ $key ] );
+				continue;
+			}
+
+			$medias[ $key ]['album_id']   = $album_id;
+			$medias[ $key ]['group_id']   = (int) $group_id;
+			$medias[ $key ]['message_id'] = 0;
 		}
 
 		// save all media uploaded.
