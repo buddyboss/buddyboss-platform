@@ -2520,12 +2520,14 @@ function bb_draft_get_evicted_attachment_ledger_ids() {
 		return array();
 	}
 
-	$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
-	$cutoff = time() - bb_draft_retention_seconds();
-	$ids    = array();
+	$ledger            = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+	$retention_seconds = bb_draft_retention_seconds();
+	$cutoff            = time() - $retention_seconds;
+	$ids               = array();
 
 	foreach ( is_array( $ledger ) ? $ledger : array() as $attachment_id => $evicted_at ) {
-		if ( (int) $evicted_at >= $cutoff ) {
+		// Expiry off keeps drafts, and so their files, for ever.
+		if ( 1 > $retention_seconds || (int) $evicted_at >= $cutoff ) {
 			$ids[] = (int) $attachment_id;
 		}
 	}

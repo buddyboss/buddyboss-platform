@@ -10931,4 +10931,34 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		delete_site_option( bb_draft_eviction_file_ledger_option() );
 	}
+
+	/**
+	 * With expiry off, the daily prune must keep the multisite eviction ledger,
+	 * so a file it protects stays protected for ever, as the sweep promises.
+	 *
+	 * Mutation check: drop the `1 > $retention_seconds` keep in
+	 * bb_draft_get_evicted_attachment_ledger_ids() and the prune empties the
+	 * ledger, so this goes red.
+	 */
+	public function test_prune_keeps_the_ledger_when_expiry_is_off() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'The eviction ledger is multisite only.' );
+		}
+
+		$user_id       = self::factory()->user->create();
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		update_site_option( bb_draft_eviction_file_ledger_option(), array( $attachment_id => time() - 400 * DAY_IN_SECONDS ) );
+
+		add_filter( 'bb_draft_retention_days', '__return_zero' );
+		bb_drafts_prune_evicted_holds();
+		$protected = bb_draft_attachment_is_eviction_protected( $attachment_id );
+		remove_filter( 'bb_draft_retention_days', '__return_zero' );
+
+		$ledger = get_site_option( bb_draft_eviction_file_ledger_option(), array() );
+		delete_site_option( bb_draft_eviction_file_ledger_option() );
+
+		$this->assertArrayHasKey( $attachment_id, (array) $ledger, 'The prune keeps the ledger entry when expiry is off.' );
+		$this->assertTrue( $protected, 'The file stays protected.' );
+	}
 }
