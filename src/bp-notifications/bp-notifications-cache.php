@@ -36,6 +36,74 @@ function bp_notifications_update_meta_cache( $notification_ids = false ) {
 }
 
 /**
+ * Get (and lazily create) the cache-busting incrementor for a user's
+ * notification counts.
+ *
+ * The value is embedded into every notification-count cache key built by
+ * bp_notifications_get_count_cache_key(). Bumping it via
+ * bp_notifications_bump_user_count_cache_incrementor() makes every
+ * previously cached count for that user - no matter which component_name/
+ * item_id/etc. combination produced it - unreachable in one operation,
+ * without needing to enumerate or individually delete each variant's key.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ * @return string Incrementor value.
+ */
+function bp_notifications_get_user_count_cache_incrementor( $user_id ) {
+	$incrementor = wp_cache_get( $user_id, 'bp_notifications_count_incrementor' );
+
+	if ( false === $incrementor ) {
+		$incrementor = microtime();
+		wp_cache_set( $user_id, $incrementor, 'bp_notifications_count_incrementor' );
+	}
+
+	return $incrementor;
+}
+
+/**
+ * Invalidate every cached notification count for a user, regardless of
+ * which component_name/item_id/etc. arguments produced it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ */
+function bp_notifications_bump_user_count_cache_incrementor( $user_id ) {
+	wp_cache_delete( $user_id, 'bp_notifications_count_incrementor' );
+}
+
+/**
+ * Build a cache key for a notification count query.
+ *
+ * The key is a hash of the final count SQL plus the user's incrementor, so it
+ * reflects every input that shapes the query (including is_new, meta/date
+ * queries and conditions added through `bb_notifications_get_where_conditions`)
+ * and is always a plain 32-character hash, which is safe for Memcached.
+ *
+ * Used by BP_Notifications_Notification::get_total_count() so that two queries
+ * for the same user with different filters never share a cache slot. See PROD-10344.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id User ID the count belongs to.
+ * @param string $sql     The final SQL of the count query.
+ *
+ * @return string Cache key.
+ */
+function bp_notifications_get_count_cache_key( $user_id, $sql ) {
+	global $wpdb;
+
+	$incrementor = bp_notifications_get_user_count_cache_incrementor( $user_id );
+
+	// Remove the placeholder escape strings from the query.
+	$sql = $wpdb->remove_placeholder_escape( $sql );
+
+	return md5( $sql . $incrementor );
+}
+
+/**
  * Clear all notifications cache for a given user ID.
  *
  * @since BuddyPress 2.3.0
@@ -47,6 +115,7 @@ function bp_notifications_clear_all_for_user_cache( $user_id = 0 ) {
 	wp_cache_delete( $user_id, 'bp_notifications_unread_count' );
 	wp_cache_delete( $user_id, 'bp_notifications_read_count' );
 	wp_cache_delete( $user_id, 'bp_notifications_grouped_notifications' );
+	bp_notifications_bump_user_count_cache_incrementor( $user_id );
 }
 
 /**
