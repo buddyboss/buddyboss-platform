@@ -394,7 +394,7 @@ class Cache {
 	/**
 	 * Purge cache by Component for setting screen
 	 *
-	 * @param string $component Component cache-group prefix to purge (e.g. 'bp-activity').
+	 * @param string $component Text to match anywhere in the cache group name (e.g. 'bp-activity').
 	 */
 	public function purge_by_component( $component = '' ) {
 		global $wpdb;
