@@ -415,7 +415,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 				$translated = esc_html( $translated );
 
-				// Expected format is a search link: only change the link text, not its URL.
+				// Expected format is a search link: If another filter wrapped the value in a link, only change the link text.
 				foreach ( array_unique( array( esc_html( $option->name ), $option->name ) ) as $label ) {
 					$linked = str_replace( ">{$label}</a>", ">{$translated}</a>", $value, $count );
 					if ( $count ) {
