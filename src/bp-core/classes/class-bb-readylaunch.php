@@ -2258,10 +2258,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$nonce = isset( $_POST['bb_rl_invite_form_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_rl_invite_form_nonce'] ) ) : '';
 
 			// Verify nonce.
-			if (
-				! empty( $nonce ) &&
-				! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' )
-			) {
+			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' ) ) {
 				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
 				wp_send_json_error( $response );
 			}
@@ -2295,6 +2292,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$name        = isset( $_POST['bb-rl-invite-name'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-name'] ) ) : '';
 			$member_type = isset( $_POST['bb-rl-invite-type'] ) ? sanitize_text_field( wp_unslash( $_POST['bb-rl-invite-type'] ) ) : '';
+
+			// Activation applies this type's mapped WP role, so only keep a type the inviter may choose.
+			if ( '' !== $member_type && ! bb_is_member_type_allowed_on_invite( $member_type ) ) {
+				$member_type = '';
+			}
 
 			$subject = bp_disable_invite_member_email_subject() && ! empty( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) )
 				? stripslashes( wp_strip_all_tags( sanitize_text_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) ) ) )

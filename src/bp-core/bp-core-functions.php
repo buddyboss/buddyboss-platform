@@ -4294,11 +4294,16 @@ function bp_strip_script_and_style_tags( $string ) {
 }
 
 /**
- * Check if logged in member type is allowed to send invites
+ * Check if a member's profile type is allowed to select the invitee's profile type.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Added the `$user_id` parameter.
+ *
+ * @param int $user_id Optional. Member to check. Default: the logged-in member.
+ *
+ * @return bool
  */
-function bp_check_member_send_invites_tab_member_type_allowed() {
+function bp_check_member_send_invites_tab_member_type_allowed( $user_id = 0 ) {
 
 	// default allowed false
 	$allowed = false;
@@ -4307,7 +4312,7 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 	if ( true === bp_member_type_enable_disable() ) {
 		// Check BuddyBoss > Settings > Email Invites > Allow users to select profile type of invitee.
 		if ( true === bp_disable_invite_member_type() ) {
-			$current_user = bp_loggedin_user_id();
+			$current_user = ! empty( $user_id ) ? (int) $user_id : bp_loggedin_user_id();
 			$member_type  = bp_get_member_type( $current_user );
 			// If current user don't have any profile type then we are not allow.
 			if ( false === $member_type ) {
