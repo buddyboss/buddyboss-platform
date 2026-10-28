@@ -1423,3 +1423,47 @@ function bb_theme_document_activity_cached_meta_compat( $meta_data, $activity_id
 	return array_diff_key( $meta_data, array_flip( bb_theme_document_activity_meta_keys() ) );
 }
 add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
+
+/**
+ * Define a no-op group subscription sender when nothing else provides one.
+ *
+ * BuddyBoss Platform Pro 3.3.4 and older call
+ * `bb_subscription_send_subscribe_group_notifications()` without a
+ * `function_exists()` check when a scheduled group post is published. The
+ * function moved to BuddyBoss Add-ons, which defines it only when its Group
+ * Subscription module loads (`bp_include`, priority 20). Without this fallback,
+ * a site that updates Platform before Pro, without that module, gets a fatal
+ * error in the scheduled post cron.
+ *
+ * Runs late on `bp_loaded`, after the Add-ons module has had its chance to
+ * define the real function. Defining the stub at file load instead would win
+ * the race and stop Add-ons from defining the real one. It lives here, not in
+ * the deprecated files, because those do not load on installs that ignore
+ * deprecated code (the default for new installs since BuddyBoss 2.1.4).
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_maybe_define_group_subscription_send_fallback() {
+	if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+		return;
+	}
+
+	/**
+	 * Send group subscription notifications.
+	 *
+	 * Fallback that does nothing; group subscriptions need BuddyBoss Add-ons. It
+	 * raises no deprecation notice, because Platform's own guarded callers reach
+	 * it on every group post when the Add-ons module is not loaded.
+	 *
+	 * @since BuddyBoss 2.2.8
+	 * @deprecated BuddyBoss [BBVERSION] Group subscriptions moved to BuddyBoss Add-ons.
+	 *
+	 * @param string $content     The content of the update.
+	 * @param int    $user_id     ID of the user posting the update.
+	 * @param int    $group_id    ID of the group being posted to.
+	 * @param int    $activity_id ID of the activity item being updated.
+	 */
+	function bb_subscription_send_subscribe_group_notifications( $content, $user_id, $group_id, $activity_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	}
+}
+add_action( 'bp_loaded', 'bb_maybe_define_group_subscription_send_fallback', 99 );

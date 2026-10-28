@@ -4507,11 +4507,10 @@ function bb_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
  * Whether the active Add-ons build is missing a player or picker library that moved into it.
  *
  * The video.js player and the GIPHY library moved from Platform into Add-ons.
- * Add-ons builds without them still provide Videos and GIFs, so the upload tools
- * and the GIF picker would have no library behind them. Used by the video upload
- * gate in the Add-ons below-floor bridge and by bb_media_gif_picker_available().
- * This checks the running code, not the version number, so any build without the
- * assets is matched.
+ * Add-ons builds without them still provide GIFs, so the GIF picker would have no
+ * library behind it. Used by bb_media_gif_picker_available(). This checks the
+ * running code, not the version number, so any build without the assets is
+ * matched.
  *
  * @since BuddyBoss [BBVERSION]
  *

@@ -2167,7 +2167,9 @@ function bb_notification_excluded_component_actions() {
 	$actions = array();
 
 	// Group subscriptions ship with BuddyBoss Add-ons. Without it nothing formats their notifications.
-	$has_group_subscriptions = ! empty( bb_register_subscriptions_types( 'group' ) );
+	// Check the formatter, not the subscription type: the type is not registered while the setting
+	// is off, and existing notifications should still show then.
+	$has_group_subscriptions = function_exists( 'bb_format_groups_subscription_notification' );
 
 	if ( ! bp_is_active( 'activity' ) || ! $has_group_subscriptions ) {
 		$actions[] = 'bb_groups_subscribed_activity';

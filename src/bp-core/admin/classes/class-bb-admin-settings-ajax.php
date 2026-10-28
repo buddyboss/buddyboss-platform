@@ -1622,6 +1622,7 @@ class BB_Admin_Settings_Ajax {
 			'_bb-sso-providers'                => 'social-login',
 			'_bb_enable_activity_post_polls'   => 'polls',
 			'_bb_enable_activity_pinned_posts' => 'pinned-posts',
+			'bb_enable_group_subscriptions'    => 'group-subscription',
 		);
 
 		foreach ( $all_fields as $field_key => $field ) {
