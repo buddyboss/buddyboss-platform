@@ -5632,7 +5632,7 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 							if ( ! $is_image ) {
 								if ( ! empty( $meta['sizes'][ $size ] ) ) {
 									$img_url = str_replace( $img_url_basename, $meta['sizes'][ $size ]['file'], $img_url );
-								} else {
+								} elseif ( ! empty( $meta['sizes']['full']['file'] ) ) {
 									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
 								}
 							}
@@ -5640,7 +5640,10 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 						}
 					}
 					$output_file_src = '../../' . $file['path'];
-					if ( file_exists( $output_file_src ) && ! file_exists( $filename ) ) {
+
+					// Use the same file name the caller checks and serves (includes the extension).
+					$filename = wp_basename( $attachment_path );
+					if ( file_exists( $output_file_src ) ) {
 						symlink( $output_file_src, $filename );
 					}
 				}
