@@ -3850,11 +3850,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
 			}
 
+			// Render the reply in single-topic context so capability checks resolve the
+			// topic the same way the topic page does (group-forum requests carry no singular
+			// topic, which otherwise leaves a guest's new reply without its Reply link until
+			// the page is reloaded). Mirrors BBP_Forums_Group_Extension::display_topics().
+			$topic_id              = bbp_get_reply_topic_id( $reply_id );
+			$previous_topic_id     = ! empty( $bbp->current_topic_id ) ? (int) $bbp->current_topic_id : 0;
+			$bbp->current_topic_id = $topic_id;
+			bbp_set_query_name( 'bbp_single_topic' );
+
 			while ( bbp_replies() ) :
 				bbp_the_reply();
 				bbp_get_template_part( 'loop', 'single-reply' );
 			endwhile;
 			$reply_html = ob_get_clean();
+
+			$bbp->current_topic_id = $previous_topic_id;
+			bbp_reset_query_name();
 
 			if ( function_exists( 'bbp_make_clickable' ) ) {
 				remove_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );
