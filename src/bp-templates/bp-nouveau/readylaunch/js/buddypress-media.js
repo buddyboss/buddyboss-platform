@@ -8381,6 +8381,11 @@ window.bp = window.bp || {};
 				description   = parent_wrap.find( '#add-activity-description' ).val(),
 				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
 
+			// The video script binds the same button; only save descriptions inside the media wrapper.
+			if ( ! parent_wrap.length ) {
+				return;
+			}
+
 			var data = {
 				'action': 'media_description_save',
 				'description': description,
