@@ -20,7 +20,7 @@ if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
 
 				<div class="update-item">
 					<cite>
-						<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" <?php echo ! empty( $activity_user_display_name ) ? 'data-bp-tooltip="' . esc_attr( $activity_user_display_name ) . '"' : ''; ?> <?php echo ! empty( $activity_user_id ) ? 'data-bb-hp-profile="' . esc_attr( $activity_user_id ) . '"' : ''; ?>">
+						<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" <?php echo ! empty( $activity_user_display_name ) ? 'data-bp-tooltip="' . esc_attr( $activity_user_display_name ) . '"' : ''; ?> <?php echo bb_get_hover_card_profile_attr( $activity_user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>">
 							<?php
 							bp_activity_avatar(
 								array(

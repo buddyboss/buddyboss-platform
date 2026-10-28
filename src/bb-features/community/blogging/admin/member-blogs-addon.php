@@ -375,7 +375,7 @@ function bb_member_blogging_get_upsell_field_data() {
 		case 'api_unavailable':
 			// The license is active but the add-ons API did not answer, so plan
 			// membership is genuinely unknown. Say so instead of guessing — an
-			// "Upgrade to Plus" button shown to a customer who already has Plus
+			// "Upgrade to Scale" button shown to a customer who already has Scale
 			// reads as a billing error on our side.
 			$data = array(
 				'empty_state_description' => __( 'We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again.', 'buddyboss' ),
@@ -388,7 +388,7 @@ function bb_member_blogging_get_upsell_field_data() {
 		default:
 			$data = array(
 				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
-				'button_label'            => __( 'Upgrade to Plus', 'buddyboss' ),
+				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
 				// Fallback for when the catalog has no entry for this panel — see
 				// `button_url_from_catalog` in the defaults above.
 				'button_url'              => 'https://www.buddyboss.com/pricing/',
@@ -553,9 +553,10 @@ function bb_member_blogging_ajax_install_plugin() {
 		);
 	}
 
-	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
+	$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
+	$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
 
-	if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
+	if ( '' === $download_url ) {
 		wp_send_json_error(
 			array(
 				'message'     => __( 'The Member Blogging add-on is not available under your current license.', 'buddyboss' ),
@@ -566,7 +567,7 @@ function bb_member_blogging_ajax_install_plugin() {
 
 	$skin     = new WP_Ajax_Upgrader_Skin();
 	$upgrader = new Plugin_Upgrader( $skin );
-	$result   = $upgrader->install( $product->_embedded->{'version-latest'}->url );
+	$result   = $upgrader->install( $download_url );
 
 	if ( is_wp_error( $result ) || ! $result ) {
 		$detail = is_wp_error( $result ) ? $result->get_error_message() : '';
