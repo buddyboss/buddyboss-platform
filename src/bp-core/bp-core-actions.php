@@ -1353,3 +1353,23 @@ function bb_load_readylaunch() {
 }
 
 add_action( 'bp_init', 'bb_load_readylaunch', 1 );
+
+/**
+ * Schedule the one-time cleanup of document preview symlinks that point at a directory.
+ *
+ * Runs bb_core_delete_directory_symlinks() once per site through a single cron event, so the
+ * directory scan never runs during a page request. Skips scheduling when the cleanup has
+ * already run on this site or is already queued.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_core_schedule_delete_directory_symlinks() {
+	if ( get_option( 'bb_directory_symlinks_deleted' ) || wp_next_scheduled( 'bb_core_delete_directory_symlinks' ) ) {
+		return;
+	}
+
+	wp_schedule_single_event( time(), 'bb_core_delete_directory_symlinks' );
+}
+
+add_action( 'bp_init', 'bb_core_schedule_delete_directory_symlinks' );
+add_action( 'bb_core_delete_directory_symlinks', 'bb_core_delete_directory_symlinks' );

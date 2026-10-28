@@ -5811,6 +5811,12 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 				}
 				if ( is_dir( 'wp-content/' . $sym_path ) ) {
 					chdir( 'wp-content/' . $sym_path );
+
+					// Callers pass false when the image size is missing.
+					if ( ! is_array( $file ) ) {
+						$file = array();
+					}
+
 					if ( empty( $file['path'] ) ) {
 						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
 						if ( 'document' === $type ) {
@@ -5823,7 +5829,7 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 							if ( ! $is_image ) {
 								if ( ! empty( $meta['sizes'][ $size ] ) ) {
 									$img_url = str_replace( $img_url_basename, $meta['sizes'][ $size ]['file'], $img_url );
-								} else {
+								} elseif ( ! empty( $meta['sizes']['full']['file'] ) ) {
 									$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
 								}
 							}
@@ -5831,6 +5837,9 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 						}
 					}
 					$output_file_src = '../../' . $file['path'];
+
+					// Use the same file name the caller checks and serves (includes the extension).
+					$filename = wp_basename( $attachment_path );
 					if ( file_exists( $output_file_src ) ) {
 						symlink( $output_file_src, $filename );
 					}
@@ -5840,6 +5849,48 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 		}
 	}
 
+}
+
+/**
+ * Delete document preview symlinks that point at a directory.
+ *
+ * In the relative symlink mode, documents without image sizes (for example audio files) used to
+ * get a symlink to their uploads month directory instead of the file. A preview symlink never
+ * points at a directory, so any such symlink is removed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array List of deleted symlink paths.
+ */
+function bb_core_delete_directory_symlinks() {
+	$deleted = array();
+
+	// Same directory as bp_document_symlink_path(), which is not loaded when documents are inactive.
+	$upload_dir = wp_upload_dir();
+	$dir        = $upload_dir['basedir'] . '/bb-platform-previews/' . md5( 'bb-documents' );
+
+	if ( is_dir( $dir ) ) {
+		$dh = opendir( $dir );
+		if ( false !== $dh ) {
+			while ( false !== ( $file = readdir( $dh ) ) ) {
+				if ( '.' === $file || '..' === $file ) {
+					continue;
+				}
+
+				$file = $dir . '/' . $file;
+				if ( is_link( $file ) && is_dir( $file ) ) {
+					unlink( $file );
+					$deleted[] = $file;
+				}
+			}
+			closedir( $dh );
+		}
+	}
+
+	// Per-site flag: the uploads directory, and so the symlinks, belong to the current site.
+	update_option( 'bb_directory_symlinks_deleted', 1 );
+
+	return $deleted;
 }
 
 function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
