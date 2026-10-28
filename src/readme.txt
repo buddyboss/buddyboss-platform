@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 6.8.1
+Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.1.2
+Stable tag: 3.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,93 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.6.2 =
+* Bug: Activity - Fixed an issue where comment reactions stopped working when reactions were turned off for activity posts
+* Bug: Activity - Fixed an issue where editing an activity comment wrongly increased the comment count
+* Bug: Core - Fixed an issue where the app could not load profile forum topics when a security plugin's username protection was turned on
+* Bug: Core - Strengthened permission checks for media previews, video thumbnails, invites, drafts and private messages
+* Bug: Email - Fixed an issue where message emails sent together could show the wrong sender avatar and profile link
+* Bug: Forums - Fixed an issue where logged-out visitors could not reply to existing replies in public discussions with anonymous posting enabled
+* Bug: Forums - Fixed an issue where videos in discussions and replies did not show a preview in the app
+* Bug: Translations - Fixed an issue where some Report text in the Turkish translation was worded incorrectly
+
+= 3.6.1 =
+* Bug: Activity - Fixed PHP warnings in activity feed caused by invalid cached activity data
+* Bug: Core - Fixed a security issue in how activity post drafts are saved
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover some restricted content
+* Bug: Core - Fixed an issue where Private Website protection did not fully cover file download links
+* Bug: Groups - Fixed a permissions issue with creating folders in group documents
+* Bug: Groups - Fixed an out-of-memory error that could occur when uploading media in very large groups
+* Bug: LearnDash - Fixed an issue cached API responses, causing the app's course screen to show placeholder content instead of the actual course curriculum
+* Bug: Media - Fixed an issue where profile completion did not recognize avatars and cover photos when media offloading was enabled
+* Bug: Messages - Fixed a slowdown that made pages load very slowly on large sites with many members and unread message notifications
+* Bug: Messages - Fixed an issue where some conversations in the app incorrectly showed that new messages could not be sent
+* Bug: ReadyLaunch - Fixed an issue where a stray divider line appeared in the group header for logged-out visitors
+* Bug: ReadyLaunch - Fixed an issue where discussion tags overflowed their container when a discussion had many tags
+
+= 3.6.0 =
+* Enhancement: Social Login - Added frontend Two-Factor Authentication management under Account - Security, allowing members to securely set up and manage 2FA and use it seamlessly with BuddyBoss Social Login
+* Bug: Groups - Fixed an issue where group members could not move documents into a group folder created by another member
+* Bug: Media - Fixed a display issue where the page layout broke after deleting all photos, videos or documents in comment and media pop-ups
+* Bug: Media - Fixed an issue where the empty album message was not shown after deleting the last photo or video in an album
+* Bug: Members - Fixed an issue where using the browser's back button after searching members showed a "Confirm Form Resubmission" error instead of the members list
+* Bug: ReadyLaunch - Fixed an issue where the comment box appeared inside the activity post and the layout broke after editing an activity or deleting its media
+
+= 3.5.1 =
+* Bug: Activity - Fixed an issue where a blocked member's posts and activity were still visible in the activity feed
+* Bug: Activity - Fixed an issue where the activity post editing time limit could become invalid, causing the settings page to show the wrong value and editing to stop working correctly
+* Bug: Core - Fixed an issue where administrators were unable to edit other users’ profile settings
+* Bug: Groups - Fixed an issue where the group invite member list took a long time to load
+* Bug: Login - Fixed an issue where the login security check (reCAPTCHA) could expire before a form was submitted, incorrectly locking out legitimate users
+* Bug: ReadyLaunch - Fixed a display issue where the password show/hide icon appeared above the password field instead of inside it in ReadyLaunch
+* Bug: Translations - Fixed an issue where translated text for the post reporting options did not appear on the site
+
+= 3.5.0 =
+* New Feature! Notification - Turn a flood of notification emails into a single daily or weekly Email Digest, with each member choosing their own frequency
+* Bug: Core - Fixed an issue that could cause the app to crash when the BuddyBoss Addons plugin was not activated
+* Bug: Core - Fixed an issue where clicking "View details" on the BuddyBoss products not showing update details
+* Bug: Core - Fixed inconsistencies where member hover cards were not appearing correctly in some areas like groups, forums, and activity feeds
+* Bug: Core - Updated the BuddyBoss products compatibility version with the latest WordPress version as unknown
+* Bug: Forums - Fixed an issue where changing a forum discussion's visibility to private was silently reverted back to public after saving
+* Bug: Group - Fixed an issue where group album edit options were incorrectly visible to non-members and logged-out users
+* Bug: Groups - Fixed an issue where the group type shortcode did not display groups when added to a WordPress page
+* Bug: Media - Fixed an issue where the "no photos or videos found" message disappeared after renaming an empty album
+* Bug: Profiles - Fixed a privacy issue where a member's full name could still appear in page source code and social sharing previews even when only their first name was set to display
+* Bug: Profiles - Fixed a security issue where new users could be granted incorrect account permissions during self-registration
+* Bug: Profiles - Fixed an issue where using a Biography field inside a repeater field set could duplicate the field and overwrite a member's WordPress biography
+* Bug: Profiles - Fixed an issue where visibility and requirement options,were missing for the Last Name profile field
+* Bug: ReadyLaunch - Fixed a display issue with reaction icons on activity comments in ReadyLaunch
+* Bug: ReadyLaunch - Fixed a styling issue with the "Sent from [Group]" label shown in group message threads in ReadyLaunch
+* Bug: ReadyLaunch - Fixed a styling issue with the guest information fields shown when starting a discussion anonymously in ReadyLaunch
+* Bug: ReadyLaunch - Fixed an issue where the Courses link did not work correctly when a custom course URL slug was set
+* Bug: ReadyLaunch - Fixed an issue where the Forum menu icon was missing from the group admin sidebar when a custom forum URL was used
+* Bug: Translations - Fixed an issue where interface text could appear in the wrong language on multilingual sites
+
+= 3.4.4 =
+* Enhancement: Members - Added Member Directory settings to the REST API, allowing apps to access configured directory elements, profile actions, and primary actions
+* Bug: Core - Fixed an issue where the Profile Visibility API ignored enforced visibility settings, allowing users to select and save visibility options restricted by administrators
+
+= 3.4.3 =
+* Bug: Access Controls - Fixed Access Control settings not saving when only the restriction type or membership provider was changed
+* Bug: Login - Fixed reCAPTCHA login verification blocking sign-ins on third-party login forms such as MemberPress; verification now applies only to the WordPress and BuddyBoss login forms it is rendered on
+
+= 3.4.2 =
+* Bug: Activity - Added two new objects to the Activity REST API
+* Bug: Core - Fixed the issue where the addon plugin was not installing and activating automatically according to the active plan
+* Bug: Login - Fixed a server-side verification bypass that allowed CAPTCHA validation to be skipped when the response field was missing
+
+= 3.4.1 =
+* Enhancement: Core - Updated add-on listing in settings and improvements
+
+= 3.4.0 =
+* Enhancement: Improved plan and feature management, laying the groundwork for plan options
+
+= 3.3.0 =
+* Enhancement: Profiles - Added a new "Bio" profile field mapped to the WordPress biographical info field
+
+= 3.2.0 =
+* New Feature! - Added the Blogs feature with post bookmarking and blog category subscriptions, plus support for the Member Blogging add-on
 
 = 3.1.2 =
 * Enhancement: Notification - Added notification cleanup support to remove orphaned notification metadata

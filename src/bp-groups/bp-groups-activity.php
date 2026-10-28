@@ -502,7 +502,13 @@ function groups_record_activity( $args = '' ) {
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $args['error_type'] ) {
-					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+					// bp_activity_user_can_edit() is false both for an expired window and for a
+					// feature the admin switched off; blaming the timer for the latter is wrong.
+					$edit_error = bp_is_activity_edit_enabled()
+						? __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' )
+						: __( 'Editing activity posts is currently disabled.', 'buddyboss' );
+
+					return new WP_Error( 'error', $edit_error );
 				} else {
 					return false;
 				}
