@@ -1492,7 +1492,10 @@ function bp_core_remove_data( $user_id ) {
 	// Remove last_activity data. Clears its own 'bp_last_activity' cache entry.
 	BP_Core_User::delete_last_activity( $user_id );
 
-	// Remove the user's cached objects without flushing the entire object cache.
+	// Clear the legacy BuddyPress `bp_user_{$user_id}` cache entry. Platform no longer
+	// sets it, but third-party code may. Caches that other members hold about this
+	// user are cleared by each component's own remove-data listeners (for example
+	// `friends_remove_data`, `bp_remove_follow_data` and `bb_messages_after_delete_user_message`).
 	bp_core_clear_user_object_cache( $user_id );
 	// Clear the user's profile type and `bb_user` query caches. Also hooked to
 	// `delete_user`/`wpmu_delete_user` directly; called here so the

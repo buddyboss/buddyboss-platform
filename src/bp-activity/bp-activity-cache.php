@@ -222,6 +222,99 @@ function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 add_action( 'bp_remove_follow_data', 'bp_activity_follow_delete_follow_ids_object_cache', 10, 2 );
 
 /**
+ * Store, or pull, the members on the other side of a user's follow relationships.
+ *
+ * `BP_Activity_Follow::delete_all_for_user()` deletes the rows with a direct query,
+ * so the other members must be captured before the rows are gone and their
+ * follower/following caches cleared afterwards.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $user_id  ID of the user whose follow data is being removed.
+ * @param array|null $user_ids Optional. Member IDs to store. Omit to pull (return
+ *                             and forget) the stored IDs.
+ *
+ * @return int[] IDs of the members who followed, or were followed by, the user.
+ */
+function bb_activity_follow_remove_data_related_users( $user_id, $user_ids = null ) {
+	static $store = array();
+
+	$user_id = (int) $user_id;
+
+	if ( null !== $user_ids ) {
+		$store[ $user_id ] = wp_parse_id_list( $user_ids );
+
+		return $store[ $user_id ];
+	}
+
+	$user_ids = isset( $store[ $user_id ] ) ? $store[ $user_id ] : array();
+	unset( $store[ $user_id ] );
+
+	return $user_ids;
+}
+
+/**
+ * Capture the members on the other side of a user's follow relationships
+ * before the user's follow data is removed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the user whose follow data is being removed.
+ */
+function bb_activity_follow_capture_related_users_before_remove_data( $user_id ) {
+	global $wpdb;
+
+	$user_id = (int) $user_id;
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$bp = buddypress();
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reads the rows about to be deleted so their caches can be cleared.
+	$leader_ids = $wpdb->get_col( $wpdb->prepare( "SELECT leader_id FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id ) );
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reads the rows about to be deleted so their caches can be cleared.
+	$follower_ids = $wpdb->get_col( $wpdb->prepare( "SELECT follower_id FROM {$bp->activity->table_name_follow} WHERE leader_id = %d", $user_id ) );
+
+	bb_activity_follow_remove_data_related_users( $user_id, array_merge( (array) $leader_ids, (array) $follower_ids ) );
+}
+add_action( 'bp_before_remove_follow_data', 'bb_activity_follow_capture_related_users_before_remove_data' );
+
+/**
+ * Clear the follower/following caches of the other members after a user's
+ * follow data has been removed.
+ *
+ * Mirrors `bp_activity_follow_reset_cache_incrementor()`, which clears both sides
+ * of a single follow relationship, for every relationship the user had.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int        $user_id ID of the user whose follow data was removed.
+ * @param array|bool $ids     Array of deleted follow IDs, or false if nothing was deleted.
+ */
+function bb_activity_follow_clear_related_users_cache_on_remove_data( $user_id, $ids = false ) {
+	$user_ids = bb_activity_follow_remove_data_related_users( $user_id );
+
+	if ( empty( $ids ) && empty( $user_ids ) ) {
+		return;
+	}
+
+	$keys = array();
+	foreach ( $user_ids as $other_id ) {
+		$keys[] = 'bp_total_follower_for_user_' . $other_id;
+		$keys[] = 'bp_total_following_for_user_' . $other_id;
+	}
+
+	foreach ( array_chunk( $keys, 500 ) as $chunk ) {
+		wp_cache_delete_multiple( $chunk, 'bp' );
+	}
+
+	// Invalidate the cached follower/following ID lists of every member.
+	bp_core_reset_incrementor( 'bp_activity_follow' );
+}
+add_action( 'bp_remove_follow_data', 'bb_activity_follow_clear_related_users_cache_on_remove_data', 10, 2 );
+
+/**
  * Clear cached data for activity meta data.
  *
  * @since BuddyBoss 2.5.50
