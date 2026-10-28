@@ -94,6 +94,55 @@ function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 add_action( 'messages_delete_thread', 'bp_messages_clear_cache_on_message_delete', 10, 2 );
 
 /**
+ * Clear message caches after all messages of a user have been deleted.
+ *
+ * `BP_Messages_Message::delete_user_message()` blanks the messages and resets the
+ * recipients' unread counts with direct queries, so the thread, recipient, unread
+ * count and message query caches of every affected thread must be cleared here.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int   $user_id    ID of the user whose messages were deleted.
+ * @param array $thread_ids IDs of the threads that contained the user's messages.
+ */
+function bb_messages_clear_cache_on_delete_user_message( $user_id, $thread_ids ) {
+	global $wpdb;
+
+	$thread_ids = wp_parse_id_list( $thread_ids );
+
+	if ( empty( $thread_ids ) ) {
+		return;
+	}
+
+	$bp = buddypress();
+
+	$thread_ids_in = implode( ',', $thread_ids );
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- IDs are sanitized by wp_parse_id_list(); this read feeds cache invalidation.
+	$recipients = $wpdb->get_results( "SELECT user_id, thread_id FROM {$bp->messages->table_name_recipients} WHERE thread_id IN ({$thread_ids_in})" );
+
+	foreach ( $thread_ids as $thread_id ) {
+		wp_cache_delete( "{$thread_id}99999999", 'bp_messages_threads' );
+		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
+		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
+	}
+
+	$recipient_ids = array();
+	foreach ( (array) $recipients as $recipient ) {
+		wp_cache_delete( "bb_thread_message_unread_count_{$recipient->user_id}_{$recipient->thread_id}", 'bp_messages_unread_count' );
+		$recipient_ids[ $recipient->user_id ] = $recipient->user_id;
+	}
+
+	foreach ( $recipient_ids as $recipient_id ) {
+		wp_cache_delete( $recipient_id, 'bp_messages_unread_count' );
+	}
+
+	// Invalidate the message and thread query caches.
+	bb_core_clear_message_cache();
+}
+add_action( 'bb_messages_after_delete_user_message', 'bb_messages_clear_cache_on_delete_user_message', 10, 2 );
+
+/**
  * Invalidate cache for notices.
  *
  * Currently, invalidates active notice cache.
