@@ -44,7 +44,7 @@ const BB_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN = 'buddyboss-addons/buddyboss-addons
 const BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_notice_dismissed';
 
 /**
- * Count the stored videos, documents and GIFs on this site.
+ * Count the stored videos, documents, GIFs and group subscriptions on this site.
  *
  * The feature code is not loaded when this matters, so the counts are read
  * straight from the tables and cached for 12 hours; the cache is cleared when
@@ -52,12 +52,12 @@ const BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_n
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return array{video: int, document: int, gif: int} Number of stored items per feature.
+ * @return array{video: int, document: int, gif: int, group_subscription: int} Number of stored items per feature.
  */
 function bb_moved_media_features_get_stored_counts() {
 	$counts = get_transient( 'bb_moved_media_features_stored_counts' );
 
-	if ( is_array( $counts ) && isset( $counts['video'], $counts['document'], $counts['gif'] ) ) {
+	if ( is_array( $counts ) && isset( $counts['video'], $counts['document'], $counts['gif'], $counts['group_subscription'] ) ) {
 		return $counts;
 	}
 
@@ -65,9 +65,10 @@ function bb_moved_media_features_get_stored_counts() {
 
 	$prefix = bp_core_get_table_prefix();
 	$counts = array(
-		'video'    => 0,
-		'document' => 0,
-		'gif'      => 0,
+		'video'              => 0,
+		'document'           => 0,
+		'gif'                => 0,
+		'group_subscription' => 0,
 	);
 
 	if ( bb_moved_media_features_table_exists( $prefix . 'bp_media' ) ) {
@@ -93,6 +94,12 @@ function bb_moved_media_features_get_stored_counts() {
 		if ( bb_moved_media_features_table_exists( $meta_table ) ) {
 			$counts['gif'] += (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$meta_table} WHERE meta_key = %s", '_gif_data' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted table name; counts are cached in a transient.
 		}
+	}
+
+	// Group subscriptions live in the network-wide subscriptions table.
+	$subscription_table = $wpdb->base_prefix . 'bb_notifications_subscriptions';
+	if ( bb_moved_media_features_table_exists( $subscription_table ) ) {
+		$counts['group_subscription'] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$subscription_table} WHERE type = %s AND status = %d", 'group', 1 ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- trusted table name; counts are cached in a transient.
 	}
 
 	set_transient( 'bb_moved_media_features_stored_counts', $counts, 12 * HOUR_IN_SECONDS );
@@ -139,7 +146,7 @@ function bb_moved_media_features_table_exists( $table ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return array<string, int> Feature key ('video', 'document', 'gif') => number of
+ * @return array<string, int> Feature key ('video', 'document', 'gif', 'group_subscription') => number of
  *                            stored items, for every unavailable feature that has content.
  */
 function bb_moved_media_features_get_hidden_content() {
@@ -147,9 +154,12 @@ function bb_moved_media_features_get_hidden_content() {
 	// admin's own choice, and installing BuddyBoss Add-ons would not show them.
 	$media_active = bp_is_active( 'media' );
 	$unavailable  = array(
-		'video'    => $media_active && ! bb_is_component_directory_available( 'video' ),
-		'document' => $media_active && ! bb_is_component_directory_available( 'document' ),
-		'gif'      => function_exists( 'bb_giphy_provider_available' ) && ! bb_giphy_provider_available(),
+		'video'              => $media_active && ! bb_is_component_directory_available( 'video' ),
+		'document'           => $media_active && ! bb_is_component_directory_available( 'document' ),
+		'gif'                => function_exists( 'bb_giphy_provider_available' ) && ! bb_giphy_provider_available(),
+		// The group subscriptions module needs Groups and Notifications, like the feature did.
+		// Turned off by the admin, they are not missed.
+		'group_subscription' => bp_is_active( 'groups' ) && bp_is_active( 'notifications' ) && bp_get_option( 'bb_enable_group_subscriptions', true ) && ! did_action( 'bb_addons_group_subscription_loaded' ),
 	);
 
 	if ( ! in_array( true, $unavailable, true ) ) {
@@ -315,6 +325,11 @@ function bb_moved_media_features_render_notice() {
 		$features[] = __( 'Animated GIFs', 'buddyboss' );
 		/* translators: %s: Number of posts, comments and messages with a GIF. */
 		$items[] = sprintf( _n( '%s GIF', '%s GIFs', $hidden['gif'], 'buddyboss' ), number_format_i18n( $hidden['gif'] ) );
+	}
+	if ( isset( $hidden['group_subscription'] ) ) {
+		$features[] = __( 'Group Subscriptions', 'buddyboss' );
+		/* translators: %s: Number of members' group subscriptions. */
+		$items[] = sprintf( _n( '%s group subscription', '%s group subscriptions', $hidden['group_subscription'], 'buddyboss' ), number_format_i18n( $hidden['group_subscription'] ) );
 	}
 
 	$state       = bb_moved_media_features_get_addons_state();

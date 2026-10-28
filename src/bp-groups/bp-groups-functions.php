@@ -5616,3 +5616,104 @@ function bb_group_type_shortcode_resolve_key( $type ) {
 	 */
 	return apply_filters( 'bb_group_type_shortcode_resolve_key', $key, $type );
 }
+
+/**
+ * Whether group membership changes should be recorded for BuddyBoss Add-ons to replay.
+ *
+ * Group subscriptions moved to BuddyBoss Add-ons, which creates and removes a member's
+ * `group` subscription when the membership changes. While its module is not loaded
+ * (Add-ons not yet installed, inactive, below the required version or not licensed),
+ * those changes are recorded instead, so the module can replay them once it is back.
+ *
+ * Only sites that use group subscriptions record: a site that never had a `group`
+ * subscription and never loaded the module has nothing to keep in step. The answer is
+ * kept in `bb_group_subscription_gap_tracking`; the module sets it to 1 whenever it
+ * loads. A limit keeps a site that never brings the module back from growing without
+ * bound; the replay re-checks the current membership, so a change dropped past the
+ * limit cannot leave a former member subscribed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when the change should be recorded.
+ */
+function bb_groups_should_record_subscription_gap() {
+	global $wpdb;
+
+	if ( did_action( 'bb_addons_group_subscription_loaded' ) ) {
+		return false;
+	}
+
+	$tracking = bp_get_option( 'bb_group_subscription_gap_tracking', '' );
+
+	if ( '' === $tracking ) {
+		$subscription_tbl = $wpdb->base_prefix . 'bb_notifications_subscriptions';
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $subscription_tbl ) ) );
+		$has_rows     = false;
+
+		if ( $table_exists ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$has_rows = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$subscription_tbl} WHERE type = %s LIMIT 1", 'group' ) );
+		}
+
+		$tracking = $has_rows ? 1 : 0;
+		bp_update_option( 'bb_group_subscription_gap_tracking', $tracking );
+	}
+
+	if ( ! $tracking ) {
+		return false;
+	}
+
+	/**
+	 * Filters the maximum number of recorded membership changes.
+	 *
+	 * A safety limit so a site that never brings the module back does not grow its
+	 * group meta without bound. Changes after the limit are not recorded.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $limit Maximum number of recorded changes. Default 100000.
+	 */
+	$limit = (int) apply_filters( 'bb_group_subscription_gap_limit', 100000 );
+
+	return (int) bp_get_option( 'bb_group_subscription_gap_count', 0 ) < $limit;
+}
+
+/**
+ * Record a group membership change for BuddyBoss Add-ons to replay.
+ *
+ * Each change is its own group meta row, so concurrent requests never overwrite
+ * one another, and the rows keep their order. See bb_groups_should_record_subscription_gap().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $group_id      ID of the group.
+ * @param int    $user_id       ID of the user.
+ * @param string $action        'save', 'remove' or 'delete', matching the membership hook.
+ * @param bool   $is_member_add Optional. For 'save': whether the membership row was inserted.
+ * @param int    $is_confirmed  Optional. For 'save': the membership's is_confirmed value.
+ * @param int    $is_banned     Optional. For 'save': the membership's is_banned value.
+ *
+ * @return void
+ */
+function bb_groups_record_subscription_gap( $group_id, $user_id, $action, $is_member_add = false, $is_confirmed = 0, $is_banned = 0 ) {
+	if ( empty( $group_id ) || empty( $user_id ) || ! bb_groups_should_record_subscription_gap() ) {
+		return;
+	}
+
+	groups_add_groupmeta(
+		(int) $group_id,
+		'_bb_group_subscription_gap',
+		array(
+			'action'        => $action,
+			'user_id'       => (int) $user_id,
+			'is_member_add' => (bool) $is_member_add,
+			'is_confirmed'  => (int) $is_confirmed,
+			'is_banned'     => (int) $is_banned,
+			'blog_id'       => get_current_blog_id(),
+		)
+	);
+
+	bp_update_option( 'bb_group_subscription_gap_count', (int) bp_get_option( 'bb_group_subscription_gap_count', 0 ) + 1 );
+}

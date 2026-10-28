@@ -32,11 +32,18 @@ function bb_admin_settings_register_media_feature() {
 	// REGISTER FEATURE
 	// =========================================================================
 
+	// Videos, Documents and GIFs come from BuddyBoss Add-ons; describe them only when it provides them.
+	$has_moved_media = bb_is_component_directory_available( 'video' ) ||
+		bb_is_component_directory_available( 'document' ) ||
+		( function_exists( 'bb_giphy_provider_available' ) && bb_giphy_provider_available() );
+
 	bb_register_feature(
 		'media',
 		array(
 			'label'              => __( 'Media Uploading', 'buddyboss' ),
-			'description'        => __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss' ),
+			'description'        => $has_moved_media
+				? __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss' )
+				: __( 'Allow members to upload photos and emojis, and organize them into albums.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',

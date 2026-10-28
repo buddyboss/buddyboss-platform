@@ -577,10 +577,13 @@ function bp_version_updater() {
 			bb_purge_forums_api_cache_for_legacy_embed();
 		}
 
-		// DB version 23606 — queue the update of an active BuddyBoss Add-ons to the
-		// version this Platform requires (PROD-9995). Queuing is cheap: the download
-		// runs later, on a regular admin page load by a user who can update plugins.
-		if ( $raw_db_version < 23606 ) {
+		// DB version 23631 — install BuddyBoss Add-ons for entitled sites that do not have
+		// it (the 23604 step above already ran on 3.4.2+ sites, so it would not run again),
+		// then queue the update of an active Add-ons to the version this Platform requires
+		// (PROD-9995). Queuing is cheap: the download runs later, on a regular admin page
+		// load by a user who can update plugins.
+		if ( $raw_db_version < 23631 ) {
+			bb_install_addons_bundle_on_upgrade();
 			bb_queue_addons_bundle_update();
 		}
 
@@ -4926,7 +4929,7 @@ function bb_update_addons_bundle_to_required_version() {
 /**
  * Queue the update of an active BuddyBoss Add-ons below the required version.
  *
- * Called once from bp_version_updater() for db version 23606. It only records
+ * Called once from bp_version_updater() for db version 23631. It only records
  * that the update is due; {@see bb_maybe_run_queued_addons_bundle_update()}
  * performs it, so the upgrade request itself (which can be any front-end
  * admin-ajax call) never downloads or replaces a plugin.

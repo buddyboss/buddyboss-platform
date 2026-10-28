@@ -329,6 +329,9 @@ class BP_Groups_Member {
 		 */
 		do_action( 'bb_groups_member_after_membership_save', $this, $is_member_add );
 
+		// Without the BuddyBoss Add-ons module, record the change so it can be replayed.
+		bb_groups_record_subscription_gap( $this->group_id, $this->user_id, 'save', $is_member_add, $this->is_confirmed, $this->is_banned );
+
 		/**
 		 * Fires after the current group membership item has been saved.
 		 *
@@ -485,6 +488,9 @@ class BP_Groups_Member {
 		 */
 		do_action( 'bb_groups_member_after_membership_remove', $this );
 
+		// Without the BuddyBoss Add-ons module, record the change so it can be replayed.
+		bb_groups_record_subscription_gap( $this->group_id, $this->user_id, 'remove' );
+
 		/**
 		 * Fires after a member is removed from a group.
 		 *
@@ -570,6 +576,9 @@ class BP_Groups_Member {
 		 * @param int $group_id ID of the group.
 		 */
 		do_action( 'bb_groups_member_after_membership_delete', $user_id, $group_id );
+
+		// Without the BuddyBoss Add-ons module, record the change so it can be replayed.
+		bb_groups_record_subscription_gap( $group_id, $user_id, 'delete' );
 
 		/**
 		 * Fires after a member is removed from a group.

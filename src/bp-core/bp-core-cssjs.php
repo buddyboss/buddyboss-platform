@@ -179,7 +179,9 @@ function bp_core_register_common_scripts() {
 	foreach ( $scripts as $id => $script ) {
 		$dependencies = isset( $script['dependencies'] ) ? $script['dependencies'] : array();
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
-		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
+		// Scripts added by another plugin (e.g. BuddyBoss Add-ons) may carry their own version.
+		$script_version = isset( $script['version'] ) ? $script['version'] : $version;
+		wp_register_script( $id, $script['file'], $dependencies, $script_version, $footer );
 	}
 
 	/**
@@ -308,7 +310,8 @@ function bp_core_register_common_styles() {
 	);
 
 	foreach ( $styles as $id => $style ) {
-		wp_register_style( $id, $style['file'], $style['dependencies'], bp_get_version() );
+		// Styles added by another plugin (e.g. BuddyBoss Add-ons) may carry their own version.
+		wp_register_style( $id, $style['file'], $style['dependencies'], isset( $style['version'] ) ? $style['version'] : bp_get_version() );
 
 		wp_style_add_data( $id, 'rtl', true );
 		if ( $min ) {

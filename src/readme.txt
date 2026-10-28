@@ -58,7 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Upgrade Notice ==
 
 = 3.7.0 =
-Important: Videos, Documents and Animated GIFs (GIPHY) have moved to the BuddyBoss Add-ons plugin, included with paid BuddyBoss plans. Your existing videos, documents and GIFs are kept, but they will be hidden from members until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
+Important: Videos, Documents, Animated GIFs (GIPHY) and Group Subscriptions have moved to the BuddyBoss Add-ons plugin, included with the Start plan and above and with the legacy BuddyBoss Platform Free plan. Your existing videos, documents, GIFs and group subscriptions are kept, but members will not see or receive them until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
 
 == Changelog ==
 
