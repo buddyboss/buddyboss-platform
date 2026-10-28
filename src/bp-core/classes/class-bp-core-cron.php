@@ -86,10 +86,11 @@ class BP_Core_Cron {
 		add_action( 'bb_' . $hook . '_hook', $callback );
 
 		/*
-		 * schedule() only runs on the bp_init hook. If bp_init has already
-		 * fired for this request (e.g. this is being added from an AJAX/REST
-		 * save handler that runs after boot), schedule() will not run again
-		 * and this cron would otherwise never actually get scheduled.
+		 * schedule() runs once per request, on bp_init. A cron added once bp_init
+		 * has started would otherwise never be scheduled: one added after boot
+		 * (e.g. from an AJAX/REST save handler), and one added by a bp_init
+		 * callback at priority 10, which runs before schedule() is attached when
+		 * that callback is what creates this class. So schedule it now.
 		 */
 		if ( did_action( 'bp_init' ) ) {
 			$this->schedule_single( $cron );
