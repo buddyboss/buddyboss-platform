@@ -3921,6 +3921,67 @@ function bp_document_delete_document_previews() {
 }
 
 /**
+ * Get the symlink path and source file of a document image preview.
+ *
+ * Falls back from the requested size to the full, original and thumbnail sizes, then to the
+ * attached file, and names the symlink with the extension of the file it points to. Both
+ * bp_document_create_symlinks() and bp_document_get_preview_url() use it, so the symlink is
+ * always looked up under the name it was created with.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_Document $document BP_Document Object.
+ * @param string      $size     Size of preview.
+ *
+ * @return array {
+ *     @type string $path   Absolute symlink path, including the file extension when known.
+ *     @type string $source Absolute path of the file the symlink points to, empty when none.
+ *     @type array  $file   Intermediate size data of the source, empty when the attached file is used.
+ * }
+ */
+function bb_document_get_preview_symlink_data( $document, $size ) {
+	$attachment_id = $document->attachment_id;
+	$path          = bp_document_symlink_path() . '/' . md5( $document->id . $attachment_id . $document->privacy . $size );
+	if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
+		$group_object = groups_get_group( $document->group_id );
+		$group_status = bp_get_group_status( $group_object );
+		$path         = bp_document_symlink_path() . '/' . md5( $document->id . $attachment_id . $group_status . $document->privacy . $size );
+	}
+
+	// If the given size is not found then use the full, original or thumbnail image.
+	$file = false;
+	foreach ( array( $size, 'full', 'original', 'thumbnail' ) as $preview_size ) {
+		$file = image_get_intermediate_size( $attachment_id, $preview_size );
+		if ( false !== $file ) {
+			break;
+		}
+	}
+
+	$attached_file = get_attached_file( $attachment_id );
+	$source        = '';
+	if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file ) ) {
+		$source = dirname( $attached_file ) . '/' . $file['file'];
+	}
+
+	// Otherwise use the attached image itself.
+	if ( ( empty( $source ) || ! file_exists( $source ) ) && wp_get_attachment_image_src( $attachment_id ) ) {
+		$source = (string) $attached_file;
+		$file   = array();
+	}
+
+	$source_extension = pathinfo( $source, PATHINFO_EXTENSION );
+	if ( ! empty( $source_extension ) ) {
+		$path = $path . '.' . $source_extension;
+	}
+
+	return array(
+		'path'   => $path,
+		'source' => $source,
+		'file'   => $file ? $file : array(),
+	);
+}
+
+/**
  * Create symlink for a document.
  *
  * @param object $document BP_Document Object.
@@ -3981,79 +4042,24 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 			if ( '' !== $size ) {
 
-				$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $privacy . $size );
-				if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-					$group_object    = groups_get_group( $document->group_id );
-					$group_status    = bp_get_group_status( $group_object );
-					$attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $privacy . $size );
-				}
-
 				$file = image_get_intermediate_size( $attachment_id, $size );
 
 				if ( false === $file && 'pdf' !== $extension ) {
 					bb_document_regenerate_attachment_thumbnails( $attachment_id );
-					$file = image_get_intermediate_size( $attachment_id, $size );
 				} elseif ( false === $file && 'pdf' === $extension ) {
 					bp_document_generate_document_previews( $attachment_id );
-					$file = image_get_intermediate_size( $attachment_id, $size );
 				}
 
-				// If the given size is not found then use the full image.
-				if ( false === $file ) {
-					$file = image_get_intermediate_size( $attachment_id, 'full' );
-				}
+				// Resolve the preview source and symlink name the same way the preview URL does.
+				$preview         = bb_document_get_preview_symlink_data( $document, $size );
+				$attachment_path = $preview['path'];
+				$output_file_src = $preview['source'];
 
-				if ( false === $file ) {
-					$file = image_get_intermediate_size( $attachment_id, 'original' );
-				}
-
-				if ( false === $file ) {
-					$file = image_get_intermediate_size( $attachment_id, 'thumbnail' );
-				}
-
-				$attached_file_info = pathinfo( $attached_file );
-				$file_path          = '';
-
-				if ( $file && ! empty( $file['file'] ) && ! empty( $attached_file_info['dirname'] ) ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				if ( ! empty( $file_path ) ) {
-					$preview_file_extension  = pathinfo( $file_path, PATHINFO_EXTENSION );
-					if ( ! empty( $preview_file_extension ) ) {
-						$attachment_path = $attachment_path . '.' . $preview_file_extension;
-					}
-				}
-
-				if ( $file && ! empty( $file_path ) && file_exists( $file_path ) && is_file( $file_path ) && ! is_dir( $file_path ) && ! file_exists( $attachment_path ) ) {
+				if ( ! empty( $output_file_src ) && file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
 					if ( ! is_link( $attachment_path ) ) {
 
 						// Generate Document Thumb Symlink.
-						bb_core_symlink_generator( 'document', $document, $size, $file, $file_path, $attachment_path );
-					}
-				} elseif ( wp_get_attachment_image_src( $attachment_id ) ) {
-					$output_file_src = get_attached_file( $attachment_id );
-					if ( ! empty( $output_file_src ) ) {
-						// Regenerate attachment thumbnails.
-						if ( ! file_exists( $output_file_src ) ) {
-							bb_document_regenerate_attachment_thumbnails( $attachment_id );
-							$file = image_get_intermediate_size( $attachment_id, $size );
-						}
-
-						$preview_file_extension  = pathinfo( $output_file_src, PATHINFO_EXTENSION );
-						if ( ! empty( $preview_file_extension ) ) {
-							$attachment_path = $attachment_path . '.' . $preview_file_extension;
-						}
-
-						// Check if file exists.
-						if ( file_exists( $output_file_src ) && is_file( $output_file_src ) && ! is_dir( $output_file_src ) && ! file_exists( $attachment_path ) ) {
-							if ( ! is_link( $attachment_path ) ) {
-
-								// Generate Document Thumb Symlink.
-								bb_core_symlink_generator( 'document', $document, $size, $file, $output_file_src, $attachment_path );
-							}
-						}
+						bb_core_symlink_generator( 'document', $document, $size, $preview['file'], $output_file_src, $attachment_path );
 					}
 				}
 			}
@@ -4478,34 +4484,14 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 		if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) && bb_enable_symlinks() ) {
 			$document = new BP_Document( $document_id );
 
-			$upload_directory       = wp_get_upload_dir();
-			$document_symlinks_path = bp_document_symlink_path();
-
-			$preview_attachment_path = $document_symlinks_path . '/' . md5( $document_id . $attachment_id . $document->privacy . $size );
-			if ( $document->group_id > 0 && bp_is_active( 'groups' ) ) {
-				$group_object            = groups_get_group( $document->group_id );
-				$group_status            = bp_get_group_status( $group_object );
-				$preview_attachment_path = $document_symlinks_path . '/' . md5( $document->id . $attachment_id . $group_status . $document->privacy . $size );
-			}
-
-			$file = image_get_intermediate_size( $attachment_id, $size );
-			if ( ! empty( $file ) && ! empty( $file['file'] ) ) {
-				$attached_file      = get_attached_file( $attachment_id );
-				$attached_file_info = pathinfo( $attached_file );
-				$file_path          = '';
-				if ( ! empty( $attached_file_info['dirname'] ) ) {
-					$file_path = $attached_file_info['dirname'];
-					$file_path = $file_path . '/' . $file['file'];
-				}
-
-				$preview_file_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
-				if ( ! empty( $preview_file_extension ) ) {
-					$preview_attachment_path = $preview_attachment_path . '.' . $preview_file_extension;
-				}
-			}
+			$upload_directory        = wp_get_upload_dir();
+			$preview_attachment_path = bb_document_get_preview_symlink_data( $document, $size )['path'];
 
 			if ( ! file_exists( $preview_attachment_path ) && $generate ) {
 				bp_document_create_symlinks( $document, $size );
+
+				// Creating the symlink can generate the preview size, which may change the name.
+				$preview_attachment_path = bb_document_get_preview_symlink_data( $document, $size )['path'];
 			}
 			if ( ! file_exists( $preview_attachment_path ) ) {
 				$attachment_url = '';
