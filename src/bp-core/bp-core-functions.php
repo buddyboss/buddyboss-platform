@@ -5695,18 +5695,6 @@ function bb_core_delete_directory_symlinks() {
 
 	return $deleted;
 }
-add_action( 'bb_core_delete_directory_symlinks', 'bb_core_delete_directory_symlinks' );
-
-add_action(
-	'bp_init',
-	function () {
-		if ( get_option( 'bb_directory_symlinks_deleted' ) || wp_next_scheduled( 'bb_core_delete_directory_symlinks' ) ) {
-			return;
-		}
-
-		wp_schedule_single_event( time(), 'bb_core_delete_directory_symlinks' );
-	}
-);
 
 function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
 
