@@ -168,4 +168,34 @@ class BP_Tests_Message_Cache extends BP_UnitTestCase {
 		$thread = new BP_Messages_Thread( $thread_id );
 		return wp_list_pluck( $thread->messages, 'id' );
 	}
+
+	/**
+	 * Deleting a member blanks their messages with direct queries; the thread
+	 * list of the other participant must not keep serving the cached text.
+	 *
+	 * @group bb_messages_clear_cache_on_delete_user_message
+	 */
+	public function test_thread_list_is_refreshed_after_sender_messages_are_deleted() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $u1,
+				'recipients' => array( $u2 ),
+				'subject'    => 'Subject',
+				'content'    => 'Original message text',
+			)
+		);
+
+		// Prime the thread list and message caches.
+		$threads = BP_Messages_Thread::get_current_threads_for_user( array( 'user_id' => $u2 ) );
+		$this->assertSame( 'Original message text', $threads['threads'][0]->last_message_content );
+
+		BP_Messages_Message::delete_user_message( $u1 );
+
+		$threads = BP_Messages_Thread::get_current_threads_for_user( array( 'user_id' => $u2 ) );
+		$content = ! empty( $threads['threads'] ) ? $threads['threads'][0]->last_message_content : '';
+		$this->assertNotSame( 'Original message text', $content );
+	}
 }
