@@ -1751,6 +1751,7 @@ window.bp = window.bp || {};
 				'video': video,
 				'activity_id': activityId,
 				'from_where': fromWhere,
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 			};
 
 			$.ajax(
