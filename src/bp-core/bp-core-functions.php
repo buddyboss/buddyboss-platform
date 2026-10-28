@@ -5620,6 +5620,12 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 				}
 				if ( is_dir( 'wp-content/' . $sym_path ) ) {
 					chdir( 'wp-content/' . $sym_path );
+
+					// Callers pass false when the image size is missing.
+					if ( ! is_array( $file ) ) {
+						$file = array();
+					}
+
 					if ( empty( $file['path'] ) ) {
 						$file['path'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
 						if ( 'document' === $type ) {
