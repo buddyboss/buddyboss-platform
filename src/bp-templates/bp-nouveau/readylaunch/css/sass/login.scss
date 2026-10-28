@@ -1243,3 +1243,81 @@ html:has(.memberpressproduct-template-default.single.registration) {
 		}
 	}
 }
+
+/*
+ * Two-factor challenge: the emailed-code provider adds a resend control, which
+ * is a bare wp-core-ui .button - give it the shape of the submit above it.
+ */
+.login #login .two-factor-email-resend {
+	margin: var(--bb-rl-space-100) 0 0;
+
+	.button {
+
+		@include bb-rl-button;
+		@include bb-rl-button--secondary-outline;
+		width: 100%;
+		padding: var(--bb-rl-space-50) var(--bb-rl-space-100);
+		border-radius: var(--bb-rl-radius-base);
+		box-shadow: none;
+		font-size: 14px;
+		font-weight: 500;
+		text-shadow: none;
+	}
+}
+
+/*
+ * Two-factor challenge: links to the member's other methods, shown when more
+ * than one is enabled. The plugin ships its own inline <style> in the body, so
+ * these selectors are weighted to land after it.
+ */
+.login #login .backup-methods-wrap {
+	margin-top: var(--bb-rl-space-300);
+	padding: 0;
+
+	p {
+		margin: 0 0 var(--bb-rl-space-100);
+		color: var(--bb-rl-text-secondary-color);
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		margin-bottom: var(--bb-rl-space-50);
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	a {
+		color: var(--bb-rl-text-brand-primary-color);
+		font-size: 14px;
+		font-weight: 500;
+		text-decoration: none;
+
+		&:hover,
+		&:focus {
+			text-decoration: underline;
+		}
+	}
+}
+
+// The privacy-policy link is pulled below the card with a negative margin. The
+// backup links sit in that gap, so hand the card back the height they need.
+#login:has(.privacy-policy-page-link:not(:empty)):has(.backup-methods-wrap) {
+
+	form {
+		margin-bottom: 0;
+	}
+
+	// 85px cancels that pull; the rest is the gap the card wants below the links.
+	.backup-methods-wrap {
+		margin-bottom: calc(85px - var(--bb-rl-space-300));
+	}
+}

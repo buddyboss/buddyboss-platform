@@ -930,6 +930,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				)
 			);
 
+			// Resolved once for the whole loop, the same way every other name-redacting endpoint in
+			// this repo resolves it. Not a bare get_current_user_id(): bb_core_get_viewer_user_id()
+			// prefers BuddyPress' logged-in global, which messaging and the personal-data exporters
+			// deliberately re-point, and falls back to the WordPress current user only when BP has
+			// no value - so this matches what Platform's own resolver would pick internally instead
+			// of quietly disagreeing with it.
+			$name_viewer_id = function_exists( 'bb_core_get_viewer_user_id' )
+				? (int) bb_core_get_viewer_user_id()
+				: (int) get_current_user_id();
+
 			foreach ( (array) $admin_mods['members'] as $user ) {
 				$user->avatar = bp_core_fetch_avatar(
 					array(
@@ -938,6 +948,15 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'html'    => false,
 					)
 				);
+
+				// The group-member object carries the raw wp_users.display_name, which holds the full
+				// name even when the member hid their last name (or the site format excludes it). Redact
+				// it for the viewer before it is exposed in admins[]/mods[], so it cannot leak the
+				// hidden surname next to the already-redacted fullname.
+				if ( isset( $user->display_name ) ) {
+					$user->display_name = $this->get_visible_member_display_name( $user, $name_viewer_id );
+				}
+
 				// Make sure to unset private data.
 				$private_keys = array_intersect(
 					array_keys( get_object_vars( $user ) ),
@@ -2081,5 +2100,192 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$group_type = bp_groups_get_group_type_object( $group_type );
 
 		return isset( $group_type->labels['singular_name'] ) ? wp_specialchars_decode( $group_type->labels['singular_name'] ) : __( 'Group', 'buddyboss' );
+	}
+
+	/**
+	 * Return a group admin/moderator's WP display name as the given viewer may see it.
+	 *
+	 * `admins[]` / `mods[]` expose the raw `wp_users.display_name`, which always holds the full
+	 * name - including a surname the member restricted, or one the site-wide Display Name Format
+	 * removes from the visible name for everybody (PROD-9896).
+	 *
+	 * On a current Platform bp_core_get_user_displayname() performs that redaction for guests as
+	 * well as members, so it is used as-is. This plugin is released separately, though, and is
+	 * routinely updated ahead of Platform: on an older Platform the same call redacts nothing on
+	 * the guest path, and the surname goes out next to an already-redacted `fullname`. The members
+	 * and invites endpoints in this repo both fail CLOSED for that skew; this does the same rather
+	 * than trusting a call whose behaviour depends on a version it does not control.
+	 *
+	 * bb_core_build_visible_display_name() is the marker for "this Platform redacts the guest path" -
+	 * it is the helper that redaction is built on, and it landed with it. Nothing here CALLS it;
+	 * its presence is being used as a version probe, because Platform exposes no capability flag
+	 * for this behaviour. That couples this branch to the name of another plugin's internal
+	 * function, so it is worth being explicit about what happens when that name changes: the probe
+	 * reads false, this endpoint takes get_visible_member_display_name_fallback() below, and that
+	 * rebuilds the visible name from the fields itself. The failure direction is therefore SAFE -
+	 * the name is still redacted, just without delegating - so a rename costs parity and a little
+	 * duplicated work, never a disclosure. Replace this with a real feature flag if Platform ever
+	 * grows one.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param WP_User|object $user      Group member object carrying at least ID and display_name.
+	 * @param int            $viewer_id ID of the user viewing the data (0 for a guest).
+	 * @return string The name this viewer may see.
+	 */
+	protected function get_visible_member_display_name( $user, $viewer_id ) {
+		$display_name = isset( $user->display_name ) ? (string) $user->display_name : '';
+		$user_id      = isset( $user->ID ) ? (int) $user->ID : 0;
+
+		if ( $user_id <= 0 || ! function_exists( 'bp_core_get_user_displayname' ) ) {
+			return $display_name;
+		}
+
+		if ( function_exists( 'bb_core_build_visible_display_name' ) ) {
+			// Decoded with ENT_QUOTES, exactly as the members endpoint does. The resolver runs
+			// esc_html() at priority 10 and wp_specialchars_decode() at 16, and that decode takes
+			// the default ENT_NOQUOTES - which leaves `&#039;` untouched. Without this, a member
+			// called O'Brien reached admins[]/mods[] spelled `O&#039;Brien` while the same member
+			// read back from the members endpoint spelled correctly.
+			$resolved = bp_core_get_user_displayname( $user_id, (int) $viewer_id );
+
+			return is_string( $resolved ) ? wp_specialchars_decode( $resolved, ENT_QUOTES ) : $display_name;
+		}
+
+		return $this->get_visible_member_display_name_fallback( $user, (int) $viewer_id );
+	}
+
+	/**
+	 * Redact a group admin/moderator's name without Platform's guest-path redaction.
+	 *
+	 * Reached only on a Platform that predates it. Two hides have to be honoured and neither can be
+	 * delegated there: the per-field visibility level, which
+	 * bp_xprofile_get_hidden_fields_for_user() does answer viewer-aware on every supported
+	 * Platform, and the site-wide Display Name Format, which never enters that list at all.
+	 *
+	 * When neither hides a name part, the stored name is already the public one and the older
+	 * resolver's answer is kept - by far the most common case, so nothing changes for it. When one
+	 * does, the name is rebuilt from the fields this viewer may see and NEVER from the stored
+	 * `display_name`, which may have drifted to a full name. Nothing left to build from falls back
+	 * to the nickname and then user_nicename, the same order Platform's own guest path uses.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param WP_User|object $user      Group member object.
+	 * @param int            $viewer_id ID of the user viewing the data (0 for a guest).
+	 * @return string
+	 */
+	protected function get_visible_member_display_name_fallback( $user, $viewer_id ) {
+		$user_id = (int) $user->ID;
+
+		$nickname = trim( (string) get_the_author_meta( 'nickname', $user_id ) );
+
+		if ( '' === $nickname ) {
+			$nickname = trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
+		}
+
+		$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+		// Under the Nickname format the visible name is the nickname - neither the first name nor
+		// the surname is part of it - so read it directly rather than trusting a display_name that
+		// may have drifted to a full name.
+		if ( 'nickname' === $format ) {
+			return $nickname;
+		}
+
+		$hidden_fields = array();
+		if (
+			function_exists( 'bp_is_active' )
+			&& bp_is_active( 'xprofile' )
+			&& function_exists( 'bp_xprofile_get_hidden_fields_for_user' )
+		) {
+			$hidden_fields = array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) );
+		}
+
+		$first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? (int) bp_xprofile_firstname_field_id() : 0;
+		$last_name_field_id  = function_exists( 'bp_xprofile_lastname_field_id' ) ? (int) bp_xprofile_lastname_field_id() : 0;
+
+		$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $hidden_fields, true ) );
+
+		// The "First Name" format drops the surname for every viewer, independently of any
+		// visibility level, and that hide never enters the visibility list.
+		$last_name_hidden = ( 'first_name' === $format )
+			|| ( $last_name_field_id > 0 && in_array( $last_name_field_id, $hidden_fields, true ) );
+
+		if ( ! $first_name_hidden && ! $last_name_hidden ) {
+			// Same ENT_QUOTES decode as the delegating path above - the resolver's own priority-16
+			// decode is ENT_NOQUOTES and leaves `&#039;` standing.
+			$resolved = bp_core_get_user_displayname( $user_id, $viewer_id );
+
+			return is_string( $resolved ) ? wp_specialchars_decode( $resolved, ENT_QUOTES ) : (string) $user->display_name;
+		}
+
+		$parts = array();
+		if ( ! $first_name_hidden ) {
+			$parts[] = $this->get_visible_name_field_value( $first_name_field_id, $user_id, 'first_name' );
+		}
+		if ( ! $last_name_hidden ) {
+			$parts[] = $this->get_visible_name_field_value( $last_name_field_id, $user_id, 'last_name' );
+		}
+
+		$name = trim( implode( ' ', array_filter( $parts, 'strlen' ) ) );
+
+		return ( '' !== $name ) ? $name : $nickname;
+	}
+
+	/**
+	 * Read a name profile field for get_visible_member_display_name_fallback().
+	 *
+	 * Unicode-aware trim so a value padded with a non-ASCII space (U+00A0 pasted from a word
+	 * processor, which PHP's trim() leaves in place) does not reach the assembled name, and a
+	 * non-string no-value normalises to '' rather than to something that cannot be concatenated.
+	 *
+	 * The WordPress user meta is read when the profile field has no stored row, because that is
+	 * what bp_xprofile_get_member_display_name() itself back-fills from: on an imported member the
+	 * xprofile row does not exist yet, and reading only the field would drop a name the viewer is
+	 * entitled to see. Delegates to Platform's bb_core_get_name_field_value() so every endpoint
+	 * resolves a name part the same way, and keeps a self-contained fallback for a Platform that
+	 * predates it.
+	 *
+	 * This body is byte-identical to BP_REST_Members_Endpoint::get_visible_name_field_value() and
+	 * to the invites endpoint's copy, deliberately: see the members endpoint's docblock for the
+	 * shared homes that were checked (includes/functions.php, a trait, a synced bp-core class) and
+	 * why none of them survives both the bp-rest.php load guard and the Grunt sync into Platform.
+	 * Keep the three in step and change them together.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
+	 * @param int    $user_id  ID of the member the field belongs to.
+	 * @param string $meta_key WordPress user meta key holding the same name part.
+	 * @return string The stored value, or '' when there is none.
+	 */
+	protected function get_visible_name_field_value( $field_id, $user_id, $meta_key = '' ) {
+		$field_id = (int) $field_id;
+		$user_id  = (int) $user_id;
+		$meta_key = (string) $meta_key;
+
+		// Platform owns the rule. Delegating means a later change to it - a different empty-value
+		// test, another Unicode class - reaches every endpoint at once instead of leaving the
+		// copies below to drift into publishing a name part a sibling endpoint withholds.
+		if ( function_exists( 'bb_core_get_name_field_value' ) ) {
+			return (string) bb_core_get_name_field_value( $field_id, $user_id, $meta_key );
+		}
+
+		// Self-contained fallback for a Platform that predates that helper, since this plugin is
+		// upgraded independently of it.
+		$value = '';
+
+		if ( $field_id > 0 && function_exists( 'xprofile_get_field_data' ) ) {
+			$stored = xprofile_get_field_data( $field_id, $user_id );
+			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+		}
+
+		if ( '' === $value && '' !== $meta_key ) {
+			$stored = get_user_meta( $user_id, $meta_key, true );
+			$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
+		}
+
+		return $value;
 	}
 }
