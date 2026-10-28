@@ -570,6 +570,13 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
+		// DB version 23605 — the topics and reply REST endpoints now return the
+		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
+		// their App API cache so cached empty previews are not served for 30 days.
+		if ( $raw_db_version < 23605 ) {
+			bb_purge_forums_api_cache_for_legacy_embed();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4652,13 +4659,15 @@ function bb_install_addons_bundle_on_upgrade() {
 
 		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
 
-		if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
+		$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
+
+		if ( '' === $download_url ) {
 			return;
 		}
 
 		$skin      = new Automatic_Upgrader_Skin();
 		$upgrader  = new Plugin_Upgrader( $skin );
-		$installed = $upgrader->install( $product->_embedded->{'version-latest'}->url );
+		$installed = $upgrader->install( $download_url );
 
 		if ( true !== $installed ) {
 			// Filesystem not writable / download failed. Fail silently for the
@@ -4685,5 +4694,24 @@ function bb_install_addons_bundle_on_upgrade() {
 	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
 		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
+}
+
+/**
+ * Purge the App API cache of forum topics and replies.
+ *
+ * The topics and reply REST endpoints now return the legacy oEmbed (`preview_data`,
+ * `link_embed_url`) for posts saved without `_link_embed` meta, as the web already shows.
+ * Responses cached before the update still hold the empty preview for up to 30 days, so
+ * clear them once on the upgrade (PROD-10630).
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @return void
+ */
+function bb_purge_forums_api_cache_for_legacy_embed() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
 	}
 }

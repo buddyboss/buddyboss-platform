@@ -40,7 +40,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				<div class="bb-single-album-header text-center">
 					<h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
 					<?php
-					if ( ( $bp_is_my_profile || bp_current_user_can( 'bp_moderate' ) ) || ( $bp_is_group && $can_edit ) ) :
+					if ( $can_edit ) :
 						?>
 						<input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
 						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>

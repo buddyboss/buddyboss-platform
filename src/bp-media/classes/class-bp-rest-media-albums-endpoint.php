@@ -1010,18 +1010,19 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		}
 
 		$data = array(
-			'id'            => $album->id,
-			'user_id'       => $album->user_id,
-			'group_id'      => $album->group_id,
-			'date_created'  => $album->date_created,
-			'title'         => wp_specialchars_decode( $album->title, ENT_QUOTES ),
-			'privacy'       => $album->privacy,
-			'media'         => $medias,
-			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
-			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
-			'user_nicename' => get_the_author_meta( 'user_nicename', $album->user_id ),
-			'user_login'    => get_the_author_meta( 'user_login', $album->user_id ),
-			'display_name'  => bp_core_get_user_displayname( $album->user_id ),
+			'id'               => $album->id,
+			'user_id'          => $album->user_id,
+			'group_id'         => $album->group_id,
+			'date_created'     => $album->date_created,
+			'title'            => wp_specialchars_decode( $album->title, ENT_QUOTES ),
+			'privacy'          => $album->privacy,
+			'media'            => $medias,
+			'group_name'       => ( isset( $album->group_name ) ? $album->group_name : '' ),
+			'visibility'       => ( isset( $album->visibility ) ? $album->visibility : '' ),
+			'user_nicename'    => get_the_author_meta( 'user_nicename', $album->user_id ),
+			'user_login'       => get_the_author_meta( 'user_login', $album->user_id ),
+			'display_name'     => bp_core_get_user_displayname( $album->user_id ),
+			'user_permissions' => $this->media_endpoint->get_media_current_user_permissions( $album ),
 		);
 
 		$response = rest_ensure_response( $data );

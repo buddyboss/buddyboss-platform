@@ -51,16 +51,12 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div class="bb-rl-course-meta">
 					<div class="bb-rl-meta-item">
 						<?php
-						// Get course author full name.
-						$first_name             = get_the_author_meta( 'first_name', $post->post_author );
-						$last_name              = get_the_author_meta( 'last_name', $post->post_author );
-						$course_author_fullname = trim( $first_name . ' ' . $last_name );
-						
-						// Fallback to display_name if first/last name are empty.
-						if ( empty( $course_author_fullname ) ) {
-							$course_author_fullname = get_the_author_meta( 'display_name', $post->post_author );
-						}
-						
+						// Course author name as the current viewer may see it. get_the_author_meta() is
+						// redacted by bb_core_filter_the_author_display_name() on the core
+						// `get_the_author_display_name` hook, so this yields the same string AND
+						// leaves that documented hook firing for third parties.
+						$course_author_fullname = get_the_author_meta( 'display_name', $post->post_author );
+
 						if ( ! empty( $course_author_fullname ) ) {
 							?>
 							<div class="bb-rl-author-name">

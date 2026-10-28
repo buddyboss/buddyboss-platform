@@ -39,9 +39,25 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		exit();
 	}
 
-	if ( ! $media ) {
+	if ( $media ) {
+		// Saved items follow their own privacy, including message thread participation.
+		$media_access = function_exists( 'bb_media_user_can_access' ) ? bb_media_user_can_access( $media->id, 'video', $attachment_id ) : array();
+		if ( empty( $media_access['can_view'] ) ) {
+			echo '// Silence is golden.';
+			exit();
+		}
+	} else {
 		$is_bb_video_upload = (bool) get_post_meta( $attachment_id, 'bp_video_upload', true );
-		if ( ! $is_bb_video_upload ) {
+
+		// Unsaved uploads are only previewed by the member who uploaded them.
+		if (
+			! $is_bb_video_upload ||
+			! is_user_logged_in() ||
+			(
+				(int) get_post_field( 'post_author', $attachment_id ) !== bp_loggedin_user_id() &&
+				! bp_current_user_can( 'bp_moderate' )
+			)
+		) {
 			echo '// Silence is golden.';
 			exit();
 		}

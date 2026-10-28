@@ -29,7 +29,16 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		exit();
 	} else {
 		$is_bb_document_upload = (bool) get_post_meta( $attachment_id, 'bp_document_upload', true );
-		if ( ! $is_bb_document_upload ) {
+
+		// Unsaved uploads are only previewed by the member who uploaded them.
+		if (
+			! $is_bb_document_upload ||
+			! is_user_logged_in() ||
+			(
+				(int) get_post_field( 'post_author', $attachment_id ) !== bp_loggedin_user_id() &&
+				! bp_current_user_can( 'bp_moderate' )
+			)
+		) {
 			echo '// Silence is golden.';
 			exit();
 		}

@@ -35,6 +35,7 @@ class BB_Activity extends Integration_Abstract {
 			'bp_activity_after_save',             // Any activity privacy update.
 			'bp_activity_delete',                 // Any Activity deleted.
 			'bp_activity_delete_comment',         // Any Activity comment deleted.
+			'bb_activity_comment_attachment_deleted', // Any Activity comment kept after an attachment was deleted.
 			'bb_activity_pin_unpin_post',         // Any Activity pin/unpin.
 			'bb_activity_close_unclose_comments', // Any Activity closed/unclosed comment.
 
@@ -77,6 +78,7 @@ class BB_Activity extends Integration_Abstract {
 			'bp_activity_add'                         => 1, // Any Activity add.
 			'bp_activity_delete'                      => 1, // Any Activity deleted.
 			'bp_activity_delete_comment'              => 1, // Any Activity comment deleted.
+			'bb_activity_comment_attachment_deleted'  => 1, // Any Activity comment kept after an attachment was deleted.
 			'updated_activity_meta'                   => 2, // Any Activity meta update.
 			'bp_activity_add_user_favorite'           => 1, // if activity added in user favorite list.
 			'bp_activity_remove_user_favorite'        => 1, // if activity remove from user favorite list.
@@ -185,6 +187,28 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function event_bp_activity_delete_comment( $activity_id ) {
 		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Any Activity comment kept after one of its attachments was deleted.
+	 * Purges the comment, its parent comment and the activity it belongs to.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int $comment_id Activity comment id.
+	 */
+	public function event_bb_activity_comment_attachment_deleted( $comment_id ) {
+		$comment = new \BP_Activity_Activity( $comment_id );
+
+		$this->purge_item_cache_by_item_id( $comment_id );
+
+		if ( ! empty( $comment->item_id ) ) {
+			$this->purge_item_cache_by_item_id( $comment->item_id );
+		}
+
+		if ( ! empty( $comment->secondary_item_id ) && (int) $comment->secondary_item_id !== (int) $comment->item_id ) {
+			$this->purge_item_cache_by_item_id( $comment->secondary_item_id );
+		}
 	}
 
 	/**

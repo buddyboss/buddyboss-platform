@@ -165,16 +165,17 @@ class BP_Messages_Box_Template {
 		} else {
 			$threads = BP_Messages_Thread::get_current_threads_for_user(
 				array(
-					'user_id'      => $this->user_id,
-					'box'          => $this->box,
-					'type'         => $this->type,
-					'limit'        => $this->pag_num,
-					'page'         => $this->pag_page,
-					'search_terms' => $this->search_terms,
-					'include'      => $this->include,
-					'is_hidden'    => $this->is_hidden,
-					'thread_type'  => $r['thread_type'],
-					'meta_query'   => $r['meta_query'],
+					'user_id'                        => $this->user_id,
+					'box'                            => $this->box,
+					'type'                           => $this->type,
+					'limit'                          => $this->pag_num,
+					'page'                           => $this->pag_page,
+					'search_terms'                   => $this->search_terms,
+					'include'                        => $this->include,
+					'is_hidden'                      => $this->is_hidden,
+					'thread_type'                    => $r['thread_type'],
+					'meta_query'                     => $r['meta_query'],
+					'exclude_disabled_group_threads' => ! empty( $r['exclude_disabled_group_threads'] ),
 				)
 			);
 

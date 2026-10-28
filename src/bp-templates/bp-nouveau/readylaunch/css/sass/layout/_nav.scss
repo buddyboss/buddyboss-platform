@@ -112,10 +112,10 @@
 			}
 		}
 
-		&#bb-rl-forum-groups-li {
+		&.bb-rl-admin-subnav-item--forum {
 
 			a::before {
-				content: "\e4d6";
+				content: "\e17a";
 			}
 		}
 
@@ -185,6 +185,13 @@
 
 			a::before {
 				content: "\e0d0";
+			}
+		}
+
+		&#bb-rl-security-personal-li {
+
+			a::before {
+				content: "\e40c";
 			}
 		}
 

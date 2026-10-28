@@ -228,8 +228,13 @@ class BB_Admin_Groups_Ajax {
 		$group_types = array();
 
 		foreach ( $posts as $post ) {
-			$post_id  = $post->ID;
-			$type_key = get_post_meta( $post_id, '_bp_group_type_key', true );
+			$post_id = $post->ID;
+			// Use bp_group_get_group_type_key() rather than a raw meta read so a
+			// legacy group type created before the _bp_group_type_key meta existed
+			// gets its key backfilled here. Otherwise 'name' is empty and the
+			// admin modal (which now builds the [group type="<key>"] shortcode
+			// from it) would silently hide the Shortcode section for that type.
+			$type_key = bp_group_get_group_type_key( $post_id );
 
 			$group_types[] = array(
 				'id'                  => $post_id,

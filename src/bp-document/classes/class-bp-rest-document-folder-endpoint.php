@@ -519,7 +519,10 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 							'status' => 400,
 						)
 					);
-				} elseif ( ! bp_folder_user_can_edit( $parent_folder->id ) ) {
+				} elseif (
+					! bp_folder_user_can_edit( $parent_folder->id ) ||
+					( ! empty( $request['group_id'] ) && (int) $request['group_id'] !== (int) $parent_folder->group_id )
+				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
 						__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' ),
@@ -592,19 +595,25 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			$args['title'] = wp_strip_all_tags( $request['title'] );
 		}
 
-		if ( isset( $request['privacy'] ) && ! empty( $request['privacy'] ) ) {
+		// Only a personal root folder's privacy can be changed: group folders stay group-only and
+		// child folders keep the privacy of their tree. The folder's group is never taken from the request.
+		$privacy_changed = false;
+		if (
+			! empty( $request['privacy'] ) &&
+			'grouponly' !== $request['privacy'] &&
+			empty( $folder->group_id ) &&
+			0 === (int) $folder->parent &&
+			$request['privacy'] !== $folder->privacy
+		) {
 			$args['privacy'] = $request['privacy'];
-		}
-
-		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-			$args['group_id'] = $request['group_id'];
-			$args['privacy']  = 'grouponly';
+			$privacy_changed = true;
 		}
 
 		if ( isset( $request['parent'] ) && ! empty( $request['parent'] ) ) {
 			$args['parent']  = $request['parent'];
 			$parent_folder   = new BP_Document_Folder( $args['parent'] );
 			$args['privacy'] = $parent_folder->privacy;
+			$privacy_changed = false;
 		} elseif ( isset( $request['parent'] ) && 0 === (int) $request['parent'] ) {
 			$args['parent'] = $request['parent'];
 		}
@@ -619,8 +628,8 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_document_folder_update_items_query_args', $args, $request );
 
-		if ( isset( $request['privacy'] ) && ! empty( $request['privacy'] ) ) {
-			bp_document_update_privacy( $folder->id, $request['privacy'], 'folder' );
+		if ( $privacy_changed ) {
+			bp_document_update_privacy( $folder->id, $args['privacy'], 'folder' );
 		}
 
 		// Move folders.
@@ -747,24 +756,30 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			} elseif (
 				! bp_folder_user_can_edit( $folder ) ||
 				(
-					function_exists( 'bb_media_user_can_upload' ) &&
-					! bb_media_user_can_upload( bp_loggedin_user_id(), (int) ( isset( $request['group_id'] ) ? $request['group_id'] : $folder->group_id ) )
+					function_exists( 'bb_document_user_can_upload' ) &&
+					! bb_document_user_can_upload( bp_loggedin_user_id(), (int) $folder->group_id )
 				)
 			) {
 				$retval = $error;
-			} elseif ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
-				if (
-					! bp_is_active( 'groups' )
-					|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
-				) {
-					$retval = new WP_Error(
-						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' ),
-						array(
-							'status' => rest_authorization_required_code(),
-						)
-					);
-				}
+			} elseif (
+				// A folder cannot be moved between groups, or in/out of a group, through an update.
+				( ! empty( $request['group_id'] ) && (int) $request['group_id'] !== (int) $folder->group_id ) ||
+				(
+					// Group folders: the actor must still be allowed to manage documents in the folder's group.
+					! empty( $folder->group_id ) &&
+					(
+						! bp_is_active( 'groups' )
+						|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $folder->group_id )
+					)
+				)
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
 			}
 		}
 

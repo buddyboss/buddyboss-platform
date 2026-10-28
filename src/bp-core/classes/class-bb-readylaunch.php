@@ -141,12 +141,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Register the ReadyLaunch telemetry data.
 		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss 3.4.3 Added the onboarding wizard's completion flag
+		 *              and progress option. These previously reached telemetry only
+		 *              through transient filters registered mid-AJAX by the wizard
+		 *              itself, so the weekly cron send never carried them and the
+		 *              signal was lost on any site where that one immediate send
+		 *              failed or telemetry was disabled at the time. They are added
+		 *              unconditionally: an abandoned wizard on a site that never
+		 *              enabled ReadyLaunch is the funnel signal, so they must not
+		 *              sit behind the enabled check.
+		 *
 		 * @param array $option_array The array of telemetry options.
 		 *
 		 * @return array The modified array of telemetry options.
 		 */
 		public function bb_rl_telemetry_platform_options( $option_array ) {
-			$op_options = array( 'bb_rl_enabled' );
+			$op_options = array(
+				'bb_rl_enabled',
+				'bb_rl_onboarding_completed',
+				'bb_rl_progress_rl_onboarding',
+			);
 			if ( bb_is_readylaunch_enabled() ) {
 				$op_options[] = 'bb_rl_theme_mode';
 				$op_options[] = 'bb_rl_enabled_pages';
@@ -707,7 +721,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							bb_tutorlms_enable()
 						) {
 							$is_active   = true;
-							$item['url'] = get_post_type_archive_link( bb_tutorlms_profile_courses_slug() );
+							$item['url'] = get_post_type_archive_link( tutor()->course_post_type );
 						} elseif (
 							class_exists( 'memberpress\courses\helpers\Courses' ) &&
 							class_exists( 'memberpress\courses\models\Course' )
@@ -2295,7 +2309,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$email
 			);
 
-			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
+			// Composed in the inviter's own session but delivered to a plain email address with no
+			// member behind it, so the request viewer is the wrong audience - it is the inviter, who
+			// is never denied their own name. Pin it to the public, logged-out view. Matches the
+			// non-ReadyLaunch handler in bp-invites/actions/invites.php.
+			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id, bb_core_guest_viewer_id() );
 			$email_encode = rawurlencode( $email );
 			$inviter_url  = bp_loggedin_user_domain();
 
@@ -3832,11 +3850,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
 			}
 
+			// Render the reply in single-topic context so capability checks resolve the
+			// topic the same way the topic page does (group-forum requests carry no singular
+			// topic, which otherwise leaves a guest's new reply without its Reply link until
+			// the page is reloaded). Mirrors BBP_Forums_Group_Extension::display_topics().
+			$topic_id              = bbp_get_reply_topic_id( $reply_id );
+			$previous_topic_id     = ! empty( $bbp->current_topic_id ) ? (int) $bbp->current_topic_id : 0;
+			$bbp->current_topic_id = $topic_id;
+			bbp_set_query_name( 'bbp_single_topic' );
+
 			while ( bbp_replies() ) :
 				bbp_the_reply();
 				bbp_get_template_part( 'loop', 'single-reply' );
 			endwhile;
 			$reply_html = ob_get_clean();
+
+			$bbp->current_topic_id = $previous_topic_id;
+			bbp_reset_query_name();
 
 			if ( function_exists( 'bbp_make_clickable' ) ) {
 				remove_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );

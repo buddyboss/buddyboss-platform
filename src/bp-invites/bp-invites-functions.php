@@ -34,6 +34,42 @@ function bp_get_invite_post_type() {
 }
 
 /**
+ * Check whether a user can revoke (delete) an email invite.
+ *
+ * Only posts of the invite post type qualify, and only the member who sent the
+ * invite or a community moderator may revoke it.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param int $invite_id Invite post ID.
+ * @param int $user_id   User ID. Defaults to the logged-in user.
+ *
+ * @return bool
+ */
+function bb_invites_user_can_revoke( $invite_id, $user_id = 0 ) {
+	$invite_id = absint( $invite_id );
+	$user_id   = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+	$invite    = $invite_id ? get_post( $invite_id ) : null;
+
+	if ( empty( $invite ) || empty( $user_id ) || bp_get_invite_post_type() !== $invite->post_type ) {
+		return false;
+	}
+
+	$can_revoke = ( (int) $invite->post_author === $user_id ) || bp_user_can( $user_id, 'bp_moderate' );
+
+	/**
+	 * Filters whether a user can revoke an email invite.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param bool    $can_revoke Whether the user can revoke the invite.
+	 * @param WP_Post $invite     Invite post.
+	 * @param int     $user_id    User ID.
+	 */
+	return (bool) apply_filters( 'bb_invites_user_can_revoke', $can_revoke, $invite, $user_id );
+}
+
+/**
  * Return labels used by the invite post type.
  *
  * @since BuddyBoss 1.0.0
@@ -224,9 +260,15 @@ function bp_invites_member_invite_register_screen_message() {
 		}
 		$inviters = array_unique( $inviters );
 
+		// This message is rendered on the public registration page, so its audience is by
+		// definition not a member yet. Resolved against the request viewer an admin previewing the
+		// page - or the inviter loading their own invitation link - would put name parts the site
+		// hides from everyone else into a page served to a stranger. Pin the resolution to the
+		// public, logged-out view, as bp_get_member_invites_wildcard_replace() does for the
+		// invitation email.
 		$inviters_names = array();
 		foreach ( $inviters as $inviter ) {
-			$inviters_names[] = bp_core_get_user_displayname( $inviter );
+			$inviters_names[] = bp_core_get_user_displayname( $inviter, bb_core_guest_viewer_id() );
 		}
 
 		if ( ! empty( $inviters_names ) ) {
@@ -415,7 +457,11 @@ function bp_get_invites_member_invite_url() {
 function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	global $bp;
 
-	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+	// The invitation is composed in the inviter's own session but is delivered to a plain email
+	// address - there is no member behind it. Resolved against the request viewer the inviter sees
+	// their own profile in full, so the email would carry name parts the site hides from everyone
+	// else. Pin the resolution to the public, logged-out view.
+	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 	$site_name    = get_bloginfo( 'name' );
 	$inviter_url  = bp_loggedin_user_domain();
 

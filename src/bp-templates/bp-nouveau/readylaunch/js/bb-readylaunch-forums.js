@@ -126,6 +126,12 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// No reply modal on this page (e.g. a member's profile Replies tab): let the link
+			// navigate to the topic, where the reply-to modal opens from the bbp_reply_to param.
+			if ( ! $( '.bbp-reply-form.bb-rl-forum-modal' ).length ) {
+				return;
+			}
+
 			e.preventDefault();
 
 			$('.bbp-reply-form.bb-rl-forum-modal').addClass( 'bb-rl-forum-modal-visible' );

@@ -728,6 +728,25 @@ module.exports = function (grunt) {
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('webpack', ['exec:build_blocks', 'exec:build_admin']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'webpack', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin:minify', 'cssmin:rtl', 'makepot']);
+	// Re-imports the REST controllers from the buddyboss-platform-api repo, which is
+	// their source of truth: `copy:bp_rest_*` runs API `includes/` -> Platform `src/`,
+	// so anything hand-edited in a generated file here is overwritten on the next run.
+	//
+	// RELEASE PAIRING - read before tagging. This task is deliberately NOT part of
+	// `release`, `build` or `default` (see `release` below for why), so a REST fix that
+	// lives only in the API repo is absent from the Platform artefact customers install
+	// until someone runs this. When a change spans both repos, the two must be tagged
+	// together and this task must be run on the Platform branch first:
+	//
+	//   1. Merge and tag buddyboss-platform-api.
+	//   2. On the Platform release branch: `grunt bp_rest`.
+	//   3. Commit the regenerated `src/**` copies with the release.
+	//   4. Only then bump the Platform version and tag.
+	//
+	// Skipping step 2 ships Platform's previous copies. Nothing fails: the generated
+	// classes are valid, the routes register, and the standalone API plugin (which most
+	// test sites run) masks the difference entirely, so the gap only shows on sites
+	// running Platform without it.
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'copy:bp_rest_reactions', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
@@ -752,6 +771,17 @@ module.exports = function (grunt) {
 	//   9. clean:all                       — final tidy
 	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
 
+	// `bp_rest` is intentionally absent from this chain, and from `build` and `default`.
+	// It is not an oversight, and adding it would make releases less reproducible, not
+	// more: `exec:rest_api` does a bare `git clone` of a PRIVATE repo, so it (a) needs an
+	// SSH key or GH_TOKEN on whatever machine cuts the release and turns a credential
+	// problem into a failed release, and (b) clones that repo's DEFAULT BRANCH at the
+	// moment the task runs - not a tag - so the same Platform commit would produce a
+	// different artefact depending on when it was built, and could sweep in unreleased
+	// API work. It also rewrites tracked files under `src/` mid-build, which would leave
+	// the shipped zip differing from the tagged tree.
+	// Run `grunt bp_rest` as a reviewable commit on the branch instead - see its
+	// RELEASE PAIRING note above.
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.

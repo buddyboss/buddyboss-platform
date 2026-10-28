@@ -304,8 +304,43 @@ function bp_helper_plugins_loaded_callback() {
 		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
 	}
 
+	/**
+	 * SEO plugin compatibility.
+	 *
+	 * They build the document title, the Open Graph tags and the JSON-LD graph themselves, and
+	 * resolve a member's name by reading the WP_User `display_name` property rather than through
+	 * get_the_author_meta() - a read no filter can reach. Without this the full name goes into the
+	 * page source for anonymous visitors and social scrapers on a community that hides it.
+	 *
+	 * Deliberately NOT gated on detecting one of the three plugins it ships support for. The class
+	 * only registers filters, and registering a hook nobody fires costs nothing - which is the same
+	 * argument its own hook list makes for not gating that. Gating the class instead put its two
+	 * documented extension points, `bb_seo_schema_graph_filters` and `bb_seo_author_name_filters`,
+	 * out of reach of exactly the plugins they exist for: a community on SEOPress, Slim SEO, The
+	 * SEO Framework or Squirrly never loaded the class, so its listener was never called and it had
+	 * no supported way to close the leak. Returning an empty array from either filter unregisters
+	 * everything, which is the off switch.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 */
+	require buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+	BB_SEO_Helpers::instance();
+
 	if ( class_exists( 'LifterLMS' ) ) {
 		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
+	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * - Prevent the "Prevent discovery of usernames" author-scan block from
+	 *   404ing BuddyBoss REST API requests that use an `author` parameter.
+	 *
+	 * Support Wordfence Security.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 */
+	if ( class_exists( 'wordfence' ) ) {
+		add_filter( 'request', 'bb_core_wordfence_rest_author_scan_compatibility', 5 );
 	}
 }
 
@@ -1194,3 +1229,52 @@ function bb_om_compatibility_helper() {
 	}
 }
 add_action( 'init', 'bb_om_compatibility_helper', 10 );
+
+/**
+ * Keep BuddyBoss REST API requests working when Wordfence's
+ * "Prevent discovery of usernames" protection is enabled.
+ *
+ * Wordfence hooks the `request` filter (`wordfence::preventAuthorNScans`) and
+ * exits with a 404 when the main query vars contain a numeric `author` value.
+ * Because `author` is a public query var, it is populated for `/wp-json/*`
+ * URLs too, which kills requests such as
+ * `GET /wp-json/buddyboss/v1/topics?author=N` before the REST server
+ * dispatches. The main query is never used to build a REST response, so the
+ * `author` query var can safely be dropped for BuddyBoss REST requests — the
+ * REST controllers read `author` from the WP_REST_Request object, not from
+ * the main query. Front-end `?author=N` scans and the WP core users endpoints
+ * are untouched, so Wordfence's username-enumeration protection stays intact.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param array $query_vars The array of requested query variables.
+ *
+ * @return array The query variables without `author` for BuddyBoss REST requests.
+ */
+function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
+	// `rest_route` arrives as an array for `?rest_route[]=…`; core's rest_api_loaded() ignores those too.
+	if ( empty( $query_vars['rest_route'] ) || ! is_string( $query_vars['rest_route'] ) || empty( $query_vars['author'] ) ) {
+		return $query_vars;
+	}
+
+	/**
+	 * Filters the REST namespaces exempted from Wordfence's author-scan block.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param array $namespaces REST namespaces whose requests keep working
+	 *                          with an `author` parameter.
+	 */
+	$namespaces = apply_filters( 'bb_rest_author_scan_compat_namespaces', array( bp_rest_namespace(), 'buddyboss-app' ) );
+
+	$rest_route = ltrim( $query_vars['rest_route'], '/' );
+
+	foreach ( $namespaces as $rest_namespace ) {
+		if ( 0 === strpos( $rest_route, trailingslashit( $rest_namespace ) ) ) {
+			unset( $query_vars['author'] );
+			break;
+		}
+	}
+
+	return $query_vars;
+}
