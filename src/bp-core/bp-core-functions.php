@@ -5690,7 +5690,8 @@ function bb_core_delete_directory_symlinks() {
 		}
 	}
 
-	bp_update_option( 'bb_directory_symlinks_deleted', 1 );
+	// Per-site flag: the uploads directory, and so the symlinks, belong to the current site.
+	update_option( 'bb_directory_symlinks_deleted', 1 );
 
 	return $deleted;
 }
@@ -5699,7 +5700,7 @@ add_action( 'bb_core_delete_directory_symlinks', 'bb_core_delete_directory_symli
 add_action(
 	'bp_init',
 	function () {
-		if ( bp_get_option( 'bb_directory_symlinks_deleted' ) || wp_next_scheduled( 'bb_core_delete_directory_symlinks' ) ) {
+		if ( get_option( 'bb_directory_symlinks_deleted' ) || wp_next_scheduled( 'bb_core_delete_directory_symlinks' ) ) {
 			return;
 		}
 

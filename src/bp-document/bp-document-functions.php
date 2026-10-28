@@ -3964,7 +3964,7 @@ function bb_document_get_preview_symlink_data( $document, $size ) {
 	}
 
 	// Otherwise use the attached image itself.
-	if ( ( empty( $source ) || ! file_exists( $source ) ) && wp_get_attachment_image_src( $attachment_id ) ) {
+	if ( ( empty( $source ) || ! file_exists( $source ) ) && wp_attachment_is_image( $attachment_id ) && wp_get_attachment_image_src( $attachment_id ) ) {
 		$source = (string) $attached_file;
 		$file   = array();
 	}
@@ -4167,6 +4167,9 @@ function bp_document_delete_symlinks( $document ) {
 		$symlink_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
 	}
 
+	// Previews without their own size link the attached file, so its extension is used too.
+	$symlink_extensions = array_unique( array_filter( array( $symlink_extension, pathinfo( (string) $attached_file, PATHINFO_EXTENSION ) ) ) );
+
 	if ( ! empty( $all_attachments ) ) {
 		foreach ( $all_attachments as $attachment_path ) {
 			// Delete symlink without an extension.
@@ -4175,9 +4178,10 @@ function bp_document_delete_symlinks( $document ) {
 			}
 
 			// Delete symlink with an extension.
-			$attachment_path = $attachment_path . '.' . $symlink_extension;
-			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+			foreach ( $symlink_extensions as $extension_name ) {
+				if ( file_exists( $attachment_path . '.' . $extension_name ) ) {
+					unlink( $attachment_path . '.' . $extension_name );
+				}
 			}
 		}
 	}
