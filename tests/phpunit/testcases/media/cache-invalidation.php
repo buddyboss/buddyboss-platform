@@ -20,6 +20,28 @@ class BP_Tests_Media_Cache_Invalidation extends BP_UnitTestCase {
 		$this->set_current_user( $this->user_id );
 	}
 
+	/**
+	 * Skip the test when the video component is not loaded.
+	 *
+	 * Videos ship in BuddyBoss Add-ons once they are removed from Platform.
+	 */
+	protected function require_video() {
+		if ( ! function_exists( 'bp_video_add' ) || ! class_exists( 'BP_Video_Album' ) ) {
+			$this->markTestSkipped( 'Videos are provided by BuddyBoss Add-ons, which is not loaded.' );
+		}
+	}
+
+	/**
+	 * Skip the test when the document component is not loaded.
+	 *
+	 * Documents ship in BuddyBoss Add-ons once they are removed from Platform.
+	 */
+	protected function require_documents() {
+		if ( ! function_exists( 'bp_document_add' ) || ! function_exists( 'bp_folder_add' ) ) {
+			$this->markTestSkipped( 'Documents are provided by BuddyBoss Add-ons, which is not loaded.' );
+		}
+	}
+
 	protected function attachment() {
 		return self::factory()->attachment->create( array( 'post_author' => $this->user_id ) );
 	}
@@ -35,6 +57,8 @@ class BP_Tests_Media_Cache_Invalidation extends BP_UnitTestCase {
 	}
 
 	public function test_group_video_count_cache_is_cleared_on_video_delete() {
+		$this->require_video();
+
 		$video_id = bp_video_add( array( 'attachment_id' => $this->attachment(), 'user_id' => $this->user_id, 'group_id' => $this->group_id ) );
 
 		$this->assertSame( 1, bp_video_get_total_group_video_count( $this->group_id ) );
@@ -55,6 +79,8 @@ class BP_Tests_Media_Cache_Invalidation extends BP_UnitTestCase {
 	}
 
 	public function test_group_document_count_cache_is_cleared_on_document_delete() {
+		$this->require_documents();
+
 		$document_id = bp_document_add( array( 'attachment_id' => $this->attachment(), 'user_id' => $this->user_id, 'group_id' => $this->group_id ) );
 
 		$this->assertSame( 1, bp_document_get_total_group_document_count( $this->group_id ) );
@@ -65,6 +91,8 @@ class BP_Tests_Media_Cache_Invalidation extends BP_UnitTestCase {
 	}
 
 	public function test_group_folder_count_cache_is_cleared_on_folder_delete() {
+		$this->require_documents();
+
 		$folder_id = bp_folder_add( array( 'title' => 'Folder', 'user_id' => $this->user_id, 'group_id' => $this->group_id ) );
 
 		$this->assertSame( 1, bp_document_get_total_group_folder_count( $this->group_id ) );
@@ -88,6 +116,8 @@ class BP_Tests_Media_Cache_Invalidation extends BP_UnitTestCase {
 	}
 
 	public function test_album_counts_are_refreshed_after_video_move() {
+		$this->require_video();
+
 		$album_id = bp_video_album_add( array( 'title' => 'Album', 'user_id' => $this->user_id ) );
 		$video_id = bp_video_add( array( 'attachment_id' => $this->attachment(), 'user_id' => $this->user_id ) );
 
@@ -98,5 +128,61 @@ class BP_Tests_Media_Cache_Invalidation extends BP_UnitTestCase {
 
 		$after = bb_media_get_album_counts( $album_id );
 		$this->assertSame( 1, $after['album_video_count'] );
+	}
+
+	/**
+	 * Photo and video albums share one table, so saving a photo album (here by
+	 * moving a photo into it) must refresh cached video album queries too.
+	 *
+	 * @group bp_media_album_reset_cache_incrementor
+	 */
+	public function test_video_album_order_is_refreshed_after_photo_album_save() {
+		$this->require_video();
+
+		global $wpdb;
+
+		$older_album = bp_album_add(
+			array(
+				'title'   => 'Older',
+				'user_id' => $this->user_id,
+			)
+		);
+		$newer_album = bp_album_add(
+			array(
+				'title'   => 'Newer',
+				'user_id' => $this->user_id,
+			)
+		);
+		$media_id    = bp_media_add(
+			array(
+				'attachment_id' => $this->attachment(),
+				'user_id'       => $this->user_id,
+			)
+		);
+
+		// Give the albums distinct, past creation dates.
+		$table = buddypress()->media->table_name_albums;
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Test fixture setup.
+		$wpdb->query( $wpdb->prepare( "UPDATE {$table} SET date_created = %s WHERE id = %d", '2020-01-01 00:00:00', $older_album ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Test fixture setup.
+		$wpdb->query( $wpdb->prepare( "UPDATE {$table} SET date_created = %s WHERE id = %d", '2021-01-01 00:00:00', $newer_album ) );
+		wp_cache_delete( $older_album, 'bp_media_album' );
+		wp_cache_delete( $newer_album, 'bp_media_album' );
+		bp_core_reset_incrementor( 'bp_video_album' );
+
+		$args = array(
+			'user_id' => $this->user_id,
+			'fields'  => 'ids',
+		);
+
+		// Prime the video album query cache.
+		$before = BP_Video_Album::get( $args );
+		$this->assertSame( array( $newer_album, $older_album ), array_map( 'intval', $before['albums'] ) );
+
+		// Moving a photo into the older album bumps its date_created to now.
+		bp_media_move_media_to_album( $media_id, $older_album );
+
+		$after = BP_Video_Album::get( $args );
+		$this->assertSame( array( $older_album, $newer_album ), array_map( 'intval', $after['albums'] ) );
 	}
 }

@@ -244,10 +244,17 @@ add_action( 'bp_albums_deleted_albums', 'bp_media_clear_cache_for_deleted_album'
  * function effectively invalidates all cached results of album queries.
  *
  * @since BuddyBoss 1.1.5
+ * @since BuddyBoss [BBVERSION] Also resets the `bp_video_album` incrementor, because
+ *              photo and video albums share the same table, so saving a photo
+ *              album (for example when media is moved into it) can change video
+ *              album query results.
  *
  * @return bool True on success, false on failure.
  */
 function bp_media_album_reset_cache_incrementor() {
+	// Video albums are stored in the albums table, so album changes
+	// can affect video album queries.
+	bp_core_reset_incrementor( 'bp_video_album' );
 	return bp_core_reset_incrementor( 'bp_media_album' );
 }
 add_action( 'bp_album_delete', 'bp_media_album_reset_cache_incrementor' );
