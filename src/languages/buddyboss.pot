@@ -16708,10 +16708,6 @@ msgid "Forgot Password?"
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:3547
-#: bp-templates/bp-nouveau/readylaunch/document/document-uploader.php:38
-#: bp-templates/bp-nouveau/readylaunch/document/uploader.php:50
-#: bp-templates/bp-nouveau/readylaunch/media/uploader.php:51
-#: bp-templates/bp-nouveau/readylaunch/video/uploader.php:48
 msgid "Write a description"
 msgstr ""
 
@@ -33930,10 +33926,14 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:40
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:44
+#: bp-templates/bp-nouveau/readylaunch/document/document-uploader.php:38
+#: bp-templates/bp-nouveau/readylaunch/document/uploader.php:50
 msgid "Write something about your documents, to be shown on the group feed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:40
+#: bp-templates/bp-nouveau/readylaunch/document/document-uploader.php:38
+#: bp-templates/bp-nouveau/readylaunch/document/uploader.php:50
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
@@ -33986,6 +33986,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:44
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:46
+#: bp-templates/bp-nouveau/readylaunch/media/uploader.php:51
 msgid "Write something about your photos, to be shown on your timeline"
 msgstr ""
 
@@ -34571,6 +34572,7 @@ msgid "Add Videos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:46
+#: bp-templates/bp-nouveau/readylaunch/media/uploader.php:51
 msgid "Write something about your photos, to be shown on the group feed"
 msgstr ""
 
@@ -35145,10 +35147,12 @@ msgid "You have not created any album yet to move this photo into."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:45
+#: bp-templates/bp-nouveau/readylaunch/video/uploader.php:48
 msgid "Write something about your videos, to be shown on the group feed"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:45
+#: bp-templates/bp-nouveau/readylaunch/video/uploader.php:48
 msgid "Write something about your videos, to be shown on your timeline"
 msgstr ""
 
