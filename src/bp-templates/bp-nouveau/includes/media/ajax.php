@@ -520,6 +520,16 @@ function bp_nouveau_ajax_media_delete() {
 	$response = array();
 	if ( $activity_id ) {
 		$response = bp_media_get_activity_media( $_POST['activity_id'] );
+
+		// A comment kept after the delete shows its grid with the comment
+		// thumbnail limit, so return the markup the comment template renders.
+		$media_activity = new BP_Activity_Activity( (int) $activity_id );
+		if ( ! empty( $media_activity->id ) && 'activity_comment' === $media_activity->type ) {
+			ob_start();
+			bp_media_activity_comment_entry( $media_activity->id );
+			$response            = (array) $response;
+			$response['content'] = ob_get_clean();
+		}
 	}
 
 	$delete_box       = false;
@@ -631,6 +641,15 @@ function bp_nouveau_ajax_media_delete() {
 		$album_counts = bb_media_get_album_counts( $album_id, $group_id );
 	}
 
+	// When deleting from a single album that is now empty, build the album-scoped
+	// empty-state markup. The personal/group scope rebuild above only renders a
+	// "no media" message when the whole scope is empty, so an album emptied while
+	// the user/group still has media elsewhere would otherwise show no message.
+	$album_empty_html = '';
+	if ( ! empty( $album_id ) && 0 === (int) $album_counts['album_total_count'] && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+		$album_empty_html = bb_nouveau_media_get_album_empty_state();
+	}
+
 	wp_send_json_success(
 		array(
 			'media'                    => $media,
@@ -645,6 +664,8 @@ function bp_nouveau_ajax_media_delete() {
 			'album_total_count'        => (int) $album_counts['album_total_count'],
 			'album_media_count'        => (int) $album_counts['album_media_count'],
 			'album_video_count'        => (int) $album_counts['album_video_count'],
+			'album_id'                 => (int) $album_id,
+			'album_empty_html'         => $album_empty_html,
 		)
 	);
 
@@ -1029,6 +1050,11 @@ function bp_nouveau_ajax_media_get_activity() {
 	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
+	// The activity is rendered without privacy filters below, so check the viewer first.
+	if ( empty( $post_id ) || ! bb_activity_user_can_view( $post_id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// check activity is media or not.
 	$media_activity = bp_activity_get_meta( $post_id, 'bp_media_activity', true );
 
@@ -1237,6 +1263,7 @@ function bp_nouveau_ajax_media_update_privacy() {
  * Update media activity description.
  *
  * @since BuddyBoss 1.3.5
+ * @since BuddyBoss 3.6.2 Requires edit permission on the item that owns the attachment.
  */
 function bp_nouveau_ajax_media_description_save() {
 	$response = array(
@@ -1268,7 +1295,7 @@ function bp_nouveau_ajax_media_description_save() {
 
 	$attachment = get_post( $attachment_id );
 
-	if ( empty( $attachment ) && ( 'attachment' !== $attachment->post_type ) ) {
+	if ( empty( $attachment ) || 'attachment' !== $attachment->post_type ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
@@ -1282,39 +1309,51 @@ function bp_nouveau_ajax_media_description_save() {
 	$video_id    = get_post_meta( $attachment_id, 'bp_video_id', true );
 	$document_id = get_post_meta( $attachment_id, 'bp_document_id', true );
 
+	// Items created before the attachment meta existed: resolve the owning item from its table.
+	if ( empty( $media_id ) && empty( $video_id ) && empty( $document_id ) ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		if ( ! empty( $bp->media->table_name ) ) {
+			$owner_row = $wpdb->get_row( $wpdb->prepare( "SELECT id, type FROM {$bp->media->table_name} WHERE attachment_id = %d LIMIT 1", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			if ( ! empty( $owner_row->id ) ) {
+				if ( 'video' === $owner_row->type ) {
+					$video_id = (int) $owner_row->id;
+				} else {
+					$media_id = (int) $owner_row->id;
+				}
+			}
+		}
+
+		if ( empty( $media_id ) && empty( $video_id ) && bp_is_active( 'document' ) && ! empty( $bp->document->table_name ) ) {
+			$document_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE attachment_id = %d LIMIT 1", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		}
+	}
+
+	// The attachment must belong to an existing media, video or document item the user can edit.
+	$can_edit           = false;
+	$permission_message = esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' );
+
 	if ( ! empty( $media_id ) ) {
-		$media = new BP_Media( $media_id );
+		$media    = new BP_Media( $media_id );
+		$can_edit = ! empty( $media->id ) && (int) $media->attachment_id === (int) $attachment_id && bp_media_user_can_edit( $media );
+	} elseif ( ! empty( $video_id ) && class_exists( 'BP_Video' ) ) {
+		$video              = new BP_Video( $video_id );
+		$can_edit           = ! empty( $video->id ) && (int) $video->attachment_id === (int) $attachment_id && bp_video_user_can_edit( $video );
+		$permission_message = esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' );
+	} elseif ( ! empty( $document_id ) && class_exists( 'BP_Document' ) ) {
+		$document           = new BP_Document( $document_id );
+		$can_edit           = ! empty( $document->id ) && (int) $document->attachment_id === (int) $attachment_id && bp_document_user_can_edit( $document );
+		$permission_message = esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' );
+	}
 
-		if ( ! empty( $media->id ) && ! bp_media_user_can_edit( $media ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this media\'s description.', 'buddyboss' )
-			);
+	if ( ! $can_edit ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			$permission_message
+		);
 
-			wp_send_json_error( $response );
-		}
-	} elseif ( ! empty( $video_id ) ) {
-		$video = new BP_Video( $video_id );
-
-		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' )
-			);
-
-			wp_send_json_error( $response );
-		}
-	} elseif ( ! empty( $document_id ) ) {
-		$document = new BP_Document( $document_id );
-
-		if ( ! empty( $document->id ) && ! bp_document_user_can_edit( $document ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this document\'s description.', 'buddyboss' )
-			);
-
-			wp_send_json_error( $response );
-		}
+		wp_send_json_error( $response );
 	}
 
 	// Added backward compatibility.
@@ -1435,7 +1474,17 @@ function bp_nouveau_ajax_media_get_media_description() {
 	}
 
 	$media = new BP_Media( $media_id );
+
+	// The activity is rendered without privacy filters below, so the viewer must be able to see this photo.
+	$media_access = bb_media_user_can_access( $media_id, 'photo', $attachment_id );
+	if ( empty( $media->id ) || empty( $media_access['can_view'] ) ) {
+		wp_send_json_error( $response );
+	}
+
 	if ( bp_is_active( 'activity' ) && ! empty( $media->activity_id ) ) {
+		if ( ! bb_activity_user_can_view( $media->activity_id ) ) {
+			wp_send_json_error( $response );
+		}
 
 		remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );

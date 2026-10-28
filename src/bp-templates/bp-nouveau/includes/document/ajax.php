@@ -58,7 +58,7 @@ add_action(
 			array(
 				'document_update_file_name' => array(
 					'function' => 'bp_nouveau_ajax_document_update_file_name',
-					'nopriv'   => true,
+					'nopriv'   => false,
 				),
 			),
 			array(
@@ -267,6 +267,11 @@ function bp_nouveau_ajax_document_get_activity() {
 	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
+	// The activity is rendered without privacy filters below, so check the viewer first.
+	if ( empty( $post_id ) || ! bb_activity_user_can_view( $post_id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// check activity is document or not.
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
 
@@ -355,7 +360,17 @@ function bp_nouveau_ajax_document_get_document_description() {
 	}
 
 	$document = new BP_Document( $document_id );
+
+	// The activity is rendered without privacy filters below, so the viewer must be able to see this document.
+	$document_access = bb_media_user_can_access( $document_id, 'document', $attachment_id );
+	if ( empty( $document->id ) || empty( $document_access['can_view'] ) ) {
+		wp_send_json_error( $response );
+	}
+
 	if ( bp_is_active( 'activity' ) && ! empty( $document->activity_id ) ) {
+		if ( ! bb_activity_user_can_view( $document->activity_id ) ) {
+			wp_send_json_error( $response );
+		}
 
 		remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_document_activity_description' );
@@ -675,12 +690,25 @@ function bp_nouveau_ajax_document_document_save() {
 	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 
 	if ( isset( $documents ) && ! empty( $documents ) && $folder_id > 0 ) {
-		if ( ! empty( $documents ) && is_array( $documents ) ) {
-			// set folder id for document.
+
+		$destination_folder = new BP_Document_Folder( $folder_id );
+
+		/*
+		 * A destination folder was supplied. The uploader must be allowed to contribute into
+		 * it, and the stored group is taken from the folder rather than trusted from the
+		 * request - otherwise a client can send group_id=0 to skip the group check above while
+		 * still routing the document into a folder of a group they do not belong to.
+		 */
+		if ( empty( $destination_folder->id ) || ! bb_document_user_can_add_to_folder( $destination_folder ) ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to upload into this folder.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
+		if ( is_array( $documents ) ) {
+			// Route every uploaded document into the destination folder and its group.
 			foreach ( $documents as $key => $document ) {
-				if ( 0 === (int) $document['folder_id'] ) {
-					$documents[ $key ]['folder_id'] = $folder_id;
-				}
+				$documents[ $key ]['folder_id'] = $folder_id;
+				$documents[ $key ]['group_id']  = ! empty( $destination_folder->group_id ) ? (int) $destination_folder->group_id : 0;
 			}
 		}
 	}
@@ -764,45 +792,115 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	// save document.
-	$id        = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
-	$group_id  = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$title     = wp_strip_all_tags( $title );
-	$privacy   = bb_filter_input_string( INPUT_POST, 'privacy' );
-	$privacy   = ! empty( $privacy ) ? $privacy : 'public';
-	$parent    = filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT );
-	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+	// Save folder.
+	$id       = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+	$group_id = (int) filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$title    = wp_strip_all_tags( $title );
+	$privacy  = bb_filter_input_string( INPUT_POST, 'privacy' );
+	$parent   = (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT );
 
-	if ( $parent > 0 ) {
-		$id = false;
-	}
+	// A posted parent means "create a child folder"; a folder_id on its own means "edit that folder".
+	$id = ( $parent > 0 || (int) $id < 1 ) ? false : (int) $id;
 
-	if ( ! $id && ! $parent ) {
-		$parent = $folder_id;
-	}
+	$existing_folder = null;
+	$parent_folder   = null;
 
-	if ( $parent > 0 ) {
-		$parent_folder = BP_Document_Folder::get_folder_data( array( $parent ) );
-		$privacy       = $parent_folder[0]->privacy;
-	}
+	if ( $id > 0 ) {
+		// Editing an existing folder: everything except the title comes from the stored row, never from the request.
+		$existing_folder = new BP_Document_Folder( $id );
 
-	if ( (int) $parent > 0 ) {
-		$has_access = bp_folder_user_can_edit( $parent );
-		if ( ! $has_access ) {
+		if ( empty( $existing_folder->id ) ) {
+			wp_send_json_error( $response );
+		}
+
+		if ( ! bp_folder_user_can_edit( $existing_folder ) ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
+		// A folder cannot be moved between groups, or in/out of a group, through this action.
+		if ( ! empty( $group_id ) && (int) $existing_folder->group_id !== $group_id ) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
+		$group_id = (int) $existing_folder->group_id;
+		$parent   = (int) $existing_folder->parent;
+
+		// Only a personal root folder's privacy can be changed here, and only to a known level.
+		if (
+			0 !== $group_id ||
+			0 !== $parent ||
+			empty( $privacy ) ||
+			'grouponly' === $privacy ||
+			! array_key_exists( $privacy, bp_document_get_visibility_levels() )
+		) {
+			$privacy = $existing_folder->privacy;
+		}
+	} elseif ( $parent > 0 ) {
+		// Creating a child folder: the group and privacy come from the parent folder, never from the request.
+		$parent_folder = new BP_Document_Folder( $parent );
+
+		if ( empty( $parent_folder->id ) ) {
+			$response['feedback'] = esc_html__( 'Invalid Parent Folder ID.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
+		if ( ! empty( $group_id ) && (int) $parent_folder->group_id !== $group_id ) {
 			$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
+
+		$group_id = (int) $parent_folder->group_id;
+		$privacy  = $parent_folder->privacy;
+	} elseif ( empty( $group_id ) && ( empty( $privacy ) || 'grouponly' === $privacy || ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) ) {
+		// Creating a personal root folder: fall back to public for a missing or unknown privacy level.
+		$privacy = 'public';
 	}
 
-	$folder_id = bp_folder_add(
-		array(
-			'id'       => $id,
-			'title'    => $title,
-			'privacy'  => $privacy,
-			'group_id' => $group_id,
-			'parent'   => $parent,
-		)
+	if ( ! empty( $group_id ) ) {
+		// Group folders: the actor must be allowed to manage documents in the folder's group.
+		if (
+			! bp_is_active( 'groups' ) ||
+			! groups_can_user_manage_document( bp_loggedin_user_id(), $group_id )
+		) {
+			if ( $id > 0 ) {
+				$response['feedback'] = esc_html__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' );
+			} else {
+				$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss' );
+			}
+			wp_send_json_error( $response );
+		}
+	} elseif ( ! bb_document_user_can_upload( bp_loggedin_user_id() ) ) {
+		// Personal folders: profile documents must be enabled and the actor allowed to create documents.
+		if ( $id > 0 ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss' );
+		} else {
+			$response['feedback'] = esc_html__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' );
+		}
+		wp_send_json_error( $response );
+	}
+
+	if ( $parent_folder && ! bp_folder_user_can_edit( $parent_folder ) ) {
+		$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
+	$folder_args = array(
+		'id'       => $id,
+		'title'    => $title,
+		'privacy'  => $privacy,
+		'group_id' => $group_id,
+		'parent'   => $parent,
 	);
+
+	if ( $existing_folder ) {
+		// Keep the original owner and creation date; bp_folder_add() would otherwise overwrite both on update.
+		$folder_args['user_id']      = (int) $existing_folder->user_id;
+		$folder_args['date_created'] = $existing_folder->date_created;
+	}
+
+	$folder_id = bp_folder_add( $folder_args );
 
 	if ( ! $folder_id ) {
 		$response['feedback'] = esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' );
@@ -876,23 +974,52 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	// save folder.
-	$group_id  = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$title     = wp_strip_all_tags( $title );
-	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
-	$privacy   = '';
+	// Save folder.
+	$group_id      = (int) filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$title         = wp_strip_all_tags( $title );
+	$folder_id     = (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+	$privacy       = '';
+	$parent_folder = null;
 
 	if ( $folder_id > 0 ) {
-		$parent_folder = BP_Document_Folder::get_folder_data( array( $folder_id ) );
-		$privacy       = $parent_folder[0]->privacy;
-	}
+		// The group and privacy come from the parent folder, never from the request.
+		$parent_folder = new BP_Document_Folder( $folder_id );
 
-	if ( (int) $folder_id > 0 ) {
-		$has_access = bp_folder_user_can_edit( $folder_id );
-		if ( ! $has_access ) {
+		if ( empty( $parent_folder->id ) ) {
+			$response['feedback'] = esc_html__( 'Invalid Parent Folder ID.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
+		if ( ! empty( $group_id ) && (int) $parent_folder->group_id !== $group_id ) {
 			$response['feedback'] = esc_html__( 'You don\'t have permission to create folder inside this folder.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
+
+		$group_id = (int) $parent_folder->group_id;
+		$privacy  = $parent_folder->privacy;
+	} elseif ( empty( $group_id ) ) {
+		// No parent posted: this is a personal root folder, so it needs a real privacy level.
+		$privacy = 'public';
+	}
+
+	if ( ! empty( $group_id ) ) {
+		// Group folders: the actor must be allowed to manage documents in the folder's group.
+		if (
+			! bp_is_active( 'groups' ) ||
+			! groups_can_user_manage_document( bp_loggedin_user_id(), $group_id )
+		) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	} elseif ( ! bb_document_user_can_upload( bp_loggedin_user_id() ) ) {
+		// Personal folders: profile documents must be enabled and the actor allowed to create documents.
+		$response['feedback'] = esc_html__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
+	if ( $parent_folder && ! bp_folder_user_can_edit( $parent_folder ) ) {
+		$response['feedback'] = esc_html__( 'You don\'t have permission to create folder inside this folder.', 'buddyboss' );
+		wp_send_json_error( $response );
 	}
 
 	$folder_id = bp_folder_add(
@@ -984,7 +1111,8 @@ function bp_nouveau_ajax_document_move() {
 	}
 
 	if ( (int) $folder_id > 0 ) {
-		$has_access = bp_folder_user_can_edit( $folder_id );
+		// Moving into a folder is a contribute action, not an edit of the folder.
+		$has_access = bb_document_user_can_add_to_folder( $folder_id );
 		if ( ! $has_access ) {
 			$response['feedback'] = esc_html__( 'You don\'t have permission to move this document.', 'buddyboss' );
 			wp_send_json_error( $response );
@@ -1109,16 +1237,15 @@ function bp_nouveau_ajax_document_update_file_name() {
 	$privacy                = bb_filter_input_string( INPUT_POST, 'document_privacy' );
 
 	if ( 'document' === $type ) {
-		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
+		// filter_input() returns null or false for a missing or invalid value, so check for a positive ID.
+		if ( (int) $document_id <= 0 || (int) $attachment_document_id <= 0 || '' === $title ) {
 			wp_send_json_error( $response );
 		}
 
-		if ( (int) $document_id > 0 ) {
-			$has_access = bp_document_user_can_edit( $document_id );
-			if ( ! $has_access ) {
-				$response['feedback'] = esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
-				wp_send_json_error( $response );
-			}
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
+			wp_send_json_error( $response );
 		}
 
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
@@ -1273,27 +1400,45 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	// save folder.
-	$id       = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$privacy  = bb_filter_input_string( INPUT_POST, 'privacy' );
+	// Save folder.
+	$id      = (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$privacy = bb_filter_input_string( INPUT_POST, 'privacy' );
 
-	if ( (int) $id > 0 ) {
-		$has_access = bp_folder_user_can_edit( $id );
-		if ( ! $has_access ) {
-			$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have permission to rename this folder', 'buddyboss' ) );
-			wp_send_json_error( $response );
-		}
+	$folder = new BP_Document_Folder( $id );
+
+	if ( empty( $folder->id ) ) {
+		wp_send_json_error( $response );
 	}
 
-	if ( empty( $privacy ) ) {
-		$folder_id = bp_document_get_root_parent_id( $id );
-		$folder    = new BP_Document_Folder( $folder_id );
-		$privacy   = $folder->privacy;
+	if ( ! bp_folder_user_can_edit( $folder ) ) {
+		$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have permission to rename this folder', 'buddyboss' ) );
+		wp_send_json_error( $response );
 	}
 
-	if ( $group_id > 0 ) {
+	// Group folders: the actor must still be allowed to manage documents in the folder's group.
+	if (
+		! empty( $folder->group_id ) &&
+		(
+			! bp_is_active( 'groups' ) ||
+			! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $folder->group_id )
+		)
+	) {
+		$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+
+	if ( ! empty( $folder->group_id ) ) {
+		// Group folders are always group-only; the posted privacy is ignored.
 		$privacy = 'grouponly';
+	} elseif (
+		0 !== (int) $folder->parent ||
+		empty( $privacy ) ||
+		'grouponly' === $privacy ||
+		! array_key_exists( $privacy, bp_document_get_visibility_levels() )
+	) {
+		// Only a personal root folder's privacy can be changed, and only to a known level; otherwise keep the tree's privacy.
+		$root_folder = new BP_Document_Folder( bp_document_get_root_parent_id( $id ) );
+		$privacy     = $root_folder->privacy;
 	}
 
 	$folder_id = bp_document_rename_folder( $id, $title, $privacy );
