@@ -4296,8 +4296,8 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 		 *
 		 * The admin-configured default registration type is unaffected. The
 		 * send-invite type is NOT admin-only — any member who can send invites
-		 * chooses it — so it is gated separately, at its own input, by
-		 * bb_is_member_type_allowed_on_invite() in bp_member_invite_submit().
+		 * chooses it — so it is gated separately: at each invite input, and
+		 * again when applied, by bb_get_invite_allowed_member_type().
 		 */
 		if (
 			'' !== $get_selected_member_type_on_register
@@ -5931,7 +5931,8 @@ function bb_is_member_type_allowed_on_invite( $member_type_key, $inviter_id = 0 
 function bb_get_invite_allowed_member_type( $invite_id ) {
 	$invite = get_post( $invite_id );
 
-	if ( ! $invite || bp_get_invite_post_type() !== $invite->post_type ) {
+	// Without an author there is no inviter to check, and the fallback would test the current user.
+	if ( ! $invite || bp_get_invite_post_type() !== $invite->post_type || empty( $invite->post_author ) ) {
 		return '';
 	}
 
