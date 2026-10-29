@@ -82,6 +82,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$this->load_template_stack();
 
+			// AJAX from legacy-template UIs on non-RL pages (e.g. theme Elementor activity widget)
+			// must get legacy markup back, not RL templates.
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( wp_doing_ajax() && ! empty( $_POST['bb_legacy_template'] ) ) {
+				$this->bb_rl_restore_default_template_stack();
+			}
+
 			/*
 			 * Only load ReadyLaunch login/registration integration when enabled in settings.
 			 * When disabled, the theme's default login/register styling and templates are used.
@@ -3237,16 +3244,51 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Return the theme logo option.
 		 *
+		 * When the stored logo carries an attachment ID, the URL is resolved from the
+		 * attachment so it follows the current upload/offload location. If the
+		 * attachment no longer exists, an empty array is returned so templates fall
+		 * back to the site title instead of rendering a broken image. The stored
+		 * option is not modified.
+		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss [BBVERSION] Resolves the URL from the attachment ID and drops deleted attachments.
 		 *
-		 * @param string $key The key of the logo.
+		 * @param string $key The key of the logo (`light` or `dark`).
 		 *
-		 * @return array
+		 * @return array Empty array, or array with `id`, `url`, `alt` and `title` keys.
 		 */
 		public function bb_rl_get_theme_logo( $key ) {
-			$bb_rl_theme_logo = bp_get_option( 'bb_rl_' . $key . '_logo', array() );
+			$raw  = bp_get_option( 'bb_rl_' . sanitize_key( $key ) . '_logo', array() );
+			$logo = array();
 
-			return $bb_rl_theme_logo;
+			if ( is_numeric( $raw ) ) {
+				// Legacy shape: a bare attachment ID.
+				$raw = array( 'id' => (int) $raw );
+			}
+
+			if ( is_array( $raw ) && ! empty( $raw ) ) {
+				$logo = wp_parse_args(
+					$raw,
+					array(
+						'id'    => 0,
+						'url'   => '',
+						'alt'   => '',
+						'title' => '',
+					)
+				);
+
+				$attachment_id = absint( $logo['id'] );
+				if ( $attachment_id > 0 ) {
+					$url         = wp_get_attachment_url( $attachment_id );
+					$logo['url'] = $url ? $url : '';
+				}
+
+				if ( empty( $logo['url'] ) ) {
+					$logo = array();
+				}
+			}
+
+			return $logo;
 		}
 
 		/**
