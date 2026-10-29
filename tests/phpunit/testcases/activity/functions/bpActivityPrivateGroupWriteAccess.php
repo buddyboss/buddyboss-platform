@@ -151,6 +151,42 @@ class BP_Tests_Activity_Functions_BpActivityPrivateGroupWriteAccess extends BP_U
 		$this->assertWPError( $this->comment_as( $this->stranger, $public_root, $this->comment ) );
 	}
 
+	public function test_reply_cannot_use_a_comment_from_another_thread_as_parent() {
+		$own_root    = self::factory()->activity->create( array( 'user_id' => $this->stranger ) );
+		$other_root  = self::factory()->activity->create( array( 'user_id' => $this->author ) );
+		$other_reply = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $other_root,
+				'content'     => 'other thread',
+			)
+		);
+
+		// Before the fix this saved the row and then never returned.
+		$result = $this->comment_as( $this->stranger, $own_root, $other_reply );
+
+		$this->assertWPError( $result );
+		$this->assertSame( 'invalid_parent_activity', $result->get_error_code() );
+		global $wpdb;
+		$this->assertSame( 0, (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_activity WHERE type = 'activity_comment' AND item_id = %d", $own_root ) ) );
+	}
+
+	public function test_reply_cannot_use_another_post_as_parent() {
+		$own_root   = self::factory()->activity->create( array( 'user_id' => $this->stranger ) );
+		$other_root = self::factory()->activity->create( array( 'user_id' => $this->author ) );
+
+		$this->assertWPError( $this->comment_as( $this->stranger, $own_root, $other_root ) );
+	}
+
+	public function test_nested_reply_in_same_public_thread_still_works() {
+		$root    = self::factory()->activity->create( array( 'user_id' => $this->author ) );
+		$comment = $this->comment_as( $this->stranger, $root );
+		$reply   = $this->comment_as( $this->author, $root, $comment );
+
+		$this->assertIsInt( $reply );
+		$this->assertIsInt( $this->comment_as( $this->stranger, $root, $reply ) );
+	}
+
 	public function test_non_member_can_comment_on_public_profile_post() {
 		$public_root = self::factory()->activity->create( array( 'user_id' => $this->author ) );
 

@@ -2990,7 +2990,7 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @since BuddyPress 2.5.0 Add a new possible parameter $skip_notification for the array of arguments.
  *              Add the $primary_link parameter for the array of arguments.
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
- * @since BuddyBoss [BBVERSION] Refuses a new comment when the user cannot view the root activity or the comment being replied to.
+ * @since BuddyBoss [BBVERSION] Refuses a new comment when the user cannot view the root activity or the comment being replied to, or when the parent is not in the root's thread.
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -3093,6 +3093,27 @@ function bp_activity_new_comment( $args = '' ) {
 		// Bail if the parent activity comment does not exist.
 		if ( empty( $comment_activity->date_recorded ) ) {
 			$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+			if ( 'wp_error' === $r['error_type'] ) {
+				return $error;
+
+				// Backpat.
+			} else {
+				$bp->activity->errors['new_comment'] = $error;
+				return false;
+			}
+		}
+
+		// The parent must be a comment in the same thread. A comment from another thread never
+		// leads back to this root, so the cache walk below would loop forever (PROD-10649).
+		if (
+			(int) $r['parent_id'] !== (int) $r['activity_id'] &&
+			(
+				'activity_comment' !== $comment_activity->type ||
+				(int) $comment_activity->item_id !== (int) $r['activity_id']
+			)
+		) {
+			$error = new WP_Error( 'invalid_parent_activity', $feedback );
 
 			if ( 'wp_error' === $r['error_type'] ) {
 				return $error;
@@ -3268,7 +3289,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( (int) $clear_id !== (int) $activity_id ) {
+	while ( ! empty( $clear_id ) && (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
