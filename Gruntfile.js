@@ -25,7 +25,20 @@ module.exports = function (grunt) {
 		return 'git@github.com:buddyboss/' + repo + '.git';
 	}
 
-	var sass       = require( 'node-sass' ),
+	// Node 14 (.nvmrc) only ships as an x86_64 build, so on Apple silicon Grunt runs
+	// under Rosetta. There `/usr/bin/git` is an xcrun shim that fails to load the
+	// arm64-only libxcrun. Put the real git binary first so every `exec` git call works.
+	if ( 'darwin' === process.platform && 'x64' === process.arch ) {
+		[ '/Library/Developer/CommandLineTools/usr/bin', '/Applications/Xcode.app/Contents/Developer/usr/bin' ].some( function ( dir ) {
+			if ( require( 'fs' ).existsSync( dir + '/git' ) ) {
+				process.env.PATH = dir + ':' + process.env.PATH;
+				return true;
+			}
+			return false;
+		} );
+	}
+
+	var sass      = require( 'node-sass' ),
 		SOURCE_DIR = 'src/',
 		BUILD_DIR  = 'buddyboss-platform/',
 

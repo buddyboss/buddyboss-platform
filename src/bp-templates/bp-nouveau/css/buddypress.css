@@ -28850,6 +28850,7 @@ html[dir="rtl"] .theme-editor-php .CodeMirror-code {
 div.dropzone.dz-started {
   margin: 0 0 20px;
 }
+
 div.dropzone.dz-started .dz-default.dz-message {
   flex-basis: 100%;
   max-width: 130px !important;
