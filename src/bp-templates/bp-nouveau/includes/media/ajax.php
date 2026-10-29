@@ -517,8 +517,9 @@ function bp_nouveau_ajax_media_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$response = array();
-	if ( $activity_id ) {
+	$response          = array();
+	$can_view_activity = $activity_id && bb_activity_user_can_view( (int) $activity_id );
+	if ( $can_view_activity ) {
 		$response = bp_media_get_activity_media( $_POST['activity_id'] );
 
 		// A comment kept after the delete shows its grid with the comment
@@ -540,7 +541,7 @@ function bp_nouveau_ajax_media_delete() {
 
 		if ( empty( $activity->id ) ) {
 			$delete_box = true;
-		} else {
+		} elseif ( $can_view_activity ) {
 			ob_start();
 			if ( bp_has_activities(
 				array(

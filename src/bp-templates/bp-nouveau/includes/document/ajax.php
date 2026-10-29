@@ -106,7 +106,7 @@ add_action(
 			array(
 				'document_activity_delete' => array(
 					'function' => 'bp_nouveau_ajax_document_activity_delete',
-					'nopriv'   => true,
+					'nopriv'   => false,
 				),
 			),
 			array(
@@ -1918,13 +1918,15 @@ function bp_nouveau_ajax_document_activity_delete() {
 		wp_send_json_error( $response );
 	}
 
-	if ( bp_document_user_can_delete( $id ) ) {
-		$args = array(
-			'id'            => $id,
-			'attachment_id' => $attachment_id,
-		);
-		bp_document_delete( $args );
+	if ( ! bp_document_user_can_delete( $id ) ) {
+		wp_send_json_error( $response );
 	}
+
+	$args = array(
+		'id'            => $id,
+		'attachment_id' => $attachment_id,
+	);
+	bp_document_delete( $args );
 
 	$delete_box = false;
 
@@ -1933,7 +1935,7 @@ function bp_nouveau_ajax_document_activity_delete() {
 	$activity_content = '';
 	if ( empty( $activity->id ) ) {
 		$delete_box = true;
-	} else {
+	} elseif ( bb_activity_user_can_view( $activity ) ) {
 		ob_start();
 		if ( bp_has_activities(
 			array(
