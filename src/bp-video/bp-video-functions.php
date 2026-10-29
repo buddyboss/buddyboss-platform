@@ -4985,8 +4985,11 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 
 	// Validate file extension against the extensions enabled in Settings > Media > Video Extensions,
 	// so chunked uploads accept the same types as the non-chunked path (bp_video_allowed_mimes()).
-	$allowed_extensions = array_map( 'strtolower', array_keys( bp_video_allowed_mimes() ) );
-	if ( empty( $allowed_extensions ) ) {
+	// With no extension enabled the list is empty and every chunked upload is refused, as on that path.
+	// bp_video_allowed_mimes() only applies the setting while Media is active; keep the built-in list otherwise.
+	if ( bp_is_active( 'media' ) ) {
+		$allowed_extensions = array_map( 'strtolower', array_keys( bp_video_allowed_mimes() ) );
+	} else {
 		$allowed_extensions = array( 'mp4', 'mov', 'avi', 'wmv', 'flv', 'mkv', 'webm' );
 	}
 
