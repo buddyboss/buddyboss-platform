@@ -55,12 +55,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
-== Upgrade Notice ==
+== Changelog ==
 
 = 3.7.0 =
-Important: Videos, Documents, Animated GIFs (GIPHY) and Group Subscriptions have moved to the BuddyBoss Add-ons plugin, included with the Start plan and above and with the legacy BuddyBoss Platform Free plan. Your existing videos, documents, GIFs and group subscriptions are kept, but members will not see or receive them until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
-
-== Changelog ==
+* Enhancement: Core - Moved Videos, Documents, Animated GIFs and Group Subscription to the Addons plugin, with existing customers keeping access
+* Bug: Activity - Fixed an issue where the app's "Only Me" activity filter showed posts from other members
+* Bug: Activity - Fixed several issues with activity topics, including required-topic checks, topic links and cleanup when topics are deleted
+* Bug: Core - Fixed an issue where emoji images did not display correctly
+* Bug: Groups - Fixed an issue where group names containing double quotes were cut off and lost when saved
+* Bug: Groups - Fixed an issue where group organizers who are not site administrators could not add topics to their own group
+* Bug: Groups - Fixed an issue where the group name was missing from the delete confirmation and cut off in the groups list
+* Bug: Groups - Fixed an issue where WP Fusion settings boxes were missing from group edit screens
+* Bug: Members - Fixed an issue where admins could not manually activate pending users when Google reCAPTCHA was enabled
+* Bug: Notifications - Fixed an issue where mention notifications for comments on event activities did not link to the right page
 
 = 3.6.2 =
 * Bug: Activity - Fixed an issue where comment reactions stopped working when reactions were turned off for activity posts
