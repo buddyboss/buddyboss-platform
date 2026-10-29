@@ -4191,6 +4191,11 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
+	// Do not save a topic that is not in this feed or that the member may not post in.
+	if ( ! empty( $topic_id ) && ! bb_activity_user_can_save_topic( $topic_id, $activity ) ) {
+		return;
+	}
+
 	$item_id = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
 
 	// Add/update the activity topic relationship.
@@ -4202,6 +4207,73 @@ function bb_activity_save_topic_data( $activity ) {
 			'item_id'     => $item_id,
 		)
 	);
+}
+
+/**
+ * Whether the current user may save a topic on an activity.
+ *
+ * Uses the same checks as the website composer when a topic is required (bp_nouveau_ajax_post_update()):
+ * the topic must exist in the activity's feed (site topics for the activity feed, the group's topics
+ * for a group post) and the user must be allowed to post in it. An activity that already carries the
+ * topic may keep it, so an edit that does not change the topic is never refused.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $topic_id Topic ID being saved.
+ * @param object $activity The activity object.
+ *
+ * @return bool True if the topic can be saved, false otherwise.
+ */
+function bb_activity_user_can_save_topic( $topic_id, $activity ) {
+	$topic_id = (int) $topic_id;
+	if ( empty( $topic_id ) || empty( $activity ) || ! function_exists( 'bb_topics_manager_instance' ) ) {
+		return false;
+	}
+
+	// An edit that keeps the post's own topic changes nothing about the topic.
+	if ( ! empty( $activity->id ) ) {
+		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity->id );
+		if ( ! empty( $existing_topic_id ) && (int) $existing_topic_id === $topic_id ) {
+			return true;
+		}
+	}
+
+	$is_group_post = 'groups' === $activity->component;
+	$group_id      = $is_group_post ? (int) $activity->item_id : 0;
+
+	if (
+		$is_group_post &&
+		(
+			! bp_is_active( 'groups' ) ||
+			empty( $group_id ) ||
+			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+			! bb_is_enabled_group_activity_topics() ||
+			! function_exists( 'bb_can_user_post_to_group_activity_topic' )
+		)
+	) {
+		return false;
+	}
+
+	$args = array(
+		'topic_id'  => $topic_id,
+		'item_type' => 'activity',
+		'fields'    => 'id',
+	);
+	if ( $is_group_post ) {
+		$args['item_type'] = 'groups';
+		$args['item_id']   = $group_id;
+	}
+
+	$topic_exists = bb_topics_manager_instance()->bb_get_topics( $args );
+	if ( empty( $topic_exists ) || empty( $topic_exists['topics'] ) ) {
+		return false;
+	}
+
+	if ( $is_group_post ) {
+		return (bool) bb_can_user_post_to_group_activity_topic( bp_loggedin_user_id(), $group_id, $topic_id );
+	}
+
+	return (bool) bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id );
 }
 
 /**
