@@ -384,6 +384,40 @@ window.bp = window.bp || {};
 			bp.Views.ActivityHeader.prototype.resetMultiMediaOptions();
 		},
 
+		/**
+		 * Puts the fresh topic list into a restored draft and keeps the stored choice only when it is still in that list.
+		 *
+		 * A draft stores a copy of the topic list taken when it was saved. Topics can be deleted, renamed,
+		 * reordered or restricted after that, so the list and the choice are taken from the current page instead.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} draftTopics Draft topics data: topic_id, topic_name and topic_lists. Changed in place.
+		 * @param {Array}  freshLists  Topic list localized for the current page.
+		 */
+		reconcileDraftTopics: function ( draftTopics, freshLists ) {
+			freshLists              = _.isArray( freshLists ) ? freshLists : [];
+			draftTopics.topic_lists = freshLists;
+
+			var draftTopicId = parseInt( draftTopics.topic_id, 10 ) || 0;
+			if ( ! draftTopicId ) {
+				return;
+			}
+
+			var chosenTopic = _.find( freshLists, function ( topic ) {
+				return parseInt( topic.topic_id, 10 ) === draftTopicId;
+			} );
+
+			if ( chosenTopic ) {
+				// Pick up a rename made after the draft was saved.
+				draftTopics.topic_name = chosenTopic.name;
+			} else {
+				// The topic was deleted or the member can no longer post in it.
+				draftTopics.topic_id   = 0;
+				draftTopics.topic_name = '';
+			}
+		},
+
 		displayEditDraftActivityData: function ( activity_data, bpActivityEvent, activity_URL_preview ) {
 			var self = this;
 
@@ -808,11 +842,31 @@ window.bp = window.bp || {};
 			) {
 				activity_data.topics.topic_id   = activity_data.topics.topic_id || 0;
 				activity_data.topics.topic_name = activity_data.topics.topic_name || '';
+
+				var isEditActivity = 0 < parseInt( activity_data.id, 10 );
 				if (
+					isEditActivity &&
 					activity_data.item_id &&
 					'groups' === activity_data.object
 				) {
+					// Edit a group post: keep the fresh group topic list supplied with the activity (PROD-8796).
 					activity_data.topics.topic_lists = activity_data.topics.topic_lists;
+				} else if (
+					! isEditActivity &&
+					activity_data.item_id &&
+					'groups' === activity_data.object
+				) {
+					// Group draft: the page list belongs to this group only on the group's own page.
+					// Elsewhere there is no fresh list for the group, so the draft's list is kept.
+					if (
+						'group' === BP_Nouveau.activity.params.object &&
+						parseInt( BP_Nouveau.activity.params.item_id, 10 ) === parseInt( activity_data.item_id, 10 )
+					) {
+						self.reconcileDraftTopics( activity_data.topics, BP_Nouveau.activity.params.topics.topic_lists );
+					}
+				} else if ( ! isEditActivity ) {
+					// Draft: use the fresh list for this page and drop a stored choice that is no longer in it.
+					self.reconcileDraftTopics( activity_data.topics, BP_Nouveau.activity.params.topics.topic_lists );
 				} else {
 					activity_data.topics.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
 				}

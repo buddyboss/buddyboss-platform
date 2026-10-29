@@ -407,6 +407,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			} );
 			topicAjaxFetch( 'bb_update_topics_order', {
 				topic_ids: topicIds,
+				item_id: groupId,
+				item_type: 'groups',
 			}, noncesRef.current.reorder || '' ).then( function ( response ) {
 				if ( ! response.success ) {
 					setTopics( previousTopics );
@@ -480,7 +482,12 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 									<BBIcon name="list" />
 								</span>
 								<span className="bb-topic-list__name">
-									{ topic.name }
+									<span
+										className="bb-topic-list__name-text"
+										title={ topic.name }
+									>
+										{ topic.name }
+									</span>
 									{ ( topic.is_global || topic.is_global_activity ) && (
 										<span
 											className="bb-topic-list__global-icon"
