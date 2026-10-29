@@ -2512,6 +2512,106 @@ function bp_core_get_minified_asset_suffix() {
 }
 
 /**
+ * Check whether a component's directory is present in this build.
+ *
+ * Optional components can be stripped from a distribution (e.g. the video and
+ * document components moved to the BuddyBoss Add-ons plugin). This checks for
+ * the component's loader file on disk, and lets a provider plugin claim the
+ * component through the `bb_component_directory_available` filter. Video and
+ * Documents are not available from a BuddyBoss Add-ons build below the version
+ * this Platform requires.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component Component ID (e.g. 'video', 'document').
+ * @return bool True when the component's code is available to load.
+ */
+function bb_is_component_directory_available( $component ) {
+	static $available = array();
+
+	if ( isset( $available[ $component ] ) ) {
+		return $available[ $component ];
+	}
+
+	$exists = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+	/**
+	 * Filters whether a component's code is available to load.
+	 *
+	 * By default this reflects whether the component's loader file exists
+	 * inside the Platform build. An external plugin that provides a
+	 * component (e.g. BuddyBoss Add-ons supplying video/document) returns
+	 * true for its component so the availability scrub keeps it active
+	 * and the admin UI keeps offering the toggle.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool   $exists    Whether the component's loader file exists in this build.
+	 * @param string $component Component ID (e.g. 'video', 'document').
+	 */
+	$is_available = (bool) apply_filters( 'bb_component_directory_available', $exists, $component );
+
+	/*
+	 * Videos and Documents moved their template pack code, settings panels and
+	 * group screens from Platform into BuddyBoss Add-ons. An older Add-ons
+	 * build still claims the components but lacks that code, so they stay off
+	 * (their data is kept) until Add-ons is updated to the required version.
+	 */
+	if (
+		$is_available &&
+		! $exists &&
+		in_array( $component, array( 'video', 'document' ), true ) &&
+		defined( 'BB_ADDONS_PLUGIN_VERSION' ) &&
+		bb_is_addons_below_required_version( (string) BB_ADDONS_PLUGIN_VERSION )
+	) {
+		$is_available = false;
+	}
+
+	// Providers register their claims on `bp_loaded`, so only memoise once it
+	// has finished — an earlier call must not freeze a premature `false`.
+	if ( did_action( 'bp_loaded' ) && ! doing_action( 'bp_loaded' ) ) {
+		$available[ $component ] = $is_available;
+	}
+
+	return $is_available;
+}
+
+/**
+ * Record that Videos or Documents are not available on this site.
+ *
+ * Their cleanup and moderation hooks ship in BuddyBoss Add-ons, so members,
+ * posts and messages deleted, and members suspended, while they are off leave
+ * their files behind. BuddyBoss Add-ons reads this record when the components
+ * are back and repairs the data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_media_record_unavailable_components() {
+	// The record lives on the root blog, like the active components option.
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		return;
+	}
+
+	$pending = bp_get_option( 'bb_media_reconcile_pending', false );
+	$changed = false === $pending;
+	$pending = $changed ? array() : (array) $pending;
+
+	foreach ( array( 'video', 'document' ) as $component ) {
+		if ( ! bp_is_active( $component ) && empty( $pending[ $component ] ) ) {
+			$pending[ $component ] = time();
+			$changed               = true;
+		}
+	}
+
+	if ( $changed ) {
+		bp_update_option( 'bb_media_reconcile_pending', $pending );
+	}
+}
+add_action( 'bp_init', 'bb_media_record_unavailable_components', 20 );
+
+/**
  * Return a list of component information.
  *
  * @since BuddyPress 2.6.0
@@ -2703,6 +2803,14 @@ function bp_core_get_components( $type = 'all' ) {
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
 		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss' );
+	}
+
+	// Hide optional components whose directories are not present in this build
+	// (e.g. the video and document components stripped from the free package).
+	foreach ( array_keys( $optional_components ) as $component_key ) {
+		if ( ! bb_is_component_directory_available( $component_key ) ) {
+			unset( $optional_components[ $component_key ] );
+		}
 	}
 
 	$default_components = array();
@@ -12350,4 +12458,31 @@ if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
 
 		return (bool) wp_delete_attachment( $value, true );
 	}
+}
+
+/**
+ * Whether the BuddyBoss Add-ons plugin provides a given module on this site.
+ *
+ * The plugin-wide lock (bb_addons_should_lock_features()) only says the plan
+ * entitles the site to at least one add-on module. A plan can carry some
+ * modules and not others (Legacy Free carries Video, Documents and GIFs
+ * only), so callers that stand in for one module must also check that module.
+ * Add-ons builds without the per-module API fall back to the plugin-wide lock.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $module_id Add-ons module ID, e.g. 'reactions' or 'pinned-posts'.
+ *
+ * @return bool True when the add-on is unlocked and entitled to the module.
+ */
+function bb_addons_provides_module( $module_id ) {
+	if ( ! function_exists( 'bb_addons_should_lock_features' ) || bb_addons_should_lock_features() ) {
+		return false;
+	}
+
+	if ( function_exists( 'bb_addons_is_module_entitled' ) ) {
+		return (bool) bb_addons_is_module_entitled( $module_id );
+	}
+
+	return true;
 }

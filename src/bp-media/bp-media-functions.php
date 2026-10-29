@@ -1028,7 +1028,7 @@ function bb_media_get_album_counts( $album_id = 0, $group_id = 0 ) {
 	$media_args = array(
 		'album_id'    => $album_id,
 		'count_total' => true,
-		'video'       => true,
+		'video'       => bp_is_active( 'video' ),
 		'per_page'    => 1,
 	);
 
@@ -1096,7 +1096,6 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 
 	return http_build_query( $querystring );
 }
-
 
 /**
  * Object template results media personal scope.
@@ -2731,6 +2730,14 @@ function bp_media_download_url_file() {
 			$media_privacy    = bb_media_user_can_access( $_GET['media_file'], 'photo', $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 
+			// Videos share the media table; without the video component they must not
+			// be downloadable through the photo handler.
+			if ( $can_download_btn && ! bp_is_active( 'video' ) ) {
+				global $wpdb;
+				$media_type       = $wpdb->get_var( $wpdb->prepare( 'SELECT type FROM ' . buddypress()->media->table_name . ' WHERE id = %d', absint( $_GET['media_file'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+				$can_download_btn = 'video' !== $media_type;
+			}
+
 			// Add pre_get_posts action hook back.
 			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 		}
@@ -2867,7 +2874,6 @@ function bp_media_get_forum_id( $media_id ) {
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
 }
-
 
 /**
  * Return the breadcrumbs.
@@ -3851,6 +3857,26 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 
+	// Bail with no access when the component for the requested type is not
+	// active (e.g. the video/document components are not present in this build),
+	// since their classes and functions are not loaded.
+	if (
+		( 'video' === $type && ! bp_is_active( 'video' ) ) ||
+		( in_array( $type, array( 'document', 'folder' ), true ) && ! bp_is_active( 'document' ) )
+	) {
+		$data = array(
+			'can_view'     => false,
+			'can_download' => false,
+			'can_add'      => false,
+			'can_edit'     => false,
+			'can_delete'   => false,
+			'can_move'     => false,
+		);
+
+		/** This filter is documented in bp-media/bp-media-functions.php */
+		return apply_filters( 'bb_media_user_can_access', $data, $id, $type, 0 );
+	}
+
 	$can_view        = false;
 	$can_download    = false;
 	$can_add         = false;
@@ -4194,9 +4220,14 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
  * A simple function that uses mtime to delete files older than a given age (in seconds)
  * Very handy to rotate backup or log files, for example...
  *
- * @return array|void the list of deleted files
+ * Also expires the document and video preview symlinks while the BuddyBoss Add-ons
+ * cleanup for them is not loaded, so their preview URLs do not outlive the usual age.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Also expires document and video preview symlinks when
+ *                              their Add-ons cleanup is not loaded.
+ *
+ * @return array|void the list of deleted files
  */
 function bb_media_delete_older_symlinks() {
 
@@ -4207,34 +4238,42 @@ function bb_media_delete_older_symlinks() {
 	// Get media previews symlink directory path.
 	$dir     = bp_media_symlink_path();
 	$max_age = apply_filters( 'bb_media_delete_older_symlinks_time', 3600 * 24 * 15 ); // Delete the file older than 15 day.
-	$list    = array();
-	$limit   = time() - $max_age;
 	$dir     = realpath( $dir );
+	$list    = array();
 
-	if ( ! is_dir( $dir ) ) {
-		return;
+	// A missing photo folder skips only the photo sweep, not the preview cleanup below.
+	if ( false !== $dir && is_dir( $dir ) ) {
+		$list = bb_media_delete_older_files_in_dir( $dir, time() - $max_age );
 	}
 
-	$dh = opendir( $dir );
-	if ( false === $dh ) {
-		return;
-	}
+	/*
+	 * Document and video previews are created by BuddyBoss Add-ons, which also schedules
+	 * their cleanup. When that code is not loaded (no entitlement, Add-ons inactive or
+	 * outdated), the symlinks it created earlier would never expire. Expire them here,
+	 * only while the Add-ons cleanup is missing, so the two never run side by side.
+	 */
+	$previews_dir = wp_upload_dir();
+	$previews_dir = $previews_dir['basedir'] . '/bb-platform-previews';
+	$unowned      = array(
+		'bb_document_delete_older_symlinks' => md5( 'bb-documents' ),
+		'bb_video_delete_older_symlinks'    => md5( 'bb-videos' ),
+	);
 
-	while ( ( $file = readdir( $dh ) ) !== false ) {
-		if ( $file === '.' || $file === '..' ) {
+	foreach ( $unowned as $addons_cleanup => $folder ) {
+		if ( function_exists( $addons_cleanup ) ) {
 			continue;
 		}
 
-		$file      = $dir . '/' . $file;
-		$file_time = lstat( $file );
-		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
-
-		if ( file_exists( $file ) && $file_time < $limit ) {
-			$list[] = $file;
-			unlink( $file );
+		$type_dir = realpath( $previews_dir . '/' . $folder );
+		if ( false === $type_dir || ! is_dir( $type_dir ) ) {
+			continue;
 		}
+
+		/** This filter is documented in BuddyBoss Add-ons, where the matching cleanup lives. */
+		$type_max_age = apply_filters( $addons_cleanup . '_time', 3600 * 24 * 15 );
+
+		$list = array_merge( $list, bb_media_delete_older_files_in_dir( $type_dir, time() - $type_max_age, true ) );
 	}
-	closedir( $dh );
 
 	if ( ! empty( $list ) ) {
 		do_action( 'bb_media_delete_older_symlinks' );
@@ -4244,75 +4283,61 @@ function bb_media_delete_older_symlinks() {
 
 }
 
+/**
+ * Delete the entries of one preview directory that are older than a given time.
+ *
+ * Reads a single directory, without recursion.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $dir        Absolute directory path.
+ * @param int    $limit      Unix time. Entries changed before it are deleted.
+ * @param bool   $links_only Whether to delete symlinks only and leave real files alone.
+ *                           Dangling symlinks are deleted too.
+ *
+ * @return array The deleted paths.
+ */
+function bb_media_delete_older_files_in_dir( $dir, $limit, $links_only = false ) {
+	$list = array();
+	$dh   = opendir( $dir );
+	if ( false === $dh ) {
+		return $list;
+	}
+
+	while ( ( $file = readdir( $dh ) ) !== false ) {
+		if ( $file === '.' || $file === '..' ) {
+			continue;
+		}
+
+		$file = $dir . '/' . $file;
+
+		if ( $links_only ) {
+			if ( ! is_link( $file ) ) {
+				continue;
+			}
+		} elseif ( ! file_exists( $file ) ) {
+			continue;
+		}
+
+		$file_time = lstat( $file );
+		$file_time = isset( $file_time['ctime'] ) ? (int) $file_time['ctime'] : filemtime( $file );
+
+		if ( $file_time < $limit ) {
+			$list[] = $file;
+			wp_delete_file( $file );
+		}
+	}
+	closedir( $dh );
+
+	return $list;
+}
+
 add_action(
 	'bp_init',
 	function () {
 		bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 	}
 );
-
-
-/**
- * Check the GIPHY key is valid or not.
- *
- * @param boolean $api_key GIPHY api key.
- * @param boolean $message GIPHY api key validation response message.
- *
- * @return mixed Whether the giphy key is valid or error object.
- *
- * @since BuddyBoss 2.1.2
- */
-function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
-
-	static $cache = array();
-	$cache_key    = 'bb_check_valid_giphy_api_key';
-	$saved_key    = bp_media_get_gif_api_key();
-	$use_caching  = false;
-
-	if ( empty( $api_key ) && empty( $cache ) ) {
-
-		// Use caching if not user action.
-		$cache       = get_transient( $cache_key );
-		$use_caching = true;
-
-		// Remove old cache if empty key saved.
-		if ( ! empty( $cache ) && is_array( $cache ) && ! array_key_exists( $saved_key, $cache ) ) {
-			delete_transient( $cache_key );
-		}
-	}
-
-	$api_key = ! empty( $api_key ) ? $api_key : $saved_key;
-	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
-		if ( true === $message ) {
-			return $cache[ $api_key ];
-		}
-		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-	}
-
-	if ( empty( $api_key ) ) {
-		return false;
-	}
-
-	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output && ! is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-		if ( $use_caching ) {
-			$cache_expiry = MONTH_IN_SECONDS;
-			if ( 200 !== $cache[ $api_key ]['response']['code'] ) {
-				$cache_expiry = WEEK_IN_SECONDS;
-			}
-			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
-		}
-	} elseif ( is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-	} else {
-		return false;
-	}
-	if ( true === $message ) {
-		return $cache[ $api_key ];
-	}
-	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-}
 
 /**
  * Run migration for media and video description from post table to media table.

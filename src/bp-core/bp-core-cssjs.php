@@ -96,12 +96,6 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 
-		'giphy'                         => array(
-			'file'         => "{$url}vendor/giphy{$min}.js",
-			'dependencies' => array( 'jquery' ),
-			'footer'       => true,
-		),
-
 		// Cropper.js for image cropping functionality
 		'bb-cropper-js'                 => array(
 			'file'         => "{$url}vendor/cropper{$min}.js",
@@ -144,26 +138,6 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array( 'jquery' ),
 			'footer'       => true,
 		),
-		'bp-media-videojs'              => array(
-			'file'         => "{$url}vendor/video{$min}.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
-		'bp-media-videojs-seek-buttons' => array(
-			'file'         => "{$url}vendor/videojs-seek-buttons.min.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
-		'bp-media-videojs-flv'          => array(
-			'file'         => "{$url}vendor/flv.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
-		'bp-media-videojs-flash'        => array(
-			'file'         => "{$url}vendor/videojs-flash.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
 		'bb-twemoji'                    => array(
 			'file'         => includes_url( "js/twemoji{$min}.js" ),
 			'dependencies' => array(),
@@ -205,7 +179,9 @@ function bp_core_register_common_scripts() {
 	foreach ( $scripts as $id => $script ) {
 		$dependencies = isset( $script['dependencies'] ) ? $script['dependencies'] : array();
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
-		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
+		// Scripts added by another plugin (e.g. BuddyBoss Add-ons) may carry their own version.
+		$script_version = isset( $script['version'] ) ? $script['version'] : $version;
+		wp_register_script( $id, $script['file'], $dependencies, $script_version, $footer );
 	}
 
 	/**
@@ -326,10 +302,6 @@ function bp_core_register_common_styles() {
 				'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
 				'dependencies' => array(),
 			),
-			'bp-media-videojs-css'    => array(
-				'file'         => "{$url}vendor/video-js{$min}.css",
-				'dependencies' => array(),
-			),
 			'bb-cropper-css'          => array(
 				'file'         => "{$url}vendor/cropper{$min}.css",
 				'dependencies' => array(),
@@ -338,7 +310,8 @@ function bp_core_register_common_styles() {
 	);
 
 	foreach ( $styles as $id => $style ) {
-		wp_register_style( $id, $style['file'], $style['dependencies'], bp_get_version() );
+		// Styles added by another plugin (e.g. BuddyBoss Add-ons) may carry their own version.
+		wp_register_style( $id, $style['file'], $style['dependencies'], isset( $style['version'] ) ? $style['version'] : bp_get_version() );
 
 		wp_style_add_data( $id, 'rtl', true );
 		if ( $min ) {

@@ -590,9 +590,12 @@ window.bp = window.bp || {};
 
 			// Inject GIF.
 			if ( ! _.isUndefined( activity_data.gif ) && Object.keys( activity_data.gif ).length ) {
-				// close and destroy existing media instance.
-				self.activityToolbar.toggleGifSelector( bpActivityEvent );
-				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
+				// Open the GIF picker when it is available. The saved GIF goes on the form model either
+				// way, so it is kept on save without a GIF provider.
+				if ( ! _.isUndefined( self.activityToolbar ) ) {
+					self.activityToolbar.toggleGifSelector( bpActivityEvent );
+				}
+				self.postForm.model.set( 'gif_data', activity_data.gif );
 
 				// Make tool box button disable.
 				if ( tool_box.find( '#activity-media-button' ) ) {
@@ -3216,7 +3219,9 @@ window.bp = window.bp || {};
 				}
 
 				this.options = options || {};
-				this.giphy   = new window.Giphy( bbRlMedia.gif_api_key );
+				// The GIPHY library ships with BuddyBoss Add-ons. Without it the view still keeps
+				// an attached GIF (activity and comment edits) but cannot search.
+				this.giphy   = 'undefined' !== typeof window.Giphy ? new window.Giphy( bbRlMedia.gif_api_key ) : null;
 
 				this.gifDataItems = new bp.Collections.GifDatas();
 				this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -3263,6 +3268,10 @@ window.bp = window.bp || {};
 			},
 
 			searchGif: function ( q ) {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self    = this;
 				self.q      = q;
 				self.offset = 0;
@@ -3359,6 +3368,10 @@ window.bp = window.bp || {};
 			},
 
 			loadTrending: function () {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self    = this;
 				self.offset = 0;
 				self.q      = null;
@@ -5356,11 +5369,16 @@ window.bp = window.bp || {};
 					this.activityMedia = new bp.Views.ActivityMedia( { model: this.model } );
 					this.views.add( this.activityMedia );
 
-					this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
-					this.views.add( this.activityDocument );
+					// The document and video templates ship with BuddyBoss Add-ons; skip their views without them.
+					if ( document.getElementById( 'tmpl-activity-document' ) ) {
+						this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
+						this.views.add( this.activityDocument );
+					}
 
-					this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
-					this.views.add( this.activityVideo );
+					if ( document.getElementById( 'tmpl-activity-video' ) ) {
+						this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
+						this.views.add( this.activityVideo );
+					}
 				}
 
 				this.activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: this.model } );

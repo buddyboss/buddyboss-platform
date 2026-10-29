@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.6.2
+Stable tag: 3.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activate at the network level for full integration with all sites in your network. (This is the most common multisite installation type.)
 * Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
+
+== Upgrade Notice ==
+
+= 3.7.0 =
+Important: Videos, Documents, Animated GIFs (GIPHY) and Group Subscriptions have moved to the BuddyBoss Add-ons plugin, included with the Start plan and above and with the legacy BuddyBoss Platform Free plan. Your existing videos, documents, GIFs and group subscriptions are kept, but members will not see or receive them until BuddyBoss Add-ons is installed and active with a license that includes them. Install BuddyBoss Add-ons before updating if your community uses these features.
 
 == Changelog ==
 

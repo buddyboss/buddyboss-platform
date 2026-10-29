@@ -45,7 +45,11 @@ function bb_platform_3_required_addons() {
 	return array(
 		'buddyboss-platform-pro/buddyboss-platform-pro.php'   => array(
 			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss' ),
-			'version' => '3.0.0',
+			'version' => bb_platform_3_pro_required_version(),
+		),
+		'buddyboss-addons/buddyboss-addons.php'               => array(
+			'name'    => __( 'BuddyBoss Add-ons', 'buddyboss' ),
+			'version' => bb_platform_3_addons_required_version(),
 		),
 		'buddyboss-gamification/buddyboss-gamification.php'   => array(
 			'name'    => __( 'BuddyBoss Gamification', 'buddyboss' ),
@@ -57,11 +61,93 @@ function bb_platform_3_required_addons() {
 		),
 		'buddyboss-offload-media/buddyboss-offload-media.php' => array(
 			'name'    => __( 'BuddyBoss Offload Media', 'buddyboss' ),
-			'version' => '2.0.0',
+			'version' => bb_platform_3_offload_media_required_version(),
 		),
-		'buddyboss-sharing/buddyboss-sharing.php'             => array(
+		'buddyboss-sharing/buddyboss-sharing.php'           => array(
 			'name'    => __( 'BuddyBoss Sharing', 'buddyboss' ),
 			'version' => '2.0.0',
+		),
+	);
+}
+
+/**
+ * Minimum BuddyBoss Platform Pro version required by this Platform.
+ *
+ * Pro builds before PROD-9995 still register the Upload Videos and Upload
+ * Documents access-control fields when those components are inactive.
+ * They do not fatal, because the field callbacks only run from the media
+ * settings screen, so this floor only keeps the settings screen accurate.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum Platform Pro version.
+ */
+function bb_platform_3_pro_required_version() {
+	return '3.4.0';
+}
+
+/**
+ * Minimum BuddyBoss Add-ons version required by this Platform.
+ *
+ * Platform no longer ships Video and Documents, so the Add-ons copies are
+ * the only live code. 1.3.0 is the first Add-ons release with the fixes that
+ * shipped in Platform's own copies: the Private Website download guard
+ * (bb_private_network_restrict_download()), the REST document-folder
+ * permission rules and the group peer-folder upload rule. It also stops
+ * locking these modules on sites without an activated licence. The
+ * released 1.2.3 has none of these.
+ *
+ * Platform 3.7.0 also moved the Video and Documents template pack code,
+ * settings panels and group screens into Add-ons 1.3.0, so an
+ * older Add-ons build cannot run them: bb_is_component_directory_available()
+ * keeps both components off (their data is kept) until Add-ons is updated.
+ *
+ * This is the single source of the floor: bb_get_addons_required_version()
+ * reads it for the post-update Add-ons update and the Media settings panels.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum Add-ons version.
+ */
+function bb_platform_3_addons_required_version() {
+	return '1.3.0';
+}
+
+/**
+ * Minimum BuddyBoss Offload Media version required by this Platform.
+ *
+ * Video and Documents now ship in BuddyBoss Add-ons, so BP_Video and
+ * BP_Document can be missing. Offload Media 2.2.0 carries the
+ * class_exists() guards from Offload Media #25 around its BP_Video and
+ * BP_Document use (video store handler, bucket helper); 2.1.4 and older
+ * fatal while processing existing videos or documents without Add-ons.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Minimum Offload Media version.
+ */
+function bb_platform_3_offload_media_required_version() {
+	return '2.2.0';
+}
+
+/**
+ * Required-theme-version map for this Platform.
+ *
+ * Keyed by theme directory (template). A row is checked only when that
+ * theme is active, or is the parent of the active child theme.
+ * The floor comes from bb_platform_3_theme_required_version()
+ * (bp-incompatible-plugins-helper.php), which also gates the document
+ * meta shim for older theme builds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array<string, array{name: string, version: string}>
+ */
+function bb_platform_3_required_themes() {
+	return array(
+		'buddyboss-theme' => array(
+			'name'    => __( 'BuddyBoss Theme', 'buddyboss' ),
+			'version' => bb_platform_3_theme_required_version(),
 		),
 	);
 }
@@ -95,8 +181,8 @@ function bb_platform_3_get_addon_version( $plugin_file ) {
 }
 
 /**
- * Collect every active addon whose installed version is below the 3.0
- * compatibility floor.
+ * Collect every active addon, and the active BuddyBoss theme, whose
+ * installed version is below the 3.0 compatibility floor.
  *
  * "Active" follows the same rule WP core uses for `is_plugin_active()`
  * — the plugin file appears in either the per-site `active_plugins`
@@ -106,6 +192,8 @@ function bb_platform_3_get_addon_version( $plugin_file ) {
  * is global to the install, not per-site.
  *
  * @since BuddyBoss 3.0.0
+ *
+ * @since BuddyBoss [BBVERSION] Also checks bb_platform_3_required_themes().
  *
  * @return array<int, array{name: string, current: string, required: string}>
  */
@@ -135,6 +223,23 @@ function bb_platform_3_get_lagging_addons() {
 			'required' => $row['version'],
 		);
 	}
+
+	// Themes: checked only when active, or the parent of the active child theme.
+	foreach ( bb_platform_3_required_themes() as $stylesheet => $row ) {
+		if ( get_template() !== $stylesheet ) {
+			continue;
+		}
+		$installed = 'buddyboss-theme' === $stylesheet ? bb_get_active_buddyboss_theme_version() : (string) wp_get_theme( $stylesheet )->get( 'Version' );
+		if ( '' === $installed || version_compare( $installed, $row['version'], '>=' ) ) {
+			continue;
+		}
+		$lagging[] = array(
+			'name'     => $row['name'],
+			'current'  => $installed,
+			'required' => $row['version'],
+		);
+	}
+
 	return $lagging;
 }
 
