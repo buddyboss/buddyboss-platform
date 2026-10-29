@@ -82,13 +82,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$this->load_template_stack();
 
-			// AJAX from legacy-template UIs on non-RL pages (e.g. theme Elementor activity widget)
-			// must get legacy markup back, not RL templates.
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			if ( wp_doing_ajax() && ! empty( $_POST['bb_legacy_template'] ) ) {
-				$this->bb_rl_restore_default_template_stack();
-			}
-
 			/*
 			 * Only load ReadyLaunch login/registration integration when enabled in settings.
 			 * When disabled, the theme's default login/register styling and templates are used.
