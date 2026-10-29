@@ -1245,6 +1245,7 @@ add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scop
  * Set up activity arguments for use with the 'favorites' scope.
  *
  * @since BuddyPress 2.2.0
+ * @since BuddyBoss [BBVERSION] Returns nothing for guests, and hides hidden items of groups the user is not a member of.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -1261,8 +1262,8 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			: bp_loggedin_user_id();
 	}
 
-	// Determine the favorites.
-	$favs = bp_activity_get_user_favorites( $user_id );
+	// Determine the favorites. A guest has none, and asking for user 0 returns everyone's reactions.
+	$favs = ! empty( $user_id ) ? bp_activity_get_user_favorites( $user_id ) : array();
 	if ( empty( $favs ) ) {
 		$favs = array( 0 );
 	}
@@ -1273,6 +1274,27 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
+		);
+	} elseif ( ! empty( $user_id ) && bp_is_active( 'groups' ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+		// A reaction outlives group membership, and reacting never checked it, so only show
+		// hidden group items from the user's own groups (PROD-10649).
+		$user_groups = groups_get_user_groups( $user_id );
+		$show_hidden = array(
+			'relation' => 'OR',
+			array(
+				'column' => 'hide_sitewide',
+				'value'  => 0,
+			),
+			array(
+				'column'  => 'component',
+				'compare' => '!=',
+				'value'   => buddypress()->groups->id,
+			),
+			array(
+				'column'  => 'item_id',
+				'compare' => 'IN',
+				'value'   => ! empty( $user_groups['groups'] ) ? array_map( 'intval', $user_groups['groups'] ) : array( 0 ),
+			),
 		);
 	}
 

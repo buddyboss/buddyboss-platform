@@ -1548,12 +1548,23 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
  * Set up activity arguments for use with the 'document' scope.
  *
  * @since BuddyBoss 1.4.2
+ * @since BuddyBoss [BBVERSION] Only matches when specific activity IDs are requested.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
  * @return array $retval
  */
 function bp_activity_filter_document_scope( $retval = array(), $filter = array() ) {
+
+	// This scope matches hidden sub-activities of every group and profile, so it only serves
+	// lookups of specific IDs the caller has already checked (PROD-10649).
+	if ( empty( $filter['in'] ) ) {
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
+	}
+
 	$retval = array(
 		'relation' => 'AND',
 		array(

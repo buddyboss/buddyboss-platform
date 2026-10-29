@@ -913,12 +913,22 @@ function bp_video_activity_update_video_privacy( $activity ) {
  * Set up activity arguments for use with the 'video' scope.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Only matches when specific activity IDs are requested.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
  * @return array $retval Meta Query.
  */
 function bp_activity_filter_video_scope( $retval = array(), $filter = array() ) {
+
+	// This scope matches hidden sub-activities of every group and profile, so it only serves
+	// lookups of specific IDs the caller has already checked (PROD-10649).
+	if ( empty( $filter['in'] ) ) {
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
+	}
 
 	$retval = array(
 		'relation' => 'AND',

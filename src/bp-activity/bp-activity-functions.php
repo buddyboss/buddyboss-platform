@@ -958,6 +958,7 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  *
  * @since BuddyPress 1.2.0
  * @since BuddyBoss 2.5.20 Added the `$args` parameter.
+ * @since BuddyBoss [BBVERSION] Refuses users who cannot view the activity, such as non-members of a private group.
  *
  * @param int   $activity_id ID of the activity item being favorited.
  * @param int   $user_id     ID of the user favoriting the activity item.
@@ -988,6 +989,17 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
+	}
+
+	// The reaction privacy check skips groups, so check the user can view the item (PROD-10649).
+	if (
+		in_array( $r['type'], array( 'activity', 'activity_comment' ), true ) &&
+		! bb_activity_user_can_view( (int) $activity_id, $user_id )
+	) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_not_allowed',
+			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss' )
+		);
 	}
 
 	// Check if migration is in progress.
@@ -2978,6 +2990,7 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @since BuddyPress 2.5.0 Add a new possible parameter $skip_notification for the array of arguments.
  *              Add the $primary_link parameter for the array of arguments.
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
+ * @since BuddyBoss [BBVERSION] Refuses a new comment when the user cannot view the root activity or the comment being replied to.
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -3118,6 +3131,30 @@ function bp_activity_new_comment( $args = '' ) {
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
 		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// The privacy check above skips groups, so a non-member could still reply in a private or
+	// hidden group. Check the root and the comment being replied to (PROD-10649).
+	if (
+		empty( $r['id'] ) &&
+		(
+			! bb_activity_user_can_view( $activity, (int) $r['user_id'] ) ||
+			(
+				(int) $r['parent_id'] !== (int) $activity_id &&
+				! bb_activity_user_can_view( (int) $r['parent_id'], (int) $r['user_id'] )
+			)
+		)
+	) {
+		$error = new WP_Error( 'bp_activity_comment_not_allowed', __( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
