@@ -320,8 +320,12 @@ function bb_legacy_wpf_create_tag() {
 		wp_send_json_error( array( 'message' => __( 'This CRM does not support creating tags.', 'buddyboss' ) ), 400 );
 	}
 
-	$term = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
-	$term = trim( $term );
+	// Not sanitize_text_field() — see bb_legacy_wpf_sanitize_group_tag_ids()
+	// docblock: it would mutate an add_tags CRM's literal tag id (brackets,
+	// internal whitespace, %xx-shaped substrings) before it's ever created.
+	$term = isset( $_POST['term'] ) ? wp_unslash( $_POST['term'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized by bb_legacy_wpf_sanitize_group_tag_ids() below.
+	$term = bb_legacy_wpf_sanitize_group_tag_ids( array( $term ) );
+	$term = isset( $term[0] ) ? $term[0] : '';
 	if ( '' === $term ) {
 		wp_send_json_error( array( 'message' => __( 'Tag name is empty.', 'buddyboss' ) ), 400 );
 	}
