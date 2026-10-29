@@ -71,6 +71,7 @@ class BP_Suspend_Group extends BP_Suspend_Abstract {
 
 		add_filter( 'bp_groups_group_pre_validate', array( $this, 'restrict_single_item' ), 10, 2 );
 
+		// Lift the suspended-group restriction while the admin Reported Content screen resolves the group link.
 		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_pre_validate_check' ) );
 		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_pre_validate_check' ) );
 
