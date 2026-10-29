@@ -324,7 +324,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 		<?php
 		bp_nouveau_activity_hook( 'before', 'entry_comments' );
 
-		if ( bp_activity_can_comment() ) {
+		if ( bb_activity_can_view_comments() ) {
 			$class = 'bb-rl-activity-comments';
 			if ( 'blogs' === bp_get_activity_object_name() ) {
 				$class .= get_option( 'thread_comments' ) ? ' bb-rl-threaded-comments bb-rl-threaded-level-' . get_option( 'thread_comments_depth' ) : '';
@@ -342,6 +342,7 @@ $bb_rl_activity_class_exists = class_exists( 'BB_Activity_Readylaunch' ) ? BB_Ac
 				$comment_count = $bb_rl_activity_class_exists->bb_rl_get_activity_comment_count( $activity_id );
 				if (
 					is_user_logged_in() &&
+					bp_activity_can_comment() &&
 					(
 						! $comment_count ||
 						bp_is_single_activity()
