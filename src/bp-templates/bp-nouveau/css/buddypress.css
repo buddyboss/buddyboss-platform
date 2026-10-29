@@ -3958,6 +3958,7 @@ input.search-query-input {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 10px 0;
+  overflow-wrap: break-word;
 }
 
 .activity-list .activity-item .activity-content .activity-header,
