@@ -819,8 +819,19 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
-	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
+	$activity_id    = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
+	$topic_required = bb_is_activity_topic_required() && isset( $_POST['topic_id'] );
+
+	// An optional topic is checked as well, so a deleted or forbidden topic is refused instead of dropped.
+	$topic_chosen = false;
+	if ( ! $topic_required && ! empty( $_POST['topic_id'] ) ) {
+		$topic_object = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+		$topic_chosen = 'group' === $topic_object
+			? function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics()
+			: function_exists( 'bb_is_enabled_activity_topics' ) && bb_is_enabled_activity_topics();
+	}
+
+	if ( $topic_required || $topic_chosen ) {
 		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
 		if ( empty( $topic_id ) ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
@@ -1298,6 +1309,7 @@ function bp_nouveau_ajax_post_update() {
  * Save activity draft data.
  *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
  */
 function bb_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
@@ -1311,13 +1323,31 @@ function bb_nouveau_ajax_post_draft_activity() {
 	}
 
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+		/*
+		 * The client's data_key names the usermeta row this handler writes or deletes, so it
+		 * must never reach bp_update_user_meta()/bp_delete_user_meta() unchecked - an arbitrary
+		 * key (e.g. wp_capabilities) would let a member overwrite any of their own meta,
+		 * including their role. Only the keys the composers actually use are allowed:
+		 * draft_user, draft_user_{id} and draft_group_{id}. A non-scalar key (a crafted array)
+		 * becomes '' and is rejected cleanly rather than emitting an "Array to string" notice.
+		 *
+		 * @since BuddyBoss 3.6.1
+		 */
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'This draft could not be saved.', 'buddyboss' ),
+				)
+			);
+		}
 
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
 				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
-					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_media_attachment['bb_media_draft'] ) && ! empty( $new_media_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_media_attachment['id'] ) ) {
 						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1327,7 +1357,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
 				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
-					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_document_attachment['bb_media_draft'] ) && ! empty( $new_document_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_document_attachment['id'] ) ) {
 						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1337,7 +1367,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
 				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
-					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
+					if ( ! isset( $new_video_attachment['bb_media_draft'] ) && ! empty( $new_video_attachment['id'] ) && bb_user_can_manage_draft_attachment( $new_video_attachment['id'] ) ) {
 						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
 						update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
 					}
@@ -1352,7 +1382,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 						array(
 							'action'        => 'edit',
 							'attachment_id' => $attachment_id,
-							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
+							// Never trust a client-supplied user_id for a permission check.
+							'user_id'       => bp_loggedin_user_id(),
 							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
 							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
 						)
@@ -1368,8 +1399,10 @@ function bb_nouveau_ajax_post_draft_activity() {
 							)
 						);
 					}
-					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
-					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					if ( bb_user_can_manage_draft_attachment( $attachment_id ) ) {
+						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+						update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					}
 				}
 			}
 
@@ -1387,7 +1420,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the medias.
 				if ( ! empty( $medias ) ) {
 					foreach ( $medias as $media ) {
-						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] && bb_user_can_manage_draft_attachment( $media['id'], true ) ) {
 							wp_delete_attachment( $media['id'], true );
 						}
 					}
@@ -1396,7 +1430,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the documents.
 				if ( ! empty( $documents ) ) {
 					foreach ( $documents as $document ) {
-						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] && bb_user_can_manage_draft_attachment( $document['id'], true ) ) {
 							wp_delete_attachment( $document['id'], true );
 						}
 					}
@@ -1405,7 +1440,8 @@ function bb_nouveau_ajax_post_draft_activity() {
 				// Delete the videos.
 				if ( ! empty( $videos ) ) {
 					foreach ( $videos as $video ) {
-						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
+						// Only the user's own, still unsaved uploads may be deleted.
+						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] && bb_user_can_manage_draft_attachment( $video['id'], true ) ) {
 							wp_delete_attachment( $video['id'], true );
 						}
 					}
@@ -1419,7 +1455,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 				true === (bool) $draft_activity['allow_delete_post_feature_image']
 			) {
 				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
-				if ( 0 < (int) $attachment_id ) {
+				if ( 0 < (int) $attachment_id && bb_user_can_manage_draft_attachment( $attachment_id, true ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}

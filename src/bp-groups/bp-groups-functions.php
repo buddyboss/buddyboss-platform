@@ -5183,19 +5183,20 @@ function bb_get_group_subscription_button( $args, $html = true ) {
  * @return void
  */
 function bb_group_single_header_actions() {
+	ob_start();
+	bp_nouveau_group_header_buttons();
+	bp_nouveau_group_header_buttons(
+		array(
+			'type'           => 'subscription',
+			'button_element' => 'button',
+		)
+	);
+	bb_nouveau_group_header_bubble_buttons();
+
+	// Trimmed so the wrapper stays truly empty and the CSS :empty divider check works.
+	$actions = trim( ob_get_clean() );
 	?>
-	<div class="group-actions-absolute">
-		<?php
-		bp_nouveau_group_header_buttons();
-		bp_nouveau_group_header_buttons(
-			array(
-				'type'           => 'subscription',
-				'button_element' => 'button',
-			)
-		);
-		bb_nouveau_group_header_bubble_buttons();
-		?>
-	</div>
+	<div class="group-actions-absolute"><?php echo $actions; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 	<?php
 }
 
