@@ -1653,7 +1653,7 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
  * Rebuild rewrite rules with verbose page rules when they are generated while
  * BuddyBoss has switched them off for the current request.
  *
- * bp_core_set_uri_globals() sets $wp_rewrite->use_verbose_page_rules to false on
+ * The bp_core_set_uri_globals() sets $wp_rewrite->use_verbose_page_rules to false on
  * every BuddyBoss page request. WP_Rewrite::rewrite_rules() places the page rule
  * after the post rule while that flag is false. If the rules are regenerated in
  * the same request (a deferred flush on wp_loaded or shutdown, a flush from
