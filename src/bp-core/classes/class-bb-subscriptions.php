@@ -612,10 +612,10 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		 *                                            Default: null.
 		 *     @type bool         $status             Optional. Get all active subscription if true otherwise return inactive.
 		 *                                            Default: true.
-		 *     @type string       $order_by           Optional. Property to sort by. 'date_recorded', 'item_id',
-		 *                                            'secondary_item_id', 'user_id', 'id', 'type'
-		 *                                            'total_subscription_count', 'random', 'include'.
-		 *                                            Default: 'date_recorded'.
+		 *     @type string       $order_by           Optional. Column to sort by: 'id', 'blog_id', 'user_id', 'type',
+		 *                                            'item_id', 'secondary_item_id', 'status', 'date_recorded'; or
+		 *                                            'rand()' for random order, or 'in' to keep the order of $include.
+		 *                                            Anything else falls back to 'date_recorded'. Default: 'date_recorded'.
 		 *     @type string       $order              Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 		 *     @type int          $per_page           Optional. Number of items to return per page of results.
 		 *                                            Default: null (no limit).
@@ -735,9 +735,24 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			}
 
 			/* Order/orderby ********************************************/
-			$order           = bp_esc_sql_order( $r['order'] );
-			$order_by        = $r['order_by'];
-			$sql['order_by'] = "ORDER BY {$order_by} {$order}";
+			$order    = bp_esc_sql_order( $r['order'] );
+			$order_by = $r['order_by'];
+
+			// Whitelist: the value is interpolated into the ORDER BY clause
+			// below. 'rand()' and 'in' are special-cased there; anything else
+			// must be a real table column. 'in' only makes sense together with
+			// $include (otherwise it would emit a literal "ORDER BY in").
+			if (
+				! in_array( $order_by, array_merge( self::get_tbl_columns(), array( 'rand()', 'in' ) ), true ) ||
+				( 'in' === $order_by && empty( $r['include'] ) )
+			) {
+				$order_by = 'date_recorded';
+			}
+
+			// Qualify the column: a third-party bb_subscriptions_get_join_sql join
+			// carrying its own `id` column would otherwise make ORDER BY ambiguous
+			// and turn the fan-out worker's page query into an empty result.
+			$sql['order_by'] = "ORDER BY sc.{$order_by} {$order}";
 
 			// Random order is a special case.
 			if ( 'rand()' === $order_by ) {
@@ -748,7 +763,18 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			}
 
 			if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 !== $r['per_page'] ) {
-				$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+				$per_page = intval( $r['per_page'] );
+				$page     = max( 1, intval( $r['page'] ) );
+
+				// Clamp the page so ( page - 1 ) * per_page cannot overflow to a
+				// float: that casts to a negative integer and produces an invalid
+				// LIMIT (a SQL error that returns nothing). REST callers can pass any
+				// page number, so an out-of-range page must simply yield an empty page.
+				if ( $per_page > 0 ) {
+					$page = min( $page, intdiv( PHP_INT_MAX, $per_page ) );
+				}
+
+				$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', ( $page - 1 ) * $per_page, $per_page );
 			}
 
 			/**
@@ -793,7 +819,12 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			$cached = bp_core_get_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions' );
 			if ( false === $cached || false === $r['cache'] ) {
 				$paged_subscription_ids = $wpdb->get_col( $paged_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				bp_core_set_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions', $paged_subscription_ids );
+
+				// cache => false means "fresh, one-off read" (keyset pages of the
+				// background fan-out): don't leave a never-read key per page behind.
+				if ( false !== $r['cache'] ) {
+					bp_core_set_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions', $paged_subscription_ids );
+				}
 			} else {
 				$paged_subscription_ids = $cached;
 			}
@@ -801,6 +832,57 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			if ( 'id' === $r['fields'] ) {
 				// We only want the IDs.
 				$paged_subscriptions = array_map( 'intval', $paged_subscription_ids );
+			} elseif ( 'all' !== $r['fields'] ) {
+				// Single-column fetch (e.g. 'user_id'): read the column directly instead
+				// of hydrating full subscription objects. Hydration warms the per-row
+				// object cache and instantiates one object per row, so an unbounded
+				// result set (large-group notification fan-out) issues one cache write
+				// per subscriber and exhausts request memory under a persistent object
+				// cache. Skips the per-row cache warm-up; readers fall back
+				// to the database on cache miss.
+				$paged_subscriptions = array();
+
+				// validate_column() already coerced unknown values to 'all' (handled by
+				// the branch below), so this re-check can never fail in practice; it only
+				// keeps the column interpolation locally auditable.
+				if ( ! empty( $paged_subscription_ids ) && in_array( $r['fields'], self::get_tbl_columns(), true ) ) {
+					$subscription_ids_sql = implode( ',', array_map( 'intval', $paged_subscription_ids ) );
+
+					// The hydration path runs every row through the bb_subscriptions_pre_validate
+					// filter inside populate(). Preserve that contract here without hydrating:
+					// only when something is hooked, read the full row (still no per-row cache
+					// write, no object) and drop rows the filter rejects. Unhooked (the default),
+					// read just the requested column.
+					$has_pre_validate = has_filter( 'bb_subscriptions_pre_validate' );
+					$select_columns   = $has_pre_validate ? 'sc.*' : "sc.id, sc.{$r['fields']}";
+					$column_results   = $wpdb->get_results( "SELECT {$select_columns} FROM {$subscription_tbl} sc WHERE sc.id IN ({$subscription_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+					$column_map = array();
+					foreach ( $column_results as $column_result ) {
+						if ( $has_pre_validate ) {
+							/** This filter is documented in bp-core/classes/class-bb-subscriptions.php */
+							$validate = apply_filters( 'bb_subscriptions_pre_validate', true, $column_result );
+
+							if ( empty( $validate ) ) {
+								continue;
+							}
+						}
+
+						$column_map[ (int) $column_result->id ] = $column_result->{$r['fields']};
+					}
+
+					// Integer columns are cast so the return matches the previous
+					// object-hydration path, which returned (int)-cast properties.
+					$is_int_column = in_array( $r['fields'], array( 'id', 'blog_id', 'user_id', 'item_id', 'secondary_item_id', 'status' ), true );
+
+					foreach ( $paged_subscription_ids as $paged_subscription_id ) {
+						// array_key_exists, not isset: a NULL column value (date_recorded is
+						// nullable) is still a row and was returned as null by the hydration path.
+						if ( array_key_exists( (int) $paged_subscription_id, $column_map ) ) {
+							$paged_subscriptions[] = $is_int_column ? (int) $column_map[ (int) $paged_subscription_id ] : $column_map[ (int) $paged_subscription_id ];
+						}
+					}
+				}
 			} else {
 				$uncached_subscription_ids = bp_get_non_cached_ids( $paged_subscription_ids, 'bb_subscriptions' );
 				if ( $uncached_subscription_ids ) {
@@ -814,10 +896,6 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				$paged_subscriptions = array();
 				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
 					$paged_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, ( 'all' === $r['fields'] ) );
-				}
-
-				if ( 'all' !== $r['fields'] ) {
-					$paged_subscriptions = array_column( $paged_subscriptions, $r['fields'] );
 				}
 			}
 
@@ -843,7 +921,10 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				$cached = bp_core_get_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions' );
 				if ( false === $cached || false === $r['cache'] ) {
 					$total_subscriptions = (int) $wpdb->get_var( $total_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					bp_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
+
+					if ( false !== $r['cache'] ) {
+						bp_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
+					}
 				} else {
 					$total_subscriptions = (int) ( ! empty( $cached ) ? current( $cached ) : 0 );
 				}
