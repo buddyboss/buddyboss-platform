@@ -3294,6 +3294,32 @@ window.bp = window.bp || {};
 								response.data.saved      = false;
 								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
+
+								// The thumbnail capture (bp.Nouveau.getVideoThumb) runs async and can still be
+								// in progress here. Backfill js_preview on this same object (already pushed
+								// above, by reference) once the capture finishes, instead of reading the
+								// <img> immediately and losing the preview.
+								if ( ! response.data.js_preview ) {
+									var thumbnailCheckAttempts = 0;
+									// getVideoThumb() reads the whole file before capturing, so on large files or
+									// slow devices it can settle well after the upload. Poll every 200ms until it
+									// settles, the preview leaves the page (file removed or comment submitted), or
+									// 60s pass, so the interval never outlives the comment form.
+									var thumbnailCheck = setInterval(
+										function () {
+											var $thumbnailPreview = $( file.previewElement ).closest( '.dz-preview' );
+											thumbnailCheckAttempts++;
+											if ( $thumbnailPreview.hasClass( 'dz-has-no-thumbnail' ) || $thumbnailPreview.hasClass( 'dz-has-thumbnail' ) ) {
+												response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+												clearInterval( thumbnailCheck );
+											} else if ( ! file.previewElement || ! document.body.contains( file.previewElement ) || thumbnailCheckAttempts >= 300 ) {
+												clearInterval( thumbnailCheck );
+											}
+										},
+										200
+									);
+								}
+
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;

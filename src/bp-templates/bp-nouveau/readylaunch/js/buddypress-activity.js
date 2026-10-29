@@ -4365,6 +4365,35 @@ window.bp = window.bp || {};
 						response.data.album_id   = typeof BP_Nouveau[subType] !== 'undefined' && typeof BP_Nouveau[subType].album_id !== 'undefined' ? BP_Nouveau[subType].album_id : false;
 						response.data.group_id   = typeof BP_Nouveau[subType] !== 'undefined' && typeof BP_Nouveau[subType].group_id !== 'undefined' ? BP_Nouveau[subType].group_id : false;
 						response.data.saved      = false;
+
+						if ( 'video' === type ) {
+							// Unlike the post composer's dropzone handler, this comment-reply handler never
+							// captured a client-side thumbnail, so a comment video's persisted thumbnail
+							// depended entirely on the server-side FFmpeg background job — missing on hosts
+							// without an FFmpeg binary. Capture js_preview the same way, backfilling it once
+							// bp.Nouveau.getVideoThumb()'s async capture finishes if it hasn't already.
+							response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+
+							if ( ! response.data.js_preview ) {
+								var thumbnailCheckAttempts = 0;
+								// Poll until the capture settles, the preview leaves the page (file removed or
+								// comment submitted), or 60s pass, so the interval never outlives the form.
+								var thumbnailCheck = setInterval(
+									function () {
+										var $thumbnailPreview = $( file.previewElement ).closest( '.dz-preview' );
+										thumbnailCheckAttempts++;
+										if ( $thumbnailPreview.hasClass( 'dz-has-no-thumbnail' ) || $thumbnailPreview.hasClass( 'dz-has-thumbnail' ) ) {
+											response.data.js_preview = $( file.previewElement ).find( '.dz-image img' ).attr( 'src' );
+											clearInterval( thumbnailCheck );
+										} else if ( ! file.previewElement || ! document.body.contains( file.previewElement ) || thumbnailCheckAttempts >= 300 ) {
+											clearInterval( thumbnailCheck );
+										}
+									},
+									200
+								);
+							}
+						}
+
 						dropzoneDataObj.push( response.data );
 						return file.previewElement.classList.add( 'dz-success' );
 					} else {
