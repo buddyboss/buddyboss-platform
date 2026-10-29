@@ -2560,6 +2560,12 @@ window.bp = window.bp || {};
 			}
 
 			var self = this, activity_id;
+
+			// The arrows are shared with the photo theatre, so only act while the video theatre is open.
+			if ( ! self.is_open_video ) {
+				return;
+			}
+
 			if ( self.current_activity_data && self.videos[ self.current_index + 1 ] ) {
 				self.updateVideoState(
 					self.videos[ self.current_index + 1 ],
@@ -2577,7 +2583,7 @@ window.bp = window.bp || {};
 						self.getVideosDescription();
 					}
 				} else {
-					self.nextLink.hide();
+					self.nextVideoLink.hide();
 				}
 			}
 		},
@@ -2589,6 +2595,11 @@ window.bp = window.bp || {};
 				return false;
 			}
 			var self = this, activity_id;
+
+			if ( ! self.is_open_video ) {
+				return;
+			}
+
 			if ( self.current_activity_data && self.videos[ self.current_index - 1 ] ) {
 				self.updateVideoState(
 					self.videos[ self.current_index - 1 ],
@@ -2606,7 +2617,7 @@ window.bp = window.bp || {};
 						self.getVideosDescription();
 					}
 				} else {
-					self.previousLink.hide();
+					self.previousVideoLink.hide();
 				}
 			}
 		},
