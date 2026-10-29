@@ -55,6 +55,20 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		public static $table_name;
 
 		/**
+		 * Whether the current request is an app "View As" (switched user) session.
+		 *
+		 * Set by bb_jwt_auth_support() when the access token carries an active switch.
+		 * The presence endpoints run under SHORTINIT or with all plugins disabled, so
+		 * the app plugin cannot hook bb_pre_update_user_last_activity there. This flag
+		 * lets those paths make the same decision on their own.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var bool
+		 */
+		public static $is_switched_user = false;
+
+		/**
 		 * Download plugin text which appears on admin side.
 		 *
 		 * @since BuddyBoss 2.3.1
@@ -742,6 +756,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 					// if switch user is found for current access token pass it.
 					if ( $jti && isset( $switch_data[ $jti ] ) && is_numeric( $switch_data[ $jti ] ) ) {
+						// An admin is viewing the app as this member, so the request is not their own activity.
+						self::$is_switched_user = true;
+
 						return (int) $switch_data[ $jti ];
 					}
 
@@ -1020,8 +1037,11 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$current_endpoint = $this->bb_get_current_endpoint();
 			$header           = apply_filters( 'bb_rest_post_dispatch_header_cache', array(), $current_endpoint );
 
-			// Update login users last activity.
-			self::bb_update_last_activity( $user_id );
+			// Update login users last activity, unless an admin is viewing the app as this
+			// member. See self::$is_switched_user.
+			if ( ! self::$is_switched_user ) {
+				self::bb_update_last_activity( $user_id );
+			}
 
 			$header['bb-presence-mu-api'] = 'hit';
 			$header['Content-Type']       = 'application/json';
