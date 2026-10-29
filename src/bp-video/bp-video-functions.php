@@ -1022,11 +1022,27 @@ function bp_video_preview_image_by_js( $video ) {
 }
 
 /**
+ * Check whether videos with this privacy skip the background thumbnail job.
+ *
+ * Forum and message videos are skipped. Activity post and comment videos are queued.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $privacy Video privacy.
+ *
+ * @return bool True when the background thumbnail job is skipped.
+ */
+function bb_video_privacy_skips_background_thumbnail( $privacy ) {
+	return in_array( $privacy, array( 'forums', 'message' ), true );
+}
+
+/**
  * Put the video in background process to create thumbnails.
  *
  * @param int $video_id Video id.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Also queues videos attached to activity comments.
  */
 function bp_video_add_generate_thumb_background_process( $video_id ) {
 
@@ -1040,15 +1056,7 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 
 		$video = new BP_Video( $video_id );
 
-		if ( ! empty( $video->privacy ) && in_array(
-			$video->privacy,
-			array(
-				'forums',
-				'comment',
-				'message',
-			),
-			true
-		) ) {
+		if ( ! empty( $video->privacy ) && bb_video_privacy_skips_background_thumbnail( $video->privacy ) ) {
 			return;
 		}
 
@@ -4447,6 +4455,90 @@ function bb_video_get_image_sizes() {
 }
 
 /**
+ * Get the registered dimensions of a video thumbnail size.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $size Image size name, as registered by bb_video_register_image_sizes().
+ *
+ * @return array Array with `width` and `height`, or an empty array when the size is not registered.
+ */
+function bb_video_get_image_size_dimensions( $size ) {
+	foreach ( bb_video_get_image_sizes() as $name => $image_size ) {
+		if ( sanitize_key( $name ) === $size && ! empty( $image_size['width'] ) && ! empty( $image_size['height'] ) ) {
+			return array(
+				'width'  => (int) $image_size['width'],
+				'height' => (int) $image_size['height'],
+			);
+		}
+	}
+
+	return array();
+}
+
+/**
+ * Check whether a poster was found too small to produce a thumbnail size.
+ *
+ * The record holds the size's dimensions at the time it was made, so it stops applying
+ * when the size is registered with different dimensions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $attachment_id Poster attachment ID.
+ * @param string $size          Image size name.
+ *
+ * @return bool True when the size should not be regenerated for this poster.
+ */
+function bb_video_is_thumb_size_unavailable( $attachment_id, $size ) {
+	$target = bb_video_get_image_size_dimensions( $size );
+
+	if ( empty( $target ) ) {
+		return false;
+	}
+
+	$recorded = get_post_meta( $attachment_id, '_bb_video_thumb_unavailable_' . $size, true );
+
+	return $recorded === $target['width'] . 'x' . $target['height'];
+}
+
+/**
+ * Record that a poster is too small to produce a thumbnail size.
+ *
+ * WordPress does not create a size when the source is not larger than it on either axis,
+ * so regenerating can never produce it. Any other reason for a missing size (memory or time
+ * limits, no image editor, a source file that is not readable yet) is not recorded, so it is
+ * retried on the next request. Each size has its own meta key, so concurrent requests
+ * cannot overwrite each other's record.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $attachment_id Poster attachment ID.
+ * @param string $size          Image size name.
+ *
+ * @return bool True when the size was recorded.
+ */
+function bb_video_maybe_mark_thumb_size_unavailable( $attachment_id, $size ) {
+	$target   = bb_video_get_image_size_dimensions( $size );
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	$width    = ! empty( $metadata['width'] ) ? (int) $metadata['width'] : 0;
+	$height   = ! empty( $metadata['height'] ) ? (int) $metadata['height'] : 0;
+
+	if (
+		empty( $target ) ||
+		$width <= 0 ||
+		$height <= 0 ||
+		$width > $target['width'] ||
+		$height > $target['height']
+	) {
+		return false;
+	}
+
+	update_post_meta( $attachment_id, '_bb_video_thumb_unavailable_' . $size, $target['width'] . 'x' . $target['height'] );
+
+	return true;
+}
+
+/**
  * Add video upload filters.
  *
  * @since BuddyBoss 1.7.0
@@ -4597,6 +4689,7 @@ function bb_video_add_thumb_image_remove_upload_filters() {
  *
  * @since BuddyBoss 1.7.0
  * @since BuddyBoss 3.6.2 Only creates public symlinks for the video's trusted thumbnails.
+ * @since BuddyBoss [BBVERSION] Skips regenerating a thumbnail size the poster is too small to produce.
  */
 function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $generate = true ) {
 
@@ -4662,9 +4755,16 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 				}
 			} elseif ( ! $file ) {
 
-				bp_video_regenerate_attachment_thumbnails( $attachment_id );
+				// Skip the regeneration when an earlier attempt showed the poster is too small for this size.
+				if ( ! bb_video_is_thumb_size_unavailable( $attachment_id, $size ) ) {
+					bp_video_regenerate_attachment_thumbnails( $attachment_id );
 
-				$file = image_get_intermediate_size( $attachment_id, $size );
+					$file = image_get_intermediate_size( $attachment_id, $size );
+
+					if ( ! $file ) {
+						bb_video_maybe_mark_thumb_size_unavailable( $attachment_id, $size );
+					}
+				}
 
 				if ( $file && ! empty( $file['path'] ) ) {
 
