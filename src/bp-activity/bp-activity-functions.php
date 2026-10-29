@@ -3651,6 +3651,140 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	return $deleted;
 }
 
+/**
+ * Check whether an activity comment still has anything to show.
+ *
+ * Used when a single photo, video or document is deleted from a comment, to
+ * decide whether the comment itself must go too. The comment is kept while it
+ * still has text, a GIF, or any photo, video or document attached. Placeholder
+ * content (`&#8203;`, `&nbsp;`, whitespace) is not text. The rows
+ * are read from the database (not from the cached helpers or the
+ * `bp_media_ids` meta) so the check reflects the delete that just happened.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param BP_Activity_Activity|int $comment Activity comment object or ID.
+ *
+ * @return bool True when the comment still has text or attachments, false otherwise.
+ */
+function bb_activity_comment_has_remaining_content( $comment ) {
+	global $wpdb;
+
+	if ( ! $comment instanceof BP_Activity_Activity ) {
+		$comment = new BP_Activity_Activity( (int) $comment );
+	}
+
+	if ( empty( $comment->id ) || 'activity_comment' !== $comment->type ) {
+		return false;
+	}
+
+	$bp         = buddypress();
+	$comment_id = (int) $comment->id;
+
+	/*
+	 * Text. The comment forms store `&#8203;` as the content of a comment that
+	 * has a video and no text, and the templates already treat `&nbsp;` and
+	 * `&#8203;` as empty (bp_get_activity_content_body()). Decode entities and
+	 * drop whitespace, no-break and zero-width spaces so these placeholders
+	 * (alone or wrapped in markup) do not count as text. If the pattern fails
+	 * (invalid UTF-8), preg_replace() returns null and the comment is kept.
+	 */
+	$text        = html_entity_decode( wp_strip_all_tags( (string) $comment->content ), ENT_QUOTES, 'UTF-8' );
+	$text        = preg_replace( '/[\s\x{00A0}\x{200B}\x{FEFF}]+/u', '', $text );
+	$has_content = '' !== $text;
+
+	// GIF attached to the comment.
+	if ( ! $has_content && ! empty( bp_activity_get_meta( $comment_id, '_gif_data', true ) ) ) {
+		$has_content = true;
+	}
+
+	// Photos and videos share the media table.
+	$media_table = '';
+	if ( bp_is_active( 'media' ) && ! empty( $bp->media->table_name ) ) {
+		$media_table = $bp->media->table_name;
+	} elseif ( bp_is_active( 'video' ) && ! empty( $bp->video->table_name ) ) {
+		$media_table = $bp->video->table_name;
+	}
+
+	if ( ! $has_content && ! empty( $media_table ) ) {
+		$has_content = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$media_table} WHERE activity_id = %d LIMIT 1", $comment_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+	}
+
+	if ( ! $has_content && bp_is_active( 'document' ) && ! empty( $bp->document->table_name ) ) {
+		$has_content = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE activity_id = %d LIMIT 1", $comment_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+	}
+
+	/**
+	 * Filters whether an activity comment still has content after one of its
+	 * attachments was deleted. Return true to keep the comment.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param bool                 $has_content Whether the comment still has text or attachments.
+	 * @param BP_Activity_Activity $comment     The activity comment.
+	 */
+	return (bool) apply_filters( 'bb_activity_comment_has_remaining_content', $has_content, $comment );
+}
+
+/**
+ * Remove deleted photos, videos or documents from a kept activity comment's meta.
+ *
+ * A comment is kept when one of its attachments is deleted while it still
+ * has text, a GIF or another attachment. Its `bp_{type}_ids`, `bp_{type}_id`
+ * and `bp_{type}_activity` meta would then still point at the deleted rows.
+ *
+ * The deleted IDs are removed from `bp_{type}_ids`, and `bp_{type}_id` is
+ * removed when it is one of them. When no attachment of this type remains,
+ * all three keys are deleted. Meta for the other attachment types is not
+ * touched.
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @param int    $comment_id  Activity comment ID.
+ * @param string $type        Attachment type: 'media', 'video' or 'document'.
+ * @param array  $deleted_ids IDs of the attachments that were just deleted.
+ */
+function bb_activity_comment_remove_deleted_attachment_meta( $comment_id, $type, $deleted_ids ) {
+	$comment_id  = (int) $comment_id;
+	$deleted_ids = wp_parse_id_list( $deleted_ids );
+
+	if ( empty( $comment_id ) || empty( $deleted_ids ) || ! in_array( $type, array( 'media', 'video', 'document' ), true ) ) {
+		return;
+	}
+
+	$ids_key = 'bp_' . $type . '_ids';
+	$id_key  = 'bp_' . $type . '_id';
+
+	$remaining_ids = array_diff( wp_parse_id_list( bp_activity_get_meta( $comment_id, $ids_key, true ) ), $deleted_ids );
+
+	if ( empty( $remaining_ids ) ) {
+		bp_activity_delete_meta( $comment_id, $ids_key );
+		bp_activity_delete_meta( $comment_id, $id_key );
+		bp_activity_delete_meta( $comment_id, 'bp_' . $type . '_activity' );
+	} else {
+		bp_activity_update_meta( $comment_id, $ids_key, implode( ',', $remaining_ids ) );
+
+		if ( in_array( (int) bp_activity_get_meta( $comment_id, $id_key, true ), $deleted_ids, true ) ) {
+			bp_activity_delete_meta( $comment_id, $id_key );
+		}
+	}
+
+	/**
+	 * Fires after attachments were deleted from an activity comment that was
+	 * kept, once its attachment meta is cleaned. The comment is not deleted,
+	 * so `bp_activity_delete_comment` does not fire for it; use this to
+	 * refresh anything that shows the comment or its thread, such as the
+	 * App API cache.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int    $comment_id  Activity comment ID.
+	 * @param string $type        Attachment type: 'media', 'video' or 'document'.
+	 * @param array  $deleted_ids IDs of the attachments that were deleted.
+	 */
+	do_action( 'bb_activity_comment_attachment_deleted', $comment_id, $type, $deleted_ids );
+}
+
 	/**
 	 * Delete an activity comment's children.
 	 *
@@ -7407,6 +7541,96 @@ function bb_validate_activity_privacy( $args ) {
 	}
 
 	return true;
+}
+
+if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
+	/**
+	 * Check whether a user may view an activity item, including its group and privacy rules.
+	 *
+	 * AJAX handlers that render an activity by a client-supplied ID with `privacy => false`
+	 * and `show_hidden => true` must call this first. Comments are checked against their root post,
+	 * and the hidden media/video/document sub-activities of a multi-item post against their parent.
+	 *
+	 * @since BuddyBoss 3.6.2
+	 *
+	 * @param int|BP_Activity_Activity $activity Activity ID or object.
+	 * @param int                      $user_id  User ID. Default the logged-in user.
+	 *
+	 * @return bool
+	 */
+	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
+		if ( ! $activity instanceof BP_Activity_Activity ) {
+			$activity = new BP_Activity_Activity( absint( $activity ) );
+		}
+
+		if ( empty( $activity->id ) ) {
+			return false;
+		}
+
+		$user_id  = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_view = true;
+
+		$activities = array( $activity );
+		$current    = $activity;
+
+		// A post with several photos, videos or documents gives each one a hidden sub-activity
+		// (privacy media/video/document) whose secondary_item_id is the post or comment it belongs to.
+		// Those privacy values carry no rule of their own, so the parent decides.
+		if (
+			in_array( $activity->privacy, array( 'media', 'video', 'document' ), true ) &&
+			! empty( $activity->secondary_item_id ) &&
+			(int) $activity->secondary_item_id !== (int) $activity->id
+		) {
+			$parent = new BP_Activity_Activity( (int) $activity->secondary_item_id );
+			if ( empty( $parent->id ) ) {
+				$can_view = false;
+			} else {
+				$activities[] = $parent;
+				$current      = $parent;
+			}
+		}
+
+		if ( $can_view && 'activity_comment' === $current->type && ! empty( $current->item_id ) && (int) $current->item_id !== (int) $current->id ) {
+			$root = new BP_Activity_Activity( (int) $current->item_id );
+			if ( empty( $root->id ) ) {
+				$can_view = false;
+			} else {
+				$activities[] = $root;
+			}
+		}
+
+		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
+			foreach ( $activities as $item ) {
+				if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
+					$can_view = false;
+					break;
+				}
+
+				$privacy = bb_validate_activity_privacy(
+					array(
+						'activity_id'     => $item->id,
+						'user_id'         => $user_id,
+						'validate_action' => 'view_activity',
+					)
+				);
+				if ( is_wp_error( $privacy ) ) {
+					$can_view = false;
+					break;
+				}
+			}
+		}
+
+		/**
+		 * Filters whether a user may view an activity item.
+		 *
+		 * @since BuddyBoss 3.6.2
+		 *
+		 * @param bool                 $can_view Whether the user may view the activity.
+		 * @param BP_Activity_Activity $activity Activity object.
+		 * @param int                  $user_id  User ID.
+		 */
+		return (bool) apply_filters( 'bb_activity_user_can_view', $can_view, $activity, $user_id );
+	}
 }
 
 /**
