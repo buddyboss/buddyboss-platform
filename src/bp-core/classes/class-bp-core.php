@@ -217,7 +217,7 @@ class BP_Core extends BP_Component {
 	 * plugin-file load — are honored. See the deferral note in
 	 * load_components().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @return void
 	 */
@@ -301,7 +301,7 @@ class BP_Core extends BP_Component {
 		 * third parties through `bp_optional_components` keep their own loading
 		 * and are never deactivated here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.0
 		 *
 		 * @param string[] $components Component IDs provided by BuddyBoss Add-ons.
 		 */

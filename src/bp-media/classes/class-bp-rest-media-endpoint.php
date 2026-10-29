@@ -2090,7 +2090,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register custom field for the activity api.
 	 *
-	 * @since BuddyBoss [BBVERSION] Registers the GIF REST fields only for a Platform build that still ships the GIF core.
+	 * @since BuddyBoss 3.7.0 Registers the GIF REST fields only for a Platform build that still ships the GIF core.
 	 */
 	public function bp_rest_media_support() {
 
@@ -2622,7 +2622,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * The giphy module boots on `bp_include`, long before any REST request, so the
 	 * check is final by the time the endpoint registers its fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @return bool True when the GIF REST fields must be registered by this endpoint.
 	 */
@@ -2697,7 +2697,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the Gif data's value of the activity REST Field.
 	 *
-	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 * @since BuddyBoss 3.7.0 Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object     The BuddyPress component's object that was just created/updated during the request.
 	 *                           (in this case the BP_Activity_Activity object).
@@ -3300,7 +3300,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
 	 *
-	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 * @since BuddyBoss 3.7.0 Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object Topics as a object.
 	 * @param object $value  The value of the REST Field to save.
@@ -3612,7 +3612,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
 	 *
-	 * @since BuddyBoss [BBVERSION] Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 * @since BuddyBoss 3.7.0 Stores the GIF still and mp4 values only when they are http(s) URLs.
 	 *
 	 * @param object $object Message as a object.
 	 * @param object $value  The value of the REST Field to save.

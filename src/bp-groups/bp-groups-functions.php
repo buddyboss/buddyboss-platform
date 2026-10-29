@@ -5632,7 +5632,7 @@ function bb_group_type_shortcode_resolve_key( $type ) {
  * bound; the replay re-checks the current membership, so a change dropped past the
  * limit cannot leave a former member subscribed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return bool True when the change should be recorded.
  */
@@ -5671,7 +5671,7 @@ function bb_groups_should_record_subscription_gap() {
 	 * A safety limit so a site that never brings the module back does not grow its
 	 * group meta without bound. Changes after the limit are not recorded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param int $limit Maximum number of recorded changes. Default 100000.
 	 */
@@ -5686,7 +5686,7 @@ function bb_groups_should_record_subscription_gap() {
  * Each change is its own group meta row, so concurrent requests never overwrite
  * one another, and the rows keep their order. See bb_groups_should_record_subscription_gap().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param int    $group_id      ID of the group.
  * @param int    $user_id       ID of the user.

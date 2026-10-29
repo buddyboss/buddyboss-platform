@@ -78,7 +78,7 @@ function bb_platform_3_required_addons() {
  * They do not fatal, because the field callbacks only run from the media
  * settings screen, so this floor only keeps the settings screen accurate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Minimum Platform Pro version.
  */
@@ -105,7 +105,7 @@ function bb_platform_3_pro_required_version() {
  * This is the single source of the floor: bb_get_addons_required_version()
  * reads it for the post-update Add-ons update and the Media settings panels.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Minimum Add-ons version.
  */
@@ -122,7 +122,7 @@ function bb_platform_3_addons_required_version() {
  * BP_Document use (video store handler, bucket helper); 2.1.4 and older
  * fatal while processing existing videos or documents without Add-ons.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Minimum Offload Media version.
  */
@@ -139,7 +139,7 @@ function bb_platform_3_offload_media_required_version() {
  * (bp-incompatible-plugins-helper.php), which also gates the document
  * meta shim for older theme builds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return array<string, array{name: string, version: string}>
  */
@@ -193,7 +193,7 @@ function bb_platform_3_get_addon_version( $plugin_file ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @since BuddyBoss [BBVERSION] Also checks bb_platform_3_required_themes().
+ * @since BuddyBoss 3.7.0 Also checks bb_platform_3_required_themes().
  *
  * @return array<int, array{name: string, current: string, required: string}>
  */

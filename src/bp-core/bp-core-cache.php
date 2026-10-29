@@ -788,7 +788,7 @@ add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
  * resetting it serves the new order on every cache backend. A reorder can come from any group
  * organizer, so it never falls back to wp_cache_flush() on backends without group flushing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  */
 function bb_topics_order_updated_cache_reset() {
 	bp_core_reset_incrementor( 'bb_topics' );

@@ -268,7 +268,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_media_feature', 
  * admins can discover it, showing an "Upgrade" empty state instead of
  * settings. The real panel replaces it as soon as the feature is active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $panel_id     Side panel ID ('videos', 'documents' or 'animated_gifs').
  * @param string $title        Panel title.
@@ -341,7 +341,7 @@ function bb_media_register_addons_upsell_panel( $panel_id, $title, $icon_class, 
 /**
  * Get the pricing URL for a Media settings upsell panel.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
  *
@@ -371,7 +371,7 @@ function bb_media_get_addons_upgrade_url( $panel_id ) {
 /**
  * Get the BuddyBoss Add-ons module that provides a Media upsell panel's feature.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
  *
@@ -390,7 +390,7 @@ function bb_media_get_addons_module_for_panel( $panel_id ) {
 /**
  * Get the component behind a Media upsell panel.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
  *
@@ -427,7 +427,7 @@ function bb_media_get_addons_component_for_panel( $panel_id ) {
  * REMOTE CALL on a cold add-ons cache (the entitlement lookup), so it is only
  * called from the settings AJAX formatters, never from feature registration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
  *
@@ -473,7 +473,7 @@ function bb_media_get_addons_panel_state( $panel_id ) {
 	/**
 	 * Filters the state of a Media upsell panel.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param string $state    One of 'upgrade', 'install', 'activate', 'update', 'unavailable' or 'disabled'.
 	 * @param string $panel_id Side panel ID ('videos', 'documents' or 'animated_gifs').
@@ -489,7 +489,7 @@ function bb_media_get_addons_panel_state( $panel_id ) {
  * Only a build at or above the required version counts. Reads the cached add-ons catalog. Fails closed: an unknown installed version or
  * release reads as "no update".
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return bool
  */
@@ -509,7 +509,7 @@ function bb_media_addons_update_available() {
 	/**
 	 * Filters whether a BuddyBoss Add-ons update is available for the Media upsell panels.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param bool   $available Whether a newer build is available.
 	 * @param string $installed Installed version, empty when unreadable.
@@ -526,7 +526,7 @@ function bb_media_addons_update_available() {
  * requests. The upgrade card registered by bb_media_register_addons_upsell_panel()
  * stays as it is for sites whose plan does not include BuddyBoss Add-ons.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param array  $field_data Formatted field data bound for React.
  * @param array  $field      Registered field args.
@@ -653,7 +653,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_media_format_addons_upsel
 /**
  * Drop the "UPGRADE START" header badge from a Media upsell panel the plan already covers.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param array  $section_data  Formatted section data bound for React.
  * @param array  $section       Registered section args.
@@ -688,7 +688,7 @@ add_filter( 'bb_admin_settings_format_section_data', 'bb_media_format_addons_ups
  * component, but it was turned off. Settings 2.0 has no separate toggle for
  * these components, so this is the way back.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */
@@ -736,7 +736,7 @@ add_action( 'wp_ajax_bb_media_enable_component', 'bb_media_ajax_enable_component
  * Mothership has install/activate actions but no update action, so this is
  * Platform-owned and verifies the `bb_admin_settings` nonce (`ajaxNonce`).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */

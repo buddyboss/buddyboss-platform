@@ -656,7 +656,7 @@ class BB_Admin_Settings_Ajax {
 				 * Lets a panel adjust its header (e.g. drop an upgrade badge) from runtime
 				 * state that is too costly to resolve at feature registration.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.7.0
 				 *
 				 * @param array  $formatted_section Formatted section data.
 				 * @param array  $section           Registered section args.

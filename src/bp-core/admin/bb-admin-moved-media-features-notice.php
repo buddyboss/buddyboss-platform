@@ -23,7 +23,7 @@
  *
  * @package BuddyBoss\Core\Administration
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  */
 
 // Exit if accessed directly.
@@ -32,14 +32,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin file of the BuddyBoss Add-ons plugin that provides the moved features.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  */
 const BB_MOVED_MEDIA_FEATURES_ADDONS_PLUGIN = 'buddyboss-addons/buddyboss-addons.php';
 
 /**
  * User meta key holding the time the notice was last dismissed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  */
 const BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_notice_dismissed';
 
@@ -50,7 +50,7 @@ const BB_MOVED_MEDIA_FEATURES_NOTICE_DISMISSED_META = 'bb_moved_media_features_n
  * straight from the tables and cached for 12 hours; the cache is cleared when
  * the providing plugins or the active components change.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return array{video: int, document: int, gif: int, group_subscription: int} Number of stored items per feature.
  */
@@ -114,7 +114,7 @@ function bb_moved_media_features_get_stored_counts() {
  * when Add-ons is activated, deactivated or updated makes the next unavailable
  * window start from fresh numbers.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */
@@ -129,7 +129,7 @@ add_action( 'update_option_bp-active-components', 'bb_moved_media_features_clear
 /**
  * Whether a database table exists.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $table Full table name.
  *
@@ -144,7 +144,7 @@ function bb_moved_media_features_table_exists( $table ) {
 /**
  * Get the features whose stored content is currently hidden.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return array<string, int> Feature key ('video', 'document', 'gif', 'group_subscription') => number of
  *                            stored items, for every unavailable feature that has content.
@@ -181,7 +181,7 @@ function bb_moved_media_features_get_hidden_content() {
 /**
  * Get the install/activation state of the BuddyBoss Add-ons plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string One of 'not_installed', 'inactive' or 'active'.
  */
@@ -209,7 +209,7 @@ function bb_moved_media_features_get_addons_state() {
  * and the add-ons list is already cached; on a cold cache this returns false and
  * the notice keeps its plan copy.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return bool True when the site is entitled and that is known from local data.
  */
@@ -245,7 +245,7 @@ function bb_moved_media_features_is_entitled_from_cache() {
 /**
  * Get the pricing URL used by the moved media features upsells.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $content Optional. `utm_content` value identifying the placement.
  *
@@ -265,7 +265,7 @@ function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
 	/**
 	 * Filters the pricing URL of the moved media features upsells.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param string $url     Upgrade URL.
 	 * @param string $content Placement identifier.
@@ -276,7 +276,7 @@ function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
 /**
  * Whether the current user snoozed the notice within the last 30 days.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return bool
  */
@@ -289,7 +289,7 @@ function bb_moved_media_features_notice_is_snoozed() {
 /**
  * Render the moved media features notice.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */
@@ -451,7 +451,7 @@ add_action( 'admin_notices', 'bb_moved_media_features_render_notice' );
 /**
  * Snooze the moved media features notice for the current user.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */

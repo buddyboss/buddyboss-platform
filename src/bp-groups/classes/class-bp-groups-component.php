@@ -577,7 +577,7 @@ class BP_Groups_Component extends BP_Component {
 	 * unavailable while Media stays active. A default tab pointing at a missing sub-nav
 	 * would send every group home page to a 404.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param string $tab Tab slug: 'photos', 'albums', 'documents' or 'videos'.
 	 *

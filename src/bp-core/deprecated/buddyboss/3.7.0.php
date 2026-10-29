@@ -2,8 +2,8 @@
 /**
  * Deprecated functions.
  *
- * @since BuddyBoss [BBVERSION]
- * @deprecated BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
+ * @deprecated BuddyBoss 3.7.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ if ( ! function_exists( 'bb_enable_group_subscriptions' ) ) {
 	 * This copy loads first, so it keeps working for both.
 	 *
 	 * @since BuddyBoss 2.2.8
-	 * @deprecated BuddyBoss [BBVERSION] Group subscriptions moved to BuddyBoss Add-ons.
+	 * @deprecated BuddyBoss 3.7.0 Group subscriptions moved to BuddyBoss Add-ons.
 	 *
 	 * @param bool $default Optional. Fallback value if not found in the database.
 	 *                      Default: true.
@@ -27,7 +27,7 @@ if ( ! function_exists( 'bb_enable_group_subscriptions' ) ) {
 	function bb_enable_group_subscriptions( $default = true ) {
 		// Only a call without the Add-ons module is a deprecated one.
 		if ( ! function_exists( 'bb_addons_group_subscription_init' ) ) {
-			_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BuddyBoss Add-ons' );
+			_deprecated_function( __FUNCTION__, 'BuddyBoss 3.7.0', 'BuddyBoss Add-ons' );
 		}
 
 		/**

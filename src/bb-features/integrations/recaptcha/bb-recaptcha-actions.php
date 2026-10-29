@@ -155,7 +155,7 @@ function bb_recaptcha_lost_password() {
  * Validate recaptcha for a lost password form.
  *
  * @since  BuddyBoss 2.5.60
- * @since  BuddyBoss [BBVERSION] Added the `$user_data` parameter and skip admin-initiated resets.
+ * @since  BuddyBoss 3.7.0 Added the `$user_data` parameter and skip admin-initiated resets.
  *
  * @param WP_Error      $errors    A WP_Error object containing any errors generated
  *                                 by using invalid credentials.

@@ -445,7 +445,7 @@ add_action( 'deleted_plugin', 'bb_flush_feature_caches_on_plugin_change' );
  * Purge the S3 JSON catalogs (field upgrades and placeholder features) after a
  * BuddyBoss plugin or theme update, so the next admin request fetches them again.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param WP_Upgrader $upgrader Upgrader instance.
  * @param array       $options  Update details: `type`, and `plugins`/`plugin` or `themes`/`theme`.

@@ -35,7 +35,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	/**
 	 * Maximum number of members a single widget request may return.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @var int
 	 */
@@ -51,7 +51,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	 * empty most of the time. The legacy `online` value is still accepted from
 	 * cached pages and mapped to `active`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param string $filter Requested filter.
 	 *
@@ -64,14 +64,14 @@ class BB_Group_Members_Widget extends WP_Widget {
 			return $filter;
 		}
 
-		// 'online' (pre-[BBVERSION] markup) and anything unknown fall back to the default tab.
+		// 'online' (pre-3.7.0 markup) and anything unknown fall back to the default tab.
 		return 'active';
 	}
 
 	/**
 	 * Build the group member query args used by both the first render and the tab AJAX.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param int    $group_id Group ID.
 	 * @param string $filter   Requested tab filter.
@@ -102,7 +102,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	 * public groups are open to everyone, private/hidden groups only to members
 	 * and community moderators.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param int $group_id Group ID.
 	 *
@@ -125,7 +125,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	/**
 	 * Render the member list items (or the empty state) for the given query args.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param array $query_args Args for bp_group_has_members().
 	 *
@@ -170,7 +170,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	 * Display the widget.
 	 *
 	 * @since BuddyBoss 2.9.00
-	 * @since BuddyBoss [BBVERSION] Always renders the tabs, lists recently active members and hides the widget when the group is not visible.
+	 * @since BuddyBoss 3.7.0 Always renders the tabs, lists recently active members and hides the widget when the group is not visible.
 	 *
 	 * @param array $args Widget arguments.
 	 * @param array $instance Widget instance.
@@ -248,7 +248,7 @@ class BB_Group_Members_Widget extends WP_Widget {
 	 * AJAX callback for group members list.
 	 *
 	 * @since BuddyBoss 2.9.00
-	 * @since BuddyBoss [BBVERSION] Checks group visibility and uses the same query args as the first render.
+	 * @since BuddyBoss 3.7.0 Checks group visibility and uses the same query args as the first render.
 	 */
 	public function groups_ajax_widget_groups_members_list() {
 		check_ajax_referer( 'groups_widget_groups_members_list', '_wpnonce' );

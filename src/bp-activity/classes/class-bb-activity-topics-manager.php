@@ -447,7 +447,7 @@ class BB_Activity_Topics_Manager {
 	 *
 	 * Idempotent; callers loop until it returns 0 (see the "Activity topics" repair tool).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param int $limit Rows per batch.
 	 *

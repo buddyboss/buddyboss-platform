@@ -4512,7 +4512,7 @@ function bb_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
  * running code, not the version number, so any build without the assets is
  * matched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $register_function Add-ons function that registers the library.
  *
@@ -4531,7 +4531,7 @@ function bb_addons_lacks_moved_assets( $register_function ) {
  * requests where scripts are not registered. Saved GIFs, the REST API and the
  * settings are not affected.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return bool True when the GIF picker can be shown.
  */

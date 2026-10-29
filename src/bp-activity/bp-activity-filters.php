@@ -4231,7 +4231,7 @@ function bb_activity_save_topic_data( $activity ) {
  * for a group post) and the user must be allowed to post in it. An activity that already carries the
  * topic may keep it, so an edit that does not change the topic is never refused.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param int    $topic_id Topic ID being saved.
  * @param object $activity The activity object.

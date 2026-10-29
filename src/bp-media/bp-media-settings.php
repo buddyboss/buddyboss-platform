@@ -142,7 +142,7 @@ function bp_is_forums_emoji_support_enabled( $default = 0 ) {
  * {@see bb_media_gifs_force_disable()}), so GIF UI never renders against a
  * missing backend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return bool True when a GIF provider (Platform-bundled or addon) is loaded.
  */
@@ -152,7 +152,7 @@ function bb_giphy_provider_available() {
 	/**
 	 * Filters whether a GIPHY integration provider is available.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param bool $available True when the GIF save/render/delete functions are loaded.
 	 */
@@ -304,14 +304,14 @@ function bp_is_profile_document_support_enabled( $default = 0 ) {
  * their filters — so an unlicensed/absent addon degrades cleanly instead of fataling.
  * Option names are the frozen video contract (bp_video_*_video_support).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  */
 
 /**
  * Checks if profile video support is enabled.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Moved from the video component, which ships in BuddyBoss Add-ons.
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
  *
  * @param int $default Default value.
  * @return bool Whether profile video support is enabled.
@@ -324,7 +324,7 @@ function bp_is_profile_video_support_enabled( $default = 0 ) {
  * Checks if group video support is enabled.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Moved from the video component, which ships in BuddyBoss Add-ons.
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
  *
  * @param int $default Default value.
  * @return bool Whether group video support is enabled.
@@ -337,7 +337,7 @@ function bp_is_group_video_support_enabled( $default = 0 ) {
  * Checks if messages video support is enabled.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Moved from the video component, which ships in BuddyBoss Add-ons.
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
  *
  * @param int $default Default value.
  * @return bool Whether messages video support is enabled.
@@ -350,7 +350,7 @@ function bp_is_messages_video_support_enabled( $default = 0 ) {
  * Checks if forums video support is enabled.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Moved from the video component, which ships in BuddyBoss Add-ons.
+ * @since BuddyBoss 3.7.0 Moved from the video component, which ships in BuddyBoss Add-ons.
  *
  * @param int $default Default value.
  * @return bool Whether forums video support is enabled.

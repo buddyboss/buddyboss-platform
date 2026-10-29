@@ -2159,7 +2159,7 @@ add_filter( 'bb_notification_is_read_only', 'bb_notification_linkable_specific_n
  * Function to exclude the notification actions.
  *
  * @since BuddyBoss 2.2.9
- * @since BuddyBoss [BBVERSION] Also excludes the group subscription notifications when BuddyBoss Add-ons does not provide group subscriptions.
+ * @since BuddyBoss 3.7.0 Also excludes the group subscription notifications when BuddyBoss Add-ons does not provide group subscriptions.
  *
  * @return array
  */

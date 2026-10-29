@@ -1288,7 +1288,7 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
  * without it those builds fatal. {@see bb_theme_document_activity_meta_compat()}
  * keeps them working until the theme is updated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Minimum BuddyBoss Theme version.
  */
@@ -1299,7 +1299,7 @@ function bb_platform_3_theme_required_version() {
 /**
  * Get the version of the active BuddyBoss Theme, or the parent of the active child theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Theme version, or an empty string when BuddyBoss Theme is not in use.
  */
@@ -1318,7 +1318,7 @@ function bb_get_active_buddyboss_theme_version() {
 /**
  * Activity meta keys that older BuddyBoss Theme builds turn into `BP_Document` objects.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string[] Meta keys.
  */
@@ -1335,7 +1335,7 @@ function bb_theme_document_activity_meta_keys() {
  * in BuddyBoss Add-ons. The stored meta is untouched, so documents reappear
  * once Add-ons is active again.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param mixed  $value     Short-circuit value; null to read the meta normally.
  * @param int    $object_id Activity ID.
@@ -1361,7 +1361,7 @@ function bb_theme_document_activity_meta_compat( $value, $object_id, $meta_key, 
 /**
  * Register the document meta compatibility filter for older BuddyBoss Theme builds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */
@@ -1408,7 +1408,7 @@ function bb_register_theme_document_meta_compat() {
  * cached, hides the keys without ever caching a stripped copy, which a
  * persistent object cache would keep after Add-ons is back.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param array|mixed $meta_data   All metadata of the activity.
  * @param int         $activity_id Activity ID.
@@ -1441,7 +1441,7 @@ add_action( 'after_setup_theme', 'bb_register_theme_document_meta_compat', 1 );
  * the deprecated files, because those do not load on installs that ignore
  * deprecated code (the default for new installs since BuddyBoss 2.1.4).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  */
 function bb_maybe_define_group_subscription_send_fallback() {
 	if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
@@ -1456,7 +1456,7 @@ function bb_maybe_define_group_subscription_send_fallback() {
 	 * it on every group post when the Add-ons module is not loaded.
 	 *
 	 * @since BuddyBoss 2.2.8
-	 * @deprecated BuddyBoss [BBVERSION] Group subscriptions moved to BuddyBoss Add-ons.
+	 * @deprecated BuddyBoss 3.7.0 Group subscriptions moved to BuddyBoss Add-ons.
 	 *
 	 * @param string $content     The content of the update.
 	 * @param int    $user_id     ID of the user posting the update.

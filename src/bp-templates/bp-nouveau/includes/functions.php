@@ -1706,7 +1706,7 @@ function bp_nouveau_get_user_profile_actions() {
  * "Cannot read properties of undefined" errors in the shared scripts. The
  * placeholders disable every feature flag so the related UI stays hidden.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param array $params Localized data passed to the BP_Nouveau script object.
  *

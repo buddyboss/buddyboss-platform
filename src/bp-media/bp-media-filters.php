@@ -2359,7 +2359,7 @@ add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable
  * so the support options can stay on while the component is absent).
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss [BBVERSION] Also returns false when the video component is inactive.
+ * @since BuddyBoss 3.7.0 Also returns false when the video component is inactive.
  *
  * @param bool $enabled Current value.
  *
@@ -2384,7 +2384,7 @@ add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable
  * so the support options can stay on while the component is absent).
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss [BBVERSION] Also returns false when the document component is inactive.
+ * @since BuddyBoss 3.7.0 Also returns false when the document component is inactive.
  *
  * @param bool $enabled Current value.
  *
@@ -2430,7 +2430,7 @@ add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable'
  * provider is loaded at all.
  *
  * @since BuddyBoss 3.0.0
- * @since BuddyBoss [BBVERSION] Also disabled when {@see bb_giphy_provider_available()}
+ * @since BuddyBoss 3.7.0 Also disabled when {@see bb_giphy_provider_available()}
  *                              is false — the GIF save/render backend is being
  *                              extracted to the BuddyBoss Addons plugin, and the
  *                              UI must never render against a missing backend.
@@ -2457,7 +2457,7 @@ add_filter( 'bp_is_forums_gif_support_enabled', 'bb_media_gifs_force_disable' );
  * The scripts hide the picker when these flags are false and the key is empty.
  * Saved GIFs, the REST API and the settings are not affected.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param array $params Strings and settings passed to the BuddyBoss scripts.
  *

@@ -4224,7 +4224,7 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
  * cleanup for them is not loaded, so their preview URLs do not outlive the usual age.
  *
  * @since BuddyBoss 1.7.0
- * @since BuddyBoss [BBVERSION] Also expires document and video preview symlinks when
+ * @since BuddyBoss 3.7.0 Also expires document and video preview symlinks when
  *                              their Add-ons cleanup is not loaded.
  *
  * @return array|void the list of deleted files
@@ -4288,7 +4288,7 @@ function bb_media_delete_older_symlinks() {
  *
  * Reads a single directory, without recursion.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $dir        Absolute directory path.
  * @param int    $limit      Unix time. Entries changed before it are deleted.

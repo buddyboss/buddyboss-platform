@@ -322,7 +322,7 @@ class BP_Groups_Member {
 		 * Group subscriptions moved to BuddyBoss Add-ons, which creates or updates the
 		 * member's subscription here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.0
 		 *
 		 * @param BP_Groups_Member $member        The saved membership.
 		 * @param bool             $is_member_add True when the row was inserted, false when it was updated.
@@ -482,7 +482,7 @@ class BP_Groups_Member {
 		 * Group subscriptions moved to BuddyBoss Add-ons, which removes the member's
 		 * subscription here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.0
 		 *
 		 * @param BP_Groups_Member $member The removed membership.
 		 */
@@ -570,7 +570,7 @@ class BP_Groups_Member {
 		 * Group subscriptions moved to BuddyBoss Add-ons, which removes the member's
 		 * subscription here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.0
 		 *
 		 * @param int $user_id  ID of the user.
 		 * @param int $group_id ID of the group.

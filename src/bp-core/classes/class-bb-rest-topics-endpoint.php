@@ -33,7 +33,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Register the fields for the activity object.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] Checks the topic of an activity create/update before the write ("Require users to select a topic" and topic permissions).
+	 * @since BuddyBoss 3.7.0 Checks the topic of an activity create/update before the write ("Require users to select a topic" and topic permissions).
 	 */
 	public function bp_rest_activity_support() {
 		// A registered field's update callback only runs after the activity is written (and only when the
@@ -354,7 +354,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Check if a given request has access to create a topic.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers can create topics for their own group.
+	 * @since BuddyBoss 3.7.0 Group organizers can create topics for their own group.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -676,7 +676,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Check if a given request has access to update a topic.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers can update topics of their own group; a global topic cannot be renamed inside a group.
+	 * @since BuddyBoss 3.7.0 Group organizers can update topics of their own group; a global topic cannot be renamed inside a group.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -933,7 +933,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Check if a given request has access to delete a topic.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers can delete and migrate topics of their own group; the migrate target must belong to the same group.
+	 * @since BuddyBoss 3.7.0 Group organizers can delete and migrate topics of their own group; the migrate target must belong to the same group.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -1280,7 +1280,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * Topic rows are shared with group topics, so a row with the same name is not enough.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param string $name Topic name.
 	 *
@@ -1309,7 +1309,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Mirrors the group branch of delete_item_permissions_check(): a logged-in site administrator
 	 * or an organizer of that group, while group activity topics are enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param int $group_id Group ID.
 	 *
@@ -1345,7 +1345,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *   topic-less posts.
 	 * An update that does not send `bb_topic_id` keeps the stored topic and is not checked.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param bool|WP_Error   $retval  Result of the endpoint's own permission check.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -1443,7 +1443,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * Uses the same lists the website composer renders its topic selector from.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param string $component `groups` or `activity`.
 	 * @param int    $item_id   Group ID for the groups component.
@@ -1489,7 +1489,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * form (bp_nouveau_ajax_post_update). Used by the activity `bb_topic_id` field after the write
 	 * and by the topic check before it, so both refuse the same input.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param object $topic       Topic relationship row from bb_get_topic().
 	 * @param int    $activity_id Activity being updated, 0 on create.
@@ -1715,7 +1715,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Prepare a topic for response.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] `is_delete` follows the delete permission instead of being always true.
+	 * @since BuddyBoss 3.7.0 `is_delete` follows the delete permission instead of being always true.
 	 *
 	 * @param stdClass        $item    Topic object.
 	 * @param WP_REST_Request $request Request object.
@@ -1908,7 +1908,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * The function to use to update the topic id's value of the activity REST Field.
 	 *
 	 * @since 2.8.80
-	 * @since BuddyBoss [BBVERSION] The required-topic check runs before the write only (bb_rest_activity_topic_required_check()).
+	 * @since BuddyBoss 3.7.0 The required-topic check runs before the write only (bb_rest_activity_topic_required_check()).
 	 *
 	 * @param int    $topic_id   The BuddyPress component's object that was just created/updated during the request.
 	 *                           (in this case, the BP_Activity_Activity object).

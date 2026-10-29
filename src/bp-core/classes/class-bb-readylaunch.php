@@ -3246,7 +3246,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * option is not modified.
 		 *
 		 * @since BuddyBoss 2.9.00
-		 * @since BuddyBoss [BBVERSION] Resolves the URL from the attachment ID and drops deleted attachments.
+		 * @since BuddyBoss 3.7.0 Resolves the URL from the attachment ID and drops deleted attachments.
 		 *
 		 * @param string $key The key of the logo (`light` or `dark`).
 		 *

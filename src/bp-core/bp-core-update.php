@@ -4734,7 +4734,7 @@ function bb_purge_forums_api_cache_for_legacy_embed() {
  * Reads the floor from the version-compatibility notice so both stay in sync;
  * that file is admin-only, hence the fallback.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Minimum Add-ons version.
  */
@@ -4749,7 +4749,7 @@ function bb_get_addons_required_version() {
 /**
  * Get the installed BuddyBoss Add-ons version, read from the plugin header on disk.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Version, or an empty string when it is not installed or unreadable.
  */
@@ -4771,7 +4771,7 @@ function bb_get_installed_addons_version() {
 /**
  * Whether a BuddyBoss Add-ons version is below the version this Platform requires.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string|null $version Optional. Version to check. Default: the installed version.
  *
@@ -4792,7 +4792,7 @@ function bb_is_addons_below_required_version( $version = null ) {
  * skipped. Non-interactive (Automatic_Upgrader_Skin); the add-on is re-activated
  * in its previous scope afterwards, as WordPress does after a manual update.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return string Result: 'inactive', 'up_to_date', 'vcs_checkout', 'not_entitled', 'no_package',
  *                'updated' or 'failed'.
@@ -4846,7 +4846,7 @@ function bb_update_addons_bundle_to_required_version() {
 	/**
 	 * Filters the BuddyBoss Add-ons package used for the post-update upgrade.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param array       $package {
 	 *     @type string $url     Package URL (or local zip path).
@@ -4934,7 +4934,7 @@ function bb_update_addons_bundle_to_required_version() {
  * performs it, so the upgrade request itself (which can be any front-end
  * admin-ajax call) never downloads or replaces a plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */
@@ -4958,7 +4958,7 @@ function bb_queue_addons_bundle_update() {
  * is checked again after the same wait, or sooner once Add-ons or a license is
  * activated ({@see bb_retry_queued_addons_bundle_update_soon()}).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */
@@ -5018,7 +5018,7 @@ add_action( 'admin_init', 'bb_maybe_run_queued_addons_bundle_update', 100 );
  * update kept queued while Add-ons was inactive or not entitled does not wait up
  * to 12 hours. Does nothing when no update is queued.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $plugin Optional. Activated plugin basename; empty for a license activation.
  *

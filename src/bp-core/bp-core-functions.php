@@ -2521,7 +2521,7 @@ function bp_core_get_minified_asset_suffix() {
  * Documents are not available from a BuddyBoss Add-ons build below the version
  * this Platform requires.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $component Component ID (e.g. 'video', 'document').
  * @return bool True when the component's code is available to load.
@@ -2544,7 +2544,7 @@ function bb_is_component_directory_available( $component ) {
 	 * true for its component so the availability scrub keeps it active
 	 * and the admin UI keeps offering the toggle.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param bool   $exists    Whether the component's loader file exists in this build.
 	 * @param string $component Component ID (e.g. 'video', 'document').
@@ -2584,7 +2584,7 @@ function bb_is_component_directory_available( $component ) {
  * their files behind. BuddyBoss Add-ons reads this record when the components
  * are back and repairs the data.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return void
  */
@@ -12469,7 +12469,7 @@ if ( ! function_exists( 'bb_media_delete_legacy_gif_attachment' ) ) {
  * only), so callers that stand in for one module must also check that module.
  * Add-ons builds without the per-module API fall back to the plugin-wide lock.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string $module_id Add-ons module ID, e.g. 'reactions' or 'pinned-posts'.
  *

@@ -419,7 +419,7 @@ function repair_default_profiles_fields() {
  * Batched through the paginated repair protocol (`status: running` + `offset`), idempotent, so it
  * is safe to re-run. Activities deleted after PROD-10670 clean their rows on `bp_activity_after_delete`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return array Repair status.
  */
