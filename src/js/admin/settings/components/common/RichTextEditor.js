@@ -79,6 +79,39 @@ function addEditorParagraphs( text ) {
 }
 
 /**
+ * Read the current content of a RichTextEditor, from either the Visual or the Code tab.
+ *
+ * While the Code tab is active TinyMCE is hidden and still holds the old Visual
+ * content, so `tinymce.get( id ).getContent()` misses anything typed there.
+ * `wp.editor.getContent()` saves the Visual editor when it is showing and
+ * returns the textarea value, which covers both tabs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string}  id    Editor ID.
+ * @param {boolean} autop Return line breaks as newlines instead of `<p>`/`<br>` tags.
+ * @returns {string|null} Editor content, or null when the editor is not initialized.
+ */
+export function getEditorContent( id, autop ) {
+	var editor = window.tinymce ? window.tinymce.get( id ) : null;
+	if ( ! editor ) {
+		return null;
+	}
+
+	if ( autop && window.wp && window.wp.editor && window.wp.editor.getContent ) {
+		return removeEditorParagraphs( window.wp.editor.getContent( id ) );
+	}
+
+	if ( editor.isHidden() ) {
+		// The Code tab textarea holds wpautop-stripped content; restore the tags.
+		var textarea = document.getElementById( id );
+		return addEditorParagraphs( textarea ? textarea.value : '' );
+	}
+
+	return editor.getContent();
+}
+
+/**
  * Rich Text Editor wrapper for TinyMCE.
  *
  * @param {Object}   props          Component props.
