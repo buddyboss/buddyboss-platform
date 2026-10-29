@@ -74,7 +74,7 @@
         },
         {
             "name": "caseproof/ground-level-container",
-            "version": "9.3.0",
+            "version": "9.3.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-container.git",
@@ -110,7 +110,7 @@
             ],
             "description": "The GroundLevel Container package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-container/tree/9.3.0"
+                "source": "https://github.com/caseproof/ground-level-container/tree/9.3.1"
             },
             "time": "2026-07-15T17:07:11+00:00"
         },
@@ -239,7 +239,7 @@
         },
         {
             "name": "caseproof/ground-level-support",
-            "version": "9.3.0",
+            "version": "9.3.1",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-support.git",
@@ -271,7 +271,7 @@
             ],
             "description": "The GroundLevel Support package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-support/tree/9.3.0"
+                "source": "https://github.com/caseproof/ground-level-support/tree/9.3.1"
             },
             "time": "2026-08-12T14:07:19+00:00"
         },
@@ -1004,16 +1004,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.4.45",
+            "version": "v5.4.54",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "57c8294ed37d4a055b77057827c67f9558c95c54"
+                "reference": "c4a6cc5733386414f6d17d744ee5ad8b445e349d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/57c8294ed37d4a055b77057827c67f9558c95c54",
-                "reference": "57c8294ed37d4a055b77057827c67f9558c95c54",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/c4a6cc5733386414f6d17d744ee5ad8b445e349d",
+                "reference": "c4a6cc5733386414f6d17d744ee5ad8b445e349d",
                 "shasum": ""
             },
             "require": {
@@ -1051,7 +1051,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v5.4.45"
+                "source": "https://github.com/symfony/filesystem/tree/v5.4.54"
             },
             "funding": [
                 {
@@ -1063,11 +1063,15 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-22T13:05:35+00:00"
+            "time": "2026-08-30T06:54:06+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1323,16 +1327,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.51",
+            "version": "v5.4.54",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "467bfc56f18f5ef6d5ccb09324d7e988c1c0a98f"
+                "reference": "485d7b3f15ae329058d2407c9772c57ed4f564de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/467bfc56f18f5ef6d5ccb09324d7e988c1c0a98f",
-                "reference": "467bfc56f18f5ef6d5ccb09324d7e988c1c0a98f",
+                "url": "https://api.github.com/repos/symfony/process/zipball/485d7b3f15ae329058d2407c9772c57ed4f564de",
+                "reference": "485d7b3f15ae329058d2407c9772c57ed4f564de",
                 "shasum": ""
             },
             "require": {
@@ -1365,7 +1369,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.51"
+                "source": "https://github.com/symfony/process/tree/v5.4.54"
             },
             "funding": [
                 {
@@ -1385,7 +1389,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-26T15:53:37+00:00"
+            "time": "2026-09-01T06:19:14+00:00"
         }
     ],
     "packages-dev": [
@@ -1779,16 +1783,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v5.4.47",
+            "version": "v5.4.54",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "c4ba980ca61a9eb18ee6bcc73f28e475852bb1ed"
+                "reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/c4ba980ca61a9eb18ee6bcc73f28e475852bb1ed",
-                "reference": "c4ba980ca61a9eb18ee6bcc73f28e475852bb1ed",
+                "url": "https://api.github.com/repos/symfony/console/zipball/68a4a45af9fcb8c9bee567a88ae29e721fb22986",
+                "reference": "68a4a45af9fcb8c9bee567a88ae29e721fb22986",
                 "shasum": ""
             },
             "require": {
@@ -1858,7 +1862,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v5.4.47"
+                "source": "https://github.com/symfony/console/tree/v5.4.54"
             },
             "funding": [
                 {
@@ -1870,11 +1874,15 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-06T11:30:55+00:00"
+            "time": "2026-10-07T15:50:15+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
