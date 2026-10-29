@@ -6376,6 +6376,12 @@ window.bp = window.bp || {};
 				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-topic-selector-list li' );
 				if ( topicSelector.length ) {
 					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
+					var topics    = self.model.get( 'topics' );
+
+					// Editing a post whose topic the author can no longer pick: it is not in the list, so keep it.
+					if ( ! topicId && 0 < parseInt( data.id, 10 ) && topics && 0 < parseInt( topics.topic_id, 10 ) ) {
+						topicId = topics.topic_id;
+					}
 					data.topic_id = topicId;
 				}
 				

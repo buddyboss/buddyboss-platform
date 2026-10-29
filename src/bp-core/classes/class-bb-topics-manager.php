@@ -163,16 +163,11 @@ class BB_Topics_Manager {
 				'delete_topic_confirm'         => esc_html__( 'Are you sure you want to delete "%s"? This cannot be undone.', 'buddyboss' ),
 				'bb_update_topics_order_nonce' => wp_create_nonce( 'bb_update_topics_order' ),
 				'generic_error'                => esc_html__( 'An error occurred while updating topic order.', 'buddyboss' ),
+				'load_error'                   => esc_html__( 'The topic could not be loaded. Please close this window and try again.', 'buddyboss' ),
 				'create_topic_text'            => __( 'Create Topic', 'buddyboss' ),
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 				/* translators: %s: Topic name */
 				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
-				// @todo: Remove the duplicate `can_reorder_topics` key when PROD-10664 merges into release.
-				// PROD-10664 adds the same key with a site-moderator-only value. Git merges both lines without
-				// a conflict and PHP keeps the later one, so whichever line ends up last decides whether group
-				// organizers get the drag handle. Keep this per-list value (organizers may reorder their group's
-				// topics), delete PROD-10664's line, update its "Only site moderators can save the order"
-				// comment in both bb-topics-manager.js copies, and rebuild the .min.js and Settings 2.0 builds.
 				'can_reorder_topics'           => $this->bb_can_update_topics_order( bp_is_active( 'groups' ) && bp_is_group() ? bp_get_current_group_id() : 0, bp_is_active( 'groups' ) && bp_is_group() ? 'groups' : 'activity' ),
 				'topics_limit'                 => $this->bb_topics_limit(),
 			)
@@ -297,12 +292,67 @@ class BB_Topics_Manager {
 	}
 
 	/**
+	 * Check whether the current user can manage topics in a topics AJAX request.
+	 *
+	 * Site moderators can manage every topic. A group organizer can manage the
+	 * topics of a group they organize, and only topics already linked to that group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string    $item_type The item type, 'activity' or 'groups'.
+	 * @param int       $item_id   The item ID.
+	 * @param int|array $topic_ids Optional. Topic IDs that must belong to the item. Empty IDs are skipped.
+	 *
+	 * @return bool True if the current user can manage the topics, false otherwise.
+	 */
+	private function bb_current_user_can_manage_topics( $item_type, $item_id, $topic_ids = array() ) {
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			return true;
+		}
+
+		if (
+			'groups' !== $item_type ||
+			empty( $item_id ) ||
+			! bp_is_active( 'groups' ) ||
+			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+			! bb_is_enabled_group_activity_topics() ||
+			! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
+		) {
+			return false;
+		}
+
+		foreach ( array_filter( wp_parse_id_list( $topic_ids ) ) as $topic_id ) {
+			$group_topic = $this->bb_get_topics(
+				array(
+					'topic_id'  => $topic_id,
+					'item_id'   => $item_id,
+					'item_type' => 'groups',
+					'fields'    => 'id',
+				)
+			);
+
+			if ( empty( $group_topic['topics'] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Add a new global topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can add and edit the topics of their own group.
 	 */
 	public function bb_add_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$previous_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$item_id           = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
+		$item_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, $previous_topic_id ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -322,17 +372,34 @@ class BB_Topics_Manager {
 			);
 		}
 
-		$name              = sanitize_text_field( wp_unslash( $_POST['name'] ) );
-		$slug              = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-		$permission_type   = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : 'anyone';
-		$previous_topic_id = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		$item_id           = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
-		$item_type         = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : 'activity';
+		$name            = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+		$slug            = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
+		$permission_type = isset( $_POST['permission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['permission_type'] ) ) : '';
 
-		if ( empty( $slug ) ) {
-			$slug = sanitize_title( $name );
+		// Only store a known permission key. A label such as "All group members" would lock members out of the topic.
+		if ( 'activity' === $item_type ) {
+			$permission_types = function_exists( 'bb_activity_topics_manager_instance' ) ? bb_activity_topics_manager_instance()->bb_activity_topic_permission_type() : array();
 		} else {
-			$slug = sanitize_title( $slug );
+			$permission_types = function_exists( 'bb_group_activity_topic_permission_type' ) ? bb_group_activity_topic_permission_type() : array();
+		}
+		if ( ! empty( $permission_types ) ) {
+			if ( '' === $permission_type ) {
+				$permission_type = key( $permission_types );
+			} elseif ( ! isset( $permission_types[ $permission_type ] ) ) {
+				wp_send_json_error(
+					array(
+						'error' => __( 'Please choose who can post in this topic.', 'buddyboss' ),
+						'topic' => array(),
+					)
+				);
+			}
+		} elseif ( '' === $permission_type ) {
+			$permission_type = 'anyone';
+		}
+
+		// Only site moderators may set a slug. Everyone else gets the slug of the topic name, as REST does.
+		if ( empty( $slug ) || ! bp_current_user_can( 'bp_moderate' ) ) {
+			$slug = sanitize_title( $name );
 		}
 		if ( empty( $slug ) ) {
 			wp_send_json_error(
@@ -341,6 +408,34 @@ class BB_Topics_Manager {
 					'topic' => array(),
 				)
 			);
+		}
+
+		// Group organizers may only pick existing activity topics when the group topics option says so.
+		// Editing a group topic without changing it (for example its permission only) is still allowed.
+		$previous_topic = ! empty( $previous_topic_id ) ? $this->bb_get_topic_by( 'id', $previous_topic_id ) : null;
+		if (
+			'groups' === $item_type &&
+			! bp_current_user_can( 'bp_moderate' ) &&
+			function_exists( 'bb_get_group_activity_topic_options' ) &&
+			'only_from_activity_topics' === bb_get_group_activity_topic_options() &&
+			! ( $previous_topic && $previous_topic->slug === $slug )
+		) {
+			$activity_topic = $this->bb_get_topics(
+				array(
+					'slug'      => $slug,
+					'item_type' => 'activity',
+					'fields'    => 'id',
+				)
+			);
+
+			if ( empty( $activity_topic['topics'] ) ) {
+				wp_send_json_error(
+					array(
+						'error' => __( 'Topic name not found in activity topics.', 'buddyboss' ),
+						'topic' => array(),
+					)
+				);
+			}
 		}
 
 		if ( empty( $previous_topic_id ) ) {
@@ -417,6 +512,7 @@ class BB_Topics_Manager {
 	 * Add a new global topic.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] When a group topic shares a row with an activity topic, the activity topic name wins.
 	 *
 	 * @param array $args {
 	 * Array of arguments for adding a topic.
@@ -528,6 +624,10 @@ class BB_Topics_Manager {
 			$topic_id = $this->wpdb->insert_id;
 		} else {
 			$topic_id = $existing_slug->id;
+
+			if ( 'activity' === $r['item_type'] ) {
+				$this->bb_update_topic_name( $existing_slug, $r['name'] );
+			}
 		}
 
 		if ( empty( $r['topic_id'] ) && ! empty( $topic_id ) ) {
@@ -598,6 +698,7 @@ class BB_Topics_Manager {
 	 * Update an existing topic.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] A global topic can no longer be renamed or swapped inside a group; only its permission changes.
 	 *
 	 * @param array $args {
 	 *     Array of arguments for updating a topic.
@@ -640,7 +741,7 @@ class BB_Topics_Manager {
 				'topic_id' => $previous_topic_id,
 			)
 		);
-		$is_global_activity = $previous_topic && isset( $previous_topic->is_global_activity ) ? $previous_topic->is_global_activity : false;
+		$is_global_activity = 'groups' === $item_type && $this->bb_is_topic_global( $previous_topic_id );
 
 		/**
 		 * Fires before a topic has been updated.
@@ -653,12 +754,14 @@ class BB_Topics_Manager {
 		 */
 		do_action( 'bb_topic_before_updated', $r, $previous_topic_id, $previous_topic );
 
-		// First, check if the new name exists in the bb_topics table.
-		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
-		if ( ! $existing_topic ) { // NO.
-			if ( $is_global_activity && 'groups' === $item_type ) {
+		// A group can change the permission of a global topic, but not rename it or swap it for another topic.
+		if ( $is_global_activity ) {
+			$previous_topic_row = $this->bb_get_topic_by( 'id', $previous_topic_id );
+			$new_slug           = ! empty( $slug ) ? $slug : sanitize_title( $name );
+
+			if ( ! $previous_topic_row || $previous_topic_row->slug !== $new_slug ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					unset( $r, $existing_topic, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
+					unset( $r, $previous_topic, $is_global_activity, $item_type, $item_id, $permission_type );
 
 					return new WP_Error(
 						'bb_topic_global_activity_group',
@@ -670,6 +773,11 @@ class BB_Topics_Manager {
 
 				return false;
 			}
+		}
+
+		// First, check if the new name exists in the bb_topics table.
+		$existing_topic = $this->bb_get_topic_by( 'slug', $slug );
+		if ( ! $existing_topic ) { // NO.
 			// Case: Name doesn't exist - create new topic.
 			$topic_data = $this->bb_add_topic(
 				array(
@@ -761,6 +869,10 @@ class BB_Topics_Manager {
 				);
 			}
 
+			if ( 'activity' === $item_type ) {
+				$this->bb_update_topic_name( $existing_topic, $name );
+			}
+
 			$topic_data = $this->bb_get_topic(
 				array(
 					'topic_id'  => $new_topic_id,
@@ -790,6 +902,45 @@ class BB_Topics_Manager {
 		do_action( 'bb_topic_after_updated', $topic_data, $r, $previous_topic_id, $previous_topic );
 
 		return $topic_data;
+	}
+
+	/**
+	 * Use the activity topic's name for a topic row that a group created first.
+	 *
+	 * Topic rows are shared by slug, so a group topic can create the row that a later
+	 * activity topic reuses. The activity topic is managed by the site admin and its
+	 * name is the one that should show everywhere.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $topic The row from the topics table.
+	 * @param string $name  The activity topic name.
+	 */
+	private function bb_update_topic_name( $topic, $name ) {
+		$name = sanitize_text_field( $name );
+
+		if ( empty( $topic->id ) || '' === $name || $topic->name === $name ) {
+			return;
+		}
+
+		$this->wpdb->update(
+			$this->topics_table,
+			array( 'name' => $name ),
+			array( 'id' => $topic->id ),
+			array( '%s' ),
+			array( '%d' )
+		);
+
+		wp_cache_delete( 'bb_topic_id_' . $topic->id, self::$topic_cache_group );
+		wp_cache_delete( 'bb_topic_slug_' . $topic->slug, self::$topic_cache_group );
+		wp_cache_delete( 'bb_topic_name_' . $topic->name, self::$topic_cache_group );
+
+		// Group topic lists cache the name per relationship, so clear the whole group.
+		if ( function_exists( 'wp_cache_supports' ) && wp_cache_supports( 'flush_group' ) ) {
+			wp_cache_flush_group( self::$topic_cache_group );
+		} else {
+			wp_cache_flush();
+		}
 	}
 
 	/**
@@ -1478,9 +1629,16 @@ class BB_Topics_Manager {
 	 * Fetch an existing topic while the edit topic modal is open via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can load the topics of their own group for editing.
 	 */
 	public function bb_edit_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$topic_id  = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, $topic_id ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1499,10 +1657,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
-		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
-		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
 		$args = array(
 			'topic_id'  => $topic_id,
@@ -1557,9 +1711,16 @@ class BB_Topics_Manager {
 	 * Delete an existing topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can load the topics of their own group for deletion.
 	 */
 	public function bb_delete_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$topic_id  = isset( $_POST['topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) ) : 0;
+		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, $topic_id ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1578,10 +1739,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
-		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
-		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
 		$topic_lists = $this->bb_get_topics(
 			array(
@@ -1713,9 +1870,18 @@ class BB_Topics_Manager {
 	 * Migrate a topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
+	 * @since BuddyBoss [BBVERSION] Group organizers can delete and migrate the topics of their own group.
 	 */
 	public function bb_migrate_topic_ajax() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
+		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
+		$old_topic_id = isset( $_POST['old_topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) ) : 0;
+		$new_topic_id = 'migrate' === $migrate_type && isset( $_POST['new_topic_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
+		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
+		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! $this->bb_current_user_can_manage_topics( $item_type, $item_id, array( $old_topic_id, $new_topic_id ) ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
@@ -1735,7 +1901,6 @@ class BB_Topics_Manager {
 			);
 		}
 
-		$migrate_type = isset( $_POST['migrate_type'] ) ? sanitize_text_field( wp_unslash( $_POST['migrate_type'] ) ) : '';
 		if ( 'migrate' === $migrate_type && ! isset( $_POST['new_topic_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -1744,11 +1909,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		$old_topic_id = absint( sanitize_text_field( wp_unslash( $_POST['old_topic_id'] ) ) );
-		$item_id      = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
-		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
-		$new_topic_id = 'migrate' === $migrate_type ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
 
 		if ( 'migrate' === $migrate_type && $new_topic_id ) {
 			$result = $this->bb_migrate_topic(

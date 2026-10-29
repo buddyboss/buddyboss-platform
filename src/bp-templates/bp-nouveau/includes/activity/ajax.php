@@ -819,30 +819,26 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	$activity_id    = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
-	$topic_required = bb_is_activity_topic_required() && isset( $_POST['topic_id'] );
-
-	// An optional topic is checked as well, so a deleted or forbidden topic is refused instead of dropped.
-	$topic_chosen = false;
-	if ( ! $topic_required && ! empty( $_POST['topic_id'] ) ) {
-		$topic_object = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
-		$topic_chosen = 'group' === $topic_object
-			? function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics()
-			: function_exists( 'bb_is_enabled_activity_topics' ) && bb_is_enabled_activity_topics();
+	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
+	// A chosen topic is checked even when a topic is not required. Nothing is checked or saved while topics are off.
+	$topics_enabled = bb_is_enabled_activity_topics();
+	$topic_id       = $topics_enabled && isset( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+	if ( $topics_enabled && bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
 	}
-
-	if ( $topic_required || $topic_chosen ) {
-		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
-		}
+	if ( ! empty( $topic_id ) ) {
 		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
 		if (
 			empty( $existing_topic_id ) ||
 			(int) $existing_topic_id !== (int) $topic_id
 		) {
-			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+			// Resolve the object the same way the posting code below does, so the topic is checked for the feed it is saved to.
+			$object  = ! empty( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 			$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+			if ( empty( $object ) && bp_is_group() ) {
+				$object  = 'group';
+				$item_id = bp_get_current_group_id();
+			}
 
 			$args = array(
 				'topic_id'  => $topic_id,

@@ -359,6 +359,12 @@ window.bp = window.bp || {};
 			if ( ! this.$topicList.length ) {
 				return;
 			}
+
+			// Only users who can save this list's order (site moderators, or the group's organizers for a group list) get dragging.
+			if ( 'undefined' !== typeof bbTopicsManagerVars && ! bbTopicsManagerVars.can_reorder_topics ) {
+				this.$topicList.find( '.bb-topic-drag' ).remove();
+				return;
+			}
 			this.$topicList.sortable( {
 				update : function ( event ) {
 					var $container = $( event.target );
@@ -449,7 +455,7 @@ window.bp = window.bp || {};
 			}
 
 			// Clear form fields.
-			this.$topicName.val( '' );
+			this.$topicName.val( '' ).removeData( 'selected' );
 			this.$topicId.val( '' );
 			this.$topicWhoCanPost.first().prop( 'checked', true );
 
@@ -590,8 +596,8 @@ window.bp = window.bp || {};
 				$( '#bb_existing_topic_id option:not(:first)' ).prop( 'selected', false );
 			}
 
-			// Reset data.
-			this.$topicName.val( '' );
+			// Reset data. Clear the select2 choice too, or the next edit submits this topic's name.
+			this.$topicName.val( '' ).removeData( 'selected' );
 			this.$topicWhoCanPost.prop( 'checked', false );
 			this.$topicId.val( '' );
 			$( '#bb_is_global_activity' ).val( '' );
@@ -635,6 +641,7 @@ window.bp = window.bp || {};
 			this.$modal.show();
 			this.$backdrop.show();
 			this.$topicWhoCanPost.prop( 'checked', false );
+			this.$topicName.removeData( 'selected' );
 
 			$( document ).trigger( 'bb_modal_opened', [this.$modal] );
 
@@ -750,6 +757,10 @@ window.bp = window.bp || {};
 				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-model-header h4 .target_name' ).text( bbTopicsManagerVars.delete_topic_text.replace( '%s', topicName ) );
 			}
 
+			// Forget the previous topic, so a submit before this one is loaded can't delete it again.
+			this.$migrateTopicContainerModalSelector.find( '#bb_topic_id, #bb_item_id, #bb_item_type, #bb_topic_nonce' ).val( '' );
+			this.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).remove();
+
 			// Show loader
 			this.$migrateTopicContainerModalSelector.addClass( 'is-loading' );
 
@@ -782,10 +793,13 @@ window.bp = window.bp || {};
 						} );
 					}
 				} else {
-
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-content, .bb-action-popup-content' ).first().prepend( BBTopicsManager.config.errorContainer );
+					BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( response.data && response.data.error ? response.data.error : bbTopicsManagerVars.load_error );
 				}
 			} ).fail( function () {
-
+				BBTopicsManager.$migrateTopicContainerModalSelector.removeClass( 'is-loading' );
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-content, .bb-action-popup-content' ).first().prepend( BBTopicsManager.config.errorContainer );
+				BBTopicsManager.$migrateTopicContainerModalSelector.find( '.bb-hello-error' ).append( bbTopicsManagerVars.load_error );
 			}.bind(this));
 		},
 
@@ -797,6 +811,11 @@ window.bp = window.bp || {};
 			var newTopicId  = this.$migrateTopicContainerModalSelector.find( '#bb_existing_topic_id' ).val();
 			var $topicItem  = $( '.bb-activity-topics-list .bb-activity-topic-item[data-topic-id="' + oldTopicId + '"]' );
 			var migrateType = $( 'input[name="bb_migrate_existing_topic"]:checked' ).val();
+
+			// The topic is still loading, or it could not be loaded.
+			if ( ! parseInt( oldTopicId, 10 ) ) {
+				return;
+			}
 
 			// Prepare data for AJAX request.
 			var data = {
