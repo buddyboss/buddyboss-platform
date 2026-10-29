@@ -1303,7 +1303,9 @@ class BB_Admin_Settings_Ajax {
 								),
 							'url'         => 'https://www.buddyboss.com/pricing/',
 						);
-					} else {
+					} elseif ( empty( $field['pro_notice']['link_url'] ) ) {
+						// A field that registered its own upgrade link (e.g. Email Digest's
+						// Start checkout) keeps it when the catalog has no entry.
 						$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
 					}
 				}

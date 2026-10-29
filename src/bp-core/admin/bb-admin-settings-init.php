@@ -441,6 +441,48 @@ add_action( 'deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
 add_action( 'upgrader_process_complete', 'bb_flush_feature_caches_on_plugin_change' );
 add_action( 'deleted_plugin', 'bb_flush_feature_caches_on_plugin_change' );
 
+/**
+ * Purge the S3 JSON catalogs (field upgrades and placeholder features) after a
+ * BuddyBoss plugin or theme update, so the next admin request fetches them again.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_Upgrader $upgrader Upgrader instance.
+ * @param array       $options  Update details: `type`, and `plugins`/`plugin` or `themes`/`theme`.
+ * @return void
+ */
+function bb_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
+	$items = array();
+	foreach ( array( 'plugins', 'plugin', 'themes', 'theme' ) as $key ) {
+		if ( ! empty( $options[ $key ] ) ) {
+			$items = array_merge( $items, (array) $options[ $key ] );
+		}
+	}
+
+	// Only BuddyBoss products (slug starts with `buddyboss`).
+	$is_buddyboss = false;
+	foreach ( $items as $item ) {
+		if ( 0 === strpos( (string) $item, 'buddyboss' ) ) {
+			$is_buddyboss = true;
+			break;
+		}
+	}
+
+	if ( ! $is_buddyboss ) {
+		return;
+	}
+
+	if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
+		bb_flush_field_upgrades_cache_full();
+	}
+
+	if ( function_exists( 'bb_placeholder_features_transient_key' ) ) {
+		delete_transient( bb_placeholder_features_transient_key() );
+		delete_option( 'bb_placeholder_features_data_stale' );
+	}
+}
+add_action( 'upgrader_process_complete', 'bb_purge_json_catalogs_on_upgrade', 10, 2 );
+
 // Network-admin (multisite) plugin lifecycle hooks.
 add_action( 'network_admin_activated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
 add_action( 'network_admin_deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
