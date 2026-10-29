@@ -819,8 +819,19 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
-	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
+	$activity_id    = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
+	$topic_required = bb_is_activity_topic_required() && isset( $_POST['topic_id'] );
+
+	// An optional topic is checked as well, so a deleted or forbidden topic is refused instead of dropped.
+	$topic_chosen = false;
+	if ( ! $topic_required && ! empty( $_POST['topic_id'] ) ) {
+		$topic_object = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+		$topic_chosen = 'group' === $topic_object
+			? function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics()
+			: function_exists( 'bb_is_enabled_activity_topics' ) && bb_is_enabled_activity_topics();
+	}
+
+	if ( $topic_required || $topic_chosen ) {
 		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
 		if ( empty( $topic_id ) ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
