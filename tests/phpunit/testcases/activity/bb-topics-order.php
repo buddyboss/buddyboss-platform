@@ -145,6 +145,90 @@ class BB_Tests_Topics_Order extends BP_UnitTestCase {
 
 		$this->assertFalse( wp_cache_get( 'bb_activity_topics_rest_probe', 'bb_activity_topics' ) );
 	}
+
+	public function test_reorder_refreshes_the_site_list_without_flushing_the_cache() {
+		global $wp_object_cache;
+
+		$a = $this->add_topic( 'Alpha' );
+		$b = $this->add_topic( 'Beta' );
+
+		// A backend whose group flush clears nothing (like a Memcached drop-in without flush_group).
+		$original_cache  = $wp_object_cache;
+		$wp_object_cache = new BB_Tests_Topics_Order_No_Group_Flush_Cache();
+
+		$list = function () {
+			return array_map( 'intval', wp_list_pluck( bb_activity_topics_manager_instance()->bb_get_activity_topics( array( 'item_type' => 'activity' ) ), 'topic_id' ) );
+		};
+
+		try {
+			$primed    = $list();
+			$reordered = bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), 0, 'activity' );
+			$after     = $list();
+			$flushed   = $wp_object_cache->flushed;
+		} finally {
+			$wp_object_cache = $original_cache;
+		}
+
+		$this->assertSame( array( $a, $b ), $primed, 'list primed in the cache' );
+		$this->assertTrue( $reordered );
+		$this->assertSame( array( $b, $a ), $after, 'members see the new order without a group flush' );
+		$this->assertFalse( $flushed, 'a reorder never empties the whole object cache' );
+	}
+
+	public function test_group_and_rest_reorders_reset_the_topic_list_incrementor() {
+		$organizer = self::factory()->user->create();
+		$g         = self::factory()->group->create( array( 'creator_id' => $organizer ) );
+		$a         = $this->add_topic( 'Alpha', 'groups', $g );
+		$b         = $this->add_topic( 'Beta', 'groups', $g );
+
+		// Pro keys its group lists with this incrementor; the Platform suite runs without Pro.
+		$before = bp_core_get_incrementor( 'bb_activity_topic_lists' );
+		usleep( 2 );
+		$this->assertTrue( bb_topics_manager_instance()->bb_update_topics_order( array( $b, $a ), $g, 'groups' ) );
+		$after_group = bp_core_get_incrementor( 'bb_activity_topic_lists' );
+
+		usleep( 2 );
+		do_action( 'bp_rest_topics_update_order', new WP_REST_Response( array() ), new WP_REST_Request( 'PATCH', '/buddyboss/v1/bb-topics/order' ) );
+		$after_rest = bp_core_get_incrementor( 'bb_activity_topic_lists' );
+
+		$this->assertNotSame( $before, $after_group );
+		$this->assertNotSame( $after_group, $after_rest );
+	}
+}
+
+/**
+ * Object cache whose group flush clears nothing and which records a full flush.
+ */
+class BB_Tests_Topics_Order_No_Group_Flush_Cache extends WP_Object_Cache {
+
+	/**
+	 * Whether wp_cache_flush() ran.
+	 *
+	 * @var bool
+	 */
+	public $flushed = false;
+
+	/**
+	 * Clears nothing, like a backend without group flushing.
+	 *
+	 * @param string $group Cache group.
+	 *
+	 * @return bool
+	 */
+	public function flush_group( $group ) {
+		return true;
+	}
+
+	/**
+	 * Records the full flush.
+	 *
+	 * @return bool
+	 */
+	public function flush() {
+		$this->flushed = true;
+
+		return parent::flush();
+	}
 }
 
 /**

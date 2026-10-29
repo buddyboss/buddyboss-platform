@@ -785,6 +785,9 @@ class BB_Activity_Topics_Manager {
 			$cache_key .= '_' . apply_filters( 'wpml_current_language', '' );
 		}
 
+		// Versions the cached list, so a reorder can refresh it without flushing the cache group.
+		$cache_key .= '_' . bp_core_get_incrementor( 'bb_activity_topic_lists' );
+
 		$topic_cache = wp_cache_get( $cache_key, $this->activity_topics_cache_key );
 		if ( false !== $topic_cache ) {
 			return $topic_cache;
