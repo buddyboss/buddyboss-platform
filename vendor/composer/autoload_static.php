@@ -13,15 +13,15 @@ class ComposerStaticInit5705c898cd9f700371dc32bbbad1f515
     );
 
     public static $prefixLengthsPsr4 = array (
-        'M' => 
+        'M' =>
         array (
             'MyCLabs\\Enum\\' => 13,
         ),
-        'C' => 
+        'C' =>
         array (
             'Composer\\Installers\\' => 20,
         ),
-        'B' => 
+        'B' =>
         array (
             'BuddyBossPlatform\\ZipStream\\' => 28,
             'BuddyBossPlatform\\Symfony\\Polyfill\\Php80\\' => 41,
@@ -46,87 +46,87 @@ class ComposerStaticInit5705c898cd9f700371dc32bbbad1f515
     );
 
     public static $prefixDirsPsr4 = array (
-        'MyCLabs\\Enum\\' => 
+        'MyCLabs\\Enum\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
         ),
-        'Composer\\Installers\\' => 
+        'Composer\\Installers\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
-        'BuddyBossPlatform\\ZipStream\\' => 
+        'BuddyBossPlatform\\ZipStream\\' =>
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
-        'BuddyBossPlatform\\Symfony\\Polyfill\\Php80\\' => 
+        'BuddyBossPlatform\\Symfony\\Polyfill\\Php80\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'BuddyBossPlatform\\Symfony\\Polyfill\\Mbstring\\' => 
+        'BuddyBossPlatform\\Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'BuddyBossPlatform\\Symfony\\Polyfill\\Ctype\\' => 
+        'BuddyBossPlatform\\Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'BuddyBossPlatform\\Symfony\\Component\\Process\\' => 
+        'BuddyBossPlatform\\Symfony\\Component\\Process\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
         ),
-        'BuddyBossPlatform\\Symfony\\Component\\Filesystem\\' => 
+        'BuddyBossPlatform\\Symfony\\Component\\Filesystem\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
         ),
-        'BuddyBossPlatform\\Psr\\Log\\' => 
+        'BuddyBossPlatform\\Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'BuddyBossPlatform\\Psr\\Http\\Message\\' => 
+        'BuddyBossPlatform\\Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'BuddyBossPlatform\\Psr\\Container\\' => 
+        'BuddyBossPlatform\\Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'BuddyBossPlatform\\Neutron\\' => 
+        'BuddyBossPlatform\\Neutron\\' =>
         array (
             0 => __DIR__ . '/..' . '/neutron/temporary-filesystem/src/Neutron',
         ),
-        'BuddyBossPlatform\\GroundLevel\\Support\\' => 
+        'BuddyBossPlatform\\GroundLevel\\Support\\' =>
         array (
             0 => __DIR__ . '/..' . '/caseproof/ground-level-support',
         ),
-        'BuddyBossPlatform\\GroundLevel\\Mothership\\' => 
+        'BuddyBossPlatform\\GroundLevel\\Mothership\\' =>
         array (
             0 => __DIR__ . '/..' . '/caseproof/ground-level-mothership',
         ),
-        'BuddyBossPlatform\\GroundLevel\\Insights\\' => 
+        'BuddyBossPlatform\\GroundLevel\\Insights\\' =>
         array (
             0 => __DIR__ . '/..' . '/caseproof/ground-level-insights',
         ),
-        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\' => 
+        'BuddyBossPlatform\\GroundLevel\\InProductNotifications\\' =>
         array (
             0 => __DIR__ . '/..' . '/caseproof/ground-level-in-product-notifications',
         ),
-        'BuddyBossPlatform\\GroundLevel\\Container\\' => 
+        'BuddyBossPlatform\\GroundLevel\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/caseproof/ground-level-container',
         ),
-        'BuddyBossPlatform\\FFMpeg\\' => 
+        'BuddyBossPlatform\\FFMpeg\\' =>
         array (
             0 => __DIR__ . '/..' . '/php-ffmpeg/php-ffmpeg/src/FFMpeg',
         ),
-        'BuddyBossPlatform\\Evenement\\' => 
+        'BuddyBossPlatform\\Evenement\\' =>
         array (
             0 => __DIR__ . '/..' . '/evenement/evenement/src',
         ),
-        'BuddyBossPlatform\\Doctrine\\Common\\Cache\\' => 
+        'BuddyBossPlatform\\Doctrine\\Common\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
         ),
-        'BuddyBossPlatform\\Alchemy\\' => 
+        'BuddyBossPlatform\\Alchemy\\' =>
         array (
             0 => __DIR__ . '/..' . '/alchemy/binary-driver/src/Alchemy',
         ),
