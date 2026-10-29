@@ -18,6 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_media_clear_cache_for_media( $media ) {
 	wp_cache_delete( $media->id, 'bp_media' );
+	// Photos and videos share one table, so the same row is also cached as a video.
+	wp_cache_delete( $media->id, 'bp_video' );
 	wp_cache_delete( 'bp_attachment_media_id_' . $media->attachment_id, 'bp_media' );
 	wp_cache_delete( 'bb_media_activity_' . $media->id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 
@@ -51,6 +53,7 @@ add_action( 'bp_media_after_save', 'bp_media_clear_cache_for_media' );
 function bp_media_clear_cache_for_deleted_media( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_media' );
+		wp_cache_delete( $deleted_id, 'bp_video' );
 		wp_cache_delete( 'bb_media_activity_' . $deleted_id, 'bp_media' ); // Used in bb_moderation_get_media_record_by_id().
 	}
 }
@@ -210,6 +213,39 @@ function bp_media_clear_media_group_object_cache_on_delete( $medias ) {
 	}
 }
 add_action( 'bp_media_before_delete', 'bp_media_clear_media_group_object_cache_on_delete', 10 );
+
+/**
+ * Clear the video caches for video rows deleted through the media path.
+ *
+ * Deleting an album or a selection of items calls bp_media_delete(), which
+ * also removes video rows from the shared table. Only bp_media_before_delete
+ * fires for them, so the video user and group counts are cleared here.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $medias DB results of media items.
+ */
+function bb_media_clear_video_object_cache_on_delete( $medias ) {
+	$videos = array();
+	foreach ( (array) $medias as $deleted_media ) {
+		if ( ! empty( $deleted_media->type ) && 'video' === $deleted_media->type ) {
+			$videos[] = $deleted_media;
+		}
+	}
+
+	if ( empty( $videos ) ) {
+		return;
+	}
+
+	if ( function_exists( 'bp_video_clear_video_user_object_cache_on_delete' ) ) {
+		bp_video_clear_video_user_object_cache_on_delete( $videos );
+	}
+
+	if ( function_exists( 'bp_video_clear_video_group_object_cache_on_delete' ) ) {
+		bp_video_clear_video_group_object_cache_on_delete( $videos );
+	}
+}
+add_action( 'bp_media_before_delete', 'bb_media_clear_video_object_cache_on_delete', 10 );
 
 /**
  * Clear a cached album item when that item is updated.

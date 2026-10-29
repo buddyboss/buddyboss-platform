@@ -18,6 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_video_clear_cache_for_video( $video ) {
 	wp_cache_delete( $video->id, 'bp_video' );
+	// Videos and photos share one table, so the same row is also cached as media.
+	wp_cache_delete( $video->id, 'bp_media' );
 	wp_cache_delete( 'bb_video_activity_' . $video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 
 	if ( ! empty( $video->album_id ) ) {
@@ -36,6 +38,7 @@ add_action( 'bp_video_after_save', 'bp_video_clear_cache_for_video' );
 function bp_video_clear_cache_for_deleted_video( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_video' );
+		wp_cache_delete( $deleted_id, 'bp_media' );
 		wp_cache_delete( 'bb_video_activity_' . $deleted_id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
 	}
 }
