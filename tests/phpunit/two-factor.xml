@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+	Two-Factor integration suite. Loads the Two Factor plugin through its own
+	bootstrap; the classes skip themselves when the plugin is absent.
+
+	Run from the plugin root:
+	phpunit -c tests/phpunit/two-factor.xml
+-->
+<phpunit
+	bootstrap="bootstrap-two-factor.php"
+	backupGlobals="false"
+	cacheResult="false"
+	colors="false"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<testsuites>
+		<testsuite name="two-factor">
+			<directory suffix=".php">testcases/integrations/two-factor/</directory>
+		</testsuite>
+	</testsuites>
+	<groups>
+		<include>
+			<group>two-factor</group>
+		</include>
+	</groups>
+</phpunit>

@@ -830,13 +830,34 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 
 		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 
-		if ( ! empty( $list_fields ) ) {
-			$last_name_field_id = bp_xprofile_lastname_field_id();
+		// Only a hidden NAME field can change the visible name.
+		// bp_xprofile_get_hidden_fields_for_user() reports every restricted field on the profile,
+		// so testing it for emptiness rebuilt the name for members whose name parts are entirely
+		// public - and a field's own default_visibility applies to every member with no per-user
+		// row, so one restricted field definition turned the rebuild on site-wide. Scope it to the
+		// two name fields, exactly as the guest path in bp_core_get_user_displayname() does, so the
+		// two resolve the same member to the same name.
+		$name_field_ids = array_filter(
+			array(
+				(int) bp_xprofile_firstname_field_id(),
+				(int) bp_xprofile_lastname_field_id(),
+			)
+		);
 
-			if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
-				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-				$full_name = str_replace( ' ' . $last_name, '', $full_name );
-			}
+		$hidden_name_fields = array_intersect( array_map( 'intval', (array) $list_fields ), $name_field_ids );
+
+		if ( ! empty( $hidden_name_fields ) ) {
+			// A name part is withheld from this viewer, so the name assembled above cannot stand:
+			// bp_xprofile_get_member_display_name() builds every part the site-wide FORMAT asks
+			// for, not every part this viewer may see. Rebuild from the permitted fields only.
+			//
+			// The same helper answers the guest path in bp_core_get_user_displayname(), so the two
+			// cannot drift apart. It replaces subtracting the hidden part out of the assembled
+			// string, which could not be made correct on this product's data: a surname is a
+			// substring of unrelated names ("Ng" inside "Armstrong") as often as it is the name
+			// being hidden, and the rules that told those apart were each load-bearing for one
+			// shape and wrong for another.
+			$full_name = bb_core_build_visible_display_name( $user_id, $list_fields );
 		}
 		$bb_default_display_avatar = false;
 		$cache[ $cache_key ]       = $full_name;

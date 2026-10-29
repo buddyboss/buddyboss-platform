@@ -15,7 +15,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
      isset( $explode_arr1 ) && ! empty( $explode_arr1 ) && isset( $explode_arr1[1] ) && (int) $explode_arr1[1] > 0 ) {
 	$attachment_id    = (int) $explode_arr[1];
 	$id1              = (int) $explode_arr1[1];
-	$document_privacy = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'document' ) : true;
+	$document_privacy = ( function_exists( 'bb_media_user_can_access' ) ) ? bb_media_user_can_access( $id1, 'document', $attachment_id ) : true;
 	$can_view         = true === (bool) $document_privacy['can_view'];
 	if ( $can_view ) {
 		$output_file_src = bb_core_scaled_attachment_path( $attachment_id );

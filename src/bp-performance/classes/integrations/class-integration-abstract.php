@@ -8,6 +8,7 @@
 namespace BuddyBoss\Performance\Integration;
 
 use BuddyBoss\Performance\Cache;
+use BuddyBoss\Performance\Helper;
 use BuddyBoss\Performance\Performance;
 use BuddyBoss\Performance\Route_Helper;
 use WP_REST_Request;
@@ -436,12 +437,44 @@ abstract class Integration_Abstract {
 				exit;
 			}
 
-			$header                    = apply_filters( 'rest_post_dispatch_header_cache', $this->api_cache_data['header'], $this->get_cached_endpoints() );
-			$header['X-App-Api-Cache'] = 'hit';
+			$cached_header = isset( $this->api_cache_data['header'] ) ? (array) $this->api_cache_data['header'] : array();
+
+			/*
+			 * Rows written by an older version can hold headers which must never be replayed, a
+			 * truncated `Set-Cookie` above all. Dropping the deny-listed headers here - before the
+			 * filter below, so integrations can still add their own runtime headers - stops those
+			 * rows from replaying them without a cache purge. Other values an older version
+			 * truncated at their second colon (the core `Link` header, for instance) are replayed
+			 * as stored until the row expires or the cache is purged.
+			 */
+			$uncacheable_headers = Helper::instance()->get_uncacheable_headers();
+			$header              = array();
+
+			foreach ( $cached_header as $header_key => $header_value ) {
+				if ( ! Helper::instance()->is_header_cacheable( $header_key, $uncacheable_headers ) ) {
+					continue;
+				}
+
+				$header[ $header_key ] = $header_value;
+			}
+
+			$header = apply_filters( 'rest_post_dispatch_header_cache', $header, $this->get_cached_endpoints() );
+			$header = Helper::instance()->add_header( $header, 'X-App-Api-Cache', 'hit' );
 
 			if ( ! empty( $header ) ) {
 				foreach ( $header as $header_key => $header_value ) {
-					header( $header_key . ':' . $header_value );
+					$header_key = trim( (string) $header_key );
+
+					if ( '' === $header_key ) {
+						continue;
+					}
+
+					$replace = true;
+
+					foreach ( ( is_array( $header_value ) ? $header_value : array( $header_value ) ) as $header_line ) {
+						header( $header_key . ': ' . trim( (string) $header_line ), $replace );
+						$replace = false;
+					}
 				}
 			}
 
@@ -611,26 +644,28 @@ abstract class Integration_Abstract {
 	 * @return array
 	 */
 	private function prepare_header( $results ) {
-		$headers          = array();
-		$disallow_headers = array(
-			'X-App-Logged-In',
-			'X-App-Unread-Notifications',
-			'bbp-unread-messages',
-			'Expires',
-			'Cache-Control',
-		);
+		$headers = array();
 
-		// To add filter for this you need to execute code form mu level.
-		$disallow_headers = apply_filters( 'rest_post_disprepare_header_cache', $disallow_headers );
-		$header_list      = headers_list();
+		// The deny list is resolved once, it runs a filter and is used for every header below.
+		$uncacheable_headers = Helper::instance()->get_uncacheable_headers();
+		$header_list         = headers_list();
 
 		if ( ! empty( $header_list ) ) {
-			foreach ( $header_list as $header ) {
-				$header = explode( ':', $header );
+			foreach ( $header_list as $header_line ) {
+				$parsed_header = Helper::instance()->parse_header_line( $header_line );
 
-				if ( ! in_array( $header[0], $disallow_headers, true ) && is_array( $header ) ) {
-					$headers[ $header[0] ] = $header[1];
+				if ( false === $parsed_header ) {
+					continue;
 				}
+
+				list( $header_key, $header_value ) = $parsed_header;
+
+				if ( ! Helper::instance()->is_header_cacheable( $header_key, $uncacheable_headers ) ) {
+					continue;
+				}
+
+				// Repeated field lines, `Link` for instance, are combined instead of overwritten.
+				$headers = Helper::instance()->add_header( $headers, $header_key, $header_value, false );
 			}
 		}
 
@@ -638,15 +673,17 @@ abstract class Integration_Abstract {
 
 		if ( ! empty( $results_header ) ) {
 			foreach ( $results_header as $header_key => $header_val ) {
-				if ( ! in_array( $header_key, $disallow_headers, true ) ) {
-					$headers[ $header_key ] = $header_val;
+				if ( ! Helper::instance()->is_header_cacheable( $header_key, $uncacheable_headers ) ) {
+					continue;
 				}
+
+				// Response headers are authoritative, they replace what PHP already queued.
+				$headers = Helper::instance()->add_header( $headers, $header_key, $header_val );
 			}
 		}
 
 		return $headers;
 	}
-
 
 	/**
 	 * Do all register and initiate from this function when writing extend class.

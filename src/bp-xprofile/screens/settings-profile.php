@@ -86,8 +86,18 @@ function bp_xprofile_action_settings() {
 			}
 		}
 
+		// The visibility gate below reads allow_custom_visibility field meta per field.
+		// Prime the whole posted set in one query rather than one lookup per field.
+		bp_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
+
 		// Save the visibility settings.
 		foreach ( $posted_field_ids as $field_id ) {
+
+			// Locked fields (enforced visibility or display-name format) never render a control;
+			// writing the 'public' fallback for them would replace the admin default once the lock is lifted.
+			if ( ! bb_xprofile_can_change_field_visibility( $field_id ) ) {
+				continue;
+			}
 
 			$visibility_level = 'public';
 
