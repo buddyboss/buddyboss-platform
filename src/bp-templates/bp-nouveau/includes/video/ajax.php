@@ -642,7 +642,7 @@ function bp_nouveau_ajax_video_delete() {
 	}
 
 	$response          = array();
-	$can_view_activity = $activity_id && bb_activity_user_can_view( (int) $activity_id );
+	$can_view_activity = $activity_id && bp_is_active( 'activity' ) && bb_activity_user_can_view( (int) $activity_id );
 	if ( $can_view_activity ) {
 		$response = bp_video_get_activity_video( $activity_id );
 
