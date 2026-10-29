@@ -942,6 +942,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0 ) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
@@ -1002,7 +1004,7 @@ window.bp = window.bp || {};
 						}
 
 						if ( response.data && response.data.id ) {
-							file.id                  = response.id;
+							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_video.length;
 							response.data.album_id   = self.video_album_id;
@@ -1215,6 +1217,8 @@ window.bp = window.bp || {};
 										file.xhr && file.xhr.status === 0
 							) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
@@ -1237,7 +1241,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id                  = response.id;
+							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_video.length;
 							response.data.album_id   = self.video_album_id;
@@ -1533,6 +1537,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if ( file.status === 'error' && ( file.xhr && file.xhr.status === 0) ) { // update server error text to user friendly.
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
@@ -1561,7 +1567,7 @@ window.bp = window.bp || {};
 					'success',
 					function ( file, response ) {
 						if ( response.data.id ) {
-							file.id                  = response.id;
+							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.menu_order = self.dropzone_video.length;
 							response.data.album_id   = self.video_album_id;
