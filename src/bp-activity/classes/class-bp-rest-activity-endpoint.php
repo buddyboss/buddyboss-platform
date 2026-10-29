@@ -3576,6 +3576,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * Get default scope for the activity
 	 * - from: bp_activity_default_scope();
 	 *
+	 * Only the 'all' or an empty scope is expanded to the 'default' set of scopes.
+	 * Any explicit scope (including 'just-me') is respected as-is.
+	 *
 	 * @param string $scope      Default scope.
 	 * @param int    $user_id    User ID.
 	 * @param int    $group_id   Group ID.
@@ -3591,11 +3594,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			bp_loggedin_user_id()
 			&& (
 				'all' === $scope ||
-				empty( $scope ) ||
-				(
-					'just-me' === $scope &&
-					empty( $user_id )
-				)
+				empty( $scope )
 			)
 		) {
 			if ( bp_is_active( 'groups' ) && ( ! empty( $group_id ) || ( ! empty( $component ) && 'groups' === $component && ! empty( $primary_id ) ) ) ) {

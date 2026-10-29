@@ -1989,11 +1989,13 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'rendered' => bbp_get_topic_content( $topic->ID ),
 		);
 
-		// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+		// GIF, media, video and document embeds may be absent (Add-ons module or component inactive); only re-add loaded callbacks.
 		if ( function_exists( 'bp_media_forums_embed_gif' ) ) {
 			add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		}
-		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		if ( function_exists( 'bp_media_forums_embed_attachments' ) ) {
+			add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		}
 		if ( function_exists( 'bp_video_forums_embed_attachments' ) ) {
 			add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
 		}
