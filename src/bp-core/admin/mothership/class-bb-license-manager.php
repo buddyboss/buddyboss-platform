@@ -1052,7 +1052,7 @@ class BB_License_Manager {
 			}
 
 			// Whitelist: Must be a known BuddyBoss product ID pattern.
-			$allowed_prefixes = array( 'bb-platform', 'bb-web', 'buddyboss' );
+			$allowed_prefixes = array( 'bb-platform', 'bb-web', 'buddyboss', 'bb-' );
 			$is_valid_prefix  = false;
 			foreach ( $allowed_prefixes as $prefix ) {
 				if ( strpos( $plugin_id, $prefix ) === 0 ) {
