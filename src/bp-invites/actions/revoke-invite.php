@@ -10,11 +10,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
- /**
-  * Member revoke email invite.
-  *
-  * @since BuddyBoss 1.0.0
-  */
+/**
+ * Member revoke email invite.
+ *
+ * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 3.6.2 Only the inviter or a moderator may revoke an invite, with a valid nonce.
+ */
 function bp_member_revoke_invite() {
 
 	global $bp;
@@ -49,7 +50,13 @@ function bp_member_revoke_invite() {
 	}
 
 	$post_id = filter_input( INPUT_POST, 'item_id', FILTER_VALIDATE_INT );
-	if ( isset( $post_id ) && '' !== $post_id ) {
+	$nonce   = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	if (
+		! empty( $post_id ) &&
+		! empty( $nonce ) &&
+		wp_verify_nonce( $nonce, 'bb_invites_revoke' ) &&
+		bb_invites_user_can_revoke( $post_id )
+	) {
 		wp_delete_post( $post_id, true );
 	}
 

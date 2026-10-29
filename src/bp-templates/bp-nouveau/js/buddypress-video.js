@@ -1704,7 +1704,6 @@ window.bp = window.bp || {};
 			var buddyPressSelector = $( '#buddypress' );
 			var type               = target.attr( 'data-type' );
 			var fromWhere          = target.data( 'item-from' );
-			var rootParentActivity = target.data( 'root-parent-activity-id' );
 			var id                 = '';
 			var activityId         = '';
 
@@ -1778,29 +1777,22 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
-
-									if ( rootParentActivity && $( '.activity-list' ).length ) {
-										var liCount = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-comments > ul > li' ).length;
-										if ( 0 === liCount ) {
-											$( '.activity-list li#activity-' + rootParentActivity + ' .activity-comments ul' ).remove();
-											var act_comments_text = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
-											if ( act_comments_text.length ) {
-												var commentLabelSingle = BP_Nouveau.activity.strings.commentLabel;
-												act_comments_text.text( commentLabelSingle.replace( '%d', 0 ) );
-											}
-											$( '.activity-list li#activity-' + rootParentActivity + ' .activity-content .activity-state' ).removeClass( 'has-comments' );
-										} else {
-											var totalLi         = parseInt( liCount );
-											var actCommentsText = $( '.activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
-											if ( actCommentsText.length ) {
-												var multipleCommentLabel = totalLi > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-												actCommentsText.text( multipleCommentLabel.replace( '%d', totalLi ) );
-											}
-										}
+									// A comment deleted with its last video: update every rendered
+									// copy's comment count (feed, "view more comments" modal,
+									// theatre) the same way the photo and document deletes do.
+									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.removeDeletedActivityComment ) {
+										bp.Nouveau.Media.removeDeletedActivityComment( activityId );
+									} else {
+										$( 'body .activity-comments li#acomment-' + activityId ).remove();
 									}
 
 								} else {
+									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.removeDeletedItemsFromCommentEditData ) {
+										bp.Nouveau.Media.removeDeletedItemsFromCommentEditData( activityId, 'video', video );
+									}
+									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.refreshKeptCommentAttachments ) {
+										bp.Nouveau.Media.refreshKeptCommentAttachments( activityId, '.bb-activity-video-wrap', '', response.data.video_content );
+									}
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
