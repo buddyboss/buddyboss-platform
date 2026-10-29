@@ -167,6 +167,12 @@ class BB_Topics_Manager {
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 				/* translators: %s: Topic name */
 				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
+				// @todo: Remove the duplicate `can_reorder_topics` key when PROD-10664 merges into release.
+				// PROD-10664 adds the same key with a site-moderator-only value. Git merges both lines without
+				// a conflict and PHP keeps the later one, so whichever line ends up last decides whether group
+				// organizers get the drag handle. Keep this per-list value (organizers may reorder their group's
+				// topics), delete PROD-10664's line, update its "Only site moderators can save the order"
+				// comment in both bb-topics-manager.js copies, and rebuild the .min.js and Settings 2.0 builds.
 				'can_reorder_topics'           => $this->bb_can_update_topics_order( bp_is_active( 'groups' ) && bp_is_group() ? bp_get_current_group_id() : 0, bp_is_active( 'groups' ) && bp_is_group() ? 'groups' : 'activity' ),
 				'topics_limit'                 => $this->bb_topics_limit(),
 			)
