@@ -250,9 +250,9 @@
 					};
 				},
 				onerror: function() {
-					if ( twemoji.parentNode ) {
+					if ( this.parentNode ) {
 						this.setAttribute( 'data-error', 'load-failed' );
-						twemoji.parentNode.replaceChild( document.createTextNode( twemoji.alt ), twemoji );
+						this.parentNode.replaceChild( document.createTextNode( this.alt ), this );
 					}
 				},
 				doNotParse: function( node ) {
