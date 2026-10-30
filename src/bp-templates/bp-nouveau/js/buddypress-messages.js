@@ -618,6 +618,7 @@ window.bp = window.bp || {};
 					data: {
 						action: $this.hasClass( 'view_other_members' ) ? 'messages_left_join_members_list' : 'messages_moderated_recipient_list',
 						post_data: postData,
+						nonce: BP_Nouveau.nonces.messages,
 					},
 					beforeSend: function () {
 						$( '#message-members-list #members_list' ).empty().removeClass( 'is_not_empty' );
@@ -673,6 +674,7 @@ window.bp = window.bp || {};
 				data: {
 					action: 'messages_recipient_list_for_blocks',
 					post_data: postData,
+					nonce: BP_Nouveau.nonces.messages,
 				},
 				beforeSend: function () {
 					$( '#load_more_rl' ).addClass( 'loading' );
@@ -918,6 +920,7 @@ window.bp = window.bp || {};
 					data: {
 						action: 'messages_moderated_recipient_list',
 						post_data: postData,
+						nonce: BP_Nouveau.nonces.messages,
 					},
 					beforeSend: function () {
 						if ( $( '.mass-block-member' ).length > 0 || $( '.mass-report-member' ).length > 0 ) {
@@ -1399,6 +1402,22 @@ window.bp = window.bp || {};
 				);
 
 				self.createCookie( 'bb-thread-unarchive', '', -1 );
+			}
+
+			var group_messages_disabled = self.readCookie( 'bb-group-messages-disabled' );
+			if ( group_messages_disabled ) {
+				jQuery( document ).trigger(
+					'bb_trigger_toast_message',
+					[
+						'',
+						group_messages_disabled,
+						'warning',
+						null,
+						true
+					]
+				);
+
+				self.createCookie( 'bb-group-messages-disabled', '', -1 );
 			}
 
 			// Show detail page in mobile after un-archived thread.
@@ -3180,7 +3199,8 @@ window.bp = window.bp || {};
 
 			initialize: function( options ) {
 				this.options = options || {};
-				this.giphy   = new window.Giphy( BP_Nouveau.media.gif_api_key );
+				// The GIPHY library ships with BuddyBoss Add-ons; without it the picker cannot search.
+				this.giphy   = 'undefined' !== typeof window.Giphy ? new window.Giphy( BP_Nouveau.media.gif_api_key ) : null;
 
 				this.gifDataItems = new bp.Collections.GifDatas();
 				this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -3219,6 +3239,10 @@ window.bp = window.bp || {};
 			},
 
 			searchGif: function( q ) {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.q 		= q;
 				self.offset = 0;
@@ -3288,6 +3312,10 @@ window.bp = window.bp || {};
 			},
 
 			loadTrending: function() {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.offset = 0;
 				self.q 		= null;
@@ -5487,6 +5515,22 @@ window.bp = window.bp || {};
 
 			messagesFetchError: function( collection, response ) {
 				var loadMore = null;
+
+				// Group messages are disabled: refresh the page and show the reason as a toast, like a deleted conversation (PROD-3077).
+				if ( response && response.group_messages_disabled ) {
+					bp.Nouveau.Messages.createCookie( 'bb-group-messages-disabled', response.feedback, 5 );
+
+					// Back to the list the conversation was opened from.
+					var group_messages_disabled_url = 'archived' === bp.Nouveau.Messages.threadType ? BP_Nouveau.messages.message_archived_url : BP_Nouveau.messages.message_url;
+
+					if ( 'undefined' !== typeof group_messages_disabled_url && '' !== group_messages_disabled_url ) {
+						window.location.href = group_messages_disabled_url;
+					} else {
+						window.location.reload();
+					}
+					return;
+				}
+
 				if ( ! response.messages ) {
 					collection.hasMore = false;
 				}

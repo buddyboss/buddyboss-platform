@@ -979,7 +979,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$medias = BP_Media::get(
 			array(
 				'in'       => $media_ids,
-				'video'    => true,
+				'video'    => bp_is_active( 'video' ),
 				'per_page' => 0,
 			)
 		);
@@ -1016,7 +1016,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				} else {
 					$status[ $media->id ] = bp_media_delete( array( 'id' => $media->id ) );
 				}
-			} else {
+			} elseif ( bp_is_active( 'video' ) ) {
 				if ( ! bp_video_user_can_delete( $media->id ) ) {
 					$status[ $media->id ] = new WP_Error(
 						'bp_rest_authorization_required',
@@ -1028,6 +1028,15 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				} else {
 					$status[ $media->id ] = bp_video_delete( array( 'id' => $media->id ) );
 				}
+			} else {
+				// Video component is inactive, but video rows can remain in the shared bp_media table.
+				$status[ $media->id ] = new WP_Error(
+					'bp_rest_video_component_inactive',
+					__( 'Sorry, video support is not available on this site.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
 			}
 		}
 
@@ -1494,7 +1503,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( 'video' === $media->type ) {
+		if ( 'video' === $media->type && bp_is_active( 'video' ) ) {
 			add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
 			$data['url'] = bb_video_get_symlink( $media->id );
 			remove_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
@@ -2080,8 +2089,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Register custom field for the activity api.
+	 *
+	 * @since BuddyBoss 3.7.0 Registers the GIF REST fields only for a Platform build that still ships the GIF core.
 	 */
 	public function bp_rest_media_support() {
+
+		// GIF fields: owned by the BuddyBoss Add-ons giphy module, registered here only for an older Platform.
+		$register_gif_fields = $this->bp_rest_media_should_register_gif_fields();
 
 		// Activity Media.
 		bp_rest_register_field(
@@ -2098,20 +2112,22 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		// Activity Gif.
-		bp_rest_register_field(
-			'activity',      // Id of the BuddyPress component the REST field is about.
-			'media_gif', // Used into the REST response/request.
-			array(
-				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),
-				'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
-				'schema'          => array(
-					'description' => 'Activity Gifs.',
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-			)
-		);
+		if ( $register_gif_fields ) {
+			// Activity Gif.
+			bp_rest_register_field(
+				'activity',      // Id of the BuddyPress component the REST field is about.
+				'media_gif', // Used into the REST response/request.
+				array(
+					'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),
+					'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
+					'schema'          => array(
+						'description' => 'Activity Gifs.',
+						'type'        => 'object',
+						'context'     => array( 'embed', 'view', 'edit' ),
+					),
+				)
+			);
+		}
 
 		// Activity Comment Media.
 		register_rest_field(
@@ -2128,20 +2144,22 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		// Activity Comment Gif.
-		register_rest_field(
-			'activity_comments',      // Id of the BuddyPress component the REST field is about.
-			'media_gif', // Used into the REST response/request.
-			array(
-				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),
-				'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
-				'schema'          => array(
-					'description' => 'Topic Gifs.',
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-			)
-		);
+		if ( $register_gif_fields ) {
+			// Activity Comment Gif.
+			register_rest_field(
+				'activity_comments',      // Id of the BuddyPress component the REST field is about.
+				'media_gif', // Used into the REST response/request.
+				array(
+					'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),
+					'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
+					'schema'          => array(
+						'description' => 'Topic Gifs.',
+						'type'        => 'object',
+						'context'     => array( 'embed', 'view', 'edit' ),
+					),
+				)
+			);
+		}
 
 		// Added param to main activity to check the comment has access to upload media or not.
 		bp_rest_register_field(
@@ -2203,35 +2221,37 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		// Topic Media Gif Support.
-		register_rest_field(
-			'topics',
-			'bbp_media_gif',
-			array(
-				'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
-				'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
-				'schema'          => array(
-					'description' => 'Topic Gifs.',
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-			)
-		);
+		if ( $register_gif_fields ) {
+			// Topic Media Gif Support.
+			register_rest_field(
+				'topics',
+				'bbp_media_gif',
+				array(
+					'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
+					'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
+					'schema'          => array(
+						'description' => 'Topic Gifs.',
+						'type'        => 'object',
+						'context'     => array( 'embed', 'view', 'edit' ),
+					),
+				)
+			);
 
-		// Reply Media Gif Support.
-		register_rest_field(
-			'reply',
-			'bbp_media_gif',
-			array(
-				'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
-				'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
-				'schema'          => array(
-					'description' => 'Topic Gifs.',
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-			)
-		);
+			// Reply Media Gif Support.
+			register_rest_field(
+				'reply',
+				'bbp_media_gif',
+				array(
+					'get_callback'    => array( $this, 'bbp_media_gif_get_rest_field_callback' ),
+					'update_callback' => array( $this, 'bbp_media_gif_update_rest_field_callback' ),
+					'schema'          => array(
+						'description' => 'Topic Gifs.',
+						'type'        => 'object',
+						'context'     => array( 'embed', 'view', 'edit' ),
+					),
+				)
+			);
+		}
 
 		// Messages Media Photo Support.
 		bp_rest_register_field(
@@ -2250,21 +2270,23 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		// Messages Media Gif Support.
-		bp_rest_register_field(
-			'messages',      // Id of the BuddyPress component the REST field is about.
-			'media_gif', // Used into the REST response/request.
-			array(
-				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback_messages' ),
-				'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback_messages' ),
-				// The function to use to update the value of the REST Field.
-				'schema'          => array(                                // The example_field REST schema.
-					'description' => 'Message Gifs.',
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-			)
-		);
+		if ( $register_gif_fields ) {
+			// Messages Media Gif Support.
+			bp_rest_register_field(
+				'messages',      // Id of the BuddyPress component the REST field is about.
+				'media_gif', // Used into the REST response/request.
+				array(
+					'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback_messages' ),
+					'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback_messages' ),
+					// The function to use to update the value of the REST Field.
+					'schema'          => array(                                // The example_field REST schema.
+						'description' => 'Message Gifs.',
+						'type'        => 'object',
+						'context'     => array( 'embed', 'view', 'edit' ),
+					),
+				)
+			);
+		}
 
 		// Added param to main activity to check the comment has access to upload gif or not.
 		bp_rest_register_field(
@@ -2455,7 +2477,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		// Set variable if current action is edit activity comment.
-		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only flag; the REST request is authenticated.
 
 		if ( $is_edit_activity_comment ) {
 			$bb_activity_comment_edit_id = $value->id;
@@ -2581,6 +2603,34 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Whether this endpoint has to register the GIF REST fields itself.
+	 *
+	 * Animated GIFs moved from the BuddyBoss Platform into the BuddyBoss Add-ons
+	 * giphy module, which registers the `media_gif` / `bbp_media_gif` REST fields
+	 * itself (`bb_addons_giphy_rest_field_support()`, on `bp_rest_api_init`). A
+	 * Platform build that still ships the GIF core keeps that module dormant, so
+	 * without this fallback nobody would register the fields there.
+	 *
+	 * - Older Platform (GIF core present): `bp_media_activity_embed_gif()` is defined
+	 *   by the Platform and the Add-ons module never loads its REST file, so the
+	 *   fields are registered here.
+	 * - Newer Platform with the Add-ons giphy module active: the module defines both
+	 *   functions and registers the fields itself, so they are not registered here.
+	 * - Newer Platform without the Add-ons giphy module: neither function exists and
+	 *   the GIF feature is unavailable, so nothing is registered.
+	 *
+	 * The giphy module boots on `bp_include`, long before any REST request, so the
+	 * check is final by the time the endpoint registers its fields.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @return bool True when the GIF REST fields must be registered by this endpoint.
+	 */
+	protected function bp_rest_media_should_register_gif_fields() {
+		return function_exists( 'bp_media_activity_embed_gif' ) && ! function_exists( 'bb_addons_giphy_rest_field_support' );
+	}
+
+	/**
 	 * The function to use to get gif data of the activity REST Field.
 	 *
 	 * @param BP_Activity_Activity $activity  Activity Array.
@@ -2647,6 +2697,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the Gif data's value of the activity REST Field.
 	 *
+	 * @since BuddyBoss 3.7.0 Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 *
 	 * @param object $object     The BuddyPress component's object that was just created/updated during the request.
 	 *                           (in this case the BP_Activity_Activity object).
 	 * @param object $value      The value of the REST Field to save.
@@ -2682,7 +2734,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		// Set variable if current action is edit activity comment.
-		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] );
+		$is_edit_activity_comment = $bb_activity_comment_edit && 'activity_comment' === $value->type && isset( $_POST['edit_comment'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only flag; the REST request is authenticated.
 
 		if ( $is_edit_activity_comment ) {
 			$bb_activity_comment_edit_id = $value->id;
@@ -2699,8 +2751,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$still = $object['url'];
-		$mp4   = $object['mp4'];
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = ( isset( $object['url'] ) && is_string( $object['url'] ) && preg_match( '#^https?://#i', $object['url'] ) ) ? esc_url_raw( $object['url'], array( 'http', 'https' ) ) : '';
+		$mp4   = ( isset( $object['mp4'] ) && is_string( $object['mp4'] ) && preg_match( '#^https?://#i', $object['mp4'] ) ) ? esc_url_raw( $object['mp4'], array( 'http', 'https' ) ) : '';
 
 		if (
 			(
@@ -3019,6 +3072,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * The function to use to update the medias's value of the topic REST Field.
 	 * - from bp_media_forums_new_post_media_save();
 	 *
+	 * @since BuddyBoss 3.6.2 Only adopts the user's own unsaved media uploads.
+	 *
 	 * @param object $object     Value for the schema.
 	 * @param object $value      The value of the REST Field to save.
 	 *
@@ -3114,6 +3169,28 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						$media_ids[] = $exisiting_media_id;
 						continue;
 					}
+				}
+
+				// Only the user's own unsaved upload can become a new item.
+				$can_adopt = function_exists( 'bb_user_can_adopt_attachment' )
+					? bb_user_can_adopt_attachment( $attachment_id )
+					// Older Platform without the helper: the user's own BuddyBoss upload, not yet bound to an item.
+					: (
+						is_numeric( $attachment_id ) &&
+						0 < bp_loggedin_user_id() &&
+						'attachment' === get_post_type( absint( $attachment_id ) ) &&
+						(int) get_post_field( 'post_author', absint( $attachment_id ) ) === bp_loggedin_user_id() &&
+						(
+							get_post_meta( absint( $attachment_id ), 'bp_media_upload', true ) ||
+							get_post_meta( absint( $attachment_id ), 'bp_video_upload', true ) ||
+							get_post_meta( absint( $attachment_id ), 'bp_document_upload', true )
+						) &&
+						! get_post_meta( absint( $attachment_id ), 'bp_media_id', true ) &&
+						! get_post_meta( absint( $attachment_id ), 'bp_video_id', true ) &&
+						! get_post_meta( absint( $attachment_id ), 'bp_document_id', true )
+					);
+				if ( ! $can_adopt ) {
+					continue;
 				}
 
 				// extract the nice title name.
@@ -3223,6 +3300,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
 	 *
+	 * @since BuddyBoss 3.7.0 Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 *
 	 * @param object $object Topics as a object.
 	 * @param object $value  The value of the REST Field to save.
 	 */
@@ -3231,6 +3310,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$still   = ( ! empty( $object ) && array_key_exists( 'url', $object ) ) ? $object['url'] : '';
 		$mp4     = ( ! empty( $object ) && array_key_exists( 'mp4', $object ) ) ? $object['mp4'] : '';
 		$post_id = $value->ID;
+
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = ( is_string( $still ) && preg_match( '#^https?://#i', $still ) ) ? esc_url_raw( $still, array( 'http', 'https' ) ) : '';
+		$mp4   = ( is_string( $mp4 ) && preg_match( '#^https?://#i', $mp4 ) ) ? esc_url_raw( $mp4, array( 'http', 'https' ) ) : '';
 
 		// Get current forum ID.
 		if ( 'reply' === $value->post_type ) {
@@ -3529,6 +3612,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to update the medias's value of the activity REST Field.
 	 *
+	 * @since BuddyBoss 3.7.0 Stores the GIF still and mp4 values only when they are http(s) URLs.
+	 *
 	 * @param object $object Message as a object.
 	 * @param object $value  The value of the REST Field to save.
 	 */
@@ -3537,6 +3622,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$still      = ( ! empty( $object ) && array_key_exists( 'url', $object ) ) ? $object['url'] : '';
 		$mp4        = ( ! empty( $object ) && array_key_exists( 'mp4', $object ) ) ? $object['mp4'] : '';
 		$message_id = $value->id;
+
+		// GIF values are Giphy URLs; anything else is stored empty.
+		$still = ( is_string( $still ) && preg_match( '#^https?://#i', $still ) ) ? esc_url_raw( $still, array( 'http', 'https' ) ) : '';
+		$mp4   = ( is_string( $mp4 ) && preg_match( '#^https?://#i', $mp4 ) ) ? esc_url_raw( $mp4, array( 'http', 'https' ) ) : '';
 
 		$thread_id = $value->thread_id;
 
@@ -3695,7 +3784,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( empty( $media->type ) || 'photo' === $media->type ) {
-			$media_privacy = bb_media_user_can_access( $media->id, 'photo' );
+			if ( empty( $media->type ) ) {
+				$media_privacy = bb_media_user_can_access( $media->id, 'album' );
+			} else {
+				$media_privacy = bb_media_user_can_access( $media->id, 'photo' );
+			}
 		} else {
 			$media_privacy           = bb_media_user_can_access( $media->id, 'video' );
 			$retval['upload_poster'] = 0;
@@ -3739,6 +3832,14 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				} elseif ( 0 === (int) $media->group_id && 0 !== (int) $media->album_id ) {
 					$retval['edit_album_privacy'] = $media->album_id;
 				}
+			}
+			// For album just unset the permissions that are not applicable.
+			if ( empty( $media->type ) ) {
+				unset( $retval['download'] );
+				unset( $retval['edit_privacy'] );
+				unset( $retval['edit_post_privacy'] );
+				unset( $retval['edit_album_privacy'] );
+				unset( $retval['move'] );
 			}
 
 			if ( isset( $media_privacy['can_delete'] ) && true === (bool) $media_privacy['can_delete'] ) {

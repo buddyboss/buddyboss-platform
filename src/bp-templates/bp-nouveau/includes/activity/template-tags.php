@@ -1248,7 +1248,7 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			if ( $document_activity ) {
+			if ( $document_activity && bp_is_active( 'document' ) ) {
 				$document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
 				$document    = new BP_Document( $document_id );
 				if ( ! empty( $document ) ) {
@@ -1268,7 +1268,7 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			if ( $video_activity ) {
+			if ( $video_activity && bp_is_active( 'video' ) ) {
 				$video_id = BP_Video::get_activity_video_id( bp_get_activity_id() );
 				$video    = new BP_Video( $video_id );
 
@@ -1315,54 +1315,58 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			$activity_video_album_id = $activity_metas['bp_video_album_activity'][0] ?? '';
-			if ( ! empty( $activity_video_album_id ) ) {
-				$album_id       = $activity_video_album_id;
-				$album          = new BP_Video_Album( $album_id );
-				$privacy        = $album->privacy;
-				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-				$media_activity = true;
-			} else {
-				$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
-				if ( ! empty( $video_ids ) ) {
-					$video_ids = explode( ',', $video_ids );
-					$video_id  = ! empty( $video_ids ) ? $video_ids[0] : false;
-					$video     = new BP_Video( $video_id );
+			if ( bp_is_active( 'video' ) ) {
+				$activity_video_album_id = $activity_metas['bp_video_album_activity'][0] ?? '';
+				if ( ! empty( $activity_video_album_id ) ) {
+					$album_id       = $activity_video_album_id;
+					$album          = new BP_Video_Album( $album_id );
+					$privacy        = $album->privacy;
+					$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+					$media_activity = true;
+				} else {
+					$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
+					if ( ! empty( $video_ids ) ) {
+						$video_ids = explode( ',', $video_ids );
+						$video_id  = ! empty( $video_ids ) ? $video_ids[0] : false;
+						$video     = new BP_Video( $video_id );
 
-					if ( ! empty( $video->album_id ) ) {
-						$album_id       = $video->album_id;
-						$album          = new BP_Video_Album( $album_id );
-						$privacy        = $album->privacy;
-						$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-						$media_activity = true;
-						bp_activity_update_meta( bp_get_activity_id(), 'bp_video_album_activity', $album_id );
+						if ( ! empty( $video->album_id ) ) {
+							$album_id       = $video->album_id;
+							$album          = new BP_Video_Album( $album_id );
+							$privacy        = $album->privacy;
+							$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+							$media_activity = true;
+							bp_activity_update_meta( bp_get_activity_id(), 'bp_video_album_activity', $album_id );
+						}
 					}
 				}
 			}
 
-			$activity_folder_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
-			if ( ! empty( $activity_folder_id ) ) {
-				$folder_id         = $activity_folder_id;
-				$folder_id         = bp_document_get_root_parent_id( $folder_id );
-				$folder            = new BP_Document_Folder( $folder_id );
-				$privacy           = $folder->privacy;
-				$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
-				$document_activity = true;
-			} else {
-				$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
-				if ( ! empty( $document_ids ) ) {
-					$document_ids = explode( ',', $document_ids );
-					$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
-					$document     = new BP_Document( $document_id );
+			if ( bp_is_active( 'document' ) ) {
+				$activity_folder_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
+				if ( ! empty( $activity_folder_id ) ) {
+					$folder_id         = $activity_folder_id;
+					$folder_id         = bp_document_get_root_parent_id( $folder_id );
+					$folder            = new BP_Document_Folder( $folder_id );
+					$privacy           = $folder->privacy;
+					$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+					$document_activity = true;
+				} else {
+					$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
+					if ( ! empty( $document_ids ) ) {
+						$document_ids = explode( ',', $document_ids );
+						$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
+						$document     = new BP_Document( $document_id );
 
-					if ( ! empty( $document->folder_id ) ) {
-						$folder_id         = $document->folder_id;
-						$folder_id         = bp_document_get_root_parent_id( $folder_id );
-						$folder            = new BP_Document_Folder( $folder_id );
-						$privacy           = $folder->privacy;
-						$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
-						$document_activity = true;
-						bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
+						if ( ! empty( $document->folder_id ) ) {
+							$folder_id         = $document->folder_id;
+							$folder_id         = bp_document_get_root_parent_id( $folder_id );
+							$folder            = new BP_Document_Folder( $folder_id );
+							$privacy           = $folder->privacy;
+							$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+							$document_activity = true;
+							bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
+						}
 					}
 				}
 			}
@@ -1823,7 +1827,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	if ( $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
+	if ( bp_is_active( 'video' ) && $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
 		$video_id       = BP_Video::get_activity_video_id( $activity_id );
 		$video_group_id = bp_get_video_group_id();
 		if ( ! empty( $video_id ) ) {
@@ -1988,82 +1992,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	global $activities_template;
-
-	// Pin post action only for allowed posts based on user role.
-	if (
-		'activity_comment' !== $activity_type &&
-		! in_array( $activities_template->activity->privacy, array( 'media', 'document', 'video' ), true ) &&
-		(
-			(
-				bp_is_group_activity() &&
-				(
-					bp_current_user_can( 'administrator' ) ||
-					(
-						bb_is_active_activity_pinned_posts() &&
-						(
-							groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
-							groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
-						)
-					)
-				)
-			) ||
-			(
-				(
-					bp_is_activity_directory() ||
-					bp_is_user_activity()
-				) &&
-				(
-					bp_current_user_can( 'administrator' ) ||
-					(
-						'groups' === bp_get_activity_object_name() &&
-						bb_is_active_activity_pinned_posts() &&
-						(
-							groups_is_user_admin( bp_loggedin_user_id(), bp_get_activity_item_id() ) ||
-							groups_is_user_mod( bp_loggedin_user_id(), bp_get_activity_item_id() )
-						)
-					)
-				)
-			)
-		)
-	) {
-
-		// Remove for activities related to group for main activity screen.
-		$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Pin to Group', 'buddyboss' ) : ( 'groups' === bp_get_activity_object_name() ? esc_html__( 'Pin to Group', 'buddyboss' ) : esc_html__( 'Pin to Feed', 'buddyboss' ) );
-		$pinned_action_class = 'pin-activity';
-		$pinned_id           = ! empty( $GLOBALS['activities_template']->pinned_id ) ? $GLOBALS['activities_template']->pinned_id : bp_get_option( 'bb_pinned_post', 0 );
-
-		if ( 'groups' === bp_get_activity_object_name() && bp_is_active( 'groups' ) ) {
-			$group_id  = bp_get_activity_item_id();
-			$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
-		}
-
-		if ( ! empty( $pinned_id ) && (int) $activity_id === (int) $pinned_id ) {
-			$pinned_action_label = bp_is_group_activity() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : ( 'groups' === bp_get_activity_object_name() ? esc_html__( 'Unpin from Group', 'buddyboss' ) : esc_html__( 'Unpin from Feed', 'buddyboss' ) );
-			$pinned_action_class = 'unpin-activity';
-		}
-
-		$buttons['activity_pin'] = array(
-			'id'                => 'activity_pin',
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'id'            => '',
-				'href'          => '',
-				'class'         => 'button item-button bp-secondary-action ' . $pinned_action_class,
-				'data-bp-nonce' => '',
-			),
-			'link_text'         => sprintf(
-				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
-				$pinned_action_label,
-				$pinned_action_label
-			),
-		);
-	}
-
 	// Download link for the medias and documents.
 	$media_id = bp_is_active( 'media' ) ? BP_Media::get_activity_media_id( $activity_id ) : 0;
 	if ( ! empty( $media_id ) ) {
@@ -2202,11 +2130,14 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
 	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss 3.4.0 Added the `$context` parameter.
 	 *
 	 * @param array $buttons     The list of buttons.
 	 * @param int   $activity_id The current activity ID.
+	 * @param array $context     Button layout context: activity_type,
+	 *                           parent_element, parent_attr, button_element.
 	 */
-	$buttons_group = apply_filters( 'bb_nouveau_get_activity_entry_bubble_buttons', $buttons, $activity_id );
+	$buttons_group = apply_filters( 'bb_nouveau_get_activity_entry_bubble_buttons', $buttons, $activity_id, compact( 'activity_type', 'parent_element', 'parent_attr', 'button_element' ) );
 
 	if ( ! $buttons_group ) {
 		return $buttons;

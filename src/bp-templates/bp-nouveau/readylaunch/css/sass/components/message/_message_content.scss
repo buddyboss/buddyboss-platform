@@ -386,6 +386,32 @@
 			}
 		}
 
+		.bb-group-message-info {
+			display: flex;
+			align-items: center;
+			gap: var(--bb-rl-space-50);
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 500;
+			color: var(--bb-rl-text-tertiary-color);
+			line-height: 1.5;
+			margin-top: var(--bb-rl-space-50);
+
+			&::before {
+				content: "\e68e";
+				font-family: bb-icons-rl;
+				font-size: 16px;
+				font-weight: 400;
+				font-style: normal;
+				line-height: 1;
+			}
+
+			a {
+				color: inherit;
+				font-weight: 500;
+				text-decoration: none;
+			}
+		}
+
 		.bp-message-content-wrap {
 			font-size: 14px;
 

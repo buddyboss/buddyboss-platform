@@ -54,6 +54,9 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 					'default'           => bp_get_activity_edit_time() ? bp_get_activity_edit_time() : 600,
 					'options'           => $edit_time_options,
 					'sanitize_callback' => 'bb_activity_sanitize_edit_time',
+					// The sanitizer resolves to one of the options above, and the getter applies
+					// the same rule, so a stored value may be resolved on read and repaired on save.
+					'resolve_invalid'   => true,
 				),
 			),
 			'order'                => 10,
@@ -150,7 +153,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		)
 	);
 
-	// FIELD: Pinned Post.
+	// FIELD: Pinned Post (Pro only — moved into the BuddyBoss Addons plugin).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -163,6 +166,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'default'           => bb_is_active_activity_pinned_posts(),
 			'sanitize_callback' => 'absint',
 			'order'             => 70,
+			'pro_only'          => true,
 		)
 	);
 

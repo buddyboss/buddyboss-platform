@@ -11,8 +11,9 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_ajax_bb_recaptcha_verification_admin_settings', 'bb_recaptcha_verification_admin_settings' );
 add_action( 'login_form', 'bb_recaptcha_login', 99 );
+add_filter( 'login_form_middle', 'bb_recaptcha_wp_login_form', 99 );
 add_action( 'lostpassword_form', 'bb_recaptcha_lost_password' );
-add_action( 'lostpassword_post', 'bb_recaptcha_validate_lost_password', 10, 1 );
+add_action( 'lostpassword_post', 'bb_recaptcha_validate_lost_password', 10, 2 );
 add_action( 'bp_before_registration_submit_buttons', 'bb_recaptcha_registration' );
 add_action( 'bp_signup_validate', 'bb_recaptcha_validate_registration' );
 add_action( 'bb_before_activate_submit_buttons', 'bb_recaptcha_activate_form' );
@@ -93,6 +94,50 @@ function bb_recaptcha_login() {
 }
 
 /**
+ * Injects the reCAPTCHA widget into front-end login forms rendered by
+ * wp_login_form().
+ *
+ * The core `login_form` action only fires on wp-login.php, so themes/plugins that
+ * embed a login form via wp_login_form() would otherwise carry no reCAPTCHA field
+ * and be rejected by the (fail-closed) login validator. Hooking the
+ * `login_form_middle` filter injects the same widget/token into those forms so
+ * they are protected rather than broken. bb_recaptcha_display() self-gates on the
+ * connection status, IP exclusion and bypass URL.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @param string $content Markup injected in the middle of wp_login_form().
+ *
+ * @return string Content with the reCAPTCHA widget appended when enabled.
+ */
+function bb_recaptcha_wp_login_form( $content ) {
+	if (
+		! bb_recaptcha_is_enabled( 'bb_login' ) ||
+		'connected' !== bb_recaptcha_connection_status()
+	) {
+		return $content;
+	}
+
+	ob_start();
+	bb_recaptcha_display( 'bb_login' );
+	$widget = ob_get_clean();
+
+	// bb_recaptcha_display() prints nothing when the widget is not actually
+	// rendered (e.g. the current IP is excluded). In that case there is no
+	// script to enqueue, so leave the form untouched.
+	if ( '' === trim( $widget ) ) {
+		return $content;
+	}
+
+	$content .= $widget;
+
+	// Enqueue the reCAPTCHA scripts in the site footer (registered by display()).
+	add_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' );
+
+	return $content;
+}
+
+/**
  * Displays reCAPTCHA on the lost password form if enabled.
  *
  * @since BuddyBoss 2.5.60
@@ -110,14 +155,16 @@ function bb_recaptcha_lost_password() {
  * Validate recaptcha for a lost password form.
  *
  * @since  BuddyBoss 2.5.60
+ * @since  BuddyBoss 3.7.0 Added the `$user_data` parameter and skip admin-initiated resets.
  *
- * @param WP_Error $errors A WP_Error object containing any errors generated
- *                         by using invalid credentials.
+ * @param WP_Error      $errors    A WP_Error object containing any errors generated
+ *                                 by using invalid credentials.
+ * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
  *
  * @return WP_Error $errors A WP_Error object containing any errors generated
  *                  by using invalid credentials.
  */
-function bb_recaptcha_validate_lost_password( $errors ) {
+function bb_recaptcha_validate_lost_password( $errors, $user_data = false ) {
 	/**
 	 * Filters whether reCAPTCHA validation should be bypassed for the
 	 * current request. Default: true on REST requests, false otherwise.
@@ -134,6 +181,25 @@ function bb_recaptcha_validate_lost_password( $errors ) {
 	 * @param bool $bypass Default: bb_is_rest().
 	 */
 	if ( apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ) {
+		return $errors;
+	}
+
+	/*
+	 * Bypass a reset sent from wp-admin by a logged-in user for another account
+	 * they can edit: Users → "Send password reset" (row and bulk) and user-edit.php
+	 * "Send Reset Link" (admin-ajax). These never render the widget. WordPress
+	 * offers these tools for other accounts only, so self-service and logged-out
+	 * requests, including admin-ajax ones, stay protected. is_admin() keeps the
+	 * wp-login.php form, which has no nonce, verified even for a logged-in admin,
+	 * so a cross-site POST cannot skip the check on the admin's cookie.
+	 */
+	if (
+		is_admin() &&
+		$user_data instanceof WP_User &&
+		is_user_logged_in() &&
+		get_current_user_id() !== $user_data->ID &&
+		current_user_can( 'edit_user', $user_data->ID )
+	) {
 		return $errors;
 	}
 

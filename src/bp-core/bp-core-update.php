@@ -562,6 +562,31 @@ function bp_version_updater() {
 			bb_update_to_3_0_3();
 		}
 
+		// DB version 23604 — install the BuddyBoss Addons bundle for entitled
+		// customers, once, on the upgrade into this release (PROD-10242). Runs on
+		// every update path — Plugins screen, auto-update, or a direct FTP/copy-paste
+		// — because this keys on the stored _bp_db_version vs the code db_version.
+		if ( $raw_db_version < 23604 ) {
+			bb_install_addons_bundle_on_upgrade();
+		}
+
+		// DB version 23605 — the topics and reply REST endpoints now return the
+		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
+		// their App API cache so cached empty previews are not served for 30 days.
+		if ( $raw_db_version < 23605 ) {
+			bb_purge_forums_api_cache_for_legacy_embed();
+		}
+
+		// DB version 23631 — install BuddyBoss Add-ons for entitled sites that do not have
+		// it (the 23604 step above already ran on 3.4.2+ sites, so it would not run again),
+		// then queue the update of an active Add-ons to the version this Platform requires
+		// (PROD-9995). Queuing is cheap: the download runs later, on a regular admin page
+		// load by a user who can update plugins.
+		if ( $raw_db_version < 23631 ) {
+			bb_install_addons_bundle_on_upgrade();
+			bb_queue_addons_bundle_update();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -2594,8 +2619,10 @@ function bb_update_to_2_2_8() {
 	// Install new group subscription email templates.
 	bb_migrate_group_subscription_email_templates();
 
-	// Migrate group subscriptions.
-	bb_migrate_group_subscription( true );
+	// Migrate group subscriptions. The migration ships with BuddyBoss Add-ons, which also offers it as a repair tool.
+	if ( function_exists( 'bb_migrate_group_subscription' ) ) {
+		bb_migrate_group_subscription( true );
+	}
 }
 
 /**
@@ -4520,3 +4547,490 @@ function bb_update_to_3_0_3() {
 	// rather than per-field.
 	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
 }
+
+/**
+ * Whether the current site is entitled to the BuddyBoss Addons bundle.
+ *
+ * Entitlement = Mothership present AND active license AND the catalog carries
+ * the buddyboss-addons product AND the products API did not error. The plan's
+ * catalog is the single source of truth — plans not entitled to the bundle
+ * simply do not carry the product. Never returns true on an errored catalog
+ * read.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return bool True when entitled.
+ */
+function bb_is_entitled_to_addons() {
+
+	/**
+	 * Short-circuit the BuddyBoss Addons entitlement decision.
+	 *
+	 * Return a non-null boolean to override the result before any Mothership
+	 * call. This is the seam the test suite and integrators use to force the
+	 * decision without a live license/catalog lookup (the checks below all
+	 * short-circuit to false when the Mothership layer is absent).
+	 *
+	 * @since BuddyBoss 3.4.2
+	 *
+	 * @param bool|null $override Non-null boolean to force the decision, or null to compute it.
+	 */
+	$override = apply_filters( 'bb_pre_is_entitled_to_addons', null );
+	if ( null !== $override ) {
+		return (bool) $override;
+	}
+
+	$has_mothership = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
+		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
+
+	if ( ! $has_mothership ) {
+		return false;
+	}
+
+	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+
+	if ( ! $connector->getLicenseActivationStatus() ) {
+		return false;
+	}
+
+	// Fetch the product first (warms the products transient), then read the
+	// error flag from that same warm cache. An errored read returns false.
+	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+	if ( \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
+		return false;
+	}
+
+	$entitled = ! empty( $product );
+
+	/**
+	 * Filters the computed BuddyBoss Addons entitlement decision.
+	 *
+	 * Runs only when the decision was computed (not short-circuited by
+	 * `bb_pre_is_entitled_to_addons`); use this to adjust the final value with
+	 * the matched product in hand.
+	 *
+	 * @since BuddyBoss 3.4.2
+	 *
+	 * @param bool        $entitled Whether the site is entitled.
+	 * @param object|null $product  The matched product object, or null.
+	 */
+	return (bool) apply_filters( 'bb_is_entitled_to_addons', $entitled, $product );
+}
+
+/**
+ * Whether the buddyboss-addons plugin is active.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return bool True when active.
+ */
+function bb_is_addons_plugin_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	return is_plugin_active( 'buddyboss-addons/buddyboss-addons.php' );
+}
+
+/**
+ * One-time upgrade migration: install & activate the BuddyBoss Addons bundle
+ * for entitled customers.
+ *
+ * Invoked once from bp_version_updater() (PROD-10242). System-migration style,
+ * like the sibling bb_update_to_* functions: no capability gate (bp_version_updater
+ * is not capability-gated and bumps the stored version on the first admin request,
+ * so a cap gate would let a low-privilege user burn the one-shot). Non-interactive
+ * (Automatic_Upgrader_Skin) — never prompts, never fatals, never loops. Performs
+ * install + activate ONLY; writes no feature settings.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return void
+ */
+function bb_install_addons_bundle_on_upgrade() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	// Already active → nothing to do (checked first: no disk/network work, and
+	// keeps the unit test's no-write path hermetic).
+	if ( bb_is_addons_plugin_active() ) {
+		return;
+	}
+
+	if ( ! bb_is_entitled_to_addons() ) {
+		return;
+	}
+
+	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+
+	// Install only when the files are absent; never re-install over an existing copy.
+	if ( ! file_exists( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/misc.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+		$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
+
+		if ( '' === $download_url ) {
+			return;
+		}
+
+		$skin      = new Automatic_Upgrader_Skin();
+		$upgrader  = new Plugin_Upgrader( $skin );
+		$installed = $upgrader->install( $download_url );
+
+		if ( true !== $installed ) {
+			// Filesystem not writable / download failed. Fail silently for the
+			// user — the admin can install manually from the Add-ons page.
+			if ( function_exists( 'bb_error_log' ) ) {
+				// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces auto-install failures for support.
+				bb_error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
+			}
+			return;
+		}
+	}
+
+	// Match Platform's activation scope. On a network-activated Platform,
+	// network-activate the add-on so every subsite community gets it; otherwise
+	// this runs inside switch_to_blog( root ), so a plain activate lands on the
+	// root blog only.
+	$network_wide = function_exists( 'bp_is_network_activated' ) && bp_is_network_activated();
+
+	$activated = activate_plugin( $plugin_file, '', $network_wide );
+
+	// Activation can fail even after a clean install (e.g. the add-on fatals on
+	// include, or its dependency check rejects the running Platform version).
+	// Leave it inactive rather than fatal the request, but log for support.
+	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
+		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
+}
+
+/**
+ * Purge the App API cache of forum topics and replies.
+ *
+ * The topics and reply REST endpoints now return the legacy oEmbed (`preview_data`,
+ * `link_embed_url`) for posts saved without `_link_embed` meta, as the web already shows.
+ * Responses cached before the update still hold the empty preview for up to 30 days, so
+ * clear them once on the upgrade (PROD-10630).
+ *
+ * @since BuddyBoss 3.6.2
+ *
+ * @return void
+ */
+function bb_purge_forums_api_cache_for_legacy_embed() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-topics' );
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bbp-replies' );
+	}
+}
+
+/**
+ * Minimum BuddyBoss Add-ons version this Platform needs.
+ *
+ * Reads the floor from the version-compatibility notice so both stay in sync;
+ * that file is admin-only, hence the fallback.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Minimum Add-ons version.
+ */
+function bb_get_addons_required_version() {
+	if ( ! function_exists( 'bb_platform_3_addons_required_version' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
+	}
+
+	return bb_platform_3_addons_required_version();
+}
+
+/**
+ * Get the installed BuddyBoss Add-ons version, read from the plugin header on disk.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Version, or an empty string when it is not installed or unreadable.
+ */
+function bb_get_installed_addons_version() {
+	static $version = null;
+
+	if ( null === $version ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugins = get_plugins();
+		$version = isset( $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] ) ? (string) $plugins['buddyboss-addons/buddyboss-addons.php']['Version'] : '';
+	}
+
+	return $version;
+}
+
+/**
+ * Whether a BuddyBoss Add-ons version is below the version this Platform requires.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string|null $version Optional. Version to check. Default: the installed version.
+ *
+ * @return bool False when the version is unknown (not installed or unreadable).
+ */
+function bb_is_addons_below_required_version( $version = null ) {
+	$version = null === $version ? bb_get_installed_addons_version() : (string) $version;
+
+	return '' !== $version && version_compare( $version, bb_get_addons_required_version(), '<' );
+}
+
+/**
+ * Update an active BuddyBoss Add-ons below the required version.
+ *
+ * The package comes from the Mothership catalog of the activated license, so the
+ * plan decides: a plan that carries the buddyboss-addons product gets the latest
+ * build; a plan that does not (e.g. Free or Lite) has nothing to download and is
+ * skipped. Non-interactive (Automatic_Upgrader_Skin); the add-on is re-activated
+ * in its previous scope afterwards, as WordPress does after a manual update.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return string Result: 'inactive', 'up_to_date', 'vcs_checkout', 'not_entitled', 'no_package',
+ *                'updated' or 'failed'.
+ */
+function bb_update_addons_bundle_to_required_version() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+
+	// Only an active copy is updated; an inactive or missing one is left alone.
+	if ( ! is_plugin_active( $plugin_file ) ) {
+		return 'inactive';
+	}
+
+	$installed = bb_get_installed_addons_version();
+
+	if ( '' !== $installed && ! bb_is_addons_below_required_version( $installed ) ) {
+		return 'up_to_date';
+	}
+
+	// Never overwrite a version-control checkout (a development copy), as WordPress
+	// core's own auto-updater does not.
+	$plugin_dir = trailingslashit( WP_PLUGIN_DIR ) . dirname( $plugin_file );
+	foreach ( array( '.git', '.svn', '.hg', '.bzr' ) as $vcs_dir ) {
+		if ( is_dir( $plugin_dir . '/' . $vcs_dir ) ) {
+			return 'vcs_checkout';
+		}
+	}
+
+	// Plan check: only a license whose plan carries the add-on product can download it.
+	if ( ! bb_is_entitled_to_addons() ) {
+		// For an activated license a catalog outage also reads as "not entitled"; report
+		// it as a failure so it is retried.
+		if (
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) &&
+			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) &&
+			( new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector() )->getLicenseActivationStatus() &&
+			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored()
+		) {
+			return 'failed';
+		}
+
+		return 'not_entitled';
+	}
+
+	$product      = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+	$download_url = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_download_url( $product );
+	$latest       = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::get_product_latest_version( $product );
+	$latest       = ( null !== $latest && ! empty( $latest->number ) ) ? (string) $latest->number : '';
+
+	/**
+	 * Filters the BuddyBoss Add-ons package used for the post-update upgrade.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param array       $package {
+	 *     @type string $url     Package URL (or local zip path).
+	 *     @type string $version Package version.
+	 * }
+	 * @param object|null $product The Mothership product, or null.
+	 */
+	$package      = (array) apply_filters(
+		'bb_addons_bundle_update_package',
+		array(
+			'url'     => $download_url,
+			'version' => $latest,
+		),
+		$product
+	);
+	$download_url = isset( $package['url'] ) ? (string) $package['url'] : '';
+	$latest       = isset( $package['version'] ) ? (string) $package['version'] : '';
+
+	// A build that is newer but still below the required version is not installed: the
+	// queue is kept and retried until Mothership serves the required build.
+	if (
+		'' === $download_url ||
+		'' === $latest ||
+		version_compare( $latest, $installed, '<=' ) ||
+		bb_is_addons_below_required_version( $latest )
+	) {
+		return 'no_package';
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/misc.php';
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	// Plugin_Upgrader::upgrade() reads the package from the update transient.
+	$inject_package = function ( $transient ) use ( $plugin_file, $download_url, $latest ) {
+		if ( ! is_object( $transient ) ) {
+			$transient = new stdClass();
+		}
+		if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
+			$transient->response = array();
+		}
+		$transient->response[ $plugin_file ] = (object) array(
+			'slug'        => 'buddyboss-addons',
+			'plugin'      => $plugin_file,
+			'new_version' => $latest,
+			'package'     => $download_url,
+		);
+
+		return $transient;
+	};
+
+	$network_wide = is_multisite() && is_plugin_active_for_network( $plugin_file );
+
+	add_filter( 'site_transient_update_plugins', $inject_package );
+	$upgrader = new Plugin_Upgrader( new Automatic_Upgrader_Skin() );
+	$result   = $upgrader->upgrade( $plugin_file );
+	remove_filter( 'site_transient_update_plugins', $inject_package );
+
+	// The upgrader deactivates the plugin before replacing it; restore it in the same
+	// scope even when the update failed part-way. Silent, like WordPress's own reactivation.
+	if ( ! is_plugin_active( $plugin_file ) ) {
+		$activated = activate_plugin( $plugin_file, '', $network_wide, true );
+
+		if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+			bb_error_log( 'BuddyBoss Addons auto-update: re-activation failed: ' . $activated->get_error_message() );
+		}
+	}
+
+	if ( true !== $result ) {
+		if ( function_exists( 'bb_error_log' ) ) {
+			bb_error_log( 'BuddyBoss Addons auto-update: update failed' . ( is_wp_error( $result ) ? ': ' . $result->get_error_message() : '.' ) );
+		}
+
+		return 'failed';
+	}
+
+	return 'updated';
+}
+
+/**
+ * Queue the update of an active BuddyBoss Add-ons below the required version.
+ *
+ * Called once from bp_version_updater() for db version 23631. It only records
+ * that the update is due; {@see bb_maybe_run_queued_addons_bundle_update()}
+ * performs it, so the upgrade request itself (which can be any front-end
+ * admin-ajax call) never downloads or replaces a plugin.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bb_queue_addons_bundle_update() {
+	bp_update_option( 'bb_addons_bundle_update_queued', 1 );
+	bp_delete_option( 'bb_addons_bundle_update_attempts' );
+}
+
+/**
+ * Run the queued BuddyBoss Add-ons update.
+ *
+ * Runs on a regular wp-admin GET page load (not AJAX, cron or REST) by a user
+ * who can update plugins, under a lock so concurrent page loads never run the
+ * upgrader twice. On multisite it runs only on the root blog, where the queue
+ * option lives, so the lock, retry wait and plugin check use the same site and
+ * a subsite page load can neither clear the queue nor spend its attempts.
+ * Final results clear the queue. A failed download, or no
+ * build at the required version being available yet (Mothership not serving
+ * it), is retried at most every 12 hours, up to 10 attempts. An inactive or
+ * not-entitled Add-ons keeps the update queued without spending an attempt; it
+ * is checked again after the same wait, or sooner once Add-ons or a license is
+ * activated ({@see bb_retry_queued_addons_bundle_update_soon()}).
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return void
+ */
+function bb_maybe_run_queued_addons_bundle_update() {
+	if (
+		! bp_get_option( 'bb_addons_bundle_update_queued', false ) ||
+		( is_multisite() && ! bp_is_root_blog() ) ||
+		wp_doing_ajax() ||
+		wp_doing_cron() ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+		! isset( $_SERVER['REQUEST_METHOD'] ) ||
+		'GET' !== $_SERVER['REQUEST_METHOD'] ||
+		! current_user_can( 'update_plugins' ) ||
+		false !== get_transient( 'bb_addons_bundle_update_retry_wait' )
+	) {
+		return;
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	if ( ! WP_Upgrader::create_lock( 'bb_addons_bundle_update', 15 * MINUTE_IN_SECONDS ) ) {
+		return;
+	}
+
+	// Count the attempt and start the wait before running, so a fatal inside the
+	// upgrader is retried later instead of on every admin page load.
+	$attempts = (int) bp_get_option( 'bb_addons_bundle_update_attempts', 0 ) + 1;
+	bp_update_option( 'bb_addons_bundle_update_attempts', $attempts );
+	set_transient( 'bb_addons_bundle_update_retry_wait', 1, 12 * HOUR_IN_SECONDS );
+
+	$result = bb_update_addons_bundle_to_required_version();
+
+	// Nothing was tried: keep the update queued for when Add-ons is active and entitled.
+	if ( in_array( $result, array( 'inactive', 'not_entitled' ), true ) ) {
+		bp_update_option( 'bb_addons_bundle_update_attempts', $attempts - 1 );
+	} elseif ( ! in_array( $result, array( 'failed', 'no_package' ), true ) || $attempts >= 10 ) {
+		bp_delete_option( 'bb_addons_bundle_update_queued' );
+		bp_delete_option( 'bb_addons_bundle_update_attempts' );
+		delete_transient( 'bb_addons_bundle_update_retry_wait' );
+	}
+
+	WP_Upgrader::release_lock( 'bb_addons_bundle_update' );
+
+	// The old Add-ons build is already loaded in this request; reload so the rest
+	// of the page runs against the new files only.
+	if ( 'updated' === $result && ! headers_sent() && isset( $_SERVER['REQUEST_URI'] ) ) {
+		wp_safe_redirect( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+		exit;
+	}
+}
+add_action( 'admin_init', 'bb_maybe_run_queued_addons_bundle_update', 100 );
+
+/**
+ * Let a queued BuddyBoss Add-ons update run on the next admin page load.
+ *
+ * Ends the retry wait once Add-ons is activated, or a license is activated, so an
+ * update kept queued while Add-ons was inactive or not entitled does not wait up
+ * to 12 hours. Does nothing when no update is queued.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $plugin Optional. Activated plugin basename; empty for a license activation.
+ *
+ * @return void
+ */
+function bb_retry_queued_addons_bundle_update_soon( $plugin = '' ) {
+	if ( '' !== $plugin && 'buddyboss-addons/buddyboss-addons.php' !== $plugin ) {
+		return;
+	}
+
+	if ( bp_get_option( 'bb_addons_bundle_update_queued', false ) ) {
+		delete_transient( 'bb_addons_bundle_update_retry_wait' );
+	}
+}
+add_action( 'activated_plugin', 'bb_retry_queued_addons_bundle_update_soon' );

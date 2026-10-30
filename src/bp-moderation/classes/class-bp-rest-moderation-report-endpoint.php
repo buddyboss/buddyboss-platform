@@ -85,9 +85,14 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$reports_terms = get_terms( 'bpm_category', array( 'hide_empty' => false ) );
 		if ( ! empty( $reports_terms ) ) {
 			foreach ( $reports_terms as $reports_term ) {
+				// Translate default categories for current locale.
+				if ( function_exists( 'bp_moderation_maybe_translate_report_term' ) ) {
+					$reports_term = bp_moderation_maybe_translate_report_term( $reports_term );
+				}
+
 				$show_when           = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
 				$fields['options'][] = array(
-					'id'                => $reports_term->term_id,
+					'id'                => (int) $reports_term->term_id,
 					'type'              => 'option',
 					'name'              => wp_specialchars_decode( $reports_term->name ),
 					'description'       => wp_specialchars_decode( $reports_term->description ),
@@ -431,12 +436,12 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $media->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $media->activity_id, BP_Suspend_Activity::$type );
 			}
-		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'document' ) && bp_is_active( 'activity' ) ) {
 			$document = new BP_Document( $request['item_id'] );
 			if ( ! empty( $document->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $document->activity_id, BP_Suspend_Activity::$type );
 			}
-		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
 			$video = new BP_Video( $request['item_id'] );
 			if ( ! empty( $video->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $video->activity_id, BP_Suspend_Activity::$type );
