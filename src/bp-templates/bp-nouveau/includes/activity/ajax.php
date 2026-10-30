@@ -538,9 +538,10 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	);
 
 	// Check scheduled status.
-	$post_status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status() ) {
-		$args['status'] = $post_status;
+	$post_status    = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+	$want_scheduled = ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status();
+	if ( $want_scheduled ) {
+		$args['status'] = bb_get_activity_scheduled_status();
 	}
 
 	$activity_array = bp_activity_get_specific( $args );
@@ -550,6 +551,16 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	}
 
 	$activity = $activity_array['activities'][0];
+
+	// A scheduled (unpublished) activity is only readable by its author or a moderator.
+	if ( $want_scheduled && ! bp_activity_user_can_delete( $activity ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// The content is returned without privacy filters, so confirm the viewer can see this activity.
+	if ( ! bb_activity_user_can_view( (int) $activity->id ) ) {
+		wp_send_json_error( $response );
+	}
 
 	/**
 	 * Fires before the return of an activity's full, non-excerpted content via a POST request.
