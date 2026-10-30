@@ -1670,7 +1670,7 @@ function bp_core_remove_data( $user_id ) {
 	// user are cleared by each component's own remove-data listeners (for example
 	// `friends_remove_data`, `bp_remove_follow_data` and `bb_messages_after_delete_user_message`).
 	bp_core_clear_user_object_cache( $user_id );
-	// Clear the user's profile type and `bb_user` query caches. Also hooked to
+	// Clear the user's profile type caches and their cached `bb_user` row. Also hooked to
 	// `delete_user`/`wpmu_delete_user` directly; called here so the
 	// `bp_make_spam_user` flow is covered as well.
 	bp_members_clear_member_type_cache( $user_id );

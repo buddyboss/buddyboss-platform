@@ -251,11 +251,15 @@ add_action( 'bp_media_before_delete', 'bb_media_clear_video_object_cache_on_dele
  * Clear a cached album item when that item is updated.
  *
  * @since BuddyBoss 1.1.5
+ * @since BuddyBoss [BBVERSION] Also clears the video album copy of the row.
  *
  * @param BP_Media_Album $album Album object.
  */
 function bp_media_clear_cache_for_album( $album ) {
 	wp_cache_delete( $album->id, 'bp_media_album' );
+
+	// Photo and video albums share one table, so the same row is also cached as a video album.
+	wp_cache_delete( $album->id, 'bp_video_album' );
 }
 add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
 
@@ -263,12 +267,14 @@ add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
  * Clear cached data for deleted album items.
  *
  * @since BuddyBoss 1.1.5
+ * @since BuddyBoss [BBVERSION] Also clears the video album copy of each row.
  *
  * @param array $deleted_ids IDs of deleted album items.
  */
 function bp_media_clear_cache_for_deleted_album( $deleted_ids ) {
 	foreach ( (array) $deleted_ids as $deleted_id ) {
 		wp_cache_delete( $deleted_id, 'bp_media_album' );
+		wp_cache_delete( $deleted_id, 'bp_video_album' );
 	}
 }
 add_action( 'bp_albums_deleted_albums', 'bp_media_clear_cache_for_deleted_album' );
