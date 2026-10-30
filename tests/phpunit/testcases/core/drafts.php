@@ -3014,6 +3014,57 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The upgrade heal must run on sites that already installed 3.7.0.
+	 *
+	 * 3.7.0 shipped with db_version 23631, so a gate at or below that number is
+	 * false on every 3.7.0 site and the heal of already-oversized draft rows
+	 * never starts on the upgrade (PROD-9621 R1-01).
+	 */
+	public function test_upgrade_heal_runs_from_the_shipped_3_7_0_db_version() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
+		if ( ! function_exists( 'bp_version_updater' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
+		}
+
+		$this->assertGreaterThan( 23631, (int) buddypress()->db_version, 'db_version must be above the 3.7.0 value so the upgrade routine runs.' );
+
+		$bp           = buddypress();
+		$raw_original = $bp->db_version_raw;
+		$db_original  = bp_get_option( '_bp_db_version' );
+
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_cleanup_epoch' );
+
+		// A 3.7.0 site: raw and stored versions are both 23631, so only the
+		// steps gated above 23631 run.
+		$bp->db_version_raw = 23631;
+		bp_update_option( '_bp_db_version', 23631 );
+
+		bp_version_updater();
+
+		$epoch     = get_site_option( 'bb_draft_cleanup_epoch' );
+		$guard     = get_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $scheduled ) {
+			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
+		}
+
+		$bp->db_version_raw = $raw_original;
+		bp_update_option( '_bp_db_version', $db_original );
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_cleanup_epoch' );
+
+		$this->assertNotEmpty( $epoch, 'The upgrade from 3.7.0 must record the draft cleanup epoch.' );
+		$this->assertNotEmpty( $guard, 'The upgrade from 3.7.0 must run the synchronous healing slice.' );
+	}
+
+	/**
 	 * The upgrade guard must survive an unreliable object cache.
 	 *
 	 * It used to be a transient - in the one routine whose sibling option was

@@ -579,7 +579,9 @@ function bp_version_updater() {
 
 		// Heal oversized/aggregate-oversized draft usermeta rows and
 		// start the draft retention machinery.
-		if ( $raw_db_version < 23621 ) {
+		// Gated above 23631, the db_version 3.7.0 shipped with, so sites
+		// already on 3.7.0 still run it.
+		if ( $raw_db_version < 23641 ) {
 			bb_drafts_cleanup_on_upgrade();
 		}
 
