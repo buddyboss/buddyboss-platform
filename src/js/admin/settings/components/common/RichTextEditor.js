@@ -74,9 +74,9 @@ export function addLinkModalCommand( editor ) {
 /**
  * Get the HTML content of a TinyMCE editor, including Code tab edits.
  *
- * For content that is stored as HTML (activity posts and comments, discussion
- * descriptions, forum replies), because their front-end editors load the
- * stored value as it is, without autop. In the Code tab TinyMCE is hidden and
+ * For content that is stored as HTML (activity posts and comments, forum and
+ * discussion descriptions, forum replies) rather than in the paragraph-free
+ * format of getRichTextEditorContent(). In the Code tab TinyMCE is hidden and
  * its content is stale, so load the textarea into it first, the same way
  * switching back to the Visual tab does, then read it.
  *

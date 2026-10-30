@@ -31,7 +31,7 @@ import { useListScreenState } from '../hooks/useListScreenState';
 import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
-import { forceRemoveEditor } from '../components/common/RichTextEditor';
+import { forceRemoveEditor, getRichTextEditorHtml } from '../components/common/RichTextEditor';
 import { useMediaFrame } from '../hooks/useMediaFrame';
 
 /**
@@ -1123,6 +1123,11 @@ function ForumEditModal( props ) {
 		var registeredPayload = forum.registered_fields
 			? buildRegisteredFieldPayload( forum.registered_fields, registeredValues, forum.id )
 			: {};
+
+		// Keep the forum description stored as HTML, including Code tab edits.
+		if ( undefined !== registeredPayload.description ) {
+			registeredPayload.description = getRichTextEditorHtml( 'bb-admin-edit-description-' + forum.id, registeredValues.description || '' );
+		}
 
 		var payload = Object.assign( registeredPayload, {
 			forum_id: forum.id,
