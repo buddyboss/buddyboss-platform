@@ -79,6 +79,8 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
  * Sanitize email notification settings as submitted by a user.
  *
  * @since BuddyPress 2.3.5
+ * @since BuddyBoss [BBVERSION] Every registered key is saved as 'yes' or 'no', unless it is listed
+ *                              in the `bb_settings_non_boolean_notification_keys` filter.
  *
  * @param array $settings Array of settings.
  * @return array Sanitized settings.
@@ -94,7 +96,8 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 	$registered_notification_settings = bp_settings_get_registered_notification_keys();
 
 	/*
-	 * We sanitize values for core notification keys.
+	 * Core notification keys are always saved as 'yes' or 'no', even when
+	 * listed in the `bb_settings_non_boolean_notification_keys` filter.
 	 *
 	 * @todo use register_meta()
 	 */
@@ -114,14 +117,34 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 		)
 	);
 
+	/**
+	 * Filters the registered notification keys that store a non-boolean value.
+	 *
+	 * Every registered notification key is saved as 'yes' or 'no'. An add-on that
+	 * renders a real non-boolean field in the notification settings form can list
+	 * its key here. That value is then saved as plain text, 255 characters at most.
+	 * Keys from the `bp_settings_core_notification_setting` filter are ignored.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $non_boolean_settings Notification keys that store a non-boolean value. Default empty array.
+	 */
+	$non_boolean_settings = array_diff(
+		(array) apply_filters( 'bb_settings_non_boolean_notification_keys', array() ),
+		(array) $core_notification_settings
+	);
+
 	foreach ( (array) $settings as $key => $value ) {
 		// Skip if not a registered setting.
 		if ( ! in_array( $key, $registered_notification_settings, true ) ) {
 			continue;
 		}
 
-		// Force core keys to 'yes' or 'no' values.
-		if ( in_array( $key, $core_notification_settings, true ) ) {
+		if ( in_array( $key, $non_boolean_settings, true ) ) {
+			// Save opted-out keys as plain text, 255 characters at most.
+			$value = is_scalar( $value ) ? mb_substr( sanitize_text_field( (string) $value ), 0, 255 ) : '';
+		} else {
+			// Force every other registered key to 'yes' or 'no'.
 			$value = 'yes' === $value ? 'yes' : 'no';
 		}
 
