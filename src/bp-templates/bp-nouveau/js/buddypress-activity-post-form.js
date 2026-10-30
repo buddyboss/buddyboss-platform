@@ -3743,7 +3743,14 @@ window.bp = window.bp || {};
 					);
 
 					if ( ! urlResponse ) {
-						self.loadURLAjax = bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always(
+						self.loadURLAjax = bp.ajax.send(
+							'bp_activity_parse_url',
+							{
+								data: { url: url },
+								// End a slow request with the same error instead of an endless loader.
+								timeout: BP_Nouveau.link_preview_timeout
+							}
+						).always(
 							function ( response, textStatus ) {
 								// A failed request passes the jqXHR here, not the parsed preview data.
 								if ( ! _.isObject( response ) || ! _.isUndefined( response.readyState ) ) {

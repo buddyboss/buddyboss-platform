@@ -4399,15 +4399,20 @@ window.bp = window.bp || {};
 					self.render( self.options );
 
 					if ( ! urlResponse ) {
-						self.loadURLAjax = $.post(
-							ajaxurl,
+						self.loadURLAjax = $.ajax(
 							{
-								action: 'bb_forums_parse_url',
-								url: url
-							},
-							function ( response ) {
-								// success callback.
-								self.setURLResponse( _.isObject( response ) ? response : { error: BP_Nouveau.link_preview_error }, url );
+								type: 'POST',
+								url: ajaxurl,
+								data: {
+									action: 'bb_forums_parse_url',
+									url: url
+								},
+								// End a slow request with the same error instead of an endless loader.
+								timeout: BP_Nouveau.link_preview_timeout,
+								success: function ( response ) {
+									// success callback.
+									self.setURLResponse( _.isObject( response ) ? response : { error: BP_Nouveau.link_preview_error }, url );
+								}
 							}
 						).fail(
 							function ( jqXHR, textStatus ) {

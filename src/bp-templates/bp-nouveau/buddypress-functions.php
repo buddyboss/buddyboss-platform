@@ -771,6 +771,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Add localize variable for the link preview error when the request fails.
 		$params['link_preview_error'] = esc_html__( 'There was a problem generating a link preview.', 'buddyboss' );
 
+		// Add localize variable for the link preview request time limit in milliseconds, above the server-side fetch time.
+		$params['link_preview_timeout'] = 20000;
+
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *
