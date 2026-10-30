@@ -18,7 +18,7 @@ import { __ } from '@wordpress/i18n';
 import { createDiscussion } from '../../utils/ajax';
 import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
-import { forceRemoveEditor } from '../common/RichTextEditor';
+import { forceRemoveEditor, getRichTextEditorHtml } from '../common/RichTextEditor';
 import { TagsAutocomplete } from './TagsAutocomplete';
 
 /**
@@ -127,6 +127,12 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 				tags: tags,             // Custom section, not in registry.
 			}
 		);
+
+		// Send the description as HTML, including Code tab edits: the front-end
+		// editor loads the stored value as it is, without autop.
+		if ( undefined !== payload.description ) {
+			payload.description = getRichTextEditorHtml( 'bb-admin-edit-description-0', registeredValues.description || '' );
+		}
 
 		createDiscussion( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
