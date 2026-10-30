@@ -32,6 +32,9 @@ $bp_loggedin_user_id                 = bp_loggedin_user_id();
 $bp_is_profile_video_support_enabled = function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled();
 $bp_is_group_video_support_enabled   = function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled();
 
+// Videos belong in this album only when the video component is available and enabled for this context.
+$bp_album_shows_videos = bp_is_active( 'video' ) && ( $bp_is_group ? $bp_is_group_video_support_enabled : $bp_is_profile_video_support_enabled );
+
 $album = new BP_Media_Album( $album_id );
 
 $back_link = bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/';
@@ -194,15 +197,20 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						}
 						?>
 
-						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep"></span>
+						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
+						<?php if ( $bp_album_shows_videos ) : ?>
+						<span class="bb-sep"></span>
 						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total_video'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<?php endif; ?>
 					</p>
 				</div>
 
 				<?php
 				if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) :
 					bp_get_template_part( 'media/uploader' );
-					bp_get_template_part( 'video/uploader' );
+					if ( bp_is_active( 'video' ) ) {
+						bp_get_template_part( 'video/uploader' );
+					}
 					bp_get_template_part( 'media/edit-album' );
 				endif;
 				?>

@@ -2344,16 +2344,19 @@ window.bp = window.bp || {};
 							videoElement.removeClass( 'vjs-initialized' );
 							videoElement.addClass( 'video-js' );
 
-							videojs(
-								videoElementId,
-								{
-									'controls'        : true,
-									'aspectRatio'     : '16:9',
-									'fluid'           : true,
-									'playbackRates'   : [0.5, 1, 1.5, 2],
-									'fullscreenToggle': false,
-								}
-							);
+							// The video.js player ships with BuddyBoss Add-ons and may not be loaded.
+							if ( 'undefined' !== typeof videojs ) {
+								videojs(
+									videoElementId,
+									{
+										'controls'        : true,
+										'aspectRatio'     : '16:9',
+										'fluid'           : true,
+										'playbackRates'   : [0.5, 1, 1.5, 2],
+										'fullscreenToggle': false,
+									}
+								);
+							}
 						}
 					);
 				}
@@ -2940,11 +2943,8 @@ window.bp = window.bp || {};
 			    activityId             = args.activityId,
 			    activity_comment_li    = target.closest( '[data-bp-activity-comment-id]' ),
 			    activity_comment_id    = activity_comment_li.data( 'bp-activity-comment-id' ),
-			    li_parent,
-			    comment_count_span,
-			    comment_count,
-			    show_all_a,
-			    deleted_comments_count = 0;
+			    self                   = this,
+			    li_parent;
 
 			var commentsList = target.closest( '.bb-rl-activity-comments' );
 			commentsList.addClass( 'active' );
@@ -3007,86 +3007,7 @@ window.bp = window.bp || {};
 						}
 
 						if ( activity_comment_id ) {
-							deleted_comments_count    = 1;
-							var hidden_comments_count = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' );
-
-							// Move the form if needed.
-							activityItem.append( activity_comment_li.find( 'form' ) );
-
-							// Count child comments if there are some.
-							activity_comment_li.find( 'li.comment-item' ).each(
-								function () {
-									deleted_comments_count += 1;
-								}
-							);
-
-							deleted_comments_count += hidden_comments_count !== undefined ? parseFloat( hidden_comments_count ) : 0;
-
-							// Update the button count.
-							comment_count_span = activityState.find( 'span.comments-count' );
-							comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
-							comment_count      = Number( comment_count - deleted_comments_count );
-
-							if ( commentsText.length ) {
-								var label = comment_count > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
-								commentsText.text( label.replace( '%d', comment_count ) );
-								comment_count_span.attr( 'data-comments-count', comment_count );
-							} else {
-								comment_count_span.parent( '.has-comments' ).removeClass( 'has-comments' );
-							}
-
-							// Update the reply count with parent replies count.
-							var $parentComment        = activity_comment_li.closest( '.activity-comment' ),
-							    processedIds          = {},
-							    totalCommentsToDelete = 1; // Start with 1 for the current comment
-							if ( activity_comment_li.hasClass( 'has-child-comments' ) ) {
-								// Only search for children if we know they exist
-								var childCount = activity_comment_li.find( '.acomments-view-more' ).data( 'child-count' ) || 0;
-								totalCommentsToDelete += childCount;
-								totalCommentsToDelete += activity_comment_li.find( '.activity-comment:visible' ).length;
-							}
-
-							var $currentParent = $parentComment;
-							while ( $currentParent.length ) {
-								var parentId = $currentParent.data( 'bp-activity-comment-id' );
-								if ( processedIds[ parentId ] ) {
-									break;
-								}
-								processedIds[ parentId ] = true;
-
-								var $reactionArea = $currentParent.find( '.bb-rl-comment-reactions' ).first(),
-								    $countElement = $reactionArea.find( '.acomments-count' );
-								if ( $countElement.length ) {
-									var currentCount = parseInt( $countElement.attr( 'data-comments-count' ) );
-									if ( isNaN( currentCount ) ) {
-										var matches  = $countElement.text().match( /\d+/ );
-										currentCount = matches ? parseInt( matches[ 0 ] ) : 0;
-									}
-
-									var newCount = Math.max( 0, currentCount - totalCommentsToDelete );
-									if ( 0 === newCount ) {
-										$reactionArea.find( '.activity-state-comments' ).remove();
-									} else {
-										var replyLabel = newCount > 1 ? bbRlActivity.strings.repliesLabel : bbRlActivity.strings.replyLabel;
-										var newText    = replyLabel.replace( '%d', newCount );
-										$countElement.attr( 'data-comments-count', newCount ).text( newText );
-									}
-								}
-								$currentParent = $currentParent.parent().closest( '.activity-comment' );
-							}
-
-							// Update the show all count.
-							show_all_a = activityItem.find( 'li.show-all a' );
-							if ( show_all_a.length ) {
-								show_all_a.html( bbbRlShowXComments.replace( '%d', comment_count ) );
-							}
-
-							// Clean up the parent activity classes.
-							if ( 0 === comment_count ) {
-								activityItem.removeClass( 'has-comments' );
-								activityState.removeClass( 'has-comments' );
-								commentsText.empty();
-							}
+							self.updateCommentCountOnDelete( activity_comment_li, activityItem, activityState, commentsText );
 						}
 
 						// Deleting the activity from inside the "view more comments"
@@ -3160,6 +3081,136 @@ window.bp = window.bp || {};
 					commentsList.removeClass( 'active' );
 				}
 			);
+		},
+
+		/**
+		 * Take a deleted activity comment out of its parent activity's comment
+		 * count, comment label, parent reply counts and "Show all X comments"
+		 * link.
+		 *
+		 * Counts the comment itself, its rendered replies and the replies still
+		 * hidden behind "View more replies". Call it before the comment `li` is
+		 * removed from the DOM.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityCommentLi The comment `li` being removed.
+		 * @param {jQuery} activityItem      The parent activity `li`.
+		 * @param {jQuery} activityState     The parent activity's `.activity-state`.
+		 * @param {jQuery} commentsText      The parent activity's `.comments-count`.
+		 *
+		 * @return {number} The updated comment count.
+		 */
+		updateCommentCountOnDelete: function ( activityCommentLi, activityItem, activityState, commentsText ) {
+			// Move the form if needed.
+			activityItem.append( activityCommentLi.find( 'form' ) );
+
+			var commentCount = this.decreaseActivityCommentCount( activityItem, activityState, commentsText, this.getDeletedCommentsCount( activityCommentLi ) );
+
+			// Update the reply count with parent replies count.
+			var $parentComment        = activityCommentLi.closest( '.activity-comment' ),
+			    processedIds          = {},
+			    totalCommentsToDelete = 1; // Start with 1 for the current comment
+			if ( activityCommentLi.hasClass( 'has-child-comments' ) ) {
+				// Only search for children if we know they exist
+				var childCount = activityCommentLi.find( '.acomments-view-more' ).data( 'child-count' ) || 0;
+				totalCommentsToDelete += childCount;
+				totalCommentsToDelete += activityCommentLi.find( '.activity-comment:visible' ).length;
+			}
+
+			var $currentParent = $parentComment;
+			while ( $currentParent.length ) {
+				var parentId = $currentParent.data( 'bp-activity-comment-id' );
+				if ( processedIds[ parentId ] ) {
+					break;
+				}
+				processedIds[ parentId ] = true;
+
+				var $reactionArea = $currentParent.find( '.bb-rl-comment-reactions' ).first(),
+				    $countElement = $reactionArea.find( '.acomments-count' );
+				if ( $countElement.length ) {
+					var currentCount = parseInt( $countElement.attr( 'data-comments-count' ) );
+					if ( isNaN( currentCount ) ) {
+						var matches  = $countElement.text().match( /\d+/ );
+						currentCount = matches ? parseInt( matches[ 0 ] ) : 0;
+					}
+
+					var newCount = Math.max( 0, currentCount - totalCommentsToDelete );
+					if ( 0 === newCount ) {
+						$reactionArea.find( '.activity-state-comments' ).remove();
+					} else {
+						var replyLabel = newCount > 1 ? bbRlActivity.strings.repliesLabel : bbRlActivity.strings.replyLabel;
+						var newText    = replyLabel.replace( '%d', newCount );
+						$countElement.attr( 'data-comments-count', newCount ).text( newText );
+					}
+				}
+				$currentParent = $currentParent.parent().closest( '.activity-comment' );
+			}
+
+			return commentCount;
+		},
+
+		/**
+		 * Number of comments a comment delete removes: the comment itself, its
+		 * rendered replies and the replies still hidden behind "View more replies".
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityCommentLi The comment `li` being removed.
+		 *
+		 * @return {number} The number of deleted comments.
+		 */
+		getDeletedCommentsCount: function ( activityCommentLi ) {
+			var hiddenCommentsCount = activityCommentLi.find( '.acomments-view-more' ).data( 'child-count' );
+
+			return 1 + activityCommentLi.find( 'li.comment-item' ).length + ( hiddenCommentsCount !== undefined ? parseFloat( hiddenCommentsCount ) : 0 );
+		},
+
+		/**
+		 * Lower an activity's comment count (label and `data-comments-count`) and
+		 * its "Show all X comments" link by the given number of deleted comments.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} activityItem         The parent activity `li`.
+		 * @param {jQuery} activityState        The parent activity's `.activity-state`.
+		 * @param {jQuery} commentsText         The parent activity's `.comments-count`.
+		 * @param {number} deletedCommentsCount The number of deleted comments.
+		 *
+		 * @return {number} The updated comment count.
+		 */
+		decreaseActivityCommentCount: function ( activityItem, activityState, commentsText, deletedCommentsCount ) {
+			var commentCountSpan,
+			    commentCount,
+			    showAllLink;
+
+			// Update the button count.
+			commentCountSpan = activityState.find( 'span.comments-count' );
+			commentCount     = commentCountSpan.text().length ? commentCountSpan.text().match( /\d+/ )[0] : 0;
+			commentCount     = Number( commentCount - deletedCommentsCount );
+
+			if ( commentsText.length ) {
+				var label = commentCount > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
+				commentsText.text( label.replace( '%d', commentCount ) );
+				commentCountSpan.attr( 'data-comments-count', commentCount );
+			} else {
+				commentCountSpan.parent( '.has-comments' ).removeClass( 'has-comments' );
+			}
+
+			// Update the show all count.
+			showAllLink = activityItem.find( 'li.show-all a' );
+			if ( showAllLink.length ) {
+				showAllLink.html( bbbRlShowXComments.replace( '%d', commentCount ) );
+			}
+
+			// Clean up the parent activity classes.
+			if ( 0 === commentCount ) {
+				activityItem.removeClass( 'has-comments' );
+				activityState.removeClass( 'has-comments' );
+				commentsText.empty();
+			}
+
+			return commentCount;
 		},
 
 		readMoreActivity: function ( args ) {
@@ -3620,7 +3671,11 @@ window.bp = window.bp || {};
 
 			commentData.content = commentData.content.replace( /&nbsp;/g, ' ' );
 
-			if ( form.hasClass( 'acomment-edit' ) ) {
+			// Read the edit state now: cancelling while the request is in flight resets the form.
+			var wasCommentEdit = form.hasClass( 'acomment-edit' );
+			var form_item_id   = form.attr( 'data-item-id' );
+
+			if ( wasCommentEdit ) {
 				commentData.edit_comment = true;
 			}
 
@@ -3676,8 +3731,7 @@ window.bp = window.bp || {};
 						}
 						form.find( '#ac-input-' + form_activity_id ).html( '' );
 
-						if ( form.hasClass( 'acomment-edit' ) ) {
-							var form_item_id = form.attr( 'data-item-id' );
+						if ( wasCommentEdit ) {
 							form.closest( '.bb-rl-activity-comments' ).append( form );
 							var $commentContainer = isInsideModal ? $( '#bb-rl-activity-modal' ).find( 'li#bb-rl-acomment-' + form_item_id ) : $( 'li#bb-rl-acomment-' + form_item_id );
 							$commentContainer.replaceWith( the_comment );
@@ -3719,7 +3773,7 @@ window.bp = window.bp || {};
 						// Trigger GIF autoplay check for newly added content
 						bp.Nouveau.Activity.invokeMediaFn( 'autoPlayGifVideos' );
 
-						if ( ! form.hasClass( 'acomment-edit' ) ) {
+						if ( ! wasCommentEdit ) {
 							// Set the new count.
 							var comment_count_span = activityState.find( 'span.comments-count' );
 							var comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
