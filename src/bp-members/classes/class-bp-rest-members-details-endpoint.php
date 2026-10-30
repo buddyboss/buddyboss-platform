@@ -1287,7 +1287,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_media;
 		}
 
-		if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() ) {
 			// Setup the logged in user variables.
 			$document_link = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() );
 

@@ -2361,16 +2361,19 @@ window.bp = window.bp || {};
 							videoElement.removeClass( 'vjs-initialized' );
 							videoElement.addClass( 'video-js' );
 
-							videojs(
-								videoElementId,
-								{
-									'controls'        : true,
-									'aspectRatio'     : '16:9',
-									'fluid'           : true,
-									'playbackRates'   : [0.5, 1, 1.5, 2],
-									'fullscreenToggle': false,
-								}
-							);
+							// The video.js player ships with BuddyBoss Add-ons and may not be loaded.
+							if ( 'undefined' !== typeof videojs ) {
+								videojs(
+									videoElementId,
+									{
+										'controls'        : true,
+										'aspectRatio'     : '16:9',
+										'fluid'           : true,
+										'playbackRates'   : [0.5, 1, 1.5, 2],
+										'fullscreenToggle': false,
+									}
+								);
+							}
 						}
 					);
 				}

@@ -190,9 +190,6 @@ add_filter( 'the_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
-add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
@@ -206,6 +203,9 @@ add_action( 'bp_activity_after_delete', 'bb_clear_activity_comment_parent_cache'
 add_action( 'bp_activity_after_save', 'bb_clear_activity_comment_parent_cache' );
 add_action( 'bp_activity_after_delete', 'bb_clear_activity_all_comment_parent_caches' );
 add_action( 'bp_init', 'bb_load_activity_topics_manager' );
+
+// Remove the topic relationship of deleted activities, also while activity topics are switched off.
+add_action( 'bp_activity_after_delete', 'bb_delete_topic_relationships_of_deleted_activities' );
 
 add_action( 'bp_activity_after_save', 'bb_activity_save_topic_data', 2, 1 );
 add_filter( 'bp_activity_get_join_sql', 'bb_activity_unanswered_only_join_sql_filter', 11, 2 );
@@ -436,7 +436,10 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
 		}
 	}
 
-	add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+	if ( function_exists( 'bp_media_activity_save_gif_data' ) ) {
+		add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	}
 }
 
 /**
@@ -1381,7 +1384,6 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 }
 add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorites_scope', 10, 2 );
 
-
 /**
  * Set up activity arguments for use with the 'favorites' scope.
  *
@@ -1808,7 +1810,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 					$attachment_id = BP_Media::get_activity_attachment_id( $activity->id );
 					if ( ! empty( $attachment_id ) ) {
 						$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
-					} else {
+					} elseif ( bp_is_active( 'video' ) ) {
 						$attachment_id = BP_Video::get_activity_attachment_id( $activity->id );
 						if ( ! empty( $attachment_id ) ) {
 							$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
@@ -2052,7 +2054,9 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			// Group subscribers are notified once the media is attached (BuddyBoss Add-ons), not on this post.
+			$had_group_subscription_hook = remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11 );
+
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -2060,7 +2064,9 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( $had_group_subscription_hook ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -2305,6 +2311,12 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 function bp_activity_document_add( $document ) {
 	global $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bb_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bb_document_get_published_status' ) ) {
+		return;
+	}
+
 	// Check the current action is edit activity comment.
 	if (
 		$bb_activity_comment_edit &&
@@ -2481,7 +2493,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			// Group subscribers are notified once the media is attached (BuddyBoss Add-ons), not on this post.
+			$had_group_subscription_hook = remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11 );
+
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -2489,7 +2503,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( $had_group_subscription_hook ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -3064,6 +3080,12 @@ add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_featur
 function bp_activity_video_add( $video ) {
 	global $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
+	// The video component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bb_video_* call fatals.
+	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bb_video_get_published_status' ) ) {
+		return;
+	}
+
 	// Check the current action is edit activity comment.
 	if (
 		$bb_activity_comment_edit &&
@@ -3241,7 +3263,9 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			// Group subscribers are notified once the media is attached (BuddyBoss Add-ons), not on this post.
+			$had_group_subscription_hook = remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11 );
+
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -3249,7 +3273,9 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( $had_group_subscription_hook ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -3902,15 +3928,6 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 }
 
 /**
- * Add template for gifpicker.
- *
- * @since BuddyBoss 2.5.80
- */
-function bb_gifpicker_add_popup_template() {
-	bp_get_template_part( 'activity/gifpicker-popup' );
-}
-
-/**
  * Add template for emojionearea picker.
  *
  * @since BuddyBoss 2.5.80
@@ -4188,6 +4205,11 @@ function bb_activity_save_topic_data( $activity ) {
 		return;
 	}
 
+	// Do not save a topic that is not in this feed or that the member may not post in.
+	if ( ! empty( $topic_id ) && ! bb_activity_user_can_save_topic( $topic_id, $activity ) ) {
+		return;
+	}
+
 	$item_id = isset( $_POST['group_id'] ) ? intval( $_POST['group_id'] ) : 0;
 
 	// Add/update the activity topic relationship.
@@ -4199,6 +4221,73 @@ function bb_activity_save_topic_data( $activity ) {
 			'item_id'     => $item_id,
 		)
 	);
+}
+
+/**
+ * Whether the current user may save a topic on an activity.
+ *
+ * Uses the same checks as the website composer when a topic is required (bp_nouveau_ajax_post_update()):
+ * the topic must exist in the activity's feed (site topics for the activity feed, the group's topics
+ * for a group post) and the user must be allowed to post in it. An activity that already carries the
+ * topic may keep it, so an edit that does not change the topic is never refused.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param int    $topic_id Topic ID being saved.
+ * @param object $activity The activity object.
+ *
+ * @return bool True if the topic can be saved, false otherwise.
+ */
+function bb_activity_user_can_save_topic( $topic_id, $activity ) {
+	$topic_id = (int) $topic_id;
+	if ( empty( $topic_id ) || empty( $activity ) || ! function_exists( 'bb_topics_manager_instance' ) ) {
+		return false;
+	}
+
+	// An edit that keeps the post's own topic changes nothing about the topic.
+	if ( ! empty( $activity->id ) ) {
+		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity->id );
+		if ( ! empty( $existing_topic_id ) && (int) $existing_topic_id === $topic_id ) {
+			return true;
+		}
+	}
+
+	$is_group_post = 'groups' === $activity->component;
+	$group_id      = $is_group_post ? (int) $activity->item_id : 0;
+
+	if (
+		$is_group_post &&
+		(
+			! bp_is_active( 'groups' ) ||
+			empty( $group_id ) ||
+			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+			! bb_is_enabled_group_activity_topics() ||
+			! function_exists( 'bb_can_user_post_to_group_activity_topic' )
+		)
+	) {
+		return false;
+	}
+
+	$args = array(
+		'topic_id'  => $topic_id,
+		'item_type' => 'activity',
+		'fields'    => 'id',
+	);
+	if ( $is_group_post ) {
+		$args['item_type'] = 'groups';
+		$args['item_id']   = $group_id;
+	}
+
+	$topic_exists = bb_topics_manager_instance()->bb_get_topics( $args );
+	if ( empty( $topic_exists ) || empty( $topic_exists['topics'] ) ) {
+		return false;
+	}
+
+	if ( $is_group_post ) {
+		return (bool) bb_can_user_post_to_group_activity_topic( bp_loggedin_user_id(), $group_id, $topic_id );
+	}
+
+	return (bool) bb_activity_topics_manager_instance()->bb_can_user_post_to_activity_topic( $topic_id );
 }
 
 /**

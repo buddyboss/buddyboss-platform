@@ -94,6 +94,11 @@ class BB_Tests_Core_Private_Network_Downloads extends BP_UnitTestCase {
 	 * @return string Redirect location, or '' when the handler did not redirect.
 	 */
 	protected function get_handler_redirect( $handler ) {
+		// Video and document download handlers ship in BuddyBoss Add-ons.
+		if ( ! is_callable( $handler ) ) {
+			$this->markTestSkipped( sprintf( '%s is provided by BuddyBoss Add-ons, which is not loaded.', is_string( $handler ) ? $handler : 'The download handler' ) );
+		}
+
 		add_filter(
 			'wp_redirect',
 			static function ( $location ) {

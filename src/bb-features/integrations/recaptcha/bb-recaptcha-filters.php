@@ -131,7 +131,7 @@ function bb_recaptcha_validate_login( $user ) {
  * Validate the activation process with reCAPTCHA if enabled.
  *
  * @since BuddyBoss 2.5.60
- * @since BuddyBoss [BBVERSION] Skip verification in wp-admin (outside admin-ajax) and under WP-CLI.
+ * @since BuddyBoss 3.7.0 Skip verification in wp-admin (outside admin-ajax) and under WP-CLI.
  *
  * @param bool $retval The return value to be validated.
  *

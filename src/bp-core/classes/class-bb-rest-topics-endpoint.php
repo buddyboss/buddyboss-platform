@@ -33,8 +33,14 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Register the fields for the activity object.
 	 *
 	 * @since 2.8.80
+	 * @since BuddyBoss 3.7.0 Checks the topic of an activity create/update before the write ("Require users to select a topic" and topic permissions).
 	 */
 	public function bp_rest_activity_support() {
+		// A registered field's update callback only runs after the activity is written (and only when the
+		// request carries the field), so the topic rules have to be checked before the write, like the website does.
+		add_filter( 'bp_rest_activity_create_item_permissions_check', array( $this, 'bb_rest_activity_topic_required_check' ), 10, 2 );
+		add_filter( 'bp_rest_activity_update_item_permissions_check', array( $this, 'bb_rest_activity_topic_required_check' ), 10, 2 );
+
 		bp_rest_register_field(
 			'activity',
 			'bb_topic',
@@ -348,6 +354,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Check if a given request has access to create a topic.
 	 *
 	 * @since 2.8.80
+	 * @since BuddyBoss 3.7.0 Group organizers can create topics for their own group.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -426,11 +433,11 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
-				} elseif ( 'only_from_activity_topics' === $group_topics_options ) {
-					$name = bb_topics_manager_instance()->bb_get_topic_by( 'name', $name );
-					if ( empty( $name ) ) {
-						$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
-					}
+				} elseif (
+					'only_from_activity_topics' === $group_topics_options &&
+					! $this->is_activity_topic_name( $name )
+				) {
+					$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
 				}
 			} elseif ( 'activity' === $item_type ) {
 				$valid_global_permissions = array( 'mods_admins', 'anyone' );
@@ -669,6 +676,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Check if a given request has access to update a topic.
 	 *
 	 * @since 2.8.80
+	 * @since BuddyBoss 3.7.0 Group organizers can update topics of their own group; a global topic cannot be renamed inside a group.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -742,11 +750,6 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 					! groups_is_user_admin( bp_loggedin_user_id(), $item_id )
 				) {
 					$retval = new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot create a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
-				} elseif ( 'only_from_activity_topics' === $group_topics_options ) {
-					$name = bb_topics_manager_instance()->bb_get_topic_by( 'name', $name );
-					if ( empty( $name ) ) {
-						$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
-					}
 				} elseif ( empty( $topic ) ) {
 					$retval = new WP_Error(
 						'bp_rest_topic_invalid_id',
@@ -755,6 +758,13 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
+				} elseif (
+					'only_from_activity_topics' === $group_topics_options &&
+					sanitize_title( $name ) !== $topic->slug &&
+					! $this->is_activity_topic_name( $name )
+				) {
+					// Keeping the same topic (for example to change its permission only) is still allowed.
+					$retval = new WP_Error( 'bp_rest_topic_name_not_found', __( 'Topic name not found in activity topics.', 'buddyboss' ), array( 'status' => 400 ) );
 				} else {
 					$valid_permissions = array( 'admins', 'mods', 'members' );
 					$permission_type   = empty( $permission_type ) ? $topic->permission_type : $permission_type;
@@ -769,9 +779,8 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 							array( 'status' => 400 )
 						);
 					} elseif (
-						$topic->is_global_activity &&
-						! empty( $title ) &&
-						$title !== $topic->name
+						! empty( $topic->is_global_activity ) &&
+						sanitize_title( $name ) !== $topic->slug
 					) {
 						$retval = new WP_Error(
 							'bp_rest_topic_global_activity_update_error',
@@ -924,6 +933,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Check if a given request has access to delete a topic.
 	 *
 	 * @since 2.8.80
+	 * @since BuddyBoss 3.7.0 Group organizers can delete and migrate topics of their own group; the migrate target must belong to the same group.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
@@ -958,12 +968,19 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 			$get_topic = bb_topics_manager_instance()->bb_get_topics( $args );
 
-			$new_topic = bb_topics_manager_instance()->bb_get_topic(
-				array(
-					'topic_id' => $new_topic_id,
-					'fields'   => 'id',
-				)
+			// The posts can only move to a topic of the same group, or to another activity topic.
+			$new_topic_args = array(
+				'topic_id' => $new_topic_id,
+				'fields'   => 'id',
 			);
+			if ( 'groups' === $item_type ) {
+				$new_topic_args['item_id']   = $item_id;
+				$new_topic_args['item_type'] = $item_type;
+			} elseif ( 'activity' === $item_type ) {
+				$new_topic_args['item_type'] = 'activity';
+			}
+			$new_topic = ! empty( $new_topic_id ) ? bb_topics_manager_instance()->bb_get_topics( $new_topic_args ) : array();
+			$new_topic = ! empty( $new_topic['topics'] );
 
 			if ( ! empty( $migrate_type ) && 'migrate' !== $migrate_type ) {
 				$retval = new WP_Error(
@@ -1107,6 +1124,11 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( $success ) {
+			// Reset the cached topic lists before reading them back, so the response carries the new order.
+			if ( function_exists( 'bb_topics_order_updated_cache_reset' ) ) {
+				bb_topics_order_updated_cache_reset();
+			}
+
 			$get_topics = bb_topics_manager_instance()->bb_get_topics(
 				array(
 					'item_id'   => $group,
@@ -1251,6 +1273,274 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request $request The request sent to the API.
 		 */
 		return apply_filters( 'bp_rest_topics_update_order_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Whether a topic name matches a site-wide activity topic.
+	 *
+	 * Topic rows are shared with group topics, so a row with the same name is not enough.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param string $name Topic name.
+	 *
+	 * @return bool
+	 */
+	protected function is_activity_topic_name( $name ) {
+		$slug = sanitize_title( $name );
+		if ( empty( $slug ) ) {
+			return false;
+		}
+
+		$activity_topic = bb_topics_manager_instance()->bb_get_topics(
+			array(
+				'slug'      => $slug,
+				'item_type' => 'activity',
+				'fields'    => 'id',
+			)
+		);
+
+		return ! empty( $activity_topic['topics'] );
+	}
+
+	/**
+	 * Whether the current user may delete (or remove from the group) a group topic.
+	 *
+	 * Mirrors the group branch of delete_item_permissions_check(): a logged-in site administrator
+	 * or an organizer of that group, while group activity topics are enabled.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param int $group_id Group ID.
+	 *
+	 * @return bool
+	 */
+	protected function bb_rest_can_delete_group_topic( $group_id ) {
+		$group_id = (int) $group_id;
+
+		if ( empty( $group_id ) || ! is_user_logged_in() ) {
+			return false;
+		}
+
+		if (
+			! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+			! bb_is_enabled_group_activity_topics()
+		) {
+			return false;
+		}
+
+		return bp_current_user_can( 'administrator' ) || groups_is_user_admin( bp_loggedin_user_id(), $group_id );
+	}
+
+	/**
+	 * Check the topic of an activity create/update before the activity is written.
+	 *
+	 * Same rules as the website composer (bp_nouveau_ajax_post_update), for activity updates on the
+	 * news feed or a group feed while activity topics are on:
+	 * - a chosen topic must exist for that feed and be one the user may post in (the rule the activity
+	 *   `bb_topic_id` field applies after the write), whether or not a topic is required; refusing it
+	 *   here keeps a refused request from saving the post or edit anyway;
+	 * - while "Require users to select a topic" is on, a post without a topic is refused when the feed
+	 *   offers at least one topic the user can post to. A feed without a usable topic keeps accepting
+	 *   topic-less posts.
+	 * An update that does not send `bb_topic_id` keeps the stored topic and is not checked.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param bool|WP_Error   $retval  Result of the endpoint's own permission check.
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function bb_rest_activity_topic_required_check( $retval, $request ) {
+		if ( true !== $retval ) {
+			return $retval;
+		}
+
+		if (
+			! function_exists( 'bb_is_enabled_activity_topics' ) ||
+			! bb_is_enabled_activity_topics()
+		) {
+			return $retval;
+		}
+
+		$topic_id = (int) $request->get_param( 'bb_topic_id' );
+
+		// The item id comes from the route, never from the body, so a create cannot pose as an update.
+		$url_params  = $request->get_url_params();
+		$activity_id = isset( $url_params['id'] ) ? (int) $url_params['id'] : 0;
+		if ( ! empty( $activity_id ) ) {
+			// Update: only a request that sends `bb_topic_id` (a new topic, or none) is checked.
+			if ( ! isset( $request['bb_topic_id'] ) ) {
+				return $retval;
+			}
+
+			$activity = new BP_Activity_Activity( $activity_id );
+			if ( empty( $activity->id ) || 'activity_update' !== $activity->type ) {
+				return $retval;
+			}
+
+			$component = $activity->component;
+			$item_id   = (int) $activity->item_id;
+		} else {
+			$type = $request->get_param( 'type' );
+			if ( ! empty( $type ) && 'activity_update' !== $type ) {
+				return $retval;
+			}
+
+			// create_item() posts to a group whenever primary_item_id is sent and groups are active.
+			$primary_item_id = $request->get_param( 'primary_item_id' );
+			$component       = bp_is_active( 'groups' ) && ! is_null( $primary_item_id ) ? 'groups' : 'activity';
+			$item_id         = (int) $primary_item_id;
+		}
+
+		if ( ! in_array( $component, array( 'groups', 'activity' ), true ) ) {
+			return $retval;
+		}
+
+		if ( $topic_id > 0 ) {
+			// The chosen topic has to exist for this feed and be usable by this user. The field callback
+			// checks the same after bp_activity_add(), so refusing here keeps a bogus or forbidden id from
+			// leaving a topic-less post behind.
+			$topic_args = array(
+				'topic_id'  => $topic_id,
+				'item_type' => 'activity',
+			);
+			if ( 'groups' === $component ) {
+				$topic_args['item_id']   = $item_id;
+				$topic_args['item_type'] = 'groups';
+			}
+			$topic = bb_topics_manager_instance()->bb_get_topic( $topic_args );
+			if ( empty( $topic ) ) {
+				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss' ), array( 'status' => 404 ) );
+			}
+
+			$can_use_topic = $this->bb_rest_activity_topic_permission_check( $topic, $activity_id );
+			if ( is_wp_error( $can_use_topic ) ) {
+				return $can_use_topic;
+			}
+
+			return $retval;
+		}
+
+		if (
+			! function_exists( 'bb_is_activity_topic_required' ) ||
+			! bb_is_activity_topic_required() ||
+			! $this->bb_rest_feed_offers_topic( $component, $item_id )
+		) {
+			return $retval;
+		}
+
+		return new WP_Error(
+			'bp_rest_topic_id_required',
+			__( 'Please select a topic before posting.', 'buddyboss' ),
+			array( 'status' => 400 )
+		);
+	}
+
+	/**
+	 * Whether a feed offers the current user at least one topic to post in.
+	 *
+	 * Uses the same lists the website composer renders its topic selector from.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param string $component `groups` or `activity`.
+	 * @param int    $item_id   Group ID for the groups component.
+	 *
+	 * @return bool
+	 */
+	protected function bb_rest_feed_offers_topic( $component, $item_id ) {
+		if ( 'groups' === $component ) {
+			if (
+				! bp_is_active( 'groups' ) ||
+				empty( $item_id ) ||
+				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+				! bb_is_enabled_group_activity_topics() ||
+				! function_exists( 'bb_get_group_activity_topics' )
+			) {
+				return false;
+			}
+
+			$topics = bb_get_group_activity_topics(
+				array(
+					'item_id'  => (int) $item_id,
+					'can_post' => true,
+				)
+			);
+		} else {
+			$topics = bb_activity_topics_manager_instance()->bb_get_activity_topics(
+				array(
+					'item_type' => 'activity',
+					'can_post'  => true,
+				)
+			);
+		}
+
+		return ! empty( $topics );
+	}
+
+	/**
+	 * Whether the current user may assign a topic to an activity.
+	 *
+	 * Group topics follow the group permission (organizers, moderators, members) while group topics
+	 * are enabled. Site topics limited to moderators and admins need the administrator capability.
+	 * An activity that already carries the topic may keep it in both cases, like the website edit
+	 * form (bp_nouveau_ajax_post_update). Used by the activity `bb_topic_id` field after the write
+	 * and by the topic check before it, so both refuse the same input.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param object $topic       Topic relationship row from bb_get_topic().
+	 * @param int    $activity_id Activity being updated, 0 on create.
+	 *
+	 * @return true|WP_Error
+	 */
+	protected function bb_rest_activity_topic_permission_check( $topic, $activity_id ) {
+		$permission_type   = $topic->permission_type;
+		$existing_topic_id = ! empty( $activity_id ) ? bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id ) : 0;
+		$keeps_its_topic   = ! empty( $existing_topic_id ) && (int) $existing_topic_id === (int) $topic->topic_id;
+
+		if ( ! empty( $topic->item_id ) && 'groups' === $topic->item_type && bp_is_active( 'groups' ) ) {
+			$group = groups_get_group( $topic->item_id );
+			if ( empty( $group ) ) {
+				return new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss' ), array( 'status' => 404 ) );
+			}
+
+			if ( $keeps_its_topic ) {
+				// An edit that keeps the post's own topic changes nothing about the topic, even while group topics are off.
+				return true;
+			}
+
+			if (
+				! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
+				! bb_is_enabled_group_activity_topics()
+			) {
+				return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss' ), array( 'status' => 403 ) );
+			} elseif (
+				in_array( $permission_type, array( 'admins' ), true ) &&
+				! groups_is_user_admin( bp_loggedin_user_id(), $topic->item_id )
+			) {
+				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
+			} elseif (
+				in_array( $permission_type, array( 'mods' ), true ) &&
+				! groups_is_user_mod( bp_loggedin_user_id(), $topic->item_id ) &&
+				! groups_is_user_admin( bp_loggedin_user_id(), $topic->item_id )
+			) {
+				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
+			} elseif (
+				in_array( $permission_type, array( 'members' ), true ) &&
+				! groups_is_user_member( bp_loggedin_user_id(), $topic->item_id ) &&
+				! groups_is_user_mod( bp_loggedin_user_id(), $topic->item_id ) &&
+				! groups_is_user_admin( bp_loggedin_user_id(), $topic->item_id )
+			) {
+				return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
+			}
+		} elseif ( ! $keeps_its_topic && ! bp_current_user_can( 'administrator' ) && 'mods_admins' === $permission_type ) {
+			return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss' ), array( 'status' => 403 ) );
+		}
+
+		return true;
 	}
 
 	/**
@@ -1425,6 +1715,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * Prepare a topic for response.
 	 *
 	 * @since 2.8.80
+	 * @since BuddyBoss 3.7.0 `is_delete` follows the delete permission instead of being always true.
 	 *
 	 * @param stdClass        $item    Topic object.
 	 * @param WP_REST_Request $request Request object.
@@ -1449,7 +1740,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 		$item_id   = $request->get_param( 'item_id' );
 		$item_type = $request->get_param( 'item_type' );
 		if ( bp_is_active( 'groups' ) && ! empty( $item_id ) && ! empty( $item_type ) && 'groups' === $item_type ) {
-			$data['is_delete'] = true;
+			$data['is_delete'] = $this->bb_rest_can_delete_group_topic( $item_id );
 
 			$data['can_post'] = false;
 			if (
@@ -1617,6 +1908,7 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * The function to use to update the topic id's value of the activity REST Field.
 	 *
 	 * @since 2.8.80
+	 * @since BuddyBoss 3.7.0 The required-topic check runs before the write only (bb_rest_activity_topic_required_check()).
 	 *
 	 * @param int    $topic_id   The BuddyPress component's object that was just created/updated during the request.
 	 *                           (in this case, the BP_Activity_Activity object).
@@ -1639,11 +1931,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		// Get the topic ID.
-		// $topic_id is already passed as the first parameter.
-		if ( bb_is_activity_topic_required() && empty( $topic_id ) ) {
-			return new WP_Error( 'bp_rest_topic_id_required', __( 'Topic ID is required.', 'buddyboss' ), array( 'status' => 400 ) );
-		}
+		// "Require users to select a topic" is checked before the write (bb_rest_activity_topic_required_check(),
+		// registered with this field), which also knows feeds without a usable topic; checking it again here,
+		// after the activity was saved, refused posts the website accepts and reported them as failed.
 
 		if ( is_numeric( $topic_id ) && $topic_id > 0 ) {
 			$topic_id = (int) $topic_id;
@@ -1661,46 +1951,9 @@ class BB_REST_Topics_Endpoint extends WP_REST_Controller {
 				return new WP_Error( 'bp_rest_topic_not_found', __( 'Topic not found.', 'buddyboss' ), array( 'status' => 404 ) );
 			}
 
-			$permission_type = $get_topic->permission_type;
-			if ( ! empty( $get_topic->item_id ) && 'groups' === $get_topic->item_type && bp_is_active( 'groups' ) ) {
-				$group = groups_get_group( $get_topic->item_id );
-				if ( empty( $group ) ) {
-					return new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss' ), array( 'status' => 404 ) );
-				}
-
-				$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $value->id );
-				if (
-					! function_exists( 'bb_is_enabled_group_activity_topics' ) ||
-					! bb_is_enabled_group_activity_topics()
-				) {
-					return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss' ), array( 'status' => 403 ) );
-				} elseif (
-					empty( $existing_topic_id ) ||
-					(int) $existing_topic_id !== (int) $topic_id
-				) {
-
-					if (
-						in_array( $permission_type, array( 'admins' ), true ) &&
-						! groups_is_user_admin( bp_loggedin_user_id(), $get_topic->item_id )
-					) {
-						return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
-					} elseif (
-						in_array( $permission_type, array( 'mods' ), true ) &&
-						! groups_is_user_mod( bp_loggedin_user_id(), $get_topic->item_id ) &&
-						! groups_is_user_admin( bp_loggedin_user_id(), $get_topic->item_id )
-					) {
-						return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
-					} elseif (
-						in_array( $permission_type, array( 'members' ), true ) &&
-						! groups_is_user_member( bp_loggedin_user_id(), $get_topic->item_id ) &&
-						! groups_is_user_mod( bp_loggedin_user_id(), $get_topic->item_id ) &&
-						! groups_is_user_admin( bp_loggedin_user_id(), $get_topic->item_id )
-					) {
-						return new WP_Error( 'bp_rest_group_access_denied', __( 'You cannot update a topic for this group.', 'buddyboss' ), array( 'status' => 403 ) );
-					}
-				}
-			} elseif ( ! bp_current_user_can( 'administrator' ) && 'mods_admins' === $permission_type ) {
-				return new WP_Error( 'bp_rest_access_denied', __( 'You cannot update a topic.', 'buddyboss' ), array( 'status' => 403 ) );
+			$can_use_topic = $this->bb_rest_activity_topic_permission_check( $get_topic, $value->id );
+			if ( is_wp_error( $can_use_topic ) ) {
+				return $can_use_topic;
 			}
 		}
 
