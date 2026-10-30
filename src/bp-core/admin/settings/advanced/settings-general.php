@@ -126,7 +126,7 @@ function bb_advanced_register_general_fields() {
 		)
 	);
 
-	// Until 3.5.1 this section was "advanced_activity"; fields added under that ID still land here.
+	// Before BuddyBoss [BBVERSION] this section was "advanced_activity"; fields added under that ID still land here.
 	add_filter( 'bb_feature_section_aliases', 'bb_advanced_general_section_aliases', 10, 3 );
 
 	// Field 6: Feed Page Loading — two inline selects (conditional on Activity component).
@@ -322,7 +322,7 @@ function bb_advanced_register_general_fields() {
 /**
  * Keep the pre-rename ID of the Page Loading section working.
  *
- * Until BuddyBoss 3.5.1 the Advanced > General card that holds Feed Page Loading was the
+ * Before BuddyBoss [BBVERSION] the Advanced > General card that holds Feed Page Loading was the
  * "advanced_activity" section, registered only while the Activity component is active. It is
  * now "advanced_page_loading" (it also holds Members & Groups Loading), so a field that an
  * add-on still registers into "advanced_activity" is moved into it, under the same condition.

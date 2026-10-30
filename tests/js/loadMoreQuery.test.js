@@ -324,4 +324,49 @@ describeWithLibs.each( BUNDLES )( 'Load More query (%s)', ( label, bundle ) => {
 		).map( ( li ) => li.getAttribute( 'data-bp-item-id' ) );
 		expect( ids ).toEqual( [ '1', '2', '3' ] );
 	} );
+
+	test.each( [
+		[
+			'an error response',
+			() =>
+				window.jQuery
+					.Deferred()
+					.resolve( { success: false } )
+					.promise(),
+		],
+		[
+			'a failed request',
+			() => window.jQuery.Deferred().reject().promise(),
+		],
+	] )(
+		'Load More is restored after %s and retries on click, not on scroll',
+		( _case, transport ) => {
+			const posts = [];
+			boot( bundle, LIST( 'members', '?upage=2' ) );
+			window.bp.Nouveau.ajax = ( postData ) => {
+				posts.push( postData );
+				return transport();
+			};
+
+			// State autoLoadMoreItems() leaves before it clicks the button.
+			const $li = window.jQuery( 'li.load-more' );
+			$li.data( 'bp-autoloaded', 1 );
+			$li.data( 'bp-load-more-label', 'Load More' );
+			$li.find( 'a' ).text( 'Loading...' );
+
+			clickLoadMore();
+
+			const link = document.querySelector( 'li.load-more a' );
+			expect( link ).not.toBeNull();
+			expect( link.classList.contains( 'loading' ) ).toBe( false );
+			expect( link.textContent ).toBe( 'Load More' );
+			// Scroll autoload stays off, so a lasting error is not re-requested on every scroll event.
+			expect( $li.data( 'bp-autoloaded' ) ).toBe( 1 );
+
+			// A click still retries the same page.
+			clickLoadMore();
+			expect( posts ).toHaveLength( 2 );
+			expect( posts[ 1 ] ).toMatchObject( { page: 2, method: 'append' } );
+		}
+	);
 } );

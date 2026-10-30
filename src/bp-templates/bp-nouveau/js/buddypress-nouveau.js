@@ -3205,6 +3205,19 @@ window.bp = window.bp || {};
 			// Show loading state.
 			$loadMore.find( 'a' ).first().addClass( 'loading' );
 
+			// Put the button back when the request fails or returns an error (e.g. an expired nonce),
+			// so the member can click it to retry instead of facing a spinner. Scroll autoload stays
+			// off for this button (bp-autoloaded is kept), so a lasting error is not re-requested on
+			// every scroll event.
+			var resetLoadMore = function () {
+				var $link = $loadMore.find( 'a' ).first();
+
+				$link.removeClass( 'loading' );
+				if ( $loadMore.data( 'bp-load-more-label' ) ) {
+					$link.text( $loadMore.data( 'bp-load-more-label' ) );
+				}
+			};
+
 			var queryData = {
 				object       : object,
 				scope        : query.scope,
@@ -3263,13 +3276,11 @@ window.bp = window.bp || {};
 
 						// Trigger lazy load for images.
 						jQuery( window ).scroll();
+					} else {
+						resetLoadMore();
 					}
 				}
-			).fail(
-				function () {
-					$loadMore.find( 'a' ).first().removeClass( 'loading' );
-				}
-			);
+			).fail( resetLoadMore );
 		},
 
 		/**
@@ -3356,6 +3367,7 @@ window.bp = window.bp || {};
 
 				if ( $window.scrollTop() + $window.height() > offset ) {
 					$btn.data( 'bp-autoloaded', 1 );
+					$btn.data( 'bp-load-more-label', $btn.find( 'a' ).text() );
 					$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
 					$btn.find( 'a' ).trigger( 'click' );
 				}
