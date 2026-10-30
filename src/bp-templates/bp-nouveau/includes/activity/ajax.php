@@ -565,9 +565,17 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		// Video and Document ship in the BuddyBoss Add-ons plugin; only re-add when loaded.
+		if ( function_exists( 'bp_video_activity_append_video' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
+		}
+		if ( function_exists( 'bp_document_activity_append_document' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
+		}
+		// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+		if ( function_exists( 'bp_media_activity_append_gif' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		}
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
@@ -820,18 +828,25 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
-	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
-		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
-		}
+	// A chosen topic is checked even when a topic is not required. Nothing is checked or saved while topics are off.
+	$topics_enabled = bb_is_enabled_activity_topics();
+	$topic_id       = $topics_enabled && isset( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+	if ( $topics_enabled && bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
+	}
+	if ( ! empty( $topic_id ) ) {
 		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
 		if (
 			empty( $existing_topic_id ) ||
 			(int) $existing_topic_id !== (int) $topic_id
 		) {
-			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+			// Resolve the object the same way the posting code below does, so the topic is checked for the feed it is saved to.
+			$object  = ! empty( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 			$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+			if ( empty( $object ) && bp_is_group() ) {
+				$object  = 'group';
+				$item_id = bp_get_current_group_id();
+			}
 
 			$args = array(
 				'topic_id'  => $topic_id,
