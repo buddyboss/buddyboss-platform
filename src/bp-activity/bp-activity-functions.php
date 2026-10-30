@@ -958,6 +958,7 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  *
  * @since BuddyPress 1.2.0
  * @since BuddyBoss 2.5.20 Added the `$args` parameter.
+ * @since BuddyBoss [BBVERSION] Refuses users who cannot view the activity, such as non-members of a private group.
  *
  * @param int   $activity_id ID of the activity item being favorited.
  * @param int   $user_id     ID of the user favoriting the activity item.
@@ -988,6 +989,17 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
+	}
+
+	// The reaction privacy check skips groups, so check the user can view the item (PROD-10649).
+	if (
+		in_array( $r['type'], array( 'activity', 'activity_comment' ), true ) &&
+		! bb_activity_user_can_view( (int) $activity_id, $user_id )
+	) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_not_allowed',
+			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss' )
+		);
 	}
 
 	// Check if migration is in progress.
@@ -2978,6 +2990,7 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  * @since BuddyPress 2.5.0 Add a new possible parameter $skip_notification for the array of arguments.
  *              Add the $primary_link parameter for the array of arguments.
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
+ * @since BuddyBoss [BBVERSION] Refuses a new comment when the user cannot view the root activity or the comment being replied to, or when the parent is not in the root's thread.
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -3090,6 +3103,27 @@ function bp_activity_new_comment( $args = '' ) {
 				return false;
 			}
 		}
+
+		// The parent must be a comment in the same thread. A comment from another thread never
+		// leads back to this root, so the cache walk below would loop forever (PROD-10649).
+		if (
+			(int) $r['parent_id'] !== (int) $r['activity_id'] &&
+			(
+				'activity_comment' !== $comment_activity->type ||
+				(int) $comment_activity->item_id !== (int) $r['activity_id']
+			)
+		) {
+			$error = new WP_Error( 'invalid_parent_activity', $feedback );
+
+			if ( 'wp_error' === $r['error_type'] ) {
+				return $error;
+
+				// Backpat.
+			} else {
+				$bp->activity->errors['new_comment'] = $error;
+				return false;
+			}
+		}
 	}
 
 	// Maybe set current activity ID as the parent.
@@ -3118,6 +3152,30 @@ function bp_activity_new_comment( $args = '' ) {
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
 		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// The privacy check above skips groups, so a non-member could still reply in a private or
+	// hidden group. Check the root and the comment being replied to (PROD-10649).
+	if (
+		empty( $r['id'] ) &&
+		(
+			! bb_activity_user_can_view( $activity, (int) $r['user_id'] ) ||
+			(
+				(int) $r['parent_id'] !== (int) $activity_id &&
+				! bb_activity_user_can_view( (int) $r['parent_id'], (int) $r['user_id'] )
+			)
+		)
+	) {
+		$error = new WP_Error( 'bp_activity_comment_not_allowed', __( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -3231,7 +3289,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( (int) $clear_id !== (int) $activity_id ) {
+	while ( ! empty( $clear_id ) && (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
@@ -3882,6 +3940,7 @@ function bp_activity_get_permalink( $activity_id, $activity_obj = false ) {
  * Can a user see a particular activity item?
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] An activity comment is checked against its root activity.
  *
  * @param  BP_Activity_Activity $activity Activity object.
  * @param  integer              $user_id  User ID.
@@ -3895,10 +3954,22 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// A comment is stored with component 'activity' and no group of its own, so the
+	// group check runs on its root activity (item_id, also for nested replies).
+	$access_activity = $activity;
+	if ( isset( $activity->type ) && 'activity_comment' === $activity->type ) {
+		$access_activity = new BP_Activity_Activity( (int) $activity->item_id );
+
+		// Fail closed when the root no longer exists.
+		if ( empty( $access_activity->id ) ) {
+			$retval = false;
+		}
+	}
+
 	// If activity is from a group, do extra cap checks.
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	if ( $retval && bp_is_active( 'groups' ) && buddypress()->groups->id === $access_activity->component ) {
 		// Check to see if the user has access to the activity's parent group.
-		$group = groups_get_group( $activity->item_id );
+		$group = groups_get_group( $access_activity->item_id );
 		if ( $group ) {
 			// For logged-in user, we can check against the 'user_has_access' prop.
 			if ( bp_loggedin_user_id() === $user_id ) {
@@ -3907,15 +3978,15 @@ function bp_activity_user_can_read( $activity, $user_id = 0 ) {
 				// Manually check status.
 			} elseif ( 'private' === $group->status || 'hidden' === $group->status ) {
 				// Only group members that are not banned can view.
-				if ( ! groups_is_user_member( $user_id, $activity->item_id ) || groups_is_user_banned( $user_id, $activity->item_id ) ) {
+				if ( ! groups_is_user_member( $user_id, $access_activity->item_id ) || groups_is_user_banned( $user_id, $access_activity->item_id ) ) {
 					$retval = false;
 				}
 			}
 		}
 	}
 
-	// Spammed items are not visible to the public.
-	if ( $activity->is_spam ) {
+	// Spammed items are not visible to the public, nor are comments on a spammed root.
+	if ( $activity->is_spam || ! empty( $access_activity->is_spam ) ) {
 		$retval = false;
 	}
 
@@ -7558,11 +7629,14 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	/**
 	 * Check whether a user may view an activity item, including its group and privacy rules.
 	 *
-	 * AJAX handlers that render an activity by a client-supplied ID with `privacy => false`
-	 * and `show_hidden => true` must call this first. Comments are checked against their root post,
-	 * and the hidden media/video/document sub-activities of a multi-item post against their parent.
+	 * AJAX handlers that render an activity by a client-supplied ID must call this first.
+	 * A comment is checked against its root post (item_id), and the hidden
+	 * media/video/document sub-activity of a multi-item post against the post or comment it
+	 * belongs to (secondary_item_id). A comment on one of those sub-activities shares its
+	 * privacy value, so comments are walked first.
 	 *
 	 * @since BuddyBoss 3.6.2
+	 * @since BuddyBoss [BBVERSION] Walks a comment to its root before the sub-activity hop and skips the privacy check on comment rows.
 	 *
 	 * @param int|BP_Activity_Activity $activity Activity ID or object.
 	 * @param int                      $user_id  User ID. Default the logged-in user.
@@ -7571,43 +7645,51 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 */
 	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
 		if ( ! $activity instanceof BP_Activity_Activity ) {
-			$activity = new BP_Activity_Activity( absint( $activity ) );
+			// Accept an ID, or a row from bp_activity_get() / bp_activity_get_specific().
+			$activity = new BP_Activity_Activity( is_object( $activity ) && isset( $activity->id ) ? (int) $activity->id : absint( $activity ) );
 		}
 
 		if ( empty( $activity->id ) ) {
 			return false;
 		}
 
-		$user_id  = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
-		$can_view = true;
-
+		$user_id    = $user_id ? absint( $user_id ) : bp_loggedin_user_id();
+		$can_view   = true;
 		$activities = array( $activity );
 		$current    = $activity;
 
-		// A post with several photos, videos or documents gives each one a hidden sub-activity
-		// (privacy media/video/document) whose secondary_item_id is the post or comment it belongs to.
-		// Those privacy values carry no rule of their own, so the parent decides.
-		if (
-			in_array( $activity->privacy, array( 'media', 'video', 'document' ), true ) &&
-			! empty( $activity->secondary_item_id ) &&
-			(int) $activity->secondary_item_id !== (int) $activity->id
-		) {
-			$parent = new BP_Activity_Activity( (int) $activity->secondary_item_id );
-			if ( empty( $parent->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $parent;
-				$current      = $parent;
-			}
-		}
+		// Walk up from a comment to its root, and from a sub-activity to its post or comment.
+		// The longest real chain is comment > sub-activity > comment > post.
+		for ( $hop = 0; $hop <= 4; $hop++ ) {
+			$parent_id = 0;
 
-		if ( $can_view && 'activity_comment' === $current->type && ! empty( $current->item_id ) && (int) $current->item_id !== (int) $current->id ) {
-			$root = new BP_Activity_Activity( (int) $current->item_id );
-			if ( empty( $root->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $root;
+			if ( 'activity_comment' === $current->type ) {
+				$parent_id = (int) $current->item_id;
+			} elseif (
+				in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) &&
+				! empty( $current->secondary_item_id ) &&
+				(int) $current->secondary_item_id !== (int) $current->id
+			) {
+				$parent_id = (int) $current->secondary_item_id;
 			}
+
+			if ( empty( $parent_id ) ) {
+				break;
+			}
+
+			// Fail closed when the chain is longer than any real one, or a parent no longer exists.
+			if ( 4 === $hop ) {
+				$can_view = false;
+				break;
+			}
+
+			$current = new BP_Activity_Activity( $parent_id );
+			if ( empty( $current->id ) ) {
+				$can_view = false;
+				break;
+			}
+
+			$activities[] = $current;
 		}
 
 		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -7615,6 +7697,12 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 				if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
 					$can_view = false;
 					break;
+				}
+
+				// A comment copies its root's privacy but keeps the commenter as user_id, so its
+				// own check would test friendship with the commenter. The root on the chain decides.
+				if ( 'activity_comment' === $item->type ) {
+					continue;
 				}
 
 				$privacy = bb_validate_activity_privacy(

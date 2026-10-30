@@ -511,6 +511,7 @@ function bp_nouveau_ajax_delete_activity() {
  * Used for the 'Read More' link on long activity items.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Only returns content the user can read, in its group and thread.
  *
  * @return string JSON reply.
  */
@@ -550,6 +551,11 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	}
 
 	$activity = $activity_array['activities'][0];
+
+	// Guests can call this, so only return content the user can read, in its group and thread.
+	if ( ! bb_activity_user_can_view( (int) $activity->id ) ) {
+		wp_send_json_error( $response );
+	}
 
 	/**
 	 * Fires before the return of an activity's full, non-excerpted content via a POST request.
@@ -691,7 +697,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 		// determine depth.
 		$depth     = 1;
 		$parent_id = (int) $activities_template->activities[0]->secondary_item_id;
-		while ( $parent_id !== (int) $activities_template->activities[0]->item_id ) {
+		while ( $parent_id && $parent_id !== (int) $activities_template->activities[0]->item_id ) {
 			$depth++;
 			$p_obj     = new BP_Activity_Activity( $parent_id );
 			$parent_id = (int) $p_obj->secondary_item_id;
@@ -1683,6 +1689,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
  * Get more comments.
  *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION] The activity and the parent comment must be readable, in their group and thread.
  *
  * @return void
  */
@@ -1749,6 +1756,19 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 			)
 		);
 	}
+
+	// Guests can call this, so the activity and the comment whose replies are loaded must
+	// both be readable, in their group and thread.
+	if (
+		! bb_activity_user_can_view( $activity_id ) ||
+		! bb_activity_user_can_view( $parent_commment )
+	) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
+			)
+		);
+	}
 	$comments = BP_Activity_Activity::append_comments(
 		array( $parent_commment ),
 		'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
@@ -1807,6 +1827,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
  * Get particular activity to sync when activity modal is closed.
  *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION] Refuses activities the current user cannot view.
  *
  * @return void
  */
@@ -1837,6 +1858,15 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	}
 
 	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+
+	// Guests can call this, so check the activity and its root post before rendering it (PROD-10649).
+	if ( ! bb_activity_user_can_view( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
 
 	$args = array(
 		'in'               => $activity_id,
