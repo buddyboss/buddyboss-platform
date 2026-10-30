@@ -1,3 +1,9 @@
+// One draft notice at a time in every composer, the forum forms included:
+// the retention note always follows a refusal notice.
+.bb-draft-save-feedback ~ .bb-draft-retention-note {
+	display: none;
+}
+
 // Activity Post Form default view
 [class*="bb-rl-activity-form"] {
 	background-color: var(--bb-rl-background-color);
@@ -136,6 +142,40 @@
 
 		#bb-rl-discard-draft-activity {
 			display: block;
+		}
+	}
+
+	// Draft notices belong to the OPEN composer, not the collapsed bar - same
+	// default-hidden / shown-on-focus-in pattern as the rest of the chrome.
+	.bb-draft-save-feedback,
+	.bb-draft-retention-note {
+		display: none;
+	}
+
+	&.bb-rl-focus-in {
+
+		.bb-draft-save-feedback,
+		.bb-draft-retention-note {
+			display: flex;
+			margin: var(--bb-rl-space-200) var(--bb-rl-space-300) 0;
+			padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+			border-radius: var(--bb-rl-radius-md);
+			font-size: var(--bb-rl-font-size-sm);
+			font-weight: 400;
+		}
+
+		.bb-draft-save-feedback.error {
+			border-color: var(--bb-rl-border-danger-secondary-color);
+		}
+
+		.bb-draft-retention-note.info {
+			border-color: var(--bb-rl-border-info-secondary-color);
+		}
+
+		// One notice at a time: the retention note always follows a refusal
+		// notice, so it waits until that notice is cleared.
+		.bb-draft-save-feedback ~ .bb-draft-retention-note {
+			display: none;
 		}
 	}
 
@@ -955,7 +995,6 @@
 			}
 		}
 
-
 		> a {
 			font-size: 0;
 
@@ -1051,7 +1090,6 @@
 #activity-url-scrapper-img-holder + .activity-link-preview-info {
 	border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
 }
-
 
 .activity-url-scrapper-container.activity-post-form-link-wp-embed .activity-link-preview-info {
 	background-color: transparent;
@@ -1197,7 +1235,6 @@
 .twitter-timeline {
 	width: 100% !important;
 }
-
 
 .whats-new-topic-selector {
 	position: relative;
@@ -1463,3 +1500,4 @@
 		}
 	}
 }
+

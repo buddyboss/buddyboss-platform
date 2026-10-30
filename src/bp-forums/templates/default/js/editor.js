@@ -6,6 +6,27 @@ jQuery( document ).ready(
 
 		if ( typeof window.MediumEditor !== 'undefined' ) {
 
+			/**
+			 * Paste replacements that keep the text of a pasted table.
+			 *
+			 * Spreadsheet copies (Google Sheets, Excel, Numbers) are an HTML table, and
+			 * the table tags are in this editor's cleanTags, which removes them WITH
+			 * their text: the paste inserted nothing (F-07). Run before MediumEditor's
+			 * own clean-up, these turn each row into a paragraph and separate cells
+			 * with a space, and drop the sheet's inline <style> block.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			var bbTablePasteReplacements = [
+				[ new RegExp( /<style[^>]*>[\s\S]*?<\/style>/gi ), '' ],
+				[ new RegExp( /<\/?(?:colgroup|col)\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|caption)\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<tr\b[^>]*>/gi ), '<p>' ],
+				[ new RegExp( /<\/tr>/gi ), '</p>' ],
+				[ new RegExp( /<t[dh]\b[^>]*>/gi ), '' ],
+				[ new RegExp( /<\/t[dh]>/gi ), ' ' ]
+			];
+
 			window.forums_medium_forum_editor = [];
 			window.forums_medium_reply_editor = [];
 			window.forums_medium_topic_editor = [];
@@ -44,6 +65,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								preCleanReplacements: bbTablePasteReplacements,
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
@@ -163,6 +185,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								preCleanReplacements: bbTablePasteReplacements,
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
@@ -330,6 +353,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								preCleanReplacements: bbTablePasteReplacements,
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
@@ -578,6 +602,7 @@ jQuery( document ).ready(
 											[new RegExp(/<\/h[1-6]/gi), '</b'],
 										],
 										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										preCleanReplacements: bbTablePasteReplacements,
 										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
@@ -693,6 +718,7 @@ jQuery( document ).ready(
 											[new RegExp(/<\/h[1-6]/gi), '</b'],
 										],
 										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										preCleanReplacements: bbTablePasteReplacements,
 										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},
@@ -807,6 +833,7 @@ jQuery( document ).ready(
 											[new RegExp(/<\/h[1-6]/gi), '</b'],
 										],
 										cleanAttrs: ['class', 'style', 'dir', 'id'],
+										preCleanReplacements: bbTablePasteReplacements,
 										cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 										unwrapTags: []
 									},

@@ -1045,6 +1045,11 @@ window.bp = window.bp || {};
 							if ( dropzoneObj ) {
 								dropzoneObj.files.push( mockFile );
 								dropzoneObj.emit( 'addedfile', mockFile );
+								// A draft keeps the upload response's formatted size ("14 KB"), which
+								// Dropzone's numeric formatter shows as "0 b"; show the stored text.
+								if ( mockFile.previewElement && mockFile.size && ! _.isFinite( Number( mockFile.size ) ) ) {
+									$( mockFile.previewElement ).find( '[data-dz-size]' ).text( String( mockFile.size ) );
+								}
 
 								// Handle thumbnails for media files.
 								if ( 'media' === fileType ) {
