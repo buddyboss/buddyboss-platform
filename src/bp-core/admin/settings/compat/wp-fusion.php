@@ -4,17 +4,22 @@
  *
  * Makes WP Fusion's post/CPT access-control metabox fully usable inside the
  * Settings 2.0 edit modals (forums, topics, replies, and any other bridged
- * CPT). WP Fusion is not bridged with any plugin-specific code in the engine —
- * everything plugin-specific lives here and registers through the engine's
- * generic extension filters:
+ * CPT), AND registers WP Fusion's BuddyPress **group** metabox
+ * ("WP Fusion - Group Settings") directly against `BB_Admin_Meta_Field_Registry`
+ * so it appears in the Settings 2.0 group edit modal. Two different mechanisms
+ * for two different reasons — see the group section below for why the CPT
+ * approach (generic auto-bridge + resolver filters) doesn't work for groups.
+ *
+ * --- CPT metabox (`wpf-meta`) -----------------------------------------------
+ *
+ * Bridged automatically by the generic engine (CPT path); this module only
+ * teaches it WP Fusion-specific behaviour via two extension filters:
  *
  *   - `bb_legacy_ajax_select_resolvers` — teaches the bridge how to search and
  *     label WP Fusion's two select2/AJAX widgets (tag pickers, page redirect).
  *   - `bb_legacy_field_overrides`       — replicates the metabox's conditional
  *     gating (fields that WP Fusion disables until "Users must be logged in"
  *     is checked) and refines a couple of field types.
- *
- * Loaded once from the bottom of legacy-meta-bridge-utils.php.
  *
  * WP Fusion field inventory (name => bridged behaviour):
  *   wpf-settings[lock_content]      checkbox — the gate; enables the rest
@@ -29,6 +34,42 @@
  *   wpf-settings[apply_tags][]      tag multiselect — independent (apply on view)
  *   wpf-settings[apply_delay]       number (ms) — independent
  *   wpf-settings[message]           textarea (custom restricted message) — independent
+ *
+ * --- Group metabox (`wpf-buddypress-meta`) ----------------------------------
+ *
+ * WP Fusion's group box (`WPF_BuddyPress::add_meta_box_groups()` /
+ * `meta_box_callback_groups()` in `includes/integrations/class-buddypress.php`)
+ * renders three `<select multiple class="select4-wpf-tags" name="wpf-settings-
+ * buddypress[<key>][]">` tag pickers — Apply Tags, Link with Tag, Link with Tag
+ * - Group Organizer — all three leaves of ONE groupmeta array stored under the
+ * single key `wpf-settings-buddypress`. Because every input name is
+ * array-notation, the generic groups auto-bridge
+ * (`groups/legacy-meta-bridge.php`) silently rejects all three via
+ * `bb_legacy_is_safe_post_key()` (see that file's "Known limitations" —
+ * array-shape reassembly only exists on the CPT path, not the groups path).
+ * So the fields are registered manually here via
+ * `bb_register_groups_meta_fields`, reusing the
+ * `wpf_tags` resolver already registered above for the CPT path (same CRM tag
+ * list, same create-tag flow) so both surfaces search/label/create identically.
+ *
+ * Field inventory (all three read/write the single `wpf-settings-buddypress`
+ * groupmeta array; PHP key in that array => modal field):
+ *   apply_tags     Apply Tags                        (multi, unlimited)
+ *   tag_link       Link with Tag                     (single tag; see note below)
+ *   organizer_tag  Link with Tag - Group Organizer    (single tag; see note below)
+ *
+ * Single-tag note: the classic select2 enforces its "pick one" limit purely
+ * client-side (`data-limit="1"` read by WP Fusion's own admin JS). The modal
+ * mirrors it with `extra_data.max_selection = 1`, which `AjaxMultiSelectField`
+ * enforces by replacing the previous chip, and
+ * `bb_legacy_wpf_sanitize_group_tag_ids()` keeps at most one id server-side.
+ *
+ * Clearing note: all three fields set `extra_data.send_empty_as_clear`, so an
+ * emptied picker is posted as '' (not omitted) and the leaf can be cleared.
+ *
+ * Loaded once from the bottom of legacy-meta-bridge-utils.php, gated by the
+ * same `WP_FUSION_VERSION`/`WPF_VERSION`/`wp_fusion()` detection used for the
+ * CPT half — both halves live in one file because they're one plugin.
  *
  * @package BuddyBoss\Core\Administration
  * @since   BuddyBoss 3.1.0
@@ -279,8 +320,12 @@ function bb_legacy_wpf_create_tag() {
 		wp_send_json_error( array( 'message' => __( 'This CRM does not support creating tags.', 'buddyboss' ) ), 400 );
 	}
 
-	$term = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
-	$term = trim( $term );
+	// Not sanitize_text_field() — see bb_legacy_wpf_sanitize_group_tag_ids()
+	// docblock: it would mutate an add_tags CRM's literal tag id (brackets,
+	// internal whitespace, %xx-shaped substrings) before it's ever created.
+	$term = isset( $_POST['term'] ) ? wp_unslash( $_POST['term'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized by bb_legacy_wpf_sanitize_group_tag_ids() below.
+	$term = bb_legacy_wpf_sanitize_group_tag_ids( array( $term ) );
+	$term = isset( $term[0] ) ? $term[0] : '';
 	if ( '' === $term ) {
 		wp_send_json_error( array( 'message' => __( 'Tag name is empty.', 'buddyboss' ) ), 400 );
 	}
@@ -329,3 +374,443 @@ function bb_legacy_wpf_create_tag() {
 	);
 }
 add_action( 'wp_ajax_bb_legacy_wpf_create_tag', 'bb_legacy_wpf_create_tag' );
+
+/**
+ * Tell the groups auto-bridge to skip WP Fusion's group metabox.
+ *
+ * The auto-bridge would otherwise still walk `wpf-buddypress-meta` and find
+ * zero safe inputs (every leaf is array-notation — see file docblock), which
+ * is harmless but wasteful (an HTML capture + parse for nothing every hour).
+ * Skipping it outright also keeps a would-be-empty "WP Fusion - Group
+ * Settings" section from ever appearing if the reject logic's behaviour
+ * changes in the future.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string[] $skip Metabox ids the auto-bridge should ignore.
+ * @return string[] Updated list.
+ */
+function bb_legacy_wpf_skip_group_auto_bridge( $skip ) {
+	$skip   = (array) $skip;
+	$skip[] = 'wpf-buddypress-meta';
+	return $skip;
+}
+add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_wpf_skip_group_auto_bridge' );
+
+/**
+ * Read the WP Fusion group settings array for a group, merged over defaults
+ * so every key is always present regardless of what's actually stored, and
+ * each leaf coerced to an array so a corrupted/scalar leaf (e.g. from data
+ * written outside this bridge) can't reach `get_value()` /
+ * `AjaxMultiSelectField` as anything but a (possibly single-element) flat
+ * array of tag ids.
+ *
+ * Mirrors the default-merge in `WPF_BuddyPress::meta_box_callback_groups()`.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param int $group_id Group ID.
+ * @return array Map with 'apply_tags', 'tag_link', 'organizer_tag' keys, each a flat array of tag ids.
+ */
+function bb_legacy_wpf_group_settings( $group_id ) {
+	$defaults = array(
+		'apply_tags'    => array(),
+		'tag_link'      => array(),
+		'organizer_tag' => array(),
+	);
+
+	$group_id = (int) $group_id;
+	if ( $group_id <= 0 ) {
+		return $defaults;
+	}
+
+	$stored   = groups_get_groupmeta( $group_id, 'wpf-settings-buddypress' );
+	$settings = is_array( $stored ) ? array_merge( $defaults, $stored ) : $defaults;
+
+	// Only coerce the three keys this bridge owns — `$settings` can carry extra
+	// keys WP Fusion itself stores under `wpf-settings-buddypress`, and
+	// `bb_legacy_wpf_replay_group_save()` writes this whole array back, so
+	// forcing an unrelated key to array() here would corrupt it on next save.
+	foreach ( array_keys( $defaults ) as $key ) {
+		$settings[ $key ] = array_values( (array) $settings[ $key ] );
+	}
+
+	return $settings;
+}
+
+/**
+ * Stage one leaf of the WP Fusion group settings for this save request.
+ *
+ * Nothing is written to groupmeta here: the 3 fields only collect their
+ * sanitized values (read-modify-write is not needed, each owns its own key),
+ * and {@see bb_legacy_wpf_replay_group_save()} hands the merged result to WP
+ * Fusion's own `save_groups_data()` once `save_fields_data()` has finished.
+ *
+ * Call with `$group_id` and `$key` to stage, or with `$key = null` to read and
+ * clear everything staged for that group.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param int         $group_id Group ID.
+ * @param string|null $key      One of 'apply_tags', 'tag_link', 'organizer_tag', or null to flush.
+ * @param array       $value    Sanitized flat array of tag ids.
+ * @return array Staged leaves for the group (only when flushing), keyed by leaf name.
+ */
+function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = array() ) {
+	static $staged = array();
+
+	$group_id = (int) $group_id;
+	if ( $group_id <= 0 ) {
+		return array();
+	}
+
+	if ( null === $key ) {
+		$out = isset( $staged[ $group_id ] ) ? $staged[ $group_id ] : array();
+		unset( $staged[ $group_id ] );
+		return $out;
+	}
+
+	$staged[ $group_id ][ $key ] = array_values( (array) $value );
+
+	return array();
+}
+
+/**
+ * Get WP Fusion's BuddyPress integration when it is loaded and enabled.
+ *
+ * WP Fusion registers the integration object even when the admin has turned
+ * the BuddyPress integration off, and only skips its `init()` (so the classic
+ * group metabox and its save are not hooked). Both the field registration and
+ * the save replay use this, so the modal shows and saves the group settings
+ * exactly when the classic screen would. `is_integration_active()` is missing
+ * before WP Fusion 3.42.6, where the integration cannot be turned off.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return object|null The integration object, or null when unavailable or disabled.
+ */
+function bb_legacy_wpf_buddypress_integration() {
+	if ( ! function_exists( 'wp_fusion' ) || empty( wp_fusion()->integrations->buddypress ) ) {
+		return null;
+	}
+
+	$integration = wp_fusion()->integrations->buddypress;
+
+	if ( ! is_object( $integration ) || ! method_exists( $integration, 'save_groups_data' ) ) {
+		return null;
+	}
+
+	if ( method_exists( $integration, 'is_integration_active' ) && ! $integration->is_integration_active() ) {
+		return null;
+	}
+
+	return $integration;
+}
+
+/**
+ * Replay WP Fusion's group save from the values staged by the 3 fields.
+ *
+ * The Settings 2.0 save fires `bp_group_admin_edit_after`, but its POST has
+ * none of the classic group form fields (`bp-groups-slug`,
+ * `wpf-settings-buddypress`), so WP Fusion's handler on that hook does not
+ * save these settings. `save_groups_data()` (3.47.14: meta writer only) is
+ * called here instead, with those fields set for this call only.
+ * `wpf-settings` (group visibility) is re-fed so the handler doesn't delete it.
+ *
+ * The injected values are slashed like a real form submission: WP Fusion
+ * reads `$_POST` raw and its meta write unslashes once, so unslashed values
+ * would lose a backslash level on every save. The call runs inside the same
+ * wp_die/exception/output guard as the other third-party saves in this
+ * request, so a misbehaving handler cannot break the already-saved group's
+ * AJAX response.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param int             $group_id Saved group ID.
+ * @param BP_Groups_Group $group    Saved group object (unused).
+ */
+function bb_legacy_wpf_replay_group_save( $group_id, $group ) {
+	unset( $group );
+
+	$group_id = (int) $group_id;
+	if ( $group_id <= 0 ) {
+		return;
+	}
+
+	// Always flush, so nothing staged leaks into a later save in the same request.
+	$staged = bb_legacy_wpf_save_group_setting( $group_id );
+	if ( empty( $staged ) ) {
+		return;
+	}
+
+	$integration = bb_legacy_wpf_buddypress_integration();
+	if ( null === $integration ) {
+		return;
+	}
+
+	$settings = array_merge( bb_legacy_wpf_group_settings( $group_id ), $staged );
+	if ( empty( array_filter( $settings ) ) ) {
+		$settings = array(); // Handler deletes the row when empty.
+	}
+
+	$visibility  = groups_get_groupmeta( $group_id, 'wpf-settings', true );
+	$post_backup = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+	$_POST['bp-groups-slug']          = 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- handler's own guard.
+	$_POST['wpf-settings-buddypress'] = wp_slash( $settings ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$_POST['wpf-settings']            = wp_slash( is_array( $visibility ) ? $visibility : array() ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+	$ob_level = ob_get_level();
+	ob_start();
+
+	try {
+		bb_legacy_with_wp_die_safety(
+			function () use ( $integration, $group_id ) {
+				$integration->save_groups_data( $group_id );
+			}
+		);
+	} catch ( Throwable $e ) {
+		// Don't let the third-party handler break the React save. Log only
+		// class + file:line, never the message.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated behind WP_DEBUG; intentional debug-only log.
+			error_log( 'bb_legacy_wpf: save_groups_data threw ' . get_class( $e ) . ' at ' . $e->getFile() . ':' . $e->getLine() );
+		}
+	} finally {
+		while ( ob_get_level() > $ob_level ) {
+			ob_end_clean();
+		}
+		$_POST = $post_backup; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	}
+}
+add_action( 'bb_admin_after_save_group', 'bb_legacy_wpf_replay_group_save', 50, 2 );
+
+/**
+ * Sanitize a tag-id array from `AjaxMultiSelectField`.
+ *
+ * CRM tag ids aren't always numeric (e.g. `add_tags` CRMs use the typed
+ * string itself as the id), so this only trims/de-dupes/drops-empties rather
+ * than forcing `absint()`. Deliberately does NOT run values through
+ * `sanitize_text_field()`: that function strips anything that looks like an
+ * HTML tag, collapses internal whitespace, and removes any `%xx`-shaped
+ * substring — any of which would silently mutate an `add_tags` CRM's tag id
+ * (the literal string the admin typed) into a different string than what's
+ * actually stored in the CRM, desyncing the two. Only control characters are
+ * stripped (via `filter_var( ..., FILTER_FLAG_STRIP_LOW )`) and the result
+ * trimmed, which is enough to keep the stored value a well-formed
+ * single-line string without touching its content.
+ * `$max` mirrors the classic select2's `data-limit` for the two single-tag
+ * fields (see file docblock "Single-tag note") — when set, only the last
+ * `$max` entries are kept, matching a user replacing their one selection
+ * with a newer pick rather than being blocked from picking at all once one
+ * tag is chosen.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param mixed    $raw Raw value from `registered_field_*` POST.
+ * @param int|null $max Optional cap on the number of ids kept.
+ * @return string[] Sanitized, unique tag ids.
+ */
+function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
+	if ( ! is_array( $raw ) ) {
+		$raw = ( '' === $raw || null === $raw ) ? array() : array( $raw );
+	}
+
+	$out = array();
+	foreach ( $raw as $value ) {
+		if ( ! is_scalar( $value ) ) {
+			continue;
+		}
+		// Strip control characters only (not sanitize_text_field() — see
+		// docblock above) so an `add_tags` CRM's literal tag id survives
+		// unmutated.
+		$value = filter_var( (string) $value, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW );
+		$value = trim( $value );
+		if ( '' !== $value ) {
+			$out[] = $value;
+		}
+	}
+
+	$out = array_values( array_unique( $out ) );
+
+	if ( null !== $max && $max > 0 && count( $out ) > $max ) {
+		$out = array_slice( $out, -$max );
+	}
+
+	return $out;
+}
+
+/**
+ * Build the `get_extra_data` payload shared by all three tag-picker fields —
+ * identical shape to what the CPT bridge's `ajax_multiselect` fields receive
+ * (see `legacy-meta-bridge-utils.php`), so `AjaxMultiSelectField` behaves the
+ * same way on both surfaces.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string[] $saved Currently saved tag ids for this field.
+ * @param int|null $max   Optional cap on how many tags the field accepts (see
+ *                        the "Single-tag note" in the file docblock). When
+ *                        set, `AjaxMultiSelectField` enforces it client-side
+ *                        by dropping the oldest selection instead of only
+ *                        relying on the server-side truncation in
+ *                        `bb_legacy_wpf_sanitize_group_tag_ids()`.
+ * @return array Extra data for the `ajax_multiselect` field type.
+ */
+function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
+	// `send_empty_as_clear`: post an emptied picker as '' so the leaf can be
+	// cleared (see the file docblock "Clearing note"); the sanitizer maps ''
+	// to array().
+	$extra = array(
+		'ajax_action'         => 'bb_legacy_ajax_select_search',
+		'ajax_nonce'          => wp_create_nonce( 'bb_admin_settings' ),
+		'nonce_param'         => 'nonce',
+		'search_placeholder'  => 1 === (int) $max ? __( 'Select tag', 'buddyboss' ) : __( 'Select tags', 'buddyboss' ),
+		'string_ids'          => true,
+		'resolver'            => 'wpf_tags',
+		'selected_items'      => array(),
+		'send_empty_as_clear' => true,
+	);
+
+	if ( null !== $max && $max > 0 ) {
+		$extra['max_selection'] = (int) $max;
+	}
+
+	if ( bb_legacy_wpf_crm_supports_tag_create() ) {
+		$extra['allow_create']  = true;
+		$extra['create_action'] = 'bb_legacy_wpf_create_tag';
+		/* translators: %s: the tag name the admin typed. */
+		$extra['create_label'] = __( 'Create "%s"', 'buddyboss' );
+	}
+
+	foreach ( (array) $saved as $tag_id ) {
+		$extra['selected_items'][] = array(
+			'value' => (string) $tag_id,
+			'label' => function_exists( 'wpf_get_tag_label' ) ? (string) wpf_get_tag_label( $tag_id ) : (string) $tag_id,
+		);
+	}
+
+	return $extra;
+}
+
+/**
+ * Register the 3 WP Fusion group fields directly on the registry.
+ *
+ * All three share `field_group => 'wpf-buddypress-meta'` so the modal renders
+ * them together under one "WP Fusion - Group Settings" heading, matching the
+ * classic metabox's title verbatim (`WPF_BuddyPress::add_meta_box_groups()`).
+ *
+ * Order numbers start at 6100 — clear of core (order 100), so the WP Fusion
+ * section appears in a stable, predictable position.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
+ * @param string                       $component Component identifier.
+ */
+function bb_legacy_wpf_register_group_fields( $registry, $component ) {
+	// `groups_get_groupmeta()` only confirms BuddyPress groups are active, not
+	// that WP Fusion's own BuddyPress integration is loaded and enabled — it
+	// owns `wpf-settings-buddypress` and is what these fields bridge against.
+	// Same check as the save replay, so a shown field is always saved.
+	if ( 'groups' !== $component || ! function_exists( 'groups_get_groupmeta' ) || null === bb_legacy_wpf_buddypress_integration() ) {
+		return;
+	}
+
+	$group_label = __( 'WP Fusion - Group Settings', 'buddyboss' );
+
+	// Anchor to the modal's `details` tab — same default the groups auto-bridge
+	// uses (`bb_legacy_meta_field_tab`), and the tab GroupEditModal always
+	// renders, so a field never gets orphaned under an unknown tab key.
+	$tab = 'details';
+
+	$registry->register(
+		$component,
+		'wpf_group_apply_tags',
+		array(
+			'label'             => __( 'Apply Tags', 'buddyboss' ),
+			'description'       => __( 'Select tags to apply when a user joins this group.', 'buddyboss' ),
+			'type'              => 'ajax_multiselect',
+			'order'             => 6100,
+			'context'           => 'after',
+			'tab'               => $tab,
+			'field_group'       => 'wpf-buddypress-meta',
+			'field_group_label' => $group_label,
+			'sanitize_callback' => 'bb_legacy_wpf_sanitize_group_tag_ids',
+			'get_value'         => function ( $group ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				return bb_legacy_wpf_group_settings( $group_id )['apply_tags'];
+			},
+			'get_extra_data'    => function ( $group ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				return bb_legacy_wpf_group_tag_extra_data( bb_legacy_wpf_group_settings( $group_id )['apply_tags'] );
+			},
+			'save_value'        => function ( $group, $value ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				bb_legacy_wpf_save_group_setting( $group_id, 'apply_tags', $value );
+			},
+		)
+	);
+
+	$registry->register(
+		$component,
+		'wpf_group_tag_link',
+		array(
+			'label'             => __( 'Link with Tag', 'buddyboss' ),
+			'description'       => __( 'Select a tag to link with this group. When the tag is applied, the user will automatically be enrolled. When the tag is removed the user will be unenrolled.', 'buddyboss' )
+				. ' ' . __( 'Warning: users can choose to leave a social group. If a user leaves this group, the linked tag will be removed. For this reason it\'s recommended not to link this tag to anything else (for example a course).', 'buddyboss' ),
+			'type'              => 'ajax_multiselect',
+			'order'             => 6110,
+			'context'           => 'after',
+			'tab'               => $tab,
+			'field_group'       => 'wpf-buddypress-meta',
+			'field_group_label' => $group_label,
+			'sanitize_callback' => function ( $raw ) {
+				return bb_legacy_wpf_sanitize_group_tag_ids( $raw, 1 );
+			},
+			'get_value'         => function ( $group ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				return bb_legacy_wpf_group_settings( $group_id )['tag_link'];
+			},
+			'get_extra_data'    => function ( $group ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				return bb_legacy_wpf_group_tag_extra_data( bb_legacy_wpf_group_settings( $group_id )['tag_link'], 1 );
+			},
+			'save_value'        => function ( $group, $value ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				bb_legacy_wpf_save_group_setting( $group_id, 'tag_link', $value );
+			},
+		)
+	);
+
+	$registry->register(
+		$component,
+		'wpf_group_organizer_tag',
+		array(
+			'label'             => __( 'Link with Tag - Group Organizer', 'buddyboss' ),
+			'description'       => __( 'When the linked tag is applied, the user will automatically be added to the group and promoted to organizer. When the tag is removed, the user will be demoted from organizer to regular group member.', 'buddyboss' ),
+			'type'              => 'ajax_multiselect',
+			'order'             => 6120,
+			'context'           => 'after',
+			'tab'               => $tab,
+			'field_group'       => 'wpf-buddypress-meta',
+			'field_group_label' => $group_label,
+			'sanitize_callback' => function ( $raw ) {
+				return bb_legacy_wpf_sanitize_group_tag_ids( $raw, 1 );
+			},
+			'get_value'         => function ( $group ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				return bb_legacy_wpf_group_settings( $group_id )['organizer_tag'];
+			},
+			'get_extra_data'    => function ( $group ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				return bb_legacy_wpf_group_tag_extra_data( bb_legacy_wpf_group_settings( $group_id )['organizer_tag'], 1 );
+			},
+			'save_value'        => function ( $group, $value ) {
+				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
+				bb_legacy_wpf_save_group_setting( $group_id, 'organizer_tag', $value );
+			},
+		)
+	);
+}
+add_action( 'bb_register_groups_meta_fields', 'bb_legacy_wpf_register_group_fields', 1000, 2 );
