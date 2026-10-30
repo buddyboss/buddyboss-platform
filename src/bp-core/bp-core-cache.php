@@ -918,3 +918,30 @@ function bb_clear_activity_results_cache( $topic, $old_topic_id, $new_topic_id, 
 }
 
 add_action( 'bb_after_migrate_topic', 'bb_clear_activity_results_cache', 10, 6 );
+
+/**
+ * Delete multiple cache keys from one group.
+ *
+ * Falls back to deleting the keys one by one on WordPress versions
+ * before 6.0, which do not have wp_cache_delete_multiple().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $keys  Cache keys to delete.
+ * @param string $group Cache group.
+ */
+function bb_core_cache_delete_multiple( $keys, $group ) {
+	if ( empty( $keys ) ) {
+		return;
+	}
+
+	if ( function_exists( 'wp_cache_delete_multiple' ) ) {
+		wp_cache_delete_multiple( $keys, $group );
+
+		return;
+	}
+
+	foreach ( $keys as $key ) {
+		wp_cache_delete( $key, $group );
+	}
+}

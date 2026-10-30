@@ -56,6 +56,22 @@ add_action( 'bp_blogs_remove_blog_for_user', 'bp_blogs_clear_blog_object_cache',
 add_action( 'wpmu_new_blog', 'bp_blogs_clear_blog_object_cache', 10, 2 );
 add_action( 'bp_blogs_remove_blog', 'bp_blogs_clear_blog_object_cache' );
 
+/**
+ * Clear the blog caches after a user's blog data has been removed.
+ *
+ * `BP_Blogs_Blog::delete_blogs_for_user()` deletes the user's blog rows with a
+ * direct query, which can change the sitewide blog total as well as the user's
+ * own blog list and count.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the user whose blog data was removed.
+ */
+function bb_blogs_clear_cache_on_remove_data( $user_id ) {
+	bp_blogs_clear_blog_object_cache( 0, $user_id );
+}
+add_action( 'bp_blogs_remove_data', 'bb_blogs_clear_cache_on_remove_data' );
+
 // List actions to clear super cached pages on, if super cache is installed.
 add_action( 'bp_blogs_remove_data_for_blog', 'bp_core_clear_cache' );
 add_action( 'bp_blogs_remove_comment', 'bp_core_clear_cache' );
