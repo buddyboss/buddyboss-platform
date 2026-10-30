@@ -809,9 +809,17 @@ class BB_Tests_Topics_Manager_Ajax extends BB_Topics_Manager_TestCase {
 	 * Reorder and admin.
 	 */
 
-	public function test_reorder_still_requires_moderator() {
+	public function test_reorder_site_list_requires_moderator() {
 		$this->assert_denied( $this->ajax( 'bb_update_topics_order_ajax', $this->organizer, array( 'topic_ids' => array( $this->alpha ) ), 'bb_update_topics_order' ) );
 		$this->assert_success( $this->ajax( 'bb_update_topics_order_ajax', $this->admin, array( 'topic_ids' => array( $this->gamma, $this->alpha ) ), 'bb_update_topics_order' ) );
+	}
+
+	public function test_organizer_reorders_only_own_group_list() {
+		$first  = $this->add_topic( 'Own First', 'groups', $this->own_group );
+		$second = $this->add_topic( 'Own Second', 'groups', $this->own_group );
+
+		$this->assert_success( $this->ajax( 'bb_update_topics_order_ajax', $this->organizer, array( 'topic_ids' => array( $second, $first ), 'item_type' => 'groups', 'item_id' => $this->own_group ), 'bb_update_topics_order' ) );
+		$this->assert_denied( $this->ajax( 'bb_update_topics_order_ajax', $this->organizer, array( 'topic_ids' => array( $this->alpha ), 'item_type' => 'groups', 'item_id' => $this->other_group ), 'bb_update_topics_order' ) );
 	}
 
 	public function test_admin_keeps_full_access() {

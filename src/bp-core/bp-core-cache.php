@@ -784,22 +784,23 @@ add_action( 'bb_topic_deleted', 'bb_topic_deleted_cache_reset', 10, 2 );
  * Reset cache when the topic order of a list changes.
  *
  * The feed filter bar, the composer and REST `/bb-topics` read cached topic lists from the
- * `bb_activity_topics` group, so a new order is only visible once that group is flushed.
+ * `bb_activity_topics` group. Their keys carry the `bb_activity_topic_lists` incrementor, so
+ * resetting it serves the new order on every cache backend. A reorder can come from any group
+ * organizer, so it never falls back to wp_cache_flush() on backends without group flushing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  */
 function bb_topics_order_updated_cache_reset() {
 	bp_core_reset_incrementor( 'bb_topics' );
+	bp_core_reset_incrementor( 'bb_activity_topic_lists' );
 
-	// Clear activity topics cache for list of topics.
+	// Also clear lists cached without the incrementor, e.g. by an older Platform Pro.
 	if (
 		function_exists( 'wp_cache_flush_group' ) &&
 		function_exists( 'wp_cache_supports' ) &&
 		wp_cache_supports( 'flush_group' )
 	) {
 		wp_cache_flush_group( 'bb_activity_topics' );
-	} else {
-		wp_cache_flush();
 	}
 }
 

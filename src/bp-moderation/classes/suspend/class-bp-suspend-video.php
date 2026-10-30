@@ -505,7 +505,8 @@ class BP_Suspend_Video extends BP_Suspend_Abstract {
 		$page             = ! empty( $args['page'] ) ? $args['page'] : - 1;
 		$related_contents = array();
 
-		if ( $page > 1 ) {
+		// Video component (buddyboss-addons) may be inactive when a queued background job runs.
+		if ( $page > 1 || ! bp_is_active( 'video' ) ) {
 			return $related_contents;
 		}
 

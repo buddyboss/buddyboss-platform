@@ -141,11 +141,10 @@ window.bp = window.bp || {};
 							var topicLists = [];
 							var modelTopics = this.model.get( 'topics' );
 							
-							// Priority order: model data > draft data > global data.
+							// Priority order: model data > global data. The draft's stored list is not used:
+							// it is a copy from when the draft was saved, and the page list is always current.
 							if ( modelTopics && ! _.isUndefined( modelTopics.topic_lists ) ) {
 								topicLists = modelTopics.topic_lists;
-							} else if ( ! _.isUndefined( bp.draft_activity.data.topics ) && ! _.isUndefined( bp.draft_activity.data.topics.topic_lists ) ) {
-								topicLists = bp.draft_activity.data.topics.topic_lists;
 							} else {
 								topicLists = BBTopicsManager.topicLists;
 							}
@@ -361,7 +360,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Only site moderators can save the order, so don't offer dragging to anyone else.
+			// Only users who can save this list's order (site moderators, or the group's organizers for a group list) get dragging.
 			if ( 'undefined' !== typeof bbTopicsManagerVars && ! bbTopicsManagerVars.can_reorder_topics ) {
 				this.$topicList.find( '.bb-topic-drag' ).remove();
 				return;

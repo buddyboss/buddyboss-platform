@@ -297,7 +297,7 @@ class BB_Topics_Manager {
 	 * Site moderators can manage every topic. A group organizer can manage the
 	 * topics of a group they organize, and only topics already linked to that group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param string    $item_type The item type, 'activity' or 'groups'.
 	 * @param int       $item_id   The item ID.
@@ -343,7 +343,7 @@ class BB_Topics_Manager {
 	 * Add a new global topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers can add and edit the topics of their own group.
+	 * @since BuddyBoss 3.7.0 Group organizers can add and edit the topics of their own group.
 	 */
 	public function bb_add_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
@@ -512,7 +512,7 @@ class BB_Topics_Manager {
 	 * Add a new global topic.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 * @since BuddyBoss [BBVERSION] When a group topic shares a row with an activity topic, the activity topic name wins.
+	 * @since BuddyBoss 3.7.0 When a group topic shares a row with an activity topic, the activity topic name wins.
 	 *
 	 * @param array $args {
 	 * Array of arguments for adding a topic.
@@ -698,7 +698,7 @@ class BB_Topics_Manager {
 	 * Update an existing topic.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 * @since BuddyBoss [BBVERSION] A global topic can no longer be renamed or swapped inside a group; only its permission changes.
+	 * @since BuddyBoss 3.7.0 A global topic can no longer be renamed or swapped inside a group; only its permission changes.
 	 *
 	 * @param array $args {
 	 *     Array of arguments for updating a topic.
@@ -911,7 +911,7 @@ class BB_Topics_Manager {
 	 * activity topic reuses. The activity topic is managed by the site admin and its
 	 * name is the one that should show everywhere.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param object $topic The row from the topics table.
 	 * @param string $name  The activity topic name.
@@ -1629,7 +1629,7 @@ class BB_Topics_Manager {
 	 * Fetch an existing topic while the edit topic modal is open via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers can load the topics of their own group for editing.
+	 * @since BuddyBoss 3.7.0 Group organizers can load the topics of their own group for editing.
 	 */
 	public function bb_edit_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
@@ -1711,7 +1711,7 @@ class BB_Topics_Manager {
 	 * Delete an existing topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers can load the topics of their own group for deletion.
+	 * @since BuddyBoss 3.7.0 Group organizers can load the topics of their own group for deletion.
 	 */
 	public function bb_delete_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
@@ -1870,7 +1870,7 @@ class BB_Topics_Manager {
 	 * Migrate a topic via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers can delete and migrate the topics of their own group.
+	 * @since BuddyBoss 3.7.0 Group organizers can delete and migrate the topics of their own group.
 	 */
 	public function bb_migrate_topic_ajax() {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is checked right after the capability check.
@@ -2195,7 +2195,7 @@ class BB_Topics_Manager {
 	 * Site moderators may reorder any list; a group organizer may reorder their own group's list
 	 * (the same rule the REST `/bb-topics/order` route applies).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param int    $item_id   Group ID for group topics, 0 for activity topics.
 	 * @param string $item_type `groups` or `activity`.
@@ -2229,7 +2229,7 @@ class BB_Topics_Manager {
 	 * Only the relationship rows of that item are touched; the same topic adopted by another
 	 * group, or the site-wide copy, keeps its own position.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.0
 	 *
 	 * @param int[]  $topic_ids Topic IDs in the new order.
 	 * @param int    $item_id   Group ID for group topics, 0 for activity topics.
@@ -2268,7 +2268,7 @@ class BB_Topics_Manager {
 		/**
 		 * Fires after the topic order of one list was written, also when a write failed part way.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.0
 		 *
 		 * @param int[]  $topic_ids Topic IDs in the requested order.
 		 * @param int    $item_id   Group ID for group topics, 0 for activity topics.
@@ -2283,7 +2283,7 @@ class BB_Topics_Manager {
 	 * Update the order of topics via AJAX.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 * @since BuddyBoss [BBVERSION] Group organizers may reorder their own group's topics; the order is stored per item.
+	 * @since BuddyBoss 3.7.0 Group organizers may reorder their own group's topics; the order is stored per item.
 	 */
 	public function bb_update_topics_order_ajax() {
 		// The list being reordered. Callers that send no item (older scripts) are the site-wide list.

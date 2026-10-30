@@ -27,6 +27,9 @@ $bp_loggedin_user_id                 = bp_loggedin_user_id();
 $bp_is_profile_video_support_enabled = function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled();
 $bp_is_group_video_support_enabled   = function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled();
 
+// Videos belong in this album only when the video component is available and enabled for this context.
+$bp_album_shows_videos = bp_is_active( 'video' ) && ( $bp_is_group ? $bp_is_group_video_support_enabled : $bp_is_profile_video_support_enabled );
+
 if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
 	while ( bp_album() ) :
@@ -49,8 +52,11 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php endif; ?>
 					<p>
 						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
-						<span class="bb-album-photo-count"><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep">&middot;</span>
+						<span class="bb-album-photo-count"><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
+						<?php if ( $bp_album_shows_videos ) : ?>
+						<span class="bb-sep">&middot;</span>
 						<span class="bb-album-video-count"><?php printf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<?php endif; ?>
 					</p>
 				</div>
 
@@ -117,7 +123,9 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 					<?php
 					bp_get_template_part( 'media/uploader' );
-					bp_get_template_part( 'video/uploader' );
+					if ( bp_is_active( 'video' ) ) {
+						bp_get_template_part( 'video/uploader' );
+					}
 				endif;
 
 				if ( $can_delete ) {

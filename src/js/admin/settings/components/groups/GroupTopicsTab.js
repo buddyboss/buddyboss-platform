@@ -488,7 +488,12 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 									<BBIcon name="list" />
 								</span>
 								<span className="bb-topic-list__name">
-									{ topic.name }
+									<span
+										className="bb-topic-list__name-text"
+										title={ topic.name }
+									>
+										{ topic.name }
+									</span>
 									{ ( topic.is_global || topic.is_global_activity ) && (
 										<span
 											className="bb-topic-list__global-icon"

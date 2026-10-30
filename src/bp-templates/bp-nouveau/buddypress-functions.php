@@ -929,9 +929,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
 		} elseif ( bp_is_media_directory() ) {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
-		} elseif ( bp_is_document_directory() ) {
+		} elseif ( bp_is_document_directory() && function_exists( 'bp_nouveau_get_document_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_document_directory_nav_items();
-		} elseif ( bp_is_video_directory() ) {
+		} elseif ( bp_is_video_directory() && function_exists( 'bp_nouveau_get_video_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_video_directory_nav_items();
 		}
 

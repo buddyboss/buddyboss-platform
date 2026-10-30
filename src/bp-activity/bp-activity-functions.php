@@ -6799,8 +6799,19 @@ function bb_activity_get_metadata( $activity_id ) {
 		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
 	}
 
-	// Return the metadata.
-	return $meta_data;
+	/**
+	 * Filters all metadata of an activity as returned by bb_activity_get_metadata().
+	 *
+	 * The metadata can come straight from the `activity_meta` cache group, which
+	 * bypasses the `get_activity_metadata` filter, so code that must hide meta
+	 * keys from every read filters both.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param array|mixed $meta_data   All metadata of the activity.
+	 * @param int         $activity_id Activity ID.
+	 */
+	return apply_filters( 'bb_activity_get_metadata', $meta_data, $activity_id );
 }
 
 /**
@@ -8313,7 +8324,7 @@ function bb_activity_get_item_user_displayname( $activity_item ) {
  * The per-relationship delete actions are not fired here: deleting the activity already clears the
  * caches that listen to them, and firing them once per row multiplied those purges on large deletes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param array $activities Deleted activity objects (or ids).
  *
