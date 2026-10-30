@@ -217,23 +217,26 @@ function bb_search_register_network_search_fields() {
 			)
 		);
 
-		// =====================================================================
-		// Videos.
-		// =====================================================================
-		bb_register_feature_field(
-			'search',
-			'network_search',
-			'network_search_components',
-			array(
-				'name'              => 'bp_search_videos',
-				'label'             => __( 'Videos', 'buddyboss' ),
-				'description'       => __( 'Allow video searching', 'buddyboss' ),
-				'type'              => 'toggle',
-				'default'           => absint( bp_get_option( 'bp_search_videos', 0 ) ),
-				'sanitize_callback' => 'absint',
-				'order'             => 400,
-			)
-		);
+		// Videos are provided by BuddyBoss Add-ons; the search only runs when the component is active.
+		if ( bp_is_active( 'video' ) ) {
+			// =====================================================================
+			// Videos.
+			// =====================================================================
+			bb_register_feature_field(
+				'search',
+				'network_search',
+				'network_search_components',
+				array(
+					'name'              => 'bp_search_videos',
+					'label'             => __( 'Videos', 'buddyboss' ),
+					'description'       => __( 'Allow video searching', 'buddyboss' ),
+					'type'              => 'toggle',
+					'default'           => absint( bp_get_option( 'bp_search_videos', 0 ) ),
+					'sanitize_callback' => 'absint',
+					'order'             => 400,
+				)
+			);
+		}
 	}
 
 	// =========================================================================
