@@ -1783,6 +1783,13 @@ function bb_forums_delete_published_draft_key( $user_id, $draft_data_key ) {
 	}
 
 	if ( isset( $existing_draft[ $draft_data_key ] ) ) {
+		// Clear it only when the form was showing this version. A draft the
+		// form never loaded, or a newer one another tab saved, stays stored. A
+		// form that sends no base (an older cached script) clears as before.
+		if ( ! bb_draft_base_matches( $existing_draft[ $draft_data_key ], bb_draft_request_base() ) ) {
+			return;
+		}
+
 		unset( $existing_draft[ $draft_data_key ] );
 	}
 

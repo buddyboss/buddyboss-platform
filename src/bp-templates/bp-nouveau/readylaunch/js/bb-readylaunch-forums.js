@@ -1015,7 +1015,28 @@ window.bp = window.bp || {};
 						// editor's text() back into this contenteditable source,
 						// which strips its markup (`<p>One</p><p>Two</p>` became
 						// `OneTwo`). Keep the HTML so `ready` can put it back.
-						var contentBeforeEmojiInit = element.innerHTML;
+						var contentBeforeEmojiInit = element.innerHTML,
+							emojiInitObserver      = null;
+
+						// init() - and the strip with it - only runs once the
+						// emoji assets are ready, which can be after the lazy
+						// draft fetch has restored a draft into this element.
+						// Writing back the snapshot taken here would then blank
+						// that restore (empty composer under `has-draft`, and the
+						// next autosave sends the emptiness over the stored
+						// draft). Follow every change made before init() so the
+						// write-back is the content init() actually stripped.
+						// Mutation records are delivered after the current task,
+						// so the strip done by init() itself - in the same task
+						// as `ready` - never reaches the snapshot.
+						if ( 'undefined' !== typeof window.MutationObserver ) {
+							emojiInitObserver = new window.MutationObserver(
+								function () {
+									contentBeforeEmojiInit = element.innerHTML;
+								}
+							);
+							emojiInitObserver.observe( element, { childList: true, subtree: true, characterData: true } );
+						}
 
 						jQuery( '#' + elem_id ).emojioneArea(
 							{
@@ -1028,6 +1049,13 @@ window.bp = window.bp || {};
 								useInternalCDN: false,
 								events: {
 									ready: function () {
+										// The strip below is init()'s own; stop
+										// following the element before it is seen.
+										if ( emojiInitObserver ) {
+											emojiInitObserver.disconnect();
+											emojiInitObserver = null;
+										}
+
 										// Unlike the default pack - which initialises
 										// emoji ONCE on document ready - this runs on
 										// every `bbp_after_load_reply_form` /

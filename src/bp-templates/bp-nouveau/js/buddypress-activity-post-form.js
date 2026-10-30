@@ -56,6 +56,9 @@ window.bp = window.bp || {};
 	bp.privacy               = 'public';
 	bp.draft_ajax_request    = null;
 	bp.draft_inflight        = null;
+	bp.draft_publishing      = false;
+	bp.draft_feedback_timer  = null;
+	bp.draft_feedback_transient = false;
 	bp.old_draft_data        = false;
 	bp.draft_activity        = {
 		object: false,
@@ -1747,7 +1750,7 @@ window.bp = window.bp || {};
 
 					if ( self.isImageOnlyPaste( event.clipboardData ) ) {
 						event.preventDefault();
-						self.showDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
+						self.showTransientDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
 					}
 				},
 				true
@@ -1757,7 +1760,7 @@ window.bp = window.bp || {};
 			// form is still refused by the editor, which reports it with this
 			// event (V03).
 			$( document ).on( 'bb-image-paste-blocked.bbDraftImageGuard', '#whats-new-form', function () {
-				self.showDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
+				self.showTransientDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
 			} );
 		},
 
@@ -2423,7 +2426,15 @@ window.bp = window.bp || {};
 				_.each(
 					keys,
 					function ( key ) {
-						var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+						var copy;
+
+						// One corrupt copy must not stop the sweep for the rest;
+						// the composer repairs its own key when it opens.
+						try {
+							copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+						} catch ( e ) {
+							return;
+						}
 
 						if ( copy && copy._draft_local_at && parseInt( copy._draft_local_at, 10 ) < cutoff ) {
 							localStorage.removeItem( key );
@@ -3140,6 +3151,41 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Show a short-lived draft notice without losing a refusal notice.
+		 *
+		 * The composer has one feedback node, so a refused image paste used to
+		 * replace a standing refusal ("A different version of this draft is
+		 * already saved...") for good, and the member was left believing their
+		 * text was being kept. Once the transient notice has had time to be
+		 * read, put the refusal back, or take the notice down.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} message The transient message to display.
+		 *
+		 * @return {void}
+		 */
+		showTransientDraftFeedback: function( message ) {
+			var self = this;
+
+			this.showDraftFeedback( message );
+
+			if ( ! message ) {
+				return;
+			}
+
+			bp.draft_feedback_transient = true;
+			bp.draft_feedback_timer     = setTimeout(
+				function () {
+					// showDraftFeedback() resets both, so a notice shown since
+					// then has already cancelled this timer.
+					self.showDraftFeedback( self.draftBlockMessage() );
+				},
+				5000
+			);
+		},
+
+		/**
 		 * Toggle the draft-retention notice on the composer.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -3179,19 +3225,18 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Text set before insertion, and placed BELOW any refusal notice, so
-			// the two notices keep one fixed order whichever is created first.
+			// Text set before insertion.
 			$note = $( '<div class="bb-draft-retention-note bp-messages bp-feedback info"></div>' )
 				.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
 				.append( $( '<p></p>' ).text( message ) );
 
-			var $feedback = $form.find( '.bb-draft-save-feedback' );
-
-			if ( $feedback.length ) {
-				$note.insertAfter( $feedback );
-			} else {
-				this.insertDraftNotice( $form, $note );
+			// One draft notice at a time: a notice about this draft's saving
+			// takes precedence over the retention note.
+			if ( $form.find( '.bb-draft-save-feedback' ).length ) {
+				return;
 			}
+
+			this.insertDraftNotice( $form, $note );
 		},
 
 		/**
@@ -3212,11 +3257,20 @@ window.bp = window.bp || {};
 
 			var $notice = $form.find( '.bb-draft-save-feedback' );
 
+			// Whatever is shown now replaces a pending transient notice.
+			clearTimeout( bp.draft_feedback_timer );
+			bp.draft_feedback_timer     = null;
+			bp.draft_feedback_transient = false;
+
 			if ( ! message ) {
 				$notice.remove();
 				this.lastSpokenDraftFeedback = '';
 				return;
 			}
+
+			// One draft notice at a time: "Drafts are kept for N days." does not
+			// belong next to a notice about this draft's saving.
+			$form.find( '.bb-draft-retention-note' ).remove();
 
 			// The visible notice is CSS-gated to the OPEN composer, so one raised
 			// while the composer is shut renders display:none - and a role="alert"
@@ -3727,8 +3781,10 @@ window.bp = window.bp || {};
 			// requests for exactly the oversized drafts that most needed deleting.
 			// A conflict or a "not loaded" outcome stops saving this key for the
 			// page view, and nothing is sent while the stored draft is still
-			// being read - the composer is not based on it yet (V02).
-			if ( bp.draft_conflict || bp.draft_save_blocked || ( bp.draft_fetch_in_progress && 'delete' !== bp.draft_activity.post_action ) ) {
+			// being read - the composer is not based on it yet (V02). Nor while the
+			// composer is being published: a save landing after the publish would
+			// store the posted text again as a draft.
+			if ( bp.draft_conflict || bp.draft_save_blocked || ( ( bp.draft_fetch_in_progress || bp.draft_publishing ) && 'delete' !== bp.draft_activity.post_action ) ) {
 				return;
 			}
 
@@ -3866,7 +3922,12 @@ window.bp = window.bp || {};
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
 					function ( response ) {
-						bp.Nouveau.Activity.postForm.showDraftFeedback( '' );
+						// A save that went through answers an earlier failure
+						// notice; a refused-paste notice is not about saving and
+						// takes itself down (showTransientDraftFeedback).
+						if ( ! bp.draft_feedback_transient ) {
+							bp.Nouveau.Activity.postForm.showDraftFeedback( '' );
+						}
 						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
 
 						bp.draft_base = isDiscardRequest ? [ 'none' ] : [ draft_rev ];
@@ -8967,8 +9028,27 @@ window.bp = window.bp || {};
 					data.post_title_cleared = 1;
 				}
 
+				// Tell the server which draft this composer was writing and the
+				// versions it was built on, so the publish clears only that draft
+				// and never one the member was not shown. An edit clears none.
+				var publish_draft_base = ( bp.draft_base || [ 'none' ] ).slice( 0 );
+
+				if ( bp.draft_inflight && ! _.isUndefined( bp.draft_activity ) && bp.draft_inflight.key === bp.draft_activity.data_key ) {
+					publish_draft_base = _.uniq( publish_draft_base.concat( [ bp.draft_inflight.rev ] ) ).slice( -8 );
+				}
+
+				data.bb_draft_key  = ( ! edit && ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data_key ) ? bp.draft_activity.data_key : '';
+				data.bb_draft_base = publish_draft_base.join( ',' );
+
+				if ( bp.draft_ajax_request ) {
+					bp.draft_ajax_request.abort();
+				}
+
+				bp.draft_publishing = true;
+
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
+						bp.draft_publishing = false;
 
 						// check if edit activity then scroll up 1px so image will load automatically.
 						if ( self.model.get( 'id' ) > 0 ) {
@@ -9056,6 +9136,12 @@ window.bp = window.bp || {};
 						if ( '' === self.model.get( 'id' ) || 0 === parseInt( self.model.get( 'id' ) ) ) {
 							// Reset draft activity.
 							bp.Nouveau.Activity.postForm.resetDraftActivity( false );
+
+							// The server kept a stored draft this composer was not
+							// showing, so the next load must offer it, not skip it.
+							if ( response.draft_kept ) {
+								$.removeCookie( bp.draft_activity.data_key );
+							}
 						}
 
 						// Reset the form.
@@ -9220,6 +9306,7 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function ( response ) {
+						bp.draft_publishing = false;
 						self.model.set( 'posting', false );
 						self.model.set(
 							'errors',

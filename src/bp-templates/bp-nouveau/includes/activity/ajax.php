@@ -1264,8 +1264,12 @@ function bp_nouveau_ajax_post_update() {
 		);
 	}
 
-	// Delete draft activity.
-	delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
+	// Delete draft activity - only the composer's own draft, and only a version it showed.
+	$draft_activity_meta_key = bb_draft_activity_publish_key( $draft_activity_meta_key, bp_loggedin_user_id() );
+
+	if ( '' !== $draft_activity_meta_key ) {
+		delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
+	}
 
 	$activity_args = array(
 		'include'     => $activity_id,
@@ -1311,6 +1315,7 @@ function bp_nouveau_ajax_post_update() {
 			'is_private'       => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
 			'is_directory'     => bp_is_activity_directory(),
 			'is_user_activity' => bp_is_user_activity(),
+			'draft_kept'       => '' === $draft_activity_meta_key,
 		)
 	);
 }
@@ -1375,7 +1380,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'This draft could not be saved.', 'buddyboss' ),
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' ),
 				)
 			);
 		}

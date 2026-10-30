@@ -569,7 +569,12 @@ function bb_post_topic_reply_draft() {
 		// the member does NOT hold still falls through to the same view check
 		// and the same indistinguishable rejection - the oracle stays closed,
 		// while the member's own orphaned draft becomes removable again (L3).
-		$draft_key_allowed = ( false !== $draft_key_context );
+		//
+		// The member's own discard also skips the shape check's status rule: a
+		// draft for a topic since trashed, spammed or deleted would otherwise be
+		// stuck counting against their draft budget until it expires. The key
+		// is one the member already holds, so this reveals nothing.
+		$draft_key_allowed = ( false !== $draft_key_context ) || $discarding_own_draft;
 
 		if ( $draft_key_allowed && ! empty( $draft_key_context['forum_id'] ) && ! $discarding_own_draft ) {
 			$draft_key_allowed = bbp_user_can_view_forum(

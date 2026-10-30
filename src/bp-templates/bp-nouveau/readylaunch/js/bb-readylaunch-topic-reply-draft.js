@@ -108,6 +108,8 @@ window.bp = window.bp || {};
 			this.bbp_reply_to               = false;
 			this.topic_reply_local_interval = false;
 			this.topic_reply_ajax_interval  = false;
+			this.draft_feedback_transient   = false;
+			this.draft_feedback_timer       = null;
 			this.draft_ajax_request         = null;
 			this.draft_inflight             = null;
 			this.is_topic_reply_form_submit = false;
@@ -197,7 +199,11 @@ window.bp = window.bp || {};
 			// have done - and displayTopicReplyDraft() still refuses to clobber
 			// anything typed in the meantime, via hasMemberTypedContent()
 			// (Q12).
-			if ( $( '.bb-rl-forum-modal' ).hasClass( 'bb-rl-forum-modal-visible' ) ) {
+			// Only when THIS form's modal is the open one: a page can carry
+			// several forms (topic + reply), and the autosave intervals are
+			// page-wide, so the first instance in DOM order would otherwise
+			// claim them for a closed composer.
+			if ( self.currentForm.closest( '.bb-rl-forum-modal' ).hasClass( 'bb-rl-forum-modal-visible' ) ) {
 				self.setupOnOpenTopicReplyModal();
 			}
 
@@ -1421,7 +1427,12 @@ window.bp = window.bp || {};
 								return;
 							}
 
-							self.showDraftFeedback( '' );
+							// A save that went through only answers an earlier
+							// failure notice; a refused-paste notice is not about
+							// saving and takes itself down (showTransientDraftFeedback).
+							if ( ! self.draft_feedback_transient ) {
+								self.showDraftFeedback( '' );
+							}
 							self.handleEvictedDrafts( response );
 
 							self.draft_base_map[ draft_key ] = is_discard_request ? [ 'none' ] : [ draft_rev ];
@@ -2131,19 +2142,18 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Text set before insertion, and placed BELOW any refusal notice, so
-			// the two notices keep one fixed order whichever is created first.
+			// One draft notice at a time: a notice about this draft's saving
+			// takes precedence over the retention note.
+			if ( $form.find( '.bb-draft-save-feedback' ).length ) {
+				return;
+			}
+
+			// Text set before insertion.
 			$note = $( '<div class="bb-draft-retention-note bp-messages bp-feedback info"></div>' )
 				.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
 				.append( $( '<p></p>' ).text( message ) );
 
-			var $feedback = $form.find( '.bb-draft-save-feedback' );
-
-			if ( $feedback.length ) {
-				$note.insertAfter( $feedback );
-			} else {
-				this.insertDraftNotice( $form, $note );
-			}
+			this.insertDraftNotice( $form, $note );
 		};
 
 		// Interim guard, mirroring the activity composer: a pasted
@@ -2173,7 +2183,7 @@ window.bp = window.bp || {};
 				// image as HTML too ({@see bbDraftClipboardIsImageOnly}).
 				if ( bbDraftClipboardIsImageOnly( event.originalEvent ? event.originalEvent.clipboardData : null ) ) {
 					event.preventDefault();
-					self.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
+					self.showTransientDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
 				}
 			} );
 
@@ -2189,7 +2199,7 @@ window.bp = window.bp || {};
 			// paste bin, which the listener above never sees. The editor refuses
 			// the image there and reports it with this event (V03).
 			$form.on( 'bb-image-paste-blocked.bbDraftImageGuard', function () {
-				self.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
+				self.showTransientDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
 			} );
 		};
 
@@ -2205,6 +2215,11 @@ window.bp = window.bp || {};
 		this.showDraftFeedback = function ( message ) {
 			var $form = this.draftNoticeForm();
 
+			// Whatever is shown now replaces a pending transient notice.
+			clearTimeout( this.draft_feedback_timer );
+			this.draft_feedback_timer     = null;
+			this.draft_feedback_transient = false;
+
 			if ( ! $form.length ) {
 				return;
 			}
@@ -2215,6 +2230,10 @@ window.bp = window.bp || {};
 				$notice.remove();
 				return;
 			}
+
+			// One draft notice at a time: "Drafts are kept for N days." does not
+			// belong next to a notice about this draft's saving.
+			$form.find( '.bb-draft-retention-note' ).remove();
 
 			if ( $notice.length ) {
 				$notice.find( 'p' ).text( message );
@@ -2231,6 +2250,42 @@ window.bp = window.bp || {};
 				$( '<div class="bb-draft-save-feedback bp-messages bp-feedback error" role="alert"></div>' )
 					.append( $( '<span class="bp-icon" aria-hidden="true"></span>' ) )
 					.append( $( '<p></p>' ).text( message ) )
+			);
+		};
+
+		/**
+		 * Display a short-lived feedback message without losing a refusal notice.
+		 *
+		 * The composer has one feedback node, so a refused image paste used to
+		 * replace "A different version of this draft is already saved..." (or
+		 * any other draftBlockMessage()) for good: saving stays stopped for the
+		 * key, nothing showed the refusal again, and the member was left
+		 * believing their text was being kept. Once the transient notice has
+		 * had time to be read, put the refusal back, or take the notice down.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} message The transient message to display.
+		 *
+		 * @return {void}
+		 */
+		this.showTransientDraftFeedback = function ( message ) {
+			var self = this;
+
+			this.showDraftFeedback( message );
+
+			if ( ! message ) {
+				return;
+			}
+
+			this.draft_feedback_transient = true;
+			this.draft_feedback_timer     = setTimeout(
+				function () {
+					// showDraftFeedback() resets both flags, so a notice shown
+					// since then has already cancelled this timer.
+					self.showDraftFeedback( self.draftBlockMessage() );
+				},
+				5000
 			);
 		};
 
@@ -2968,6 +3023,26 @@ window.bp = window.bp || {};
 		this.submitTopicReplyDraftForm = function () {
 			var key       = this.topic_reply_draft.data_key,
 				held_copy = key ? this.heldCopyToKeep( key ) : null;
+
+			// Tell the server which stored versions this form was built on, so
+			// publishing clears the stored draft only when the form showed it.
+			// A draft withheld from the form (it loaded after the member started
+			// writing, or another tab saved a newer one) stays stored.
+			if ( key ) {
+				var $post_form   = this.currentForm.is( 'form' ) ? this.currentForm : this.currentForm.find( 'form' ).first(),
+					publish_base = ( this.draft_conflict_keys[ key ] || this.draft_blocked_keys[ key ] ) ? [ 'none' ] : this.draftBaseFor( key ),
+					$base_input  = $post_form.find( 'input[name="bb_draft_base"]' );
+
+				if ( this.draft_inflight && this.draft_inflight.key === key ) {
+					publish_base = _.uniq( publish_base.concat( [ this.draft_inflight.rev ] ) ).slice( -8 );
+				}
+
+				if ( ! $base_input.length ) {
+					$base_input = $( '<input type="hidden" name="bb_draft_base" />' ).appendTo( $post_form );
+				}
+
+				$base_input.val( publish_base.join( ',' ) );
+			}
 
 			this.topic_reply_draft.post_action = 'delete';
 			this.clearTopicReplyDraftIntervals();
@@ -3914,7 +3989,15 @@ window.bp = window.bp || {};
 			_.each(
 				keys,
 				function ( key ) {
-					var copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+					var copy;
+
+					// One corrupt copy must not stop the sweep for the rest;
+					// each composer repairs its own key when it opens.
+					try {
+						copy = JSON.parse( localStorage.getItem( key ) || 'null' );
+					} catch ( e ) {
+						return;
+					}
 
 					if ( copy && copy._draft_local_at && parseInt( copy._draft_local_at, 10 ) < cutoff ) {
 						localStorage.removeItem( key );
@@ -4413,7 +4496,7 @@ window.bp = window.bp || {};
 
 				if ( bbDraftClipboardIsImageOnly( event.clipboardData ) ) {
 					event.preventDefault();
-					bbDraftPasteComposer.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
+					bbDraftPasteComposer.showTransientDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
 				}
 			},
 			true

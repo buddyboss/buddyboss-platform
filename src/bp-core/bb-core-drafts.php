@@ -218,9 +218,13 @@ function bb_draft_max_size() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $max_size Size limit in bytes. Default 100 KB.
+	 * @param int $max_size Size limit in bytes. Default 100 KB. A value of 0 or less
+	 *                       falls back to the default rather than refusing or
+	 *                       evicting every draft.
 	 */
-	return (int) apply_filters( 'bb_draft_max_size', 100 * KB_IN_BYTES );
+	$size = (int) apply_filters( 'bb_draft_max_size', 100 * KB_IN_BYTES );
+
+	return $size > 0 ? $size : 100 * KB_IN_BYTES;
 }
 
 /**
@@ -240,9 +244,13 @@ function bb_draft_user_total_max_size() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $max_size Size limit in bytes. Default 300 KB.
+	 * @param int $max_size Size limit in bytes. Default 300 KB. A value of 0 or less
+	 *                       falls back to the default rather than refusing or
+	 *                       evicting every draft.
 	 */
-	return (int) apply_filters( 'bb_draft_user_total_max_size', 300 * KB_IN_BYTES );
+	$size = (int) apply_filters( 'bb_draft_user_total_max_size', 300 * KB_IN_BYTES );
+
+	return $size > 0 ? $size : 300 * KB_IN_BYTES;
 }
 
 /**
@@ -265,9 +273,13 @@ function bb_draft_user_meta_budget() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $budget Budget in bytes. Default 800 KB.
+	 * @param int $budget Budget in bytes. Default 800 KB. A value of 0 or less
+	 *                       falls back to the default rather than refusing or
+	 *                       evicting every draft.
 	 */
-	return (int) apply_filters( 'bb_draft_user_meta_budget', 800 * KB_IN_BYTES );
+	$size = (int) apply_filters( 'bb_draft_user_meta_budget', 800 * KB_IN_BYTES );
+
+	return $size > 0 ? $size : 800 * KB_IN_BYTES;
 }
 
 /**
@@ -278,7 +290,7 @@ function bb_draft_user_meta_budget() {
  * drops the `data:` protocol via kses — stripping the whole tag here keeps
  * megabytes out of the request pipeline before kses runs.
  *
- * MUST be handed UNSLASHED content. Two of the three rules below anchor on
+ * MUST be handed UNSLASHED content. Three of the four rules below anchor on
  * `=\s*"`, and on slashed input a backslash sits between the `=` and the quote,
  * which `\s` does not match - so they silently no-op while the base64 rule still
  * fires, and the caller sees a partial strip with no error. The activity handler
@@ -296,9 +308,20 @@ function bb_draft_strip_data_urls( $content ) {
 		return $content;
 	}
 
-	// Remove the base64 payload itself first. This linear character-class
-	// pattern cannot hit PCRE backtracking limits even on multi-megabyte
-	// pasted images, unlike a tag-level match over the full subject.
+	// A quoted attribute value is removed whole first. Some clipboards wrap a
+	// base64 payload across lines, and the unanchored rule below stops at the
+	// first line break, leaving the rest of the payload in place. The negated
+	// class runs to the closing quote, so it stays linear on large input.
+	$stripped = preg_replace( '/(=\s*["\'])data:[^"\';,]*;base64,[^"\']*/i', '$1', $content );
+
+	if ( is_string( $stripped ) ) {
+		$content = $stripped;
+	}
+
+	// Then any base64 payload outside a quoted attribute. This linear
+	// character-class pattern cannot hit PCRE backtracking limits even on
+	// multi-megabyte pasted images, unlike a tag-level match over the full
+	// subject.
 	$stripped = preg_replace( '/data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?;base64,[A-Za-z0-9+\/=]*/i', '', $content );
 
 	if ( is_string( $stripped ) ) {
@@ -873,6 +896,25 @@ function bb_draft_strip_document_render_fields( $draft ) {
 }
 
 /**
+ * Whether a draft row still holds what a healing pass read from it.
+ *
+ * The heal reads a row, works on it, and writes the whole row back. A live
+ * save landing in between would be overwritten by that write, so the heal
+ * checks the stored row first and leaves a newer one alone: a live save has
+ * already passed the size caps.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id  User ID.
+ * @param string $meta_key Draft meta key.
+ * @param mixed  $read     The value the heal read.
+ * @return bool True when the stored row is unchanged.
+ */
+function bb_draft_row_unchanged( $user_id, $meta_key, $read ) {
+	return maybe_serialize( bb_draft_fresh_value( $user_id, $meta_key ) ) === maybe_serialize( $read );
+}
+
+/**
  * Try to bring an oversized single-draft row under the cap by shedding.
  *
  * For the one-draft-per-row keys (`draft_user`, `draft_user_{id}`,
@@ -933,6 +975,11 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 	// function exists to PRESERVE the member's text when the row is oversized
 	// (Q6) - without the re-slash it mangled exactly that text,
 	// turning `path C:\temp\notes` into `path C:tempnotes` (S2).
+	// A live save since the read already passed the caps; leave it be.
+	if ( ! bb_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
+		return true;
+	}
+
 	bp_update_user_meta( $user_id, $meta_key, wp_slash( $shed ) );
 	bb_draft_flush_user_meta_sizes( $user_id );
 
@@ -962,6 +1009,12 @@ function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
 
 	if ( ! is_array( $stored ) || empty( $stored ) ) {
 		return bb_draft_dispose( $user_id, $meta_key, '', is_multisite() );
+	}
+
+	// A live save since the read already passed the caps; removing the row
+	// now would remove that newer draft instead.
+	if ( ! bb_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
+		return false;
 	}
 
 	$entry = bb_draft_shed_preview_frames( $stored );
@@ -1034,6 +1087,11 @@ function bb_draft_shed_user_drafts( $user_id ) {
 		}
 
 		if ( maybe_serialize( $shed ) === maybe_serialize( $stored ) ) {
+			continue;
+		}
+
+		// A live save since the read already passed the caps; leave it be.
+		if ( ! bb_draft_row_unchanged( $user_id, $meta_key, $stored ) ) {
 			continue;
 		}
 
@@ -1634,6 +1692,48 @@ function bb_draft_base_matches( $stored, $base ) {
 }
 
 /**
+ * The activity draft key a successful publish may clear.
+ *
+ * The composer sends the key it was drafting under and the revisions it was
+ * built on. Only that key is cleared, so posting into a group from the news
+ * feed composer no longer deletes the group page's own draft. It is cleared
+ * only when the stored draft is a version the composer showed: a draft that
+ * was withheld from the composer (the member typed before it loaded, the
+ * fetch failed, or another tab or device saved a newer version) stays stored,
+ * along with the protection on its attachments.
+ *
+ * A request without the key (a cached older script) keeps the legacy
+ * behaviour and clears `$fallback_key`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $fallback_key Key the publish handler derived from the posted object.
+ * @param int    $user_id      Publishing user ID.
+ * @return string Draft meta key to clear, or '' to keep the stored draft.
+ */
+function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside the nonce-checked publish handler.
+	if ( ! isset( $_POST['bb_draft_key'] ) ) {
+		return $fallback_key;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read inside the nonce-checked publish handler.
+	$data_key = sanitize_text_field( wp_unslash( $_POST['bb_draft_key'] ) );
+
+	$draft_object = 0 === strpos( $data_key, 'draft_group' ) ? 'group' : 'user';
+
+	if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $data_key ) || ! bb_draft_validate_activity_data_key( $data_key, $draft_object, 0, $user_id, 'manage' ) ) {
+		return '';
+	}
+
+	if ( ! bb_draft_base_matches( bb_draft_fresh_value( $user_id, $data_key ), bb_draft_request_base() ) ) {
+		return '';
+	}
+
+	return $data_key;
+}
+
+/**
  * The member-facing message for a refused, conflicting draft save.
  *
  * @since BuddyBoss [BBVERSION]
@@ -1669,9 +1769,11 @@ function bb_draft_evicted_hold_seconds() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $seconds Hold time in seconds. Default 7 days.
+	 * @param int $seconds Hold time in seconds. Default 7 days. A value below one
+	 *                     hour falls back to one hour: an evicted draft is
+	 *                     always held for its hand-back, never deleted outright.
 	 */
-	return max( 0, (int) apply_filters( 'bb_draft_evicted_hold_seconds', 7 * DAY_IN_SECONDS ) );
+	return max( HOUR_IN_SECONDS, (int) apply_filters( 'bb_draft_evicted_hold_seconds', 7 * DAY_IN_SECONDS ) );
 }
 
 /**
@@ -2020,6 +2122,49 @@ function bb_draft_promote_evicted( $user_id, $wanted ) {
 }
 
 /**
+ * Take the per-member lock around a change to their held drafts.
+ *
+ * Two requests changing the same member's hold at once - a save in one tab
+ * evicting a draft while another tab acknowledges a hand-back - would each
+ * write back the hold they read, and the later write drops the other's
+ * change. Waits briefly for a holder, then proceeds regardless, so a lock
+ * left behind by a dead request never blocks a save.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ * @return bool Whether this request took the lock (and must release it).
+ */
+function bb_draft_lock_evicted_hold( $user_id ) {
+	$key = 'bb_draft_hold_lock_' . (int) $user_id;
+
+	for ( $attempt = 0; $attempt < 10; $attempt++ ) {
+		if ( bb_draft_acquire_lock( $key, 5, is_multisite() ) ) {
+			return true;
+		}
+
+		usleep( 50000 );
+	}
+
+	return false;
+}
+
+/**
+ * Release the lock taken by {@see bb_draft_lock_evicted_hold()}.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $user_id User ID.
+ * @param bool $locked  Whether the lock was taken.
+ * @return void
+ */
+function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
+	if ( $locked ) {
+		bb_draft_release_lock( 'bb_draft_hold_lock_' . (int) $user_id, is_multisite() );
+	}
+}
+
+/**
  * Hold freshly evicted drafts until the browser acknowledges the hand-back.
  *
  * Eviction removes the draft from usermeta in the same request that hands it
@@ -2038,8 +2183,9 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 	}
 
 	$entries = bb_draft_stamp_handback_revs( $entries );
+	$locked  = bb_draft_lock_evicted_hold( $user_id );
 	$hold    = array_merge( bb_draft_get_evicted_overflow( $user_id ), bb_draft_get_evicted_hold( $user_id ) );
-	$now  = time();
+	$now     = time();
 
 	foreach ( $entries as $key => $entry ) {
 		// A forum entry with no text or attachments has nothing to restore,
@@ -2055,6 +2201,7 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
 	}
 
 	bb_draft_store_evicted_hold( $user_id, $hold );
+	bb_draft_unlock_evicted_hold( $user_id, $locked );
 
 	// The sweep's reference set now has to include these files; a set cached
 	// before the hold was written would let it release their stamps.
@@ -2198,23 +2345,35 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
 	$unheld  = count( $hold );
 	$hold    = bb_draft_drop_settled_evicted( $user_id, $hold, $acked );
 	$changed = count( $hold ) !== $unheld;
+	$promote = 2 === $flag && ( $changed || ! empty( $acked ) );
+
+	// Nothing to write: an ordinary page view reads the hold and goes, without
+	// taking the lock.
+	if ( ! $promote && ! $changed && ! ( empty( $hold ) && 2 !== $flag ) ) {
+		return wp_list_pluck( $hold, 'entry' );
+	}
+
+	// About to write: take the lock and work from the hold as it is now, so a
+	// draft another request held in the meantime is not written away.
+	$locked = bb_draft_lock_evicted_hold( $user_id );
+	$hold   = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_hold( $user_id ), $acked );
 
 	// Room was made in the hold: move the newest waiting drafts in, so the
 	// browser gets them back in turn. An acknowledgement can also name a
 	// waiting draft the browser got through its own fetch. Not on every page
 	// view: an overflow left only with drafts larger than the hold waits for
 	// its composer's fetch ({@see bb_draft_promote_evicted()}).
-	if ( 2 === $flag && ( $changed || ! empty( $acked ) ) ) {
+	if ( $promote ) {
 		$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ), $acked );
 
 		bb_draft_store_evicted_hold( $user_id, array_merge( $overflow, $hold ) );
+		bb_draft_unlock_evicted_hold( $user_id, $locked );
 
 		return wp_list_pluck( bb_draft_get_evicted_hold( $user_id ), 'entry' );
 	}
 
-	if ( $changed || ( empty( $hold ) && 2 !== $flag ) ) {
-		bb_draft_set_evicted_hold( $user_id, $hold );
-	}
+	bb_draft_set_evicted_hold( $user_id, $hold );
+	bb_draft_unlock_evicted_hold( $user_id, $locked );
 
 	return wp_list_pluck( $hold, 'entry' );
 }
@@ -2293,31 +2452,57 @@ function bb_drafts_prune_evicted_holds() {
 	global $wpdb;
 
 	$cutoff = time() - bb_draft_evicted_hold_seconds();
+	$limit  = 500;
 
-	if ( is_multisite() ) {
-		$names = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$wpdb->sitemeta} WHERE site_id = %d AND meta_key LIKE %s LIMIT 500", get_current_network_id(), $wpdb->esc_like( 'bb_draft_evicted_' ) . '%' ) );
-	} else {
-		$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s LIMIT 500", $wpdb->esc_like( 'bb_draft_evicted_' ) . '%' ) );
-	}
+	// The scan pages through the hold rows by name and keeps its place between
+	// runs, so after a mass eviction every member's expired holds are reached,
+	// not only the first page of them.
+	$cursor = (string) get_site_option( 'bb_draft_prune_cursor', '' );
 
-	$user_ids = array();
-
-	foreach ( (array) $names as $name ) {
-		if ( preg_match( '/^bb_draft_evicted_(\d+)(_overflow)?$/', $name, $match ) ) {
-			$user_ids[ (int) $match[1] ] = true;
+	for ( $page = 0; $page < 10; $page++ ) {
+		if ( is_multisite() ) {
+			$names = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$wpdb->sitemeta} WHERE site_id = %d AND meta_key LIKE %s AND meta_key > %s ORDER BY meta_key LIMIT %d", get_current_network_id(), $wpdb->esc_like( 'bb_draft_evicted_' ) . '%', $cursor, $limit ) );
+		} else {
+			$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s AND option_name > %s ORDER BY option_name LIMIT %d", $wpdb->esc_like( 'bb_draft_evicted_' ) . '%', $cursor, $limit ) );
 		}
-	}
 
-	foreach ( array_keys( $user_ids ) as $user_id ) {
-		$hold = array_merge( bb_draft_get_evicted_overflow( $user_id, true ), bb_draft_get_evicted_hold( $user_id ) );
+		$user_ids = array();
 
-		foreach ( $hold as $key => $held ) {
-			if ( ! is_array( $held ) || (int) ( isset( $held['at'] ) ? $held['at'] : 0 ) < $cutoff ) {
-				unset( $hold[ $key ] );
+		foreach ( (array) $names as $name ) {
+			if ( preg_match( '/^bb_draft_evicted_(\d+)(_overflow)?$/', $name, $match ) ) {
+				// Remember whether the overflow row showed up. Without it the read
+				// goes through the member's flag instead of forcing the option: a
+				// forced read for a member with no overflow records a site-wide
+				// `notoptions` miss that is never cleared.
+				$user_ids[ (int) $match[1] ] = ! empty( $user_ids[ (int) $match[1] ] ) || ! empty( $match[2] );
 			}
 		}
 
-		bb_draft_store_evicted_hold( $user_id, $hold );
+		foreach ( $user_ids as $user_id => $has_overflow_row ) {
+			$hold = array_merge( bb_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bb_draft_get_evicted_hold( $user_id ) );
+
+			foreach ( $hold as $key => $held ) {
+				if ( ! is_array( $held ) || (int) ( isset( $held['at'] ) ? $held['at'] : 0 ) < $cutoff ) {
+					unset( $hold[ $key ] );
+				}
+			}
+
+			bb_draft_store_evicted_hold( $user_id, $hold );
+		}
+
+		// A short page is the end of the list; start from the top next run.
+		if ( count( (array) $names ) < $limit ) {
+			$cursor = '';
+			break;
+		}
+
+		$cursor = (string) end( $names );
+	}
+
+	if ( '' === $cursor ) {
+		delete_site_option( 'bb_draft_prune_cursor' );
+	} else {
+		update_site_option( 'bb_draft_prune_cursor', $cursor );
 	}
 
 	if ( is_multisite() ) {
@@ -2966,7 +3151,12 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
 			return true;
 		}
 
-		return (bool) ( groups_is_user_member( $user_id, $item_id ) || groups_is_user_admin( $user_id, $item_id ) || groups_is_user_mod( $user_id, $item_id ) );
+		if ( ! groups_is_user_member( $user_id, $item_id ) && ! groups_is_user_admin( $user_id, $item_id ) && ! groups_is_user_mod( $user_id, $item_id ) ) {
+			return false;
+		}
+
+		// Follow the group's "who can post" setting, as publishing does.
+		return ! function_exists( 'groups_is_user_allowed_posting' ) || groups_is_user_allowed_posting( $user_id, $item_id );
 	}
 
 	if ( 'user' === $draft_object ) {
@@ -3900,6 +4090,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 	$user_id  = (int) $user_id;
 	$disposed = 0;
 	$row      = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	$read_row = $row;
 
 	if ( empty( $row ) ) {
 		return 0;
@@ -4019,6 +4210,12 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 	// still has to reach the write below - returning early here would throw
 	// the shed row away and leave the oversized one stored (Q6).
 	if ( empty( $removed ) && empty( $trimmed ) && 0 === $salvaged ) {
+		return 0;
+	}
+
+	// A live save since the read already passed the caps, and writing this
+	// row back would replace it with older text.
+	if ( ! bb_draft_row_unchanged( $user_id, 'bb_user_topic_reply_draft', $read_row ) ) {
 		return 0;
 	}
 
@@ -4319,10 +4516,20 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 					$aggregate_values
 				)
 			);
+
+			// get_col() reads a failed query as "no rows". Leave the list unset so
+			// the next slice retries, instead of recording that nobody is over the
+			// total and skipping stage 2 for good.
+			if ( '' !== $wpdb->last_error ) {
+				$heavy_users = null;
+				$complete    = false;
+			}
 		}
 
-		$state['heavy_users'] = array_map( 'intval', is_array( $heavy_users ) ? $heavy_users : array() );
-		update_site_option( 'bb_draft_oneshot_state', $state );
+		if ( null !== $heavy_users ) {
+			$state['heavy_users'] = array_map( 'intval', is_array( $heavy_users ) ? $heavy_users : array() );
+			update_site_option( 'bb_draft_oneshot_state', $state );
+		}
 	}
 
 	// Stage 2 - aggregate healing, draining the persisted user list.
@@ -5835,6 +6042,25 @@ function bb_drafts_schedule_cleanup() {
 	}
 }
 add_action( 'bp_init', 'bb_drafts_schedule_cleanup' );
+
+/**
+ * Clear the daily draft cleanup events when the plugin is deactivated.
+ *
+ * Their `bb_schedule_24hours` interval goes away with the plugin, and WP-Cron
+ * then logs an invalid-schedule error on every run. They are added back on
+ * `bp_init` after reactivation. The one-off `bb_draft_oneshot` continuation is
+ * left in place: it does not repeat, and clearing it would leave an unfinished
+ * upgrade heal with nothing to resume it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_drafts_unschedule_cleanup() {
+	wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
+	wp_clear_scheduled_hook( 'bb_draft_cleanup_hook' );
+}
+add_action( 'bp_deactivation', 'bb_drafts_unschedule_cleanup' );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	/**

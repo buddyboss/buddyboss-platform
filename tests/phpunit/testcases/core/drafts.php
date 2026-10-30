@@ -141,12 +141,46 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$non_member = self::factory()->user->create();
 		$group_id   = self::factory()->group->create( array( 'creator_id' => $member ) );
 
+		// Draft saves run as the logged-in member, like the publish path.
+		wp_set_current_user( $member );
+
 		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id, $member ) );
 
 		// Non-members, mismatched item ids, and unknown groups: rejected.
 		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id, $non_member ) );
 		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_' . $group_id, 'group', $group_id + 1, $member ) );
 		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_999999999', 'group', 999999999, $member ) );
+	}
+
+	/**
+	 * A group draft follows the group's "who can post" setting, as publishing does.
+	 */
+	public function test_activity_group_draft_follows_group_posting_setting() {
+		if ( ! bp_is_active( 'groups' ) ) {
+			$this->markTestSkipped( 'Groups component is not active.' );
+		}
+
+		$admin    = self::factory()->user->create();
+		$member   = self::factory()->user->create();
+		$group_id = self::factory()->group->create( array( 'creator_id' => $admin ) );
+		$key      = 'draft_group_' . $group_id;
+
+		groups_join_group( $group_id, $member );
+		groups_update_groupmeta( $group_id, 'activity_feed_status', 'admins' );
+
+		wp_set_current_user( $member );
+		$this->assertFalse( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $member ) );
+
+		// The member still manages (fetches, discards) a draft they already hold.
+		$this->assertTrue( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $member, 'manage' ) );
+
+		wp_set_current_user( $admin );
+		$this->assertTrue( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $admin ) );
+
+		groups_update_groupmeta( $group_id, 'activity_feed_status', 'members' );
+
+		wp_set_current_user( $member );
+		$this->assertTrue( bb_draft_validate_activity_data_key( $key, 'group', $group_id, $member ) );
 	}
 
 	public function test_topic_reply_data_key_validation() {
@@ -11012,4 +11046,239 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertArrayHasKey( $attachment_id, (array) $ledger, 'The prune keeps the ledger entry when expiry is off.' );
 		$this->assertTrue( $protected, 'The file stays protected.' );
 	}
+
+	/**
+	 * Break the stage-1b aggregate the way a real failure arrives: the query
+	 * errors, get_col() returns an empty list and last_error is set.
+	 *
+	 * @param string $query SQL.
+	 * @return string
+	 */
+	public function break_draft_aggregate_query( $query ) {
+		global $wpdb;
+
+		if ( false !== strpos( $query, 'HAVING SUM(LENGTH(meta_value))' ) ) {
+			return 'SELECT 1 FROM ' . $wpdb->prefix . 'bb_draft_no_such_table_for_tests';
+		}
+
+		return $query;
+	}
+
+	/**
+	 * A failed stage-1b aggregate leaves the heal unfinished and retries it,
+	 * instead of recording "nobody is over the total" and skipping stage 2.
+	 */
+	public function test_oneshot_failed_aggregate_is_retried_not_marked_complete() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+
+		for ( $i = 1; $i <= 6; $i++ ) {
+			add_user_meta(
+				$user_id,
+				'draft_group_' . $i,
+				array(
+					'data_key'        => 'draft_group_' . $i,
+					'data'            => array( 'content' => str_repeat( 'x', 60000 ) ),
+					'_draft_saved_at' => $i,
+				)
+			);
+		}
+
+		add_filter( 'query', array( $this, 'break_draft_aggregate_query' ) );
+		$failed = bb_drafts_oneshot_batch( 0 );
+		remove_filter( 'query', array( $this, 'break_draft_aggregate_query' ) );
+
+		$state = get_site_option( 'bb_draft_oneshot_state' );
+
+		$this->assertFalse( $failed['complete'], 'A failed aggregate is not a finished heal.' );
+		$this->assertFalse( (bool) get_site_option( 'bb_draft_oneshot_done' ), 'The heal is not marked done.' );
+		$this->assertFalse( is_array( $state ) && is_array( $state['heavy_users'] ), 'No member list is recorded from a failed query.' );
+		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'Premise: nothing was evicted yet.' );
+
+		$retried = bb_drafts_oneshot_batch( 0 );
+
+		$this->assertTrue( $retried['complete'], 'The retry finishes the heal.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ), 'The retry reaches stage 2 and evicts the oldest draft.' );
+		$this->assertArrayHasKey( 'draft_group_1', bb_draft_get_evicted_hold( $user_id ), 'The evicted draft is held for the hand-back.' );
+	}
+
+	/**
+	 * A cap filtered to 0 or less falls back to its default instead of
+	 * refusing or evicting every draft; the hold time never drops to zero.
+	 */
+	public function test_cap_filters_fall_back_to_defaults_when_not_positive() {
+		add_filter( 'bb_draft_max_size', '__return_zero' );
+		add_filter( 'bb_draft_user_total_max_size', '__return_zero' );
+		add_filter( 'bb_draft_user_meta_budget', '__return_zero' );
+		add_filter( 'bb_draft_evicted_hold_seconds', '__return_zero' );
+
+		$this->assertSame( 100 * KB_IN_BYTES, bb_draft_max_size() );
+		$this->assertSame( 300 * KB_IN_BYTES, bb_draft_user_total_max_size() );
+		$this->assertSame( 800 * KB_IN_BYTES, bb_draft_user_meta_budget() );
+		$this->assertSame( HOUR_IN_SECONDS, bb_draft_evicted_hold_seconds() );
+
+		remove_filter( 'bb_draft_max_size', '__return_zero' );
+		remove_filter( 'bb_draft_user_total_max_size', '__return_zero' );
+		remove_filter( 'bb_draft_user_meta_budget', '__return_zero' );
+		remove_filter( 'bb_draft_evicted_hold_seconds', '__return_zero' );
+
+		$custom = function () {
+			return 50 * KB_IN_BYTES;
+		};
+
+		add_filter( 'bb_draft_max_size', $custom );
+		$this->assertSame( 50 * KB_IN_BYTES, bb_draft_max_size(), 'A positive value is still honoured.' );
+		remove_filter( 'bb_draft_max_size', $custom );
+	}
+
+	/**
+	 * A base64 payload wrapped across lines is stripped whole, and a
+	 * multi-megabyte one does not hit the PCRE backtrack limit.
+	 */
+	public function test_strip_removes_line_wrapped_base64_payloads() {
+		$wrapped = '<p>Keep me</p><img src="data:image/png;base64,AAAA' . "\n" . 'BBBB' . "\r\n" . 'CCCC==" alt="x"><p>and me</p>';
+		$out     = bb_draft_strip_data_urls( $wrapped );
+
+		$this->assertStringContainsString( 'Keep me', $out );
+		$this->assertStringContainsString( 'and me', $out );
+		$this->assertStringNotContainsString( 'BBBB', $out, 'The part after the line break is gone too.' );
+		$this->assertStringNotContainsString( 'CCCC', $out );
+
+		$large = '<img src="data:image/png;base64,' . str_repeat( "QUFB\n", 400000 ) . '">';
+		$out   = bb_draft_strip_data_urls( $large );
+
+		$this->assertSame( PREG_NO_ERROR, preg_last_error(), 'No PCRE limit is hit on a 2MB payload.' );
+		$this->assertLessThan( 100, strlen( $out ), 'The 2MB payload is removed.' );
+
+		$prose = 'Writing about data: URIs; base64, is an encoding.';
+		$this->assertSame( $prose, bb_draft_strip_data_urls( $prose ), 'Prose that mentions data: is left alone.' );
+	}
+
+	/**
+	 * The daily prune does not record a `notoptions` miss for members who have
+	 * a hold but no overflow.
+	 */
+	public function test_prune_does_not_record_notoptions_for_members_without_overflow() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+
+		bb_draft_hold_evicted(
+			$user_id,
+			array(
+				'draft_user' => array(
+					'data_key' => 'draft_user',
+					'data'     => array( 'content' => 'held' ),
+				),
+			)
+		);
+
+		wp_cache_delete( 'notoptions', 'options' );
+
+		bb_drafts_prune_evicted_holds();
+
+		$notoptions = wp_cache_get( 'notoptions', 'options' );
+		$overflow   = bb_draft_evicted_overflow_option( $user_id );
+
+		$this->assertFalse( is_array( $notoptions ) && isset( $notoptions[ $overflow ] ), 'No overflow miss is cached for this member.' );
+		$this->assertArrayHasKey( 'draft_user', bb_draft_get_evicted_hold( $user_id ), 'A hold within its time is kept.' );
+	}
+
+	/**
+	 * The prune pages past the first 500 hold rows instead of re-reading the
+	 * same first page every day.
+	 */
+	public function test_prune_reaches_holds_past_the_first_page() {
+		$this->isolate_draft_maintenance();
+
+		$expired = array(
+			'draft_user' => array(
+				'entry' => array( 'data' => array( 'content' => 'old' ) ),
+				'at'    => time() - bb_draft_evicted_hold_seconds() - 60,
+			),
+		);
+
+		$first = 9000000;
+
+		for ( $i = 0; $i < 520; $i++ ) {
+			update_option( 'bb_draft_evicted_' . ( $first + $i ), $expired, false );
+		}
+
+		bb_drafts_prune_evicted_holds();
+
+		$this->assertSame( array(), bb_draft_get_evicted_hold( $first + 519 ), 'An expired hold beyond the first 500 rows is pruned.' );
+		$this->assertFalse( get_site_option( 'bb_draft_prune_cursor' ), 'The scan reached the end, so the cursor is cleared.' );
+	}
+
+	/**
+	 * The heal does not write its older copy of a row over a newer live save.
+	 */
+	public function test_heal_skips_a_row_that_changed_since_it_was_read() {
+		$user_id = self::factory()->user->create();
+		$read    = array(
+			'data_key' => 'draft_user',
+			'data'     => array( 'content' => 'read by the heal' ),
+		);
+
+		update_user_meta( $user_id, 'draft_user', $read );
+		$this->assertTrue( bb_draft_row_unchanged( $user_id, 'draft_user', $read ) );
+
+		$newer         = $read;
+		$newer['data'] = array( 'content' => 'saved meanwhile' );
+		update_user_meta( $user_id, 'draft_user', $newer );
+
+		$this->assertFalse( bb_draft_row_unchanged( $user_id, 'draft_user', $read ), 'A newer save is detected.' );
+	}
+
+	/**
+	 * Deactivation clears the recurring draft events, whose interval goes away
+	 * with the plugin.
+	 */
+	public function test_deactivation_clears_recurring_draft_events() {
+		bb_drafts_schedule_cleanup();
+		$this->assertNotFalse( wp_next_scheduled( 'bb_draft_cleanup_hook' ), 'Premise: the cleanup is scheduled.' );
+
+		bb_drafts_unschedule_cleanup();
+
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_cleanup_hook' ) );
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_stamp_release_hook' ) );
+	}
+
+	/**
+	 * A publish clears only the composer's own draft, and only a version the
+	 * composer was showing.
+	 */
+	public function test_publish_key_clears_only_a_shown_draft_of_the_composer() {
+		$user_id = self::factory()->user->create();
+
+		update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'   => 'draft_user',
+				'_draft_rev' => 'revAAAAAAAA',
+				'data'       => array( 'content' => 'stored' ),
+			)
+		);
+
+		$_POST = array(
+			'bb_draft_key'  => 'draft_user',
+			'bb_draft_base' => 'none',
+		);
+		$this->assertSame( '', bb_draft_activity_publish_key( 'draft_group_5', $user_id ), 'A draft the composer never showed is kept.' );
+
+		$_POST['bb_draft_base'] = 'revAAAAAAAA';
+		$this->assertSame( 'draft_user', bb_draft_activity_publish_key( 'draft_group_5', $user_id ), 'The composer\'s own key is cleared, not the posted group\'s.' );
+
+		$_POST['bb_draft_key'] = '';
+		$this->assertSame( '', bb_draft_activity_publish_key( 'draft_user', $user_id ), 'An edit clears no draft.' );
+
+		$_POST['bb_draft_key'] = 'wp_capabilities';
+		$this->assertSame( '', bb_draft_activity_publish_key( 'draft_user', $user_id ), 'A key that is not a draft key is never cleared.' );
+
+		$_POST = array();
+		$this->assertSame( 'draft_group_5', bb_draft_activity_publish_key( 'draft_group_5', $user_id ), 'An older script sending no key keeps the old behaviour.' );
+	}
 }
+

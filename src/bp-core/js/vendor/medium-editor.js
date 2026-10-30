@@ -5623,6 +5623,10 @@ MediumEditor.extensions = {};
             var i, elList, tmp, workEl,
                 multiline = /<p|<br|<div/.test(text),
                 replacements = [].concat(
+                    // A screenshot inside copied HTML arrives as a data-URL image;
+                    // drop it so it never reaches a draft or post, whatever the
+                    // editor's own cleanTags say (PROD-9621) - BuddyBoss.
+                    [ [ /<img\b[^>]*?\bsrc\s*=\s*["']?\s*data:[^>]*>/gi, '' ] ],
                     this.preCleanReplacements || [],
                     createReplacements(),
                     this.cleanReplacements || []);

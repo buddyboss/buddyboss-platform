@@ -262,7 +262,7 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 		// Pin that the allowlist gate itself rejected it (not a coincidental downstream
 		// failure): the crafted array key coerces to '' and is refused with the gate's
 		// own message. user_can() here would be invariant, so assert the message instead.
-		$this->assertSame( 'This draft could not be saved.', $response['data']['message'] ?? '' );
+		$this->assertSame( 'Your draft could not be saved. Please copy your text before leaving this page.', $response['data']['message'] ?? '' );
 	}
 
 	/**
@@ -1222,4 +1222,178 @@ class BB_Tests_Activity_Draft_Ajax extends BP_UnitTestCase {
 
 		$this->assertTrue( $accepted['success'] );
 	}
+
+	/**
+	 * Publish an activity update through the real AJAX handler.
+	 *
+	 * @param int   $user_id Member.
+	 * @param array $extra   Extra request fields (object, item_id, bb_draft_key, bb_draft_base).
+	 * @return array|null
+	 */
+	protected function publish_update( $user_id, $extra ) {
+		return $this->invoke_handler( 'bp_nouveau_ajax_post_update', 'content', '_wpnonce_post_update', 'post_update', $user_id, 'Published text', $extra );
+	}
+
+	/**
+	 * Publishing from a composer that never showed the stored draft keeps it,
+	 * and says so; publishing the version it showed clears it.
+	 */
+	public function test_publish_keeps_a_draft_the_composer_never_showed() {
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+
+		$this->save_rev_draft( $user_id, 'unseen draft', 'revAAAAAAAA' );
+
+		$kept = $this->publish_update(
+			$user_id,
+			array(
+				'object'        => 'user',
+				'bb_draft_key'  => 'draft_user',
+				'bb_draft_base' => 'none',
+			)
+		);
+
+		$this->assertTrue( $kept['success'], 'Premise: the update was posted.' );
+		$this->assertTrue( $kept['data']['draft_kept'], 'The response tells the composer the draft was kept.' );
+		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_user' ), 'The draft the member never saw survives the publish.' );
+
+		$cleared = $this->publish_update(
+			$user_id,
+			array(
+				'object'        => 'user',
+				'bb_draft_key'  => 'draft_user',
+				'bb_draft_base' => 'revAAAAAAAA',
+			)
+		);
+
+		$this->assertTrue( $cleared['success'] );
+		$this->assertFalse( $cleared['data']['draft_kept'] );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_user' ), 'Publishing the version the composer showed clears it.' );
+	}
+
+	/**
+	 * Posting into a group from the news feed composer clears the feed draft,
+	 * not the group page's own draft.
+	 */
+	public function test_publish_to_a_group_from_the_feed_keeps_the_group_draft() {
+		if ( ! bp_is_active( 'groups' ) ) {
+			$this->markTestSkipped( 'Groups component is not active.' );
+		}
+
+		$user_id  = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$group_id = self::factory()->group->create( array( 'creator_id' => $user_id ) );
+
+		update_user_meta( $user_id, 'draft_group_' . $group_id, array( 'data' => array( 'content' => 'group page draft' ) ) );
+		$this->save_rev_draft( $user_id, 'feed draft', 'revAAAAAAAA' );
+
+		$response = $this->publish_update(
+			$user_id,
+			array(
+				'object'        => 'group',
+				'item_id'       => $group_id,
+				'bb_draft_key'  => 'draft_user',
+				'bb_draft_base' => 'revAAAAAAAA',
+			)
+		);
+
+		$this->assertTrue( $response['success'], 'Premise: the group update was posted.' );
+		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_group_' . $group_id ), 'The group page\'s own draft is untouched.' );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_user' ), 'The feed composer\'s draft is the one cleared.' );
+	}
+
+	/**
+	 * Publishing a topic or reply keeps a stored draft the form never showed.
+	 */
+	public function test_forum_publish_keeps_a_draft_the_form_never_showed() {
+		if ( ! function_exists( 'bb_forums_delete_published_draft_key' ) ) {
+			$this->markTestSkipped( 'Forums component is not loaded.' );
+		}
+
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$key     = 'draft_discussion_123';
+
+		update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$key => array(
+					'data_key'   => $key,
+					'_draft_rev' => 'revAAAAAAAA',
+					'data'       => array( 'bbp_topic_content' => 'unseen' ),
+				),
+			)
+		);
+
+		$_POST = array( 'bb_draft_base' => 'none' );
+		bb_forums_delete_published_draft_key( $user_id, $key );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertArrayHasKey( $key, $row, 'A draft the form never showed survives the publish.' );
+
+		$_POST = array( 'bb_draft_base' => 'revAAAAAAAA' );
+		bb_forums_delete_published_draft_key( $user_id, $key );
+
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ), 'Publishing the version the form showed clears it.' );
+	}
+
+	/**
+	 * A member can discard their own draft for a topic that has since been trashed.
+	 */
+	public function test_forum_discard_of_own_draft_for_a_trashed_topic() {
+		if ( ! function_exists( 'bb_post_topic_reply_draft' ) ) {
+			$this->markTestSkipped( 'Forums component is not loaded.' );
+		}
+
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		$forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$topic   = self::factory()->post->create(
+			array(
+				'post_type'   => bbp_get_topic_post_type(),
+				'post_parent' => $forum,
+			)
+		);
+		$key     = 'draft_reply_' . $topic;
+
+		update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$key => array(
+					'data_key'   => $key,
+					'object'     => 'reply',
+					'_draft_rev' => 'revAAAAAAAA',
+					'data'       => array( 'bbp_reply_content' => 'reply draft' ),
+				),
+			)
+		);
+
+		wp_trash_post( $topic );
+
+		$discard = $this->invoke_forum_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => $key,
+				'object'      => 'reply',
+				'post_action' => 'delete',
+			),
+			array( 'bb_draft_base' => 'revAAAAAAAA' )
+		);
+
+		$this->assertTrue( $discard['success'], 'The member\'s own draft is discardable after the topic is trashed.' );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertFalse( is_array( $row ) && isset( $row[ $key ] ), 'The draft is gone.' );
+
+		// A key the member does NOT hold still gets the indistinguishable refusal.
+		$other = $this->invoke_forum_draft_handler(
+			$user_id,
+			array(
+				'data_key'    => 'draft_reply_' . ( $topic + 1000 ),
+				'object'      => 'reply',
+				'post_action' => 'delete',
+			)
+		);
+
+		$this->assertFalse( $other['success'] );
+	}
 }
+
