@@ -1881,6 +1881,8 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  * then this notification will only for read purpose.
  *
  * @since BuddyBoss 2.2.7
+ * @since BuddyBoss [BBVERSION] Resolve the triggering user from item_id for the legacy
+ *                              'friendship_request' and 'friendship_accepted' actions.
  *
  * @param object $notification Notification item.
  *
@@ -1888,10 +1890,12 @@ function bb_notifications_on_screen_get_where_conditions( $where_sql, $tbl_alias
  */
 function bb_notification_is_read_only( $notification ) {
 	static $cache = array();
-	// item_id is the user_id and secondary_item_id is the friend_id for the below component action.
+	// item_id is the triggering user_id and secondary_item_id is the friendship_id for the below component actions.
 	$allowed_component_action = array(
 		'bb_connections_request_accepted',
 		'bb_connections_new_request',
+		'friendship_accepted',
+		'friendship_request',
 	);
 
 	if ( empty( $notification->id ) ) {
@@ -1904,38 +1908,40 @@ function bb_notification_is_read_only( $notification ) {
 		return $cache[ $cache_key ];
 	}
 
-	$retval = ! empty( $notification ) &&
-	(
-		(
-				! in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->secondary_item_id ) &&
-				bp_is_user_inactive( $notification->secondary_item_id )
-		) ||
-		(
-				in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->item_id ) &&
-				bp_is_user_inactive( $notification->item_id )
-		) ||
-		(
-			bp_is_active( 'moderation' ) &&
+	/*
+	 * Resolve the ID of the user who triggered the notification. Connection
+	 * notifications (modern and legacy) store that user in item_id and the
+	 * friendship ID in secondary_item_id; every other notification type stores
+	 * the triggering user in secondary_item_id. Passing the friendship ID to
+	 * bp_is_user_inactive() would mark the notification read-only whenever no
+	 * user with that ID exists.
+	 */
+	if ( in_array( $notification->component_action, $allowed_component_action, true ) ) {
+		$triggering_user_id = ! empty( $notification->item_id ) ? (int) $notification->item_id : 0;
+	} else {
+		$triggering_user_id = ! empty( $notification->secondary_item_id ) ? (int) $notification->secondary_item_id : 0;
+	}
+
+	$retval = ! empty( $notification )
+		&& (
 			(
-				(
-					! in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->secondary_item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->secondary_item_id )
-				) ||
-				(
-					in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->item_id )
-				) ||
-				(
-					! empty( $notification->user_id ) &&
-					bb_moderation_moderated_user_ids( $notification->user_id )
+				! empty( $triggering_user_id )
+				&& bp_is_user_inactive( $triggering_user_id )
+			) ||
+			(
+				bp_is_active( 'moderation' )
+				&& (
+					(
+						! empty( $triggering_user_id )
+						&& bb_moderation_moderated_user_ids( $triggering_user_id )
+					) ||
+					(
+						! empty( $notification->user_id )
+						&& bb_moderation_moderated_user_ids( (int) $notification->user_id )
+					)
 				)
 			)
-		)
-	);
+		);
 
 	$retval = (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 
