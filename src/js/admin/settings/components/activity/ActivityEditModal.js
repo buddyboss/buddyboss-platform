@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, Fragment } from '@wordpress/element';
-import { splitFieldsByMetaboxGroup } from '../../utils/format';
+import { getRegisteredFieldPostValue, splitFieldsByMetaboxGroup } from '../../utils/format';
 import {
 	Modal,
 	Button,
@@ -236,7 +236,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 					val = getRichTextEditorHtml( 'bb-admin-edit-' + field.id + '-' + activity.id, val );
 				}
 
-				payload[ 'registered_field_' + field.id ] = null != val ? val : '';
+				payload[ 'registered_field_' + field.id ] = getRegisteredFieldPostValue( field, val );
 			} );
 		}
 
