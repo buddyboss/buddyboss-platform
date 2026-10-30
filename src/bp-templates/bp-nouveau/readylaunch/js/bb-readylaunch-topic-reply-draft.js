@@ -241,6 +241,15 @@ window.bp = window.bp || {};
 				}
 			);
 
+			// The theme submits the form from its own button handler before the
+			// click above runs, so the publish base is also set on submit.
+			this.currentForm.on(
+				'submit',
+				function () {
+					self.setPublishDraftBase();
+				}
+			);
+
 			this.currentForm.on(
 				'click',
 				'.bb_discard_topic_reply_draft',
@@ -3014,6 +3023,42 @@ window.bp = window.bp || {};
 		};
 
 		/**
+		 * Put the stored versions this form was built on into the form.
+		 *
+		 * Publishing clears the stored draft only when the form showed it. A
+		 * draft withheld from the form (it loaded after the member started
+		 * writing, or another tab saved a newer one) stays stored. Runs on the
+		 * form's submit as well as on the button click: the BuddyBoss theme
+		 * submits the form from its own button handler, before the click
+		 * reaches this form, and posts it over AJAX.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		this.setPublishDraftBase = function () {
+			var key = this.topic_reply_draft.data_key;
+
+			if ( ! key ) {
+				return;
+			}
+
+			var $post_form   = this.currentForm.is( 'form' ) ? this.currentForm : this.currentForm.find( 'form' ).first(),
+				publish_base = ( this.draft_conflict_keys[ key ] || this.draft_blocked_keys[ key ] ) ? [ 'none' ] : this.draftBaseFor( key ),
+				$base_input  = $post_form.find( 'input[name="bb_draft_base"]' );
+
+			if ( this.draft_inflight && this.draft_inflight.key === key ) {
+				publish_base = _.uniq( publish_base.concat( [ this.draft_inflight.rev ] ) ).slice( -8 );
+			}
+
+			if ( ! $base_input.length ) {
+				$base_input = $( '<input type="hidden" name="bb_draft_base" />' ).appendTo( $post_form );
+			}
+
+			$base_input.val( publish_base.join( ',' ) );
+		};
+
+		/**
 		 * Handle the composer submit: persist the draft, then let the post proceed.
 		 *
 		 * @since BuddyBoss [BBVERSION]
@@ -3024,25 +3069,7 @@ window.bp = window.bp || {};
 			var key       = this.topic_reply_draft.data_key,
 				held_copy = key ? this.heldCopyToKeep( key ) : null;
 
-			// Tell the server which stored versions this form was built on, so
-			// publishing clears the stored draft only when the form showed it.
-			// A draft withheld from the form (it loaded after the member started
-			// writing, or another tab saved a newer one) stays stored.
-			if ( key ) {
-				var $post_form   = this.currentForm.is( 'form' ) ? this.currentForm : this.currentForm.find( 'form' ).first(),
-					publish_base = ( this.draft_conflict_keys[ key ] || this.draft_blocked_keys[ key ] ) ? [ 'none' ] : this.draftBaseFor( key ),
-					$base_input  = $post_form.find( 'input[name="bb_draft_base"]' );
-
-				if ( this.draft_inflight && this.draft_inflight.key === key ) {
-					publish_base = _.uniq( publish_base.concat( [ this.draft_inflight.rev ] ) ).slice( -8 );
-				}
-
-				if ( ! $base_input.length ) {
-					$base_input = $( '<input type="hidden" name="bb_draft_base" />' ).appendTo( $post_form );
-				}
-
-				$base_input.val( publish_base.join( ',' ) );
-			}
+			this.setPublishDraftBase();
 
 			this.topic_reply_draft.post_action = 'delete';
 			this.clearTopicReplyDraftIntervals();
