@@ -158,22 +158,80 @@ add_action(
 	function() {
 		$component = bp_get_option( 'bp-active-components' );
 
-		// Set the "Document" component active/inactive based on the media components.
-		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
-			$component['document'] = '1';
-			bp_update_option( 'bp-active-components', $component );
-		} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-			unset( $component['document'] );
+		if ( ! is_array( $component ) ) {
+			return;
+		}
+
+		// The option lives on the root blog, while code availability depends on the plugins
+		// active on the current site. On multisite only the root blog decides, as in BP_Core.
+		if ( is_multisite() && ! bp_is_root_blog() ) {
+			return;
+		}
+
+		/*
+		 * Keep the "Document" and "Video" components in step with "Media".
+		 *
+		 * Both need Media, so they are switched off with it. They are only
+		 * switched on when their code is available — the components now ship
+		 * in the BuddyBoss Add-ons plugin, and adding one that cannot load
+		 * would just be scrubbed again by BP_Core on the next request. Media may
+		 * be stored as '1' (legacy) or 1 (Settings 2.0), so test truthiness.
+		 *
+		 * Each child is switched on automatically once per Media activation
+		 * (remembered in `bb_media_auto_enabled_components`), so an admin can
+		 * still turn Video or Documents off on their own afterwards. Its
+		 * directory page is created at the same time, as the Media toggle did
+		 * when it owned these components.
+		 */
+		$auto_enabled = bp_get_option( 'bb_media_auto_enabled_components', false );
+		if ( false === $auto_enabled ) {
+			// Seed it so later reads come from autoloaded options instead of a query per request.
+			$auto_enabled = array();
+			bp_update_option( 'bb_media_auto_enabled_components', $auto_enabled );
+		}
+
+		$auto_enabled  = (array) $auto_enabled;
+		$updated       = false;
+		$added         = array();
+		$added_or_seen = array();
+		foreach ( array( 'document', 'video' ) as $media_child ) {
+			if ( ! empty( $component['media'] ) ) {
+				if ( ! empty( $component[ $media_child ] ) ) {
+					// Already on: remember it so a later manual disable sticks.
+					$added_or_seen[] = $media_child;
+				} elseif (
+					! in_array( $media_child, $auto_enabled, true ) &&
+					bb_is_component_directory_available( $media_child )
+				) {
+					$component[ $media_child ] = '1';
+					$added[ $media_child ]     = 1;
+					$added_or_seen[]           = $media_child;
+					$updated                   = true;
+				}
+			} elseif ( isset( $component[ $media_child ] ) ) {
+				unset( $component[ $media_child ] );
+				$updated = true;
+			}
+		}
+
+		if ( $updated ) {
 			bp_update_option( 'bp-active-components', $component );
 		}
 
-		// Set the "Video" component active/inactive based on the media components.
-		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['video'] ) ) {
-			$component['video'] = '1';
-			bp_update_option( 'bp-active-components', $component );
-		} elseif ( isset( $component ) && isset( $component['video'] ) && empty( $component['media'] ) ) {
-			unset( $component['video'] );
-			bp_update_option( 'bp-active-components', $component );
+		$new_auto_enabled = empty( $component['media'] )
+			? array()
+			: array_values( array_unique( array_merge( $auto_enabled, $added_or_seen ) ) );
+		if ( $new_auto_enabled !== $auto_enabled ) {
+			bp_update_option( 'bb_media_auto_enabled_components', $new_auto_enabled );
+		}
+
+		if ( ! empty( $added ) ) {
+			// bp_core_add_page_mappings() uses post_exists(), which only loads in wp-admin.
+			if ( ! function_exists( 'post_exists' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/post.php';
+			}
+			bp_core_add_page_mappings( $added, 'keep', false );
+			add_action( 'shutdown', 'flush_rewrite_rules' );
 		}
 	},
 	10,
