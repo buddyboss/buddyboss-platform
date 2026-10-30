@@ -1827,6 +1827,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
  * Get particular activity to sync when activity modal is closed.
  *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION] Refuses activities the current user cannot view.
  *
  * @return void
  */
@@ -1857,6 +1858,15 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	}
 
 	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+
+	// Guests can call this, so check the activity and its root post before rendering it (PROD-10649).
+	if ( ! bb_activity_user_can_view( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
 
 	$args = array(
 		'in'               => $activity_id,

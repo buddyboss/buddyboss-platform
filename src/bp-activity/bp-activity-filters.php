@@ -1560,6 +1560,35 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_scope', 10, 2 );
 
 /**
+ * Limit the 'video' and 'document' scopes to lookups of specific activity IDs.
+ *
+ * These scopes match the hidden sub-activities of every group and profile. Combined with a
+ * scope that shows hidden items, such as `favorites,video`, they would list them all. The
+ * scope callbacks live in BuddyBoss Add-ons, and older Add-ons versions do not guard them,
+ * so apply the same rule as the 'media' scope after them (PROD-10649).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $retval Scope query arguments.
+ * @param array $filter Current activity arguments.
+ *
+ * @return array
+ */
+function bb_activity_limit_sub_activity_scope_to_ids( $retval = array(), $filter = array() ) {
+	// Nothing to limit when no component registered the scope.
+	if ( ! empty( $retval ) && empty( $filter['in'] ) ) {
+		return array(
+			'column' => 'id',
+			'value'  => 0,
+		);
+	}
+
+	return $retval;
+}
+add_filter( 'bp_activity_set_video_scope_args', 'bb_activity_limit_sub_activity_scope_to_ids', 20, 2 );
+add_filter( 'bp_activity_set_document_scope_args', 'bb_activity_limit_sub_activity_scope_to_ids', 20, 2 );
+
+/**
  * Filter the members loop on a follow page.
  *
  * This is done so we can return users that:

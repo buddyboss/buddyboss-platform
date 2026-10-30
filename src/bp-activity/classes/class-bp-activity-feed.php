@@ -400,6 +400,7 @@ class BP_Activity_Feed {
 	 * Output the RSS feed.
 	 *
 	 * @since BuddyPress 1.8.0
+	 * @since BuddyBoss [BBVERSION] Skips items the current user cannot view.
 	 */
 	protected function output() {
 		$this->http_headers();
@@ -447,6 +448,12 @@ class BP_Activity_Feed {
 			<?php
 			while ( bp_activities() ) :
 				bp_the_activity();
+
+				// The feed scopes match comments on private and hidden group posts and on
+				// friends-only posts, and render the root post's text with them (PROD-10649).
+				if ( ! bb_activity_user_can_view( $GLOBALS['activities_template']->activity ) ) {
+					continue;
+				}
 				?>
 			<item>
 				<guid isPermaLink="false"><?php bp_activity_feed_item_guid(); ?></guid>
