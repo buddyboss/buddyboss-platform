@@ -278,7 +278,7 @@ function bb_friends_clear_related_users_cache_on_remove_data( $user_id ) {
 		) as $group => $keys
 	) {
 		foreach ( array_chunk( $keys, 500 ) as $chunk ) {
-			wp_cache_delete_multiple( $chunk, $group );
+			bb_core_cache_delete_multiple( $chunk, $group );
 		}
 	}
 
@@ -294,7 +294,7 @@ function bb_friends_clear_related_users_cache_on_remove_data( $user_id ) {
 		}
 
 		foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
-			wp_cache_delete_multiple( $chunk, 'bp_notifications' );
+			bb_core_cache_delete_multiple( $chunk, 'bp_notifications' );
 		}
 
 		foreach ( $recipient_ids as $recipient_id ) {

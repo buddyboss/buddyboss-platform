@@ -139,7 +139,7 @@ function bb_messages_clear_cache_on_delete_user_message( $user_id, $thread_ids, 
 	}
 
 	foreach ( array_chunk( array_merge( $unread_keys, array_values( $recipient_ids ) ), 500 ) as $chunk ) {
-		wp_cache_delete_multiple( $chunk, 'bp_messages_unread_count' );
+		bb_core_cache_delete_multiple( $chunk, 'bp_messages_unread_count' );
 	}
 
 	// Invalidate the message and thread query caches.

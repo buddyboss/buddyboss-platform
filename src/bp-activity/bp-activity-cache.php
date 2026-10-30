@@ -306,7 +306,7 @@ function bb_activity_follow_clear_related_users_cache_on_remove_data( $user_id, 
 	}
 
 	foreach ( array_chunk( $keys, 500 ) as $chunk ) {
-		wp_cache_delete_multiple( $chunk, 'bp' );
+		bb_core_cache_delete_multiple( $chunk, 'bp' );
 	}
 
 	// Invalidate the cached follower/following ID lists of every member.
