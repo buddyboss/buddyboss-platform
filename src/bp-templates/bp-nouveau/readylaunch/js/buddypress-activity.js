@@ -1694,6 +1694,10 @@ window.bp = window.bp || {};
 							dictMaxFilesExceeded         : BP_Nouveau.video.video_dict_file_exceeded,
 							previewTemplate              : acCommentVideoTemplate,
 							dictCancelUploadConfirmation : BP_Nouveau.media.dictCancelUploadConfirmation,
+							chunking                     : true,
+							chunkSize                    : 30 * 1024 * 1024,
+							retryChunks                  : true,
+							retryChunksLimit             : 3,
 						}
 					);
 
@@ -4344,6 +4348,11 @@ window.bp = window.bp || {};
 			dropzoneObj.on(
 				'success',
 				function ( file, response ) {
+					if ( file.upload && true === file.upload.chunked ) {
+						// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+						response = JSON.parse( file.xhr.response );
+					}
+
 					if ( 'document' === type ) {
 						var filename      = file.upload.filename,
 							fileExtension = filename.substr(
@@ -4360,8 +4369,8 @@ window.bp = window.bp || {};
 						}
 					}
 
-					if ( response.data.id ) {
-						file.id                  = response.id;
+					if ( response.data && response.data.id ) {
+						file.id                  = response.data.id;
 						response.data.uuid       = file.upload.uuid;
 						response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 						var subType = 'document' === type ? 'media' : type;
@@ -4440,6 +4449,8 @@ window.bp = window.bp || {};
 						            file.xhr && file.xhr.status === 0
 						) ) { // update server error text to user friendly.
 							$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+						} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+							$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 						}
 					} else {
 						var commentForm = target.closest( '.ac-form' );
