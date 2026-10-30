@@ -85,21 +85,15 @@ class BB_Readylaunch_WC4BP_Helper {
 	 * still serving as the template-stack callback registered above.
 	 *
 	 * @since BuddyBoss 3.1.0
+	 * @since BuddyBoss [BBVERSION] Resolve the path from buddypress()->plugin_dir
+	 *              as-is. It already points at the folder that holds bp-templates
+	 *              in both the source checkout (`.../src/`) and the release build,
+	 *              so prefixing `src/` produced a missing directory on release installs.
 	 * @static
 	 *
 	 * @return string Template directory path.
 	 */
 	public static function bb_rl_wc4bp_get_template_directory() {
-		$plugin_dir = buddypress()->plugin_dir;
-		$plugin_dir = rtrim( $plugin_dir, '/' ) . '/';
-
-		// Check if plugin_dir already includes 'src/'.
-		if ( false !== strpos( $plugin_dir, '/src/' ) ) {
-			// plugin_dir already includes src/, so use bp-templates directly.
-			return $plugin_dir . 'bp-templates/bp-nouveau/readylaunch/wc4bp';
-		} else {
-			// plugin_dir doesn't include src/, so add it.
-			return $plugin_dir . 'src/bp-templates/bp-nouveau/readylaunch/wc4bp';
-		}
+		return trailingslashit( buddypress()->plugin_dir ) . 'bp-templates/bp-nouveau/readylaunch/wc4bp';
 	}
 }
