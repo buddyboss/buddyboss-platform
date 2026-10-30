@@ -6870,8 +6870,19 @@ function bb_activity_get_metadata( $activity_id ) {
 		wp_cache_set( $activity_id, $meta_data, 'activity_meta' );
 	}
 
-	// Return the metadata.
-	return $meta_data;
+	/**
+	 * Filters all metadata of an activity as returned by bb_activity_get_metadata().
+	 *
+	 * The metadata can come straight from the `activity_meta` cache group, which
+	 * bypasses the `get_activity_metadata` filter, so code that must hide meta
+	 * keys from every read filters both.
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param array|mixed $meta_data   All metadata of the activity.
+	 * @param int         $activity_id Activity ID.
+	 */
+	return apply_filters( 'bb_activity_get_metadata', $meta_data, $activity_id );
 }
 
 /**
@@ -8389,4 +8400,62 @@ function bb_activity_get_item_user_displayname( $activity_item ) {
 	$name = bp_core_get_user_displayname( $activity_item->user_id );
 
 	return is_string( $name ) ? $name : '';
+}
+
+/**
+ * Delete the topic relationship rows of activities that were just deleted.
+ *
+ * Runs on `bp_activity_after_delete`, which every delete path (front end, admin bulk, REST,
+ * group/user cascades) reaches through BP_Activity_Activity::delete(). It is hooked outside the
+ * activity topics manager so it also runs while activity topics are switched off; otherwise those
+ * rows would be left pointing at activities that no longer exist. One DELETE per 500 activity ids.
+ * The per-relationship delete actions are not fired here: deleting the activity already clears the
+ * caches that listen to them, and firing them once per row multiplied those purges on large deletes.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param array $activities Deleted activity objects (or ids).
+ *
+ * @return int Number of relationship rows deleted.
+ */
+function bb_delete_topic_relationships_of_deleted_activities( $activities ) {
+	global $wpdb;
+
+	if (
+		empty( $activities ) ||
+		! is_array( $activities ) ||
+		! function_exists( 'bb_topics_manager_instance' ) ||
+		! bb_topics_manager_instance()
+	) {
+		return 0;
+	}
+
+	$first = reset( $activities );
+	if ( is_object( $first ) || is_array( $first ) ) {
+		$activity_ids = wp_parse_id_list( wp_list_pluck( $activities, 'id' ) );
+	} else {
+		// Plain id lists.
+		$activity_ids = wp_parse_id_list( $activities );
+	}
+	if ( empty( $activity_ids ) ) {
+		return 0;
+	}
+
+	$table   = bb_topics_manager_instance()->activity_topic_rel_table;
+	$deleted = 0;
+	foreach ( array_chunk( $activity_ids, 500 ) as $chunk ) {
+		$placeholders = implode( ',', array_fill( 0, count( $chunk ), '%d' ) );
+
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare,WordPress.DB.DirectDatabaseQuery -- placeholders built above, table name is internal.
+		$result = $wpdb->query(
+			$wpdb->prepare( "DELETE FROM `{$table}` WHERE activity_id IN ({$placeholders})", $chunk )
+		);
+		// phpcs:enable
+
+		if ( false !== $result ) {
+			$deleted += (int) $result;
+		}
+	}
+
+	return $deleted;
 }

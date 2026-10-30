@@ -19,7 +19,8 @@ $album_id         = (int) bp_action_variable( 0 );
 $bp_is_my_profile = bp_is_my_profile();
 $bp_is_group      = bp_is_group();
 
-if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
+$bp_is_user_video = false;
+if ( bp_is_active( 'video' ) && bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 	$bp_is_user_video = bp_is_user_video();
 }
 ?>
@@ -46,7 +47,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show bb-rl-filter">
 								<select id="bb-album-privacy">
 									<?php
-									foreach ( bp_video_get_visibility_levels() as $k => $option ) {
+									foreach ( ( bp_is_active( 'video' ) ? bp_video_get_visibility_levels() : bp_media_get_visibility_levels() ) as $k => $option ) {
 										$selected = '';
 										$privacy  = bp_get_album_privacy();
 										if ( $k === $privacy ) {
