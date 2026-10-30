@@ -153,13 +153,15 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 								// textarea. Send them too, converted with autop() to the
 								// same HTML format as the Visual tab, so the value is kept
 								// when the modal switches to another tab before Save.
+								// Bind through jQuery: the link button's wpLink fires its
+								// change with jQuery's trigger(), which native listeners
+								// don't receive.
 								var onCodeTabChange = function () {
 									if ( editor.isHidden() && window.wp.editor.autop ) {
 										onChangeRef.current( window.wp.editor.autop( textarea.value ) );
 									}
 								};
-								textarea.addEventListener( 'input', onCodeTabChange );
-								textarea.addEventListener( 'change', onCodeTabChange );
+								window.jQuery( textarea ).on( 'input change', onCodeTabChange );
 							},
 						},
 						quicktags: {
