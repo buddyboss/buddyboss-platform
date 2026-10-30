@@ -140,13 +140,15 @@ export function TopicListField( { field, value, values, onChange } ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var newTopic = response.data.content.topic;
+				// The response puts the display label in permission_type; keep the key we sent.
+				newTopic.permission_type = data.permission_type;
 				var updatedTopics = topics.concat( [ newTopic ] );
 				setTopics( updatedTopics );
 				onChange( field.name, updatedTopics );
 				setIsAddModalOpen( false );
 				setError( '' );
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to add topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to add topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -170,6 +172,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var updatedTopic = response.data.content.topic;
+				updatedTopic.permission_type = data.permission_type;
 				// Compare using the original topic_id sent in the request,
 				// because editing a topic name may create a new topic_id.
 				var originalTopicId = String( data.topic_id );
@@ -185,7 +188,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setEditingTopic( null );
 				setError( '' );
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to update topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to update topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -212,7 +215,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setIsDeleteModalOpen( true );
 				setError( '' );
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsDeleteLoading( false );
@@ -244,7 +247,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setDeletingTopic( null );
 				setError( '' );
 			} else {
-				setError( response.data && response.data.message ? response.data.message : __( 'Failed to delete topic.', 'buddyboss' ) );
+				setError( response.data && ( response.data.error || response.data.message ) ? ( response.data.error || response.data.message ) : __( 'Failed to delete topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
@@ -286,6 +289,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 			} );
 			ajaxRequest( 'bb_update_topics_order', {
 				topic_ids: topicIds,
+				item_type: 'activity',
 				nonce: nonces.order || '',
 			} ).then( function ( response ) {
 				if ( ! response.success ) {
