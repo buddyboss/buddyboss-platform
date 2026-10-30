@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Load the template loop for the current object.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Refuses a single-activity context the current user cannot view.
  *
  * @return string Template loop for the specified object.
  */
@@ -40,6 +41,12 @@ function bp_nouveau_ajax_object_template_loader() {
 	$result = array();
 
 	if ( 'activity' === $object ) {
+		// AJAX takes the single-activity context from the Referer, and the query string then
+		// asks for that ID with hidden items shown. Check it the way the activity page does (PROD-10649).
+		if ( bp_is_single_activity() && ! bb_activity_user_can_view( (int) bp_current_action() ) ) {
+			wp_send_json_error();
+		}
+
 		$scope = '';
 		if ( ! empty( $_POST['scope'] ) ) {
 			$scope = sanitize_text_field( $_POST['scope'] );

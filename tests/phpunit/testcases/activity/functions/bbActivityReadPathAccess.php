@@ -314,6 +314,120 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		$this->assertSame( $this->comment, $validate->invoke( $extension, $url( $this->comment ) ) );
 	}
 
+	/**
+	 * Call an AJAX handler and return its decoded JSON response.
+	 */
+	protected function call_ajax( $handler ) {
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+
+		$die_handler = function () {
+			return function () {
+				throw new WPDieException( 'ajax' );
+			};
+		};
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', $die_handler );
+
+		ob_start();
+		try {
+			call_user_func( $handler );
+		} catch ( WPDieException $e ) {
+			unset( $e );
+		}
+		$response = ob_get_clean();
+
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'wp_die_ajax_handler', $die_handler );
+
+		return json_decode( $response, true );
+	}
+
+	/**
+	 * The activity loop AJAX as it runs when the Referer is a single activity page.
+	 */
+	protected function single_activity_loop( $user_id, $activity_id ) {
+		$this->set_current_user( $user_id );
+
+		$bp                    = buddypress();
+		$bp->current_component = 'activity';
+		$bp->current_action    = (string) $activity_id;
+
+		$_POST = array(
+			'object' => 'activity',
+			'nonce'  => wp_create_nonce( 'bp_nouveau_activity' ),
+			'scope'  => 'media',
+		);
+
+		$response = $this->call_ajax( 'bp_nouveau_ajax_object_template_loader' );
+
+		$bp->current_component = '';
+		$bp->current_action    = '';
+
+		return $response;
+	}
+
+	public function test_single_activity_loop_refuses_private_group_items() {
+		$this->assertTrue( bp_is_active( 'activity' ) );
+
+		$this->assertFalse( $this->single_activity_loop( 0, $this->root )['success'] );
+		$this->assertFalse( $this->single_activity_loop( 0, $this->comment )['success'] );
+		$this->assertFalse( $this->single_activity_loop( $this->stranger, $this->root )['success'] );
+	}
+
+	public function test_single_activity_loop_runs_for_member() {
+		$response = $this->single_activity_loop( $this->member, $this->root );
+
+		// The loop runs; the test install has no templates, so its HTML may be empty.
+		$this->assertTrue( $response['success'] );
+	}
+
+	/**
+	 * Ask the reactions AJAX for an activity's reactions.
+	 */
+	protected function reactions( $user_id, $activity_id ) {
+		$this->set_current_user( $user_id );
+
+		$_POST = array(
+			'_wpnonce'  => wp_create_nonce( 'bp_nouveau_activity' ),
+			'item_id'   => $activity_id,
+			'item_type' => 'activity_comment',
+		);
+
+		return $this->call_ajax( 'bb_get_activity_reaction_ajax_callback' );
+	}
+
+	public function test_reactions_list_follows_root_privacy() {
+		if ( ! function_exists( 'bb_get_activity_reaction_ajax_callback' ) ) {
+			$this->markTestSkipped( 'Reactions are not loaded.' );
+		}
+
+		$only_me = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->activity->id,
+				'type'      => 'activity_update',
+				'user_id'   => $this->author,
+				'privacy'   => 'onlyme',
+			)
+		);
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $only_me,
+				'content'     => 'only me comment',
+			)
+		);
+
+		$refused = __( 'Activity not found.', 'buddyboss' );
+
+		$this->assertSame( $refused, $this->reactions( 0, $comment )['data']['message'] );
+		$this->assertSame( $refused, $this->reactions( $this->stranger, $comment )['data']['message'] );
+		$this->assertSame( $refused, $this->reactions( $this->stranger, $this->comment )['data']['message'] );
+
+		// The author gets past the access check; there are no reactions to list.
+		$this->assertNotSame( $refused, $this->reactions( $this->author, $comment )['data']['message'] );
+		$this->assertNotSame( $refused, $this->reactions( $this->member, $this->comment )['data']['message'] );
+	}
+
 	public function test_video_and_document_scopes_match_only_requested_ids() {
 		$registered = array( 'column' => 'privacy', 'value' => 'video' );
 		$no_match   = array(
