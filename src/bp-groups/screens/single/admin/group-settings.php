@@ -53,11 +53,20 @@ function groups_screen_group_admin_settings() {
 		$allowed_document_status = bb_groups_get_settings_status( 'document' );
 		$document_status         = isset( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : bb_groups_settings_default_fallback( 'document', current( $allowed_document_status ) );
 
+		// The Documents and Videos fields are not shown while the component is unavailable
+		// (e.g. BuddyBoss Add-ons is inactive). Keep the stored value instead of resetting it.
+		if ( ! isset( $_POST['group-document-status'] ) ) {
+			$document_status = false;
+		}
+
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_video_status    = bb_groups_get_settings_status( 'video' );
 		$post_group_video_status = bb_filter_input_string( INPUT_POST, 'group-video-status' );
 		$video_status            = ! empty( $post_group_video_status ) && in_array( $post_group_video_status, (array) $allowed_video_status, true ) ? $post_group_video_status : bb_groups_settings_default_fallback( 'video', current( $allowed_video_status ) );
+		if ( empty( $post_group_video_status ) ) {
+			$video_status = false;
+		}
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */

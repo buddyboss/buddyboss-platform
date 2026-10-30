@@ -10,7 +10,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback, useRef, Fragment } from '@wordpress/element';
-import { splitFieldsByMetaboxGroup } from '../../utils/format';
+import { getRegisteredFieldPostValue, splitFieldsByMetaboxGroup } from '../../utils/format';
 import {
 	Modal,
 	Button,
@@ -328,7 +328,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					val = getRichTextEditorContent( 'bb-admin-edit-' + field.id + '-' + group.id, val );
 				}
 
-				payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
+				payload[ 'registered_field_' + field.id ] = getRegisteredFieldPostValue( field, val );
 			} );
 		}
 
