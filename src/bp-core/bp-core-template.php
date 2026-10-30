@@ -4503,6 +4503,42 @@ function bb_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
 }
 
 /**
+ * Whether the active Add-ons build is missing a player or picker library that moved into it.
+ *
+ * The video.js player and the GIPHY library moved from Platform into Add-ons.
+ * Add-ons builds without them still provide GIFs, so the GIF picker would have no
+ * library behind it. Used by bb_media_gif_picker_available(). This checks the
+ * running code, not the version number, so any build without the assets is
+ * matched.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param string $register_function Add-ons function that registers the library.
+ *
+ * @return bool True when Add-ons is active and does not ship the library.
+ */
+function bb_addons_lacks_moved_assets( $register_function ) {
+	return defined( 'BB_ADDONS_PLUGIN_VERSION' ) && ! function_exists( $register_function );
+}
+
+/**
+ * Whether the GIF picker can be shown on the front end.
+ *
+ * The GIPHY library ships with BuddyBoss Add-ons. An Add-ons build from before
+ * the library moved still provides GIFs, but the picker would fail without the
+ * library. This checks the running Add-ons code, so it also works in AJAX
+ * requests where scripts are not registered. Saved GIFs, the REST API and the
+ * settings are not affected.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @return bool True when the GIF picker can be shown.
+ */
+function bb_media_gif_picker_available() {
+	return ! bb_addons_lacks_moved_assets( 'bb_addons_giphy_register_scripts' );
+}
+
+/**
  * Whether user has access to upload Emoji or not.
  *
  * @param int    $group_id  group id to be check if passed.

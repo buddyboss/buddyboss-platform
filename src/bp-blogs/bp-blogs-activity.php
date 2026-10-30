@@ -1462,7 +1462,7 @@ add_filter( 'bp_activity_can_comment_reply', 'bp_blogs_can_comment_reply', 10, 2
  * activity item is a 'new_blog_post' entry.
  *
  * @since BuddyPress 2.0.0
- * @since BuddyBoss [BBVERSION] Falls back to the activity comment permalink when no synced post comment exists.
+ * @since BuddyBoss 3.7.0 Falls back to the activity comment permalink when no synced post comment exists.
  *
  * @param string $retval The activity comment permalink.
  * @return string
@@ -1505,7 +1505,7 @@ add_filter( 'bp_get_activity_comment_permalink', 'bp_blogs_activity_comment_perm
  * This is only done if the activity comment is associated with a blog comment.
  *
  * @since BuddyPress 2.0.1
- * @since BuddyBoss [BBVERSION] Falls back to the activity comment permalink when no synced post comment exists.
+ * @since BuddyBoss 3.7.0 Falls back to the activity comment permalink when no synced post comment exists.
  *
  * @param string               $retval   The activity permalink.
  * @param BP_Activity_Activity $activity Activity object.

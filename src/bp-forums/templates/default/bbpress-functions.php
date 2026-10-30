@@ -356,7 +356,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 					$document_ids = get_post_meta( bbp_get_topic_id(), 'bp_document_ids', true );
 
-					if ( ! empty( $document_ids ) && bp_has_document(
+					if ( bp_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
 						array(
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
@@ -386,7 +386,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 					$video_ids = get_post_meta( bbp_get_topic_id(), 'bp_video_ids', true );
 
-					if ( ! empty( $video_ids ) && bp_has_video(
+					if ( bp_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
 						array(
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
@@ -470,7 +470,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 					$document_ids = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
 
-					if ( ! empty( $document_ids ) && bp_has_document(
+					if ( bp_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
 						array(
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
@@ -500,7 +500,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 					$video_ids = get_post_meta( bbp_get_reply_id(), 'bp_video_ids', true );
 
-					if ( ! empty( $video_ids ) && bp_has_video(
+					if ( bp_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
 						array(
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',
@@ -584,7 +584,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 					$document_ids = get_post_meta( bbp_get_forum_id(), 'bp_document_ids', true );
 
-					if ( ! empty( $document_ids ) && bp_has_document(
+					if ( bp_is_active( 'document' ) && ! empty( $document_ids ) && bp_has_document(
 						array(
 							'include'  => $document_ids,
 							'order_by' => 'menu_order',
@@ -614,7 +614,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 					$video_ids = get_post_meta( bbp_get_forum_id(), 'bp_video_ids', true );
 
-					if ( ! empty( $video_ids ) && bp_has_video(
+					if ( bp_is_active( 'video' ) && ! empty( $video_ids ) && bp_has_video(
 						array(
 							'include'  => $video_ids,
 							'order_by' => 'menu_order',

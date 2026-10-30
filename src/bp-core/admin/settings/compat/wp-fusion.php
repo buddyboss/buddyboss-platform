@@ -385,7 +385,7 @@ add_action( 'wp_ajax_bb_legacy_wpf_create_tag', 'bb_legacy_wpf_create_tag' );
  * Settings" section from ever appearing if the reject logic's behaviour
  * changes in the future.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string[] $skip Metabox ids the auto-bridge should ignore.
  * @return string[] Updated list.
@@ -407,7 +407,7 @@ add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_wpf_skip_group_a
  *
  * Mirrors the default-merge in `WPF_BuddyPress::meta_box_callback_groups()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param int $group_id Group ID.
  * @return array Map with 'apply_tags', 'tag_link', 'organizer_tag' keys, each a flat array of tag ids.
@@ -449,7 +449,7 @@ function bb_legacy_wpf_group_settings( $group_id ) {
  * Call with `$group_id` and `$key` to stage, or with `$key = null` to read and
  * clear everything staged for that group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param int         $group_id Group ID.
  * @param string|null $key      One of 'apply_tags', 'tag_link', 'organizer_tag', or null to flush.
@@ -485,7 +485,7 @@ function bb_legacy_wpf_save_group_setting( $group_id, $key = null, $value = arra
  * exactly when the classic screen would. `is_integration_active()` is missing
  * before WP Fusion 3.42.6, where the integration cannot be turned off.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @return object|null The integration object, or null when unavailable or disabled.
  */
@@ -524,7 +524,7 @@ function bb_legacy_wpf_buddypress_integration() {
  * request, so a misbehaving handler cannot break the already-saved group's
  * AJAX response.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param int             $group_id Saved group ID.
  * @param BP_Groups_Group $group    Saved group object (unused).
@@ -605,7 +605,7 @@ add_action( 'bb_admin_after_save_group', 'bb_legacy_wpf_replay_group_save', 50, 
  * with a newer pick rather than being blocked from picking at all once one
  * tag is chosen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param mixed    $raw Raw value from `registered_field_*` POST.
  * @param int|null $max Optional cap on the number of ids kept.
@@ -646,7 +646,7 @@ function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
  * (see `legacy-meta-bridge-utils.php`), so `AjaxMultiSelectField` behaves the
  * same way on both surfaces.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param string[] $saved Currently saved tag ids for this field.
  * @param int|null $max   Optional cap on how many tags the field accepts (see
@@ -703,7 +703,7 @@ function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
  * Order numbers start at 6100 — clear of core (order 100), so the WP Fusion
  * section appears in a stable, predictable position.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.

@@ -1,3 +1,18 @@
+// All uploader UI. Moved here from _bp_video.scss because it styles
+// every uploader, not only the video one.
+div.dropzone.dz-started {
+	margin: 0 0 20px;
+
+	.dz-default.dz-message {
+		flex-basis: 100%;
+		max-width: 130px !important;
+		min-height: 130px !important;
+		margin: 0 4px 10px;
+		padding: 0 5px;
+	}
+
+}
+
 .dropzone,
 .dropzone * {
 	box-sizing: border-box;
