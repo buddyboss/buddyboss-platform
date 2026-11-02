@@ -49,7 +49,7 @@ function bb_activity_sharing_section_help_article() {
  * Base args for the Activity Sharing section.
  *
  * Defaults that apply regardless of which Sharing state (new / old / none) is
- * active. State-specific extensions (e.g. the UPGRADE PRO badge when Sharing
+ * active. State-specific extensions (e.g. the UPGRADE LAUNCH badge when Sharing
  * is not installed) are layered on top via the
  * `bb_activity_sharing_section_args` filter — see
  * `bb_activity_sharing_get_section_args()` and
@@ -79,7 +79,7 @@ function bb_activity_sharing_section_base_args() {
  * two sections in the panel.
  *
  * The filter is the canonical extension point for boot-time state (e.g. "no
- * Sharing installed → show UPGRADE PRO badge"). For runtime state changes
+ * Sharing installed → show UPGRADE LAUNCH badge"). For runtime state changes
  * that only resolve at AJAX time — Sharing's license-lock state being the
  * only known case, because Sharing's DRM-addon registration races with
  * Platform's panel hook on `plugins_loaded@10` — use a follow-up
@@ -113,7 +113,7 @@ function bb_activity_sharing_get_section_args() {
 }
 
 /**
- * Filter callback: add UPGRADE PRO badge when the BuddyBoss Sharing plugin is
+ * Filter callback: add UPGRADE LAUNCH badge when the BuddyBoss Sharing plugin is
  * not installed at all (state 4).
  *
  * Detection here is reliable at boot — `class_exists` does not depend on DRM
@@ -140,7 +140,7 @@ function bb_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
 
 	$args['pro_notice'] = array(
 		'show'       => true,
-		'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+		'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/pricing/',
 	);
@@ -161,13 +161,13 @@ add_filter( 'bb_activity_sharing_section_args', 'bb_activity_sharing_add_pro_bad
  *      here beyond the section shell.
  *   2. NEW Sharing + license locked — Same as state 1 at boot. Sharing's
  *      lazy hook calls `bb_activity_register_sharing_pro_placeholder_fields()`
- *      at AJAX time, which adds the UPGRADE PRO badge via merge mode and
+ *      at AJAX time, which adds the UPGRADE LAUNCH badge via merge mode and
  *      registers placeholder fields.
  *   3. OLD Sharing — main plugin class exists but predates Settings 2.0.
- *      Render an `empty_state` Update Required card. No UPGRADE PRO badge.
+ *      Render an `empty_state` Update Required card. No UPGRADE LAUNCH badge.
  *   4. Sharing NOT installed / deactivated — the
  *      `bb_activity_sharing_section_args` filter has already added the
- *      UPGRADE PRO badge to the section. Register the placeholder fields.
+ *      UPGRADE LAUNCH badge to the section. Register the placeholder fields.
  *
  * Detection key: `Activity_Settings::bb_sh_register_sharing_settings()` only
  * ships in Sharing versions with the Settings 2.0 path. The class itself has
@@ -180,7 +180,7 @@ function bb_activity_register_sharing_panel_fields() {
 	// Single section registration — args go through the
 	// `bb_activity_sharing_section_args` filter, which is the canonical
 	// extension point for mutating section attributes from this or any
-	// other plugin. State-appropriate badges (e.g. UPGRADE PRO when Sharing
+	// other plugin. State-appropriate badges (e.g. UPGRADE LAUNCH when Sharing
 	// is absent) are added via filter callbacks, not by re-registering.
 	bb_register_feature_section(
 		'activity',
@@ -220,19 +220,19 @@ function bb_activity_register_sharing_panel_fields() {
 		return;
 	}
 
-	// State 4 — Sharing NOT installed: section already carries the UPGRADE PRO
+	// State 4 — Sharing NOT installed: section already carries the UPGRADE LAUNCH
 	// badge from the filter callback above. Register the placeholder fields.
 	bb_activity_register_sharing_pro_placeholder_fields();
 }
 
 /**
  * Register PRO-gated placeholder fields for the Activity Sharing panel, and
- * ensure the section carries the UPGRADE PRO badge.
+ * ensure the section carries the UPGRADE LAUNCH badge.
  *
  * Called from two contexts:
  *
  *   - Platform boot, no Sharing installed (state 4) — section already carries
- *     the UPGRADE PRO badge from the boot-time
+ *     the UPGRADE LAUNCH badge from the boot-time
  *     `bb_activity_sharing_add_pro_badge_when_no_sharing` filter callback.
  *     The merge call below overlays the same `pro_notice` value — no-op.
  *
@@ -286,13 +286,13 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 	// and keep the badge visible in that combination.
 	$pro_notice_field = array(
 		'show'       => true,
-		'badge_text' => __( 'PRO', 'buddyboss' ),
+		'badge_text' => __( 'LAUNCH', 'buddyboss' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/platform/',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
 
-	// Idempotently ensure the section carries the UPGRADE PRO badge.
+	// Idempotently ensure the section carries the UPGRADE LAUNCH badge.
 	//
 	// State 4 (no Sharing): the boot-time filter already added the badge.
 	// This merge overlays the same value — no-op.
@@ -308,7 +308,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 			'merge'      => true,
 			'pro_notice' => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => 'https://www.buddyboss.com/pricing/',
 			),

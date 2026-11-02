@@ -285,6 +285,17 @@ class BB_Admin_Profile_Fields_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss' ) ) );
 		}
 
+		// The Bio field is shared with the member's WordPress "Biographical Info",
+		// so a set holding one cannot start repeating its fields. Only the switch-on
+		// is refused, so a set that already repeats can still be renamed or edited.
+		if (
+			'on' === $group_is_repeater &&
+			'on' !== bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true ) &&
+			bb_xprofile_group_has_bio_field( $group_id )
+		) {
+			wp_send_json_error( array( 'message' => __( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set cannot be enabled. Remove the Bio field first.', 'buddyboss' ) ) );
+		}
+
 		$result = xprofile_insert_field_group(
 			array(
 				'field_group_id' => $group_id,
@@ -470,6 +481,12 @@ class BB_Admin_Profile_Fields_Ajax {
 		$saved_id = xprofile_insert_field( $args );
 
 		if ( empty( $saved_id ) ) {
+			// The Bio field is shared with the member's WordPress "Biographical Info",
+			// so a set that repeats its fields cannot hold one — adding or saving.
+			if ( 'biography' === $type && bb_xprofile_is_repeater_group( $group_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'The "Bio" profile field cannot be used in a repeater field set, because it shares its value with the member\'s WordPress profile. Move it to a field set that does not repeat.', 'buddyboss' ) ) );
+			}
+
 			// Singleton validation error messages.
 			if ( 'membertypes' === $type ) {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ) ) );
@@ -477,6 +494,8 @@ class BB_Admin_Profile_Fields_Ajax {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ) ) );
 			} elseif ( 'socialnetworks' === $type ) {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ) ) );
+			} elseif ( 'biography' === $type ) {
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss' ) ) );
 			}
 
 			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss' ) ) );
@@ -752,6 +771,8 @@ class BB_Admin_Profile_Fields_Ajax {
 			'is_required'             => (bool) $field->is_required,
 			'can_delete'              => (bool) $field->can_delete,
 			'is_default_field'        => $this->bb_is_default_field( $field->id ),
+			'is_settings_locked'      => $this->bb_is_settings_locked_field( $field->id ),
+			'hide_member_types'       => $this->bb_hide_member_types_for_field( $field ),
 			'field_order'             => (int) $field->field_order,
 			'alternate_name'          => $alternate_name ? $alternate_name : '',
 			'description'             => $field->description,
@@ -800,6 +821,53 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		return in_array( (int) $field_id, $synced_field_ids, true );
+	}
+
+	/**
+	 * Determine whether a field's Type, Requirement and Visibility settings are locked.
+	 *
+	 * Mirrors legacy `BP_XProfile_Field::is_default_field()` exactly — the set the
+	 * legacy editor used to hide the Type, Requirement and Visibility metaboxes:
+	 * the Nickname field always, plus First name when the display-name format is
+	 * `first_name` or `first_last_name`. Unlike `bb_is_default_field()` (a superset
+	 * kept for cross-field-set move protection), Last name is deliberately NOT
+	 * included: legacy always offered its Visibility (incl. "Enforce field
+	 * visibility"), Requirement and Type controls, and under `first_last_name`
+	 * members can still change Last name's visibility, so the admin controls must
+	 * stay available. See PROD-10439.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param int $field_id Field ID.
+	 * @return bool True when the field's settings sections are locked in the editor.
+	 */
+	private function bb_is_settings_locked_field( $field_id ) {
+		$locked_field_ids = array( (int) bp_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
+			$locked_field_ids[] = (int) bp_xprofile_firstname_field_id();
+		}
+
+		return in_array( (int) $field_id, $locked_field_ids, true );
+	}
+
+	/**
+	 * Determine whether the Profile Types selector is hidden for a field.
+	 *
+	 * Mirrors legacy `BP_XProfile_Field::member_type_metabox()`: hidden for the
+	 * primary field (ID 1), fields that cannot be deleted, and the Profile Type
+	 * field itself. Every other field — including Last name — may be restricted
+	 * to specific profile types, matching the legacy editor. See PROD-10439.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param BP_XProfile_Field $field Field object.
+	 * @return bool True when the Profile Types selector should not be offered.
+	 */
+	private function bb_hide_member_types_for_field( $field ) {
+		return 1 === (int) $field->id
+			|| empty( $field->can_delete )
+			|| (int) bp_get_xprofile_member_type_field_id() === (int) $field->id;
 	}
 
 	/**
@@ -936,6 +1004,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$labels = array(
 			'textbox'        => __( 'Single Line Input', 'buddyboss' ),
 			'textarea'       => __( 'Paragraph Input', 'buddyboss' ),
+			'biography'      => __( 'Bio', 'buddyboss' ),
 			'selectbox'      => __( 'Dropdown', 'buddyboss' ),
 			'multiselectbox' => __( 'Multi Select', 'buddyboss' ),
 			'checkbox'       => __( 'Checkboxes', 'buddyboss' ),
@@ -978,6 +1047,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$descriptions = array(
 			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss' ),
 			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss' ),
+			'biography'      => __( 'Displays a multi-line text field for the member\'s bio, shared with the "Biographical Info" field on their WordPress profile.', 'buddyboss' ),
 			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss' ),
 			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss' ),
 			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss' ),

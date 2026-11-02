@@ -26,10 +26,12 @@
 				$bp_nouveau = bp_nouveau();
 				$nav_item   = $bp_nouveau->current_nav_item;
 
-				$nav_class = array( 'bp-' . $bp_nouveau->displayed_nav . '-sub-tab' );
-				if ( 'subscriptions' === $nav_item->slug && bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
-					$nav_class = array_merge( $nav_class, array( 'current', 'selected' ) );
-				} elseif ( 'notifications' === $nav_item->slug && ! bp_action_variables() ) {
+				$nav_class       = array( 'bp-' . $bp_nouveau->displayed_nav . '-sub-tab' );
+				$current_sub_tab = bp_action_variables() ? bp_action_variable( 0 ) : '';
+				if (
+					( 'notifications' === $nav_item->slug && '' === $current_sub_tab ) ||
+					( 'notifications' !== $nav_item->slug && $nav_item->slug === $current_sub_tab )
+				) {
 					$nav_class = array_merge( $nav_class, array( 'current', 'selected' ) );
 				}
 				?>

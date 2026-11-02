@@ -141,12 +141,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Register the ReadyLaunch telemetry data.
 		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss 3.4.3 Added the onboarding wizard's completion flag
+		 *              and progress option. These previously reached telemetry only
+		 *              through transient filters registered mid-AJAX by the wizard
+		 *              itself, so the weekly cron send never carried them and the
+		 *              signal was lost on any site where that one immediate send
+		 *              failed or telemetry was disabled at the time. They are added
+		 *              unconditionally: an abandoned wizard on a site that never
+		 *              enabled ReadyLaunch is the funnel signal, so they must not
+		 *              sit behind the enabled check.
+		 *
 		 * @param array $option_array The array of telemetry options.
 		 *
 		 * @return array The modified array of telemetry options.
 		 */
 		public function bb_rl_telemetry_platform_options( $option_array ) {
-			$op_options = array( 'bb_rl_enabled' );
+			$op_options = array(
+				'bb_rl_enabled',
+				'bb_rl_onboarding_completed',
+				'bb_rl_progress_rl_onboarding',
+			);
 			if ( bb_is_readylaunch_enabled() ) {
 				$op_options[] = 'bb_rl_theme_mode';
 				$op_options[] = 'bb_rl_enabled_pages';
@@ -707,7 +721,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							bb_tutorlms_enable()
 						) {
 							$is_active   = true;
-							$item['url'] = get_post_type_archive_link( bb_tutorlms_profile_courses_slug() );
+							$item['url'] = get_post_type_archive_link( tutor()->course_post_type );
 						} elseif (
 							class_exists( 'memberpress\courses\helpers\Courses' ) &&
 							class_exists( 'memberpress\courses\models\Course' )
@@ -837,6 +851,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+			} elseif ( is_singular( 'post' ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/single-post' );
+			} elseif ( ( is_home() || is_author() || is_category() || is_tag() || is_date() ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/loop-post' );
 			} else {
 				the_content();
 			}
@@ -1248,6 +1266,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
 			}
 
+			// Register only if it's a Blog page, or the member profile Blogs tab.
+			if ( ( $this->bb_rl_is_page_enabled_for_integration( 'blog' ) && ( is_home() || is_singular( 'post' ) || is_author() || is_category() || is_tag() || is_date() ) ) || ( function_exists( 'bp_is_current_component' ) && bp_is_current_component( 'blog' ) ) ) {
+				wp_enqueue_style( 'bb-readylaunch-blog', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/blog{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-blog', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
+				}
+
+				wp_enqueue_script( 'bb-readylaunch-blog', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bp_get_version(), true );
+			}
+
 			if ( bp_is_members_directory() ) {
 				wp_register_script(
 					'bb-rl-members',
@@ -1352,6 +1381,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					false === strpos( $src, '/wp-includes/' ) &&
 					false === strpos( $src, '/buddyboss-platform/' ) &&
 					false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+					false === strpos( $src, '/buddyboss-addons/' ) &&
 					false === strpos( $src, '/sfwd-lms/' ) &&
 					false === strpos( $src, '/learndash-course-reviews/' ) &&
 					false === strpos( $src, '/instructor-role/' ) &&
@@ -1371,6 +1401,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						false === strpos( $src, '/wp-includes/' ) &&
 						false === strpos( $src, '/buddyboss-platform/' ) &&
 						false === strpos( $src, '/buddyboss-platform-pro/' ) &&
+						false === strpos( $src, '/buddyboss-addons/' ) &&
 						false === strpos( $src, '/sfwd-lms/' ) &&
 						false === strpos( $src, '/instructor-role/' ) &&
 						false === strpos( $src, 'wp-content/plugins/' ) &&
@@ -2280,7 +2311,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$email
 			);
 
-			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id );
+			// Composed in the inviter's own session but delivered to a plain email address with no
+			// member behind it, so the request viewer is the wrong audience - it is the inviter, who
+			// is never denied their own name. Pin it to the public, logged-out view. Matches the
+			// non-ReadyLaunch handler in bp-invites/actions/invites.php.
+			$inviter_name = bp_core_get_user_displayname( $loggedin_user_id, bb_core_guest_viewer_id() );
 			$email_encode = rawurlencode( $email );
 			$inviter_url  = bp_loggedin_user_domain();
 
@@ -3204,16 +3239,51 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Return the theme logo option.
 		 *
+		 * When the stored logo carries an attachment ID, the URL is resolved from the
+		 * attachment so it follows the current upload/offload location. If the
+		 * attachment no longer exists, an empty array is returned so templates fall
+		 * back to the site title instead of rendering a broken image. The stored
+		 * option is not modified.
+		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss 3.7.0 Resolves the URL from the attachment ID and drops deleted attachments.
 		 *
-		 * @param string $key The key of the logo.
+		 * @param string $key The key of the logo (`light` or `dark`).
 		 *
-		 * @return array
+		 * @return array Empty array, or array with `id`, `url`, `alt` and `title` keys.
 		 */
 		public function bb_rl_get_theme_logo( $key ) {
-			$bb_rl_theme_logo = bp_get_option( 'bb_rl_' . $key . '_logo', array() );
+			$raw  = bp_get_option( 'bb_rl_' . sanitize_key( $key ) . '_logo', array() );
+			$logo = array();
 
-			return $bb_rl_theme_logo;
+			if ( is_numeric( $raw ) ) {
+				// Legacy shape: a bare attachment ID.
+				$raw = array( 'id' => (int) $raw );
+			}
+
+			if ( is_array( $raw ) && ! empty( $raw ) ) {
+				$logo = wp_parse_args(
+					$raw,
+					array(
+						'id'    => 0,
+						'url'   => '',
+						'alt'   => '',
+						'title' => '',
+					)
+				);
+
+				$attachment_id = absint( $logo['id'] );
+				if ( $attachment_id > 0 ) {
+					$url         = wp_get_attachment_url( $attachment_id );
+					$logo['url'] = $url ? $url : '';
+				}
+
+				if ( empty( $logo['url'] ) ) {
+					$logo = array();
+				}
+			}
+
+			return $logo;
 		}
 
 		/**
@@ -3817,11 +3887,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bbp_get_reply_content', 'bb_forums_link_preview', 999, 2 );
 			}
 
+			// Render the reply in single-topic context so capability checks resolve the
+			// topic the same way the topic page does (group-forum requests carry no singular
+			// topic, which otherwise leaves a guest's new reply without its Reply link until
+			// the page is reloaded). Mirrors BBP_Forums_Group_Extension::display_topics().
+			$topic_id              = bbp_get_reply_topic_id( $reply_id );
+			$previous_topic_id     = ! empty( $bbp->current_topic_id ) ? (int) $bbp->current_topic_id : 0;
+			$bbp->current_topic_id = $topic_id;
+			bbp_set_query_name( 'bbp_single_topic' );
+
 			while ( bbp_replies() ) :
 				bbp_the_reply();
 				bbp_get_template_part( 'loop', 'single-reply' );
 			endwhile;
 			$reply_html = ob_get_clean();
+
+			$bbp->current_topic_id = $previous_topic_id;
+			bbp_reset_query_name();
 
 			if ( function_exists( 'bbp_make_clickable' ) ) {
 				remove_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );
