@@ -97,7 +97,12 @@ export function getRichTextEditorHtml( editorId, fallback ) {
 		editor.load();
 	}
 
-	return editor.getContent();
+	// getContent() skips the wplink plugin's "savecontent" cleanup, so remove
+	// the editor-only attributes it adds to links (the edit mark and the
+	// "link may be broken" flag), the same way core does when it saves.
+	return editor.getContent().replace( /<a [^>]+>/g, function ( tag ) {
+		return tag.replace( / data-wplink-(?:edit|url-error)="true"/g, '' );
+	} );
 }
 
 /**
