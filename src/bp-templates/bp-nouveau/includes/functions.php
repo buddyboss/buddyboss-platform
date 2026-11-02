@@ -108,6 +108,11 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		}
 	}
 
+	// An activity scope nothing handles would add no condition to the query (PROD-10649).
+	if ( 'activity' === $object ) {
+		$post_query['scope'] = bb_activity_get_request_scope( $post_query['scope'] );
+	}
+
 	// Init the query arguments.
 	$qs = array();
 

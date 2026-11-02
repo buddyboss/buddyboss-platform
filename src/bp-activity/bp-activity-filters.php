@@ -1575,8 +1575,9 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
  * @return array
  */
 function bb_activity_limit_sub_activity_scope_to_ids( $retval = array(), $filter = array() ) {
-	// Nothing to limit when no component registered the scope.
-	if ( ! empty( $retval ) && empty( $filter['in'] ) ) {
+	// Without IDs the scope matches nothing, also when its component is off: an empty
+	// condition would leave the query open to every privacy level.
+	if ( empty( $filter['in'] ) ) {
 		return array(
 			'column' => 'id',
 			'value'  => 0,

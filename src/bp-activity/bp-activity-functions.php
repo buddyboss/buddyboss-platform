@@ -5790,6 +5790,39 @@ function bp_activity_default_scope( $scope = 'all' ) {
 }
 
 /**
+ * Keep the parts of a request's activity scope that a component handles.
+ *
+ * A scope name nothing is hooked to adds no condition to the activity query, which then
+ * returns every privacy level. Scopes sent by a visitor (AJAX loops, heartbeat, `?scope=`)
+ * go through here so an unknown name falls back to the default 'all' scope (PROD-10649).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|array $scope Comma-separated scopes, or a list of them, from the request.
+ *
+ * @return string Comma-separated handled scopes, or 'all' when none is handled.
+ */
+function bb_activity_get_request_scope( $scope ) {
+	$parts = is_array( $scope ) ? $scope : explode( ',', (string) $scope );
+	$kept  = array();
+
+	foreach ( $parts as $part ) {
+		if ( ! is_scalar( $part ) ) {
+			continue;
+		}
+
+		$part = trim( (string) $part );
+		if ( 'all' === $part || ( '' !== $part && has_filter( "bp_activity_set_{$part}_scope_args" ) ) ) {
+			$kept[] = $part;
+		}
+	}
+
+	$kept = array_unique( $kept );
+
+	return empty( $kept ) || in_array( 'all', $kept, true ) ? 'all' : implode( ',', $kept );
+}
+
+/**
  * Get the Activity edit data.
  *
  * @since BuddyBoss 1.5.1

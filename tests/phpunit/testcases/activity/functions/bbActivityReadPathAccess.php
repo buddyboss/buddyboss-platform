@@ -450,8 +450,9 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 			remove_filter( "bp_activity_set_{$scope}_scope_args", $add_scope, 10 );
 
-			// No component registered the scope: nothing to limit.
-			$this->assertSame( array(), apply_filters( "bp_activity_set_{$scope}_scope_args", array(), array() ) );
+			// No component handles the scope (it is off): still nothing matches without IDs.
+			$this->assertSame( $no_match, apply_filters( "bp_activity_set_{$scope}_scope_args", array(), array() ) );
+			$this->assertSame( array(), apply_filters( "bp_activity_set_{$scope}_scope_args", array(), array( 'in' => array( 5 ) ) ) );
 		}
 	}
 
@@ -677,5 +678,56 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		$this->assertSame( '2', $query_string['page'] );
 		$this->assertSame( 'just-me', $query_string['scope'] );
 		$this->assertArrayNotHasKey( 'amp;page', $query_string );
+	}
+
+	public function test_request_scope_nothing_handles_falls_back_to_the_default() {
+		$friends_post  = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->activity->id,
+				'type'      => 'activity_update',
+				'user_id'   => $this->author,
+				'privacy'   => 'friends',
+			)
+		);
+		$loggedin_post = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->activity->id,
+				'type'      => 'activity_update',
+				'user_id'   => $this->author,
+				'privacy'   => 'loggedin',
+			)
+		);
+
+		$this->assertSame( 'all', bb_activity_get_request_scope( 'xyz' ) );
+		$this->assertSame( 'all', bb_activity_get_request_scope( 'all,xyz' ) );
+		$this->assertSame( 'just-me', bb_activity_get_request_scope( 'just-me,xyz' ) );
+		$this->assertSame( 'favorites,mentions', bb_activity_get_request_scope( 'favorites, mentions' ) );
+
+		// The activity loop AJAX and heartbeat, as a guest.
+		foreach ( array( 'xyz', 'all,xyz', 'video', 'document' ) as $scope ) {
+			$listed = $this->filtered_loop_ids( 0, array( 'scope' => $scope ) );
+			$this->assertNotContains( $friends_post, $listed, "scope={$scope}" );
+			$this->assertNotContains( $loggedin_post, $listed, "scope={$scope}" );
+		}
+		$listed = $this->filtered_loop_ids( 0, array( 'data' => array( 'bp_heartbeat' => array( 'scope' => 'xyz' ) ) ) );
+		$this->assertNotContains( $friends_post, $listed );
+
+		// `?scope=` read by bp_has_activities() itself.
+		$this->set_current_user( 0 );
+		buddypress()->current_component = 'activity';
+		$_REQUEST['scope'] = 'xyz';
+		$ids               = array();
+		if ( bp_has_activities( array( 'per_page' => 0 ) ) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				$ids[] = (int) bp_get_activity_id();
+			}
+		}
+		unset( $_REQUEST['scope'] );
+		buddypress()->current_component = '';
+
+		$this->assertNotContains( $friends_post, $ids );
+		$this->assertNotContains( $loggedin_post, $ids );
+		$this->assertContains( $this->public_post, $ids );
 	}
 }
