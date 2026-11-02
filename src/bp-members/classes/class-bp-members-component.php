@@ -213,7 +213,12 @@ class BP_Members_Component extends BP_Component {
 		/** Profiles Fallback ************************************************
 		 */
 
-		if ( ! bp_is_active( 'xprofile' ) ) {
+		// Only stub the profile globals when no xProfile component was loaded.
+		// xProfile is a required component, but bp_is_active( 'xprofile' ) is
+		// false on the first request after activation (nothing is stored in
+		// bp-active-components yet), and replacing the loaded component here
+		// would drop its table names.
+		if ( ! bp_is_active( 'xprofile' ) && ! isset( $bp->profile->id ) ) {
 			$bp->profile       = new stdClass();
 			$bp->profile->slug = 'profile';
 			$bp->profile->id   = 'profile';
