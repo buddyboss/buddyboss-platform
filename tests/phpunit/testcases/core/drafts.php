@@ -11232,6 +11232,131 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Store a newer draft row behind the object cache, as a live save in
+	 * another request does while the heal works from the copy it read.
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param string $meta_key Draft meta key; its cached copy must be loaded.
+	 * @param array  $newer    The row the live save stores.
+	 */
+	private function store_live_save_behind_cache( $user_id, $meta_key, $newer ) {
+		global $wpdb;
+
+		$wpdb->update(
+			$wpdb->usermeta,
+			array( 'meta_value' => maybe_serialize( $newer ) ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			array(
+				'user_id'  => $user_id,
+				'meta_key' => bp_get_user_meta_key( $meta_key ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			)
+		);
+	}
+
+	/**
+	 * Store an oversized draft row as the heal's cached read, then a smaller
+	 * live save behind it.
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param string $meta_key Draft meta key.
+	 * @param string $payload  'image' for a pasted image the heal can strip,
+	 *                         'text' for text over the cap.
+	 * @return array The live save's row.
+	 */
+	private function prime_heal_race( $user_id, $meta_key, $payload ) {
+		$big = 'image' === $payload
+			? '<p>older</p><img src="data:image/png;base64,' . str_repeat( 'A', 200 * KB_IN_BYTES ) . '">'
+			: str_repeat( 'x', bb_draft_max_size() + 100 );
+
+		bp_update_user_meta(
+			$user_id,
+			$meta_key,
+			array(
+				'data_key'        => $meta_key,
+				'_draft_saved_at' => 100,
+				'data'            => array( 'content' => $big ),
+			)
+		);
+
+		// The heal's read: the oversized row is now the cached copy.
+		bp_get_user_meta( $user_id, $meta_key, true );
+
+		$newer = array(
+			'data_key'        => $meta_key,
+			'_draft_saved_at' => 200,
+			'data'            => array( 'content' => '<p>saved meanwhile</p>' ),
+		);
+		$this->store_live_save_behind_cache( $user_id, $meta_key, $newer );
+
+		return $newer;
+	}
+
+	/**
+	 * Salvage does not write its stripped older copy over a live save.
+	 */
+	public function test_salvage_leaves_a_live_save_alone() {
+		$user_id = self::factory()->user->create();
+		$newer   = $this->prime_heal_race( $user_id, 'draft_group_5', 'image' );
+
+		bb_draft_salvage_oversized_draft( $user_id, 'draft_group_5' );
+
+		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'draft_group_5' ) );
+	}
+
+	/**
+	 * Holding an oversized draft does not remove a live save that replaced it.
+	 */
+	public function test_hold_oversized_leaves_a_live_save_alone() {
+		$user_id = self::factory()->user->create();
+		$newer   = $this->prime_heal_race( $user_id, 'draft_group_5', 'text' );
+
+		$this->assertFalse( bb_draft_hold_oversized_draft( $user_id, 'draft_group_5' ) );
+		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'draft_group_5' ) );
+	}
+
+	/**
+	 * Stripping a member's drafts does not write an older copy over a live save.
+	 */
+	public function test_shed_user_drafts_leaves_a_live_save_alone() {
+		$user_id = self::factory()->user->create();
+		$newer   = $this->prime_heal_race( $user_id, 'draft_group_5', 'image' );
+
+		$this->assertSame( 0, bb_draft_shed_user_drafts( $user_id ) );
+		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'draft_group_5' ) );
+	}
+
+	/**
+	 * The forum row heal does not write its older row over a live save.
+	 */
+	public function test_forum_heal_leaves_a_live_save_alone() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_reply_1' => array(
+					'data_key'        => 'draft_reply_1',
+					'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ) ),
+					'_draft_saved_at' => 100,
+				),
+			)
+		);
+		bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$newer = array(
+			'draft_reply_1' => array(
+				'data_key'        => 'draft_reply_1',
+				'data'            => array( 'bbp_reply_content' => 'saved meanwhile' ),
+				'_draft_saved_at' => 200,
+			),
+		);
+		$this->store_live_save_behind_cache( $user_id, 'bb_user_topic_reply_draft', $newer );
+
+		$this->assertSame( 0, bb_draft_heal_forum_row( $user_id ) );
+		$this->assertSame( $newer, bb_draft_fresh_value( $user_id, 'bb_user_topic_reply_draft' ) );
+	}
+
+	/**
 	 * Deactivation clears the recurring draft events, whose interval goes away
 	 * with the plugin.
 	 */
