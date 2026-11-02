@@ -149,15 +149,15 @@ function bp_core_get_wp_profile() {
 	$ud = get_userdata( bp_displayed_user_id() ); ?>
 
 <div class="bp-widget wp-profile">
-	<h4><?php _e( 'My Profile', 'buddyboss' ); ?></h4>
+	<h4><?php esc_html_e( 'My Profile', 'buddyboss' ); ?></h4>
 
 	<table class="wp-profile-fields">
 
 		<?php if ( $ud->display_name ) : ?>
 
 			<tr id="wp_displayname">
-				<td class="label"><?php _e( 'Name', 'buddyboss' ); ?></td>
-				<td class="data"><?php echo $ud->display_name; ?></td>
+				<td class="label"><?php esc_html_e( 'Name', 'buddyboss' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->display_name ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -165,8 +165,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->user_description ) : ?>
 
 			<tr id="wp_desc">
-				<td class="label"><?php _e( 'About Me', 'buddyboss' ); ?></td>
-				<td class="data"><?php echo $ud->user_description; ?></td>
+				<td class="label"><?php esc_html_e( 'About Me', 'buddyboss' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->user_description ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -174,8 +174,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->user_url ) : ?>
 
 			<tr id="wp_website">
-				<td class="label"><?php _e( 'Website', 'buddyboss' ); ?></td>
-				<td class="data"><?php echo make_clickable( $ud->user_url ); ?></td>
+				<td class="label"><?php esc_html_e( 'Website', 'buddyboss' ); ?></td>
+				<td class="data"><?php echo wp_kses_post( make_clickable( $ud->user_url ) ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -183,8 +183,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->jabber ) : ?>
 
 			<tr id="wp_jabber">
-				<td class="label"><?php _e( 'Jabber', 'buddyboss' ); ?></td>
-				<td class="data"><?php echo $ud->jabber; ?></td>
+				<td class="label"><?php esc_html_e( 'Jabber', 'buddyboss' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->jabber ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -192,8 +192,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->aim ) : ?>
 
 			<tr id="wp_aim">
-				<td class="label"><?php _e( 'AOL Messenger', 'buddyboss' ); ?></td>
-				<td class="data"><?php echo $ud->aim; ?></td>
+				<td class="label"><?php esc_html_e( 'AOL Messenger', 'buddyboss' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->aim ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -201,8 +201,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->yim ) : ?>
 
 			<tr id="wp_yim">
-				<td class="label"><?php _e( 'Yahoo Messenger', 'buddyboss' ); ?></td>
-				<td class="data"><?php echo $ud->yim; ?></td>
+				<td class="label"><?php esc_html_e( 'Yahoo Messenger', 'buddyboss' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->yim ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -323,7 +323,7 @@ function bp_log_out_link() {
 	_deprecated_function( __FUNCTION__, '1.5', 'wp_logout_url()' );
 
 	$logout_link = '<a href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss' ) . '</a>';
-	echo apply_filters( 'bp_logout_link', $logout_link );
+	echo wp_kses_post( apply_filters( 'bp_logout_link', $logout_link ) );
 }
 
 /**

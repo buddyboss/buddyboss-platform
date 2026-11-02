@@ -499,7 +499,7 @@ abstract class BP_Core_oEmbed_Extension {
 
 		if ( ! class_exists( 'SimpleXMLElement' ) ) {
 			status_header( 501 );
-			die( get_status_header_desc( 501 ) );
+			die( esc_html( get_status_header_desc( 501 ) ) );
 		}
 
 		$result = _oembed_create_xml( $data );

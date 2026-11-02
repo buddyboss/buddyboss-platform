@@ -164,8 +164,9 @@ final class BP_Friendship_Export extends BP_Export {
 		$query_select_count = 'COUNT(item.id)';
 		$query_where        = 'item.initiator_user_id=%d OR item.friend_user_id=%d';
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$items_per_batch = absint( $this->items_per_batch );
+		$offset          = ( absint( $page ) - 1 ) * $items_per_batch;
+		$limit           = "LIMIT {$items_per_batch} OFFSET {$offset}";
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
 		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );

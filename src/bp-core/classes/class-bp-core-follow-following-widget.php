@@ -109,11 +109,11 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		) ) {
 			do_action( 'bp_before_following_widget' );
 
-			echo $args['before_widget'];
-			echo $args['before_title']
-			   . $title
-			   . $following_count
-			   . $args['after_title'];
+			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $args['before_widget'] is theme/WP-provided widget wrapper markup.
+			echo $args['before_title'] // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $args['before_title'] is theme/WP-provided widget wrapper markup.
+			   . esc_html( $title )
+			   . wp_kses_post( $following_count )
+			   . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $args['after_title'] is theme/WP-provided widget wrapper markup.
 			?>
 
 			<div class="avatar-block">
@@ -161,7 +161,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		?>
 
 		<p><label for="bp-follow-widget-users-max"><?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_users' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_users' ) ); ?>" type="number" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
-		<p><small><?php _e( 'Note: This widget is only displayed if a member is following other members.', 'buddyboss' ); ?></small></p>
+		<p><small><?php esc_html_e( 'Note: This widget is only displayed if a member is following other members.', 'buddyboss' ); ?></small></p>
 
 		<?php
 	}

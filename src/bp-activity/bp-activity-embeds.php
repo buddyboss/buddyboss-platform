@@ -122,7 +122,7 @@ function bp_activity_embed_has_activity( $activity_id = 0 ) {
  * @since BuddyPress 2.6.0
  */
 function bp_activity_embed_excerpt( $content = '' ) {
-	echo bp_activity_get_embed_excerpt( $content );
+	echo wp_kses_post( bp_activity_get_embed_excerpt( $content ) );
 }
 
 	/**
@@ -318,8 +318,8 @@ EOD;
 			printf(
 				'<div class="bp-activity-embed-display-media %s" style="max-width:%spx">%s</div>',
 				$thumb_width < $float_width ? 'two-col' : 'one-col',
-				$thumb_width < $float_width ? $width : $thumb_width,
-				$content
+				esc_attr( $thumb_width < $float_width ? $width : $thumb_width ),
+				wp_kses_post( $content )
 			);
 		}
 

@@ -56,7 +56,7 @@ function bbp_dashboard_widget_right_now() {
 				}
 				?>
 
-				<td colspan="2" class="t forums"><?php echo $text; ?></td>
+				<td colspan="2" class="t forums"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
@@ -76,7 +76,7 @@ function bbp_dashboard_widget_right_now() {
 				}
 				?>
 
-				<td colspan="2" class="t topics"><?php echo $text; ?></td>
+				<td colspan="2" class="t topics"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
@@ -103,7 +103,7 @@ function bbp_dashboard_widget_right_now() {
 					}
 					?>
 
-					<td colspan="2" class="t topic_tags"><?php echo $text; ?></td>
+					<td colspan="2" class="t topic_tags"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 
@@ -125,7 +125,7 @@ function bbp_dashboard_widget_right_now() {
 				}
 				?>
 
-				<td colspan="2" class="t replies"><?php echo $text; ?></td>
+				<td colspan="2" class="t replies"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
@@ -158,7 +158,7 @@ function bbp_dashboard_widget_right_now() {
 				}
 				?>
 
-				<td colspan="2" class="last t users"><?php echo $text; ?></td>
+				<td colspan="2" class="last t users"><?php echo wp_kses_post( $text ); ?></td>
 
 			</tr>
 
@@ -181,7 +181,7 @@ function bbp_dashboard_widget_right_now() {
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $text . '</a>';
 					?>
 
-					<td colspan="2" class="last t hidden-replies"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-replies"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 
@@ -206,7 +206,7 @@ function bbp_dashboard_widget_right_now() {
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $text . '</a>';
 					?>
 
-					<td colspan="2" class="last t hidden-replies"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-replies"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 
@@ -235,7 +235,7 @@ function bbp_dashboard_widget_right_now() {
 					$text = '<a class="waiting" href="' . esc_url( $link ) . '">' . $text . '</a>';
 					?>
 
-					<td colspan="2" class="last t hidden-topic-tags"><?php echo $text; ?></td>
+					<td colspan="2" class="last t hidden-topic-tags"><?php echo wp_kses_post( $text ); ?></td>
 
 				</tr>
 

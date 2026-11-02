@@ -198,7 +198,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		 * Store temporary variable
 		 */
 		$url     = ( '/' . bp_get_groups_root_slug() . '/' . bp_get_group_slug( $group ) );
-		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
+		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
 		$tmp_bp  = $bp;
 
 		/**

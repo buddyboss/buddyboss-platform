@@ -90,7 +90,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 		$args['before_widget'];
 
 		if ( $title ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] );
 		}
 
 		if ( $blogs ) {
@@ -141,10 +141,11 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 								</div>
 								<div class="item-data">
 							<span class="netowrk-post-content">
-								<a href="<?php the_permalink(); ?>" class="bb-title"><?php echo wp_trim_words( the_title( '', '', false ), 6, '&hellip;' ); ?></a>
+								<a href="<?php the_permalink(); ?>" class="bb-title"><?php echo wp_kses_post( wp_trim_words( the_title( '', '', false ), 6, '&hellip;' ) ); ?></a>
 							</span>
 									<?php if ( $show_image && has_post_thumbnail() ) { ?>
 										<div class="data-photo"><a href="<?php the_permalink(); ?>"
+																   <?php /* translators: %s: post title. */ ?>
 																   title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>"
 																   class="entry-media entry-img">
 												<?php the_post_thumbnail(); ?>
@@ -170,7 +171,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 			<?php
 		}
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 	}
 
@@ -210,17 +211,17 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 		$show_date  = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : true;
 		$show_image = isset( $instance['show_image'] ) ? (bool) $instance['show_image'] : true;
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $title escaped with esc_attr() at assignment. ?>" /></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of posts to show for each blog:', 'buddyboss' ); ?></label>
-			<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo $number; ?>" size="3" /></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>"><?php esc_html_e( 'Number of posts to show for each blog:', 'buddyboss' ); ?></label>
+			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'number' ) ); ?>" type="number" step="1" min="1" value="<?php echo $number; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $number escaped with absint() at assignment. ?>" size="3" /></p>
 
-		<p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?', 'buddyboss' ); ?></label></p>
+		<p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_date' ) ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>"><?php esc_html_e( 'Display post date?', 'buddyboss' ); ?></label></p>
 
-		<p><input class="checkbox" type="checkbox"<?php checked( $show_image ); ?> id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display post featured image?', 'buddyboss' ); ?></label></p>
+		<p><input class="checkbox" type="checkbox"<?php checked( $show_image ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_image' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_image' ) ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_image' ) ); ?>"><?php esc_html_e( 'Display post featured image?', 'buddyboss' ); ?></label></p>
 
 		<?php
 	}

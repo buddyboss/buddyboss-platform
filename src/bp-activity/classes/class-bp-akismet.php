@@ -471,7 +471,7 @@ class BP_Akismet {
 		$activity_data['blog']         = bp_get_option( 'home' );
 		$activity_data['blog_charset'] = bp_get_option( 'blog_charset' );
 		$activity_data['blog_lang']    = get_locale();
-		$activity_data['referrer']     = $_SERVER['HTTP_REFERER'];
+		$activity_data['referrer']     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		$activity_data['user_agent']   = bp_core_current_user_ua();
 		$activity_data['user_ip']      = bp_core_current_user_ip();
 
@@ -482,7 +482,7 @@ class BP_Akismet {
 		// Loop through _POST args and rekey strings.
 		foreach ( $_POST as $key => $value ) {
 			if ( is_string( $value ) && 'cookie' != $key ) {
-				$activity_data[ 'POST_' . $key ] = $value;
+				$activity_data[ 'POST_' . $key ] = sanitize_text_field( wp_unslash( $value ) );
 			}
 		}
 
@@ -494,7 +494,7 @@ class BP_Akismet {
 
 			// Key should not be ignored.
 			if ( ! in_array( $key, $ignore ) && is_string( $value ) ) {
-				$activity_data[ $key ] = $value;
+				$activity_data[ $key ] = sanitize_text_field( wp_unslash( $value ) );
 
 				// Key should be ignored.
 			} else {

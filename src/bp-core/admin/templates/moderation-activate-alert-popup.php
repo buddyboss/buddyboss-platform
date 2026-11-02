@@ -41,12 +41,14 @@ defined( 'ABSPATH' ) || exit;
 		?>
         <div class="bp-spam-action-msg" style="display: none">
 			<?php
-			printf( __( 'To suspend members who are creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
+			/* translators: %s: Moderation component activation URL. */
+			printf( wp_kses_post( __( 'To suspend members who are creating spam in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ) ), esc_url( $component_link ) );
 			?>
         </div>
         <div class="bp-not-spam-action-msg" style="display: none;">
 	        <?php
-	        printf( __( 'To unsuspend members who are not creating spam anymore in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ), $component_link );
+	        /* translators: %s: Moderation component activation URL. */
+	        printf( wp_kses_post( __( 'To unsuspend members who are not creating spam anymore in your network, activate the <a href="%s" >Moderation</a> component.', 'buddyboss' ) ), esc_url( $component_link ) );
 	        ?>
         </div>
     </div>

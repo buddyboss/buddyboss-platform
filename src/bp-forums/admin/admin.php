@@ -647,7 +647,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 							$siteurl = get_blog_option( $details['blog_id'], 'siteurl' );
 							?>
 
-							<li><?php echo $siteurl; ?></li>
+							<li><?php echo esc_url( $siteurl ); ?></li>
 
 							<?php
 
@@ -662,7 +662,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 							// Site errored out, no response?
 							if ( is_wp_error( $response ) ) {
-								wp_die( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>', 'buddyboss' ), $siteurl, $response->get_error_message() ) );
+								/* translators: 1: site URL, 2: error message. */
+								wp_die( wp_kses_post( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>', 'buddyboss' ), esc_url( $siteurl ), esc_html( $response->get_error_message() ) ) ) );
 							}
 
 							// Switch to the new blog
@@ -689,7 +690,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 					<p>
 						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
-						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo ( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
+						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo esc_attr( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
 					</p>
 					<script type='text/javascript'>
 						<!--

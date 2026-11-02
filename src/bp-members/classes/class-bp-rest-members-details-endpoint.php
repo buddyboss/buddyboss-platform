@@ -241,7 +241,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$url = bp_core_get_user_domain( $current_user_id );
 
-		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
+		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
 
 		/**
 		 * Member navigation tabs creation start

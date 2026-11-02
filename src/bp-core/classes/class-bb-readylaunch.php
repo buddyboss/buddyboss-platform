@@ -3378,7 +3378,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			) {
 				$courses_base = memberpress\courses\helpers\Courses::get_permalink_base();
 				if ( ! empty( $courses_base ) && isset( $_SERVER['REQUEST_URI'] ) ) {
-					$request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+					$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 					// Check if this is the courses archive page.
 					if ( strpos( $request_uri, '/' . $courses_base ) !== false ) {
 						return true;

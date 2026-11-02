@@ -439,9 +439,9 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 	 */
 	private function bb_rl_mpcs_output_secondary_header() {
 		global $wp_query, $wp;
-		$search          = isset( $_GET['s'] ) ? esc_attr( $_GET['s'] ) : '';               // phpcs:ignore
-		$category        = isset( $_GET['category'] ) ? esc_attr( $_GET['category'] ) : ''; // phpcs:ignore
-		$author          = isset( $_GET['author'] ) ? esc_attr( $_GET['author'] ) : '';     // phpcs:ignore
+		$search          = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';               // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$category        = isset( $_GET['category'] ) ? sanitize_text_field( wp_unslash( $_GET['category'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$author          = isset( $_GET['author'] ) ? sanitize_text_field( wp_unslash( $_GET['author'] ) ) : '';     // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$filter_base_url = home_url( $wp->request );
 		$pos             = strpos( $filter_base_url, '/page' );
 		$courses_page    = get_home_url( null, helpers\Courses::get_permalink_base() );
@@ -700,7 +700,7 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 					$cert_url
 				);
 				?>
-				<a target="_blank" class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url_raw( $cert_url ); ?>">
+				<a target="_blank" class="bb-rl-lms-tab <?php \MeprAccountHelper::active_nav( 'certificate', 'is-active' ); ?>" href="<?php echo esc_url( $cert_url ); ?>">
 					<div class="tile-content">
 						<p class="tile-title m-0">
 							<?php
@@ -777,23 +777,14 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 				<div class="comment-meta comment-metadata">
 					<?php
 					printf(
-					/* translators: %s: Author related metas. */
-						__( '%s', 'buddyboss' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-						sprintf(
-							'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
-							empty( $user_link ) ? '' : esc_url( $user_link ),
-							get_comment_author_link( $comment )
-						)
+						'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
+						empty( $user_link ) ? '' : esc_url( $user_link ),
+						wp_kses_post( get_comment_author_link( $comment ) )
 					);
 					?>
 					<a class="comment-date" href="<?php echo esc_url( get_comment_link( $comment, $args ) ); ?>">
 						<?php
-						printf(
-						/* translators: %s: Author comment date. */
-							__( '%1$s', 'buddyboss' ),  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-							get_comment_date( '', $comment ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-							get_comment_time() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-						);
+						echo esc_html( get_comment_date( '', $comment ) );
 						?>
 					</a>
 				</div>

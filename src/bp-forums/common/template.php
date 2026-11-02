@@ -1442,7 +1442,7 @@ function bbp_redirect_to_field( $redirect_to = '' ) {
 	// Make sure we are directing somewhere
 	if ( empty( $redirect_to ) ) {
 		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			$redirect_to = bbp_get_url_scheme() . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			$redirect_to = bbp_get_url_scheme() . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 		} else {
 			$redirect_to = wp_get_referer();
 		}

@@ -2051,7 +2051,7 @@ function bp_is_component_front_page( $component = '' ) {
 	$show_on_front = get_option( 'show_on_front' );
 	$page_on_front = get_option( 'page_on_front' );
 
-	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
 	if ( ( 'page' !== $show_on_front ) || empty( $component ) || empty( $bp->pages->{$component} ) || ( $request_uri !== $path ) ) {
 		return false;
