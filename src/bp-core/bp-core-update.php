@@ -587,6 +587,16 @@ function bp_version_updater() {
 			bb_queue_addons_bundle_update();
 		}
 
+		// DB version 23633 — rewrite rules regenerated during a BuddyBoss page request were
+		// stored with the post rule ahead of the page rule, so regular pages returned 404
+		// (PROD-10720). This version bump runs the updater on every update path, including
+		// auto-updates and FTP or deploy copies that never flush the rules themselves.
+		// Regenerate them here explicitly, so the repair does not depend on the flush in
+		// bp_core_install().
+		if ( $raw_db_version < 23633 ) {
+			flush_rewrite_rules( false );
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
