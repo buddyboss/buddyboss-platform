@@ -443,6 +443,42 @@ class BB_Activity_Topics_Manager {
 	}
 
 	/**
+	 * Delete one batch of relationship rows whose activity no longer exists.
+	 *
+	 * Idempotent; callers loop until it returns 0 (see the "Activity topics" repair tool).
+	 *
+	 * @since BuddyBoss 3.7.0
+	 *
+	 * @param int $limit Rows per batch.
+	 *
+	 * @return int Rows deleted in this batch.
+	 */
+	public function bb_delete_orphan_activity_topic_relationships( $limit = 500 ) {
+		$bp    = buddypress();
+		$limit = max( 1, (int) $limit );
+
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- placeholders built below, table names are internal.
+		$orphan_ids = $this->wpdb->get_col(
+			$this->wpdb->prepare(
+				"SELECT atr.id FROM `{$this->activity_topic_rel_table}` atr LEFT JOIN `{$bp->activity->table_name}` a ON a.id = atr.activity_id WHERE a.id IS NULL ORDER BY atr.id ASC LIMIT %d",
+				$limit
+			)
+		);
+		if ( empty( $orphan_ids ) ) {
+			return 0;
+		}
+
+		$orphan_ids   = wp_parse_id_list( $orphan_ids );
+		$placeholders = implode( ',', array_fill( 0, count( $orphan_ids ), '%d' ) );
+		$result       = $this->wpdb->query(
+			$this->wpdb->prepare( "DELETE FROM `{$this->activity_topic_rel_table}` WHERE id IN ({$placeholders})", $orphan_ids )
+		);
+		// phpcs:enable
+
+		return false === $result ? 0 : (int) $result;
+	}
+
+	/**
 	 * Function to get activity topic relationship.
 	 *
 	 * @since BuddyBoss 2.8.80
@@ -748,6 +784,9 @@ class BB_Activity_Topics_Manager {
 		if ( class_exists( 'SitePress' ) ) {
 			$cache_key .= '_' . apply_filters( 'wpml_current_language', '' );
 		}
+
+		// Versions the cached list, so a reorder can refresh it without flushing the cache group.
+		$cache_key .= '_' . bp_core_get_incrementor( 'bb_activity_topic_lists' );
 
 		$topic_cache = wp_cache_get( $cache_key, $this->activity_topics_cache_key );
 		if ( false !== $topic_cache ) {

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 7.1
 Requires PHP: 7.4.0
-Stable tag: 3.6.2
+Stable tag: 3.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.7.0 =
+* Enhancement: Core - Moved Videos, Documents, Animated GIFs and Group Subscription to the Addons plugin, with existing customers keeping access
+* Bug: Activity - Fixed an issue where the app's "Only Me" activity filter showed posts from other members
+* Bug: Activity - Fixed several issues with activity topics, including required-topic checks, topic links and cleanup when topics are deleted
+* Bug: Core - Fixed an issue where emoji images did not display correctly
+* Bug: Groups - Fixed an issue where group names containing double quotes were cut off and lost when saved
+* Bug: Groups - Fixed an issue where group organizers who are not site administrators could not add topics to their own group
+* Bug: Groups - Fixed an issue where the group name was missing from the delete confirmation and cut off in the groups list
+* Bug: Groups - Fixed an issue where WP Fusion settings boxes were missing from group edit screens
+* Bug: Members - Fixed an issue where admins could not manually activate pending users when Google reCAPTCHA was enabled
+* Bug: Notifications - Fixed an issue where mention notifications for comments on event activities did not link to the right page
 
 = 3.6.2 =
 * Bug: Activity - Fixed an issue where comment reactions stopped working when reactions were turned off for activity posts

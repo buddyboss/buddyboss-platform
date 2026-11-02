@@ -405,31 +405,6 @@ function bb_email_digest_placeholder_state() {
 }
 
 /**
- * Content for the Email Digest upgrade dialog.
- *
- * Uses the short key names a `pro_notice.modal` is registered with, not the field-upgrades
- * catalog's `upgrade_*` names. A catalog entry for this panel supersedes the whole payload,
- * which is what lets marketing retarget copy, art and URL without a release.
- *
- * @since BuddyBoss 3.5.0
- *
- * @return array Modal payload.
- */
-function bb_email_digest_upgrade_modal_payload() {
-	return array(
-		'label'       => __( 'Email Digest', 'buddyboss' ),
-		'title'       => __( 'Simplify Email Notifications', 'buddyboss' ),
-		'description' => __( 'Combine multiple community notifications into one organized daily or weekly email while keeping in-app notifications unchanged.', 'buddyboss' ),
-		'tier'        => 'start',
-		'url'         => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
-		// Platform's own copy of the hero, at the design's native 600x337. The add-on
-		// ships the same file, but this panel exists precisely for sites where the add-on
-		// is not on disk, so it cannot borrow that one.
-		'image_url'   => buddypress()->plugin_url . 'bp-core/images/email-digest-upgrade.png',
-	);
-}
-
-/**
  * Register the stand-in Email Digest panel.
  *
  * Runs at priority 35, behind every real registration (the add-on registers at 30), so the
@@ -483,8 +458,7 @@ function bb_admin_settings_register_email_digest_placeholder() {
 			'show'       => true,
 			'badge_text' => __( 'UPGRADE START', 'buddyboss' ),
 			'badge_icon' => 'bb-icons-rl-crown-simple',
-			'link_url'   => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
-			'modal'      => bb_email_digest_upgrade_modal_payload(),
+			'link_url'   => 'https://buddyboss.com/ch/web-start/?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 		);
 	}
 
@@ -841,8 +815,6 @@ add_action( 'wp_ajax_bb_email_digest_update_addon', 'bb_email_digest_ajax_update
  * @return void
  */
 function bb_admin_settings_register_email_digest_locked_form() {
-	$modal = bb_email_digest_upgrade_modal_payload();
-
 	/**
 	 * Register one inert field.
 	 *
@@ -890,8 +862,7 @@ function bb_admin_settings_register_email_digest_locked_form() {
 				'badge_text' => __( 'START', 'buddyboss' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_icon'  => 'bb-icons-rl bb-icons-rl-play',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-				'modal'      => $modal,
+				'link_url'   => 'https://buddyboss.com/ch/web-start/?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 			),
 		)
 	);
