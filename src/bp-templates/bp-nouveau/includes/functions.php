@@ -215,7 +215,8 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	// Encode each value so a request value can never add a loop argument of its own,
 	// such as `include` or `show_hidden`, which skip the read checks (PROD-10649).
-	$query_string = empty( $qs ) ? '' : http_build_query( $qs );
+	// Pass the separator: the arg_separator.output default can be `&amp;` on some hosts.
+	$query_string = empty( $qs ) ? '' : http_build_query( $qs, '', '&' );
 
 	// List the variables for the filter
 	list( $filter, $scope, $page, $search_terms, $extras ) = array_values( $post_query );

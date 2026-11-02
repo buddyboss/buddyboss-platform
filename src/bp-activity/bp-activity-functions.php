@@ -7655,6 +7655,7 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 *
 	 * @since BuddyBoss 3.6.2
 	 * @since BuddyBoss [BBVERSION] Walks a comment to its root before the sub-activity hop and skips the privacy check on comment rows.
+	 * @since BuddyBoss [BBVERSION] The moderator bypass checks the given user, not the current one.
 	 *
 	 * @param int|BP_Activity_Activity $activity Activity ID or object.
 	 * @param int                      $user_id  User ID. Default the logged-in user.
@@ -7710,7 +7711,11 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 			$activities[] = $current;
 		}
 
-		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
+		// Site moderators may view everything. Ask about the user being checked, which is not the
+		// current user under WP-CLI or cron, or when checking on behalf of someone else.
+		$is_moderator = ( bp_loggedin_user_id() === $user_id ) ? bp_current_user_can( 'bp_moderate' ) : bp_user_can( $user_id, 'bp_moderate' );
+
+		if ( $can_view && ! $is_moderator ) {
 			foreach ( $activities as $item ) {
 				if ( ! bp_activity_user_can_read( $item, $user_id ) ) {
 					$can_view = false;

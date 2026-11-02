@@ -639,4 +639,43 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 		);
 		$this->assertContains( $public_comment, array_map( 'intval', $listed( array() ) ) );
 	}
+
+	public function test_moderator_bypass_checks_the_given_user() {
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		// WP-CLI and cron: no current user, acting for a site admin who is not a member.
+		$this->set_current_user( 0 );
+		$this->assertTrue( bb_activity_user_can_view( $this->root, $admin ) );
+
+		// The admin's own session still sees everything.
+		$this->set_current_user( $admin );
+		$this->assertTrue( bb_activity_user_can_view( $this->root ) );
+
+		// A member's session does not borrow anyone's moderator rights.
+		$this->set_current_user( $this->member );
+		$this->assertFalse( bb_activity_user_can_view( $this->root, $this->stranger ) );
+	}
+
+	public function test_activity_filter_query_string_ignores_the_arg_separator_setting() {
+		$separator = ini_get( 'arg_separator.output' );
+		ini_set( 'arg_separator.output', '&amp;' ); // phpcs:ignore WordPress.PHP.IniSet.Risky
+
+		$this->set_current_user( $this->member );
+		buddypress()->current_component = 'activity';
+		$_POST = array(
+			'object' => 'activity',
+			'filter' => 'activity_update',
+			'scope'  => 'just-me',
+			'page'   => 2,
+		);
+
+		$query_string = wp_parse_args( bp_nouveau_ajax_querystring( '', 'activity' ) );
+
+		ini_set( 'arg_separator.output', $separator ); // phpcs:ignore WordPress.PHP.IniSet.Risky
+		buddypress()->current_component = '';
+
+		$this->assertSame( '2', $query_string['page'] );
+		$this->assertSame( 'just-me', $query_string['scope'] );
+		$this->assertArrayNotHasKey( 'amp;page', $query_string );
+	}
 }
