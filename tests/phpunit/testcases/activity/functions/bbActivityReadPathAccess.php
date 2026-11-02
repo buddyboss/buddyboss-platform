@@ -208,11 +208,15 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 
 		groups_edit_group_settings( $group, false, 'private' );
 
-		// The status change hides the group's rows but not the comment row.
-		$this->assertStringContainsString( 'comment from public days', $this->personal_feed( 0, true ) );
+		// The status change hides the group's rows but not the comment row. The query leaves the
+		// comment out anyway, because its post is hidden, even without the feed's own check.
+		$this->assertStringNotContainsString( 'comment from public days', $this->personal_feed( 0, true ) );
 
 		$this->assertStringNotContainsString( 'comment from public days', $this->personal_feed( 0 ) );
-		$this->assertStringContainsString( 'comment from public days', $this->personal_feed( $this->member ) );
+
+		// A sitewide feed leaves it out for members too, like the post itself and like comments
+		// written after the change; members read both in the group's own feed.
+		$this->assertStringNotContainsString( 'comment from public days', $this->personal_feed( $this->member ) );
 	}
 
 	/**
@@ -449,5 +453,190 @@ class BP_Tests_Activity_Functions_BbActivityReadPathAccess extends BP_UnitTestCa
 			// No component registered the scope: nothing to limit.
 			$this->assertSame( array(), apply_filters( "bp_activity_set_{$scope}_scope_args", array(), array() ) );
 		}
+	}
+
+	/**
+	 * Build the activity loop query string the way the activity_filter AJAX does, then run it.
+	 *
+	 * @return int[] IDs of the activities the loop returns.
+	 */
+	protected function filtered_loop_ids( $user_id, $post ) {
+		$this->set_current_user( $user_id );
+
+		$bp                    = buddypress();
+		$bp->current_component = 'activity';
+		$bp->current_action    = '';
+
+		$_POST = array_merge(
+			array(
+				'object' => 'activity',
+				'scope'  => 'all',
+				'page'   => 1,
+			),
+			$post
+		);
+
+		$query_string = bp_nouveau_ajax_querystring( '', 'activity' );
+		$ids          = array();
+		if ( bp_has_activities( $query_string ) ) {
+			while ( bp_activities() ) {
+				bp_the_activity();
+				$ids[] = (int) bp_get_activity_id();
+			}
+		}
+
+		$bp->current_component = '';
+
+		return $ids;
+	}
+
+	public function test_activity_filter_ignores_loop_args_injected_into_its_values() {
+		$injected = '&include=' . $this->root . ',' . $this->comment . '&show_hidden=1&display_comments=stream&scope=';
+
+		foreach ( array( 0, $this->stranger ) as $viewer ) {
+			foreach ( array( 'filter', 'scope', 'order_by' ) as $key ) {
+				$value = 'scope' === $key ? 'all' . $injected : ( 'order_by' === $key ? 'date_recorded' . $injected : $injected );
+				$ids   = $this->filtered_loop_ids( $viewer, array( $key => $value ) );
+
+				$this->assertNotContains( $this->root, $ids, "Private group post leaked through `{$key}` to user {$viewer}." );
+				$this->assertNotContains( $this->comment, $ids, "Private group comment leaked through `{$key}` to user {$viewer}." );
+			}
+		}
+
+		// The same injection through a heartbeat request.
+		$ids = $this->filtered_loop_ids( 0, array( 'data' => array( 'bp_heartbeat' => array( 'filter' => $injected ) ) ) );
+		$this->assertNotContains( $this->root, $ids );
+	}
+
+	public function test_activity_filter_keeps_request_values_as_values() {
+		$this->set_current_user( $this->member );
+		buddypress()->current_component = 'activity';
+
+		$_POST        = array(
+			'object'   => 'activity',
+			'filter'   => 'activity_update,new_avatar',
+			'scope'    => 'just-me',
+			'order_by' => 'date_updated',
+			'page'     => 1,
+		);
+		$query_string = wp_parse_args( bp_nouveau_ajax_querystring( '', 'activity' ) );
+
+		$this->assertSame( 'activity_update,new_avatar', $query_string['type'] );
+		$this->assertSame( 'just-me', $query_string['scope'] );
+		$this->assertSame( 'date_updated', $query_string['order_by'] );
+
+		// An injected argument stays inside the value it was sent in.
+		$_POST['filter'] = 'activity_update&include=' . $this->root . '&show_hidden=1';
+		$query_string    = wp_parse_args( bp_nouveau_ajax_querystring( '', 'activity' ) );
+
+		$this->assertSame( $_POST['filter'], $query_string['type'] );
+		$this->assertArrayNotHasKey( 'include', $query_string );
+		$this->assertArrayNotHasKey( 'show_hidden', $query_string );
+
+		buddypress()->current_component = '';
+	}
+
+	public function test_loggedin_privacy_checks_the_given_user_without_a_session() {
+		$loggedin_post = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->activity->id,
+				'type'      => 'activity_update',
+				'user_id'   => $this->author,
+				'privacy'   => 'loggedin',
+			)
+		);
+
+		// CLI and cron run with no current user but pass the member they act for.
+		$this->set_current_user( 0 );
+		$this->assertTrue( bb_activity_user_can_view( $loggedin_post, $this->member ) );
+		$this->assertIsInt(
+			bp_activity_new_comment(
+				array(
+					'user_id'     => $this->member,
+					'activity_id' => $loggedin_post,
+					'content'     => 'comment without a session',
+					'error_type'  => 'wp_error',
+				)
+			)
+		);
+
+		// A guest is still refused.
+		$this->assertFalse( bb_activity_user_can_view( $loggedin_post, 0 ) );
+	}
+
+	public function test_new_comment_refuses_a_comment_as_the_root() {
+		$this->set_current_user( $this->member );
+
+		$result = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->member,
+				'activity_id' => $this->comment,
+				'content'     => 'comment hung off a comment',
+				'error_type'  => 'wp_error',
+			)
+		);
+
+		$this->assertWPError( $result );
+		$this->assertSame( 'invalid_parent_activity', $result->get_error_code() );
+
+		// Replying to the comment through its root still works.
+		$this->assertIsInt(
+			bp_activity_new_comment(
+				array(
+					'user_id'     => $this->member,
+					'activity_id' => $this->root,
+					'parent_id'   => $this->comment,
+					'content'     => 'proper reply',
+					'error_type'  => 'wp_error',
+				)
+			)
+		);
+	}
+
+	public function test_listed_comment_follows_its_hidden_post() {
+		// A comment written while the group was public keeps hide_sitewide = 0 after the group
+		// is made private; only its post is hidden.
+		$group   = self::factory()->group->create( array( 'creator_id' => $this->author ) );
+		$post    = self::factory()->activity->create(
+			array(
+				'component' => buddypress()->groups->id,
+				'type'      => 'activity_update',
+				'user_id'   => $this->author,
+				'item_id'   => $group,
+			)
+		);
+		$comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $post,
+				'content'     => 'comment from public days',
+			)
+		);
+		groups_edit_group_settings( $group, false, 'private' );
+
+		$this->assertSame( 0, (int) ( new BP_Activity_Activity( $comment ) )->hide_sitewide );
+
+		$listed = function ( $args ) {
+			return wp_list_pluck( bp_activity_get( array_merge( array( 'display_comments' => 'stream', 'per_page' => 0, 'count_total' => true ), $args ) )['activities'], 'id' );
+		};
+
+		$this->assertNotContains( $comment, array_map( 'intval', $listed( array() ) ) );
+		$this->assertContains( $comment, array_map( 'intval', $listed( array( 'show_hidden' => true ) ) ) );
+
+		// Scopes switch show_hidden on and ask for hide_sitewide = 0 themselves.
+		$this->set_current_user( $this->stranger );
+		$this->assertNotContains( $comment, array_map( 'intval', $listed( array( 'scope' => 'public' ) ) ) );
+		$this->assertNotContains( $comment, array_map( 'intval', $listed( array( 'scope' => 'just-me,public,mentions,friends,groups' ) ) ) );
+
+		// Comments on visible posts are still listed.
+		$this->assertContains( $this->comment, array_map( 'intval', $listed( array( 'show_hidden' => true ) ) ) );
+		$public_comment = bp_activity_new_comment(
+			array(
+				'user_id'     => $this->author,
+				'activity_id' => $this->public_post,
+				'content'     => 'public comment',
+			)
+		);
+		$this->assertContains( $public_comment, array_map( 'intval', $listed( array() ) ) );
 	}
 }

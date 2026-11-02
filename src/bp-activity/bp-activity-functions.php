@@ -2991,6 +2991,7 @@ add_action( 'delete_comment', 'bp_activity_post_type_remove_comment', 10, 1 );
  *              Add the $primary_link parameter for the array of arguments.
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
  * @since BuddyBoss [BBVERSION] Refuses a new comment when the user cannot view the root activity or the comment being replied to, or when the parent is not in the root's thread.
+ *              Also refuses a new comment whose $activity_id is itself a comment.
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -3152,6 +3153,21 @@ function bp_activity_new_comment( $args = '' ) {
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
 		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// A new comment must hang off a post, not off another comment. Read checks look one level up
+	// from a comment (its item_id), so a comment-on-comment row would skip the root's group check.
+	if ( empty( $r['id'] ) && 'activity_comment' === $activity->type ) {
+		$error = new WP_Error( 'invalid_parent_activity', $feedback );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -7569,6 +7585,7 @@ function bb_user_has_mute_notification( $activity_id, $user_id ) {
  * Function to validate activity privacy.
  *
  * @since BuddyBoss 2.6.00
+ * @since BuddyBoss [BBVERSION] The `loggedin` check uses the validated user instead of the current request.
  *
  * @param array $args Array for argument.
  *
@@ -7615,7 +7632,8 @@ function bb_validate_activity_privacy( $args ) {
 			if ( 'view_activity' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, please establish a friendship with the author of the activity to view.', 'buddyboss' ) );
 			}
-		} elseif ( 'loggedin' === $activity->privacy && ! is_user_logged_in() ) {
+		} elseif ( 'loggedin' === $activity->privacy && empty( $args['user_id'] ) ) {
+			// Check the user being validated, not the current request, so CLI and cron callers that pass a member still pass.
 			if ( 'view_activity' === $args['validate_action'] ) {
 				return new WP_Error( 'error', __( 'Sorry, You cannot view on this activity.', 'buddyboss' ) );
 			}
