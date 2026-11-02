@@ -18,7 +18,7 @@ import { __ } from '@wordpress/i18n';
 import { createReply } from '../../utils/ajax';
 import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
-import { forceRemoveEditor } from '../common/RichTextEditor';
+import { forceRemoveEditor, getRichTextEditorHtml } from '../common/RichTextEditor';
 
 /**
  * Reply Create Modal Component
@@ -116,16 +116,8 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleCreate = function () {
-		var contentVal = registeredValues.content || '';
-		if ( ! contentVal.trim() ) {
-			// Pull from TinyMCE if available.
-			if ( window.tinymce ) {
-				var editor = window.tinymce.get( 'bb-admin-edit-content-0' );
-				if ( editor ) {
-					contentVal = editor.getContent();
-				}
-			}
-		}
+		// Pull latest content from the editor, including Code tab edits.
+		var contentVal = getRichTextEditorHtml( 'bb-admin-edit-content-0', registeredValues.content || '' );
 
 		if ( ! contentVal.trim() ) {
 			setError( __( 'Description is required.', 'buddyboss' ) );
