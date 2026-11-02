@@ -354,8 +354,14 @@ class BP_Messages_Thread {
 		global $wpdb;
 		$bp = buddypress();
 
-		$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id IN (%s)", $thread_id, implode( ',', wp_list_pluck( $deleted_recipients, 'user_id' ) ) );
-		$wpdb->query( $query );
+		// One %d per user: `IN (%s)` bound "1,2,3" as a single string, which MySQL casts to 1.
+		$user_ids = array_map( 'intval', wp_list_pluck( $deleted_recipients, 'user_id' ) );
+		if ( empty( $user_ids ) ) {
+			return;
+		}
+		$placeholders = implode( ',', array_fill( 0, count( $user_ids ), '%d' ) );
+		$query        = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id IN ({$placeholders})", array_merge( array( $thread_id ), $user_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- internal table name and %d placeholders only.
+		$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- prepared above.
 	}
 
 	/**

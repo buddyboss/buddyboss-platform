@@ -82,7 +82,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	//FOr prev data
 	$get_prev_ids = [];
 	if ( 0 < strlen( $prev_type_key ) ) {
-		$query           = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$prev_type_key}' AND object_type = 'field'";
+		$query           = $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = %s AND object_type = 'field'", $prev_type_key );
 		$get_db_prev_ids = $wpdb->get_results( $query );
 		if ( isset( $get_db_prev_ids ) ) {
 			foreach ( $get_db_prev_ids as $id ) {
@@ -91,7 +91,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 		}
 	}
 
-	$query      = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$member_type_key}' AND object_type = 'field'";
+	$query      = $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = %s AND object_type = 'field'", $member_type_key );
 	$get_db_ids = $wpdb->get_results( $query );
 
 	$new_fields = array();
