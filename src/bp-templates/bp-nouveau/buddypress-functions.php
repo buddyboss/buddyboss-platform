@@ -650,6 +650,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * @since BuddyPress 3.0.0
 	 * @since BuddyBoss 3.6.2 Adds the `invites_revoke` nonce.
+	 * @since BuddyBoss [BBVERSION] Adds the link_preview_error and link_preview_timeout values.
 	 */
 	public function localize_scripts() {
 
