@@ -9035,6 +9035,11 @@ window.bp = window.bp || {};
 
 				if ( bp.draft_inflight && ! _.isUndefined( bp.draft_activity ) && bp.draft_inflight.key === bp.draft_activity.data_key ) {
 					publish_draft_base = _.uniq( publish_draft_base.concat( [ bp.draft_inflight.rev ] ) ).slice( -8 );
+
+					// The save is cancelled below, but PHP may still store it. Keep
+					// its revision acceptable for the next autosave too, or a failed
+					// publish leaves the member's own save as a conflict (D-01).
+					bp.draft_base = publish_draft_base.slice( 0 );
 				}
 
 				data.bb_draft_key  = ( ! edit && ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data_key ) ? bp.draft_activity.data_key : '';
