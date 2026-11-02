@@ -15,8 +15,12 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 			'component_name' => 'groups',
 			'user_id'        => $u
 		) );
+		// 'members' is in the default registered component list, so it is counted
+		// by bp_notifications_get_unread_notification_count(). 'messages' is not:
+		// it is filtered out of bp_notifications_get_registered_components() when
+		// message notifications are hidden.
 		self::factory()->notification->create( array(
-			'component_name' => 'messages',
+			'component_name' => 'members',
 			'user_id'        => $u,
 			'item_id'        => 1
 		) );
@@ -31,7 +35,7 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 
 		// Trigger invalidation via save
 		self::factory()->notification->create( array(
-			'component_name' => 'messages',
+			'component_name' => 'members',
 			'user_id'        => $u,
 			'item_id'        => 2
 		) );
@@ -50,8 +54,9 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 			'component_name' => 'groups',
 			'user_id'        => $u
 		) );
+		// 'members' rather than 'messages': only registered components are counted.
 		self::factory()->notification->create( array(
-			'component_name' => 'messages',
+			'component_name' => 'members',
 			'user_id'        => $u
 		) );
 
@@ -81,8 +86,9 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 			'component_name' => 'groups',
 			'user_id'        => $u
 		) );
+		// 'members' rather than 'messages': only registered components are counted.
 		self::factory()->notification->create( array(
-			'component_name' => 'messages',
+			'component_name' => 'members',
 			'user_id'        => $u
 		) );
 
@@ -115,8 +121,9 @@ class BP_Tests_Notifications_Functions extends BP_UnitTestCase {
 			'user_id'        => $u
 		) );
 
+		// 'members' rather than 'messages': only registered components are counted.
 		self::factory()->notification->create( array(
-			'component_name' => 'messages',
+			'component_name' => 'members',
 			'user_id'        => $u
 		) );
 
