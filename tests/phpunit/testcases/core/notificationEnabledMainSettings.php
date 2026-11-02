@@ -147,6 +147,27 @@ class BP_Tests_Core_NotificationEnabledMainSettings extends BP_UnitTestCase {
 		$output = ob_get_clean();
 
 		$this->assertStringContainsString( 'main-notification-settings', $output );
+		$this->assertStringContainsString( 'notifications[' . $field['key'] . ']', $output );
+	}
+
+	/**
+	 * The member notification preferences hide a type whose 'main' is 'no'.
+	 */
+	public function test_render_notification_hides_main_no() {
+		$found = $this->get_default_on_field();
+		if ( empty( $found ) ) {
+			$this->markTestSkipped( 'No default-on notification preference is registered.' );
+		}
+
+		list( $group, $field ) = $found;
+
+		bp_update_option( 'bb_enabled_notification', array( $field['key'] => array( 'main' => 'no' ) ) );
+
+		ob_start();
+		bb_render_notification( $group );
+		$output = ob_get_clean();
+
+		$this->assertStringNotContainsString( 'notifications[' . $field['key'] . ']', $output );
 	}
 
 	/**
