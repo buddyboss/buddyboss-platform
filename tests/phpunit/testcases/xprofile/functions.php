@@ -302,15 +302,12 @@ Bar!';
 		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
 		bp_xprofile_update_meta( $g, 'group', 'foo2', 'bar' );
 
-		$expected = array(
-			'foo' => array(
-				'bar',
-			),
-			'foo2' => array(
-				'bar',
-			),
-		);
-		$this->assertSame( $expected, bp_xprofile_get_meta( $g, 'group' ) );
+		$meta = bp_xprofile_get_meta( $g, 'group' );
+
+		// Group creation stores its own meta (is_repeater_enabled), so assert on the keys
+		// this test sets rather than on the whole meta bag.
+		$this->assertSame( array( 'bar' ), $meta['foo'] );
+		$this->assertSame( array( 'bar' ), $meta['foo2'] );
 	}
 
 	/**
@@ -343,8 +340,11 @@ Bar!';
 	public function test_bp_xprofile_get_meta_no_meta_key_no_results() {
 		$g = self::factory()->xprofile_group->create();
 
-		$expected = array();
-		$this->assertSame( $expected, bp_xprofile_get_meta( $g, 'group' ) );
+		// A freshly created group is not meta-free (group creation stores
+		// is_repeater_enabled), so assert that no user meta key was invented for it.
+		$meta = bp_xprofile_get_meta( $g, 'group' );
+		$this->assertArrayNotHasKey( 'foo', $meta );
+		$this->assertArrayNotHasKey( 'foo2', $meta );
 	}
 
 	/**
@@ -588,6 +588,13 @@ Bar!';
 	public function test_xprofile_sync_bp_profile_new_user() {
 		$post_vars = $_POST;
 
+		// add_user()/edit_user() are wp-admin operations performed by a logged-in
+		// administrator. Without a current user, bp_xprofile_validate_nickname_value()
+		// takes its registration-page branch (! is_user_logged_in()), which has no notion
+		// of "the user being edited" and rejects the member's own unchanged nickname.
+		$old_user = get_current_user_id();
+		$this->set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
 		$_POST = array(
 			'user_login' => 'foobar',
 			'pass1'      => 'password',
@@ -599,6 +606,7 @@ Bar!';
 		);
 
 		$id = add_user();
+		$this->assertNotWPError( $id, 'The fixture user could not be created.' );
 
 		$_POST = array(
 			'display_name' => 'Bar Foo',
@@ -607,9 +615,11 @@ Bar!';
 		);
 
 		$id = edit_user( $id );
+		$this->assertNotWPError( $id, 'Re-saving a user with an unchanged nickname must not be rejected.' );
 
 		// clean up post vars
 		$_POST = $post_vars;
+		$this->set_current_user( $old_user );
 
 		$this->assertEquals( 'foobar', xprofile_get_field_data( bp_xprofile_nickname_field_id(), $id ) );
 	}
@@ -949,16 +959,21 @@ Bar!';
 		$profile_template = new stdClass;
 		// Avoid the 'alt' class being added
 		$profile_template->current_field = 2;
+		// bp_get_field_css_class() reads field_order off the looped field, so the stub must
+		// carry it as a real BP_XProfile_Field would; without it the tag emits an undefined
+		// property notice and the expected class list is incomplete.
 		$profile_template->field = new stdClass;
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public'
 			);
 
@@ -986,12 +1001,14 @@ Bar!';
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public',
 			'rhubarb',
 			'apple'
@@ -1021,12 +1038,14 @@ Bar!';
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public',
 			'blueberry',
 			'gooseberry'
@@ -1074,4 +1093,657 @@ Bar!';
 	// 	$this->assertRegExp( $regex, $output );
 	// 	unset( $GLOBALS['field'] );
 	// }
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_enforced_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'disabled', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_allowed_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertTrue( bb_xprofile_can_change_field_visibility( $f ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_nickname_locked_by_display_name_format() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		bp_update_option( 'bp-xprofile-nickname-field-id', $f );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+
+		bp_delete_option( 'bp-xprofile-nickname-field-id' );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_does_not_leak_globals() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+		unset( $GLOBALS['profile_template'], $GLOBALS['field'] );
+
+		bb_xprofile_can_change_field_visibility( $f );
+
+		$this->assertFalse( isset( $GLOBALS['profile_template'] ) );
+		$this->assertFalse( isset( $GLOBALS['field'] ) );
+	}
+
+	/**
+	 * The restore path must hand the caller back the exact globals it had, including a
+	 * NULL-valued $GLOBALS['field'] — which is why the helper uses array_key_exists()
+	 * rather than isset(). The sibling test covers the "globals were absent" branch.
+	 *
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_restores_pre_existing_globals() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$template          = new stdClass();
+		$template->sentinel = 'caller';
+		$field             = new stdClass();
+		$field->sentinel   = 'caller';
+
+		$GLOBALS['profile_template'] = $template;
+		$GLOBALS['field']            = $field;
+
+		bb_xprofile_can_change_field_visibility( $f );
+
+		// Same object handles, not merely equal copies.
+		$this->assertSame( $template, $GLOBALS['profile_template'] );
+		$this->assertSame( $field, $GLOBALS['field'] );
+
+		// A NULL-valued global is a set global, so it must come back as NULL rather than
+		// being unset — the array_key_exists()/isset() distinction the helper relies on.
+		$GLOBALS['field'] = null;
+
+		bb_xprofile_can_change_field_visibility( $f );
+
+		$this->assertTrue( array_key_exists( 'field', $GLOBALS ) );
+		$this->assertNull( $GLOBALS['field'] );
+
+		unset( $GLOBALS['profile_template'], $GLOBALS['field'] );
+	}
+
+	/**
+	 * bp_xprofile_action_settings() skips locked fields entirely. Before the gate every
+	 * posted field id fell through to the 'public' fallback, so a locked field's stored
+	 * level was silently overwritten on any Profile Visibility save.
+	 *
+	 * @group bp_xprofile_action_settings
+	 */
+	public function test_bp_xprofile_action_settings_skips_locked_field_and_saves_the_rest() {
+		$u      = self::factory()->user->create();
+		$locked = $this->create_visibility_field( 'disabled', 'adminsonly' );
+		$open   = $this->create_visibility_field( 'allowed', 'public' );
+
+		$this->set_current_user( $u );
+
+		$bp                     = buddypress();
+		$displayed_user_backup  = isset( $bp->displayed_user->id ) ? $bp->displayed_user->id : 0;
+		$component_backup       = $bp->current_component;
+		$action_backup          = $bp->current_action;
+		$action_vars_backup     = $bp->action_variables;
+		$request_method_backup  = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : null;
+
+		$bp->displayed_user->id = $u;
+		$bp->current_component  = 'settings';
+		$bp->current_action     = 'profile';
+		$bp->action_variables   = array();
+
+		try {
+			$_SERVER['REQUEST_METHOD']         = 'POST';
+			$_POST['xprofile-settings-submit'] = '1';
+			$_REQUEST['_wpnonce']              = wp_create_nonce( 'bp_xprofile_settings' );
+			$_POST['field_ids']                = $locked . ',' . $open;
+			// The locked field renders no control, so the browser posts no value for it -
+			// exactly the case that used to fall through to the 'public' default.
+			$_POST[ 'field_' . $open . '_visibility' ] = 'adminsonly';
+
+			bp_xprofile_action_settings();
+		} finally {
+			// Restore in a finally block: a failed nonce check raises WPDieException in the
+			// test suite, and leaking $_SERVER/$_POST or the BP globals would corrupt every
+			// test that runs after this one.
+			unset(
+				$_POST['xprofile-settings-submit'],
+				$_POST['field_ids'],
+				$_POST[ 'field_' . $open . '_visibility' ],
+				$_REQUEST['_wpnonce']
+			);
+			if ( null === $request_method_backup ) {
+				unset( $_SERVER['REQUEST_METHOD'] );
+			} else {
+				$_SERVER['REQUEST_METHOD'] = $request_method_backup;
+			}
+			$bp->displayed_user->id = $displayed_user_backup;
+			$bp->current_component  = $component_backup;
+			$bp->current_action     = $action_backup;
+			$bp->action_variables   = $action_vars_backup;
+		}
+
+		// The locked field was skipped: nothing member-chosen reached storage.
+		$levels = bp_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
+		$this->assertTrue( empty( $levels[ $locked ] ), 'A locked field must not be written by the settings screen.' );
+
+		// Positive control: the unlocked field in the same POST still saved, proving the
+		// `continue` skips only the locked field rather than aborting the loop.
+		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $open, $u ) );
+	}
+
+	/**
+	 * @group bb_xprofile_save_fields
+	 */
+	public function test_bb_xprofile_save_fields_skips_visibility_write_for_enforced_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'disabled', 'loggedin' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$_POST[ 'field_' . $f ]                 = 'hello';
+		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
+		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
+
+		$this->assertSame( 'hello', xprofile_get_field_data( $f, $u ) );
+		$levels = bp_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
+		$this->assertTrue( empty( $levels[ $f ] ) );
+	}
+
+	/**
+	 * @group bb_xprofile_save_fields
+	 */
+	public function test_bb_xprofile_save_fields_writes_visibility_for_allowed_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$_POST[ 'field_' . $f ]                 = 'hello';
+		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
+		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
+
+		$this->assertSame( 'friends', xprofile_get_field_visibility_level( $f, $u ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_signup_activation_ignores_submitted_visibility_for_enforced_field() {
+		$f = $this->create_visibility_field( 'disabled', 'adminsonly' );
+
+		$signup_id = BP_Signup::add(
+			array(
+				'user_login'     => 'lockedsignupuser',
+				'user_email'     => 'lockedsignup@example.test',
+				'activation_key' => 'lockedsignupkey',
+				'meta'           => array(
+					'password'              => 'password',
+					'profile_field_ids'     => (string) $f,
+					"field_{$f}"            => 'Locked value',
+					"field_{$f}_visibility" => 'public',
+				),
+			)
+		);
+		$this->assertNotEmpty( $signup_id );
+
+		$user_id = bp_core_activate_signup( 'lockedsignupkey' );
+		$this->assertNotWPError( $user_id );
+
+		// Assert the RAW stored meta, not the accessor: for enforced fields the
+		// accessor always returns the admin default regardless of storage, so it
+		// cannot distinguish a blocked write from a stored crafted level. The
+		// guard stores the default, so the crafted 'public' must not be present.
+		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$this->assertIsArray( $levels, 'Activation must store the visibility levels it resolved.' );
+		$this->assertArrayHasKey( $f, $levels, 'Activation writes the resolved level for every field; a missing key would hide a skipped write.' );
+		$this->assertSame( 'adminsonly', $levels[ $f ], 'Stored level must be the admin default, never the crafted value.' );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_signup_activation_honors_submitted_visibility_for_allowed_field() {
+		$f = $this->create_visibility_field( 'allowed', 'adminsonly' );
+
+		$signup_id = BP_Signup::add(
+			array(
+				'user_login'     => 'allowedsignupuser',
+				'user_email'     => 'allowedsignup@example.test',
+				'activation_key' => 'allowedsignupkey',
+				'meta'           => array(
+					'password'              => 'password',
+					'profile_field_ids'     => (string) $f,
+					"field_{$f}"            => 'Allowed value',
+					"field_{$f}_visibility" => 'loggedin',
+				),
+			)
+		);
+		$this->assertNotEmpty( $signup_id );
+
+		$user_id = bp_core_activate_signup( 'allowedsignupkey' );
+		$this->assertNotWPError( $user_id );
+
+		// Control: activation still honors the submitted level for fields the
+		// member may change — proves the path processes the signup meta at all.
+		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $f, $user_id ) );
+	}
+
+	/**
+	 * Create an xprofile field with the given visibility settings.
+	 *
+	 * @param string $allow_custom_visibility 'allowed' or 'disabled'.
+	 * @param string $default_visibility      Admin-set default visibility level.
+	 *
+	 * @return int Field ID.
+	 */
+	protected function create_visibility_field( $allow_custom_visibility, $default_visibility ) {
+		$g = self::factory()->xprofile_group->create();
+		$f = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
+
+		bp_xprofile_update_field_meta( $f, 'default_visibility', $default_visibility );
+		bp_xprofile_update_field_meta( $f, 'allow_custom_visibility', $allow_custom_visibility );
+
+		return $f;
+	}
+
+	/**
+	 * buddypress()->displayed_user->fullname is seeded from the raw WP display_name; the
+	 * xprofile override must always re-resolve it for the current viewer (not only when
+	 * profile sync is disabled), otherwise a hidden last name leaks through every
+	 * bp_get_displayed_user_fullname() consumer — e.g. the member RSS <link> title.
+	 *
+	 * @group xprofile_override_user_fullnames
+	 * @group bp_get_displayed_user_fullname
+	 */
+	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_enabled() {
+		$bp                 = buddypress();
+		$displayed_backup   = $bp->displayed_user;
+		$loggedin_backup    = $bp->loggedin_user;
+		$format_backup      = bp_get_option( 'bp-display-name-format' );
+		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bp_is_active( 'xprofile' );
+
+		buddypress()->active_components['xprofile'] = '1';
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// Profile sync on. Note this option is what an admin sets, but bp_disable_profile_sync()
+		// does not read it (it only runs its filter), so asserting on that function here would
+		// be a tautology - the point of this test is that the override no longer depends on it.
+		bp_update_option( 'bp-disable-profile-sync', 0 );
+
+		$u      = self::factory()->user->create();
+		$member = self::factory()->user->create();
+
+		// `profile_update` syncs first/last name into the xprofile fields.
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		// Refresh the per-request name memo primed during user creation.
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		// Seed the globals exactly as BP_Members_Component::setup_globals() does (raw column).
+		$bp->displayed_user           = new stdClass();
+		$bp->displayed_user->id       = $u;
+		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
+
+		// try/finally so a failing assertion cannot leave the BP globals, the display-name
+		// format or the xprofile activation flag mutated for every later test in this process.
+		try {
+			// Guest viewer.
+			$this->set_current_user( 0 );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+
+			if ( bp_is_active( 'activity' ) ) {
+				ob_start();
+				bp_members_activity_feed();
+				$rss_link = ob_get_clean();
+				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+				$this->assertStringContainsString( '| Alex |', $rss_link );
+			}
+
+			// Logged-in member viewer gets the full name.
+			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+			$this->set_current_user( $member );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			$bp->displayed_user = $displayed_backup;
+			$bp->loggedin_user  = $loggedin_backup;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			if ( ! $xprofile_is_active ) {
+				unset( buddypress()->active_components['xprofile'] );
+			}
+		}
+	}
+
+	/**
+	 * The same redaction must hold with profile sync DISABLED.
+	 *
+	 * xprofile_override_user_fullnames() used to begin with
+	 * `if ( ! bp_disable_profile_sync() ) { return; }`, so with sync off it never ran and
+	 * $bp->displayed_user->fullname kept the raw wp_users.display_name - which is where the
+	 * drifted full name lives. The RSS <link rel="alternate"> title on a member page is built
+	 * from that global, which is how the surname reached page source. The early
+	 * return is gone, so the option must now make no difference at all; the sibling test above
+	 * pins the sync-enabled half.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_disabled() {
+		$bp                 = buddypress();
+		$displayed_backup   = $bp->displayed_user;
+		$loggedin_backup    = $bp->loggedin_user;
+		$format_backup      = bp_get_option( 'bp-display-name-format' );
+		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bp_is_active( 'xprofile' );
+
+		buddypress()->active_components['xprofile'] = '1';
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// The only difference from the sibling test: profile sync is off.
+		bp_update_option( 'bp-disable-profile-sync', 1 );
+
+		$u      = self::factory()->user->create();
+		$member = self::factory()->user->create();
+
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		// With sync off, `profile_update` may not populate the xprofile fields - write them
+		// directly so the redaction has the field values it reads, which is exactly the state a
+		// sync-disabled site is in once a member has filled in their profile.
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Alex' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		$bp->displayed_user           = new stdClass();
+		$bp->displayed_user->id       = $u;
+		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
+
+		try {
+			// Guest viewer - the surname must not survive, sync off or not.
+			$this->set_current_user( 0 );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+
+			if ( bp_is_active( 'activity' ) ) {
+				ob_start();
+				bp_members_activity_feed();
+				$rss_link = ob_get_clean();
+				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+				$this->assertStringContainsString( '| Alex |', $rss_link );
+			}
+
+			// A logged-in member is still allowed the full name.
+			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+			$this->set_current_user( $member );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			$bp->displayed_user = $displayed_backup;
+			$bp->loggedin_user  = $loggedin_backup;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			if ( ! $xprofile_is_active ) {
+				unset( buddypress()->active_components['xprofile'] );
+			}
+		}
+	}
+
+	/**
+	 * A failed visibility query must report "could not resolve", never "nobody restricted anything".
+	 *
+	 * bb_xprofile_filter_possible_hidden_users() narrows the set of members whose search match has
+	 * to be re-tested against their viewer-visible name. Its callers treat an array as an
+	 * authoritative narrowing - bb_xprofile_filter_field_search_matches() returns the whole matched
+	 * set unfiltered when that narrowing comes back empty - so a query error resolving to array()
+	 * publishes exactly the names the filter exists to withhold.
+	 *
+	 * It cannot be detected from the return value of the query: wpdb::get_col() initialises its
+	 * return to array() and never hands back null, so an error and an empty result set are the same
+	 * value. This pins the $wpdb->last_error check that replaced that dead comparison.
+	 *
+	 * The sentinel is three-valued and the two non-array answers mean opposite things, so they are
+	 * pinned separately: `false` here, "the narrowing could not be RESOLVED", on which the callers
+	 * withhold their leg; `null` in the companion below, "the narrowing does not APPLY", on which
+	 * the callers keep their whole set. Collapsing the two is what turned one transient read
+	 * failure into a 90% result cull.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_filter_possible_hidden_users_fails_closed_on_query_error() {
+		global $wpdb;
+
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+		$levels   = array( 'friends', 'loggedin', 'adminsonly' );
+
+		// Healthy control: the narrowing applies and returns an array.
+		$this->assertIsArray(
+			bb_xprofile_filter_possible_hidden_users( $user_ids, $levels ),
+			'A healthy query should return the narrowed candidate array.'
+		);
+
+		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text
+		// ('DISTINCT user_id') this silently stopped breaking any read whose SELECT list was
+		// reworded - the query still read the same table, the fixture just no longer recognised it,
+		// and the test went green against a leg that was never broken. `FROM` keeps
+		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
+		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
+		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+
+		$break_query = function ( $query ) use ( $visibility_table ) {
+			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
+				return 'SELECT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			$result = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$this->assertFalse(
+			$result,
+			'A failed visibility query must return false so the caller withholds its leg, rather than an empty array it would treat as an authoritative narrowing.'
+		);
+	}
+
+	/**
+	 * A community-wide forced default means the narrowing does not APPLY, which is not a failure.
+	 *
+	 * `allow_custom_visibility = 'disabled'` makes the admin default replace every member's own
+	 * setting on both branches of bp_xprofile_get_fields_by_visibility_levels(), so the field is
+	 * restricted for the whole community and no candidate set is smaller than the set handed in.
+	 * The answer is null, and the callers keep everything they were given and let their own budget
+	 * decide - reading it as `false` would withhold the leg on an ordinary configuration, and
+	 * reading it as an empty array would publish the names.
+	 *
+	 * The companion to the query-error test above: the two answers are one character apart in the
+	 * callers and mean opposite things, so both directions are pinned.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_filter_possible_hidden_users_returns_null_when_a_forced_default_disables_narrowing() {
+		$field_id = bp_xprofile_lastname_field_id();
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+
+		$default_backup = bp_xprofile_get_meta( $field_id, 'field', 'default_visibility' );
+		$allow_backup   = bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' );
+
+		// Both members hold their own, entirely public, row - so the only thing that can make them
+		// candidates is the forced default.
+		foreach ( $user_ids as $user_id ) {
+			xprofile_set_field_visibility_level( $field_id, $user_id, 'public' );
+		}
+
+		bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', 'loggedin' );
+		bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'allowed' );
+		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+		try {
+			// Control: with custom visibility allowed the default does not reach a member who has
+			// their own row, so the narrowing still applies and returns an array.
+			$this->assertIsArray(
+				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				'With custom visibility allowed the narrowing must still apply.'
+			);
+
+			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', 'disabled' );
+			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+			$this->assertNull(
+				bb_xprofile_filter_possible_hidden_users( $user_ids, array( 'friends', 'loggedin', 'adminsonly' ) ),
+				'A forced community-wide default must stand the narrowing down with null, not report a read failure or an authoritative empty set.'
+			);
+		} finally {
+			bp_xprofile_update_meta( $field_id, 'field', 'default_visibility', $default_backup );
+			bp_xprofile_update_meta( $field_id, 'field', 'allow_custom_visibility', $allow_backup );
+			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+		}
+	}
+
+	/**
+	 * The user_data_exists() memo must not be filled from a read that failed.
+	 *
+	 * BB_XProfile_Visibility::prime_user_data_exists_cache() fills, for a whole batch, the probe
+	 * that decides which branch bp_xprofile_get_fields_by_visibility_levels() takes per member. A
+	 * failed query returns the same empty result as "nobody has a row" - wpdb::get_col() never
+	 * hands back null - so memoising it would tell every later caller in the request that a member
+	 * resolves from user meta when they may in fact hold a restricting row, and a member whose name
+	 * field is hidden would be judged on meta they never wrote and served.
+	 *
+	 * Leaving the memo unfilled costs an uncached read per member and is the fail-closed direction.
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_prime_user_data_exists_cache_does_not_memoise_a_failed_read() {
+		global $wpdb;
+
+		if ( ! class_exists( 'BB_XProfile_Visibility' ) ) {
+			$this->markTestSkipped( 'The visibility class is not available in this configuration.' );
+		}
+
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+
+		$memo = new ReflectionProperty( 'BB_XProfile_Visibility', 'user_data_exists_cache' );
+		$memo->setAccessible( true );
+
+		// Matched on the table being READ, not on a particular SELECT list. Keyed to the SQL text
+		// ('DISTINCT user_id') this silently stopped breaking any read whose SELECT list was
+		// reworded - the query still read the same table, the fixture just no longer recognised it,
+		// and the test went green against a leg that was never broken. `FROM` keeps
+		// BB_XProfile_Visibility::visibility_table_exists() out of scope: it probes with
+		// `SHOW TABLES LIKE`, and breaking that is the missing-table path, not the failed-read path.
+		$visibility_table = BB_XProfile_Visibility::get_visibility_table_name();
+
+		$break_query = function ( $query ) use ( $visibility_table ) {
+			if ( false !== strpos( $query, 'FROM ' . $visibility_table ) ) {
+				return 'SELECT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		BB_XProfile_Visibility::flush_field_ids_cache();
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$after_failure = $memo->getValue();
+
+		foreach ( $user_ids as $user_id ) {
+			$this->assertArrayNotHasKey(
+				$user_id,
+				$after_failure,
+				'A failed batch read was memoised, so every later caller in this request reads "no visibility row" for a member who may hold one.'
+			);
+		}
+
+		// Control: the healthy read does fill the memo, so the assertion above is about the error
+		// handling rather than about the priming never working.
+		BB_XProfile_Visibility::flush_field_ids_cache();
+		BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+
+		$after_success = $memo->getValue();
+
+		foreach ( $user_ids as $user_id ) {
+			$this->assertArrayHasKey(
+				$user_id,
+				$after_success,
+				'A healthy batch read did not fill the memo it exists to fill.'
+			);
+		}
+
+		BB_XProfile_Visibility::flush_field_ids_cache();
+	}
+
 }

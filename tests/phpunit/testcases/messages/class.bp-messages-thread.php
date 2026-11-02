@@ -323,10 +323,85 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		// Mark thread as read
 		$current_user = get_current_user_id();
 		$this->set_current_user( $u2 );
+		$this->assertSame( 1, (int) $recipients_cached[ $u2 ]->unread_count );
+
 		messages_mark_thread_read( $t1 );
 
-		// Cache should be empty.
-		$this->assertFalse( wp_cache_get( 'thread_recipients_' . $t1, 'bp_messages' ) );
+		/*
+		 * The stale entry must be gone. Hooks on mark-as-read reload the thread's
+		 * messages, and BP_Messages_Thread::get_messages() checks the recipients on
+		 * every call, so the cache may already be re-warmed with fresh data.
+		 */
+		$recipients_after = wp_cache_get( 'thread_recipients_' . $t1, 'bp_messages' );
+		if ( false !== $recipients_after ) {
+			$this->assertSame( 0, (int) $recipients_after[ $u2 ]->unread_count );
+		}
+
+		$this->set_current_user( $current_user );
+	}
+
+	/**
+	 * A non-recipient must not read messages served from the shared thread cache.
+	 *
+	 * @group get_messages
+	 * @group cache
+	 */
+	public function test_get_messages_should_deny_non_recipient_on_cache_hit() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+
+		$message = self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $u1,
+				'recipients' => array( $u2 ),
+				'subject'    => 'Foo',
+			)
+		);
+
+		$current_user = get_current_user_id();
+
+		// A recipient warms the shared cache.
+		$this->set_current_user( $u2 );
+		$this->assertNotEmpty( BP_Messages_Thread::get_messages( $message->thread_id ) );
+
+		// An outsider gets nothing, even on a cache hit.
+		$this->set_current_user( $u3 );
+		$this->assertSame( array(), BP_Messages_Thread::get_messages( $message->thread_id ) );
+
+		$this->set_current_user( $current_user );
+	}
+
+	/**
+	 * A denied read must not blank the thread for its real recipients.
+	 *
+	 * @group get_messages
+	 * @group cache
+	 */
+	public function test_get_messages_denial_should_not_blank_thread_for_recipients() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+
+		$message = self::factory()->message->create_and_get(
+			array(
+				'sender_id'  => $u1,
+				'recipients' => array( $u2 ),
+				'subject'    => 'Foo',
+			)
+		);
+
+		$current_user = get_current_user_id();
+
+		// The outsider reads first, on a cold cache.
+		$this->set_current_user( $u3 );
+		$this->assertSame( array(), BP_Messages_Thread::get_messages( $message->thread_id ) );
+
+		// An empty array cached by an older version is treated as a miss.
+		wp_cache_set( "{$message->thread_id}10", array(), 'bp_messages_threads' );
+
+		$this->set_current_user( $u2 );
+		$this->assertNotEmpty( BP_Messages_Thread::get_messages( $message->thread_id ) );
 
 		$this->set_current_user( $current_user );
 	}
