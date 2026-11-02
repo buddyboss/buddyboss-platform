@@ -2103,6 +2103,18 @@ function bb_draft_promote_evicted( $user_id, $wanted ) {
 	}
 
 	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
+
+	// Nothing wanted is waiting: a composer fetch reads and goes, without
+	// taking the lock.
+	if ( ! array_filter( array_map( $wanted, array_map( 'strval', array_keys( $overflow ) ) ) ) ) {
+		return array();
+	}
+
+	// About to write: take the lock and work from the hold and overflow as
+	// they are now, so a draft another request evicted in the meantime is not
+	// written away.
+	$locked   = bb_draft_lock_evicted_hold( $user_id );
+	$overflow = bb_draft_drop_settled_evicted( $user_id, bb_draft_get_evicted_overflow( $user_id ) );
 	$moved    = array();
 
 	foreach ( $overflow as $key => $held ) {
@@ -2112,11 +2124,11 @@ function bb_draft_promote_evicted( $user_id, $wanted ) {
 		}
 	}
 
-	if ( empty( $moved ) ) {
-		return array();
+	if ( ! empty( $moved ) ) {
+		bb_draft_set_evicted_hold( $user_id, array_merge( bb_draft_get_evicted_hold( $user_id ), $moved ), $overflow );
 	}
 
-	bb_draft_set_evicted_hold( $user_id, array_merge( bb_draft_get_evicted_hold( $user_id ), $moved ), $overflow );
+	bb_draft_unlock_evicted_hold( $user_id, $locked );
 
 	return wp_list_pluck( $moved, 'entry' );
 }
@@ -2178,7 +2190,7 @@ function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
  * @return void
  */
 function bb_draft_hold_evicted( $user_id, $entries ) {
-	if ( empty( $entries ) || 1 > bb_draft_evicted_hold_seconds() ) {
+	if ( empty( $entries ) ) {
 		return;
 	}
 
@@ -2439,6 +2451,27 @@ function bb_draft_request_acked_evictions() {
 }
 
 /**
+ * Drop a member's held drafts past the hold time.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $hold   Held and overflow entries, like {@see bb_draft_get_evicted_hold()}.
+ * @param int   $cutoff Entries held before this timestamp have expired.
+ * @return array|null The remaining entries, or null when none expired.
+ */
+function bb_draft_prune_expired_hold_entries( $hold, $cutoff ) {
+	$kept = array();
+
+	foreach ( (array) $hold as $key => $held ) {
+		if ( is_array( $held ) && (int) ( isset( $held['at'] ) ? $held['at'] : 0 ) >= $cutoff ) {
+			$kept[ $key ] = $held;
+		}
+	}
+
+	return count( $kept ) === count( (array) $hold ) ? null : $kept;
+}
+
+/**
  * Delete held evicted drafts past the hold time, for every member.
  *
  * Runs on the daily draft cleanup so holds of members who never come back
@@ -2479,15 +2512,23 @@ function bb_drafts_prune_evicted_holds() {
 		}
 
 		foreach ( $user_ids as $user_id => $has_overflow_row ) {
-			$hold = array_merge( bb_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bb_draft_get_evicted_hold( $user_id ) );
+			$hold = bb_draft_prune_expired_hold_entries( array_merge( bb_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bb_draft_get_evicted_hold( $user_id ) ), $cutoff );
 
-			foreach ( $hold as $key => $held ) {
-				if ( ! is_array( $held ) || (int) ( isset( $held['at'] ) ? $held['at'] : 0 ) < $cutoff ) {
-					unset( $hold[ $key ] );
-				}
+			if ( null === $hold ) {
+				continue;
 			}
 
-			bb_draft_store_evicted_hold( $user_id, $hold );
+			// Something expired: take the member's lock and prune the hold as it
+			// is now, so a draft a save evicted since the read above is not
+			// written away.
+			$locked = bb_draft_lock_evicted_hold( $user_id );
+			$hold   = bb_draft_prune_expired_hold_entries( array_merge( bb_draft_get_evicted_overflow( $user_id, $has_overflow_row ), bb_draft_get_evicted_hold( $user_id ) ), $cutoff );
+
+			if ( null !== $hold ) {
+				bb_draft_store_evicted_hold( $user_id, $hold );
+			}
+
+			bb_draft_unlock_evicted_hold( $user_id, $locked );
 		}
 
 		// A short page is the end of the list; start from the top next run.

@@ -11357,6 +11357,125 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Whether a member's hold lock is held right now.
+	 *
+	 * @param int $user_id User ID.
+	 * @return bool
+	 */
+	private function hold_lock_is_held( $user_id ) {
+		$lock_key = 'bb_draft_hold_lock_' . (int) $user_id;
+
+		return (bool) ( is_multisite() ? get_site_transient( $lock_key ) : get_transient( $lock_key ) );
+	}
+
+	/**
+	 * Promoting a waiting held draft writes the hold under the member's lock,
+	 * so a save evicting another draft at the same moment is not written away.
+	 */
+	public function test_promote_evicted_writes_under_the_hold_lock() {
+		$user_id = self::factory()->user->create();
+
+		bb_draft_set_evicted_hold(
+			$user_id,
+			array(),
+			array(
+				'draft_group_9' => array(
+					'entry' => array(
+						'data_key' => 'draft_group_9',
+						'data'     => array( 'content' => 'waiting' ),
+					),
+					'at'    => time(),
+				),
+			)
+		);
+
+		$hold_name = bb_draft_evicted_hold_option( $user_id );
+		$unlocked  = 0;
+		$check     = function ( $option ) use ( &$unlocked, $hold_name, $user_id ) {
+			if ( 0 === strpos( (string) $option, $hold_name ) && ! $this->hold_lock_is_held( $user_id ) ) {
+				++$unlocked;
+			}
+		};
+		$hooks     = array( 'add_option', 'update_option', 'delete_option', 'add_site_option', 'update_site_option', 'delete_site_option' );
+
+		foreach ( $hooks as $hook ) {
+			add_action( $hook, $check );
+		}
+
+		$moved = bb_draft_promote_evicted(
+			$user_id,
+			function ( $key ) {
+				return 'draft_group_9' === $key;
+			}
+		);
+
+		foreach ( $hooks as $hook ) {
+			remove_action( $hook, $check );
+		}
+
+		$this->assertArrayHasKey( 'draft_group_9', $moved );
+		$this->assertArrayHasKey( 'draft_group_9', bb_draft_get_evicted_hold( $user_id ), 'The waiting draft moved into the hold.' );
+		$this->assertSame( 0, $unlocked, 'The hold was written without the member lock.' );
+		$this->assertFalse( $this->hold_lock_is_held( $user_id ), 'The lock is released.' );
+	}
+
+	/**
+	 * The daily prune writes an expired hold under the member's lock, and
+	 * leaves a hold with nothing expired unwritten.
+	 */
+	public function test_prune_writes_expired_holds_under_the_lock_only() {
+		$expired = self::factory()->user->create();
+		$current = self::factory()->user->create();
+
+		bb_draft_set_evicted_hold(
+			$expired,
+			array(
+				'draft_group_1' => array(
+					'entry' => array(
+						'data_key' => 'draft_group_1',
+						'data'     => array( 'content' => 'old' ),
+					),
+					'at'    => time() - 30 * DAY_IN_SECONDS,
+				),
+			)
+		);
+		bb_draft_set_evicted_hold(
+			$current,
+			array(
+				'draft_group_2' => array(
+					'entry' => array(
+						'data_key' => 'draft_group_2',
+						'data'     => array( 'content' => 'new' ),
+					),
+					'at'    => time(),
+				),
+			)
+		);
+
+		$writes = array();
+		$check  = function ( $option ) use ( &$writes ) {
+			if ( preg_match( '/^bb_draft_evicted_(\d+)$/', (string) $option, $match ) ) {
+				$writes[] = array( (int) $match[1], $this->hold_lock_is_held( $match[1] ) );
+			}
+		};
+		$hooks  = array( 'update_option', 'delete_option', 'update_site_option', 'delete_site_option' );
+
+		foreach ( $hooks as $hook ) {
+			add_action( $hook, $check );
+		}
+
+		bb_drafts_prune_evicted_holds();
+
+		foreach ( $hooks as $hook ) {
+			remove_action( $hook, $check );
+		}
+
+		$this->assertSame( array( array( $expired, true ) ), $writes, 'Only the expired hold is written, and under its lock.' );
+		$this->assertSame( array(), bb_draft_get_evicted_hold( $expired ) );
+		$this->assertArrayHasKey( 'draft_group_2', bb_draft_get_evicted_hold( $current ) );
+	}
+
+	/**
 	 * Deactivation clears the recurring draft events, whose interval goes away
 	 * with the plugin.
 	 */
