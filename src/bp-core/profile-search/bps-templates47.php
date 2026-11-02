@@ -30,7 +30,8 @@ function bp_ps_escaped_form_data47( $version ) {
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
 	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$F->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$F->page      = wp_parse_url( $request_uri, PHP_URL_PATH );
 
 	$template_options = $meta['template_options'][ $meta['template'] ];
 	if ( isset( $template_options['header'] ) ) {
@@ -46,7 +47,8 @@ function bp_ps_escaped_form_data47( $version ) {
 	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
-		$F->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+		$F->action    = wp_parse_url( $http_referer, PHP_URL_PATH );
 	}
 
 	$F->method = $meta['method'];
@@ -186,7 +188,7 @@ function bp_ps_escaped_filters_data47() {
 	list ( $request, $full ) = bp_ps_template_args();
 
 	$F         = new stdClass();
-	$action    = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$action    = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 	$action    = add_query_arg( BP_PS_FORM, 'clear', $action );
 	$F->action = $full ? esc_url( $action ) : '';
 	$F->fields = array();
@@ -287,51 +289,65 @@ function bp_ps_print_filter( $f ) {
 			case 'range':
 			case 'date_range':
 				if ( ! isset( $f->value['max'] ) ) {
+					/* translators: %1$s: minimum value. */
 					return sprintf( esc_html__( 'min: %1$s', 'buddyboss' ), $f->value['min'] );
 				}
 				if ( ! isset( $f->value['min'] ) ) {
+					/* translators: %1$s: maximum value. */
 					return sprintf( esc_html__( 'max: %1$s', 'buddyboss' ), $f->value['max'] );
 				}
 
+				/* translators: 1: minimum value, 2: maximum value. */
 				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss' ), $f->value['min'], $f->value['max'] );
 
 			case '':
 				if ( isset( $values ) ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: field value. */
 				return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $f->value );
 
 			case 'contains':
+				/* translators: %1$s: field value. */
 				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss' ), $f->value );
 
 			case 'like':
+				/* translators: %1$s: field value. */
 				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss' ), $f->value );
 
 			case 'one_of':
 				if ( count( $values ) == 1 ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: comma-separated field values. */
 				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'match_any':
 				if ( count( $values ) == 1 ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: comma-separated field values. */
 				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'match_all':
 				if ( count( $values ) == 1 ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: comma-separated field values. */
 				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'distance':
 				if ( $f->value['units'] == 'km' ) {
 					return sprintf(
+						/* translators: 1: distance in km, 2: location. */
 						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss' ),
 						$f->value['distance'],
 						$f->value['location']
@@ -339,6 +355,7 @@ function bp_ps_print_filter( $f ) {
 				}
 
 				return sprintf(
+					/* translators: 1: distance in miles, 2: location. */
 					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss' ),
 					$f->value['distance'],
 					$f->value['location']

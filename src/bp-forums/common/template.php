@@ -1442,7 +1442,7 @@ function bbp_redirect_to_field( $redirect_to = '' ) {
 	// Make sure we are directing somewhere
 	if ( empty( $redirect_to ) ) {
 		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			$redirect_to = bbp_get_url_scheme() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$redirect_to = bbp_get_url_scheme() . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 		} else {
 			$redirect_to = wp_get_referer();
 		}
@@ -1501,7 +1501,7 @@ function bbp_get_sanitize_val( $request = '', $input_type = 'text' ) {
 	switch ( $input_type ) {
 		case 'text':
 		case 'textarea':
-			$retval = esc_attr( stripslashes( $pre_ret_val ) );
+			$retval = esc_attr( sanitize_textarea_field( wp_unslash( $pre_ret_val ) ) );
 			break;
 
 		case 'password':
@@ -1509,7 +1509,7 @@ function bbp_get_sanitize_val( $request = '', $input_type = 'text' ) {
 		case 'radio':
 		case 'checkbox':
 		default:
-			$retval = esc_attr( $pre_ret_val );
+			$retval = esc_attr( sanitize_text_field( wp_unslash( $pre_ret_val ) ) );
 			break;
 	}
 
@@ -1529,7 +1529,7 @@ function bbp_get_sanitize_val( $request = '', $input_type = 'text' ) {
  *                             increment
  */
 function bbp_tab_index( $auto_increment = true ) {
-	echo bbp_get_tab_index( $auto_increment );
+	echo esc_attr( bbp_get_tab_index( $auto_increment ) );
 }
 
 	/**
@@ -1790,7 +1790,7 @@ function bbp_get_dropdown( $args = '' ) {
 function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 
 	if ( bbp_get_topic_post_type() === get_post_type( $post->ID ) || bbp_get_reply_post_type() === get_post_type( $post->ID ) ) {
-		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ), 'buddyboss' );
+		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ) );
 	}
 
 	return apply_filters( 'bbp_reply_attributes_meta_box_discussion_reply_title', $title, $post );
@@ -2126,7 +2126,7 @@ function bbp_get_the_content( $args = array() ) {
 		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
-			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . bp_get_current_group_id() . '"' : ''; ?>><?php echo wp_kses_post( $post_content ); ?></div>
+			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . esc_attr( bp_get_current_group_id() ) . '"' : ''; ?>><?php echo $post_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  ?></div>
 			<input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
 			<?php
 
@@ -2159,7 +2159,7 @@ function bbp_get_the_content( $args = array() ) {
 		else :
 			?>
 
-			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . bp_get_current_group_id() . '"' : ''; ?>><?php echo esc_textarea( $post_content ); ?></textarea>
+			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . esc_attr( bp_get_current_group_id() ) . '"' : ''; ?>><?php echo esc_textarea( $post_content ); ?></textarea>
 
 			<?php
 		endif;
@@ -2271,7 +2271,7 @@ function bbp_get_quicktags_settings( $settings = array() ) {
  * @uses bbp_get_view_id() To get the view id
  */
 function bbp_view_id( $view = '' ) {
-	echo bbp_get_view_id( $view );
+	echo esc_attr( bbp_get_view_id( $view ) );
 }
 
 /**
@@ -2709,6 +2709,7 @@ function bbp_get_breadcrumb( $args = array() ) {
 
 		// Edit topic tag.
 	} elseif ( bbp_is_topic_tag_edit() ) {
+		/* translators: %s: topic tag name. */
 		$crumbs[] = '<a href="' . esc_url( get_term_link( bbp_get_topic_tag_id(), bbp_get_topic_tag_tax_id() ) ) . '" class="bbp-breadcrumb-topic-tag">' . sprintf( __( 'Discussion Tag: %s', 'buddyboss' ), bbp_get_topic_tag_name() ) . '</a>';
 
 		// Search.
@@ -2946,21 +2947,25 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Forum edit page.
 	} elseif ( bbp_is_forum_edit() ) {
 		$new_title['text']   = bbp_get_forum_title();
+		/* translators: %s: forum title. */
 		$new_title['format'] = esc_attr__( 'Forum Edit: %s', 'buddyboss' );
 
 		// Topic edit page.
 	} elseif ( bbp_is_topic_edit() ) {
 		$new_title['text']   = bbp_get_topic_title();
+		/* translators: %s: discussion title. */
 		$new_title['format'] = esc_attr__( 'Discussion Edit: %s', 'buddyboss' );
 
 		// Reply edit page.
 	} elseif ( bbp_is_reply_edit() ) {
 		$new_title['text']   = bbp_get_reply_title();
+		/* translators: %s: reply title. */
 		$new_title['format'] = esc_attr__( 'Reply Edit: %s', 'buddyboss' );
 
 		// Topic tag edit page.
 	} elseif ( bbp_is_topic_tag_edit() ) {
 		$new_title['text']   = bbp_get_topic_tag_name();
+		/* translators: %s: topic tag name. */
 		$new_title['format'] = esc_attr__( 'Discussion Tag Edit: %s', 'buddyboss' );
 
 		/** Singles */
@@ -2968,11 +2973,13 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Forum page.
 	} elseif ( bbp_is_single_forum() ) {
 		$new_title['text']   = bbp_get_forum_title();
+		/* translators: %s: forum title. */
 		$new_title['format'] = esc_attr__( 'Forum: %s', 'buddyboss' );
 
 		// Topic page.
 	} elseif ( bbp_is_single_topic() ) {
 		$new_title['text']   = bbp_get_topic_title();
+		/* translators: %s: discussion title. */
 		$new_title['format'] = esc_attr__( 'Discussion: %s', 'buddyboss' );
 
 		// Replies.
@@ -2982,6 +2989,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Topic tag page.
 	} elseif ( bbp_is_topic_tag() || get_query_var( 'bbp_topic_tag' ) ) {
 		$new_title['text']   = bbp_get_topic_tag_name();
+		/* translators: %s: topic tag name. */
 		$new_title['format'] = esc_attr__( 'Discussion Tag: %s', 'buddyboss' );
 
 		/** Users */
@@ -3001,22 +3009,27 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 		// User topics created
 		if ( bbp_is_single_user_topics() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Discussions', 'buddyboss' );
 
 			// User rueplies created
 		} elseif ( bbp_is_single_user_replies() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Replies', 'buddyboss' );
 
 			// User favorites
 		} elseif ( bbp_is_favorites() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Saved', 'buddyboss' );
 
 			// User subscriptions
 		} elseif ( bbp_is_subscriptions() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Subscriptions', 'buddyboss' );
 
 			// User "home"
 		} else {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Profile', 'buddyboss' );
 		}
 
@@ -3030,6 +3043,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 			// Other user
 		} else {
 			$new_title['text']   = bp_core_get_user_displayname( bbp_get_user_id() );
+			/* translators: %s: User display name. */
 			$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss' );
 		}
 
@@ -3038,6 +3052,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Views
 	} elseif ( bbp_is_single_view() ) {
 		$new_title['text']   = bbp_get_view_title();
+		/* translators: %s: view title. */
 		$new_title['format'] = esc_attr__( 'View: %s', 'buddyboss' );
 
 		/** Search */
