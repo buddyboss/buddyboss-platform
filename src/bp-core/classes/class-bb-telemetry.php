@@ -124,27 +124,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			$data    = $this->bb_collect_site_data();
-			$api_url =
-				'aHR0cHM6Ly9h' .
-				'bmFseXRpY3Mu' .
-				'YnVkZHlib3Nz' .
-				'LmNvbS93cC1q' .
-				'c29uL3dwL3Yx' .
-				'L2JiLXRlbGVt' .
-				'ZXRyeQ==';
+			// Plain URL (disclosed under "External services" in readme.txt); TLS is verified
+			// (WordPress default) because this is a remote server, not a loopback request.
+			$api_url = 'https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry';
 			$args    = array(
-				'headers'   => array(
+				'headers'  => array(
 					'Accept'       => 'application/json;ver=1.0',
 					'Content-Type' => 'application/json; charset=UTF-8',
 					'Site-URL'     => get_site_url(),
 				),
-				'timeout'   => 10,
-				'blocking'  => true,
-				'body'      => wp_json_encode( $data ),
-				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
+				'timeout'  => 10,
+				'blocking' => true,
+				'body'     => wp_json_encode( $data ),
 			);
 
-			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			$raw_response = wp_safe_remote_post( $api_url, $args );
 			if ( is_wp_error( $raw_response ) ) {
 				$this->bb_record_delivery_failure( $raw_response->get_error_message() );
 				unset( $data, $api_url, $args );
