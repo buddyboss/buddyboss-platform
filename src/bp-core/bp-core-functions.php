@@ -11301,10 +11301,12 @@ function bb_get_tool_usage() {
  * still a paid site. Used to decide whether telemetry is forced to "complete"
  * and whether the Telemetry settings panel is shown.
  *
+ * @bbwt-com-start drm
  * Detection is DRM-based, with one deliberate exception for the theme. Plugin
  * activation state is not inspected: an add-on only reaches
  * `BB_DRM_Registry::register_addon()` when it is active, so the registry
  * already carries that meaning.
+ * @bbwt-com-end drm
  *
  * 1. The BuddyBoss Theme is active, or is the parent of the active child theme.
  *    The exception, because DRM cannot see it: the theme never calls
@@ -11333,6 +11335,7 @@ function bb_has_paid_product() {
 		// The BuddyBoss Theme, including when it is the parent of a child theme.
 		$detected = ( 'buddyboss-theme' === get_template() );
 
+		// @bbwt-com-start drm
 		// A paid add-on registered itself for DRM.
 		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
 			$registered_addons = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
@@ -11348,6 +11351,7 @@ function bb_has_paid_product() {
 				$detected = false;
 			}
 		}
+		// @bbwt-com-end drm
 
 		// Licence data from before the Mothership migration. Multisite stored
 		// this network-wide, so mirror the migration loader's site-option

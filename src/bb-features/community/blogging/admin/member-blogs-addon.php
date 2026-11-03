@@ -111,6 +111,7 @@ function bb_member_blogging_get_license_url() {
  * header): an unlicensed site can now switch the add-on on from this panel, so
  * the panel must not promise functionality that DRM will immediately deny.
  *
+ * @bbwt-com-start drm
  * Two paths, because the registry is only half an answer:
  *
  * - Add-on ACTIVE — its `plugins_loaded` hook has run `BB_DRM_Registry::register_addon()`,
@@ -122,12 +123,15 @@ function bb_member_blogging_get_license_url() {
  *   `cleanup_addon_drm()`). Instantiate `BB_DRM_Addon` for the slug instead so
  *   the real policy — including the grace-period threshold — is reused rather
  *   than duplicated here.
+ * @bbwt-com-end drm
  *
  * @since BuddyBoss 3.3.0
  *
  * @return bool True when the add-on's features are DRM-locked.
  */
 function bb_member_blogging_addon_is_drm_locked() {
+	$is_locked = false;
+	// @bbwt-com-start drm
 	if ( ! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
 		return false;
 	}
@@ -146,7 +150,10 @@ function bb_member_blogging_addon_is_drm_locked() {
 	// `bb_drm_addon_event_{slug}` callback, which fires from run(), never here.
 	$drm = new \BuddyBoss\Core\Admin\DRM\BB_DRM_Addon( $slug, __( 'Member Blogging', 'buddyboss' ) );
 
-	return (bool) $drm->should_lock_features();
+	$is_locked = (bool) $drm->should_lock_features();
+	// @bbwt-com-end drm
+
+	return $is_locked;
 }
 
 /**

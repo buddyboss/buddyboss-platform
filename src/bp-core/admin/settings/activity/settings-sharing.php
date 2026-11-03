@@ -236,6 +236,7 @@ function bb_activity_register_sharing_panel_fields() {
  *     `bb_activity_sharing_add_pro_badge_when_no_sharing` filter callback.
  *     The merge call below overlays the same `pro_notice` value — no-op.
  *
+ * @bbwt-com-start drm
  *   - Sharing add-on's lazy AJAX hook when its license is locked (state 2).
  *     At boot the filter saw `class_exists` for new Sharing and stepped
  *     aside, so the section was registered without the badge. License-lock
@@ -247,6 +248,7 @@ function bb_activity_register_sharing_panel_fields() {
  *     hasn't seen Sharing's addon registration yet and returns false. The
  *     filter therefore can't detect state 2 at boot. The merge call below
  *     adds the badge at AJAX time, where DRM state is fully settled.
+ * @bbwt-com-end drm
  *
  * Why merge is the canonical mechanism here:
  *

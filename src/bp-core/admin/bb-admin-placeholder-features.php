@@ -502,6 +502,7 @@ function bb_admin_sort_features_response( $features ) {
 }
 add_filter( 'bb_admin_features_response', 'bb_admin_sort_features_response', 30 );
 
+// @bbwt-com-start drm
 /**
  * Mark DRM-locked features in the AJAX features response.
  *
@@ -613,6 +614,7 @@ function bb_admin_mark_drm_locked_features( $features ) {
  * @since BuddyBoss 3.0.0
  */
 add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 20 );
+// @bbwt-com-end drm
 
 /**
  * Clear Settings 2.0 caches via query parameter.

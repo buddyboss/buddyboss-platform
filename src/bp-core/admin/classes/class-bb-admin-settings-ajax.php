@@ -362,6 +362,7 @@ class BB_Admin_Settings_Ajax {
 		$icon_registry = bb_icon_registry();
 		$activate      = 'active' === $status;
 
+		// @bbwt-com-start drm
 		// Defense-in-depth: refuse to activate a DRM-locked add-on feature via
 		// a crafted request — the card's toggle is already disabled in the UI
 		// (see bb_admin_mark_drm_locked_features()). Deactivation stays
@@ -380,6 +381,7 @@ class BB_Admin_Settings_Ajax {
 				);
 			}
 		}
+		// @bbwt-com-end drm
 
 		$result = $activate
 			? $registry->bb_activate_feature( $feature_id )

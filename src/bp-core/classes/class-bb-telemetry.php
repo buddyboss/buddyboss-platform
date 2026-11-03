@@ -388,12 +388,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				}
 			}
 
+			// @bbwt-com-start drm
 			// DRM's detector is the single definition of "not a real site":
 			// environment type, reserved TLDs, staging keywords as whole labels,
 			// host/staging provider domains, local IPs and non-standard ports.
 			if ( class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
 				return ! \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::is_dev_environment();
 			}
+			// @bbwt-com-end drm
 
 			// Fallback when DRM is unavailable: the one legacy rule the list
 			// above does not express — a `staging.` host prefix.
@@ -939,10 +941,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Reporting the stage is what makes the ladder measurable: how many sites
 		 * sit at each rung, and how many reach lockout rather than licensing.
 		 *
+		 * @bbwt-com-start drm
 		 * Derived from local state only — two indexed lookups on the DRM event
 		 * table plus two option reads. Deliberately avoids
 		 * `BB_DRM_Registry::get_addons_by_drm_status()`, which calls
 		 * `is_addon_licensed()` and can reach the Mothership API.
+		 * @bbwt-com-end drm
 		 *
 		 * @since BuddyBoss 3.4.3
 		 *
@@ -956,6 +960,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'addons'   => array(),
 			);
 
+			// @bbwt-com-start drm
 			if (
 				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Event' ) ||
 				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' )
@@ -976,6 +981,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			$data = array_merge( $data, $this->bb_get_drm_stage( $data['scenario'] ) );
+			// @bbwt-com-end drm
 
 			/**
 			 * Filters the DRM data reported by telemetry.
@@ -987,6 +993,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			return apply_filters( 'bb_telemetry_drm_data', $data );
 		}
 
+		// @bbwt-com-start drm
 		/**
 		 * Resolve the DRM escalation stage for a single DRM event.
 		 *
@@ -1147,6 +1154,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			return $events;
 		}
+		// @bbwt-com-end drm
 
 		/**
 		 * Get the status of integrations.

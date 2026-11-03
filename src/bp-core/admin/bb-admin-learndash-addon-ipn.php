@@ -169,6 +169,7 @@ function bb_learndash_addon_license_is_lite() {
  * @since BuddyBoss 3.0.0
  */
 function bb_learndash_addon_sync_ipn() {
+	// @bbwt-com-start drm
 	// Bail if the notifications wrapper isn't loaded — happens during very
 	// early Platform boot or on partial installs where the DRM/Mothership
 	// classes haven't autoloaded yet. Without this guard we'd fatal instead
@@ -233,5 +234,6 @@ function bb_learndash_addon_sync_ipn() {
 			),
 		)
 	);
+	// @bbwt-com-end drm
 }
 add_action( 'admin_init', 'bb_learndash_addon_sync_ipn', 30 );
