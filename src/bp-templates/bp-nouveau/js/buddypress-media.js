@@ -1151,7 +1151,7 @@ window.bp = window.bp || {};
 									self.removeDeletedActivityComment( activityId );
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						}
@@ -1654,7 +1654,7 @@ window.bp = window.bp || {};
 								} else {
 									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
 									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bp-media-move-photo', response.data.media_content );
-									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									bp.Nouveau.replaceActivityItem( $( 'body #buddypress .activity-list li#activity-' + activityId ), response.data.activity_content, [ '.activity-inner > .bb-activity-media-wrap' ] );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'media' === fromWhere ) {
