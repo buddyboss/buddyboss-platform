@@ -64,7 +64,7 @@ function bp_messages_is_message_starred( $mid = 0, $user_id = 0 ) {
  * @param array $args See bp_get_the_message_star_action_link() for full documentation.
  */
 function bp_the_message_star_action_link( $args = array() ) {
-	echo bp_get_the_message_star_action_link( $args );
+	echo wp_kses_post( bp_get_the_message_star_action_link( $args ) );
 }
 	/**
 	 * Return the link or raw URL for starring or unstarring a message.
@@ -342,8 +342,8 @@ add_action( 'bp_enqueue_scripts', 'bp_messages_star_enqueue_scripts' );
 function bp_messages_star_bulk_management_dropdown() {
 	?>
 
-	<option value="star"><?php _e( 'Add star', 'buddyboss' ); ?></option>
-	<option value="unstar"><?php _e( 'Remove star', 'buddyboss' ); ?></option>
+	<option value="star"><?php esc_html_e( 'Add star', 'buddyboss' ); ?></option>
+	<option value="unstar"><?php esc_html_e( 'Remove star', 'buddyboss' ); ?></option>
 
 	<?php
 }
