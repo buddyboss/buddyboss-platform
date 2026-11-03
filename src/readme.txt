@@ -9,6 +9,18 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 BuddyBoss Platform helps site builders & developers add community features to their websites, with user profiles, activity feeds, and more!
 
+== Description ==
+
+BuddyBoss Platform adds member profiles, activity feeds, groups, private messaging, notifications, media, forums and more to WordPress.
+
+= Credits =
+
+BuddyBoss Platform began as a fork of [BuddyPress](https://buddypress.org/) and [bbPress](https://bbpress.org/), and still contains code from both. Both are free software released under the GPL, and we thank the BuddyPress and bbPress contributors for the work this plugin builds on. Copyright for that code remains with its original authors.
+
+= Source code =
+
+The full source code, including the uncompressed JavaScript and SCSS sources and the build configuration (`Gruntfile.js`, `package.json`, `composer.json`), is available at [github.com/buddyboss/buddyboss-platform](https://github.com/buddyboss/buddyboss-platform).
+
 = Documentation =
 
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
@@ -54,6 +66,35 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activate at the network level for full integration with all sites in your network. (This is the most common multisite installation type.)
 * Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
+
+== External services ==
+
+BuddyBoss Platform connects to the services below only in the situations described. None of them is contacted unless the feature is in use.
+
+= Google reCAPTCHA =
+
+* **What and when:** if an administrator enables the reCAPTCHA integration and enters their own Google reCAPTCHA keys, the protected forms (for example login and registration) load Google's reCAPTCHA script from `www.google.com`. When such a form is submitted, the site sends the reCAPTCHA response token, your secret key and the visitor's IP address to Google's verification endpoint (`https://www.google.com/recaptcha/api/siteverify`).
+* **Who provides it:** Google LLC. [Terms of Service](https://policies.google.com/terms), [Privacy Policy](https://policies.google.com/privacy).
+
+= Link previews =
+
+* **What and when:** when a member includes a link in an activity post, comment, message or discussion, the site fetches that web page from your server to build a preview (title, description and image). Only a normal HTTP request for the linked page is sent; no member data is included.
+* **Who provides it:** the website that owns the linked page, under that website's own terms and privacy policy.
+
+= Akismet (forums) =
+
+* **What and when:** only if the separate Akismet plugin is active and configured, new discussions and replies are sent to Akismet for spam checking. That includes the content, the author's name, email address, IP address and user agent, and the page URL.
+* **Who provides it:** Automattic Inc. [Terms of Service](https://akismet.com/tos/), [Privacy Policy](https://automattic.com/privacy/).
+
+= BuddyBoss telemetry (opt-in) =
+
+* **What and when:** telemetry is **off by default**. Only if an administrator turns it on under BuddyBoss > Settings, the site periodically sends technical information to `https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry`. The data is the site and admin URLs, the WordPress, PHP and database versions, the database host name, the server software and operating system, multisite status, the installed plugins and themes with their versions, BuddyBoss component settings, the status of earlier telemetry deliveries, and a random site ID. No member content or member personal data is sent.
+* **Who provides it:** BuddyBoss. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
+
+= BuddyBoss help articles and integrations list (admin only) =
+
+* **What and when:** when an administrator opens the Help screen or the Integrations list in BuddyBoss > Settings, the site requests the help articles or the list of available integrations from `https://buddyboss.com`. The request carries the site's URL and the Platform version in its user agent, and nothing else.
+* **Who provides it:** BuddyBoss. [Terms](https://www.buddyboss.com/terms-and-conditions/), [Privacy Policy](https://www.buddyboss.com/privacy-policy/).
 
 == Changelog ==
 
