@@ -183,7 +183,7 @@ class BP_Groups_Member {
 			$sql = $wpdb->prepare( "SELECT * FROM {$bp->groups->table_name_members} WHERE id = %d", $this->id );
 		}
 
-		$member = $wpdb->get_row( $sql );
+		$member = $wpdb->get_row( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above (user_id/group_id or id as %d); table name from $bp->groups.
 
 		if ( ! empty( $member ) ) {
 			$this->id            = (int) $member->id;
@@ -304,7 +304,7 @@ class BP_Groups_Member {
 			$is_member_add = true;
 		}
 
-		if ( ! $wpdb->query( $sql ) ) {
+		if ( ! $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is the $wpdb->prepare()'d UPDATE or INSERT above (all values %d/%s); table name from $bp->groups.
 			return false;
 		}
 
@@ -463,7 +463,7 @@ class BP_Groups_Member {
 		$bp  = buddypress();
 		$sql = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $this->user_id, $this->group_id );
 
-		if ( ! $result = $wpdb->query( $sql ) ) {
+		if ( ! $result = $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above (user_id/group_id as %d); table name from $bp->groups.
 			return false;
 		}
 
@@ -637,7 +637,7 @@ class BP_Groups_Member {
 		// Get group details with pagination.
 		$cached = bp_core_get_incremented_cache( $group_sql, 'bp_groups_member' );
 		if ( false === $cached ) {
-			$groups = $wpdb->get_col( $group_sql );
+			$groups = $wpdb->get_col( $group_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table names from $bp->groups; $where_sql and $pag_sql are $wpdb->prepare()'d above (%d), or the whole statement is prepared in the else branch.
 			bp_core_set_incremented_cache( $group_sql, 'bp_groups_member', $groups );
 		} else {
 			$groups = $cached;
@@ -646,7 +646,7 @@ class BP_Groups_Member {
 		// Get total group count.
 		$cached = bp_core_get_incremented_cache( $total_groups_sql, 'bp_groups_member' );
 		if ( false === $cached ) {
-			$total_groups = $wpdb->get_var( $total_groups_sql );
+			$total_groups = $wpdb->get_var( $total_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- table names from $bp->groups; $where_sql is $wpdb->prepare()'d above (%d), or the whole statement is prepared in the else branch.
 			bp_core_set_incremented_cache( $total_groups_sql, 'bp_groups_member', $total_groups );
 		} else {
 			$total_groups = $cached;
@@ -899,7 +899,7 @@ class BP_Groups_Member {
 
 		$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
 
-		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $user_id ) );
+		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is a literal select/from/where with a %d placeholder for $user_id, prepared here; the where/from parts pass through the documented bp_groups_get_where_count_conditions/bp_groups_get_join_count_sql SQL filters (core listeners add only literals or prepared fragments).
 	}
 
 	/**
@@ -1467,11 +1467,11 @@ class BP_Groups_Member {
 			 *
 			 * @param string $value SQL prepared statement for fetching group members.
 			 */
-			$members = $wpdb->get_results( apply_filters( 'bp_group_members_user_join_filter', $wpdb->prepare( "SELECT m.user_id, m.date_modified, m.is_banned, u.user_login, u.user_nicename, u.user_email, pd.value as display_name FROM {$bp->groups->table_name_members} m, {$wpdb->users} u, {$bp->profile->table_name_data} pd WHERE u.ID = m.user_id AND u.ID = pd.user_id AND pd.field_id = 1 AND group_id = %d AND is_confirmed = 1 {$banned_sql} {$exclude_admins_sql} {$exclude_sql} ORDER BY m.date_modified DESC {$pag_sql}", $group_id ) ) );
+			$members = $wpdb->get_results( apply_filters( 'bp_group_members_user_join_filter', $wpdb->prepare( "SELECT m.user_id, m.date_modified, m.is_banned, u.user_login, u.user_nicename, u.user_email, pd.value as display_name FROM {$bp->groups->table_name_members} m, {$wpdb->users} u, {$bp->profile->table_name_data} pd WHERE u.ID = m.user_id AND u.ID = pd.user_id AND pd.field_id = 1 AND group_id = %d AND is_confirmed = 1 {$banned_sql} {$exclude_admins_sql} {$exclude_sql} ORDER BY m.date_modified DESC {$pag_sql}", $group_id ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- filtered SQL is a documented extension point (BuddyPress 1.5.0); the core statement is $wpdb->prepare()'d ($group_id %d), table names from $bp/$wpdb, $pag_sql %d-prepared, $exclude_sql from wp_parse_id_list(), $banned_sql/$exclude_admins_sql are literals.
 		} else {
 
 			/** This filter is documented in bp-groups/bp-groups-classes */
-			$members = $wpdb->get_results( apply_filters( 'bp_group_members_user_join_filter', $wpdb->prepare( "SELECT m.user_id, m.date_modified, m.is_banned, u.user_login, u.user_nicename, u.user_email, u.display_name FROM {$bp->groups->table_name_members} m, {$wpdb->users} u WHERE u.ID = m.user_id AND group_id = %d AND is_confirmed = 1 {$banned_sql} {$exclude_admins_sql} {$exclude_sql} ORDER BY m.date_modified DESC {$pag_sql}", $group_id ) ) );
+			$members = $wpdb->get_results( apply_filters( 'bp_group_members_user_join_filter', $wpdb->prepare( "SELECT m.user_id, m.date_modified, m.is_banned, u.user_login, u.user_nicename, u.user_email, u.display_name FROM {$bp->groups->table_name_members} m, {$wpdb->users} u WHERE u.ID = m.user_id AND group_id = %d AND is_confirmed = 1 {$banned_sql} {$exclude_admins_sql} {$exclude_sql} ORDER BY m.date_modified DESC {$pag_sql}", $group_id ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- filtered SQL is a documented extension point (BuddyPress 1.5.0); the core statement is $wpdb->prepare()'d ($group_id %d), table names from $bp/$wpdb, $pag_sql %d-prepared, $exclude_sql from wp_parse_id_list(), $banned_sql/$exclude_admins_sql are literals.
 		}
 
 		if ( empty( $members ) ) {
@@ -1489,7 +1489,7 @@ class BP_Groups_Member {
 			 *
 			 * @param string $value SQL prepared statement for fetching group member count.
 			 */
-			$total_member_count = $wpdb->get_var( apply_filters( 'bp_group_members_count_user_join_filter', $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->groups->table_name_members} m WHERE group_id = %d AND is_confirmed = 1 {$banned_sql} {$exclude_admins_sql} {$exclude_sql}", $group_id ) ) );
+			$total_member_count = $wpdb->get_var( apply_filters( 'bp_group_members_count_user_join_filter', $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->groups->table_name_members} m WHERE group_id = %d AND is_confirmed = 1 {$banned_sql} {$exclude_admins_sql} {$exclude_sql}", $group_id ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- filtered SQL is a documented extension point (BuddyPress 1.5.0); the core statement is $wpdb->prepare()'d ($group_id %d), table name from $bp->groups, $exclude_sql from wp_parse_id_list(), $banned_sql/$exclude_admins_sql are literals.
 		}
 
 		// Fetch whether or not the user is a friend.

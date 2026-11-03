@@ -362,7 +362,7 @@ class BP_Groups_Group {
 			);
 		}
 
-		if ( false === $wpdb->query( $sql ) ) {
+		if ( false === $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is the $wpdb->prepare()'d UPDATE or INSERT above (all values %d/%s); table name from $bp->groups.
 			return false;
 		}
 
@@ -1458,7 +1458,7 @@ class BP_Groups_Group {
 
 		$cached = bp_core_get_incremented_cache( $paged_groups_sql, 'bp_groups' );
 		if ( false === $cached ) {
-			$paged_group_ids = $wpdb->get_col( $paged_groups_sql );
+			$paged_group_ids = $wpdb->get_col( $paged_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_groups_get_paged_groups_sql and bp_groups_get_where_conditions (listeners may rewrite parts, e.g. BB_WPML_Helpers rewrites the search clause when WPML is active); as built by this method: table names from $bp, user/creator/search/hidden/pagination $wpdb->prepare()'d, include/exclude/parent_id via wp_parse_id_list(), status/slug via sanitize_title(), meta/date/group type via WP_Meta_Query/BP_Date_Query/WP_Tax_Query, ORDER BY column whitelisted and order via bp_esc_sql_order().
 			bp_core_set_incremented_cache( $paged_groups_sql, 'bp_groups', $paged_group_ids );
 		} else {
 			$paged_group_ids = $cached;
@@ -1528,7 +1528,7 @@ class BP_Groups_Group {
 
 		$cached = bp_core_get_incremented_cache( $total_groups_sql, 'bp_groups' );
 		if ( false === $cached ) {
-			$total_groups = (int) $wpdb->get_var( $total_groups_sql );
+			$total_groups = (int) $wpdb->get_var( $total_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_groups_get_total_groups_sql; built from the same $sql['from'] and $where as the paged query above (see the reason there).
 			bp_core_set_incremented_cache( $total_groups_sql, 'bp_groups', $total_groups );
 		} else {
 			$total_groups = (int) $cached;
@@ -1890,8 +1890,8 @@ class BP_Groups_Group {
 			 */
 			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
 
-			$sql    = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id );
-			$record = $wpdb->get_var( $sql );
+			$sql    = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- the %d placeholder for $group_id is in $where_conditions['where']; $select_sql uses the $bp table name; join/where pass through the documented bb_group_member_count_* SQL filters (core listener adds a prepared suspend join and a literal where).
+			$record = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the $wpdb->prepare()'d statement on the previous line.
 			wp_cache_set( $cache_key, $record, 'bp_groups' );
 		}
 

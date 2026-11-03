@@ -2843,20 +2843,21 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
 		if ( 'add' === $action ) {
 			if ( empty( $parent_reply_count ) ) {
 
-				// Get child reply.
-				$post_status   = "'" . implode( "','", array( bbp_get_public_status_id() ) ) . "'";
-				$bbp_gtcpq_sql = $wpdb->prepare(
-					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
+				// Get child reply. The (filterable) public status goes in as a placeholder too.
+				$reply_count = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
 				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status
-				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s'
-				AND {$wpdb->postmeta}.meta_key = '%s';",
-					$topic_id,
-					bbp_get_reply_post_type(),
-					'reply',
-					'_bbp_reply_to'
+				IN ( %s ) AND {$wpdb->posts}.post_type = %s AND {$wpdb->posts}.post_type = %s
+				AND {$wpdb->postmeta}.meta_key = %s;",
+						$topic_id,
+						bbp_get_public_status_id(),
+						bbp_get_reply_post_type(),
+						'reply',
+						'_bbp_reply_to'
+					)
 				);
-				$reply_count   = $wpdb->get_var( $bbp_gtcpq_sql );
-				$replies       = (int) get_post_meta( $topic_id, '_bbp_reply_count', true );
+				$replies     = (int) get_post_meta( $topic_id, '_bbp_reply_count', true );
 
 				// Find parent reply - Subtract child reply from total reply count.
 				$parent_count = (int) $new_topic_reply_count - (int) $reply_count;
