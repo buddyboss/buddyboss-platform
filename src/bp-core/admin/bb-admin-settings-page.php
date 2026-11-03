@@ -367,6 +367,19 @@ function bb_admin_settings_page() {
 	// @bbwt-com-end pricing-links
 	$localize_data['pricingUrls'] = $bb_pricing_urls;
 
+	// Help tab promo images, hosted on the BuddyBoss marketing bucket. Builds
+	// without remote marketing assets (the wordpress.org edition) send an empty
+	// list, and the Help promos then render without an image.
+	$bb_help_promo_images = array();
+	// @bbwt-com-start remote-upsell-features
+	$bb_help_promo_images = array(
+		'app'         => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/app%203.0.png',
+		'upgradePlus' => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-plus.jpg',
+		'upgradePro'  => 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-pro.jpg',
+	);
+	// @bbwt-com-end remote-upsell-features
+	$localize_data['helpPromoImages'] = $bb_help_promo_images;
+
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {

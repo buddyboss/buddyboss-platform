@@ -14,11 +14,6 @@ import { getTaxonomy, clearTaxonomy } from '../components/knowledge-base/taxonom
 import { getCuratedOverrides } from '../components/knowledge-base/curatedOverrides';
 import { ajaxFetch } from '../utils/ajax';
 
-// Promo images served from the BuddyBoss marketing S3 bucket (not bundled).
-var upgradePlus = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-plus.jpg';
-var upgradePro = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-pro.jpg';
-var app_3 = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/app%203.0.png';
-
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
 var HELP_SEARCH_ENDPOINT = 'https://buddyboss.com/wp-json/wp/v2/ht-kb/';
 var HELP_SEARCH_DEBOUNCE_MS = 300;
@@ -143,6 +138,10 @@ export function HelpScreen( { onNavigate } ) {
 	var showProPromo = ! hasActiveLicense && !! pricingUrls.helpFreeToPro;
 	var showPlusPromo = hasActiveLicense && ! hasPlusTier && !! pricingUrls.helpProToPlus;
 	var showDFYPromo = hasActiveLicense && hasPlusTier && !! pricingUrls.helpPlusToApp;
+	// Promo images come from the server too (`bbAdminData.helpPromoImages`,
+	// hosted on the BuddyBoss marketing bucket, not bundled); a build without
+	// them sends none, and the promo renders without its image.
+	const helpPromoImages = ( window.bbAdminData && window.bbAdminData.helpPromoImages ) || {};
 
 	var searchState = useState( '' );
 	var searchQuery = searchState[ 0 ];
@@ -836,13 +835,15 @@ export function HelpScreen( { onNavigate } ) {
 								className="bb-admin-help-promo"
 								aria-labelledby="bb-admin-help-app-promo-title"
 							>
-								<div className="bb-admin-help-promo__media">
-									<img
-										src={ app_3 }
-										alt={ __( 'App 3.0', 'buddyboss' ) }
-										className="bb-admin-help-promo__image"
-									/>
-								</div>
+								{ helpPromoImages.app && (
+									<div className="bb-admin-help-promo__media">
+										<img
+											src={ helpPromoImages.app }
+											alt={ __( 'App 3.0', 'buddyboss' ) }
+											className="bb-admin-help-promo__image"
+										/>
+									</div>
+								) }
 								<div className="bb-admin-help-promo__body">
 									<div className="bb-admin-help-promo__text">
 										<p className="bb-admin-help-promo__eyebrow">
@@ -873,13 +874,15 @@ export function HelpScreen( { onNavigate } ) {
 						className="bb-admin-help-promo"
 						aria-labelledby="bb-admin-help-plus-promo-title"
 					>
-						<div className="bb-admin-help-promo__media">
-							<img
-								src={ upgradePlus }
-								alt={ __( 'Upgrade to scale preview', 'buddyboss' ) }
-								className="bb-admin-help-promo__image"
-							/>
-						</div>
+						{ helpPromoImages.upgradePlus && (
+							<div className="bb-admin-help-promo__media">
+								<img
+									src={ helpPromoImages.upgradePlus }
+									alt={ __( 'Upgrade to scale preview', 'buddyboss' ) }
+									className="bb-admin-help-promo__image"
+								/>
+							</div>
+						) }
 						<div className="bb-admin-help-promo__body">
 							<div className="bb-admin-help-promo__text">
 								<p className="bb-admin-help-promo__eyebrow">
@@ -919,13 +922,15 @@ export function HelpScreen( { onNavigate } ) {
 						className="bb-admin-help-promo"
 						aria-labelledby="bb-admin-help-pro-promo-title"
 					>
-						<div className="bb-admin-help-promo__media">
-							<img
-								src={ upgradePro }
-								alt={ __( 'Upgrade to launch preview', 'buddyboss' ) }
-								className="bb-admin-help-promo__image"
-							/>
-						</div>
+						{ helpPromoImages.upgradePro && (
+							<div className="bb-admin-help-promo__media">
+								<img
+									src={ helpPromoImages.upgradePro }
+									alt={ __( 'Upgrade to launch preview', 'buddyboss' ) }
+									className="bb-admin-help-promo__image"
+								/>
+							</div>
+						) }
 						<div className="bb-admin-help-promo__body">
 							<div className="bb-admin-help-promo__text">
 								<p className="bb-admin-help-promo__eyebrow">

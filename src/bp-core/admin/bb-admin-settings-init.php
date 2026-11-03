@@ -233,12 +233,14 @@ function bb_admin_settings_init() {
 		}
 
 		bb_icon_registry();
+		// @bbwt-com-start remote-upsell-features
 
 		// Placeholder features provider for unregistered add-ons/integrations.
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php';
 		}
 
+		// @bbwt-com-end remote-upsell-features
 		// @bbwt-com-start mothership-hub
 		// "Register your email and get Memberships & Courses" banner for
 		// free, unlicensed installs on the Settings page.
@@ -247,6 +249,14 @@ function bb_admin_settings_init() {
 		}
 		// @bbwt-com-end mothership-hub
 
+		// Add-on upsell field helpers: which fields belong to the features that
+		// moved into BuddyBoss Addons, and whether their provider is loaded.
+		// Gates those fields on display and save, with or without the catalog below.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-addon-upsell-fields.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-addon-upsell-fields.php';
+		}
+
+		// @bbwt-com-start remote-upsell-features
 		// Field & section upgrade modal catalog (Settings 2.0 marketing copy
 		// for `pro_only` fields and `pro_notice` sections). Hosted on S3 like
 		// the placeholder features catalog and shares its cache-flush plumbing
@@ -255,6 +265,7 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-field-upgrades.php';
 		}
 
+		// @bbwt-com-end remote-upsell-features
 		// Platform 3.0 addon-compatibility admin notice. Loads
 		// unconditionally so the warning fires regardless of which
 		// admin screen the user is on — version mismatches break
