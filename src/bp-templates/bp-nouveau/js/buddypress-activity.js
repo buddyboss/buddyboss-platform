@@ -1185,6 +1185,7 @@ window.bp = window.bp || {};
 
 				var ajaxData = {
 					action      : 'delete_activity',
+					bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					'id'        : activity_id,
 					'_wpnonce'  : parent.getLinkParams( target.prop( 'href' ), '_wpnonce' ),
 					'is_single' : target.closest( '[data-bp-single]' ).length
@@ -1337,6 +1338,7 @@ window.bp = window.bp || {};
 				parent.ajax(
 					{
 						action : 'get_single_activity_content',
+						bb_legacy_template : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id     : item_id
 					},
 					'activity'
@@ -1726,6 +1728,7 @@ window.bp = window.bp || {};
 
 				comment_data = {
 					action                        : 'new_activity_comment',
+					bb_legacy_template            : 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
@@ -4279,6 +4282,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				action: 'activity_loadmore_comments',
+				bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				activity_id: activityId,
 				parent_comment_id: parentCommentId,
 				offset: $( e.currentTarget ).parents( '.activity-comments' ).find( 'ul[data-parent_comment_id ="' + parentCommentId + '"] > li.comment-item:not(.bb-recent-comment)' ).length,
@@ -4440,6 +4444,7 @@ window.bp = window.bp || {};
 
 					var data = {
 						action: 'activity_sync_from_modal',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						activity_id: activityId,
 					};
 
