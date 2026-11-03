@@ -27,7 +27,7 @@ global $current_message; ?>
 			$participants[] = bp_core_get_userlink( $recepient_id );
 		}
 
-		echo ' ' . implode( ', ', $participants ) . ' ' . __( 'and you.', 'buddyboss' );
+		echo ' ' . wp_kses_post( implode( ', ', $participants ) ) . ' ' . esc_html__( 'and you.', 'buddyboss' );
 		?>
 
 		<span class='view_thread_link'>
@@ -41,13 +41,13 @@ global $current_message; ?>
 		<div class="item-avatar">
 			<a href="<?php echo esc_url( bp_core_get_userlink( $current_message->sender_id, true, true ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $current_message->sender_id ); ?>">
 				<?php
-				echo bp_core_fetch_avatar(
+				echo wp_kses_post( bp_core_fetch_avatar(
 					array(
 						'item_id' => $current_message->sender_id,
 						'width'   => 50,
 						'height'  => 50,
 					)
-				);
+				) );
 				?>
 			</a>
 		</div>

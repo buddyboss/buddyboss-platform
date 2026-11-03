@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 <li class="bb-rl-forum-list-item">
 	<?php if ( function_exists( 'bbp_get_forum_thumbnail_image' ) ) { ?>
 		<a href="<?php bbp_forum_permalink(); ?>" class="bb-rl-forum-cover" title="<?php bbp_forum_title(); ?>">
-			<?php echo bbp_get_forum_thumbnail_image( bbp_get_forum_id(), 'large', 'full' ); ?>
+			<?php echo wp_kses_post( bbp_get_forum_thumbnail_image( bbp_get_forum_id(), 'large', 'full' ) ); ?>
 		</a>
 	<?php } ?>
 
@@ -66,7 +66,7 @@ defined( 'ABSPATH' ) || exit;
 				do_action( 'bbp_theme_before_forum_description' );
 				remove_filter( 'bbp_get_forum_content', 'wpautop' );
 			?>
-			<div class="bb-forum-content"><?php echo bbp_get_forum_content_excerpt_view_more( bbp_get_forum_id(), 150, '&hellip;' ); ?></div>
+			<div class="bb-forum-content"><?php echo wp_kses_post( bbp_get_forum_content_excerpt_view_more( bbp_get_forum_id(), 150, '&hellip;' ) ); ?></div>
 			<?php
 				add_filter( 'bbp_get_forum_content', 'wpautop' );
 				do_action( 'bbp_theme_after_forum_description' );

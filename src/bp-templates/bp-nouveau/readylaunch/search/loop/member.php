@@ -27,7 +27,7 @@ $member_user_link = bp_get_member_permalink();
 				<h2 class="item-title member-name">
 					<a href="<?php echo esc_url( $member_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_user_id ); ?>"><?php bp_member_name(); ?></a>
 					<?php
-					echo bp_get_user_member_type( $member_user_id );
+					echo wp_kses_post( bp_get_user_member_type( $member_user_id ) );
 					?>
 				</h2>
 			</div>

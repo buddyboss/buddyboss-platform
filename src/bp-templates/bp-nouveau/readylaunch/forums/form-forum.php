@@ -31,10 +31,10 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				if ( bbp_is_forum_edit() ) {
 					/* translators: %s: Forum title */
-					printf( esc_html__( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() );
+					printf( esc_html__( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), esc_html( bbp_get_forum_title() ) );
 				} else {
 					/* translators: %s: Forum title */
-					bbp_is_single_forum() ? printf( esc_html__( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() ) : esc_html_e( 'Create New Forum', 'buddyboss' );
+					bbp_is_single_forum() ? printf( esc_html__( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), esc_html( bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss' );
 				}
 				?>
 				</h2>
@@ -60,7 +60,7 @@ defined( 'ABSPATH' ) || exit;
 						<label class="bbp-forum-title-label" for="bbp_forum_title">
 							<?php
 							/* translators: %d: Maximum length of forum title */
-							printf( esc_html__( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss' ), bbp_get_title_max_length() );
+							echo wp_kses_post( sprintf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss' ), bbp_get_title_max_length() ) );
 							?>
 						</label><br />
 						<input type="text" id="bbp_forum_title" value="<?php bbp_form_forum_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_forum_title" maxlength="<?php bbp_title_max_length(); ?>" />
@@ -159,7 +159,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss' ), bbp_get_forum_title() );
+				printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss' ), esc_html( bbp_get_forum_title() ) );
 				?>
 			</p>
 		</div>

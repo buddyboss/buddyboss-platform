@@ -386,6 +386,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 							<?php if ( bp_is_active( 'friends' ) ) : ?>
 								<?php
 								printf(
+									/* translators: 1: "Please note:" label, 2: notice message text. */
 									wp_kses( __( '<span>%1$s</span> %2$s', 'buddyboss' ), array( 'span' => array() ) ),
 									esc_html__( 'Please note:', 'buddyboss' ),
 									esc_html__( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' )

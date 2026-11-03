@@ -80,23 +80,23 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 
 						case 'date_range':
 							?>
-							<span class="date-from date-label"><?php _e( 'From', 'buddyboss' ); ?></span>
+							<span class="date-from date-label"><?php esc_html_e( 'From', 'buddyboss' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $field_name . '[min][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $field_value['min']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss' )
 										);
 
 										for ( $i = 1; $i < 32; ++$i ) {
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $field_value['min']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
@@ -123,7 +123,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['min']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss' )
 									);
 
 									for ( $i = 0; $i < 12; ++$i ) {
@@ -131,9 +131,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $field_value['min']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>
@@ -145,7 +145,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['min']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss' )
 									);
 
 										$date_range_type = bp_xprofile_get_meta( $field->id, 'field', 'range_type', true );
@@ -153,14 +153,14 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 									if ( 'relative' === $date_range_type ) {
 										$range_relative_start = bp_xprofile_get_meta( $field->id, 'field', 'range_relative_start', true );
 										$range_relative_end   = bp_xprofile_get_meta( $field->id, 'field', 'range_relative_end', true );
-										$start                = date( 'Y' ) - abs( $range_relative_start );
-										$end                  = date( 'Y' ) + $range_relative_end;
+										$start                = gmdate( 'Y' ) - abs( $range_relative_start );
+										$end                  = gmdate( 'Y' ) + $range_relative_end;
 									} elseif ( 'absolute' === $date_range_type ) {
 										$start = bp_xprofile_get_meta( $field->id, 'field', 'range_absolute_start', true );
 										$end   = bp_xprofile_get_meta( $field->id, 'field', 'range_absolute_end', true );
 									} else {
-										$start = date( 'Y' ) - 50;// 50 years ago
-										$end   = date( 'Y' ) + 50;// 50 years in future
+										$start = gmdate( 'Y' ) - 50;// 50 years ago
+										$end   = gmdate( 'Y' ) + 50;// 50 years in future
 									}
 
 									for ( $i = $end; $i >= $start; $i-- ) {
@@ -175,23 +175,23 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 								</select>
 							</div>
 
-							<span class="date-to date-label"><?php _e( 'To', 'buddyboss' ); ?></span>
+							<span class="date-to date-label"><?php esc_html_e( 'To', 'buddyboss' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $field_name . '[max][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $field_value['max']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss' )
 										);
 
 										for ( $i = 1; $i < 32; ++$i ) {
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $field_value['max']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
@@ -203,7 +203,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['max']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss' )
 									);
 
 									for ( $i = 0; $i < 12; ++$i ) {
@@ -211,9 +211,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $field_value['max']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>
@@ -225,7 +225,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['max']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss' )
 									);
 									for ( $i = $end; $i >= $start; $i-- ) {
 										printf(
