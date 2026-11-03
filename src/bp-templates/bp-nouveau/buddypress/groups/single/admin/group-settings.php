@@ -264,15 +264,17 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
-				<option value="" <?php selected( '', '' ); ?>><?php _e( 'Select Group Type', 'buddyboss' ); ?></option>
+				<option value="" <?php selected( '', '' ); ?>><?php esc_html_e( 'Select Group Type', 'buddyboss' ); ?></option>
 				<?php
 				foreach ( $group_types as $type ) :
 
 					$option = sprintf(
 						'<option for="%1$s" value="%2$s" %3$s>%4$s</option>',
-						sprintf(
-							'group-type-%s',
-							$type->name
+						esc_attr(
+							sprintf(
+								'group-type-%s',
+								$type->name
+							)
 						),
 						esc_attr( $type->name ),
 						selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name, false ),
@@ -294,19 +296,19 @@ if ( bp_is_group_create() ) : ?>
 
 								if ( ! empty( $include_group_type ) ) {
 									if ( in_array( $type->name, $include_group_type ) ) {
-										print $option;
+										print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 									}
 								} else {
-									print $option;
+									print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 								}
 							} else {
-								print $option;
+								print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 							}
 						} else {
-							print $option;
+							print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 						}
 					} else {
-						print $option;
+						print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 					}
 				endforeach;
 				?>
@@ -323,12 +325,12 @@ if ( bp_is_group_create() ) : ?>
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
-				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php _e( 'Select Parent', 'buddyboss' ); ?></option>
+				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php esc_html_e( 'Select Parent', 'buddyboss' ); ?></option>
 				<?php
 				if ( $possible_parent_groups ) {
 					foreach ( $possible_parent_groups as $possible_parent_group ) {
 						?>
-						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+						<option value="<?php echo esc_attr( $possible_parent_group->id ); ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
 						<?php
 					}
 				}

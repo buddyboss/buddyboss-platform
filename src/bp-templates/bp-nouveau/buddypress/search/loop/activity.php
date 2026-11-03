@@ -41,6 +41,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					add_filter( 'bp_activity_allowed_tags', 'bb_network_search_allowed_tags' );
 					$content = preg_replace('/<p[^>]*>(.*?)<\/p>/is', "$1 ", bp_activity_filter_kses( bp_get_activity_content_body() ) );
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- activity content is kses-filtered on save; wp_kses_post() here turns a tag cut by the excerpt into visible text.
 					echo bp_create_excerpt(
 						$content,
 						100,
@@ -57,8 +58,8 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					printf(
 						'<time class="time-since" data-livestamp="%1$s">%2$s</time>',
-						bp_core_get_iso8601_date( bp_get_activity_date_recorded() ),
-						bp_core_time_since( bp_get_activity_date_recorded() )
+						esc_html( bp_core_get_iso8601_date( bp_get_activity_date_recorded() ) ),
+						esc_html( bp_core_time_since( bp_get_activity_date_recorded() ) )
 					);
 					?>
 				</a>
