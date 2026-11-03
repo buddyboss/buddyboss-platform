@@ -295,7 +295,16 @@ module.exports = function (grunt) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['**', '!**/.{svn,git}/**', '!**/readylaunch/css/sass/**'].concat( BP_EXCLUDED_MISC )
+						src: [
+							'**',
+							'!**/.{svn,git}/**',
+							'!**/readylaunch/css/sass/**',
+							// WP-CLI Behat test harness: dev-only, never loaded at runtime
+							// (Plugin Check flags the shell scripts and the test helpers).
+							'!cli/features/**',
+							'!cli/bin/**',
+							'!cli/utils/behat-tags.php'
+						].concat( BP_EXCLUDED_MISC )
 					},
 					{
 						dest: BUILD_DIR,

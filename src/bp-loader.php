@@ -8,7 +8,8 @@
  * Version:     3.7.0
  * Text Domain: buddyboss
  * Domain Path: /languages/
- * License:     GPLv2 or later (license.txt)
+ * License:     GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 /**
