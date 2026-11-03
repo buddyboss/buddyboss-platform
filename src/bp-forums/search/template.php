@@ -467,7 +467,7 @@ function bbp_get_search_pagination_count() {
 
 		// Several pages of results
 	} else {
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s results', 'Viewing %2$s - %3$s of %4$s results', $bbp->search_query->post_count, 'buddyboss' ), $bbp->search_query->post_count, $from_num, $to_num, $total );
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s results', 'Viewing %2$s - %3$s of %4$s results', $bbp->search_query->post_count, 'buddyboss' ), $bbp->search_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	}
 

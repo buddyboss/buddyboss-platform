@@ -177,7 +177,7 @@ function bp_get_group_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+			$unique = wp_rand(pow(10, $digits-1), pow(10, $digits)-1);
 			$key = $key.$unique;
 		}
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );

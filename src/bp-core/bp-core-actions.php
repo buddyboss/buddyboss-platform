@@ -296,13 +296,13 @@ function bb_media_symlink_validate( $updated_value ) {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 	}
 
 	foreach ( $keys as $k ) {

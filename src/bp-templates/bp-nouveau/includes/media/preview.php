@@ -124,7 +124,7 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 		header( "Content-Type: $type" );
 		header( 'Cache-Control: max-age=2592000, public' );
 		header( 'Expires: ' . gmdate( 'D, d M Y H:i:s', time() + 2592000 ) . ' GMT' );
-		readfile( "$output_file_src" );
+		readfile( "$output_file_src" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- streams a media file to the browser in chunks; WP_Filesystem has no streaming read API.
 	} else {
 		echo '// Silence is golden.';
 		exit();

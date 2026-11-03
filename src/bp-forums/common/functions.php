@@ -630,7 +630,7 @@ function bbp_get_statistics( $args = '' ) {
 	if ( ! empty( $r['count_tags'] ) && bbp_allow_topic_tags() ) {
 
 		// Get the count.
-		$topic_tag_count = wp_count_terms( bbp_get_topic_tag_tax_id(), array( 'hide_empty' => true ) );
+		$topic_tag_count = wp_count_terms( array( 'taxonomy' => bbp_get_topic_tag_tax_id(), 'hide_empty' => true ) );
 
 		// Empty tags.
 		if ( ! empty( $r['count_empty_tags'] ) && current_user_can( 'edit_topic_tags' ) ) {
@@ -1710,7 +1710,7 @@ function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
 
 			// Performance
 			'nopaging'               => true,
-			'suppress_filters'       => true,
+			'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'update_post_term_cache' => false,
 			'update_post_meta_cache' => false,
 			'ignore_sticky_posts'    => true,

@@ -1005,7 +1005,12 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 
 		// Finally, mark this user as a spammer.
 		if ( is_multisite() ) {
-			update_user_status( $user_id, 'spam', $is_spam );
+			wp_update_user(
+				array(
+					'ID'   => $user_id,
+					'spam' => $is_spam,
+				)
+			);
 		}
 	}
 
@@ -1541,7 +1546,15 @@ function bp_core_delete_account( $user_id = 0 ) {
 		}
 
 		// Bail if current user cannot delete this user.
-		if ( ! current_user_can_for_blog( bp_get_root_blog_id(), 'delete_user', $user_id ) ) {
+		// Capability on the root site (current_user_can_for_blog() is deprecated since WP 6.7).
+		if ( is_multisite() && bp_get_root_blog_id() !== get_current_blog_id() ) {
+			switch_to_blog( bp_get_root_blog_id() );
+			$can_delete_user = current_user_can( 'delete_user', $user_id );
+			restore_current_blog();
+		} else {
+			$can_delete_user = current_user_can( 'delete_user', $user_id );
+		}
+		if ( ! $can_delete_user ) {
 			return false;
 		}
 	}

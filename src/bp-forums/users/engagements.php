@@ -752,7 +752,7 @@ function bbp_get_user_object_ids( $args = array() ) {
 
 				// Performance.
 				'nopaging'               => true,
-				'suppress_filters'       => true,
+				'suppress_filters'       => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 				'update_post_term_cache' => false,
 				'update_post_meta_cache' => false,
 				'ignore_sticky_posts'    => true,

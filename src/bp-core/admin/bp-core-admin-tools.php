@@ -859,8 +859,8 @@ function bp_admin_reinstall_emails() {
 
 	// Make sure we have no orphaned email type terms.
 	$email_types = get_terms(
-		bp_get_email_tax_type(),
 		array(
+			'taxonomy'               => bp_get_email_tax_type(),
 			'fields'                 => 'ids',
 			'hide_empty'             => false,
 			'update_term_meta_cache' => false,

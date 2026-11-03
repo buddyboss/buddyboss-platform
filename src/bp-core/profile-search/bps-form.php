@@ -51,7 +51,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 	$F->page      = wp_parse_url( $request_uri, PHP_URL_PATH );
 
-	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
 		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';

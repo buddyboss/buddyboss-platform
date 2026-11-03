@@ -283,8 +283,8 @@ function bp_ps_hidden_filters() {
  */
 function bp_ps_current_page() {
 	 $current = defined( 'DOING_AJAX' ) ?
-		parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) :
-		parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		wp_parse_url( isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '', PHP_URL_PATH ) :
+		wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 	return $current;
 }

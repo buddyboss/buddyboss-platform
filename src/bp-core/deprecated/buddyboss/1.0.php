@@ -65,7 +65,7 @@ function bp_get_member_latest_update( $args = '' ) {
 	 * @param string $value Excerpt of the latest update for current member in the loop.
 	 * @param array  $r     Array of parsed arguments.
 	 */
-	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
+	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( wp_strip_all_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
 
 	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
 

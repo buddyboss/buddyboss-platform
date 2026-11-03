@@ -957,7 +957,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 			return $text;
 		}
 
-		$totalLength = mb_strlen( strip_tags( $ending ) );
+		$totalLength = mb_strlen( strip_tags( $ending ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- wp_strip_all_tags() also trims, which changes the excerpt length arithmetic below.
 		$openTags    = array();
 		$truncate    = '';
 
@@ -1007,7 +1007,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 	} else {
 		// Strip HTML tags if necessary.
 		if ( ! empty( $r['strip_tags'] ) ) {
-			$text = strip_tags( $text );
+			$text = strip_tags( $text ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- wp_strip_all_tags() also trims, which changes the excerpt length arithmetic below.
 		}
 
 		// Remove links if necessary.
@@ -3569,7 +3569,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 			// If we have a subnav name, add it separately for localization.
 			if ( ! empty( $component_subnav_name ) ) {
-				$bp_title_parts[] = strip_tags( $component_subnav_name );
+				$bp_title_parts[] = wp_strip_all_tags( $component_subnav_name );
 			}
 		}
 

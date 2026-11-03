@@ -5812,7 +5812,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 			}
 		}
 		reset( $objects );
-		rmdir( $directory );
+		rmdir( $directory ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- recursive removal of the plugin's own temporary directory inside uploads.
 	}
 }
 
@@ -9010,7 +9010,7 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
 		 * will return 'something'. wp_strip_all_tags will return ''
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'wp_strip_all_tags', $string ) : wp_strip_all_tags( $string );
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
@@ -9053,7 +9053,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
 		 * will return 'something'. wp_strip_all_tags will return ''
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'wp_strip_all_tags', $string ) : wp_strip_all_tags( $string );
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );

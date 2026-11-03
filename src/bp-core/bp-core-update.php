@@ -1923,7 +1923,7 @@ function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
 
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
-			chmod( $upload_dir, 0777 );
+			chmod( $upload_dir, 0777 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- the plugin's own directory inside uploads, created just above with wp_mkdir_p().
 		}
 
 		if ( is_dir( $upload_dir ) ) {

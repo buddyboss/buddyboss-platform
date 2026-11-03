@@ -143,7 +143,7 @@ function bp_member_invite_submit() {
 
 		$message .= '
 
-' . bp_get_member_invites_wildcard_replace( stripslashes( strip_tags( bp_get_invites_member_invite_url() ) ), $email );
+' . bp_get_member_invites_wildcard_replace( stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ), $email );
 
 		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 		$site_name    = get_bloginfo( 'name' );

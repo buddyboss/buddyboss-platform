@@ -932,13 +932,13 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	if ( $av_dir = opendir( $avatar_folder_dir ) ) {
 		while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
 			if ( ( preg_match( '/-bpfull/', $avatar_file ) || preg_match( '/-bpthumb/', $avatar_file ) ) && '.' != $avatar_file && '..' != $avatar_file ) {
-				@unlink( $avatar_folder_dir . '/' . $avatar_file );
+				wp_delete_file( $avatar_folder_dir . '/' . $avatar_file );
 			}
 		}
 		closedir( $av_dir );
 	}
 
-	@rmdir( $avatar_folder_dir );
+	@rmdir( $avatar_folder_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir, WordPress.PHP.NoSilencedErrors.Discouraged -- removes the now-empty avatar directory inside uploads; a non-empty directory is left alone.
 
 	/**
 	 * Fires after deleting an existing avatar.
@@ -1101,7 +1101,9 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	} else {
 		$bp->avatar_admin->image->file = $bp->avatar_admin->resized['path'];
 		$bp->avatar_admin->image->dir  = str_replace( $upload_path, '', $bp->avatar_admin->resized['path'] );
-		@unlink( $bp->avatar_admin->original['file'] );
+		if ( file_exists( $bp->avatar_admin->original['file'] ) ) {
+			wp_delete_file( $bp->avatar_admin->original['file'] );
+		}
 	}
 
 	// Check for WP_Error on what should be an image.

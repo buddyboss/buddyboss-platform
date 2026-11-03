@@ -274,7 +274,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	/** Reply Title */
 
 	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( strip_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Filter and sanitize.
@@ -389,7 +389,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	// Either replace terms.
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// ...or remove them.
 	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
@@ -700,7 +700,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	/** Reply Title */
 
 	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( strip_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Filter and sanitize.
@@ -766,7 +766,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Either replace terms.
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// ...or remove them.
 	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
@@ -840,7 +840,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Revision Reason.
 	if ( ! empty( $_POST['bbp_reply_edit_reason'] ) ) {
-		$reply_edit_reason = esc_attr( strip_tags( $_POST['bbp_reply_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+		$reply_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 	}
 
 	// Update revision log.
@@ -1487,7 +1487,7 @@ function bbp_move_reply_handler( $action = '' ) {
 
 					// Use the new title that was passed.
 					if ( ! empty( $_POST['bbp_reply_move_destination_title'] ) ) {
-						$destination_topic_title = esc_attr( strip_tags( $_POST['bbp_reply_move_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_move_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 						// Use the source topic title.
 					} else {

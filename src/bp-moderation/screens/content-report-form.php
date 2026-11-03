@@ -35,8 +35,8 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 				<?php
 				$reports_terms = get_terms(
-					'bpm_category',
 					array(
+						'taxonomy'   => 'bpm_category',
 						'hide_empty' => false,
 					)
 				);

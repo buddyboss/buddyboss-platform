@@ -355,7 +355,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && ! empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input.
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// Explode by comma.
 		if ( strstr( $terms, ',' ) ) {
@@ -745,7 +745,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input.
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 		// Explode by comma.
 		if ( strstr( $terms, ',' ) ) {
@@ -819,7 +819,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 		// Revision Reason.
 		if ( ! empty( $_POST['bbp_topic_edit_reason'] ) ) {
-			$topic_edit_reason = esc_attr( strip_tags( $_POST['bbp_topic_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+			$topic_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_edit_reason'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 		}
 
 		// Update revision log.
@@ -1355,7 +1355,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 	if ( strtotime( $source_topic->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 		// Set destination topic post_date to 1 second before source topic.
-		$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
+		$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
 
 		// Update destination topic.
 		wp_update_post(
@@ -1703,7 +1703,7 @@ function bbp_split_topic_handler( $action = '' ) {
 
 					// Use the new title that was passed.
 					if ( ! empty( $_POST['bbp_topic_split_destination_title'] ) ) {
-						$destination_topic_title = esc_attr( strip_tags( $_POST['bbp_topic_split_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( strip_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
+						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_split_destination_title'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- bbPress stores this entity-encoded via esc_attr( wp_strip_all_tags() ) and wp_insert_post() expects slashed input; sanitize_text_field()/wp_unslash() would change the stored format.
 
 						// Use the source topic title.
 					} else {
@@ -1757,7 +1757,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	if ( strtotime( $from_reply->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 		// Set destination topic post_date to 1 second before from reply.
-		$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
+		$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
 
 		// Update destination topic.
 		wp_update_post(
@@ -3119,7 +3119,7 @@ function bbp_spam_topic( $topic_id = 0 ) {
 	// Topic is being spammed, so its replies are trashed.
 	$replies = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_reply_post_type(),
 			'post_status'      => bbp_get_public_status_id(),
 			'post_parent'      => $topic_id,
@@ -3447,7 +3447,7 @@ function bbp_delete_topic( $topic_id = 0 ) {
 	// Note that we get all post statuses here.
 	$replies = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_reply_post_type(),
 			'post_status'      => array_keys( get_post_stati() ),
 			'post_parent'      => $topic_id,
@@ -3498,7 +3498,7 @@ function bbp_trash_topic( $topic_id = 0 ) {
 	// Topic is being trashed, so its replies are trashed too.
 	$replies = new WP_Query(
 		array(
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- internal forum/moderation lookup; bbPress applies its own visibility rules, extra query filters must not change the set.
 			'post_type'        => bbp_get_reply_post_type(),
 			'post_status'      => bbp_get_public_status_id(),
 			'post_parent'      => $topic_id,
@@ -3788,7 +3788,7 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 		$embed_urls = $embeds_array = array();
 		$flag       = true;
 
-		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
 			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 		}
 

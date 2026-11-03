@@ -63,7 +63,7 @@ function bp_ps_clear_directory() {
 	global $bp;
 
 	$dirs    = bp_ps_directories();
-	$current = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$current = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 	foreach ( $dirs as $dir ) {
 		if ( $dir->link == $current ) {

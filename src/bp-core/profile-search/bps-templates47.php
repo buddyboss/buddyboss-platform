@@ -44,7 +44,7 @@ function bp_ps_escaped_form_data47( $version ) {
 		$F->toggle_text = $template_options['button'];
 	}
 
-	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
 		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';

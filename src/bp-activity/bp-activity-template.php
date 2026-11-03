@@ -491,7 +491,7 @@ function bp_get_activity_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $activities_template->total_activity_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -3140,7 +3140,7 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
 	 * @param string $value   The excerpt for the latest update.
 	 * @param int    $user_id ID of the queried user.
 	 */
-	$latest_update = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], bp_activity_get_excerpt_length() ) ) ), $user_id );
+	$latest_update = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( wp_strip_all_tags( bp_create_excerpt( $update['content'], bp_activity_get_excerpt_length() ) ) ), $user_id );
 
 	$latest_update = sprintf(
 		'%s <a href="%s">%s</a>',
@@ -4009,14 +4009,14 @@ function bp_get_activity_feed_item_title() {
 	}
 
 	$content = explode( '<span', $content );
-	$title   = strip_tags( ent2ncr( trim( convert_chars( $content[0] ) ) ) );
+	$title   = wp_strip_all_tags( ent2ncr( trim( convert_chars( $content[0] ) ) ) );
 
 	if ( ':' === substr( $title, -1 ) ) {
 		$title = substr( $title, 0, -1 );
 	}
 
 	if ( 'activity_update' === $activities_template->activity->type ) {
-		$title .= ': ' . strip_tags( ent2ncr( trim( convert_chars( bp_create_excerpt( $activities_template->activity->content, 70, array( 'ending' => ' [&#133;]' ) ) ) ) ) );
+		$title .= ': ' . wp_strip_all_tags( ent2ncr( trim( convert_chars( bp_create_excerpt( $activities_template->activity->content, 70, array( 'ending' => ' [&#133;]' ) ) ) ) ) );
 	}
 
 	/**

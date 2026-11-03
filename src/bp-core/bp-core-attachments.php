@@ -1416,7 +1416,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 	// Image is too small in width and height.
 	if ( empty( $cover_image ) ) {
 		$cover_file = $cover_image_class->generate_filename( $args['file'] );
-		@rename( $args['file'], $cover_file );
+		@rename( $args['file'], $cover_file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename, WordPress.PHP.NoSilencedErrors.Discouraged -- moves the just-uploaded cover image within uploads.
 
 		// It's too small!
 		$is_too_small = true;

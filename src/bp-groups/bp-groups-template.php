@@ -2320,7 +2320,7 @@ function bp_get_groups_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $groups_template->pag_num - 1 ) > $groups_template->total_group_count ) ? $groups_template->total_group_count : $start_num + ( $groups_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $groups_template->total_group_count );
 
-	$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the "Viewing x-y of z groups" pagination message.
@@ -4897,11 +4897,11 @@ function bp_get_group_member_section_title() {
 
 				<?php
 				if ( groups_is_user_admin( $user_id, $group_id ) ) {
-					esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
+					echo esc_html( get_group_role_label( $group_id, 'organizer_plural_label_name' ) );
 				} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-					esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
+					echo esc_html( get_group_role_label( $group_id, 'moderator_plural_label_name' ) );
 				} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-					esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
+					echo esc_html( get_group_role_label( $group_id, 'member_plural_label_name' ) );
 				}
 				?>
 
@@ -5460,7 +5460,7 @@ function bp_get_group_member_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $members_template->pag_num - 1 ) > $members_template->total_member_count ) ? $members_template->total_member_count : $start_num + ( $members_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $members_template->total_member_count );
 
-	$message = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the "Viewing x-y of z members" pagination message.
@@ -7019,7 +7019,7 @@ function bp_group_request_comment() {
 	 *
 	 * @param string $value Membership request comment left by user.
 	 */
-	echo apply_filters( 'bp_group_request_comment', strip_tags( stripslashes( $requests_template->request->comments ) ) );
+	echo apply_filters( 'bp_group_request_comment', wp_strip_all_tags( stripslashes( $requests_template->request->comments ) ) );
 }
 
 /**
@@ -7073,7 +7073,7 @@ function bp_get_group_requests_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $requests_template->pag_num - 1 ) > $requests_template->total_request_count ) ? $requests_template->total_request_count : $start_num + ( $requests_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $requests_template->total_request_count );
 
-		$message = sprintf( _n( 'Viewing 1 request', 'Viewing %1$s - %2$s of %3$s requests', $requests_template->total_request_count, 'buddyboss' ), $from_num, $to_num, $total );
+		$message = sprintf( _n( 'Viewing 1 request', 'Viewing %1$s - %2$s of %3$s requests', $requests_template->total_request_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters pagination count text for group membership requests.
@@ -7366,7 +7366,7 @@ function bp_get_group_invite_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $invites_template->pag_num - 1 ) > $invites_template->total_invite_count ) ? $invites_template->total_invite_count : $start_num + ( $invites_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $invites_template->total_invite_count );
 
-	$message = sprintf( _n( 'Viewing 1 invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/** This filter is documented in bp-groups/bp-groups-template.php */
 	return apply_filters( 'bp_get_groups_pagination_count', $message, $from_num, $to_num, $total );

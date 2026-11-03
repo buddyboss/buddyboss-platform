@@ -132,8 +132,8 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance               = $old_instance;
-		$instance['title']      = strip_tags( $new_instance['title'] );
-		$instance['max_posts']  = strip_tags( $new_instance['max_posts'] );
+		$instance['title']      = wp_strip_all_tags( $new_instance['title'] );
+		$instance['max_posts']  = wp_strip_all_tags( $new_instance['max_posts'] );
 		$instance['link_title'] = (bool) $new_instance['link_title'];
 
 		return $instance;
@@ -156,8 +156,8 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 			)
 		);
 
-		$title      = strip_tags( $instance['title'] );
-		$max_posts  = strip_tags( $instance['max_posts'] );
+		$title      = wp_strip_all_tags( $instance['title'] );
+		$max_posts  = wp_strip_all_tags( $instance['max_posts'] );
 		$link_title = (bool) $instance['link_title'];
 
 		?>
