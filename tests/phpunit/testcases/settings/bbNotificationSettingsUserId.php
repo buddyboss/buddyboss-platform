@@ -96,6 +96,65 @@ class BB_Tests_Settings_BbNotificationSettingsUserId extends BP_UnitTestCase {
 		}
 
 		$this->assertFalse( (bool) preg_match( '/checked=/', $input[0] ), 'The member turned mention emails off, so the box must be unticked even though the admin has them on.' );
-		$this->assertStringContainsString( '@' . bb_members_get_user_mentionname( $this->member ), $html, 'The label names the member being edited.' );
+
+		// bb_register_notification_preferences() keeps its result in a per-process static, so the
+		// label inside $html can predate this test's members when the whole suite runs. Read the
+		// label from the registration filter instead; the last bb_new_mention entry is the one the
+		// bp_init run above registered for this request.
+		$label = $this->get_registered_mentions_label();
+
+		$this->assertNotNull( $label, 'The bb_new_mention preference should be registered.' );
+		$this->assertStringContainsString( '@' . bb_members_get_user_mentionname( $this->member ), $label, 'The label names the member being edited.' );
+	}
+
+	public function test_admin_saving_another_members_screen_writes_that_member() {
+		bp_update_user_meta( $this->admin, 'enable_notification', 'yes' );
+		bp_update_user_meta( $this->member, 'enable_notification', 'yes' );
+
+		self::set_current_user( $this->admin );
+		$this->go_to_notification_settings( $this->member );
+
+		$previous_method = isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : null;
+
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$_POST['submit']           = 'Save Changes';
+		$_POST['notifications']    = array( 'enable_notification' => 'no' );
+		$_REQUEST['_wpnonce']      = wp_create_nonce( 'bp_settings_notifications' );
+
+		try {
+			bp_settings_action_notifications();
+		} finally {
+			unset( $_POST['submit'], $_POST['notifications'], $_REQUEST['_wpnonce'] );
+
+			if ( null === $previous_method ) {
+				unset( $_SERVER['REQUEST_METHOD'] );
+			} else {
+				$_SERVER['REQUEST_METHOD'] = $previous_method;
+			}
+		}
+
+		$this->assertSame( 'no', bp_get_user_meta( $this->member, 'enable_notification', true ), 'Save on the member\'s screen stores the submitted value for that member.' );
+		$this->assertSame( 'yes', bp_get_user_meta( $this->admin, 'enable_notification', true ), 'The admin\'s own preference is left alone.' );
+	}
+
+	/**
+	 * Label of the bb_new_mention preference as currently registered, bypassing the static cache
+	 * in bb_register_notification_preferences().
+	 *
+	 * @return string|null
+	 */
+	protected function get_registered_mentions_label() {
+		$preferences = apply_filters( 'bb_register_notification_preferences', array() );
+		$label       = null;
+
+		if ( ! empty( $preferences['mentions']['fields'] ) ) {
+			foreach ( $preferences['mentions']['fields'] as $field ) {
+				if ( isset( $field['key'], $field['label'] ) && 'bb_new_mention' === $field['key'] ) {
+					$label = $field['label'];
+				}
+			}
+		}
+
+		return $label;
 	}
 }
