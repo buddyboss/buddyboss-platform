@@ -347,7 +347,7 @@ class BP_Activity_Activity {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, post_title, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $q is the return of $wpdb->prepare() in either branch above (activity table name from buddypress()->activity, every value bound as %d/%s).
 			return false;
 		}
 
@@ -821,7 +821,7 @@ class BP_Activity_Activity {
 				$cache_group = 'bp_activity_with_last_activity';
 			}
 
-			$activities = $wpdb->get_results( $activity_sql );
+			$activities = $wpdb->get_results( $activity_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_activity_get_user_join_filter / bp_activity_get_where_conditions / bp_activity_get_join_sql; as built in get(): table names from buddypress()->activity / $wpdb->users, scope/filter clauses from get_scope_query_sql()/get_filter_sql() (ids via wp_parse_id_list(), strings via prepare %s in get_in_operator_sql()), search LIKE %s-prepared via bp_esc_like(), exclude/in ids via wp_parse_id_list(), privacy/status %s lists prepared, excluded types esc_sql()'d, meta/date query from WP_Meta_Query/BP_Date_Query, sort ASC/DESC only, LIMIT %d-prepared.
 
 			// Integer casting for legacy activity query.
 			foreach ( (array) $activities as $i => $ac ) {
@@ -866,7 +866,7 @@ class BP_Activity_Activity {
 
 			$cached = bp_core_get_incremented_cache( $activity_ids_sql, $cache_group );
 			if ( false === $cached ) {
-				$activity_ids = $wpdb->get_col( $activity_ids_sql );
+				$activity_ids = $wpdb->get_col( $activity_ids_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_activity_paged_activities_sql / bp_activity_get_where_conditions / bp_activity_get_join_sql; as built in get(): table names from buddypress()->activity / $wpdb->users, scope/filter clauses from get_scope_query_sql()/get_filter_sql() (ids via wp_parse_id_list(), strings via prepare %s in get_in_operator_sql()), search LIKE %s-prepared via bp_esc_like(), exclude/in ids via wp_parse_id_list(), privacy/status %s lists prepared, excluded types esc_sql()'d, meta/date query from WP_Meta_Query/BP_Date_Query, ORDER BY column whitelisted (FIELD() ids via wp_parse_id_list(), pinned id %d-prepared), sort ASC/DESC only, LIMIT %d-prepared.
 				bp_core_set_incremented_cache( $activity_ids_sql, $cache_group, $activity_ids );
 			} else {
 				$activity_ids = $cached;
@@ -929,7 +929,7 @@ class BP_Activity_Activity {
 			$total_activities_sql = apply_filters( 'bp_activity_total_activities_sql', "SELECT count(DISTINCT a.id) FROM {$bp->activity->table_name} a {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached               = bp_core_get_incremented_cache( $total_activities_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_activities = $wpdb->get_var( $total_activities_sql );
+				$total_activities = $wpdb->get_var( $total_activities_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filter bp_activity_total_activities_sql (plus the where/join filters above); as built here: literal COUNT select, activity table name from buddypress()->activity and the same $join_sql/$where_sql as the ids query above (see the reason there).
 				bp_core_set_incremented_cache( $total_activities_sql, $cache_group, $total_activities );
 			} else {
 				$total_activities = $cached;
@@ -1794,9 +1794,9 @@ class BP_Activity_Activity {
 				 * @param int    $right       Right-most node boundary.
 				 * @param string $spam_sql    SQL Statement portion to differentiate between ham or spam.
 				 */
-				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( $sql, $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql );
+				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( $sql, $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- legacy query template documented via bp_activity_comments_get_join_sql / bp_activity_comments_get_where_conditions; as built here: table names from buddypress() / $wpdb->users, literal spam/xprofile fragments, item_id/mptt bounds bound as %d by this prepare().
 
-				$descendants = $wpdb->get_results( $sql );
+				$descendants = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filter bp_activity_comments_user_join_filter over the $wpdb->prepare() result above.
 
 				// The legacy SELECT joins the raw xprofile name; resolve it for the current viewer.
 				$descendants = self::append_user_fullnames( $descendants );
@@ -1817,15 +1817,15 @@ class BP_Activity_Activity {
 						if ( ! empty( $spam_comment_ids ) ) {
 							$spam_ids_list = implode( ',', array_map( 'intval', $spam_comment_ids ) );
 							// Include direct replies OR orphaned comments (replies to spam).
-							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = {$activity_id} AND (a.secondary_item_id = {$activity_id} OR a.secondary_item_id IN ({$spam_ids_list}))";
+							$sql['where'] = "WHERE a.type = 'activity_comment' " . $spam_sql . $wpdb->prepare( ' AND a.item_id = %d AND (a.secondary_item_id = %d', $activity_id, $activity_id ) . " OR a.secondary_item_id IN ({$spam_ids_list}))";
 						} else {
-							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = {$activity_id}";
+							$sql['where'] = "WHERE a.type = 'activity_comment' " . $spam_sql . $wpdb->prepare( ' AND a.secondary_item_id = %d', $activity_id );
 						}
 					} else {
-						$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+						$sql['where'] = "WHERE a.type = 'activity_comment' " . $spam_sql . $wpdb->prepare( ' AND a.secondary_item_id = %d', $activity_id );
 					}
 				} else {
-					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
+					$sql['where'] = "WHERE a.type = 'activity_comment' " . $spam_sql . $wpdb->prepare( ' AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d', $top_level_parent_id, $left, $right );
 				}
 				$sql['misc'] = 'ORDER BY a.date_recorded ASC';
 
@@ -1899,7 +1899,7 @@ class BP_Activity_Activity {
 								a.id {$comparison_op} %d
 								OR (
 									a.id {$comparison_eq_op} %d
-									AND a.date_recorded {$comparison_op} '%s'
+									AND a.date_recorded {$comparison_op} %s
 								)
 							) ",
 							$args['last_comment_id'],
@@ -1918,7 +1918,7 @@ class BP_Activity_Activity {
 					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
 						$sql['limit'] = '';
 					} else {
-						$sql['limit'] = 'limit ' . $limit;
+						$sql['limit'] = $wpdb->prepare( 'limit %d', $limit );
 					}
 
 					/**
@@ -1933,7 +1933,7 @@ class BP_Activity_Activity {
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']} {$sql['limit']}";
 
-				$descendant_ids = $wpdb->get_col( $sql );
+				$descendant_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bp_activity_comments_get_join_sql / bp_activity_comments_get_where_conditions / bp_activity_comments_get_misc_sql / bb_activity_comments_get_limit_conditions; as built here: activity table name from buddypress()->activity, literal spam fragment, activity/parent ids and mptt bounds %d-prepared, spam ids intval()'d, cursor id/date prepared (%d/%s, operators from a two-value ternary), LIMIT %d-prepared.
 				$descendants    = self::get_activity_data( $descendant_ids );
 				$descendants    = self::append_user_fullnames( $descendants );
 			}
@@ -2606,7 +2606,7 @@ class BP_Activity_Activity {
 		$cache_group = 'bp_activity_comment_count_' . $comment_id;
 		$cached      = wp_cache_get( $cache_group, 'bp_activity_comments' );
 		if ( false === $cached ) {
-			$counts          = $wpdb->get_row( $total_comment_sql, ARRAY_A );
+			$counts          = $wpdb->get_row( $total_comment_sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented filters bb_activity_comments_count_get_where_conditions / bb_activity_comments_count_get_join_sql; as built here: activity table name from $bp->activity, id/item_id/mptt values from the BP_Activity_Activity object (int-cast by populate()/get()), spam ids intval()'d, literal type/spam fragments.
 			$all_child_count = isset( $counts['all_child_count'] ) ? intval( $counts['all_child_count'] ) : 0;
 			$top_level_count = isset( $counts['top_level_count'] ) ? intval( $counts['top_level_count'] ) : 0;
 
