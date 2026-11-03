@@ -776,17 +776,8 @@ module.exports = function (grunt) {
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'copy:bp_rest_reactions', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
-	// Build task: creates the release zip from BUILD_DIR. Builds without the
-	// buddyboss.com release pipeline (the WordPress.org edition) only zip it:
-	// no git, no commit, no push to the `production` branch.
-	var bbBuildDirInit = 'exec:init_build_dir_clean',
-		bbBuildPublish = [];
-	// @bbwt-com-start mothership-hub
-	// buddyboss.com: initialise git in BUILD_DIR and commit the build to `production`.
-	bbBuildDirInit = 'exec:init_build_dir_git';
-	bbBuildPublish = ['exec:commit_build_to_mothership_release'];
-	// @bbwt-com-end mothership-hub
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', bbBuildDirInit, 'exec:empty_build_dir', 'copy:files', 'clean:composer'].concat( bbBuildPublish, ['compress', 'clean:all'] ));
+	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
 
 	// Build-test task: identical to `build` except it never touches the
 	// production branch — no git init, no fetch, no checkout, no commit,
