@@ -25,6 +25,10 @@ export default function ActivationRequiredCTA() {
 
 	const ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || window.ajaxurl;
 
+	// Ask the server which state the addon is in. A failed probe shows an error with a
+	// reload-to-retry instead of guessing `not-installed`: a guessed Install Now would
+	// post to an install action that builds without the in-dashboard installer do not
+	// register.
 	useEffect( function () {
 		const controller = new AbortController();
 		abortRef.current = controller;
@@ -52,12 +56,12 @@ export default function ActivationRequiredCTA() {
 						setDownloadUrl( res.data.download_url );
 					}
 				} else {
-					setPluginState( 'not-installed' );
+					setPluginState( 'error' );
 				}
 			} )
 			.catch( function ( e ) {
 				if ( 'AbortError' !== e.name ) {
-					setPluginState( 'not-installed' );
+					setPluginState( 'error' );
 				}
 			} );
 
@@ -182,7 +186,10 @@ export default function ActivationRequiredCTA() {
 					{ __( 'Add-on Required', 'buddyboss' ) }
 				</h2>
 				<p className="bb-tools-activation-cta__description">
-					{ __( 'Download the BuddyBoss Tools addon from your BuddyBoss account, then upload and activate it from Plugins to use this feature.', 'buddyboss' ) }
+					{ __(
+						'Download the BuddyBoss Tools addon from your BuddyBoss account, then upload and activate it from Plugins to use this feature.',
+						'buddyboss'
+					) }
 				</p>
 				<Button
 					variant="primary"
@@ -191,6 +198,30 @@ export default function ActivationRequiredCTA() {
 					rel="noopener noreferrer"
 				>
 					{ __( 'Go to My Account', 'buddyboss' ) }
+				</Button>
+			</div>
+		);
+	}
+
+	if ( 'error' === pluginState ) {
+		return (
+			<div className="bb-tools-activation-cta">
+				<div className="bb-tools-activation-cta__icon">
+					<span className="bb-icons-rl bb-icons-rl-info"></span>
+				</div>
+				<h2 className="bb-tools-activation-cta__title">
+					{ __( 'Add-on Status Unavailable', 'buddyboss' ) }
+				</h2>
+				<p className="bb-tools-activation-cta__description">
+					{ __( 'We could not check the BuddyBoss Tools addon. Please try again.', 'buddyboss' ) }
+				</p>
+				<Button
+					variant="primary"
+					onClick={ function () {
+						window.location.reload();
+					} }
+				>
+					{ __( 'Try Again', 'buddyboss' ) }
 				</Button>
 			</div>
 		);
