@@ -1333,6 +1333,23 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 		return false;
 	}
 
+	/**
+	 * Filters whether to skip recording last activity for this user.
+	 *
+	 * The bp_current_member_switched() check above only covers the cookie based member
+	 * switching used on the web. Integrations that implement their own impersonation,
+	 * such as the BuddyBoss App's JWT "View As", can return true here so an admin's
+	 * requests are not recorded as activity for the member they are viewing as.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $skip    Whether to skip updating last activity. Default false.
+	 * @param int  $user_id ID of the user whose activity would be recorded.
+	 */
+	if ( true === apply_filters( 'bb_pre_update_user_last_activity', false, $user_id ) ) {
+		return false;
+	}
+
 	// Fall back on current time.
 	if ( empty( $time ) ) {
 		$time = bp_core_current_time();
