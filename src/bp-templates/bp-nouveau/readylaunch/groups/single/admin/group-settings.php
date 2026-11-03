@@ -221,6 +221,16 @@ if ( bp_is_group_create() ) : ?>
 				<select id="bp-groups-type" name="group-types[]" autocomplete="off">
 					<option value="" <?php selected( '', '' ); ?>><?php esc_html_e( 'Select Group Type', 'buddyboss' ); ?></option>
 					<?php
+					// `wp_kses_post()` strips `<option>`/`<select>` as they're not part of the post-content
+					// allowed-tags list, so a dedicated allowlist is used instead to keep these options intact.
+					$group_type_option_allowed_html = array(
+						'option' => array(
+							'for'      => true,
+							'value'    => true,
+							'selected' => true,
+						),
+					);
+
 					foreach ( $group_types as $group_type ) :
 
 						$group_option = sprintf(
@@ -249,19 +259,19 @@ if ( bp_is_group_create() ) : ?>
 
 									if ( ! empty( $include_group_type ) ) {
 										if ( in_array( $group_type->name, $include_group_type, true ) ) {
-											echo wp_kses_post( $group_option );
+											echo wp_kses( $group_option, $group_type_option_allowed_html );
 										}
 									} else {
-										echo wp_kses_post( $group_option );
+										echo wp_kses( $group_option, $group_type_option_allowed_html );
 									}
 								} else {
-									echo wp_kses_post( $group_option );
+									echo wp_kses( $group_option, $group_type_option_allowed_html );
 								}
 							} else {
-								echo wp_kses_post( $group_option );
+								echo wp_kses( $group_option, $group_type_option_allowed_html );
 							}
 						} else {
-							echo wp_kses_post( $group_option );
+							echo wp_kses( $group_option, $group_type_option_allowed_html );
 						}
 					endforeach;
 					?>
