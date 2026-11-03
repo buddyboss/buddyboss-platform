@@ -187,6 +187,7 @@ function bp_admin_repair_friend_count() {
 		return;
 	}
 
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing total connections count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -248,6 +249,7 @@ function bp_admin_repair_group_count() {
 		return;
 	}
 
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing total groups count for each member &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -294,6 +296,7 @@ function bp_admin_repair_group_count() {
 function bp_admin_repair_blog_records() {
 
 	// Description of this tool, displayed to the user.
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddyboss' );
 
 	// Default to failure text.
@@ -325,6 +328,7 @@ function bp_admin_repair_blog_records() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_repair_count_members() {
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing total members count &hellip; %s', 'buddyboss' );
 	delete_transient( 'bp_active_member_count' );
 	bp_core_get_active_member_count();
@@ -343,6 +347,7 @@ function bp_admin_repair_count_members() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_repair_last_activity() {
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing member "last activity" data &hellip; %s', 'buddyboss' );
 	bp_last_activity_migrate();
 
@@ -405,6 +410,7 @@ function repair_default_profiles_fields() {
 	// Clear profile completion data
 	bp_core_xprofile_clear_all_user_progress_cache();
 
+	/* translators: %s: the result of the action performed by the repair tool. */
 	$statement = __( 'Repairing default profile set and fields &hellip; %s', 'buddyboss' );
 
 	return array(
@@ -483,6 +489,7 @@ function resync_xprofile_wordpress_fields() {
 			$offset++;
 		}
 
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -490,6 +497,7 @@ function resync_xprofile_wordpress_fields() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
@@ -534,6 +542,7 @@ function resync_wordpress_xprofile_fields() {
 			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -541,6 +550,7 @@ function resync_wordpress_xprofile_fields() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
@@ -579,6 +589,7 @@ function xprofile_update_display_names() {
 			);
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -586,6 +597,7 @@ function xprofile_update_display_names() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Updating display name to selected format in profile settings &hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
@@ -968,6 +980,7 @@ function bp_admin_assign_member_type() {
 			}
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -976,6 +989,7 @@ function bp_admin_assign_member_type() {
 		);
 	} else {
 		// Description of this tool, displayed to the user.
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss' );
 		$result    = __( 'Complete!', 'buddyboss' );
 		// All done!
@@ -1011,6 +1025,7 @@ function bp_admin_repair_nickname_value() {
 			}
 			$offset++;
 		}
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -1019,6 +1034,7 @@ function bp_admin_repair_nickname_value() {
 		);
 	} else {
 		// Description of this tool, displayed to the user.
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Repair Nickname&hellip; %s', 'buddyboss' );
 		$result    = __( 'Complete!', 'buddyboss' );
 
@@ -1259,6 +1275,7 @@ function bp_admin_update_activity_favourite() {
 				++$offset;
 			}
 
+			/* translators: %s: number of activity favorites updated. */
 			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 			return array(
@@ -1268,6 +1285,7 @@ function bp_admin_update_activity_favourite() {
 			);
 		} else {
 			bp_update_option( 'bp_activity_reactions', true );
+			/* translators: %s: the result of the action performed by the repair tool. */
 			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 			return array(
@@ -1276,6 +1294,7 @@ function bp_admin_update_activity_favourite() {
 			);
 		}
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
 
 		return array(
@@ -1479,6 +1498,7 @@ function bb_sync_profile_completion_widget() {
 			$offset++;
 		}
 
+		/* translators: %s: number of members updated. */
 		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
@@ -1486,6 +1506,7 @@ function bb_sync_profile_completion_widget() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: the result of the action performed by the repair tool. */
 		$statement = __( 'Profile Completion widget, profile photo status re-sync %s', 'buddyboss' );
 		return array(
 			'status'  => 1,

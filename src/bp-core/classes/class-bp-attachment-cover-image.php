@@ -38,7 +38,9 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 				// Specific errors for cover photos.
 				'upload_error_strings'  => array(
+					/* translators: %s: maximum allowed file size. */
 					11 => sprintf( __( 'That image is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( $max_upload_file_size ) ),
+					/* translators: %s: comma-separated list of allowed file types. */
 					12 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_cover_image_types( $allowed_types ) ),
 				),
 			)

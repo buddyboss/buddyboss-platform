@@ -1712,6 +1712,7 @@ function bp_activity_generate_action_string( $activity ) {
 		}
 		$actions->{$activity->component}->{$activity->type} = array(
 			'key'             => $activity->type,
+			/* translators: %s: post type name. */
 			'value'           => sprintf( __( 'New %s published', 'buddyboss' ), str_replace( 'new_blog_', '', $activity->type ) ),
 			'format_callback' => 'bb_blogs_format_activity_action_disabled_post_type_feed',
 			'label'           => ucwords( str_replace( 'new_blog_', '', $activity->type ) ),
@@ -1763,6 +1764,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 		$last_user_link = array_pop( $mentioned_users_link );
 
 		$action = sprintf(
+			/* translators: 1: author user link, 2: mentioned users links, 3: " and " separator, 4: last mentioned user link. */
 			__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s', 'buddyboss' ),
 			bp_core_get_userlink( $activity->user_id ),
 			$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
@@ -1770,6 +1772,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 			$last_user_link
 		);
 	} else {
+		/* translators: %s: author user link. */
 		$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 	}
 
@@ -1794,6 +1797,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_comment( $action, $activity ) {
+	/* translators: %s: author user link. */
 	$action = sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 
 	/**
@@ -1894,12 +1898,14 @@ function bp_activity_format_activity_action_custom_post_type_comment( $action, $
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms, $user_link, $activity->primary_link, $blog_link );
 		} else {
+			/* translators: 1: author user link, 2: item URL, 3: site link. */
 			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, $activity->primary_link, $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action, $user_link, $activity->primary_link );
 		} else {
+			/* translators: 1: author user link, 2: item URL. */
 			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>', 'buddyboss' ), $user_link, $activity->primary_link );
 		}
 	}
@@ -7989,6 +7995,7 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 	if ( is_multisite() ) {
 		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
+		/* translators: %s: author user link. */
 		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
 	}
 

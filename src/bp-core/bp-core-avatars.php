@@ -1071,6 +1071,7 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	// In case of an error, stop the process and display a feedback to the user.
 	if ( ! empty( $bp->avatar_admin->original['error'] ) ) {
+		/* translators: %s: the upload error message. */
 		bp_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddyboss' ), $bp->avatar_admin->original['error'] ), 'error' );
 		return false;
 	}
@@ -1088,6 +1089,7 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	$bp->avatar_admin->image   = new stdClass();
 
 	if ( is_wp_error( $bp->avatar_admin->resized ) ) {
+		/* translators: %s: the upload error message. */
 		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss' ), $bp->avatar_admin->resized->get_error_message() ), 'error' );
 		return false;
 	}
@@ -1104,12 +1106,14 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	// Check for WP_Error on what should be an image.
 	if ( is_wp_error( $bp->avatar_admin->image->dir ) ) {
+		/* translators: %s: the upload error message. */
 		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
 		return false;
 	}
 
 	// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 	if ( $avatar_attachment->is_too_small( $bp->avatar_admin->image->file ) ) {
+		/* translators: 1: recommended width in pixels, 2: recommended height in pixels. */
 		bp_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
 	}
 

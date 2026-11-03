@@ -247,6 +247,7 @@ class BP_Groups_Invite_Template {
 				'item_id' => $user_id,
 				'type'    => 'full',
 				'alt'     => sprintf(
+					// translators: %s: the invited member's full name.
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -260,6 +261,7 @@ class BP_Groups_Invite_Template {
 				'item_id' => $user_id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					// translators: %s: the invited member's full name.
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -272,6 +274,7 @@ class BP_Groups_Invite_Template {
 			array(
 				'item_id' => $user_id,
 				'type'    => 'thumb',
+				/* translators: %s: member full name. */
 				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->invite->user->fullname ),
 				'width'   => 30,
 				'height'  => 30,
@@ -280,10 +283,12 @@ class BP_Groups_Invite_Template {
 		$this->invite->user->email        = $this->invite->user->user_email;
 		$this->invite->user->user_url     = bp_core_get_user_domain( $user_id, $this->invite->user->user_nicename, $this->invite->user->user_login );
 		$this->invite->user->user_link    = "<a href='{$this->invite->user->user_url}'>{$this->invite->user->fullname}</a>";
+		/* translators: %s: human-readable time since last activity. */
 		$this->invite->user->last_active  = bp_core_get_last_activity( $this->invite->user->last_activity, __( 'active %s', 'buddyboss' ) );
 
 		if ( bp_is_active( 'groups' ) ) {
 			$total_groups                     = BP_Groups_Member::total_group_count( $user_id );
+			/* translators: %d: number of groups. */
 			$this->invite->user->total_groups = sprintf( _n( '%d group', '%d groups', $total_groups, 'buddyboss' ), $total_groups );
 		}
 

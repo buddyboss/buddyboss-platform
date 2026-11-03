@@ -341,8 +341,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss' ),
-				__( '', 'buddyboss' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''
@@ -544,8 +544,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss' ),
-				__( '', 'buddyboss' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''

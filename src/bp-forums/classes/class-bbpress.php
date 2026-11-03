@@ -557,6 +557,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_closed_post_status',
 					array(
 						'label'             => __( 'Closed', 'buddyboss' ),
+						/* translators: %s: number of closed topics/replies. */
 						'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss' ),
 						'public'            => true,
 						'show_in_admin_all' => true,
@@ -572,6 +573,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_spam_post_status',
 					array(
 						'label'                     => __( 'Spam', 'buddyboss' ),
+						/* translators: %s: number of spam topics/replies. */
 						'label_count'               => _n_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'buddyboss' ),
 						'protected'                 => true,
 						'exclude_from_search'       => true,
@@ -589,6 +591,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_orphan_post_status',
 					array(
 						'label'                     => __( 'Orphan', 'buddyboss' ),
+						/* translators: %s: number of orphan replies. */
 						'label_count'               => _n_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'buddyboss' ),
 						'protected'                 => true,
 						'exclude_from_search'       => true,
@@ -606,6 +609,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 					'bbp_register_hidden_post_status',
 					array(
 						'label'                     => __( 'Hidden', 'buddyboss' ),
+						/* translators: %s: number of hidden topics/replies. */
 						'label_count'               => _n_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'buddyboss' ),
 						'private'                   => true,
 						'exclude_from_search'       => true,

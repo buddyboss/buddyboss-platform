@@ -65,10 +65,12 @@ function bp_groups_group_admin_menu() {
 		 * the 'show_in_admin_bar' argument of your edit screen to true
 		 */
 		if ( $menu->show_in_admin_bar ) {
+			/* translators: %s: group manage tab name. */
 			$title = sprintf( __( 'Edit Group %s', 'buddyboss' ), $menu->name );
 
 			// Title is specific for delete.
 			if ( 'delete-group' == $menu->slug ) {
+				/* translators: %s: group manage tab name. */
 				$title = sprintf( __( '%s Group', 'buddyboss' ), $menu->name );
 
 				if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
