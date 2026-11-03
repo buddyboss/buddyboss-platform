@@ -123,7 +123,8 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 	 * Every registered notification key is saved as 'yes' or 'no'. An add-on that
 	 * renders a real non-boolean field in the notification settings form can list
 	 * its key here. That value is then saved as plain text, 255 characters at most.
-	 * Keys from the `bp_settings_core_notification_setting` filter are ignored.
+	 * Keys from the `bp_settings_core_notification_setting` filter are ignored. The
+	 * field must be rendered as an <input> named notifications[key] to be picked up.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
