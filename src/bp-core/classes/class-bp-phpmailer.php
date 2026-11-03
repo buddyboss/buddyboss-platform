@@ -68,7 +68,7 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		/*
 		 * Resets.
 		 */
-		$phpmailer->MessageDate = date( 'D, j M Y H:i:s O' );
+		$phpmailer->MessageDate = gmdate( 'D, j M Y H:i:s O' );
 		$phpmailer->clearAllRecipients();
 		$phpmailer->clearAttachments();
 		$phpmailer->clearCustomHeaders();

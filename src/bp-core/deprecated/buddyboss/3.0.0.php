@@ -6,6 +6,9 @@
  * @deprecated BuddyBoss 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Search Settings 2.0 deprecated functions and hook compatibility.
 // Legacy settings API functions were removed from bp-search-settings.php.
