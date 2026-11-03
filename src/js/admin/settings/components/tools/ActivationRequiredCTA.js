@@ -20,6 +20,7 @@ export default function ActivationRequiredCTA() {
 	const [ isWorking, setIsWorking ] = useState( false );
 	const [ error, setError ] = useState( null );
 	const [ licenseUrl, setLicenseUrl ] = useState( '' );
+	const [ downloadUrl, setDownloadUrl ] = useState( '' );
 	const abortRef = useRef( null );
 
 	const ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || window.ajaxurl;
@@ -46,6 +47,9 @@ export default function ActivationRequiredCTA() {
 					setPluginState( res.data.state );
 					if ( res.data.license_url ) {
 						setLicenseUrl( res.data.license_url );
+					}
+					if ( res.data.download_url ) {
+						setDownloadUrl( res.data.download_url );
 					}
 				} else {
 					setPluginState( 'not-installed' );
@@ -160,6 +164,33 @@ export default function ActivationRequiredCTA() {
 					href={ licenseUrl || '#' }
 				>
 					{ __( 'Activate License', 'buddyboss' ) }
+				</Button>
+			</div>
+		);
+	}
+
+	if ( 'download' === pluginState ) {
+		// The server has no in-dashboard installer for the addon (the wordpress.org
+		// edition): send the admin to their BuddyBoss account to download it, then
+		// they upload it from Plugins → Add New.
+		return (
+			<div className="bb-tools-activation-cta">
+				<div className="bb-tools-activation-cta__icon">
+					<span className="bb-icons-rl bb-icons-rl-info"></span>
+				</div>
+				<h2 className="bb-tools-activation-cta__title">
+					{ __( 'Add-on Required', 'buddyboss' ) }
+				</h2>
+				<p className="bb-tools-activation-cta__description">
+					{ __( 'Download the BuddyBoss Tools addon from your BuddyBoss account, then upload and activate it from Plugins to use this feature.', 'buddyboss' ) }
+				</p>
+				<Button
+					variant="primary"
+					href={ downloadUrl || '#' }
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'Go to My Account', 'buddyboss' ) }
 				</Button>
 			</div>
 		);
