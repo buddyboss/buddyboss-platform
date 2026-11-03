@@ -1191,7 +1191,7 @@ function bb_admin_xprofile_add_repeater_set() {
 							<?php if ( $can_change_visibility ) : ?>
 								<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
 									<fieldset>
-										<legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
+										<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss' ); ?></legend>
 										<?php bp_profile_visibility_radio_buttons(); ?>
 									</fieldset>
 									<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>

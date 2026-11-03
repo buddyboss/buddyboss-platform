@@ -2080,7 +2080,7 @@ function bp_group_list_mods( $group = false ) {
 
 	<?php else : ?>
 
-		<span class="activity"><?php _e( 'No Moderators', 'buddyboss' ); ?></span>
+		<span class="activity"><?php esc_html_e( 'No Moderators', 'buddyboss' ); ?></span>
 
 		<?php
 	endif;
@@ -3245,7 +3245,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 					<?php echo bp_core_get_userlink( $admin->user_id ); ?>
 
 					<span class="small">
-						<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( $admin->user_id ); ?>"><?php _e( 'Demote to member', 'buddyboss' ); ?></a>
+						<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( $admin->user_id ); ?>"><?php esc_html_e( 'Demote to member', 'buddyboss' ); ?></a>
 					</span>
 				</h5>
 			</li>
@@ -3297,7 +3297,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 	<?php else : ?>
 
 		<div id="message" class="info">
-			<p><?php _e( 'This group has no organizers', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'This group has no organizers', 'buddyboss' ); ?></p>
 		</div>
 
 		<?php
@@ -3358,8 +3358,8 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 					<?php echo bp_core_get_userlink( $mod->user_id ); ?>
 
 					<span class="small">
-						<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => $mod->user_id ) ); ?>" class="button confirm mod-promote-to-admin"><?php _e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
-						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( $mod->user_id ); ?>"><?php _e( 'Demote to member', 'buddyboss' ); ?></a>
+						<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => $mod->user_id ) ); ?>" class="button confirm mod-promote-to-admin"><?php esc_html_e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
+						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( $mod->user_id ); ?>"><?php esc_html_e( 'Demote to member', 'buddyboss' ); ?></a>
 					</span>
 				</h5>
 			</li>
@@ -3406,7 +3406,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 	<?php } else { ?>
 
 		<div id="message" class="info">
-			<p><?php _e( 'This group has no moderators', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'This group has no moderators', 'buddyboss' ); ?></p>
 		</div>
 
 		<?php
@@ -5619,7 +5619,7 @@ function bp_groups_members_template_part() {
 	<h2 class="bp-screen-reader-text">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Members', 'buddyboss' );
+		esc_html_e( 'Members', 'buddyboss' );
 	?>
 	</h2>
 
@@ -5639,16 +5639,16 @@ function bp_groups_members_template_part() {
 function bp_groups_members_filter() {
 	?>
 	<li id="group_members-order-select" class="last filter">
-		<label for="group_members-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
+		<label for="group_members-order-by"><?php esc_html_e( 'Order By:', 'buddyboss' ); ?></label>
 		<select id="group_members-order-by">
-			<option value="last_joined"><?php _e( 'Newest', 'buddyboss' ); ?></option>
-			<option value="first_joined"><?php _e( 'Oldest', 'buddyboss' ); ?></option>
+			<option value="last_joined"><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
+			<option value="first_joined"><?php esc_html_e( 'Oldest', 'buddyboss' ); ?></option>
 
 			<?php if ( bp_is_active( 'activity' ) ) : ?>
-				<option value="group_activity"><?php _e( 'Group Activity', 'buddyboss' ); ?></option>
+				<option value="group_activity"><?php esc_html_e( 'Group Activity', 'buddyboss' ); ?></option>
 			<?php endif; ?>
 
-			<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
+			<option value="alphabetical"><?php esc_html_e( 'Alphabetical', 'buddyboss' ); ?></option>
 
 			<?php
 
@@ -6459,27 +6459,27 @@ function bp_groups_header_tabs() {
 	<?php
 	if ( bp_is_action_variable( 'recently-joined', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php _e( 'Recently Joined', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php esc_html_e( 'Recently Joined', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'most-popular', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular' ); ?>"><?php _e( 'Most Popular', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular' ); ?>"><?php esc_html_e( 'Most Popular', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'admin-of', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of' ); ?>"><?php _e( 'Organizer Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of' ); ?>"><?php esc_html_e( 'Organizer Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'mod-of', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of' ); ?>"><?php _e( 'Moderator Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of' ); ?>"><?php esc_html_e( 'Moderator Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'alphabetically' ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically' ); ?>"><?php esc_html_e( 'Alphabetically', 'buddyboss' ); ?></a></li>
 
 	<?php
 	do_action( 'groups_header_tabs' );
@@ -6498,22 +6498,22 @@ function bp_groups_filter_title() {
 	switch ( $current_filter ) {
 		case 'recently-active':
 		default:
-			_e( 'Recently Active', 'buddyboss' );
+			esc_html_e( 'Recently Active', 'buddyboss' );
 			break;
 		case 'recently-joined':
-			_e( 'Recently Joined', 'buddyboss' );
+			esc_html_e( 'Recently Joined', 'buddyboss' );
 			break;
 		case 'most-popular':
-			_e( 'Most Popular', 'buddyboss' );
+			esc_html_e( 'Most Popular', 'buddyboss' );
 			break;
 		case 'admin-of':
-			_e( 'Administrator Of', 'buddyboss' );
+			esc_html_e( 'Administrator Of', 'buddyboss' );
 			break;
 		case 'mod-of':
-			_e( 'Moderator Of', 'buddyboss' );
+			esc_html_e( 'Moderator Of', 'buddyboss' );
 			break;
 		case 'alphabetically':
-			_e( 'Alphabetically', 'buddyboss' );
+			esc_html_e( 'Alphabetically', 'buddyboss' );
 			break;
 	}
 	do_action( 'bp_groups_filter_title' );
@@ -7387,7 +7387,7 @@ function bp_groups_activity_feed() {
 	}
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bp_current_group_name(); ?> | <?php _e( 'Group Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bp_group_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bp_current_group_name(); ?> | <?php esc_html_e( 'Group Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bp_group_activity_feed_link(); ?>" />
 
 	<?php
 }

@@ -1020,8 +1020,8 @@ function bp_notifications_sort_order_form() {
 		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss' ); ?></label>
 
 		<select id="notifications-sort-order-list" name="sort_order" onchange="this.form.submit();">
-			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddyboss' ); ?></option>
-			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php _e( 'Oldest First', 'buddyboss' ); ?></option>
+			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php esc_html_e( 'Newest First', 'buddyboss' ); ?></option>
+			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php esc_html_e( 'Oldest First', 'buddyboss' ); ?></option>
 		</select>
 
 		<noscript>
@@ -1042,18 +1042,18 @@ function bp_notifications_bulk_management_dropdown() {
 	<label class="bp-screen-reader-text" for="notification-select">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Select Bulk Action', 'buddyboss' );
+		esc_html_e( 'Select Bulk Action', 'buddyboss' );
 	?>
 	</label>
 	<select name="notification_bulk_action" id="notification-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+		<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></option>
 
 		<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-			<option value="read"><?php _e( 'Mark read', 'buddyboss' ); ?></option>
+			<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss' ); ?></option>
 		<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-			<option value="unread"><?php _e( 'Mark unread', 'buddyboss' ); ?></option>
+			<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss' ); ?></option>
 		<?php endif; ?>
-		<option value="delete"><?php _e( 'Delete', 'buddyboss' ); ?></option>
+		<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></option>
 	</select>
 	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
@@ -1112,8 +1112,8 @@ function bb_on_screen_notification_template() {
 			</ul>
 			<div class="bb-remove-all-notification">
 				<a class="action-close primary">
-					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss' ); ?></span>
-					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss' ); ?></span>
+					<span class="bb-for-desktop"><?php esc_html_e( 'Clear', 'buddyboss' ); ?></span>
+					<span class="bb-for-mobile"><?php esc_html_e( 'Clear All', 'buddyboss' ); ?></span>
 					<span class="dashicons dashicons-no" aria-hidden="true"></span>
 				</a>
 			</div>

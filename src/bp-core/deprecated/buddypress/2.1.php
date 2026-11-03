@@ -394,7 +394,7 @@ function bp_groups_adminbar_admin_menu() {
 
 			<?php endif; ?>
 
-			<li><a class="confirm" href="<?php echo wp_nonce_url( bp_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php _e( 'Delete Group', 'buddyboss' ); ?></a></li>
+			<li><a class="confirm" href="<?php echo wp_nonce_url( bp_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php esc_html_e( 'Delete Group', 'buddyboss' ); ?></a></li>
 
 			<?php do_action( 'bp_groups_adminbar_admin_menu' ); ?>
 

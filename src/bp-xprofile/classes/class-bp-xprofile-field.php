@@ -1597,20 +1597,20 @@ class BP_XProfile_Field {
 				<table class="widefat bp-postbox-table" style="margin-top: 6px;">
 					<tbody>
 					<tr>
-						<th><?php _e( 'Alternate Title', 'buddyboss' ); ?></th>
+						<th><?php esc_html_e( 'Alternate Title', 'buddyboss' ); ?></th>
 						<td>
 							<input type="text" name="title_secondary" id="title_secondary"
 								   value="<?php echo esc_attr( $this->get_alternate_name() ); ?>" autocomplete="off"
 								   style="width: 100%;">
-							<p class="description"><?php _e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss' ); ?></p>
+							<p class="description"><?php esc_html_e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th><?php _e( 'Instructions', 'buddyboss' ); ?></th>
+						<th><?php esc_html_e( 'Instructions', 'buddyboss' ); ?></th>
 						<td>
 							<textarea name="description" id="description" rows="6"
 									  cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
-							<p class="description"><?php _e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
 					</tbody>
@@ -1648,9 +1648,9 @@ class BP_XProfile_Field {
 		?>
 
 		<div id="member-types-div" class="postbox">
-			<h2><?php _e( 'Profile Types', 'buddyboss' ); ?></h2>
+			<h2><?php esc_html_e( 'Profile Types', 'buddyboss' ); ?></h2>
 			<div class="inside">
-				<p class="description"><?php _e( 'This field should be available to:', 'buddyboss' ); ?></p>
+				<p class="description"><?php esc_html_e( 'This field should be available to:', 'buddyboss' ); ?></p>
 
 				<ul>
 					<?php foreach ( $member_types as $member_type ) : ?>
@@ -1670,7 +1670,7 @@ class BP_XProfile_Field {
 							<input name="member-types[]" id="member-type-none" class="member-type-selector"
 								   type="checkbox"
 								   value="null" <?php checked( in_array( 'null', $field_member_types ) ); ?>/>
-							<?php _e( 'Users with no profile type', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Users with no profile type', 'buddyboss' ); ?>
 						</label>
 					</li>
 
@@ -1679,7 +1679,7 @@ class BP_XProfile_Field {
 				<?php
 				if ( ! empty( $field_member_types ) ) :
 					?>
-					 hide<?php endif; ?>"><?php _e( 'Unavailable to all members.', 'buddyboss' ); ?></p>
+					 hide<?php endif; ?>"><?php esc_html_e( 'Unavailable to all members.', 'buddyboss' ); ?></p>
 			</div>
 
 			<input type="hidden" name="has-member-types" value="1"/>
