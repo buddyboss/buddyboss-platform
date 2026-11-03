@@ -248,6 +248,55 @@ add_action( 'xprofile_data_after_save', 'xprofile_clear_profiledata_object_cache
 add_action( 'xprofile_data_after_delete', 'xprofile_clear_profiledata_object_cache' );
 
 /**
+ * Get, or advance, the per-request version of a member's resolved display name.
+ *
+ * The resolvers xprofile_filter_get_user_display_name() and bp_xprofile_get_member_display_name()
+ * keep the name they resolve in a per-request static cache, and every request resolves the
+ * logged-in member's name at `bp_setup_globals` - before a profile form or REST update is
+ * processed. Both include this version in their cache key, so advancing it when the member's
+ * profile data changes makes the rest of the request resolve the new name instead of the one
+ * cached before the save.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $user_id ID of the member whose name is resolved.
+ * @param bool $advance Optional. True to invalidate the member's cached name. Default false.
+ *
+ * @return int The member's current display-name cache version.
+ */
+function bb_xprofile_member_display_name_cache_version( $user_id, $advance = false ) {
+	static $versions = array();
+
+	$user_id = (int) $user_id;
+
+	if ( $advance ) {
+		$versions[ $user_id ] = ( isset( $versions[ $user_id ] ) ? $versions[ $user_id ] : 0 ) + 1;
+	}
+
+	return isset( $versions[ $user_id ] ) ? $versions[ $user_id ] : 0;
+}
+
+/**
+ * Invalidate a member's resolved display name when their profile data is saved or deleted.
+ *
+ * Any field, not only the name fields: `bp_xprofile_get_member_display_name` is filterable, and a
+ * site may build the name from other profile fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_XProfile_ProfileData $data_obj Field data object that was saved or deleted.
+ */
+function bb_xprofile_clear_member_display_name_cache( $data_obj ) {
+	if ( empty( $data_obj->user_id ) ) {
+		return;
+	}
+
+	bb_xprofile_member_display_name_cache_version( $data_obj->user_id, true );
+}
+add_action( 'xprofile_data_after_save', 'bb_xprofile_clear_member_display_name_cache' );
+add_action( 'xprofile_data_after_delete', 'bb_xprofile_clear_member_display_name_cache' );
+
+/**
  * Clear fullname_field_id cache when bp-xprofile-fullname-field-name is updated.
  *
  * Note for future developers: Dating from an early version of BuddyPress where
