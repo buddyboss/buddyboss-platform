@@ -491,6 +491,7 @@ function bp_get_activity_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $activities_template->total_activity_count );
 
+	/* translators: 1: number, 2: number, 3: number. */
 	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
@@ -1101,6 +1102,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	$dn_default = bb_activity_get_item_user_displayname( $current_activity_item );
 
 	// Prepend some descriptive text to alt.
+	/* translators: %s: member display name. */
 	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
 
 	$defaults = array(
@@ -1263,6 +1265,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = __( 'Group logo', 'buddyboss' );
 
 				if ( ! empty( $name ) ) {
+					/* translators: %s: group name. */
 					$alt = sprintf( __( 'Group logo of %s', 'buddyboss' ), $name );
 				}
 			}
@@ -1274,6 +1277,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = home_url();
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: site name. */
 				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
 			}
 
@@ -1284,6 +1288,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = bp_core_get_userlink( $item_id, false, true );
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: member display name. */
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 

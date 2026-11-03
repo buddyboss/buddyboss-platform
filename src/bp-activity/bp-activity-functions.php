@@ -1847,12 +1847,14 @@ function bp_activity_format_activity_action_custom_post_type_post( $action, $act
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action_ms, $user_link, $post_url, $blog_link );
 		} else {
+			/* translators: 1: member profile link, 2: post URL, 3: site link. */
 			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, esc_url( $post_url ), $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action, $user_link, $post_url );
 		} else {
+			/* translators: 1: member profile link, 2: post URL. */
 			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>', 'buddyboss' ), $user_link, esc_url( $post_url ) );
 		}
 	}
@@ -7064,6 +7066,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 	$activity      = new BP_Activity_Activity( $activity_id );
 	if ( ! empty( $activity->id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity->id ) ) {
 		$closer_id     = bb_get_activity_comments_closer_id( $activity->id );
+		/* translators: %s: member display name. */
 		$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 		if ( $closer_id === bp_loggedin_user_id() ) {
 			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
@@ -7076,6 +7079,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 			} elseif ( bp_user_can( $closer_id, 'administrator' ) && 'public' === $group->status ) {
 				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
 			} else {
+				/* translators: %s: member display name. */
 				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 			}
 		} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
@@ -7993,6 +7997,7 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
+		/* translators: 1: member profile link, 2: site link. */
 		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
 		/* translators: %s: author user link. */

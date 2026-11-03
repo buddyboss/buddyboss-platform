@@ -205,6 +205,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
+				/* translators: %d: maximum upload size in MB. */
 				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss' ), bp_media_file_upload_max_size() ),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),

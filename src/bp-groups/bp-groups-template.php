@@ -942,6 +942,7 @@ function bp_get_group_avatar( $args = '' ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => false,
+			/* translators: %s: group name. */
 			'alt'    => sprintf( __( 'Group logo of %s', 'buddyboss' ), $groups_template->group->name ),
 		)
 	);
@@ -1857,6 +1858,7 @@ function bp_get_group_creator_avatar( $group = false, $args = array() ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => false,
+			/* translators: %s: member display name. */
 			'alt'    => sprintf( __( 'Group organizer profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $group->creator_id ) ),
 		),
 		'group_creator_avatar'
@@ -2018,6 +2020,7 @@ function bp_group_list_parents( $group = false ) {
 							array(
 								'item_id' => $parent_group->id,
 								'object'  => 'group',
+								/* translators: %s: group name. */
 								'alt'     => sprintf( __( 'Group photo of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) ),
 							)
 						)
@@ -2062,6 +2065,7 @@ function bp_group_list_mods( $group = false ) {
 								'item_id' => $mod->user_id,
 								'email'   => $mod->user_email,
 								'alt'     => sprintf(
+									/* translators: %s: member display name. */
 									__(
 										'Profile photo of %s',
 										'buddyboss'
@@ -2320,6 +2324,7 @@ function bp_get_groups_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $groups_template->pag_num - 1 ) > $groups_template->total_group_count ) ? $groups_template->total_group_count : $start_num + ( $groups_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $groups_template->total_group_count );
 
+	/* translators: 1: number, 2: number, 3: number. */
 	$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
@@ -2419,6 +2424,7 @@ function bp_get_group_member_count() {
 		$count = 0;
 	}
 
+	/* translators: %s: number. */
 	$count_string = sprintf( _n( '%s member', '%s members', $count, 'buddyboss' ), bp_core_number_format( $count ) );
 
 	/**
@@ -3230,6 +3236,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 						'width'   => 30,
 						'height'  => 30,
 						'alt'     => sprintf(
+							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
 								'buddyboss'
@@ -3260,6 +3267,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 						'item_id' => $admin->user_id,
 						'type'    => 'thumb',
 						'alt'     => sprintf(
+							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
 								'buddyboss'
@@ -3272,7 +3280,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 
 				<h5><?php echo bp_core_get_userlink( $admin->user_id ); ?></h5>
 				<span class="activity">
-					<?php echo bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss' ) ); ?>
+					<?php /* translators: %s: human-readable time since joining. */ echo bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss' ) ); ?>
 				</span>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
@@ -3344,6 +3352,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 						'width'   => 30,
 						'height'  => 30,
 						'alt'     => sprintf(
+							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
 								'buddyboss'
@@ -3374,6 +3383,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 						'item_id' => $mod->user_id,
 						'type'    => 'thumb',
 						'alt'     => sprintf(
+							/* translators: %s: member display name. */
 							__(
 								'Profile photo of %s',
 								'buddyboss'
@@ -3386,7 +3396,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 
 				<h5><?php echo bp_core_get_userlink( $mod->user_id ); ?></h5>
 
-				<span class="activity"><?php echo bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss' ) ); ?></span>
+				<span class="activity"><?php /* translators: %s: human-readable time since joining. */ echo bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss' ) ); ?></span>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
 
@@ -5460,6 +5470,7 @@ function bp_get_group_member_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $members_template->pag_num - 1 ) > $members_template->total_member_count ) ? $members_template->total_member_count : $start_num + ( $members_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $members_template->total_member_count );
 
+	/* translators: 1: number, 2: number, 3: number. */
 	$message = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
@@ -6540,6 +6551,7 @@ function bp_get_current_group_directory_type_message() {
 
 	// Unknown type (e.g. a mistyped shortcode attribute): avoid a broken sentence and PHP warnings.
 	if ( ! empty( $type_object ) && ! empty( $type_object->labels['name'] ) ) {
+		/* translators: %s: group type label (wrapped in <strong>). */
 		$message = sprintf( __( 'Viewing all groups that are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 	}
 
@@ -6871,6 +6883,7 @@ function bp_group_request_user_avatar_thumb() {
 				'item_id' => $requests_template->request->user_id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					/* translators: %s: member display name. */
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -7001,6 +7014,7 @@ function bp_group_request_time_since_requested() {
 	 *
 	 * @param string $value Formatted time since membership was requested.
 	 */
+	/* translators: %s: date or time. */
 	echo apply_filters( 'bp_group_request_time_since_requested', sprintf( __( 'requested %s', 'buddyboss' ), bp_core_time_since( $requests_template->request->date_modified ) ) );
 }
 
@@ -7073,6 +7087,7 @@ function bp_get_group_requests_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $requests_template->pag_num - 1 ) > $requests_template->total_request_count ) ? $requests_template->total_request_count : $start_num + ( $requests_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $requests_template->total_request_count );
 
+		/* translators: 1: number, 2: number, 3: number. */
 		$message = sprintf( _n( 'Viewing 1 request', 'Viewing %1$s - %2$s of %3$s requests', $requests_template->total_request_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
@@ -7366,6 +7381,7 @@ function bp_get_group_invite_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $invites_template->pag_num - 1 ) > $invites_template->total_invite_count ) ? $invites_template->total_invite_count : $start_num + ( $invites_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $invites_template->total_invite_count );
 
+	/* translators: 1: number, 2: number, 3: number. */
 	$message = sprintf( _n( 'Viewing 1 invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/** This filter is documented in bp-groups/bp-groups-template.php */
@@ -7672,6 +7688,7 @@ function bp_groups_get_profile_stats( $args = '' ) {
 			}
 
 			// If groups exist, show some formatted output.
+			/* translators: %s: number of groups (wrapped in <strong>). */
 			$r['output'] = $r['before'] . sprintf( _n( '%s group', '%s groups', $r['groups'], 'buddyboss' ), '<strong>' . $r['groups'] . '</strong>' ) . $r['after'];
 		}
 	}

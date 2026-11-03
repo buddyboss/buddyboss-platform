@@ -142,6 +142,7 @@ function bp_get_directory_title( $component = '' ) {
 
 		// If none is found, concatenate.
 	} elseif ( isset( buddypress()->{$component}->name ) ) {
+		/* translators: %s: component name. */
 		$title = sprintf( __( '%s Directory', 'buddyboss' ), buddypress()->{$component}->name );
 	}
 
@@ -199,6 +200,7 @@ function bp_comment_author_avatar() {
 					array(
 						'item_id' => $comment->user_id,
 						'type'    => 'thumb',
+						/* translators: %s: member display name. */
 						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $comment->user_id ) ),
 					)
 				)
@@ -225,6 +227,7 @@ function bp_post_author_avatar() {
 					array(
 						'item_id' => $post->post_author,
 						'type'    => 'thumb',
+						/* translators: %s: member display name. */
 						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $post->post_author ) ),
 					)
 				)

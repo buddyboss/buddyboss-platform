@@ -623,6 +623,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$start_html          = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 										  . "<header class='results-group-header clearfix'>"
 										  . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
+										  /* translators: %s: number. */
 										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . '</a>'
 										  . '</header>'
 										  . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
@@ -639,6 +640,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
+											   /* translators: %s: number. */
 											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
 											 '</a>';
 								$end_html .= '</footer>';

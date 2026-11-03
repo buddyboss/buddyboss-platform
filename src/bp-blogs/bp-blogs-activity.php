@@ -179,6 +179,7 @@ function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
 	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
 	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
 
+	/* translators: 1: member profile link, 2: site link. */
 	$action = sprintf( __( '%1$s created the site %2$s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 
 	// Legacy filter - requires the BP_Blogs_Blog object.
@@ -285,6 +286,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
+		/* translators: 1: member profile link, 2: site link. */
 		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
 		/* translators: %1$s: member link. */
@@ -412,6 +414,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
+		/* translators: 1: member profile link, 2: post link, 3: site link. */
 		$action = sprintf( __( '%1$s commented on the post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
 		/* translators: 1: member link, 2: post link. */
@@ -1722,6 +1725,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
+			/* translators: 1: member profile link, 2: post type label, 3: site link. */
 			$action = sprintf( __( '%1$s posted a new %2$s, on the site %3$s', 'buddyboss' ), $user_link, $singular_label_name, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
 			/* translators: 1: member link, 2: singular post type label. */
@@ -1730,6 +1734,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 	} else {
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
+			/* translators: 1: member profile link, 2: site link. */
 			$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
 			/* translators: %1$s: member link. */

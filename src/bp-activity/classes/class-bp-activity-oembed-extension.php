@@ -310,6 +310,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 				<span class="dashicons dashicons-admin-comments"></span>
 				<?php
 				printf(
+					/* translators: %s: number. */
 					_n(
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comment</span>',

@@ -103,6 +103,7 @@ function bp_ps_show_directory( $attr, $content ) {
 
 	if ( bp_get_theme_package_id() == 'nouveau' ) {
 		printf(
+			/* translators: %s: plugin name and version (wrapped in <strong>). */
 			'<p class="bp-ps-error">' . __( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss' ) . '</p>',
 			'<strong>BP Profile Search ' . bp_get_version() . '</strong>'
 		);

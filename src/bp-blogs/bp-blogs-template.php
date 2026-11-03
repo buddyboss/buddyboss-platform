@@ -247,6 +247,7 @@ function bp_get_blogs_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $blogs_template->pag_num - 1 ) > $blogs_template->total_blog_count ) ? $blogs_template->total_blog_count : $start_num + ( $blogs_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $blogs_template->total_blog_count );
 
+	/* translators: 1: number, 2: number, 3: number. */
 	$message = sprintf( _n( 'Viewing 1 site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
@@ -656,6 +657,7 @@ function bp_get_blog_last_active( $args = array() ) {
 
 	// Backwards compatibility for anyone forcing a 'true' active_format.
 	if ( true === $r['active_format'] ) {
+		/* translators: %s: human-readable time since the site was last active. */
 		$r['active_format'] = __( 'active %s', 'buddyboss' );
 	}
 
@@ -724,6 +726,7 @@ function bp_get_blog_latest_post( $args = array() ) {
 			 *
 			 * @param string $retval Title of the latest post.
 			 */
+			/* translators: %s: latest post link. */
 			$retval = sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval, $blogs_template->blog->latest_post->ID ) . '</a>' );
 		} else {
 
@@ -1621,6 +1624,7 @@ function bp_blogs_get_profile_stats( $args = '' ) {
 			}
 
 			// If blogs exist, show some formatted output.
+			/* translators: %s: number of sites (wrapped in <strong>). */
 			$r['output'] = $r['before'] . sprintf( _n( '%s site', '%s sites', $r['blogs'], 'buddyboss' ), '<strong>' . $r['blogs'] . '</strong>' ) . $r['after'];
 		}
 	}

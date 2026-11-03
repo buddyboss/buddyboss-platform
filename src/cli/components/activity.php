@@ -826,6 +826,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( ! $r['action'] ) {
+						/* translators: 1: member profile link, 2: site link. */
 						$r['action'] = sprintf( __( '%1$s created the site %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . get_home_url( $r['item-id'] ) . '">' . esc_attr( get_blog_option( $r['item-id'], 'blogname' ) ) . '</a>' );
 					}
 
@@ -925,6 +926,7 @@ class Activity extends BuddypressCommand {
 				$group_permalink = bp_get_group_permalink( $group );
 
 				if ( empty( $r['action'] ) ) {
+					/* translators: 1: member profile link, 2: group link. */
 					$r['action'] = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $group_permalink . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 
@@ -951,6 +953,7 @@ class Activity extends BuddypressCommand {
 				}
 
 				if ( empty( $r['action'] ) ) {
+					/* translators: 1: member profile link, 2: group link. */
 					$r['action'] = sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 

@@ -370,9 +370,11 @@ function groups_at_message_notification( $content, $poster_user_id, $group_id, $
 			// Set up and send the message
 			$ud      = bp_core_get_core_userdata( $receiver_user_id );
 			$to      = $ud->user_email;
+			/* translators: 1: member display name, 2: group name. */
 			$subject = bp_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss' ), $poster_name, $group->name ) ) );
 
 			$message = sprintf(
+				/* translators: 1: member display name, 2: group name, 3: message excerpt, 4: link to the activity, 5: link to the notification settings. */
 				__(
 					'%1$s mentioned you in the group "%2$s":
 

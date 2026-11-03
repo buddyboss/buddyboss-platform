@@ -67,6 +67,7 @@ function bp_get_member_latest_update( $args = '' ) {
 	 */
 	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( wp_strip_all_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
 
+	/* translators: %s: latest update excerpt. */
 	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
 
 	// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
@@ -625,6 +626,7 @@ function bbp_get_single_topic_description( $args = '' ) {
 	$time_since  = bbp_get_topic_freshness_link( $topic_id );
 
 	// Singular/Plural
+	/* translators: %s: number. */
 	$voice_count = sprintf( _n( '%s member', '%s members', $vc_int, 'buddyboss' ), $voice_count );
 
 	// Topic has replies
@@ -726,6 +728,7 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 	// Has replies
 	if ( ! empty( $reply_count ) ) {
+		/* translators: %s: number. */
 		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'buddyboss' ), $reply_count );
 	}
 
@@ -742,6 +745,7 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 		// Forum has no last active data
 	} else {
+		/* translators: %s: number. */
 		$topic_text = sprintf( _n( '%s discussion', '%s discussions', $tc_int, 'buddyboss' ), $topic_count );
 	}
 

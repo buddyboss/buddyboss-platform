@@ -2590,6 +2590,7 @@ function bbp_get_breadcrumb( $args = array() ) {
 		}
 
 		// Implode the results of the tag data.
+		/* translators: %s: tag name(s). */
 		$pre_current_text = sprintf( __( 'Discussion Tag: %s', 'buddyboss' ), implode( ' ', $tag_data ) );
 
 		// Edit Topic Tag.

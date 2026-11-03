@@ -2386,6 +2386,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			if ( empty( $group_name ) ) {
 				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
 				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
+					/* translators: %s: group name. */
 					$group_text = sprintf( __( 'Sent from %s', 'buddyboss' ), $group_name );
 				}
 			} else {
@@ -2973,6 +2974,7 @@ function bp_nouveau_ajax_hide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: group name. */
 			__( 'Messages for "%s" have been archived.', 'buddyboss' ),
 			$group_name
 		);
@@ -2989,6 +2991,7 @@ function bp_nouveau_ajax_hide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: recipient name(s). */
 			__( 'The conversation with %s has been archived.', 'buddyboss' ),
 			implode( ', ', $recipients )
 		);
@@ -3533,6 +3536,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: group name. */
 			__( 'Messages for "%s" have been unarchived.', 'buddyboss' ),
 			$group_name
 		);
@@ -3549,6 +3553,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		}
 
 		$toast_message = sprintf(
+			/* translators: %s: recipient name(s). */
 			__( 'The conversation with %s has been unarchived.', 'buddyboss' ),
 			implode( ', ', $recipients )
 		);

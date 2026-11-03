@@ -1179,6 +1179,7 @@ function bb_admin_xprofile_add_repeater_set() {
 									<span id="<?php echo esc_attr( $field->id ); ?>-2">
 									<?php
 									printf(
+										/* translators: %s: visibility level label (wrapped in <span>). */
 										__( 'This field can be seen by: %s', 'buddyboss' ),
 										'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 									);

@@ -1381,6 +1381,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 						$output = $right_now_text;
 					} else {
 						$output = sprintf(
+							/* translators: %s: number of seconds. */
 							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
 							$count
 						);

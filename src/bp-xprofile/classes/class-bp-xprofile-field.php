@@ -871,6 +871,7 @@ class BP_XProfile_Field {
 				$member_type_labels[] = __( 'Users with no profile type', 'buddyboss' );
 			}
 
+			/* translators: %s: profile type names. */
 			$label = sprintf( __( '(Profile types: %s)', 'buddyboss' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
 		} else {
 			$label = '<span class="member-type-none-notice">' . __( '(Unavailable to all members)', 'buddyboss' ) . '</span>';
@@ -1236,6 +1237,7 @@ class BP_XProfile_Field {
 
 		// Check that field is of valid type.
 		if ( ! in_array( $_POST['fieldtype'], array_keys( bp_xprofile_get_field_types() ), true ) ) {
+			/* translators: %s: field type (wrapped in <code>). */
 			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_attr( $_POST['fieldtype'] ) . '</code>' );
 
 			return false;
@@ -1264,6 +1266,7 @@ class BP_XProfile_Field {
 
 			// Check for missing or malformed options.
 			if ( 0 === $field_count ) {
+				/* translators: %s: field type name. */
 				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 
 				return false;
@@ -1271,6 +1274,7 @@ class BP_XProfile_Field {
 
 			// If only one option exists, it cannot be an empty string.
 			if ( ( 1 === $field_count ) && ( '' === $field_options[0] ) ) {
+				/* translators: %s: field type name. */
 				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 
 				return false;

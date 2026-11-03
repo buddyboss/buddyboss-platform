@@ -16,7 +16,7 @@ get_header(); ?>
 	<?php do_action( 'bbp_template_notices' ); ?>
 
 	<div id="topic-tag" class="bbp-topic-tag">
-		<h1 class="entry-title"><?php printf( __( 'Discussion Tag: %s', 'buddyboss' ), '<span>' . bbp_get_topic_tag_name() . '</span>' ); ?></h1>
+		<h1 class="entry-title"><?php /* translators: %s: tag name (wrapped in <span>). */ printf( __( 'Discussion Tag: %s', 'buddyboss' ), '<span>' . bbp_get_topic_tag_name() . '</span>' ); ?></h1>
 
 		<div class="entry-content">
 

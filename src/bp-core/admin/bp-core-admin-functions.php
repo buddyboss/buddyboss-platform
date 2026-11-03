@@ -253,6 +253,7 @@ function bp_core_activation_notice() {
 
 	// Add notice if no rewrite rules are enabled.
 	if ( empty( $wp_rewrite->permalink_structure ) ) {
+		/* translators: %s: URL of the Pages settings screen. */
 		bp_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss' ), admin_url( 'options-permalink.php' ) ), 'error' );
 	}
 
@@ -358,6 +359,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s',
 				sprintf(
+					/* translators: %s: comma-separated component names (wrapped in <strong>). */
 					__(
 						'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
 						'buddyboss'
@@ -372,6 +374,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
 				sprintf(
+					/* translators: %s: comma-separated component names (wrapped in <strong>). */
 					__(
 						'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
 						'buddyboss'
@@ -422,6 +425,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s',
 				sprintf(
+					/* translators: %s: comma-separated page names (wrapped in <strong>). */
 					__(
 						'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
 						'buddyboss'
@@ -433,6 +437,7 @@ function bp_core_activation_notice() {
 			$notice = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
 				sprintf(
+					/* translators: %s: comma-separated page names (wrapped in <strong>). */
 					__(
 						'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
 						'buddyboss'
@@ -531,6 +536,7 @@ function bp_print_legacy_theme_deprecated_notice() {
 	$theme_link = '<a href="https://www.buddyboss.com/pricing/" target="_blank" rel="noopener">BuddyBoss Theme</a>';
 	// @bbwt-com-end pricing-links
 	$message = sprintf(
+		/* translators: 1: link to the BuddyPress Legacy template documentation, 2: link to the BuddyBoss Theme. */
 		__( 'You are using an old theme and/or BuddyPress addon that relies on the older %1$s templates, and some things may not work properly. Consider switching to our %2$s and/or removing the BuddyPress addon that is using old methods.', 'buddyboss' ),
 		'<a href="https://www.buddyboss.com/resources/docs/development/theme-development/theme-compatibility/" target="_blank" rel="noopener">BuddyPress Legacy</a>',
 		$theme_link
@@ -1357,6 +1363,7 @@ function bp_admin_email_maybe_add_translation_notice() {
 
 	bp_core_add_admin_notice(
 		sprintf(
+			/* translators: %s: URL of the BuddyBoss Tools screen. */
 			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss' ),
 			esc_url(
 				add_query_arg(
@@ -1387,6 +1394,7 @@ function bp_admin_email_add_codex_notice() {
 
 	bp_core_add_admin_notice(
 		sprintf(
+			/* translators: %s: URL of the email tokens documentation. */
 			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
@@ -1942,6 +1950,7 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 	if ( 'options-discussion.php' === $pagenow && function_exists( 'bb_get_profile_avatar_type' ) && 'BuddyBoss' === bb_get_profile_avatar_type() ) {
 
 		$avatar_notice = sprintf(
+			/* translators: %s: URL of the Discussion settings screen. */
 			__( 'Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to "WordPress" in the <a href="%s">Profile</a> settings.', 'buddyboss' ),
 			add_query_arg(
 				array(

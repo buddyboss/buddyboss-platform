@@ -251,15 +251,25 @@ function bp_ps_escaped_filters_data47() {
  */
 function bp_ps_full_label( $f ) {
 	$labels = array(
+		/* translators: 1: field label. */
 		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss' ),
+		/* translators: 1: field label. */
 		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss' ),
 	);
 
