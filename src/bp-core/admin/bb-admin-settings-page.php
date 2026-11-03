@@ -245,6 +245,7 @@ function bb_admin_settings_page() {
 	// will render. The React Header reads this via bbAdminData.ipnRootId to
 	// locate and relocate the live IPN node.
 	$ipn_root_id = '';
+	// @bbwt-com-start mothership-hub
 	if (
 		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
 		class_exists( '\BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View' )
@@ -259,6 +260,7 @@ function bb_admin_settings_page() {
 			unset( $e );
 		}
 	}
+	// @bbwt-com-end mothership-hub
 
 	$localize_data = array(
 		'apiUrl'                    => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
@@ -330,9 +332,12 @@ function bb_admin_settings_page() {
 	//
 	// Help tab logic (HelpScreen.js): no active license -> show the "Pro"
 	// promo; active license without Scale -> show the "Scale" promo.
+	$bb_has_active_license = false;
+	$bb_has_plus_tier      = false;
+	// @bbwt-com-start mothership-hub
 	$bb_license_connector  = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 	$bb_has_active_license = $bb_license_connector->getLicenseActivationStatus();
-	$bb_has_plus_tier      = false;
+	// @bbwt-com-end mothership-hub
 	if ( $bb_has_active_license && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		$bb_has_plus_tier = null !== \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-gamification' );
 
@@ -605,12 +610,14 @@ function bb_admin_settings_page() {
 		?>
 		<hr class="wp-header-end">
 		<?php
+		// @bbwt-com-start mothership-hub
 		// Free-install "Register your email" banner — rendered outside the
 		// React mount so React never manages (or clobbers) it. Renders
 		// nothing on properly licensed sites (see bb_admin_register_banner_mode()).
 		if ( function_exists( 'bb_admin_render_register_banner' ) ) {
 			bb_admin_render_register_banner();
 		}
+		// @bbwt-com-end mothership-hub
 		?>
 		<div id="bb-admin-settings"></div>
 		<?php

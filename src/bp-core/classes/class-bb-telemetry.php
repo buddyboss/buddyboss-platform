@@ -753,6 +753,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * would otherwise report as unlicensed.
 			 */
 			$platform_key = '';
+			// @bbwt-com-start mothership-hub
 			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
 				try {
 					/*
@@ -770,6 +771,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					$platform_key = '';
 				}
 			}
+			// @bbwt-com-end mothership-hub
 
 			if ( '' === $platform_key && ! empty( $platform_id ) ) {
 				$platform_key = (string) get_option( $platform_id . '_license_key', '' );

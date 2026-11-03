@@ -532,6 +532,7 @@ function bp_version_updater() {
 			bb_update_to_2_10_1();
 		}
 
+		// @bbwt-com-start mothership-hub
 		if (
 			$raw_db_version < 23541 &&
 			class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
@@ -539,6 +540,7 @@ function bp_version_updater() {
 		) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::migrate_legacy_license();
 		}
+		// @bbwt-com-end mothership-hub
 
 		if ( $raw_db_version < 23551 ) {
 			bb_update_to_2_16_1();
