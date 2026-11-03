@@ -311,7 +311,7 @@ function bp_nouveau_activity_state() {
 		do_action( 'bp_activity_state_after_reactions', $activity_id );
 		?>
 
-		<?php if ( bp_activity_can_comment() ) :
+		<?php if ( bb_activity_can_view_comments() ) :
 			?>
 			<?php
 			$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';

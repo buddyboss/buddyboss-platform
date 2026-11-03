@@ -297,7 +297,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 		<?php
 	}
 
-	if ( bp_activity_can_comment() ) {
+	if ( bb_activity_can_view_comments() ) {
 		$class = 'activity-comments';
 		if ( 'blogs' === bp_get_activity_object_name() ) {
 			$class .= get_option( 'thread_comments' ) ? ' threaded-comments threaded-level-' . get_option( 'thread_comments_depth' ) : '';
@@ -315,7 +315,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 				echo '<ul data-activity_id="' . esc_attr( $activity_id ) . '" data-parent_comment_id="' . esc_attr( $activity_id ) . '"></ul>';
 			}
 
-			if ( is_user_logged_in() ) {
+			if ( is_user_logged_in() && bp_activity_can_comment() ) {
 				bp_nouveau_activity_comment_form();
 			}
 			?>
