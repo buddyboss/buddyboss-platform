@@ -644,7 +644,7 @@ function bp_admin_tools_feedback( $message, $class = false ) {
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
 	$lambda  = function () use ( $message ) {
-		echo $message;
+		echo wp_kses_post( $message );
 	};
 
 	add_action( bp_core_do_network_admin() ? 'network_admin_notices' : 'admin_notices', $lambda );
@@ -696,7 +696,7 @@ function bp_core_admin_available_tools_intro() {
 		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ); ?></h2>
 		<p>
 			<?php esc_html_e( 'BuddyBoss keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?>
-			<?php /* translators: %s: link to the repair tool. */ printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss' ) . '</a>' ); ?>
+			<?php /* translators: %s: link to the repair tool. */ printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss' ), wp_kses_post( '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss' ) . '</a>' ) ); ?>
 		</p>
 	</div>
 	<?php
@@ -935,7 +935,7 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 		return;
 	}
 
-	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
+	echo '<div class="error"><p>' . esc_html__( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
 }
 
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );

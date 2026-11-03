@@ -311,15 +311,15 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 				<?php
 				printf(
 					/* translators: %s: number. */
-					_n(
+					wp_kses_post( _n(
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comment</span>',
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comments</span>',
 						$count,
 						'buddyboss'
-					),
-					bp_core_number_format( $count )
+					) ),
+					esc_html( bp_core_number_format( $count ) )
 				);
 				?>
 			</a>

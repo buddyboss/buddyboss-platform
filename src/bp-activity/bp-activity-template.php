@@ -3810,10 +3810,10 @@ function bp_activity_types_list( $output = 'select', $args = '' ) {
 		// Switch output based on the element.
 		switch ( $output ) {
 			case 'select':
-				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $type ), $selected, esc_html( $description ) );
+				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $type ), $selected, esc_html( $description ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $selected is selected() output.
 				break;
 			case 'checkbox':
-				printf( '<label style="" for="%1$s[]">%2$s<input type="checkbox" id="%1$s[]" name="%1$s[]" value="%3$s" %4$s/></label>', esc_attr( $args['checkbox_name'] ), esc_html( $description ), esc_attr( $args['checkbox_name'] ), esc_attr( $args['checkbox_name'] ), esc_attr( $type ), $checked );
+				printf( '<label style="" for="%1$s[]">%2$s<input type="checkbox" id="%1$s[]" name="%1$s[]" value="%3$s" %4$s/></label>', esc_attr( $args['checkbox_name'] ), esc_html( $description ), esc_attr( $args['checkbox_name'] ), esc_attr( $args['checkbox_name'] ), esc_attr( $type ), $checked ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the last argument is checked() output; the others are escaped.
 				break;
 		}
 

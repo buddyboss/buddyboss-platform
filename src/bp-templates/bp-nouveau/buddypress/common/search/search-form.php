@@ -19,7 +19,7 @@ $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 
 		<label for="<?php bp_nouveau_search_selector_id( 'search' ); ?>" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( '', false ); ?></label>
 
-		<input id="<?php bp_nouveau_search_selector_id( 'search' ); ?>" name="<?php bp_nouveau_search_selector_name(); ?>" type="search"  value="<?php echo $search_term ?>" placeholder="<?php bp_nouveau_search_default_text(); ?>" />
+		<input id="<?php bp_nouveau_search_selector_id( 'search' ); ?>" name="<?php bp_nouveau_search_selector_name(); ?>" type="search"  value="<?php echo esc_attr( $search_term ); ?>" placeholder="<?php bp_nouveau_search_default_text(); ?>" />
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit search-form_submit" name="<?php bp_nouveau_search_selector_name( 'search_submit' ); ?>">
 			<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>

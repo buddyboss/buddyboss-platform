@@ -1452,7 +1452,7 @@ function bbp_redirect_to_field( $redirect_to = '' ) {
 	$redirect_to    = remove_query_arg( 'loggedout', $redirect_to );
 	$redirect_field = '<input type="hidden" id="bbp_redirect_to" name="redirect_to" value="' . esc_url( $redirect_to ) . '" />';
 
-	echo apply_filters( 'bbp_redirect_to_field', $redirect_field, $redirect_to );
+	echo apply_filters( 'bbp_redirect_to_field', $redirect_field, $redirect_to ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hidden-input markup built with esc_attr(); wp_kses_post() strips <input>.
 }
 
 /**
@@ -2111,7 +2111,7 @@ function bbp_get_the_content( $args = array() ) {
 
 	// Output something before the editor
 	if ( ! empty( $r['before'] ) ) {
-		echo $r['before'];
+		echo wp_kses_post( $r['before'] );
 	}
 
 	// Use TinyMCE if available
@@ -2166,7 +2166,7 @@ function bbp_get_the_content( $args = array() ) {
 
 		// Output something after the editor
 		if ( ! empty( $r['after'] ) ) {
-			echo $r['after'];
+			echo wp_kses_post( $r['after'] );
 		}
 
 		// Put the output into a usable variable
@@ -2847,7 +2847,8 @@ function bbp_template_notices() {
 		<div class="bp-feedback error">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
-				<?php echo implode( "</p>\n<p>", $errors ); ?>
+				<?php echo wp_kses_post( implode( "</p>
+<p>", $errors ) ); ?>
 			</p>
 		</div>
 
@@ -2861,7 +2862,8 @@ function bbp_template_notices() {
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
-				<?php echo implode( "</p>\n<p>", $messages ); ?>
+				<?php echo wp_kses_post( implode( "</p>
+<p>", $messages ) ); ?>
 			</p>
 		</div>
 
@@ -3135,7 +3137,7 @@ function bb_forums_edit_link_preview_field( $post_id ) {
 	if ( isset( $link_data['url'] ) && ! empty( $link_data['url'] ) ) {
 		$link_data_string = htmlentities( wp_json_encode( $link_data ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		?>
-		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; ?>"/>
+		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo esc_attr( $link_data_string ); ?>"/>
 		<?php
 	}
 }

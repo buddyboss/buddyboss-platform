@@ -3858,7 +3858,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 	// Display the feed.
 	header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
 	header( 'Status: 200 OK' );
-	echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>'; ?>
+	echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>'; ?>
 
 	<rss version="2.0"
 		xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -3875,7 +3875,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 		<link><?php self_link(); ?></link>
 		<description></description>
-		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ); ?></pubDate>
+		<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ) ); ?></pubDate>
 		<generator>http://bbpress.org/?v=<?php bbp_version(); ?></generator>
 		<language><?php bloginfo_rss( 'language' ); ?></language>
 
@@ -3892,14 +3892,14 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 					<guid><?php bbp_topic_permalink(); ?></guid>
 					<title><![CDATA[<?php bbp_topic_title(); ?>]]></title>
 					<link><?php bbp_topic_permalink(); ?></link>
-					<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_meta( bbp_get_topic_id(), '_bbp_last_active_time', true ) ); ?></pubDate>
+					<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_meta( bbp_get_topic_id(), '_bbp_last_active_time', true ) ) ); ?></pubDate>
 					<dc:creator><?php echo esc_html( (string) get_the_author() ); ?></dc:creator>
 
 					<?php if ( ! post_password_required() ) : ?>
 
 					<description>
 						<![CDATA[
-						<p><?php /* translators: %s: number. */ printf( esc_html__( 'Replies: %s', 'buddyboss' ), bbp_get_topic_reply_count() ); ?></p>
+						<p><?php /* translators: %s: number. */ printf( esc_html__( 'Replies: %s', 'buddyboss' ), esc_html( bbp_get_topic_reply_count() ) ); ?></p>
 						<?php bbp_topic_content(); ?>
 						]]>
 					</description>

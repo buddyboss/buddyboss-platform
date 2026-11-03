@@ -606,7 +606,7 @@ class BB_DRM_Registry {
 					action: 'bb_dismiss_notice_drm',
 					notice: noticeKey,
 					secret: secret,
-					nonce: '<?php echo wp_create_nonce( 'bb_dismiss_notice' ); ?>'
+					nonce: '<?php echo esc_js( wp_create_nonce( 'bb_dismiss_notice' ) ); ?>'
 				}, function(response) {
 					if (response.success) {
 						console.log('DRM notice dismissed for 24 hours');

@@ -295,7 +295,7 @@ class Activity extends BuddypressCommand {
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', $activities['activities'] ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', $activities['activities'] ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $activities['total'] );
 		} else {

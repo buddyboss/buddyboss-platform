@@ -444,7 +444,7 @@ function bp_search_form() {
 		</form>
 	';
 
-	echo apply_filters( 'bp_search_form', $form );
+	echo apply_filters( 'bp_search_form', $form ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search-form template (contains <form>/<input>); wp_kses_post() would strip the form controls.
 }
 
 /**

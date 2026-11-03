@@ -26,7 +26,7 @@ class BB_Deprecated_Forum_Import_Stub {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
-		_deprecated_function( get_class( $this ), 'BuddyBoss 3.1.0', 'BB_Tools_BBP_Converter (install buddyboss-tools - third-party importers calling parent::* on these classes require Tools active)' );
+		_deprecated_function( esc_html( get_class( $this ) ), 'BuddyBoss 3.1.0', 'BB_Tools_BBP_Converter (install buddyboss-tools - third-party importers calling parent::* on these classes require Tools active)' );
 	}
 
 	/**

@@ -5620,7 +5620,7 @@ function bp_activity_directory_page_content() {
 
 	if ( ! empty( $page_ids['activity'] ) ) {
 		$activity_page_content = get_post_field( 'post_content', $page_ids['activity'] );
-		echo apply_filters( 'the_content', $activity_page_content );
+		echo apply_filters( 'the_content', $activity_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 

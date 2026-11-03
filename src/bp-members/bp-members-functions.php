@@ -1371,7 +1371,7 @@ function _bp_get_user_meta_last_activity_warning( $retval, $object_id, $meta_key
 	if ( 'last_activity' === $meta_key ) {
 		// Don't send the warning more than once per pageload.
 		if ( false === $warned ) {
-			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
 			$warned = true;
 		}
 
@@ -1406,7 +1406,7 @@ add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 
  */
 function _bp_update_user_meta_last_activity_warning( $meta_id, $object_id, $meta_key, $meta_value ) {
 	if ( 'last_activity' === $meta_key ) {
-		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
 		bp_update_user_last_activity( $object_id, $meta_value );
 	}
 }
@@ -3836,8 +3836,8 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		}
 		?>
-		<li id="members-<?php echo $type_id; ?>">
-			<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); // @todo no variables in the text domain please ?></a>
+		<li id="members-<?php echo esc_attr( $type_id ); ?>">
+			<a href="<?php echo esc_url( bp_member_type_directory_permalink( $type_name ) ); ?>"><?php printf( '%s <span>%s</span>', esc_html( $member_type_name ), esc_html( $members_count ) ); // @todo no variables in the text domain please ?></a>
 		</li>
 		<?php
 	}
@@ -4756,7 +4756,7 @@ function bp_members_directory_page_content() {
 
 	if ( ! empty( $page_ids['members'] ) ) {
 		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
-		echo apply_filters( 'the_content', $members_page_content );
+		echo apply_filters( 'the_content', $members_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
@@ -4772,7 +4772,7 @@ function bp_activate_page_content() {
 
 	if ( ! empty( $page_ids['activate'] ) ) {
 		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
-		echo apply_filters( 'the_content', $activate_page_content );
+		echo apply_filters( 'the_content', $activate_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
@@ -4788,7 +4788,7 @@ function bp_register_page_content() {
 
 	if ( ! empty( $page_ids['register'] ) ) {
 		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
-		echo apply_filters( 'the_content', $register_page_content );
+		echo apply_filters( 'the_content', $register_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- page content run through the_content (kses on save); wp_kses_post() strips oEmbed <iframe>s and block <svg>s.
 	}
 }
 add_action( 'bp_before_register_page', 'bp_register_page_content' );

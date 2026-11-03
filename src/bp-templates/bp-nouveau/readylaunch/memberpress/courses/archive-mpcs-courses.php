@@ -78,7 +78,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 						?>
 						<a href="<?php echo esc_url( $author_url ); ?>" class="item-avatar bb-rl-author-avatar">
 							<?php
-							echo bp_core_fetch_avatar(
+							echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 								array(
 									'item_id' => $user_id,
 									'html' => true,
@@ -160,7 +160,7 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 			?>
 			<span class="bb-rl-author-avatar">
 				<?php
-				echo bp_core_fetch_avatar(
+				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 					array(
 						'item_id' => $user_id,
 						'html' => true,

@@ -131,7 +131,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 				<div class="more-block more-following"><a href="<?php bp_members_directory_permalink(); ?>#following" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
-			<?php echo $args['after_widget']; ?>
+			<?php echo wp_kses_post( $args['after_widget'] ); ?>
 
 			<?php do_action( 'bp_after_following_widget' ); ?>
 

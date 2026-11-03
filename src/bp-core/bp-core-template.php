@@ -119,7 +119,7 @@ function bp_get_options_title() {
 		$bp->bp_options_title = __( 'Options', 'buddyboss' );
 	}
 
-	echo apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) );
+	echo esc_html( apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) ) );
 }
 
 /**

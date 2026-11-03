@@ -119,7 +119,7 @@ function bp_media_activity_entry() {
 	);
 
 	if ( ! empty( $is_media ) ) {
-		print $is_media;
+		print (int) $is_media;
 	}
 }
 
@@ -658,7 +658,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 		?>
 		<div class="bb-activity-media-wrap forums-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
+		echo esc_attr( 'bb-media-length-' . $media_template->media_count );
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
@@ -930,37 +930,37 @@ function bp_media_import_submenu_page() {
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
 							</p>
 							<label style="display: none;"
-								   id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
+								   id="bp-media-resetting"><strong><?php echo esc_html__( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
 							<table class="form-table">
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
+										<span id="bp-media-import-albums-done"><?php echo (int) $albums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-albums-total"><?php echo (int) $total_albums; ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Media', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+										<span id="bp-media-import-media-done"><?php echo (int) $media_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $total_media; ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Forums', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $forums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $forums_total; ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Discussions', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $topics_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $topics_total; ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Replies', 'buddyboss' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo (int) $replies_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-total"><?php echo (int) $replies_total; ?></span></td>
 								</tr>
 							</table>
 							<p>
@@ -1468,7 +1468,7 @@ function bp_media_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
 		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss' ) . '</a>';
 	}
-	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+	wp_die( wp_kses_post( $message ), esc_html( $title ), array( 'response' => (int) $status ) );
 }
 
 /**

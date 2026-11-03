@@ -602,7 +602,7 @@ class BP_Email_Tokens {
 											<td>
 												<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 													<?php
-													echo apply_filters_ref_array(
+													echo apply_filters_ref_array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- email body: activity content kses-filtered on save and run through the display filter chain; wp_kses_post() would strip embeds.
 														'bp_get_activity_content_body',
 														array(
 															$activity->content,
@@ -2277,7 +2277,7 @@ class BP_Email_Tokens {
 														<?php
 														$poll_id = bp_activity_get_meta( $activity->id, 'bb_poll_id' );
 														if ( ! empty( $poll_id ) && function_exists( 'get_email_poll' ) ) {
-															echo get_email_poll( $activity->id, $poll_id, $tokens );
+															echo get_email_poll( $activity->id, $poll_id, $tokens ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- email poll markup with inline styles built from escaped values.
 														}
 														echo wp_kses_post( $this->get_email_media( $activity->id, $tokens ) );
 														?>

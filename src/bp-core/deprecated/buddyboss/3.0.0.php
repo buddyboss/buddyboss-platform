@@ -1600,13 +1600,13 @@ function bb_deprecated_xprofile_admin_rendering_hooks() {
 	foreach ( $deprecated_hooks as $hook => $description ) {
 		if ( has_action( $hook ) ) {
 			_deprecated_hook(
-				$hook,
+				esc_html( $hook ),
 				'BuddyBoss 3.0.0',
 				'',
 				sprintf(
 					/* translators: %s: hook name */
-					__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss' ),
-					$hook
+					esc_html__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss' ),
+					esc_html( $hook )
 				)
 			);
 		}
@@ -1634,13 +1634,13 @@ function bb_deprecated_profile_admin_tab_hooks() {
 	foreach ( $deprecated_filters as $hook ) {
 		if ( has_filter( $hook ) ) {
 			_deprecated_hook(
-				$hook,
+				esc_html( $hook ),
 				'BuddyBoss 3.0.0',
 				'bb_register_side_panel()',
 				sprintf(
 					/* translators: %s: hook name */
-					__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss' ),
-					$hook
+					esc_html__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss' ),
+					esc_html( $hook )
 				)
 			);
 		}
@@ -3616,7 +3616,7 @@ function bb_deprecated_tools_admin_tabs_hooks_notice() {
 
 	foreach ( $retired as $hook => $replacement ) {
 		if ( has_filter( $hook ) || has_action( $hook ) ) {
-			_deprecated_hook( $hook, 'BuddyBoss 3.1.0', $replacement );
+			_deprecated_hook( esc_html( $hook ), 'BuddyBoss 3.1.0', esc_html( $replacement ) );
 		}
 	}
 }

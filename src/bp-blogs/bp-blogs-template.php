@@ -1419,7 +1419,7 @@ function bp_directory_blogs_search_form() {
 	 *
 	 * @param string $search_form_html HTML markup for blog directory search form.
 	 */
-	echo apply_filters( 'bp_directory_blogs_search_form', $search_form_html );
+	echo apply_filters( 'bp_directory_blogs_search_form', $search_form_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search-form template (contains <form>/<input>); wp_kses_post() would strip the form controls.
 }
 
 /**

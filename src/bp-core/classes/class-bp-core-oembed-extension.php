@@ -514,7 +514,7 @@ abstract class BP_Core_oEmbed_Extension {
 			$server->send_header( 'Content-Type', 'text/xml; charset=' . get_option( 'blog_charset' ) );
 		}
 
-		echo $result;
+		echo $result; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- oEmbed XML/JSON response produced by WP_oEmbed_Controller, not HTML.
 
 		return true;
 	}

@@ -127,7 +127,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												$privacy = ! $bp_is_group && $can_edit ? 'data-privacy="' . esc_attr( bp_get_album_privacy() ) . '"' : '';
 												?>
 													<li class="album-edit">
-														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; ?>>
+														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $privacy is a data-attribute fragment built with esc_attr(). ?>>
 														<?php
 															esc_html_e( 'Edit Album', 'buddyboss' );
 														?>

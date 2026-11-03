@@ -67,8 +67,8 @@ function bp_adminbar_blogs_menu() {
 			$alt      = ( 0 == $counter % 2 ) ? ' class="alt"' : '';
 			$site_url = esc_attr( $blog->siteurl );
 
-			echo '<li' . $alt . '>';
-			echo '<a href="' . $site_url . '">' . esc_html( $blog->name ) . '</a>';
+			echo '<li' . esc_attr( $alt ) . '>';
+			echo '<a href="' . esc_url( $site_url ) . '">' . esc_html( $blog->name ) . '</a>';
 			echo '<ul>';
 			echo '<li class="alt"><a href="' . $site_url . 'wp-admin/">' . esc_html__( 'Dashboard', 'buddyboss' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
 			echo '<li><a href="' . $site_url . 'wp-admin/post-new.php">' . esc_html__( 'New Post', 'buddyboss' ) . '</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $site_url escaped at assignment.
@@ -394,7 +394,7 @@ function bp_groups_adminbar_admin_menu() {
 
 			<?php endif; ?>
 
-			<li><a class="confirm" href="<?php echo wp_nonce_url( bp_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php esc_html_e( 'Delete Group', 'buddyboss' ); ?></a></li>
+			<li><a class="confirm" href="<?php echo esc_url( wp_nonce_url( bp_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ) ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php esc_html_e( 'Delete Group', 'buddyboss' ); ?></a></li>
 
 			<?php do_action( 'bp_groups_adminbar_admin_menu' ); ?>
 

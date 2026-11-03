@@ -104,8 +104,8 @@ function bp_ps_show_directory( $attr, $content ) {
 	if ( bp_get_theme_package_id() == 'nouveau' ) {
 		printf(
 			/* translators: %s: plugin name and version (wrapped in <strong>). */
-			'<p class="bp-ps-error">' . __( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss' ) . '</p>',
-			'<strong>BP Profile Search ' . bp_get_version() . '</strong>'
+			'<p class=\"bp-ps-error\">' . esc_html__( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss' ) . '</p>',
+			'<strong>BP Profile Search ' . esc_html( bp_get_version() ) . '</strong>'
 		);
 	}
 
@@ -161,7 +161,9 @@ function bp_ps_display_sort_options() {
 	 global $bp_ps_sort_options;
 
 	$version = bp_get_version();
-	echo "\n<!-- BP Profile Search $version -->\n";
+	echo "
+<!-- BP Profile Search " . esc_html( $version ) . " -->
+";
 
 	$sort_options = apply_filters( 'bp_ps_sort_options', $bp_ps_sort_options );
 	foreach ( $sort_options as $code => $name ) {

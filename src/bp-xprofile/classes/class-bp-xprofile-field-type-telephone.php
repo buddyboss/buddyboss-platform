@@ -296,11 +296,11 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			?>
 			<script type='text/javascript'>
 				jQuery(document).ready(function($){
-					jQuery('#field_<?php echo $current_field->id; ?>').mask('<?php echo $selected_format_details['mask']; ?>').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
+					jQuery('#field_<?php echo esc_js( $current_field->id ); ?>').mask('<?php echo esc_js( $selected_format_details['mask'] ); ?>').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
 				});
 			</script>
 			<?php
-			echo ob_get_clean();
+			echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered field-settings markup and script built from escaped values (see above).
 		}
 	}
 

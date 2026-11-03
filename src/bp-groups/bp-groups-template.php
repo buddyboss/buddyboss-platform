@@ -1944,7 +1944,7 @@ function bp_group_list_admins( $group = false ) {
 				<li>
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $admin->user_id ) ); ?>">
 					<?php
-					echo bp_core_fetch_avatar(
+					echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 						array(
 							'item_id' => $admin->user_id,
 							'email'   => $admin->user_email,
@@ -2010,13 +2010,13 @@ function bp_group_list_parents( $group = false ) {
 		$group_type        = ( isset( $group_type_object ) && isset( $group_type_object->labels['singular_name'] ) ) ?: esc_html__( 'Subgroup of', 'buddyboss' );
 		?>
 		<dl class="parent-list">
-			<dt class="parent-title"><?php echo $group_type; ?></dt>
+			<dt class="parent-title"><?php echo esc_html( $group_type ); ?></dt>
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_get_group_name( $parent_group ) ); ?>">
 						<?php
-						echo bp_core_fetch_avatar(
+						echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 							array(
 								'item_id' => $parent_group->id,
 								'object'  => 'group',
@@ -2058,9 +2058,9 @@ function bp_group_list_mods( $group = false ) {
 			<?php foreach ( (array) $group->mods as $mod ) { ?>
 
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $mod->user_id, $mod->user_nicename, $mod->user_login ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_core_get_user_displayname( $mod->user_id ) ); ?>">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $mod->user_id, $mod->user_nicename, $mod->user_login ) ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $mod->user_id ) ); ?>">
 						<?php
-						echo bp_core_fetch_avatar(
+						echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 							array(
 								'item_id' => $mod->user_id,
 								'email'   => $mod->user_email,
@@ -2235,7 +2235,7 @@ function bp_group_search_form() {
 		' . wp_nonce_field( 'group-filter-box', '_wpnonce_group_filter', true, false ) . '
 		</form>';
 
-	echo apply_filters( 'bp_group_search_form', $search_form_html );
+	echo apply_filters( 'bp_group_search_form', $search_form_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search-form template (contains <form>/<input>); wp_kses_post() would strip the form controls.
 }
 
 /**
@@ -3229,7 +3229,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 			<li>
 
 				<?php
-				echo bp_core_fetch_avatar(
+				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 					array(
 						'item_id' => $admin->user_id,
 						'type'    => 'thumb',
@@ -3262,7 +3262,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 			<li>
 
 				<?php
-				echo bp_core_fetch_avatar(
+				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 					array(
 						'item_id' => $admin->user_id,
 						'type'    => 'thumb',
@@ -3278,9 +3278,9 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 				);
 				?>
 
-				<h5><?php echo bp_core_get_userlink( $admin->user_id ); ?></h5>
+				<h5><?php echo wp_kses_post( bp_core_get_userlink( $admin->user_id ) ); ?></h5>
 				<span class="activity">
-					<?php /* translators: %s: human-readable time since joining. */ echo bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss' ) ); ?>
+					<?php /* translators: %s: human-readable time since joining. */ echo esc_html( bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss' ) ) ); ?>
 				</span>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
@@ -3345,7 +3345,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 			<li>
 
 				<?php
-				echo bp_core_fetch_avatar(
+				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 					array(
 						'item_id' => $mod->user_id,
 						'type'    => 'thumb',
@@ -3378,7 +3378,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 			<li>
 
 				<?php
-				echo bp_core_fetch_avatar(
+				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 					array(
 						'item_id' => $mod->user_id,
 						'type'    => 'thumb',
@@ -3394,9 +3394,9 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 				);
 				?>
 
-				<h5><?php echo bp_core_get_userlink( $mod->user_id ); ?></h5>
+				<h5><?php echo wp_kses_post( bp_core_get_userlink( $mod->user_id ) ); ?></h5>
 
-				<span class="activity"><?php /* translators: %s: human-readable time since joining. */ echo bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss' ) ); ?></span>
+				<span class="activity"><?php /* translators: %s: human-readable time since joining. */ echo esc_html( bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss' ) ) ); ?></span>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
 
@@ -3782,7 +3782,7 @@ function bp_group_admin_tabs_backcompat( $subnav_output = '', $subnav_item = '',
 	ob_end_clean();
 
 	if ( ! empty( $admin_tabs_backcompat ) ) {
-		_doing_it_wrong( "do_action( 'groups_admin_tabs' )", __( 'This action should not be used directly. Please use the BuddyPress Group Extension API to generate Manage tabs.', 'buddyboss' ), '2.2.0' );
+		_doing_it_wrong( "do_action( 'groups_admin_tabs' )", esc_html__( 'This action should not be used directly. Please use the BuddyPress Group Extension API to generate Manage tabs.', 'buddyboss' ), '2.2.0' );
 		$subnav_output .= $admin_tabs_backcompat;
 	}
 
@@ -4664,7 +4664,7 @@ function bp_group_status_message( $group = null ) {
 	 * @param string $message Message to display to the current user.
 	 * @param object $group   Group to get status message for.
 	 */
-	echo apply_filters( 'bp_group_status_message', $message, $group );
+	echo wp_kses_post( apply_filters( 'bp_group_status_message', $message, $group ) );
 }
 
 /**
@@ -5256,7 +5256,7 @@ function bp_group_member_css_class() {
 		 *
 		 * @param string $value HTML class to add.
 		 */
-		echo apply_filters( 'bp_group_member_css_class', 'banned-user' );
+		echo esc_attr( apply_filters( 'bp_group_member_css_class', 'banned-user' ) );
 	}
 }
 
@@ -5747,7 +5747,7 @@ function bp_group_creation_tabs() {
 			<?php
 			if ( $is_enabled ) {
 				?>
-				<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo $slug; ?>/">
+				<a href="<?php bp_groups_directory_permalink(); ?>create/step/<?php echo esc_attr( $slug ); ?>/">
 				<?php
 			} else {
 				?>
@@ -5755,7 +5755,7 @@ function bp_group_creation_tabs() {
 				<?php
 			}
 
-			echo apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ) . $step['name'];
+			echo esc_html( apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ) ) . esc_html( $step['name'] );
 
 			if ( $is_enabled ) {
 				?>
@@ -5795,7 +5795,7 @@ function bp_group_creation_stage_title() {
 	 *
 	 * @param string $value HTML markup for the group creation stage title.
 	 */
-	echo apply_filters( 'bp_group_creation_stage_title', '<span>- ' . $bp->groups->group_creation_steps[ bp_get_groups_current_create_step() ]['name'] . '</span>' );
+	echo wp_kses_post( apply_filters( 'bp_group_creation_stage_title', '<span>- ' . $bp->groups->group_creation_steps[ bp_get_groups_current_create_step() ]['name'] . '</span>' ) );
 }
 
 /**
@@ -6446,7 +6446,7 @@ function bp_directory_groups_search_form() {
 	 *
 	 * @param string $search_form_html HTML markup for the search form.
 	 */
-	echo apply_filters( 'bp_directory_groups_search_form', $search_form_html );
+	echo apply_filters( 'bp_directory_groups_search_form', $search_form_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search-form template (contains <form>/<input>); wp_kses_post() would strip the form controls.
 
 }
 
@@ -6465,32 +6465,32 @@ function bp_groups_header_tabs() {
 	<?php
 	if ( ! bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/recently-active' ) ); ?>"><?php esc_html_e( 'Recently Active', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'recently-joined', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php esc_html_e( 'Recently Joined', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/recently-joined' ) ); ?>"><?php esc_html_e( 'Recently Joined', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'most-popular', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular' ); ?>"><?php esc_html_e( 'Most Popular', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/most-popular' ) ); ?>"><?php esc_html_e( 'Most Popular', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'admin-of', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of' ); ?>"><?php esc_html_e( 'Organizer Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/admin-of' ) ); ?>"><?php esc_html_e( 'Organizer Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'mod-of', 0 ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of' ); ?>"><?php esc_html_e( 'Moderator Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/mod-of' ) ); ?>"><?php esc_html_e( 'Moderator Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'alphabetically' ) ) :
 		?>
-		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically' ); ?>"><?php esc_html_e( 'Alphabetically', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( $user_groups . '/my-groups/alphabetically' ) ); ?>"><?php esc_html_e( 'Alphabetically', 'buddyboss' ); ?></a></li>
 
 	<?php
 	do_action( 'groups_header_tabs' );
@@ -6876,7 +6876,7 @@ function bp_group_request_user_avatar_thumb() {
 	 *
 	 * @param string $value HTML markup for the user's avatar thumbnail.
 	 */
-	echo apply_filters(
+	echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_core_fetch_avatar() markup, attributes escaped when built.
 		'bp_group_request_user_avatar_thumb',
 		bp_core_fetch_avatar(
 			array(
@@ -7015,7 +7015,7 @@ function bp_group_request_time_since_requested() {
 	 * @param string $value Formatted time since membership was requested.
 	 */
 	/* translators: %s: date or time. */
-	echo apply_filters( 'bp_group_request_time_since_requested', sprintf( __( 'requested %s', 'buddyboss' ), bp_core_time_since( $requests_template->request->date_modified ) ) );
+	echo esc_html( apply_filters( 'bp_group_request_time_since_requested', sprintf( __( 'requested %s', 'buddyboss' ), bp_core_time_since( $requests_template->request->date_modified ) ) ) );
 }
 
 /**
@@ -7033,7 +7033,7 @@ function bp_group_request_comment() {
 	 *
 	 * @param string $value Membership request comment left by user.
 	 */
-	echo apply_filters( 'bp_group_request_comment', wp_strip_all_tags( stripslashes( $requests_template->request->comments ) ) );
+	echo esc_html( apply_filters( 'bp_group_request_comment', wp_strip_all_tags( stripslashes( $requests_template->request->comments ) ) ) );
 }
 
 /**

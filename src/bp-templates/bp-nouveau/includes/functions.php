@@ -364,7 +364,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	}
 
 	// Print the wrapper and its content.
-	printf( '<%1$s%2$s%3$s>%4$s</%1$s>', $container, $container_id, $container_classes, $output );
+	printf( '<%1$s%2$s%3$s>%4$s</%1$s>', esc_attr( $container ), $container_id, $container_classes, $output ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $container_id/$container_classes are attribute fragments built with esc_attr(); $output is the buffered, self-escaping template part.
 }
 
 /**

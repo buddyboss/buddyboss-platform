@@ -46,7 +46,7 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 				<span class="middot">&middot;</span>
 				<?php
 				/* translators: %s: number. */
-				printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total );
+				printf( esc_html( _n( '%d reply', '%d replies', $total, 'buddyboss' ) ), (int) $total );
 				?>
 				<span class="middot">&middot;</span>
 				<span>

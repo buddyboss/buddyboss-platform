@@ -1607,7 +1607,7 @@ function bp_core_render_message() {
 
 		<div id="message" class="bp-template-notice <?php echo esc_attr( $type ); ?>">
 
-			<?php echo $content; ?>
+			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- template message built from translated strings and escaped parts, filtered by bp_core_render_message_content; may carry links. ?>
 
 		</div>
 

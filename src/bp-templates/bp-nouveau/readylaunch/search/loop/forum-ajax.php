@@ -46,8 +46,8 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 					<?php
 					printf(
 					/* translators: total topics */
-						_n( '%d topic', '%d topics', $total, 'buddyboss' ),
-						$total
+						esc_html( _n( '%d topic', '%d topics', $total, 'buddyboss' ) ),
+						(int) $total
 					);
 					?>
 				</span>
@@ -56,8 +56,8 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 					<?php
 					printf(
 					/* translators: total replies */
-						_n( '%d reply', '%d replies', $total_reply, 'buddyboss' ),
-						$total_reply
+						esc_html( _n( '%d reply', '%d replies', $total_reply, 'buddyboss' ) ),
+						(int) $total_reply
 					);
 					?>
 				</span>

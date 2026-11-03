@@ -1358,7 +1358,7 @@ function bp_core_render_email_template( $template ) {
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
 	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss' ) . '</title>', $template );
-	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template );
+	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- embed template HTML built by the plugin with wpautop()'d post content (kses on save); wp_kses_post() would strip embeds.
 
 	/*
 	 * Link colours are applied directly in the email template before sending, so we

@@ -507,7 +507,7 @@ function bp_core_add_cropper_inline_css() {
 
 	<style>
 		.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
-		#avatar-crop-pane { width: <?php echo bp_core_avatar_full_width(); ?>px; height: <?php echo bp_core_avatar_full_height(); ?>px; overflow: hidden; }
+		#avatar-crop-pane { width: <?php echo (int) bp_core_avatar_full_width(); ?>px; height: <?php echo (int) bp_core_avatar_full_height(); ?>px; overflow: hidden; }
 		#avatar-crop-submit { margin: 20px 0; }
 		.jcrop-holder img,
 		#avatar-crop-pane img,
@@ -527,7 +527,7 @@ function bp_core_add_cropper_inline_css() {
 function bp_core_add_ajax_url_js() {
 	?>
 
-	<script>var ajaxurl = '<?php echo bp_core_ajax_url(); ?>';</script>
+	<script>var ajaxurl = '<?php echo esc_url( bp_core_ajax_url() ); ?>';</script>
 
 	<?php
 }

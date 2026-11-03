@@ -1048,7 +1048,7 @@ class BP_Group_Extension {
 		$screen = ob_get_contents();
 		ob_end_clean();
 
-		echo $this->maybe_add_submit_button( $screen );
+		echo $this->maybe_add_submit_button( $screen ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- submit-button markup built with esc_attr(); wp_kses_post() strips <input>.
 
 		$this->nonce_field( 'edit' );
 	}

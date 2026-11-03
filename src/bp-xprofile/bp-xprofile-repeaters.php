@@ -822,8 +822,8 @@ function bp_print_add_repeater_set_button( $args = array() ) {
 		echo '<i class="bb-icon-f bb-icon-plus"></i>';
 		printf(
 			/* translators: %s = profile field group name */
-			__( 'Add Another', 'buddyboss' ),
-			bp_get_the_profile_group_name()
+			esc_html__( 'Add Another', 'buddyboss' ),
+			esc_html( bp_get_the_profile_group_name() )
 		);
 		echo '</button>';
 	}
@@ -1180,13 +1180,13 @@ function bb_admin_xprofile_add_repeater_set() {
 									<?php
 									printf(
 										/* translators: %s: visibility level label (wrapped in <span>). */
-										__( 'This field can be seen by: %s', 'buddyboss' ),
-										'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
+										esc_html__( 'This field can be seen by: %s', 'buddyboss' ),
+										'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
 									);
 									?>
 									</span>
 								<?php if ( $can_change_visibility ) : ?>
-									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php echo bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
+									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
 								<?php endif; ?>
 							</p>
 							<?php if ( $can_change_visibility ) : ?>

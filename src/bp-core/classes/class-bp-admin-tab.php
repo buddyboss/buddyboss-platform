@@ -806,7 +806,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					$class = ' class="' . esc_attr( $field['args']['class'] ) . '"';
 				}
 
-				echo "<tr{$class}>";
+				echo "<tr{$class}>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $class is a fixed ' class="alternate"' fragment or empty.
 
 				if ( ! empty( $field['args']['label_for'] ) ) {
 					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . wp_kses_post( $field['title'] ) . '</label></th>';

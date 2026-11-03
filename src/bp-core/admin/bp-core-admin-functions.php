@@ -1436,13 +1436,13 @@ function bp_email_tax_type_metabox( $post, $box ) {
 	$tax_name = esc_attr( $r['taxonomy'] );
 	$taxonomy = get_taxonomy( $r['taxonomy'] );
 	?>
-	<div id="taxonomy-<?php echo $tax_name; ?>" class="categorydiv">
-		<div id="<?php echo $tax_name; ?>-all" class="tabs-panel">
+	<div id="taxonomy-<?php echo esc_attr( $tax_name ); ?>" class="categorydiv">
+		<div id="<?php echo esc_attr( $tax_name ); ?>-all" class="tabs-panel">
 			<?php
 			$name = ( $tax_name == 'category' ) ? 'post_category' : 'tax_input[' . $tax_name . ']';
-			echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
+			echo "<input type='hidden' name='" . esc_attr( $name ) . "[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
 			?>
-			<ul id="<?php echo $tax_name; ?>checklist" data-wp-lists="list:<?php echo $tax_name; ?>"
+			<ul id="<?php echo esc_attr( $tax_name ); ?>checklist" data-wp-lists="list:<?php echo esc_attr( $tax_name ); ?>"
 				class="categorychecklist form-no-clear">
 				<?php
 				wp_terms_checklist(

@@ -633,7 +633,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		function print_search_options( $items_to_search ) {
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __( 'Account', 'buddyboss' ) . '</strong></p>';
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html__( 'Account', 'buddyboss' ) . '</strong></p>';
 
 			$fields = array(
 				'user_login'   => __( 'Username/Login', 'buddyboss' ),
@@ -644,7 +644,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			foreach ( $fields as $field => $label ) {
 				$item    = 'member_field_' . $field;
 				$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-				echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				printf( "<label><input type='checkbox' value='%s' name='bp_search_plugin_options[items-to-search][]' %s>%s</label><br>", esc_attr( $item ), esc_attr( trim( $checked ) ), esc_html( $label ) );
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
@@ -662,14 +662,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( ! empty( $groups ) ) {
 				echo "<div class='xprofile-fields' style='margin: 0 0 10px 30px'>";
 				foreach ( $groups as $group ) {
-					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . $group->name . '</strong></p>';
+					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html( $group->name ) . '</strong></p>';
 
 					if ( ! empty( $group->fields ) ) {
 						foreach ( $group->fields as $field ) {
 							// lets save these as xprofile_field_{field_id}
 							$item    = 'xprofile_field_' . $field->id;
 							$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-							echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$field->name}</label><br>";
+							printf( "<label><input type='checkbox' value='%s' name='bp_search_plugin_options[items-to-search][]' %s>%s</label><br>", esc_attr( $item ), esc_attr( trim( $checked ) ), esc_html( $field->name ) );
 						}
 					}
 				}

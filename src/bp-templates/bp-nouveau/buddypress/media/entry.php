@@ -139,7 +139,7 @@ if ( 'video' === $media_template->media->type ) {
 							if ( $report_btn ) {
 								?>
 								<li class="report_file">
-									<?php echo wp_kses_post( $report_btn ); ?>
+									<?php echo $report_btn; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- report button markup built with esc_attr(); wp_kses_post() strips its reported_type attribute. ?>
 								</li>
 								<?php
 							}
@@ -273,7 +273,7 @@ if ( 'video' === $media_template->media->type ) {
 						if ( $report_btn ) {
 							?>
 							<li class="report_file">
-								<?php echo $report_btn; ?>
+								<?php echo $report_btn; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- report button markup built with esc_attr(); wp_kses_post() strips its reported_type attribute. ?>
 							</li>
 							<?php
 						}

@@ -191,7 +191,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 		 * post type e.g $this->cpt_name
 		 */
 		public function print_search_options( $items_to_search ) {
-			echo "<div class='wp-{$this->cpt_name}-fields' style='margin: 10px 0 10px 30px'>";
+			echo "<div class='wp-" . esc_attr( $this->cpt_name ) . "-fields' style='margin: 10px 0 10px 30px'>";
 
 			$cpt_taxonomy = get_object_taxonomies( $this->cpt_name );
 
@@ -201,7 +201,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$value   = $this->search_type . '-tax-' . $tax;
 				$checked = ! empty( $items_to_search ) && in_array( $value, $items_to_search ) ? ' checked' : '';
 
-				echo "<label><input type='checkbox' value='{$value}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				printf( "<label><input type='checkbox' value='%s' name='bp_search_plugin_options[items-to-search][]' %s>%s</label><br>", esc_attr( $value ), esc_attr( trim( $checked ) ), esc_html( $label ) );
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
