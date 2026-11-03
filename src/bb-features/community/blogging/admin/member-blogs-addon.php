@@ -351,14 +351,21 @@ function bb_member_blogging_get_upsell_field_data() {
 		case 'not_installed':
 			$data = array(
 				'empty_state_description' => __( 'Member Blogging is included in your plan. Install the add-on to let your community members create blog posts from the frontend.', 'buddyboss' ),
-				'button_label'            => __( 'Install & Activate', 'buddyboss' ),
-				// @bbwt-com-start installers
-				'addon_action'            => 'bb_member_blogging_install_plugin',
-				'addon_slug'              => bb_member_blogging_plugin_slug(),
-				'addon_nonce_key'         => 'ajaxNonce',
-				'addon_busy_label'        => __( 'Installing…', 'buddyboss' ),
-				// @bbwt-com-end installers
+				// Builds without the in-dashboard installer (the wordpress.org edition) link
+				// to the BuddyBoss account, where the add-on is downloaded for upload.
+				'button_label'            => __( 'Go to My Account', 'buddyboss' ),
+				'button_url'              => 'https://www.buddyboss.com/my-account/',
+				'button_target'           => '_blank',
 			);
+			// @bbwt-com-start installers
+			// In-place install. The empty-state card renders an `addon_action` button
+			// ahead of `button_url`, so the link above is only a fallback.
+			$data['button_label']     = __( 'Install & Activate', 'buddyboss' );
+			$data['addon_action']     = 'bb_member_blogging_install_plugin';
+			$data['addon_slug']       = bb_member_blogging_plugin_slug();
+			$data['addon_nonce_key']  = 'ajaxNonce';
+			$data['addon_busy_label'] = __( 'Installing…', 'buddyboss' );
+			// @bbwt-com-end installers
 			break;
 
 		case 'needs_license':
@@ -517,8 +524,8 @@ function bb_member_blogging_ajax_activate_plugin() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_member_blogging_activate_plugin', 'bb_member_blogging_ajax_activate_plugin' );
-
 // @bbwt-com-start installers
+
 /**
  * AJAX: install and activate the Member Blogging add-on.
  *

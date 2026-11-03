@@ -35,9 +35,11 @@
  *                                   (both via the Mothership handlers the BuddyBoss
  *                                   Add-ons list screen uses), and UPDATE when it is
  *                                   running on a build that does not ship the digest
- *                                   module. The update runs through a Platform-owned
- *                                   handler, Mothership having no update action, and is
- *                                   withdrawn when nothing newer exists to install.
+ *                                   module. UPDATE links to the WordPress updates
+ *                                   screen; builds with the in-dashboard installer also
+ *                                   run it in place through a Platform-owned handler
+ *                                   (Mothership has no update action) and withdraw it
+ *                                   when nothing newer exists to install.
  *
  * A previous revision rendered state 2 as an inert replica of the add-on's settings form.
  * It read as a working panel — an admin on a plan without the digest saw a full set of
@@ -525,15 +527,17 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 
 		case 'addon_outdated':
 			// Entitled, add-on running, but this build does not ship the digest module.
-			// The fix is a plugin update, so that is what the card offers — through a
-			// Platform-owned handler rather than Mothership, which has activate,
-			// deactivate and install actions but no update action.
+			// The fix is a plugin update, so that is what the card offers: a link to the
+			// WordPress updates screen.
 			//
+			// Builds with the in-dashboard installer also get the `addon_*` keys below:
+			// an in-place update through a Platform-owned handler rather than Mothership,
+			// which has activate, deactivate and install actions but no update action.
 			// Whether an update actually EXISTS is not settled here: answering that
 			// needs a remote lookup, and this function runs during feature registration
-			// on every admin request. bb_email_digest_soften_stale_update_card() below
-			// re-decides it lazily, on the AJAX path that only this panel triggers, and
-			// replaces the button when there is nothing newer to install.
+			// on every admin request. bb_email_digest_soften_stale_update_card() (in the
+			// same build-only block) re-decides it lazily, on the AJAX path that only this
+			// panel triggers, and replaces the button when there is nothing newer to install.
 			$card = array(
 				'empty_state_title'       => __( 'Update Required', 'buddyboss' ),
 				'empty_state_description' => __( 'Email Digest is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the add-on to continue.', 'buddyboss' ),

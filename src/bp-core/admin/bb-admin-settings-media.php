@@ -597,8 +597,8 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 					__( 'Your plan includes %s, but the installed version of the BuddyBoss Add-ons plugin does not provide this feature. Update the plugin to use it.', 'buddyboss' ),
 					$title
 				);
-				$card['button_label']     = __( 'Update Plugin', 'buddyboss' );
-				$card['button_url']       = self_admin_url( 'update-core.php' );
+				$card['button_label'] = __( 'Update Plugin', 'buddyboss' );
+				$card['button_url']   = self_admin_url( 'update-core.php' );
 				// @bbwt-com-start installers
 				$card['addon_action']     = 'bb_media_update_addons';
 				$card['addon_slug']       = 'buddyboss-addons';
@@ -731,8 +731,8 @@ function bb_media_ajax_enable_component() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_media_enable_component', 'bb_media_ajax_enable_component' );
-
 // @bbwt-com-start installers
+
 /**
  * AJAX: update BuddyBoss Add-ons so the Media panels it provides become available.
  *

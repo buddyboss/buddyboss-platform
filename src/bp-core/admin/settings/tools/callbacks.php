@@ -158,8 +158,8 @@ function bb_tools_ajax_activate_plugin() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_tools_activate_plugin', 'bb_tools_ajax_activate_plugin' );
-
 // @bbwt-com-start installers
+
 /**
  * AJAX: Install the buddyboss-tools plugin via the WP plugin installer.
  *
