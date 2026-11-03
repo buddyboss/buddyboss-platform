@@ -925,7 +925,7 @@ function bb_load_emoji_detection_script() {
 	if ( version_compare( $wp_version, '6.0', '>' ) ) {
 
 		// Pinned to the emoji set in WP core's _print_emoji_detection_script(); bump it when core bumps twemoji.
-		$emoji_cdn_url = 'https://s.w.org/images/core/emoji/17.0.2/';
+		$emoji_cdn_url = 'https://s.w.org/images/core/emoji/17.0.2/'; // phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- WordPress core's own emoji CDN, the same URL _print_emoji_detection_script() uses.
 
 		// Respect core's emoji filters, but ignore the falsey values that "disable emojis" options return to drop the DNS prefetch.
 		$emoji_url     = apply_filters( 'emoji_url', $emoji_cdn_url . '72x72/' );

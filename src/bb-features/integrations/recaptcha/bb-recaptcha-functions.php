@@ -840,7 +840,7 @@ function bb_recaptcha_remove_duplicate_scripts() {
 		return false;
 	}
 
-	$urls = array( 'google.com/recaptcha', 'gstatic.com/recaptcha' );
+	$urls = array( 'google.com/recaptcha', 'gstatic.com/recaptcha' ); // phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- host names used to detect an already-enqueued Google reCAPTCHA script (opt-in integration, disclosed under External services).
 	foreach ( $wp_scripts->queue as $handle ) {
 		foreach ( $urls as $url ) {
 			if (

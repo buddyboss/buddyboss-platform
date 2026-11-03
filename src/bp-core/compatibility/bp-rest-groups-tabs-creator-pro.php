@@ -102,12 +102,14 @@ if ( ! function_exists( 'array_msort' ) ) {
 				$colarr[ $col ][ '_' . $k ] = strtolower( $row[ $col ] );
 			}
 		}
-		$eval = 'array_multisort(';
+		// array_multisort() sorts its array arguments in place, so pass them by reference.
+		$multisort_args = array();
 		foreach ( $cols as $col => $order ) {
-			$eval .= '$colarr[\'' . $col . '\'],' . $order . ',';
+			$multisort_args[] = &$colarr[ $col ];
+			$multisort_args[] = (int) $order;
 		}
-		$eval = substr( $eval, 0, - 1 ) . ');';
-		eval( $eval );
+		call_user_func_array( 'array_multisort', $multisort_args );
+		unset( $multisort_args );
 		$ret = array();
 		foreach ( $colarr as $col => $arr ) {
 			foreach ( $arr as $k => $v ) {

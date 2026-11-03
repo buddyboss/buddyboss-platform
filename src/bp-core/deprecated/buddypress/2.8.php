@@ -56,9 +56,12 @@ function bp_core_admin_maybe_remove_from_update_core() {
 	}
 
 	// Add filter to remove BP from the update plugins list.
+	// @bbwt-com-start mothership-hub
 	add_filter( 'site_transient_update_plugins', 'bp_core_admin_remove_buddypress_from_update_transient' );
+	// @bbwt-com-end mothership-hub
 }
 
+// @bbwt-com-start mothership-hub
 /**
  * Filter callback to remove BuddyPress from the update plugins list.
  *
@@ -82,6 +85,7 @@ function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
 
 	return $retval;
 }
+// @bbwt-com-end mothership-hub
 
 /**
  * Outputs a replacement for WP's default update notice, when site is not running PHP 5.3 or greater.

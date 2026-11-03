@@ -826,6 +826,10 @@ class BuddyPress {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} elseif ( 'suspend' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-moderation/classes/suspend/class-{$class}.php";
+		} elseif ( 'bp-phpmailer' === $class ) {
+			// File deliberately named without the "phpmailer.php" suffix so it is not mistaken
+			// for the bundled PHPMailer library; the class name BP_PHPMailer is unchanged.
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-bp-php-mailer.php";
 		} else {
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";
 		}

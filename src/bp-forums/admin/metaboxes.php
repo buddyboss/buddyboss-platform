@@ -6,6 +6,9 @@
  * @package BuddyBoss\Administration
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /** Dashboard *****************************************************************/
 
 /**

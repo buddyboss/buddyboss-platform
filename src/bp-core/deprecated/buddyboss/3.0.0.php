@@ -4533,25 +4533,15 @@ if ( ! function_exists( 'bb_deprecated_forum_import_autoload' ) ) {
 			}
 		}
 
-		// Tools is inactive - define the stub inline using eval. The stub:
+		// Tools is inactive - alias the legacy name to one shared stub class. The stub:
 		//   - emits _deprecated_function on construction
 		//   - dispatches all $this->method() calls to __call / __callStatic returning null
-		//   - declares no parent (the legacy parent class is itself stubbed)
-		$replacement = 'BB_Tools_BBP_Converter (install buddyboss-tools - third-party importers calling parent::* on these classes require Tools active)';
-		$code        = sprintf(
-			'class %1$s {
-				public function __construct() {
-					_deprecated_function( %2$s, "BuddyBoss 3.1.0", %3$s );
-				}
-				public function __call( $name, $args ) { return null; }
-				public static function __callStatic( $name, $args ) { return null; }
-			}',
-			$class_name,
-			var_export( $class_name, true ),
-			var_export( $replacement, true )
-		);
-		// phpcs:ignore Squiz.PHP.Eval.Discouraged -- Required: legacy class names must be defined dynamically so third-party `extends` declarations resolve without fataling. Input is constant (whitelisted via bb_deprecated_forum_import_class_map()).
-		eval( $code ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.eval_eval -- Same justification as above; whitelisted input only.
+		//   - declares no parent (the legacy parent class is itself aliased to the stub)
+		// A class alias can be extended, so third-party `extends` declarations still resolve.
+		if ( ! class_exists( 'BB_Deprecated_Forum_Import_Stub', false ) ) {
+			require_once __DIR__ . '/class-bb-deprecated-forum-import-stub.php';
+		}
+		class_alias( 'BB_Deprecated_Forum_Import_Stub', $class_name );
 	}
 
 	spl_autoload_register( 'bb_deprecated_forum_import_autoload' );
