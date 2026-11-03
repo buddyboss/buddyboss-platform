@@ -103,6 +103,7 @@ function bp_ps_xprofile_search( $f ) {
 			$field_visibility[] = 'loggedin';
 
 			if ( bp_is_active( 'friends' ) ) {
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- only the friends table name ($bp->friends->table_name, from the component globals) is concatenated; the logged-in user id is bound with %d.
 				$friend_ids_sql = $wpdb->prepare(
 					'SELECT CASE
 		                	WHEN initiator_user_id = %d THEN friend_user_id
@@ -113,6 +114,7 @@ function bp_ps_xprofile_search( $f ) {
 		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
 					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			}
 		}
 
@@ -535,6 +537,7 @@ function bp_ps_anyfield_search( $f ) {
 			$field_visibility[] = 'loggedin';
 
 			if ( bp_is_active( 'friends' ) ) {
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- only the friends table name ($bp->friends->table_name, from the component globals) is concatenated; the logged-in user id is bound with %d.
 				$friend_ids_sql = $wpdb->prepare(
 					'SELECT CASE
 		                	WHEN initiator_user_id = %d THEN friend_user_id
@@ -545,6 +548,7 @@ function bp_ps_anyfield_search( $f ) {
 		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
 					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			}
 		}
 
@@ -582,7 +586,7 @@ function bp_ps_anyfield_search( $f ) {
 						$query_placeholder[] = '%' . bp_ps_esc_like( $term ) . '%';
 					}
 				}
-				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder );
+				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- every clause is the literal '( xpd.value LIKE %s )'; each search term is bound as a %s value.
 			} else {
 				$sql['where'][ $filter ] = '1=1';
 			}
@@ -597,7 +601,7 @@ function bp_ps_anyfield_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$results  = $wpdb->get_results( $query, ARRAY_A );
+	$results  = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filter bp_ps_field_sql; as built here: profile table names, visibility subquery (literal esc_sql()'d visibility values, prepare()d friends subquery, (int) bp_loggedin_user_id()), and the value clause from prepare() or the literal '1=1' (filter whitelisted by bp_ps_is_filter()).
 	$user_ids = array();
 	if ( ! empty( $results ) ) {
 		// Exclude repeater fields.
@@ -732,5 +736,5 @@ function bb_ps_xprofile_email_users_search( $f ) {
 			break;
 	}
 
-	return $wpdb->get_col( $sql_query );
+	return $wpdb->get_col( $sql_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- literal SELECT on $wpdb->users plus the WHERE clause from $wpdb->prepare() (email value bound as %s).
 }
