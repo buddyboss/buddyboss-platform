@@ -848,11 +848,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			if ( current_user_can( 'edit_user', $user->ID ) ) :
 				?>
 
-				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url ); ?>"><?php _e( 'Profile', 'buddyboss' ); ?></a>
+				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url ); ?>"><?php esc_html_e( 'Profile', 'buddyboss' ); ?></a>
 
 			<?php endif; ?>
 
-			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php _e( 'Extended Profile', 'buddyboss' ); ?></a>
+			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php esc_html_e( 'Extended Profile', 'buddyboss' ); ?></a>
 
 			<?php
 			/**
@@ -886,18 +886,20 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			// Can current user edit this profile?
 			if ( ! $this->member_can_edit( $user_id ) ) {
-				wp_die( __( 'You cannot edit the requested user.', 'buddyboss' ) );
+				wp_die( esc_html__( 'You cannot edit the requested user.', 'buddyboss' ) );
 			}
 
 			// Build redirection URL.
-			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham', 'delete_avatar' ), $_SERVER['REQUEST_URI'] );
-			$doaction    = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : false;
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham', 'delete_avatar' ), $request_uri );
+			$doaction    = ! empty( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : false;
 
 			if ( ! empty( $_REQUEST['user_status'] ) ) {
-				$spam = (bool) ( 'spam' === $_REQUEST['user_status'] );
+				$user_status = sanitize_text_field( wp_unslash( $_REQUEST['user_status'] ) );
+				$spam        = (bool) ( 'spam' === $user_status );
 
 				if ( $spam !== bp_is_user_spammer( $user_id ) ) {
-					$doaction = $_REQUEST['user_status'];
+					$doaction = $user_status;
 				}
 			}
 
@@ -984,6 +986,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				// User Stat metabox.
 				add_meta_box(
 					'bp_members_admin_user_stats',
+					/* translators: %s: member display name. */
 					sprintf( __( "%s's Stats", 'buddyboss' ), $display_name ),
 					array( $this, 'user_admin_stats_metabox' ),
 					get_current_screen()->id,
@@ -1029,9 +1032,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				check_admin_referer( 'edit-bp-profile_' . $user_id );
 
 				if ( bp_core_process_spammer_status( $user_id, $doaction ) ) {
-					$redirect_to = add_query_arg( 'updated', $doaction, $redirect_to );
+					$redirect_to = add_query_arg( 'updated', rawurlencode( $doaction ), $redirect_to );
 				} else {
-					$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+					$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 				}
 
 				bp_core_redirect( $redirect_to );
@@ -1079,7 +1082,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			// Construct URL for form.
-			$request_url     = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham' ), $_SERVER['REQUEST_URI'] );
+			$request_uri     = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request_url     = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham' ), $request_uri );
 			$form_action_url = add_query_arg( 'action', 'update', $request_url );
 			$wp_http_referer = false;
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
@@ -1189,9 +1193,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php
 					printf(
 						'%1$s <a href="%2$s">%3$s</a>',
-						__( 'No user found with this ID.', 'buddyboss' ),
+						esc_html__( 'No user found with this ID.', 'buddyboss' ),
 						esc_url( bp_get_admin_url( 'users.php' ) ),
-						__( 'Go back and try again.', 'buddyboss' )
+						esc_html__( 'Go back and try again.', 'buddyboss' )
 					);
 					?>
 				</p>
@@ -1270,7 +1274,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							<?php
 							$date = bp_format_time( strtotime( $user->user_registered ), false, true );
 							?>
-						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
+						<span id="timestamp"><?php /* translators: %s: registration date. */ echo wp_kses_post( sprintf( esc_html__( 'Registered on: %s', 'buddyboss' ), '<strong>' . esc_html( $date ) . '</strong>' ) ); ?></span>
 					</div>
 				</div> <!-- #misc-publishing-actions -->
 
@@ -1300,7 +1304,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1313,7 +1317,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_suspended_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( esc_html__( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1344,7 +1348,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			?>
 
 		<ul>
-			<li class="bp-members-profile-stats"><?php printf( __( 'Last active: %1$s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></li>
+			<li class="bp-members-profile-stats"><?php /* translators: %s: last active date. */ echo wp_kses_post( sprintf( esc_html__( 'Last active: %1$s', 'buddyboss' ), '<strong>' . esc_html( $date ) . '</strong>' ) ); ?></li>
 
 				<?php
 				// Loading other stats only if user has activated their account.
@@ -1745,6 +1749,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			$url  = add_query_arg( 'page', 'bp-signups', $base_url );
+			/* translators: %s: pending signup count markup. */
 			$text = sprintf( __( 'Pending %s', 'buddyboss' ), '<span class="count">(' . bp_core_number_format( $signups ) . ')</span>' );
 
 			$views['registered'] = sprintf( '<a href="%1$s" class="%2$s">%3$s</a>', esc_url( $url ), $class, $text );
@@ -1789,7 +1794,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			global $bp_members_signup_list_table;
 
 			// Build redirection URL.
-			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'activated', 'notactivated', 'deleted', 'notdeleted', 'resent', 'notresent', 'do_delete', 'do_resend', 'do_activate', '_wpnonce', 'signup_ids' ), $_SERVER['REQUEST_URI'] );
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'activated', 'notactivated', 'deleted', 'notdeleted', 'resent', 'notresent', 'do_delete', 'do_resend', 'do_activate', '_wpnonce', 'signup_ids' ), $request_uri );
 			$doaction    = bp_admin_list_table_current_bulk_action();
 
 			/**
@@ -1880,7 +1886,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					$resent = BP_Signup::resend( $signups );
 
 					if ( empty( $resent ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'resent' );
 
@@ -1907,7 +1913,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					$activated = BP_Signup::activate( $signups );
 
 					if ( empty( $activated ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'activated' );
 
@@ -1934,7 +1940,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					$deleted = BP_Signup::delete( $signups );
 
 					if ( empty( $deleted ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'deleted' );
 
@@ -2023,6 +2029,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['resent'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of activation emails successfully sent.
 								_n(
 									'%s activation email successfully sent! ',
 									'%s activation emails successfully sent! ',
@@ -2035,6 +2042,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['notsent'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of activation emails that were not sent.
 								_n(
 									'%s activation email was not sent.',
 									'%s activation emails were not sent.',
@@ -2059,6 +2067,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['activated'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of accounts successfully activated.
 								_n(
 									'%s account successfully activated! ',
 									'%s accounts successfully activated! ',
@@ -2071,6 +2080,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['notactivated'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of accounts that were not activated.
 								_n(
 									'%s account was not activated.',
 									'%s accounts were not activated.',
@@ -2095,6 +2105,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['deleted'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of sign-ups successfully deleted.
 								_n(
 									'%s sign-up successfully deleted!',
 									'%s sign-ups successfully deleted!',
@@ -2107,6 +2118,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['notdeleted'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of sign-ups that were not deleted.
 								_n(
 									'%s sign-up was not deleted.',
 									'%s sign-ups were not deleted.',
@@ -2186,7 +2198,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php endif; ?>
 
-				<p><?php echo $notice['message']; ?></p>
+				<p><?php echo wp_kses_post( $notice['message'] ); ?></p>
 
 					<?php if ( ! empty( $_REQUEST['notactivated'] ) || ! empty( $_REQUEST['notdeleted'] ) || ! empty( $_REQUEST['notsent'] ) ) : ?>
 
@@ -2225,7 +2237,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		public function signups_admin_index() {
 			global $plugin_page, $bp_members_signup_list_table;
 
-			$usersearch = ! empty( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
+			$usersearch = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
 
 			// Prepare the group items for display.
 			$bp_members_signup_list_table->prepare_items();
@@ -2264,7 +2276,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					'_wpnonce',
 					'signup_ids',
 				),
-				$_SERVER['REQUEST_URI']
+				isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''
 			);
 
 			?>
@@ -2272,7 +2284,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		<div class="wrap">
 			<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-				<h1 class="wp-heading-inline"><?php _e( 'Users', 'buddyboss' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'Users', 'buddyboss' ); ?></h1>
 
 				<?php if ( current_user_can( 'create_users' ) ) : ?>
 
@@ -2286,7 +2298,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				endif;
 
 				if ( $usersearch ) {
-					printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
+					/* translators: %s: user search query. */
+					printf( '<span class="subtitle">' . esc_html__( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 				}
 				?>
 
@@ -2294,7 +2307,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php else : ?>
 
-				<h1><?php _e( 'Users', 'buddyboss' ); ?>
+				<h1><?php esc_html_e( 'Users', 'buddyboss' ); ?>
 
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 
@@ -2308,7 +2321,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					endif;
 
 					if ( $usersearch ) {
-						printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
+						/* translators: %s: user search query. */
+						printf( '<span class="subtitle">' . esc_html__( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 					}
 
 					?>
@@ -2472,7 +2486,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 								<tr>
 									<td class="column-fields"><?php esc_html_e( 'Email', 'buddyboss' ); ?></td>
-									<td><?php echo sanitize_email( $signup->user_email ); ?></td>
+									<td><?php echo esc_html( sanitize_email( $signup->user_email ) ); ?></td>
 								</tr>
 
 								<?php
@@ -2500,7 +2514,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 											?>
 											<tr>
 												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
-												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); ?></td>
+												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- format_xprofile_field_for_display() returns esc_html()-escaped value. ?></td>
 											</tr>
 											<?php
 										}
@@ -2514,7 +2528,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php if ( 'resend' == $action ) : ?>
 
 						<p class="description">
-							<?php printf( esc_html__( 'Last notified: %s', 'buddyboss' ), $last_notified ); ?>
+							<?php /* translators: %s: last notified date. */ printf( esc_html__( 'Last notified: %s', 'buddyboss' ), esc_html( $last_notified ) ); ?>
 
 							<?php if ( ! empty( $signup->recently_sent ) ) : ?>
 
@@ -2571,9 +2585,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			$types = bp_get_member_types( array(), 'objects' );
 			?>
 
-		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php _e( 'Change profile type to&hellip;', 'buddyboss' ); ?></label>
-		<select name="<?php echo $id_name; ?>" id="<?php echo $id_name; ?>" style="display:inline-block;float:none;">
-			<option value=""><?php _e( 'Change profile type to&hellip;', 'buddyboss' ); ?></option>
+		<label class="screen-reader-text" for="<?php echo esc_attr( $id_name ); ?>"><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss' ) ); ?></label>
+		<select name="<?php echo esc_attr( $id_name ); ?>" id="<?php echo esc_attr( $id_name ); ?>" style="display:inline-block;float:none;">
+			<option value=""><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss' ) ); ?></option>
 
 				<?php foreach ( $types as $type ) : ?>
 
@@ -2581,7 +2595,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php endforeach; ?>
 
-			<option value="remove_member_type"><?php _e( 'No Profile Type', 'buddyboss' ); ?></option>
+			<option value="remove_member_type"><?php esc_html_e( 'No Profile Type', 'buddyboss' ); ?></option>
 
 		</select>
 			<?php

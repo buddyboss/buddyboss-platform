@@ -65,8 +65,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 
 		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-spin6"></i></a>';
 
-		echo $args['before_widget'];
-		echo $args['before_title'] . $title . $refresh_recent_users . $args['after_title'];
+		echo wp_kses_post( $args['before_widget'] );
+		echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $refresh_recent_users ) . wp_kses_post( $args['after_title'] );
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -83,7 +83,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		$old_members_template = $members_template;
 
 		?>
-		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
+		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
 			<?php if ( bp_has_members( $members_args ) ) : ?>
 
 				<div class="avatar-block">
@@ -116,7 +116,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			<?php endif; ?>
 		</div>
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Restore the global.
 		$members_template = $old_members_template;
@@ -133,8 +133,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance                = $old_instance;
-		$instance['title']       = strip_tags( $new_instance['title'] );
-		$instance['max_members'] = strip_tags( $new_instance['max_members'] );
+		$instance['title']       = wp_strip_all_tags( $new_instance['title'] );
+		$instance['max_members'] = wp_strip_all_tags( $new_instance['max_members'] );
 
 		return $instance;
 	}
@@ -151,19 +151,19 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 
 		// Get widget settings.
 		$settings    = $this->parse_settings( $instance );
-		$title       = strip_tags( $settings['title'] );
-		$max_members = strip_tags( $settings['max_members'] );
+		$title       = wp_strip_all_tags( $settings['title'] );
+		$max_members = wp_strip_all_tags( $settings['max_members'] );
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
 				<?php esc_html_e( 'Title:', 'buddyboss' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>">
 				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>

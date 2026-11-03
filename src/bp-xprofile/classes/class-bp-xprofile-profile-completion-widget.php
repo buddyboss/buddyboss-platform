@@ -73,12 +73,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		/* Widget Template */
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		// Widget Title
-		echo $args['before_title'];
-		echo $instance['title'];
-		echo $args['after_title'];
+		echo wp_kses_post( $args['before_title'] );
+		echo esc_html( $instance['title'] );
+		echo wp_kses_post( $args['after_title'] );
 
 		// Widget Content
 
@@ -95,7 +95,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		 */
 		do_action( 'xprofile_profile_completion_widget' );
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 	}
 

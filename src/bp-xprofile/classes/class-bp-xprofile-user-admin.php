@@ -147,7 +147,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					bp_the_profile_group();
 					add_meta_box(
 						'bp_xprofile_user_admin_fields_' . sanitize_key( bp_get_the_profile_group_slug() ),
-						esc_html( bp_get_the_profile_group_name() ),
+						bp_get_the_profile_group_name(), // Pre-escaped via the wp_filter_kses filter chain; esc_html would double-encode entities such as "R&D" in the meta box title.
 						array( $this, 'user_admin_profile_metaboxes' ),
 						$screen_id,
 						'normal',
@@ -414,7 +414,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					?>
 					<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $r['user_id'] ); ?>" />
 					<input type="hidden" name="group[]" id="group" value="<?php echo esc_attr( $r['profile_group_id'] ); ?>" />
-					<input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( $_SERVER['REQUEST_URI'] ) : ''; ?>" />
+					<input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; ?>" />
 					<?php
 				}
 				?>
@@ -460,8 +460,9 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 						<?php
 						printf(
-							__( 'This field can be seen by: %s', 'buddyboss' ),
-							'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
+							/* translators: %s: field visibility level label. */
+							esc_html__( 'This field can be seen by: %s', 'buddyboss' ),
+							'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
 						);
 						?>
 						</span>
@@ -477,7 +478,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 						<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
 							<fieldset>
-								<legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
+								<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss' ); ?></legend>
 
 								<?php bp_profile_visibility_radio_buttons(); ?>
 
@@ -520,7 +521,9 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php
+			/* translators: %s: user display name. */
+			printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -533,7 +536,9 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_suspended_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php
+			/* translators: %s: member display name. */
+			printf( esc_html__( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -554,14 +559,14 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		<div class="avatar">
 
 			<?php
-			echo bp_core_fetch_avatar(
+			echo wp_kses_post( bp_core_fetch_avatar(
 				array(
 					'item_id' => $user->ID,
 					'object'  => 'user',
 					'type'    => 'full',
 					'title'   => $user->display_name,
 				)
-			);
+			) );
 			?>
 
 				<?php
