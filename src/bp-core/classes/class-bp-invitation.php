@@ -844,7 +844,7 @@ class BP_Invitation {
 
 		$cached = bp_core_get_incremented_cache( $paged_invites_sql, 'bp_invitations' );
 		if ( false === $cached ) {
-			$paged_invite_ids = $wpdb->get_col( $paged_invites_sql );
+			$paged_invite_ids = $wpdb->get_col( $paged_invites_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_invitations_get_join_sql / bp_invitations_get_where_conditions / bp_invitations_get_paged_invitations_sql; as built here: table from BP_Invitation_Manager::get_table_name(), literal field list, WHERE from get_where_sql() (ids via wp_parse_id_list(), emails/class/type/search %s-prepared, sent/accepted literal), ORDER BY columns whitelisted against self::$columns or FIELD() of int ids, order via bp_esc_sql_order(), LIMIT %d-prepared.
 			bp_core_set_incremented_cache( $paged_invites_sql, 'bp_invitations', $paged_invite_ids );
 		} else {
 			$paged_invite_ids = $cached;
@@ -906,7 +906,7 @@ class BP_Invitation {
 		$sql        = "{$select_sql} {$from_sql} {$where_sql}";
 
 		// Return the queried results
-		return $wpdb->get_var( $sql );
+		return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- documented SQL filters bp_invitations_get_join_sql / bp_invitations_get_where_conditions; as built here: literal COUNT select, table from BP_Invitation_Manager::get_table_name(), WHERE from get_where_sql() (see get()).
 	}
 
 	/**

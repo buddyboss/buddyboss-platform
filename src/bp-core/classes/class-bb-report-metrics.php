@@ -752,11 +752,11 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				}
 
 				$query = self::$wpdb->prepare(
-					implode( ' ', $query_parts ),
+					implode( ' ', $query_parts ), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- the parts above are string literals, the $wpdb->posts/$wpdb->postmeta table names and $status_placeholders (only '%s' repeated count( $config['status'] ) times); every value (post type, statuses, meta key, $since) is bound through $query_args.
 					$query_args
 				);
 
-				$result = self::$wpdb->get_row( $query );
+				$result = self::$wpdb->get_row( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is the return of self::$wpdb->prepare() directly above.
 
 				// Validate result.
 				if ( $result && ( $result->order_count > 0 || $result->total_revenue > 0 ) ) {
@@ -788,7 +788,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				// Check if table exists.
 				$table_name   = self::$wpdb->prefix . $config['table'];
-				$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+				$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- literal statement prepared in place via self::$wpdb (the global $wpdb), table name bound as %s.
 				if ( ! $table_exists ) {
 					return false;
 				}

@@ -109,7 +109,7 @@ class BP_Core_Notification {
 			$sql = $wpdb->prepare( "INSERT INTO {$bp->core->table_name_notifications} ( item_id, secondary_item_id, user_id, component_name, component_action, date_notified, is_new ) VALUES ( %d, %d, %d, %s, %s, %s, %d )", $this->item_id, $this->secondary_item_id, $this->user_id, $this->component_name, $this->component_action, $this->date_notified, $this->is_new );
 		}
 
-		if ( ! $result = $wpdb->query( $sql ) ) {
+		if ( ! $result = $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the return of $wpdb->prepare() in either branch above (table name from buddypress()->core, every value bound).
 			return false;
 		}
 
