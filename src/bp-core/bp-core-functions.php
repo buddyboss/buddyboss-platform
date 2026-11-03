@@ -1680,8 +1680,7 @@ function bp_core_record_activity() {
 	}
 
 	// updated users last activity on each page refresh.
-	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
-
+	bp_update_user_last_activity( $user_id, gmdate( 'Y-m-d H:i:s', $current_time ) );
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
 
@@ -2306,7 +2305,7 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 
 	// Parse home_url() into pieces to remove query-strings, strange characters,
 	// and other funny things that plugins might to do to it.
-	$parsed_home = parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
+	$parsed_home = wp_parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
 
 	// Maybe include the port, if it's included in home_url().
 	if ( isset( $parsed_home['port'] ) ) {
@@ -5808,7 +5807,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 				if ( 'dir' === filetype( $directory . '/' . $object ) ) {
 					bp_core_remove_temp_directory( $directory . '/' . $object );
 				} else {
-					unlink( $directory . '/' . $object );
+					wp_delete_file( $directory . '/' . $object );
 				}
 			}
 		}

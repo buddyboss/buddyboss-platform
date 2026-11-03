@@ -124,13 +124,13 @@ function bp_member_invite_submit() {
 		if ( true === bp_disable_invite_member_email_subject() ) {
 			$subject = sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) );
 		} else {
-			$subject = stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
+			$subject = stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
 		}
 
 		if ( true === bp_disable_invite_member_email_content() ) {
-			$message = stripslashes( strip_tags( $_POST['bp_member_invites_custom_content'] ) );
+			$message = stripslashes( wp_strip_all_tags( $_POST['bp_member_invites_custom_content'] ) );
 		} else {
-			$message = stripslashes( strip_tags( bp_get_member_invitation_message() ) );
+			$message = stripslashes( wp_strip_all_tags( bp_get_member_invitation_message() ) );
 		}
 
 		$email          = sanitize_email( wp_unslash( $value['email'] ) );
