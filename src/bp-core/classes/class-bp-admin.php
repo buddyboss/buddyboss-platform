@@ -222,7 +222,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Fix the "View details"/"View version details" links on the Plugins page, which
 			// otherwise point to a WordPress.org plugin_information lookup that always fails.
 			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
-			// @bbwt-com-end mothership-hub
 			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_information' ), 10, 3 );
 
 			// Later than any add-on's own handler, so one that is active always
@@ -261,13 +260,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * in first is what makes the modal win when the theme is active. Neither
 			 * this nor the theme overwrites a URL a third-party updater supplied.
 			 */
-			// @bbwt-com-start mothership-hub
 			add_filter( 'site_transient_update_themes', array( $this, 'bb_fix_theme_details_link' ), 11 );
-			// @bbwt-com-end mothership-hub
 			add_action( 'admin_post_bb_theme_changelog', array( $this, 'bb_render_theme_changelog' ) );
 
 			// Keep the licensed package URL out of the plugin dependency cache.
 			add_filter( 'pre_set_site_transient_wp_plugin_dependencies_plugin_data', array( $this, 'bb_strip_dependency_api_data' ) );
+			// @bbwt-com-end mothership-hub
 		}
 
 		/**
@@ -1019,6 +1017,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 		}
 
+		// @bbwt-com-start mothership-hub
 		/**
 		 * Normalize BuddyBoss update transient entries so their details links work.
 		 *
@@ -1554,6 +1553,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		protected function bb_get_platform_plugin_slug() {
 			return dirname( $this->bb_get_platform_plugin_file() );
 		}
+		// @bbwt-com-end mothership-hub
 
 		/**
 		 * Display plugin information after plugin successfully updated.
@@ -1593,6 +1593,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			delete_option( '_bb_is_update' );
 		}
 
+		// @bbwt-com-start mothership-hub
 		/**
 		 * Serve plugin information for BuddyBoss Platform locally.
 		 *
@@ -4042,5 +4043,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			return array();
 		}
+		// @bbwt-com-end mothership-hub
 	}
 endif; // End class_exists check.
