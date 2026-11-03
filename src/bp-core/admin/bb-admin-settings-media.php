@@ -599,10 +599,12 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 				);
 				$card['button_label']     = __( 'Update Plugin', 'buddyboss' );
 				$card['button_url']       = self_admin_url( 'update-core.php' );
+				// @bbwt-com-start installers
 				$card['addon_action']     = 'bb_media_update_addons';
 				$card['addon_slug']       = 'buddyboss-addons';
 				$card['addon_nonce_key']  = 'ajaxNonce';
 				$card['addon_busy_label'] = __( 'Updating…', 'buddyboss' );
+				// @bbwt-com-end installers
 			} else {
 				// Nothing newer is known yet; the update check may be stale, and the
 				// WordPress updates screen can re-run it.
@@ -730,6 +732,7 @@ function bb_media_ajax_enable_component() {
 }
 add_action( 'wp_ajax_bb_media_enable_component', 'bb_media_ajax_enable_component' );
 
+// @bbwt-com-start installers
 /**
  * AJAX: update BuddyBoss Add-ons so the Media panels it provides become available.
  *
@@ -773,3 +776,4 @@ function bb_media_ajax_update_addons() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_media_update_addons', 'bb_media_ajax_update_addons' );
+// @bbwt-com-end installers
