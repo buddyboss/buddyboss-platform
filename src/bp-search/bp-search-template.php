@@ -80,7 +80,7 @@ function bp_search_buffer_template_part( $template, $variation = '', $echo = tru
 
 	// Echo or return the output buffer contents
 	if ( true === $echo ) {
-		echo $output;
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered template part (may contain form/input/button); wp_kses_post would strip form controls.
 	} else {
 		return $output;
 	}

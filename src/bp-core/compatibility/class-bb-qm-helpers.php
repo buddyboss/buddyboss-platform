@@ -73,7 +73,7 @@ class BB_QM_Helpers {
 			}
 		</style>
 		<?php
-		echo ob_get_clean();
+		echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, hardcoded <style> block with no dynamic content; wp_kses_post() would strip the style tag.
 	}
 
 }

@@ -234,7 +234,7 @@ function bp_invites_member_invite_register_screen_message() {
 
 	?>
 	<?php if ( empty( $email ) ) : ?>
-		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ); ?></p></div>
+		<div id="message" class="error"><p><?php esc_html_e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ); ?></p></div>
 	<?php endif; ?>
 
 	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
@@ -272,6 +272,7 @@ function bp_invites_member_invite_register_screen_message() {
 		}
 
 		if ( ! empty( $inviters_names ) ) {
+			/* translators: %s: comma-separated list of inviter display names. */
 			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss' ), implode( ', ', $inviters_names ) );
 
 			echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
@@ -541,7 +542,7 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
-			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', gmdate( 'Y-m-d H:i:s' ) );
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
@@ -625,7 +626,7 @@ function bp_invites_member_invite_mark_register_user( $user_id ) {
 
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
-			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', gmdate( 'Y-m-d H:i:s' ) );
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
