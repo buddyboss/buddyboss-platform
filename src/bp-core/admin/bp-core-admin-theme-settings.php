@@ -10,6 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 return;
+// @bbwt-com-start theme-updates
+// Never reached (the file returns above). Theme licence-check and theme-update
+// transient code, kept out of builds without licence or updater code.
 
 if ( ! function_exists( 'buddyboss_theme_sudharo_tapas' ) ) {
 	/**
@@ -112,3 +115,4 @@ if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
 	}
 }
 
+// @bbwt-com-end theme-updates
