@@ -4979,6 +4979,12 @@ window.bp = window.bp || {};
 				$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
 			}
 
+			// Activity move popups are rendered before the document loop, so they share id "bp-media-move-file-0".
+			// Give this one its own id, or the selector below resolves to the first popup on the page.
+			if ( $currentTarget.attr( 'id' ) && 1 < $( '[id="' + $currentTarget.attr( 'id' ) + '"]' ).length ) {
+				$currentTarget.attr( 'id', 'bp-media-move-file-' + _.uniqueId( 'popup-' ) );
+			}
+
 			// Convert to selector string for compatibility with existing code
 			currentTarget = $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file';
 
