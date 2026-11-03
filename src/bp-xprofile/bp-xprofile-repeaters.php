@@ -42,9 +42,13 @@ function bp_get_repeater_template_field_ids( $field_group_id ) {
 		return array();
 	}
 
+	// Table name from $bp->profile; one %d placeholder per field ID (IDs read from the fields table above).
 	$clone_field_ids = $wpdb->get_col(
-		"SELECT object_id FROM {$bp->profile->table_name_meta} "
-		. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', $group_field_ids ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1"
+		$wpdb->prepare(
+			"SELECT object_id FROM {$bp->profile->table_name_meta} "
+			. " WHERE object_type = 'field' AND object_id IN (" . implode( ',', array_fill( 0, count( $group_field_ids ), '%d' ) ) . ") AND meta_key = '_is_repeater_clone' AND meta_value = 1",
+			$group_field_ids
+		)
 	);
 
 	if ( empty( $clone_field_ids ) || is_wp_error( $clone_field_ids ) ) {
@@ -454,8 +458,12 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 				// get all clones of the template field.
 				$all_clones = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = %d", $template_field_id ) );
 				if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
+					// Table name from $bp->profile; one %d placeholder per clone field ID (IDs read from the meta table above).
 					$last_max_clone_number = $wpdb->get_var(
-						"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
+						$wpdb->prepare(
+							"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', array_fill( 0, count( $all_clones ), '%d' ) ) . ')',
+							$all_clones
+						)
 					);
 					$last_max_clone_number = ! empty( $last_max_clone_number ) ? absint( $last_max_clone_number ) : 0;
 					$current_clone_number  = $last_max_clone_number + 1;

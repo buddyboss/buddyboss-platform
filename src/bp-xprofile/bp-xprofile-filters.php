@@ -1342,10 +1342,15 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
+	// Table names from $bp->profile; OFFSET bound as %d.
+	$added_fields = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
     LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
-    WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
-	$added_fields       = $wpdb->get_results( $clone_fields_query );
+    WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET %d",
+			$offset
+		)
+	);
 
 	if ( $offset == 0 ) {
 		$duplicate_fields = array();
@@ -1454,13 +1459,16 @@ function bb_xprofile_repair_user_nicknames_callback() {
 
 	$records_updated = 0;
 
-	$users_query = "SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
+	$records = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT users.ID, users.display_name, users.user_login, users.user_nicename, meta.meta_value, xprofile.value as xprofile_nickname
 					FROM `{$wpdb->users}` as users
 					LEFT JOIN `{$wpdb->usermeta}` as meta ON users.ID = meta.user_ID AND meta.meta_key = 'nickname'
 					LEFT JOIN `{$wpdb->base_prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
-					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
-
-	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
+					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)",
+			bp_xprofile_nickname_field_id()
+		)
+	);
 
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {

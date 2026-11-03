@@ -159,7 +159,7 @@ class BP_XProfile_Group {
 		}
 
 		// Attempt to insert or update.
-		$query = $wpdb->query( $sql );
+		$query = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is the $wpdb->prepare()'d UPDATE or INSERT above (name/description %s, id %d); table name from $bp->profile.
 
 		// Bail if query fails. If `$query` is 0, it means the save was successful, but no fields were updated.
 		if ( false === $query || is_wp_error( $query ) ) {
@@ -270,8 +270,7 @@ class BP_XProfile_Group {
 		do_action_ref_array( 'xprofile_group_before_delete', array( &$this ) );
 
 		$bp      = buddypress();
-		$sql     = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_groups} WHERE id = %d", $this->id );
-		$deleted = $wpdb->query( $sql );
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_groups} WHERE id = %d", $this->id ) );
 
 		// Delete field group.
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
