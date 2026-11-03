@@ -245,13 +245,16 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
+		/* translators: %s: logged-in user display name. */
 		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
 		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
 		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
 		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
+		/* translators: %d: number of comments (singular). */
 		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
+		/* translators: %d: number of comments (plural). */
 		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
 		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),

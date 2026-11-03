@@ -298,7 +298,7 @@ function bp_nouveau_activity_state() {
 	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
 		if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
-			echo bb_get_activity_post_user_reactions_html( $activity_id );
+			echo wp_kses_post( bb_get_activity_post_user_reactions_html( $activity_id ) );
 		}
 
 		/**
@@ -324,9 +324,11 @@ function bp_nouveau_activity_state() {
 				<span class="comments-count" data-comments-count="<?php echo esc_attr( $comment_count ); ?>">
 					<?php
 					if ( $comment_count > 1 || 0 === $comment_count ) {
-						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
+						/* translators: %d: number of comments. */
+						printf( esc_html_x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), esc_html( $comment_count ) );
 					} else {
-						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
+						/* translators: %d: number of comments. */
+						printf( esc_html_x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), esc_html( $comment_count ) );
 					}
 					?>
 				</span>
@@ -786,7 +788,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+	echo wp_kses_post( apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" ) );
 
 	$comment_loaded_count = 0;
 	$skip_children_loop   = false;
@@ -840,7 +842,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
 	 *
 	 * @param string $value Closing tag for the HTML markup to use.
 	 */
-	echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+	echo wp_kses_post( apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' ) );
 }
 
 /**
@@ -849,7 +851,7 @@ function bp_nouveau_activity_recurse_comments( $comment, $args = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_comment_action() {
-	echo bp_nouveau_get_activity_comment_action();
+	echo wp_kses_post( bp_nouveau_get_activity_comment_action() );
 }
 
 /**
@@ -1199,7 +1201,7 @@ function bb_nouveau_activity_comment_meta_buttons( $comment, $args ) {
 		$content .= $return;
 	}
 
-	echo empty( $content ) ? '' : '<div class="bp-generic-meta activity-meta action">' . $content . '</div>';
+	echo empty( $content ) ? '' : wp_kses_post( '<div class="bp-generic-meta activity-meta action">' . $content . '</div>' );
 }
 
 /**
@@ -1488,7 +1490,7 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 	$rendered_text = apply_filters( 'bp_nouveau_activity_is_edited', $activity_text, $activity_id );
 
 	if ( $echo ) {
-		echo $rendered_text;
+		echo wp_kses_post( $rendered_text );
 	} else {
 		return $rendered_text;
 	}
@@ -1580,22 +1582,22 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	$media = new BP_Media( $media_id );
 
 	echo '<div class="activity-media-description">' .
-		 '<div class="bp-media-activity-description">' . $media->description . '</div>';
+		 '<div class="bp-media-activity-description">' . esc_html( $media->description ) . '</div>';
 
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $media->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit"></span>
-			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $media->description; ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo esc_textarea( $media->description ); ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
-				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
 				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
 				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
@@ -1633,22 +1635,22 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	$document = new BP_Document( $document_id );
 
 	echo '<div class="activity-media-description">' .
-		 '<div class="bp-media-activity-description">' . $document->description . '</div>';
+		 '<div class="bp-media-activity-description">' . esc_html( $document->description ) . '</div>';
 
 	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $document->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit"></span>
-			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
-				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $document->description; ?></textarea>
+				<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo esc_textarea( $document->description ); ?></textarea>
 			</div>
 			<div class="in-profile description-new-submit">
-				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
 				<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
 				<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 			</div>
@@ -1681,7 +1683,7 @@ function bp_nouveau_clear_activity_content_body( $content, $activity ) {
  * @since BuddyBoss 1.5.0
  */
 function bp_nouveau_edit_activity_data() {
-	echo bp_nouveau_get_edit_activity_data();
+	echo bp_nouveau_get_edit_activity_data(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Return value is htmlentities-encoded JSON.
 }
 
 /**
@@ -2431,7 +2433,7 @@ function bb_nouveau_get_activity_comment_timestamp() {
  * @since BuddyBoss 2.4.40
  */
 function bb_nouveau_edit_activity_comment_data() {
-	echo bb_nouveau_get_edit_activity_comment_data();
+	echo bb_nouveau_get_edit_activity_comment_data(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Return value is htmlentities-encoded JSON.
 }
 
 /**
@@ -2476,7 +2478,7 @@ function bb_nouveau_activity_comment_is_edited( $activity_comment_id = 0, $echo 
 	$rendered_text = apply_filters( 'bb_nouveau_activity_comment_is_edited', $activity_comment_text, $activity_comment_id );
 
 	if ( $echo ) {
-		echo $rendered_text;
+		echo wp_kses_post( $rendered_text );
 	} else {
 		return $rendered_text;
 	}
@@ -2503,7 +2505,7 @@ function bb_activity_load_progress_bar_state() {
  * @since BuddyBoss 2.5.80
  */
 function bp_nouveau_activity_comment_meta() {
-	echo bp_nouveau_get_activity_comment_meta();
+	echo bp_nouveau_get_activity_comment_meta(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped comment meta markup (esc_url/esc_attr/esc_html per value); wp_kses_post() strips the datetime attribute from the time-since <span>.
 }
 
 /**
