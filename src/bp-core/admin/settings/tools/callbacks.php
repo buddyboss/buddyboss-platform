@@ -58,7 +58,13 @@ function bb_tools_is_license_active() {
  * @return string Admin URL for the license activation screen.
  */
 function bb_tools_get_license_url() {
-	return admin_url( 'admin.php?page=buddyboss-license' );
+	// Empty in builds without the BuddyBoss licence screen (the wordpress.org edition).
+	$url = '';
+	// @bbwt-com-start mothership-hub
+	$url = admin_url( 'admin.php?page=buddyboss-license' );
+	// @bbwt-com-end mothership-hub
+
+	return $url;
 }
 
 /**

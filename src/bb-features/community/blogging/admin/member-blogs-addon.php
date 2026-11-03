@@ -101,7 +101,7 @@ function bb_member_blogging_is_license_active() {
  * @return string Admin URL for the license activation screen.
  */
 function bb_member_blogging_get_license_url() {
-	return bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+	return bb_admin_license_screen_url();
 }
 
 /**
@@ -329,7 +329,7 @@ function bb_member_blogging_get_upsell_field_data() {
 			$data = array(
 				'empty_state_description' => __( 'The Member Blogging add-on is active but this version does not provide these settings. Update the add-on to continue.', 'buddyboss' ),
 				'button_label'            => __( 'Manage Add-ons', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-addons' ),
+				'button_url'              => bb_admin_addons_screen_url(),
 			);
 			break;
 
@@ -396,7 +396,7 @@ function bb_member_blogging_get_upsell_field_data() {
 			$data = array(
 				'empty_state_description' => __( 'We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again.', 'buddyboss' ),
 				'button_label'            => __( 'Manage Add-ons', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-addons' ),
+				'button_url'              => bb_admin_addons_screen_url(),
 			);
 			break;
 

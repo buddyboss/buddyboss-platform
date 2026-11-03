@@ -571,7 +571,7 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 				$title
 			);
 			$card['button_label']     = __( 'Install & Activate', 'buddyboss' );
-			$card['button_url']       = bp_get_admin_url( 'admin.php?page=buddyboss-addons' );
+			$card['button_url']       = bb_admin_addons_screen_url();
 			$card['addon_action']     = isset( $actions['install'] ) ? $actions['install'] : null;
 			$card['addon_slug']       = 'buddyboss-addons';
 			$card['addon_busy_label'] = __( 'Installing…', 'buddyboss' );
@@ -645,7 +645,7 @@ function bb_media_format_addons_upsell_field( $field_data, $field, $feature_id )
 				$title
 			);
 			$card['button_label'] = __( 'Manage License', 'buddyboss' );
-			$card['button_url']   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+			$card['button_url']   = bb_admin_license_screen_url();
 			break;
 	}
 

@@ -339,7 +339,11 @@ function bb_moved_media_features_render_notice() {
 
 	$state       = bb_moved_media_features_get_addons_state();
 	$upgrade_url = bb_moved_media_features_get_upgrade_url();
-	$addons_url  = bp_get_admin_url( 'admin.php?page=buddyboss-addons' );
+
+	// Empty in builds without the BuddyBoss licence and add-ons screens (the wordpress.org
+	// edition); the buttons that use them are then not shown.
+	$addons_url  = bb_admin_addons_screen_url();
+	$license_url = bb_admin_license_screen_url();
 
 	if ( 'inactive' === $state ) {
 		$message   = __( 'Activate the BuddyBoss Add-ons plugin to show them to your members again.', 'buddyboss' );
@@ -368,7 +372,7 @@ function bb_moved_media_features_render_notice() {
 		);
 		$secondary = array(
 			'label' => __( 'Manage license', 'buddyboss' ),
-			'url'   => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+			'url'   => $license_url,
 		);
 	} elseif ( 'active' === $state ) {
 		$message   = __( 'Your current BuddyBoss license does not include them. Check your license or upgrade your plan to show them to your members again.', 'buddyboss' );
@@ -379,7 +383,7 @@ function bb_moved_media_features_render_notice() {
 		);
 		$secondary = array(
 			'label' => __( 'Manage license', 'buddyboss' ),
-			'url'   => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+			'url'   => $license_url,
 		);
 	} elseif ( bb_moved_media_features_is_entitled_from_cache() ) {
 		$message   = __( 'Your BuddyBoss plan includes the BuddyBoss Add-ons plugin. Install it to show them to your members again.', 'buddyboss' );

@@ -11299,6 +11299,44 @@ function bb_get_tool_usage() {
 }
 
 /**
+ * Admin URL of the BuddyBoss licence screen.
+ *
+ * Builds without the BuddyBoss licence screen (the WordPress.org edition) return an
+ * empty string; callers then leave the link or button out.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Admin URL, or '' when the screen does not exist.
+ */
+function bb_admin_license_screen_url() {
+	$url = '';
+	// @bbwt-com-start mothership-hub
+	$url = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
+	// @bbwt-com-end mothership-hub
+
+	return $url;
+}
+
+/**
+ * Admin URL of the BuddyBoss add-ons screen.
+ *
+ * Builds without the BuddyBoss add-ons screen (the WordPress.org edition) return an
+ * empty string; callers then leave the link or button out.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Admin URL, or '' when the screen does not exist.
+ */
+function bb_admin_addons_screen_url() {
+	$url = '';
+	// @bbwt-com-start mothership-hub
+	$url = bp_get_admin_url( 'admin.php?page=buddyboss-addons' );
+	// @bbwt-com-end mothership-hub
+
+	return $url;
+}
+
+/**
  * Check whether this site has any paid BuddyBoss product.
  *
  * Deliberately broader than `function_exists( 'bb_platform_pro' )`: a Plus

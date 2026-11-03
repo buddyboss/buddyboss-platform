@@ -581,7 +581,7 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'empty_state_title'       => __( 'License Activation Required', 'buddyboss' ),
 				'empty_state_description' => __( 'Combine multiple notifications into a single daily or weekly email to reduce inbox clutter. Activate your license to unlock Email Digest.', 'buddyboss' ),
 				'button_label'            => __( 'Activate License', 'buddyboss' ),
-				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+				'button_url'              => bb_admin_license_screen_url(),
 			);
 			break;
 	}
@@ -739,7 +739,7 @@ function bb_email_digest_ajax_update_addon() {
 		wp_send_json_error(
 			array(
 				'message'     => __( 'The BuddyBoss Add-ons plugin is not available under your current license.', 'buddyboss' ),
-				'license_url' => bp_get_admin_url( 'admin.php?page=buddyboss-license' ),
+				'license_url' => bb_admin_license_screen_url(),
 			)
 		);
 	}
