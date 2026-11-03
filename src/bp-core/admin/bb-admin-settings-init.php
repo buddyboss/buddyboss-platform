@@ -262,6 +262,13 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
 		}
 
+		// Moved media features notice. Videos, Documents and Animated GIFs moved
+		// to the BuddyBoss Add-ons plugin; sites that still hold that content
+		// are told how to bring it back.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-moved-media-features-notice.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-moved-media-features-notice.php';
+		}
+
 		// LearnDash addon promotion IPN. Registers an in-product notification
 		// on the buddyboss-addons page for licensed sites that still use the
 		// pre-3.0 bundled LearnDash integration and haven't installed the
@@ -434,6 +441,48 @@ add_action( 'deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
 add_action( 'upgrader_process_complete', 'bb_flush_feature_caches_on_plugin_change' );
 add_action( 'deleted_plugin', 'bb_flush_feature_caches_on_plugin_change' );
 
+/**
+ * Purge the S3 JSON catalogs (field upgrades and placeholder features) after a
+ * BuddyBoss plugin or theme update, so the next admin request fetches them again.
+ *
+ * @since BuddyBoss 3.7.0
+ *
+ * @param WP_Upgrader $upgrader Upgrader instance.
+ * @param array       $options  Update details: `type`, and `plugins`/`plugin` or `themes`/`theme`.
+ * @return void
+ */
+function bb_purge_json_catalogs_on_upgrade( $upgrader, $options ) {
+	$items = array();
+	foreach ( array( 'plugins', 'plugin', 'themes', 'theme' ) as $key ) {
+		if ( ! empty( $options[ $key ] ) ) {
+			$items = array_merge( $items, (array) $options[ $key ] );
+		}
+	}
+
+	// Only BuddyBoss products (slug starts with `buddyboss`).
+	$is_buddyboss = false;
+	foreach ( $items as $item ) {
+		if ( 0 === strpos( (string) $item, 'buddyboss' ) ) {
+			$is_buddyboss = true;
+			break;
+		}
+	}
+
+	if ( ! $is_buddyboss ) {
+		return;
+	}
+
+	if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
+		bb_flush_field_upgrades_cache_full();
+	}
+
+	if ( function_exists( 'bb_placeholder_features_transient_key' ) ) {
+		delete_transient( bb_placeholder_features_transient_key() );
+		delete_option( 'bb_placeholder_features_data_stale' );
+	}
+}
+add_action( 'upgrader_process_complete', 'bb_purge_json_catalogs_on_upgrade', 10, 2 );
+
 // Network-admin (multisite) plugin lifecycle hooks.
 add_action( 'network_admin_activated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
 add_action( 'network_admin_deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
@@ -464,8 +513,24 @@ function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
 		return;
 	}
 
-	// Only run if Feature Registry is loaded.
+	// Only run if Feature Registry is loaded. The facade function lives in
+	// bp-core-functions.php (loaded early), so also require the CLASS —
+	// it loads at `bp_loaded` priority 4. A component write earlier in the
+	// boot (e.g. the availability scrub at `bp_loaded` priority 1) defers
+	// the sync until the registry exists instead of fataling.
 	if ( ! function_exists( 'bb_feature_registry' ) ) {
+		return;
+	}
+	if ( ! class_exists( 'BB_Feature_Registry' ) ) {
+		if ( doing_action( 'bp_loaded' ) || ! did_action( 'bp_loaded' ) ) {
+			add_action(
+				'bp_loaded',
+				function () use ( $old_value, $new_value ) {
+					bb_reverse_sync_components_to_features( $old_value, $new_value );
+				},
+				6
+			);
+		}
 		return;
 	}
 
