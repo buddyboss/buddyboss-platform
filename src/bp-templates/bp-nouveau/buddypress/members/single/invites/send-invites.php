@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_member_hook( 'before', 'invites_send_template' );
 $send_invite_member_type_allow     = bp_check_member_send_invites_tab_member_type_allowed();
 $is_disabled_invite_member_subject = bp_disable_invite_member_email_subject();

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_group_hook( 'before', 'manage_members_list' );
 $bp_current_group_id = bp_get_current_group_id();
 ?>

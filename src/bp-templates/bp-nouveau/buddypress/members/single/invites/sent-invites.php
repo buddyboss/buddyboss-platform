@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 
 $email = trim( bb_filter_input_string( INPUT_GET, 'email' ) );

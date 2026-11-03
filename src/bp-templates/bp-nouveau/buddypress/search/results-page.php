@@ -13,6 +13,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $post_title = '';
 
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {

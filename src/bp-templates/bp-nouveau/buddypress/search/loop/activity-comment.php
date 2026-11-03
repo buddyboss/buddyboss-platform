@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_activity_user_link = bp_get_activity_user_link();
 $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
 ?>

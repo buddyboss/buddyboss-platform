@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $forum_id    = get_the_ID();
 $total_topic = bbp_get_forum_topic_count( $forum_id );
 $total_reply = bbp_get_forum_reply_count( $forum_id );

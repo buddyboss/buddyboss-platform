@@ -203,7 +203,7 @@ function bp_core_admin_forums_tabs( $active_tab = '' ) {
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
-	echo $tabs_html;
+	echo $tabs_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tabs_html is built from esc_url()/esc_attr()/esc_html()-escaped parts.
 
 	/**
 	 * Fires after the output of tabs for the admin area.

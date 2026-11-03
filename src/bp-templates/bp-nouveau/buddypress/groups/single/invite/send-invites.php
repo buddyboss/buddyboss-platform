@@ -8,6 +8,9 @@
  * @version 1.2.3
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
 	bp_get_template_part( 'groups/single/parts/invite-subnav' );
 }
