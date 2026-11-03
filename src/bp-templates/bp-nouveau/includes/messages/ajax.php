@@ -494,6 +494,12 @@ function bp_nouveau_ajax_messages_send_reply() {
 		wp_send_json_error( $response );
 	}
 
+	// Group threads cannot be opened while "Group Messages" is disabled, so they cannot be replied to either.
+	if ( bb_messages_is_disabled_group_thread( $thread_id ) ) {
+		$response['feedback'] = __( 'Group messages have been disabled by a site administrator.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	if ( ! empty( $_POST['media'] ) ) {
 		$can_send_media = bb_user_has_access_upload_media( 0, bp_loggedin_user_id(), 0, $thread_id, 'message' );
 		if ( ! $can_send_media ) {
@@ -894,6 +900,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'is_deleted'                      => $is_deleted_group,
 			'is_group'                        => ! empty( $group_id ) ? true : false,
 			'is_group_thread'                 => $is_group_thread,
+			'group_id'                        => (int) $group_id,
 			'group_link'                      => $group_link,
 			'group_message_users'             => $group_message_users,
 			'group_message_type'              => $group_message_type,
@@ -1063,7 +1070,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+			if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
 				$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
 
 				if ( ! empty( $video_ids ) ) {
@@ -1187,6 +1194,7 @@ function bp_nouveau_ajax_messages_thread_read() {
  * AJAX get messages for each thread.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss 3.6.2 Only thread participants and moderators may read the thread.
  */
 function bp_nouveau_ajax_get_thread_messages() {
 	global $thread_template, $media_template, $document_template, $wpdb, $bp;
@@ -1217,8 +1225,27 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	$post = $_POST;
 
+	$requested_thread_id = $thread_id;
+
 	$thread_id = apply_filters( 'bb_messages_validate_thread', $thread_id );
 	if ( empty( $thread_id ) ) {
+		// Name the reason only to members who can see the thread; others keep the generic answer.
+		if (
+			bb_messages_is_disabled_group_thread( $requested_thread_id ) &&
+			( bp_current_user_can( 'bp_moderate' ) || bb_messages_is_active_thread_recipient( $requested_thread_id ) )
+		) {
+			$response = array(
+				'feedback'                => __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ),
+				'type'                    => 'warning',
+				'group_messages_disabled' => true,
+			);
+		}
+
+		wp_send_json_error( $response );
+	}
+
+	// Only thread participants and moderators may read a thread's messages.
+	if ( ! messages_check_thread_access( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1280,6 +1307,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
  * AJAX delete entire thread.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss 3.6.2 Limited to moderators and switched admins; deletes the meta of every message.
  */
 function bp_nouveau_ajax_delete_thread() {
 
@@ -1295,6 +1323,18 @@ function bp_nouveau_ajax_delete_thread() {
 	}
 
 	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	/*
+	 * Deleting an entire conversation removes it for every participant, so it is
+	 * limited to the users who are shown the "Delete conversation" action: site
+	 * moderators and admins switched into a member's account. The same helper
+	 * decides whether the templates show the action.
+	 */
+	$can_delete_conversation = bb_messages_user_can_delete_conversation();
+
+	if ( ! $can_delete_conversation ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1355,9 +1395,24 @@ function bp_nouveau_ajax_delete_thread() {
 		$wpdb->query( $query ); // db call ok; no-cache ok.
 
 		// Delete messages meta.
-		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		if ( ! empty( $message_ids ) ) {
+			$meta_message_ids = array_map( 'absint', $message_ids );
+
+			/*
+			 * Prime the meta cache for every message first. The media, video, document and
+			 * GIF cleanup hooked to bp_messages_thread_after_delete reads this meta after the
+			 * rows below are gone, so without it only already-cached messages get cleaned up.
+			 * Primed in chunks so a very large thread does not build one huge IN() query.
+			 */
+			foreach ( array_chunk( $meta_message_ids, 500 ) as $meta_message_ids_chunk ) {
+				bp_messages_update_meta_cache( $meta_message_ids_chunk );
+			}
+
+			$id_placeholders = implode( ',', array_fill( 0, count( $meta_message_ids ), '%d' ) );
+			$query_meta      = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$id_placeholders})", $meta_message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		}
 
 		// Delete thread.
 		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -1741,6 +1796,7 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
  * Messages for each thread.
  *
  * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 3.6.2 Video thumbnails use the video's poster image.
  *
  * @param int   $thread_id thread id.
  * @param array $post      $_POST data.
@@ -2618,7 +2674,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							<p class="bb-video-duration"><?php bp_video_length(); ?></p>
 							<?php
 						}
-						$thumbnail_url = bb_video_get_thumb_url( bp_get_video_id(), bp_get_video_attachment_id(), 'bb-video-profile-album-add-thumbnail-directory-poster-image' );
+						// Use the video's poster image, not the video file attachment itself.
+						$poster_id     = bb_get_video_thumb_id( bp_get_video_attachment_id() );
+						$thumbnail_url = $poster_id ? bb_video_get_thumb_url( bp_get_video_id(), $poster_id, 'bb-video-profile-album-add-thumbnail-directory-poster-image' ) : '';
 
 						if ( empty( $thumbnail_url ) ) {
 							$thumbnail_url = bb_get_video_default_placeholder_image();
@@ -2650,7 +2708,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if (
-			bp_is_active( 'media' ) &&
+			bp_is_active( 'document' ) &&
 			(
 				(
 					$group_id &&
@@ -2871,7 +2929,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
-	$thread->user_can_upload_gif             = bb_user_has_access_upload_gif( 0, $login_user_id, 0, $thread_id, 'message' );
+	$thread->user_can_upload_gif             = bb_media_gif_picker_available() && bb_user_has_access_upload_gif( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_emoji           = bb_user_has_access_upload_emoji( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->is_thread_archived              = ( 0 < $is_thread_archived ) ? true : false;
 
@@ -2896,6 +2954,13 @@ function bp_nouveau_ajax_hide_thread() {
 	}
 
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
+
+	// Only threads the member is in (or moderators, as for deleting): the toast below names the recipients or the group.
+	foreach ( $thread_ids as $thread_id ) {
+		if ( ! bb_messages_is_active_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error( $response );
+		}
+	}
 
 	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
 	if ( $is_group_message_thread ) {
@@ -2991,6 +3056,26 @@ function bp_nouveau_ajax_hide_thread() {
 }
 
 /**
+ * Check that the current user may list the recipients of a thread over AJAX.
+ *
+ * @since BuddyBoss 3.6.1
+ *
+ * @param int $thread_id Thread ID.
+ *
+ * @return bool
+ */
+function bb_nouveau_ajax_can_list_thread_recipients( $thread_id ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
+		return false;
+	}
+
+	$thread_id = (int) $thread_id;
+
+	// One recipient row instead of messages_check_thread_access(), which loads every recipient of the thread.
+	return $thread_id > 0 && ( bp_current_user_can( 'bp_moderate' ) || bb_messages_is_active_thread_recipient( $thread_id ) );
+}
+
+/**
  * Function which get next recipients list for block member in message section and message header.
  */
 function bb_nouveau_ajax_recipient_list_for_blocks() {
@@ -2999,6 +3084,10 @@ function bb_nouveau_ajax_recipient_list_for_blocks() {
 
 	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+	if ( ! bb_nouveau_ajax_can_list_thread_recipients( $post_data['thread_id'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'You do not have access to that conversation.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 
@@ -3110,6 +3199,10 @@ function bb_nouveau_ajax_moderated_recipient_list() {
 	$user_id   = bp_loggedin_user_id() ? (int) bp_loggedin_user_id() : '';
 	if ( ! isset( $post_data['thread_id'] ) ) {
 		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'Missing thread id.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
+	if ( ! bb_nouveau_ajax_can_list_thread_recipients( $post_data['thread_id'] ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_recipient_list_for_blocks', esc_html__( 'You do not have access to that conversation.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
 	if ( ! isset( $post_data['page_no'] ) ) {
@@ -3330,6 +3423,13 @@ function bb_nouveau_ajax_left_join_members_list() {
 		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'Missing message type.', 'buddyboss' ) );
 		wp_send_json_error( $response );
 	}
+
+	// The joined/left members belong to a group thread message: same access as the thread.
+	$message = new BP_Messages_Message( (int) $post_data['message_id'] );
+	if ( empty( $message->thread_id ) || ! bb_nouveau_ajax_can_list_thread_recipients( $message->thread_id ) ) {
+		$response['message'] = new WP_Error( 'bp_error_get_left_join_members_list', esc_html__( 'You do not have access to that conversation.', 'buddyboss' ) );
+		wp_send_json_error( $response );
+	}
 	$html = '';
 
 	if ( 'joined' === $post_data['message_type'] ) {
@@ -3414,6 +3514,13 @@ function bp_nouveau_ajax_unhide_thread() {
 	}
 
 	$thread_ids = wp_parse_id_list( $_POST['id'] );
+
+	// Only threads the member is in (or moderators, as for deleting): the toast below names the recipients or the group.
+	foreach ( $thread_ids as $thread_id ) {
+		if ( ! bb_messages_is_active_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error( $response );
+		}
+	}
 
 	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
 	if ( $is_group_message_thread ) {

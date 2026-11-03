@@ -608,6 +608,37 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$form_fields_all = $form_fields->get_data();
 		$param           = $request->get_params();
 
+		/*
+		 * Reject a submitted Profile Type that is not offered on the registration
+		 * form BEFORE the $form_fields allowlist below silently drops off-form
+		 * fields, so the app receives the same validation error the web register
+		 * screen returns. bp_assign_default_member_type_to_activate_user() remains
+		 * the activation-time backstop.
+		 */
+		if (
+			function_exists( 'bp_get_xprofile_member_type_field_id' )
+			&& function_exists( 'bb_is_member_type_allowed_on_registration' )
+		) {
+			$bb_member_type_key = 'field_' . bp_get_xprofile_member_type_field_id();
+			if (
+				! empty( $param[ $bb_member_type_key ] )
+				&& ! bp_current_user_can( 'bp_moderate' )
+				&& (
+					// An array is never a valid single-select submission; reject it
+					// (rather than skip validation) and short-circuit absint() so it
+					// is not called on an array.
+					is_array( $param[ $bb_member_type_key ] )
+					|| ! bb_is_member_type_allowed_on_registration( absint( $param[ $bb_member_type_key ] ) )
+				)
+			) {
+				return new WP_Error(
+					'bp_rest_invalid_member_type',
+					__( 'Please select a valid profile type.', 'buddyboss' ),
+					array( 'status' => 400 )
+				);
+			}
+		}
+
 		$posted_data = array();
 		$date_fields = array();
 		if ( ! empty( $form_fields_all ) ) {
