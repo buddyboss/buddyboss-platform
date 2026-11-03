@@ -21,6 +21,12 @@ defined( 'ABSPATH' ) || exit;
 
 define('PLATFORM_EDITION', 'developer');
 
+/*
+ * Build marker: 'com' in the buddyboss.com build. The WordPress.org build ships 'wporg' under a
+ * renamed constant, so Pro, the theme and add-ons can stand down there instead of fataling.
+ */
+define( 'BB_PLATFORM_BUILD', 'com' );
+
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) && file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
