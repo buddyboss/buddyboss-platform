@@ -115,19 +115,23 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			 */
 			$sql['from'] = apply_filters( 'bp_document_search_join_sql_folder', $sql['from'] );
 
-			$where_conditions   = array( '1=1' );
-			$where_conditions[] = $wpdb->prepare(
-				"(
-                    f.title LIKE %s AND
-                    (
-                        f.privacy IN ( '" . implode( "','", $privacy ) . "' ) " .
-				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( f.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND f.privacy = 'grouponly' )" : '' ) .
-				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( f.user_id IN ( '" . implode( "','", $friends ) . "' ) AND f.privacy = 'friends' )" : '' ) .
-				( is_user_logged_in() ? " OR ( f.user_id = '" . bp_loggedin_user_id() . "' AND f.privacy = 'onlyme' )" : '' ) .
-				')
-				)',
-				'%' . $wpdb->esc_like( $search_term ) . '%'
+			// Who may see a folder: each visibility clause is prepared on its own, the
+			// privacy values bound as %s and the group/user ids as %d.
+			$visibility_sql = array(
+				$wpdb->prepare( 'f.privacy IN ( ' . implode( ', ', array_fill( 0, count( $privacy ), '%s' ) ) . ' )', $privacy ),
 			);
+			if ( ! empty( $user_groups ) ) {
+				$visibility_sql[] = $wpdb->prepare( '( f.group_id IN ( ' . implode( ', ', array_fill( 0, count( $user_groups ), '%d' ) ) . " ) AND f.privacy = 'grouponly' )", $user_groups );
+			}
+			if ( bp_is_active( 'friends' ) && ! empty( $friends ) ) {
+				$visibility_sql[] = $wpdb->prepare( '( f.user_id IN ( ' . implode( ', ', array_fill( 0, count( $friends ), '%d' ) ) . " ) AND f.privacy = 'friends' )", $friends );
+			}
+			if ( is_user_logged_in() ) {
+				$visibility_sql[] = $wpdb->prepare( "( f.user_id = %d AND f.privacy = 'onlyme' )", bp_loggedin_user_id() );
+			}
+
+			$where_conditions   = array( '1=1' );
+			$where_conditions[] = '( ' . $wpdb->prepare( 'f.title LIKE %s', '%' . $wpdb->esc_like( $search_term ) . '%' ) . ' AND ( ' . implode( ' OR ', $visibility_sql ) . ' ) )';
 
 			/**
 			 * Filters the MySQL WHERE conditions for the folder Search query.

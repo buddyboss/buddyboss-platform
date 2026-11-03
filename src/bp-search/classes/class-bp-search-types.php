@@ -105,7 +105,7 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 			}
 			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
 				$sql    = $this->sql( $search_term, true );
-				$result = $wpdb->get_var( $sql );
+				$result = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the COUNT query returned by the search helper's sql(); the core helpers bind the search term with $wpdb->prepare(); their other values are prepared, int-cast, literal or registered taxonomy names. Helpers added through bp_search_additional_search_helpers and the per-helper *_sql filters are extension points that build or alter their own SQL.
 
 				$bbp_search_term[ $cache_key ] = $result;
 			} else {

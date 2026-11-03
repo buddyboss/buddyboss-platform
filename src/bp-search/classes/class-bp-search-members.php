@@ -353,8 +353,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape.
-							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing,WordPress.DB.PreparedSQL.NotPrepared -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape. The template is built above from the $bp->profile table name, int-cast field id lists and $date_sql (already $wpdb->prepare()'d by bb_generate_date_search_sql(), its % escaped by the placeholder hash); the LIKE/REGEXP terms are bound here as %s.
+							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_xprofile is $wpdb->prepare()'d on the previous line.
 
 							// check visiblity for field id with current user.
 							if ( ! empty( $sql_xprofile_result ) ) {
@@ -447,7 +447,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			if ( ! empty( $query_placeholder ) ) {
-				$sql = $wpdb->prepare( $sql, $query_placeholder );
+				$sql = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- as built by this method: table names from $wpdb/$bp, every search term and the display-name exclusion ids/values bound here as %s/%d, xprofile user ids int-cast, member type clause from WP_Tax_Query. JOIN/WHERE pass through the documented bp_user_search_join_sql / bp_user_search_where_sql filters (core listener: BP_Suspend_Member); listeners may alter them.
 			}
 
 			return apply_filters(

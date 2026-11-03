@@ -26,7 +26,8 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 			if ( $only_totalrow_count ) {
 				$sql .= ' COUNT( DISTINCT id ) ';
 			} else {
-				$sql                .= " DISTINCT id , '{$this->type}' as type, post_title LIKE %s AS relevance, post_date as entry_date  ";
+				$sql                .= ' DISTINCT id , %s as type, post_title LIKE %s AS relevance, post_date as entry_date  ';
+				$query_placeholder[] = $this->type;
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
@@ -40,12 +41,13 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 									OR 	(post_content LIKE %s)
 								)
 							)
-						AND post_type = '{$this->type}'
+						AND post_type = %s
 						AND post_status = 'publish'
 				";
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
+			$query_placeholder[] = $this->type;
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is built in this method from literals and the $wpdb->posts table name; every value (post type, search term) is bound here as a %s placeholder.
 
 			return apply_filters(
 				'Bp_Search_Forums_sql',

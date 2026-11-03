@@ -519,7 +519,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 * This also means that all such classes must have a common set of methods.
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
-					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . ( $args['number'] ) : '';
+					$limit                 = isset( $_REQUEST['view'] ) ? ' LIMIT ' . absint( $args['number'] ) : '';
 					if (
 						bp_is_active( 'forums' ) &&
 						in_array( $search_type, array( bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ), true )
@@ -543,10 +543,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- UNION of each search helper's union_sql() (core helpers bind the search term with $wpdb->prepare(); their other values are prepared, int-cast, literal or registered taxonomy names; helpers added via bp_search_additional_search_helpers and the per-helper *_sql filters are extension points that build or alter their own SQL); ORDER BY is literal and every LIMIT value is absint()'d.
 				/*
 				 $results will have a structure like below */
 				/*
@@ -699,13 +699,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				} elseif ( $args['per_page'] > 0 ) {
-					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
-					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
+					$offset            = ( (int) $args['current_page'] * absint( $args['per_page'] ) ) - absint( $args['per_page'] );
+					$pre_search_query .= ' LIMIT ' . $offset . ', ' . absint( $args['per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- the search helper's union_sql() (core helpers bind the search term with $wpdb->prepare(); their other values are prepared, int-cast, literal or registered taxonomy names; helpers added via bp_search_additional_search_helpers and the per-helper *_sql filters are extension points that build or alter their own SQL); ORDER BY is literal and the LIMIT values are integers (absint()/int cast).
 
 				/*
 				 $results will have a structure like below */
