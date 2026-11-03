@@ -1461,31 +1461,33 @@ function bp_media_delete_orphaned_attachments() {
 	 * @since BuddyBoss 1.7.6
 	 */
 	global $wpdb;
-	$post_table              = $wpdb->posts;
-	$postmeta_table          = $wpdb->postmeta;
 	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
 	$six_hours_ago           = gmdate( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
-	$query = "SELECT {$post_table}.ID
-				FROM {$post_table}
-				LEFT JOIN {$postmeta_table} ON ( {$post_table}.ID = {$postmeta_table}.post_id )
-				LEFT JOIN {$postmeta_table} AS mt1
-					ON ( {$post_table}.ID = mt1.post_id AND mt1.meta_key = 'bb_media_draft' )
+	// Table names from $wpdb; the cut-off date bound as %s.
+	$media_wp_query_posts = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT {$wpdb->posts}.ID
+				FROM {$wpdb->posts}
+				LEFT JOIN {$wpdb->postmeta} ON ( {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id )
+				LEFT JOIN {$wpdb->postmeta} AS mt1
+					ON ( {$wpdb->posts}.ID = mt1.post_id AND mt1.meta_key = 'bb_media_draft' )
 					WHERE 1=1 AND
-						( {$post_table}.post_date_gmt < '{$six_hours_ago}' ) AND
+						( {$wpdb->posts}.post_date_gmt < %s ) AND
 						(
 							(
-								{$postmeta_table}.meta_key = 'bp_media_saved' AND
-								{$postmeta_table}.meta_value = '0'
+								{$wpdb->postmeta}.meta_key = 'bp_media_saved' AND
+								{$wpdb->postmeta}.meta_value = '0'
 							) AND
 							mt1.post_id IS NULL
 						) AND
-						{$post_table}.post_type = 'attachment' AND
-						( {$post_table}.post_status = 'inherit' )
-				GROUP BY {$post_table}.ID
-				ORDER BY {$post_table}.post_date DESC";
-
-	$media_wp_query_posts = $wpdb->get_col( $query );
+						{$wpdb->posts}.post_type = 'attachment' AND
+						( {$wpdb->posts}.post_status = 'inherit' )
+				GROUP BY {$wpdb->posts}.ID
+				ORDER BY {$wpdb->posts}.post_date DESC",
+			$six_hours_ago
+		)
+	);
 
 	if ( ! empty( $media_wp_query_posts ) ) {
 		foreach ( $media_wp_query_posts as $post_id ) {
@@ -2901,7 +2903,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 	}
 
 	// db call ok; no-cache ok;
-	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
+	$data = $wpdb->get_results( $media_album_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $media_album_query is the return of $wpdb->prepare() in either branch above (albums table name from $bp->media, user_id/group_id bound as %d).
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {

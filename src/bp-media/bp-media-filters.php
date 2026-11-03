@@ -1214,8 +1214,8 @@ function bp_media_message_privacy_repair() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	// Table name from $bp->media; OFFSET bound as %d.
+	$medias = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET %d ", $offset ) );
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1255,8 +1255,8 @@ function bp_media_admin_repair_media() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	// Table name from $bp->media; OFFSET bound as %d.
+	$medias = $wpdb->get_results( $wpdb->prepare( "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET %d ", $offset ) );
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1267,8 +1267,7 @@ function bp_media_admin_repair_media() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-						$wpdb->query( $update_query );
+						$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id=%d, privacy='grouponly' WHERE id=%d ", $activity->item_id, $media->id ) );
 					}
 					if ( 'media' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1278,8 +1277,7 @@ function bp_media_admin_repair_media() {
 									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
-									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-									$wpdb->query( $update_query );
+									$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id=%d, privacy='grouponly' WHERE id=%d ", $media_activity->item_id, $media->id ) );
 									$activity->item_id   = $media_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1319,15 +1317,20 @@ function bp_media_forum_privacy_repair() {
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp     = buddypress();
 
-	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
-	$records = $wpdb->get_col( $squery );
+	// Table names from $wpdb; OFFSET bound as %d.
+	$records = $wpdb->get_col( $wpdb->prepare( "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET %d ", $offset ) );
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
-				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
-				if ( $media_ids ) {
-					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ')';
-					$wpdb->query( $update_query );
+				// The meta is a comma-separated list of media ids; bind one %d per id (it was spliced in raw).
+				$media_ids = array_filter( wp_parse_id_list( get_post_meta( $record, 'bp_media_ids', true ) ) );
+				if ( ! empty( $media_ids ) ) {
+					$wpdb->query(
+						$wpdb->prepare(
+							"UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . implode( ',', array_fill( 0, count( $media_ids ), '%d' ) ) . ')',
+							$media_ids
+						)
+					);
 				}
 			}
 			$offset ++;
