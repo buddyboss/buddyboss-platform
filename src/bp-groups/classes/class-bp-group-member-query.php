@@ -389,7 +389,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 			// Call $wpdb->prepare passing the values of the array as separate arguments.
 			$query = call_user_func_array( array( $wpdb, 'prepare' ), array_merge( array( $sql ), $group_ids ) );
 
-			$extras              = $wpdb->get_results( $query );
+			$extras              = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above (group IDs from wp_parse_id_list() as %s); $user_ids_sql is the comma-separated wp_parse_id_list() list BP_User_Query passes to bp_user_query_populate_extras; table name from $bp->groups.
 			$cache[ $cache_key ] = $extras;
 		} else {
 			$extras = $cache[ $cache_key ];
