@@ -1366,6 +1366,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action': 'document_move',
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'document_id': document_id,
 				'folder_id': folder_id,
@@ -1450,6 +1451,7 @@ window.bp = window.bp || {};
 
 			var data = {
 				'action': 'media_move',
+				'bb_legacy_template': 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'media_id': media_id,
 				'album_id': album_id,
@@ -7455,6 +7457,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: {
 						action: 'media_get_media_description',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id: self.current_media.id,
 						attachment_id: self.current_media.attachment_id,
 						nonce: BP_Nouveau.nonces.media
@@ -8080,6 +8083,7 @@ window.bp = window.bp || {};
 						url: BP_Nouveau.ajaxurl,
 						data: {
 							action: 'media_get_activity',
+							bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 							id: self.current_media.activity_id,
 							group_id: !_.isUndefined( self.current_media.group_id ) ? self.current_media.group_id : 0,
 							nonce: BP_Nouveau.nonces.media
@@ -8136,6 +8140,7 @@ window.bp = window.bp || {};
 						url: BP_Nouveau.ajaxurl,
 						data: {
 							action: 'document_get_activity',
+							bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 							id: self.current_document.activity_id,
 							group_id: !_.isUndefined( self.current_document.group_id ) ? self.current_document.group_id : 0,
 							nonce: BP_Nouveau.nonces.media
@@ -8188,6 +8193,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: {
 						action: 'document_get_document_description',
+						bb_legacy_template: 1, // Keep non-RL markup in the response when ReadyLaunch is on.
 						id: self.current_document.id,
 						attachment_id: self.current_document.attachment_id,
 						nonce: BP_Nouveau.nonces.media
