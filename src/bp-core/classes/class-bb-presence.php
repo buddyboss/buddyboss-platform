@@ -585,56 +585,87 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * Get Pre User ID from WordPress Cookie.
 		 *
 		 * @since BuddyBoss 2.3.1
+		 * @since BuddyBoss [BBVERSION] Validates the auth cookie (HMAC, expiry and session token)
+		 *                              instead of trusting the username stored in it.
 		 *
 		 * @param int $user_id User ID.
 		 *
 		 * @return int
 		 */
 		public function bb_cookie_support( $user_id ) {
-			$scheme = apply_filters( 'auth_redirect_scheme', '' );
+			$this->bb_load_auth_dependencies();
 
-			$header = $this->bb_get_all_headers();
+			$auth_cookies = array(
+				'logged_in'   => LOGGED_IN_COOKIE,
+				'secure_auth' => SECURE_AUTH_COOKIE,
+				'auth'        => AUTH_COOKIE,
+			);
 
-			$cookies = '';
-			if ( ! empty( $header ) ) {
-				foreach ( $header as $k => $v ) {
-					if ( 'cookie' === strtolower( $k ) ) {
-						$cookies = $v;
-						break;
-					}
+			foreach ( $auth_cookies as $scheme => $cookie_name ) {
+				if ( empty( $_COOKIE[ $cookie_name ] ) ) {
+					continue;
+				}
+
+				// The same check WordPress runs on a normal request, so a forged cookie cannot pick a user.
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				$valid_user_id = wp_validate_auth_cookie( wp_unslash( $_COOKIE[ $cookie_name ] ), $scheme );
+
+				if ( $valid_user_id ) {
+					return (int) $valid_user_id;
 				}
 			}
 
-			$wp_cookie = '';
+			return $user_id;
+		}
 
-			if ( ! empty( $cookies ) ) {
-				$cookies = explode( ';', trim( $cookies ) );
-				if ( ! empty( $cookies ) ) {
-					foreach ( $cookies as $cookie ) {
-						$cookie = trim( $cookie );
-						if (
-							strpos( $cookie, 'wordpress_test_' ) === false &&
-							strpos( $cookie, 'wordpress_' ) !== false
-						) {
-							$wp_cookie = $cookie;
-							break;
-						}
-					}
-				}
+		/**
+		 * Load what is needed to validate auth cookies on the presence endpoints.
+		 *
+		 * The presence API MU plugin runs at muplugins_loaded, before WordPress loads
+		 * pluggable.php and defines the cookie constants. The native presence file
+		 * loads both itself, so this is a no-op there.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return void
+		 */
+		private function bb_load_auth_dependencies() {
+			if ( ! function_exists( 'wp_validate_auth_cookie' ) ) {
+				require_once ABSPATH . WPINC . '/pluggable.php';
 			}
 
-			$cookie_elements = $this->bb_wp_parse_auth_cookie( $wp_cookie, $scheme );
-
-			if ( $cookie_elements && isset( $cookie_elements['username'] ) ) {
-				global $wpdb;
-
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$get_user = $wpdb->get_row( $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE user_login=%s", $cookie_elements['username'] ) );
-
-				if ( $get_user ) {
-					return $get_user->ID;
-				}
+			if ( ! defined( 'LOGGED_IN_COOKIE' ) || ! defined( 'COOKIEHASH' ) ) {
+				wp_cookie_constants();
 			}
+		}
+
+		/**
+		 * Whether the request comes from an admin using the web "View As" (member switching).
+		 *
+		 * Web View As logs the browser in as the member and keeps the admin in the old user
+		 * cookie. bp_current_member_switched() is not available on the presence endpoints,
+		 * so validate that cookie here the same way BP_Core_Members_Switching::get_old_user() does.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $user_id ID of the user the request is authenticated as.
+		 *
+		 * @return bool True when a valid old user cookie belongs to someone other than $user_id.
+		 */
+		public function bb_is_web_member_switched( $user_id ) {
+			$this->bb_load_auth_dependencies();
+
+			$cookie_name = defined( 'BP_MEMBER_SWITCHING_OLDUSER_COOKIE' ) ? BP_MEMBER_SWITCHING_OLDUSER_COOKIE : 'buddyboss_user_sw_olduser_' . COOKIEHASH;
+
+			if ( empty( $_COOKIE[ $cookie_name ] ) ) {
+				return false;
+			}
+
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$old_user_id = (int) wp_validate_auth_cookie( wp_unslash( $_COOKIE[ $cookie_name ] ), 'logged_in' );
+
+			// A leftover cookie for the same account is not a switch; the user is browsing as themselves.
+			return $old_user_id && $old_user_id !== (int) $user_id;
 		}
 
 		/**
@@ -694,6 +725,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * Function to get user if from JWT token.
 		 *
 		 * @since BuddyBoss 2.3.1
+		 * @since BuddyBoss [BBVERSION] Verifies the token signature and jti, and flags app View As.
 		 *
 		 * @param int $user_id User ID.
 		 *
@@ -717,8 +749,12 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				$token = explode( '.', $jwt_token );
 
-				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-				$token_pre = (array) json_decode( base64_decode( $token[0] ) );
+				// Only trust a token signed with the app's secret, the same check the app runs.
+				if ( ! $this->bb_verify_jwt_signature( $token ) ) {
+					return $user_id;
+				}
+
+				$token_pre = (array) json_decode( (string) $this->bb_base64url_decode( $token[0] ) );
 
 				if (
 					array(
@@ -729,8 +765,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					return $user_id;
 				}
 
-				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
-				$token = (array) json_decode( base64_decode( $token[1] ) );
+				$token = (array) json_decode( (string) $this->bb_base64url_decode( $token[1] ) );
 
 				if ( ! empty( $token ) ) {
 					if ( empty( $token['exp'] ) ) {
@@ -747,12 +782,20 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 					isset( $token['data']->user ) &&
 					isset( $token['data']->user->id )
 				) {
-					$user_id = $token['data']->user->id;
+					$jti           = ( isset( $token['jti'] ) ) ? $token['jti'] : false;
+					$token_user_id = (int) $token['data']->user->id;
+
+					// The token must not be revoked: its jti has to still be registered for the user.
+					$jti_data = get_user_meta( $token_user_id, '_bbapp_jwt_jti', true );
+					if ( ! $jti || ! is_array( $jti_data ) || ! isset( $jti_data[ $jti ] ) ) {
+						return $user_id;
+					}
+
+					$user_id = $token_user_id;
 
 					// Check if there is any switch user.
 					$switch_data = get_user_meta( $user_id, '_bbapp_jwt_switch_user', true );
 					$switch_data = ( ! is_array( $switch_data ) ) ? array() : $switch_data;
-					$jti         = ( isset( $token['jti'] ) ) ? $token['jti'] : false;
 
 					// if switch user is found for current access token pass it.
 					if ( $jti && isset( $switch_data[ $jti ] ) && is_numeric( $switch_data[ $jti ] ) ) {
@@ -770,6 +813,68 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			return $user_id;
 
+		}
+
+		/**
+		 * Verify the HS256 signature of an app access token.
+		 *
+		 * The presence endpoints answer before the BuddyBoss App plugin loads, so the
+		 * token is checked here against the secret the app signs it with.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $token_parts Token split on '.' (header, payload, signature).
+		 *
+		 * @return bool
+		 */
+		private function bb_verify_jwt_signature( $token_parts ) {
+			if ( 3 !== count( $token_parts ) || '' === $token_parts[2] ) {
+				return false;
+			}
+
+			$signature = $this->bb_base64url_decode( $token_parts[2] );
+			if ( empty( $signature ) ) {
+				return false;
+			}
+
+			// Stored per site, or on the main network site when the app is network activated.
+			$secrets = array( get_option( 'bbapp_jwt_secret' ) );
+			if ( is_multisite() ) {
+				$secrets[] = get_network_option( 1, 'bbapp_jwt_secret' );
+			}
+
+			foreach ( array_unique( array_filter( $secrets, 'is_string' ) ) as $secret ) {
+				if ( '' === $secret ) {
+					continue;
+				}
+
+				$expected = hash_hmac( 'sha256', $token_parts[0] . '.' . $token_parts[1], $secret, true );
+
+				if ( hash_equals( $expected, $signature ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		 * Decode a base64url string (RFC 4648 §5), as used by JWT.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $input Encoded string.
+		 *
+		 * @return string|false
+		 */
+		private function bb_base64url_decode( $input ) {
+			$remainder = strlen( $input ) % 4;
+			if ( $remainder ) {
+				$input .= str_repeat( '=', 4 - $remainder );
+			}
+
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			return base64_decode( strtr( $input, '-_', '+/' ), true );
 		}
 
 		/**
@@ -930,6 +1035,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * Function to cache rendered response in cache.
 		 *
 		 * @since BuddyBoss 2.3.1
+		 * @since BuddyBoss [BBVERSION] Skips the last activity write under app or web View As.
 		 *
 		 * @param int   $user_id User id.
 		 * @param array $ids     Post user ids.
@@ -1037,9 +1143,9 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$current_endpoint = $this->bb_get_current_endpoint();
 			$header           = apply_filters( 'bb_rest_post_dispatch_header_cache', array(), $current_endpoint );
 
-			// Update login users last activity, unless an admin is viewing the app as this
-			// member. See self::$is_switched_user.
-			if ( ! self::$is_switched_user ) {
+			// Update login users last activity, unless an admin is viewing the app or the web
+			// as this member. See self::$is_switched_user and bb_is_web_member_switched().
+			if ( ! self::$is_switched_user && ! $this->bb_is_web_member_switched( $user_id ) ) {
 				self::bb_update_last_activity( $user_id );
 			}
 
