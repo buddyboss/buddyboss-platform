@@ -266,7 +266,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * admin email (BuddyBoss App adds it unconditionally), the legacy licence
 			 * option with its keys (Platform Pro and the Theme), a licence key added
 			 * through `bb_telemetry_license_data`, and the App's connection token,
-			 * AppCenter account id and app id. This runs after every contributor and
+			 * AppCenter account id and app id. The database host name goes too: on
+			 * managed hosting it can name the server or the customer account, which
+			 * "anonymous" does not promise. This runs after every contributor and
 			 * filter that can touch the payload.
 			 */
 			$bb_telemetry_scrub_private = true;
@@ -275,7 +277,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			// @bbwt-com-end telemetry-complete
 
 			if ( $bb_telemetry_scrub_private ) {
-				foreach ( array( 'admin_email', 'bboss_updater_saved_licenses', 'app_key', 'vendor_id', 'app_id' ) as $bb_telemetry_private_key ) {
+				foreach ( array( 'admin_email', 'bboss_updater_saved_licenses', 'app_key', 'vendor_id', 'app_id', 'db_provider' ) as $bb_telemetry_private_key ) {
 					unset( $bb_telemetry_data[ $bb_telemetry_private_key ] );
 				}
 
@@ -1285,11 +1287,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					</p>
 					<p>
 						<?php
+						/*
+						 * Builds where telemetry is off until an administrator opts in (the
+						 * WordPress.org edition) must not word this notice as opt-out.
+						 */
+						/* translators: %1$s: telemetry settings URL. */
+						$bb_telemetry_notice_text = __( 'You can help us improve the product by sharing anonymous usage statistics. Nothing is sent unless an administrator turns this on in your <a href="%1$s">telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' );
+						// @bbwt-com-start telemetry-complete
+						/* translators: %1$s: telemetry settings URL. */
+						$bb_telemetry_notice_text = __( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' );
+						// @bbwt-com-end telemetry-complete
+
 						// Message with link to telemetry settings.
 						printf(
 							wp_kses(
-							/* translators: %1$s and %2$s are links. */
-								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								$bb_telemetry_notice_text,
 								array(
 									'a' => array(
 										'href' => array(),

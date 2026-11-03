@@ -11303,8 +11303,9 @@ function bb_get_tool_usage() {
  *
  * Deliberately broader than `function_exists( 'bb_platform_pro' )`: a Plus
  * customer, or a site running a licensed add-on without the Pro plugin, is
- * still a paid site. Used to decide whether telemetry is forced to "complete"
- * and whether the Telemetry settings panel is shown.
+ * still a paid site. Used to decide whether the Telemetry settings panel is
+ * shown and, in builds that offer "complete" reporting (not the WordPress.org
+ * edition), whether telemetry is forced to "complete".
  *
  * @bbwt-com-start drm
  * Detection is DRM-based, with one deliberate exception for the theme. Plugin
