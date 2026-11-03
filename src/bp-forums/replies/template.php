@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses  bbp_get_reply_post_type() To get the reply post type
  */
 function bbp_reply_post_type() {
-	echo bbp_get_reply_post_type();
+	echo esc_attr( bbp_get_reply_post_type() );
 }
 
 /**
@@ -355,7 +355,7 @@ function bbp_the_reply() {
  * @uses  bbp_get_reply_id() To get the reply id
  */
 function bbp_reply_id( $reply_id = 0 ) {
-	echo bbp_get_reply_id( $reply_id );
+	echo esc_attr( bbp_get_reply_id( $reply_id ) );
 }
 
 /**
@@ -569,7 +569,7 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
  * @uses  bbp_get_reply_title() To get the reply title
  */
 function bbp_reply_title( $reply_id = 0 ) {
-	echo bbp_get_reply_title( $reply_id );
+	echo esc_html( bbp_get_reply_title( $reply_id ) );
 }
 
 /**
@@ -630,7 +630,7 @@ function bbp_get_reply_title_fallback( $post_title = '', $post_id = 0 ) {
  * @uses  bbp_get_reply_content() To get the reply content
  */
 function bbp_reply_content( $reply_id = 0 ) {
-	echo bbp_get_reply_content( $reply_id );
+	echo bbp_get_reply_content( $reply_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content is kses-filtered on save and run through the display filter chain (autoembed); wp_kses_post() would strip embeds.
 }
 
 /**
@@ -672,7 +672,7 @@ function bbp_get_reply_content( $reply_id = 0 ) {
  * @uses  bbp_get_reply_excerpt() To get the reply excerpt
  */
 function bbp_reply_excerpt( $reply_id = 0, $length = 100 ) {
-	echo bbp_get_reply_excerpt( $reply_id, $length );
+	echo wp_kses_post( bbp_get_reply_excerpt( $reply_id, $length ) );
 }
 
 /**
@@ -729,7 +729,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
  * @uses  bbp_get_reply_post_date() to get the output
  */
 function bbp_reply_post_date( $reply_id = 0, $humanize = false, $gmt = false ) {
-	echo bbp_get_reply_post_date( $reply_id, $humanize, $gmt );
+	echo esc_html( bbp_get_reply_post_date( $reply_id, $humanize, $gmt ) );
 }
 
 /**
@@ -803,7 +803,7 @@ function bbp_reply_content_append_revisions( $content = '', $reply_id = 0 ) {
  * @uses  bbp_get_reply_revision_log() To get the reply revision log
  */
 function bbp_reply_revision_log( $reply_id = 0 ) {
-	echo bbp_get_reply_revision_log( $reply_id );
+	echo wp_kses_post( bbp_get_reply_revision_log( $reply_id ) );
 }
 
 /**
@@ -958,7 +958,7 @@ function bbp_get_reply_revision_count( $reply_id = 0, $integer = false ) {
  * @uses  bbp_get_reply_status() To get the reply status
  */
 function bbp_reply_status( $reply_id = 0 ) {
-	echo bbp_get_reply_status( $reply_id );
+	echo esc_attr( bbp_get_reply_status( $reply_id ) );
 }
 
 /**
@@ -1073,7 +1073,7 @@ function bbp_is_reply_anonymous( $reply_id = 0 ) {
  * @uses       bbp_get_reply_author() To get the reply author
  */
 function bbp_reply_author( $reply_id = 0 ) {
-	echo bbp_get_reply_author( $reply_id );
+	echo esc_html( bbp_get_reply_author( $reply_id ) );
 }
 
 /**
@@ -1119,7 +1119,7 @@ function bbp_get_reply_author( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_id() To get the reply author id
  */
 function bbp_reply_author_id( $reply_id = 0 ) {
-	echo bbp_get_reply_author_id( $reply_id );
+	echo esc_attr( bbp_get_reply_author_id( $reply_id ) );
 }
 
 /**
@@ -1152,7 +1152,7 @@ function bbp_get_reply_author_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_display_name()
  */
 function bbp_reply_author_display_name( $reply_id = 0 ) {
-	echo bbp_get_reply_author_display_name( $reply_id );
+	echo esc_html( bbp_get_reply_author_display_name( $reply_id ) );
 }
 
 /**
@@ -1233,7 +1233,7 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
  * @uses  bbp_get_reply_author_avatar() To get the reply author id
  */
 function bbp_reply_author_avatar( $reply_id = 0, $size = 40 ) {
-	echo bbp_get_reply_author_avatar( $reply_id, $size );
+	echo bbp_get_reply_author_avatar( $reply_id, $size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
 
 /**
@@ -1280,7 +1280,7 @@ function bbp_get_reply_author_avatar( $reply_id = 0, $size = 40 ) {
  * @uses  bbp_get_reply_author_link() To get the reply author link
  */
 function bbp_reply_author_link( $args = '' ) {
-	echo bbp_get_reply_author_link( $args );
+	echo bbp_get_reply_author_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped markup incl. get_avatar() output; wp_kses_post() strips the avatar srcset.
 }
 
 /**
@@ -1466,7 +1466,7 @@ function bbp_get_reply_author_url( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_email() To get the reply author email
  */
 function bbp_reply_author_email( $reply_id = 0 ) {
-	echo bbp_get_reply_author_email( $reply_id );
+	echo esc_html( bbp_get_reply_author_email( $reply_id ) );
 }
 
 /**
@@ -1522,7 +1522,7 @@ function bbp_get_reply_author_email( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_role() To get the reply author role
  */
 function bbp_reply_author_role( $args = array() ) {
-	echo bbp_get_reply_author_role( $args );
+	echo wp_kses_post( bbp_get_reply_author_role( $args ) );
 }
 
 /**
@@ -1570,7 +1570,7 @@ function bbp_get_reply_author_role( $args = array() ) {
  * @uses  bbp_get_reply_topic_title() To get the reply topic title
  */
 function bbp_reply_topic_title( $reply_id = 0 ) {
-	echo bbp_get_reply_topic_title( $reply_id );
+	echo esc_html( bbp_get_reply_topic_title( $reply_id ) );
 }
 
 /**
@@ -1604,7 +1604,7 @@ function bbp_get_reply_topic_title( $reply_id = 0 ) {
  * @uses  bbp_get_reply_topic_id() To get the reply topic id
  */
 function bbp_reply_topic_id( $reply_id = 0 ) {
-	echo bbp_get_reply_topic_id( $reply_id );
+	echo esc_attr( bbp_get_reply_topic_id( $reply_id ) );
 }
 
 /**
@@ -1650,7 +1650,7 @@ function bbp_get_reply_topic_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_forum_id() To get the reply forum id
  */
 function bbp_reply_forum_id( $reply_id = 0 ) {
-	echo bbp_get_reply_forum_id( $reply_id );
+	echo esc_attr( bbp_get_reply_forum_id( $reply_id ) );
 }
 
 /**
@@ -1695,7 +1695,7 @@ function bbp_get_reply_forum_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_ancestor_id() To get the reply's ancestor id
  */
 function bbp_reply_ancestor_id( $reply_id = 0 ) {
-	echo bbp_get_reply_ancestor_id( $reply_id );
+	echo esc_attr( bbp_get_reply_ancestor_id( $reply_id ) );
 }
 
 /**
@@ -1737,7 +1737,7 @@ function bbp_get_reply_ancestor_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_to() To get the reply to id
  */
 function bbp_reply_to( $reply_id = 0 ) {
-	echo bbp_get_reply_to( $reply_id );
+	echo esc_html( bbp_get_reply_to( $reply_id ) );
 }
 
 /**
@@ -1779,7 +1779,7 @@ function bbp_get_reply_to( $reply_id = 0 ) {
  * @uses  bbp_get_reply_to_link() To get the reply to link
  */
 function bbp_reply_to_link( $args = array() ) {
-	echo bbp_get_reply_to_link( $args );
+	echo bbp_get_reply_to_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- link markup built with esc_url()/esc_attr(); wp_kses_post() strips its onclick handler.
 }
 
 /**
@@ -1861,7 +1861,7 @@ function bbp_get_reply_to_link( $args = array() ) {
  * @uses  bbp_get_cancel_reply_to_link() To get the reply cancellation link
  */
 function bbp_cancel_reply_to_link( $text = '' ) {
-	echo bbp_get_cancel_reply_to_link( $text );
+	echo bbp_get_cancel_reply_to_link( $text ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- link markup built with esc_url()/esc_attr(); wp_kses_post() strips its onclick handler.
 }
 
 /**
@@ -1908,7 +1908,7 @@ function bbp_get_cancel_reply_to_link( $text = '' ) {
  * @uses  bbp_get_reply_position() To get the reply position
  */
 function bbp_reply_position( $reply_id = 0, $topic_id = 0 ) {
-	echo bbp_get_reply_position( $reply_id, $topic_id );
+	echo esc_html( bbp_get_reply_position( $reply_id, $topic_id ) );
 }
 
 /**
@@ -1976,7 +1976,7 @@ function bbp_get_reply_position( $reply_id = 0, $topic_id = 0 ) {
  * @uses  bbp_get_reply_admin_links() To get the reply admin links
  */
 function bbp_reply_admin_links( $args = array() ) {
-	echo bbp_get_reply_admin_links( $args );
+	echo bbp_get_reply_admin_links( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- admin links built with esc_url()/esc_attr(); they include the reply-to link whose onclick handler wp_kses_post() strips.
 }
 
 /**
@@ -2090,7 +2090,7 @@ function bbp_get_reply_admin_links( $args = array() ) {
  * @uses  bbp_get_reply_edit_link() To get the reply edit link
  */
 function bbp_reply_edit_link( $args = '' ) {
-	echo bbp_get_reply_edit_link( $args );
+	echo wp_kses_post( bbp_get_reply_edit_link( $args ) );
 }
 
 /**
@@ -2161,7 +2161,7 @@ function bbp_get_reply_edit_link( $args = '' ) {
  * @uses  bbp_get_reply_edit_url() To get the reply edit url
  */
 function bbp_reply_edit_url( $reply_id = 0 ) {
-	echo bbp_get_reply_edit_url( $reply_id );
+	echo esc_url( bbp_get_reply_edit_url( $reply_id ) );
 }
 
 /**
@@ -2220,7 +2220,7 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
  * @uses  bbp_get_reply_trash_link() To get the reply trash link
  */
 function bbp_reply_trash_link( $args = '' ) {
-	echo bbp_get_reply_trash_link( $args );
+	echo wp_kses_post( bbp_get_reply_trash_link( $args ) );
 }
 
 /**
@@ -2348,7 +2348,7 @@ function bbp_get_reply_trash_link( $args = '' ) {
  * @uses  bbp_get_reply_spam_link() To get the reply spam link
  */
 function bbp_reply_spam_link( $args = '' ) {
-	echo bbp_get_reply_spam_link( $args );
+	echo wp_kses_post( bbp_get_reply_spam_link( $args ) );
 }
 
 /**
@@ -2422,7 +2422,7 @@ function bbp_get_reply_spam_link( $args = '' ) {
  * @uses  bbp_get_reply_move_link() To get the reply move link
  */
 function bbp_reply_move_link( $args = '' ) {
-	echo bbp_get_reply_move_link( $args );
+	echo wp_kses_post( bbp_get_reply_move_link( $args ) );
 }
 
 /**
@@ -2499,7 +2499,7 @@ function bbp_get_reply_move_link( $args = '' ) {
  * @uses  bbp_get_topic_split_link() To get the topic split link
  */
 function bbp_topic_split_link( $args = '' ) {
-	echo bbp_get_topic_split_link( $args );
+	echo wp_kses_post( bbp_get_topic_split_link( $args ) );
 }
 
 /**
@@ -2575,7 +2575,7 @@ function bbp_get_topic_split_link( $args = '' ) {
  * @uses  bbp_get_reply_class() To get the reply class
  */
 function bbp_reply_class( $reply_id = 0, $classes = array() ) {
-	echo bbp_get_reply_class( $reply_id, $classes );
+	echo bbp_get_reply_class( $reply_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 
 /**
@@ -2620,7 +2620,7 @@ function bbp_get_reply_class( $reply_id = 0, $classes = array() ) {
  * @uses  bbp_get_topic_pagination_count() To get the topic pagination count
  */
 function bbp_topic_pagination_count() {
-	echo bbp_get_topic_pagination_count();
+	echo esc_html( bbp_get_topic_pagination_count() );
 }
 
 /**
@@ -2659,7 +2659,7 @@ function bbp_get_topic_pagination_count() {
  * @uses  bbp_get_topic_pagination_links() To get the topic pagination links
  */
 function bbp_topic_pagination_links() {
-	echo bbp_get_topic_pagination_links();
+	echo wp_kses_post( bbp_get_topic_pagination_links() );
 }
 
 /**
@@ -2691,7 +2691,7 @@ function bbp_get_topic_pagination_links() {
  * @uses  bbp_get_form_reply_content() To get value of reply content field
  */
 function bbp_form_reply_content() {
-	echo bbp_get_form_reply_content();
+	echo bbp_get_form_reply_content(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the getter's own esc_attr()/esc_textarea() filter.
 }
 
 /**
@@ -2734,7 +2734,7 @@ function bbp_get_form_reply_content() {
  * @uses  bbp_get_form_reply_to() To get value of the reply to field
  */
 function bbp_form_reply_to() {
-	echo bbp_get_form_reply_to();
+	echo esc_attr( bbp_get_form_reply_to() );
 }
 
 /**
@@ -2772,7 +2772,7 @@ function bbp_get_form_reply_to() {
  * @uses  bbp_get_form_reply_log_edit() To get the reply log edit value
  */
 function bbp_form_reply_log_edit() {
-	echo bbp_get_form_reply_log_edit();
+	echo bbp_get_form_reply_log_edit(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 
 /**
@@ -2806,7 +2806,7 @@ function bbp_get_form_reply_log_edit() {
  * @uses  bbp_get_form_reply_edit_reason() To get the reply edit reason value
  */
 function bbp_form_reply_edit_reason() {
-	echo bbp_get_form_reply_edit_reason();
+	echo esc_attr( bbp_get_form_reply_edit_reason() );
 }
 
 /**

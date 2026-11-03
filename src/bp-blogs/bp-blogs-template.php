@@ -586,7 +586,7 @@ function bp_get_blog_description() {
  * @param array $classes Array of custom classes.
  */
 function bp_blog_class( $classes = array() ) {
-	echo bp_get_blog_class( $classes );
+	echo bp_get_blog_class( $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 	/**
 	 * Return the row class of the current blog in the loop.

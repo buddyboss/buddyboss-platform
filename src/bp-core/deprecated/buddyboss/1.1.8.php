@@ -274,7 +274,7 @@ function bp_group_type_post_type() {
 
 	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_group_type_post_type' );
 
-	echo bp_get_group_type_post_type();
+	echo esc_attr( bp_get_group_type_post_type() );
 }
 
 /**

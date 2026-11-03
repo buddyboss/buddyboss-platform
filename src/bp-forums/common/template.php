@@ -1469,7 +1469,7 @@ function bbp_redirect_to_field( $redirect_to = '' ) {
  * @uses bbp_get_sanitize_val() To sanitize the value.
  */
 function bbp_sanitize_val( $request = '', $input_type = 'text' ) {
-	echo bbp_get_sanitize_val( $request, $input_type );
+	echo esc_attr( bbp_get_sanitize_val( $request, $input_type ) );
 }
 	/**
 	 * Return sanitized $_REQUEST value.
@@ -1567,7 +1567,7 @@ function bbp_get_tab_index( $auto_increment = true ) {
  * @param mixed $args See {@link bbp_get_dropdown()} for arguments
  */
 function bbp_dropdown( $args = '' ) {
-	echo bbp_get_dropdown( $args );
+	echo bbp_get_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
 }
 	/**
 	 * Output a select box allowing to pick which forum/topic a new
@@ -2054,7 +2054,7 @@ function bbp_move_reply_form_fields() {
  * @uses bbp_get_the_content() To return the content to output
  */
 function bbp_the_content( $args = array() ) {
-	echo bbp_get_the_content( $args );
+	echo bbp_get_the_content( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup escaped per value when built; wp_kses_post() would strip the controls.
 }
 	/**
 	 * Return a textarea or TinyMCE if enabled
@@ -2317,7 +2317,7 @@ function bbp_get_view_id( $view = '' ) {
  * @uses bbp_get_view_title() To get the view title
  */
 function bbp_view_title( $view = '' ) {
-	echo bbp_get_view_title( $view );
+	echo esc_html( bbp_get_view_title( $view ) );
 }
 
 	/**
@@ -2449,7 +2449,7 @@ function bbp_reset_query_name() {
  * @uses bbp_get_breadcrumb() To get the breadcrumb
  */
 function bbp_title_breadcrumb( $args = array() ) {
-	echo bbp_get_breadcrumb( $args );
+	echo wp_kses_post( bbp_get_breadcrumb( $args ) );
 }
 
 /**
@@ -2464,7 +2464,7 @@ function bbp_title_breadcrumb( $args = array() ) {
  * @param string $sep          Separator. Defaults to '&larr;'.
  */
 function bbp_breadcrumb( $args = array() ) {
-	echo bbp_get_breadcrumb( $args );
+	echo wp_kses_post( bbp_get_breadcrumb( $args ) );
 }
 	/**
 	 * Return a breadcrumb ( forum -> topic -> reply )
@@ -2766,7 +2766,7 @@ function bbp_get_breadcrumb( $args = array() ) {
  * @uses bbp_get_allowed_tags()
  */
 function bbp_allowed_tags() {
-	echo bbp_get_allowed_tags();
+	echo wp_kses_post( bbp_get_allowed_tags() );
 }
 
 /**
@@ -2880,7 +2880,7 @@ function bbp_template_notices() {
  * @uses bbp_get_logout_link() To get the logout link
  */
 function bbp_logout_link( $redirect_to = '' ) {
-	echo bbp_get_logout_link( $redirect_to );
+	echo wp_kses_post( bbp_get_logout_link( $redirect_to ) );
 }
 	/**
 	 * Return the logout link

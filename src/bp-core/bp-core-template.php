@@ -760,7 +760,7 @@ function bp_custom_profile_sidebar_boxes() {
  * @param array  $attributes Array of existing attributes to add.
  */
 function bp_form_field_attributes( $name = '', $attributes = array() ) {
-	echo bp_get_form_field_attributes( $name, $attributes );
+	echo bp_get_form_field_attributes( $name, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup built with esc_attr(); escaping it again would corrupt the attribute.
 }
 	/**
 	 * Get the attributes for a form field.
@@ -3655,7 +3655,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
  * @since BuddyPress 1.1.0
  */
 function bp_the_body_class() {
-	echo bp_get_the_body_class();
+	echo esc_attr( bp_get_the_body_class() );
 }
 	/**
 	 * Customize the body class, according to the currently displayed BP content.

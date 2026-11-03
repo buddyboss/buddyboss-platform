@@ -192,7 +192,7 @@ function bp_core_admin_buddyboss_app() {
  * @param bool   $slug    Form option slug.
  */
 function bp_form_option( $option, $default = '', $slug = false ) {
-	echo bp_get_form_option( $option, $default, $slug );
+	echo esc_attr( bp_get_form_option( $option, $default, $slug ) );
 }
 
 /**

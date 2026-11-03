@@ -290,7 +290,7 @@ function bp_search_form_enabled() {
  * @since BuddyPress 1.0.0
  */
 function bp_page_title() {
-	echo bp_get_page_title();
+	echo esc_html( bp_get_page_title() );
 }
 	/**
 	 * Prior to BuddyPress 1.5, this was used to generate the page's <title> text.

@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="item">
 			<div class="item-title"><?php bp_member_name(); ?></div>
 			<?php
-			echo bp_get_user_member_type( bp_get_member_user_id() );
+			echo wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) );
 			if ( bp_nouveau_member_has_meta() ) :
 				?>
 				<p class="item-meta last-activity">

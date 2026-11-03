@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  */
 function bp_version() {
-	echo bp_get_version();
+	echo esc_html( bp_get_version() );
 }
 	/**
 	 * Return the BuddyPress version.
@@ -36,7 +36,7 @@ function bp_get_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version() {
-	echo bp_get_db_version();
+	echo esc_html( bp_get_db_version() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -55,7 +55,7 @@ function bp_get_db_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version_raw() {
-	echo bp_get_db_version_raw();
+	echo esc_html( bp_get_db_version_raw() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -1422,7 +1422,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
  * @return string|null
  */
 function bp_core_iso8601_date( $timestamp = '' ) {
-	echo bp_core_get_iso8601_date( $timestamp );
+	echo esc_html( bp_core_get_iso8601_date( $timestamp ) );
 }
 	/**
 	 * Return an ISO-8601 date from a date string.
@@ -1477,7 +1477,7 @@ function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
  * @return string|null
  */
 function bp_core_format_date( $date = '', $format = '' ) {
-	echo bp_core_get_format_date( $date, $format );
+	echo esc_html( bp_core_get_format_date( $date, $format ) );
 }
 
 /**
@@ -3401,7 +3401,7 @@ function bp_upload_dir() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_post_type() {
-	echo bp_get_email_post_type();
+	echo esc_attr( bp_get_email_post_type() );
 }
 	/**
 	 * Returns the name of the email post type.
@@ -3498,7 +3498,7 @@ function bp_get_email_post_type_supports() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_tax_type() {
-	echo bp_get_email_tax_type();
+	echo esc_attr( bp_get_email_tax_type() );
 }
 	/**
 	 * Return the name of the email type taxonomy.

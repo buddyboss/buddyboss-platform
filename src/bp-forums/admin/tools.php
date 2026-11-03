@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @param bool   $slug
  */
 function bbp_form_option( $option, $default = '', $slug = false ) {
-	echo bbp_get_form_option( $option, $default, $slug );
+	echo esc_attr( bbp_get_form_option( $option, $default, $slug ) );
 }
 
 /**

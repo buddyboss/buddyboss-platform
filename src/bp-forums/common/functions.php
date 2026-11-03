@@ -90,7 +90,7 @@ function bbp_convert_date( $time, $d = 'U', $translate = false ) {
  * @uses bbp_get_time_since() To get the formatted time
  */
 function bbp_time_since( $older_date, $newer_date = false, $gmt = false ) {
-	echo bbp_get_time_since( $older_date, $newer_date, $gmt );
+	echo esc_html( bbp_get_time_since( $older_date, $newer_date, $gmt ) );
 }
 	/**
 	 * Return formatted time to display human readable time difference.

@@ -196,7 +196,7 @@ function bbp_the_search_result() {
  * @uses bbp_get_search_title()
  */
 function bbp_search_title() {
-	echo bbp_get_search_title();
+	echo esc_html( bbp_get_search_title() );
 }
 
 /**
@@ -436,7 +436,7 @@ function bbp_get_search_pagination_base() {
  * @uses bbp_get_search_pagination_count() To get the search result pagination count
  */
 function bbp_search_pagination_count() {
-	echo bbp_get_search_pagination_count();
+	echo esc_html( bbp_get_search_pagination_count() );
 }
 
 /**
@@ -486,7 +486,7 @@ function bbp_get_search_pagination_count() {
  * @uses bbp_get_search_pagination_links() To get the search pagination links
  */
 function bbp_search_pagination_links() {
-	echo bbp_get_search_pagination_links();
+	echo wp_kses_post( bbp_get_search_pagination_links() );
 }
 
 /**
