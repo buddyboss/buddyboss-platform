@@ -354,7 +354,11 @@ function bb_media_get_addons_upgrade_url( $panel_id ) {
 	}
 
 	$content = 'settings-' . sanitize_key( $panel_id );
-	$url     = add_query_arg(
+	// Builds without pricing links (the wordpress.org edition) return an empty URL,
+	// so the upsell card renders no button.
+	$url = '';
+	// @bbwt-com-start pricing-links
+	$url = add_query_arg(
 		array(
 			'utm_source'   => 'product',
 			'utm_medium'   => 'platform-plugin',
@@ -363,6 +367,7 @@ function bb_media_get_addons_upgrade_url( $panel_id ) {
 		),
 		'https://www.buddyboss.com/pricing/'
 	);
+	// @bbwt-com-end pricing-links
 
 	/** This filter is documented in bp-core/admin/bb-admin-moved-media-features-notice.php */
 	return (string) apply_filters( 'bb_moved_media_features_upgrade_url', $url, $content );

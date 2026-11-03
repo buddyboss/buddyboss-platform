@@ -406,11 +406,16 @@ function bb_member_blogging_get_upsell_field_data() {
 				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
 				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
 				// Fallback for when the catalog has no entry for this panel — see
-				// `button_url_from_catalog` in the defaults above.
-				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				// `button_url_from_catalog` in the defaults above. Builds without
+				// pricing links (the wordpress.org edition) keep it empty, so the
+				// empty-state card renders no button.
+				'button_url'              => '',
 				'button_url_from_catalog' => true,
 				'button_target'           => '_blank',
 			);
+			// @bbwt-com-start pricing-links
+			$data['button_url'] = 'https://www.buddyboss.com/pricing/';
+			// @bbwt-com-end pricing-links
 			break;
 	}
 

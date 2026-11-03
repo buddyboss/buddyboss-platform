@@ -252,6 +252,10 @@ function bb_moved_media_features_is_entitled_from_cache() {
  * @return string
  */
 function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
+	// Builds without pricing links (the wordpress.org edition) return an empty URL;
+	// callers then leave the link out.
+	$url = '';
+	// @bbwt-com-start pricing-links
 	$url = add_query_arg(
 		array(
 			'utm_source'   => 'product',
@@ -261,6 +265,7 @@ function bb_moved_media_features_get_upgrade_url( $content = 'admin-notice' ) {
 		),
 		'https://www.buddyboss.com/pricing/'
 	);
+	// @bbwt-com-end pricing-links
 
 	/**
 	 * Filters the pricing URL of the moved media features upsells.
@@ -423,8 +428,12 @@ function bb_moved_media_features_render_notice() {
 			?>
 		</p>
 		<p>
+			<?php if ( ! empty( $primary['url'] ) ) : ?>
 			<a href="<?php echo esc_url( $primary['url'] ); ?>" class="button button-primary" <?php echo ! empty( $primary['external'] ) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $primary['label'] ); ?></a>
+			<?php endif; ?>
+			<?php if ( ! empty( $secondary['url'] ) ) : ?>
 			<a href="<?php echo esc_url( $secondary['url'] ); ?>" class="button" <?php echo ! empty( $secondary['external'] ) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $secondary['label'] ); ?></a>
+			<?php endif; ?>
 		</p>
 	</div>
 	<script>

@@ -39,6 +39,19 @@ import { useProfileNavSync } from '../components/members/ProfileNavSync';
 import { WelcomeBanner } from '../components/appearance/WelcomeBanner';
 import { evaluateConditional } from '../utils/conditional';
 
+/**
+ * Get the default pricing URL sent by the server (`bbAdminData.pricingUrls`).
+ *
+ * Empty on a build without pricing links; upsell links are then not rendered.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return {string} Pricing URL, or an empty string.
+ */
+function getDefaultPricingUrl() {
+	return ( window.bbAdminData && window.bbAdminData.pricingUrls && window.bbAdminData.pricingUrls.default ) || '';
+}
+
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
@@ -189,7 +202,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			// url, poster }. UpgradeModal switches on media.type to pick the
 			// renderer (iframe / video / img). No URL sniffing on the client.
 			upgrade_media: modal.media || null,
-			upgrade_url: modal.url || 'https://www.buddyboss.com/pricing/',
+			upgrade_url: modal.url || getDefaultPricingUrl(),
 			upgrade_tier: modal.tier || 'pro',
 		};
 	}, []);
@@ -1439,8 +1452,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													    or registration-provided) the badge opens
 													    UpgradeModal in-page; without one it keeps the
 													    original behavior and opens the pricing page in a
-													    new tab. */}
-													{section.pro_notice && section.pro_notice.show && (
+													    new tab. With neither a modal nor a URL (a build
+													    without pricing links) the badge is not shown. */}
+													{section.pro_notice && section.pro_notice.show && ( section.pro_notice.modal || section.pro_notice.link_url || getDefaultPricingUrl() ) && (
 														<span className="bb-admin-feature-settings__section-pro-notice">
 															{ section.pro_notice.modal ? (
 																<button
@@ -1453,7 +1467,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 																</button>
 															) : (
 																<a
-																	href={safeUrl( section.pro_notice.link_url || 'https://www.buddyboss.com/pricing/' )}
+																	href={safeUrl( section.pro_notice.link_url || getDefaultPricingUrl() )}
 																	target="_blank"
 																	rel="noopener noreferrer"
 																	className={ 'bb-admin-feature-settings__section-pro-badge' + ( section.pro_notice.tier ? ' bb-admin-feature-settings__section-pro-badge--' + section.pro_notice.tier : '' ) }

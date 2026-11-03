@@ -464,6 +464,13 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 		$entry['upgrade_image_url'] ?? $entry['image_url'] ?? ''
 	);
 
+	// Builds without pricing links (the wordpress.org edition) have no fallback URL;
+	// UpgradeModal then renders no call-to-action link.
+	$fallback_url = '';
+	// @bbwt-com-start pricing-links
+	$fallback_url = 'https://www.buddyboss.com/pricing/';
+	// @bbwt-com-end pricing-links
+
 	return array(
 		'tier'        => sanitize_key( $entry['upgrade_tier'] ?? $entry['tier'] ?? 'pro' ),
 		'label'       => sanitize_text_field( $entry['label'] ?? $fallback_label ),
@@ -472,7 +479,7 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 		// Kept for backward-compat with any consumer that still reads `image_url`.
 		'image_url'   => 'image' === $media['type'] ? $media['url'] : ( $media['poster'] ?? '' ),
 		'media'       => $media,
-		'url'         => esc_url_raw( $entry['upgrade_url'] ?? $entry['url'] ?? 'https://www.buddyboss.com/pricing/' ),
+		'url'         => esc_url_raw( $entry['upgrade_url'] ?? $entry['url'] ?? $fallback_url ),
 	);
 }
 

@@ -137,9 +137,12 @@ export function HelpScreen( { onNavigate } ) {
 	// plan -> show neither (the user already has everything promoted).
 	var hasActiveLicense = !! ( window.bbAdminData && window.bbAdminData.hasActiveLicense );
 	var hasPlusTier = !! ( window.bbAdminData && window.bbAdminData.hasPlusTier );
-	var showProPromo = ! hasActiveLicense;
-	var showPlusPromo = hasActiveLicense && ! hasPlusTier;
-	var showDFYPromo = hasActiveLicense && hasPlusTier;
+	// Promo links come from the server (`bbAdminData.pricingUrls`); a build
+	// without pricing links sends none, and the promo is not shown.
+	const pricingUrls = ( window.bbAdminData && window.bbAdminData.pricingUrls ) || {};
+	var showProPromo = ! hasActiveLicense && !! pricingUrls.helpFreeToPro;
+	var showPlusPromo = hasActiveLicense && ! hasPlusTier && !! pricingUrls.helpProToPlus;
+	var showDFYPromo = hasActiveLicense && hasPlusTier && !! pricingUrls.helpPlusToApp;
 
 	var searchState = useState( '' );
 	var searchQuery = searchState[ 0 ];
@@ -853,7 +856,7 @@ export function HelpScreen( { onNavigate } ) {
 										</h2>
 										<p className="bb-admin-help-promo__description">{ __( 'Say goodbye to React Native. We have completely rebuilt the BuddyBoss App using Flutter for blazing-fast performance, smoother animations, and a truly unified experience.', 'buddyboss' ) }</p>
 									</div>
-									<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-app-3 is-primary">
+									<a target="_blank" rel="noopener noreferrer" href={ pricingUrls.helpPlusToApp } className="bb-admin-help-promo__action bb-admin-help-promo__action-app-3 is-primary">
 										<span className="bb-admin-help-promo__action-label">
 											{ __( 'Get Next Gen App', 'buddyboss' ) }
 										</span>
@@ -899,7 +902,7 @@ export function HelpScreen( { onNavigate } ) {
 									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss' ) }</li>
 								</ul>
 							</div>
-							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
+							<a target="_blank" rel="noopener noreferrer" href={ pricingUrls.helpProToPlus } className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
 									{ __( 'Upgrade Scale', 'buddyboss' ) }
@@ -945,7 +948,7 @@ export function HelpScreen( { onNavigate } ) {
 									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss' ) }</li>
 								</ul>
 							</div>
-							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
+							<a target="_blank" rel="noopener noreferrer" href={ pricingUrls.helpFreeToPro } className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
 									{ __( 'Upgrade Launch', 'buddyboss' ) }

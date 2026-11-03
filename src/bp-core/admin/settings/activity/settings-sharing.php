@@ -142,8 +142,11 @@ function bb_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
 		'show'       => true,
 		'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
-		'link_url'   => 'https://www.buddyboss.com/pricing/',
+		'link_url'   => '',
 	);
+	// @bbwt-com-start pricing-links
+	$args['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+	// @bbwt-com-end pricing-links
 
 	return $args;
 }
@@ -302,6 +305,10 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 	// State 2 (Sharing license locked at AJAX time): the boot-time filter
 	// did NOT add the badge (DRM race — see function docblock above). This
 	// merge adds it now, where license state is reliable.
+	$pro_notice_section_url = '';
+	// @bbwt-com-start pricing-links
+	$pro_notice_section_url = 'https://www.buddyboss.com/pricing/';
+	// @bbwt-com-end pricing-links
 	bb_register_feature_section(
 		$feature_id,
 		$panel_id,
@@ -312,7 +319,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 				'show'       => true,
 				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
+				'link_url'   => $pro_notice_section_url,
 			),
 		)
 	);

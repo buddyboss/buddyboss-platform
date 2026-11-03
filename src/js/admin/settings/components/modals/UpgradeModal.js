@@ -154,6 +154,11 @@ export function UpgradeModal( { feature, onClose } ) {
 	var bodyText = feature.upgrade_description || feature.description || '';
 	var media    = resolveUpgradeMedia( feature );
 
+	// A build without pricing links sends no `bbAdminData.pricingUrls`; the
+	// call-to-action link is then shown only when the feature has its own URL.
+	const pricingUrls     = ( window.bbAdminData && window.bbAdminData.pricingUrls ) || {};
+	const showUpgradeLink = !! ( feature.upgrade_url || pricingUrls.default );
+
 	return (
 		<Modal
 			title={ feature.label }
@@ -176,15 +181,17 @@ export function UpgradeModal( { feature, onClose } ) {
 						dangerouslySetInnerHTML={ { __html: sanitizeHtml( bodyText ) } }
 					/>
 
-					<a
-						href={ safeUrl( feature.upgrade_url ) || 'https://www.buddyboss.com/pricing/' }
-						target="_blank"
-						rel="noopener noreferrer"
-						className={`bb-upgrade-modal__cta bb-upgrade-modal__cta--${feature.upgrade_tier || 'plus'}`}
-					>
-						<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
-						{tierLabel}
-					</a>
+					{ showUpgradeLink && (
+						<a
+							href={ safeUrl( feature.upgrade_url ) }
+							target="_blank"
+							rel="noopener noreferrer"
+							className={`bb-upgrade-modal__cta bb-upgrade-modal__cta--${feature.upgrade_tier || 'plus'}`}
+						>
+							<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
+							{tierLabel}
+						</a>
+					) }
 				</div>
 			</div>
 		</Modal>

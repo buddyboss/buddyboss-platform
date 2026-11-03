@@ -351,6 +351,22 @@ function bb_admin_settings_page() {
 	$localize_data['hasActiveLicense'] = $bb_has_active_license;
 	$localize_data['hasPlusTier']      = $bb_has_plus_tier;
 
+	// Pricing links for the React upsells: the upgrade modal and section badge
+	// fallback (`default`), the Appearance "Buy Theme" button (`buyTheme`) and the
+	// Help tab promos (`help*`). Builds without pricing links (the wordpress.org
+	// edition) send an empty list, and each component then hides its link.
+	$bb_pricing_urls = array();
+	// @bbwt-com-start pricing-links
+	$bb_pricing_urls = array(
+		'default'       => 'https://www.buddyboss.com/pricing/',
+		'buyTheme'      => 'https://buddyboss.com/pricing/',
+		'helpPlusToApp' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help',
+		'helpProToPlus' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help',
+		'helpFreeToPro' => 'https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help',
+	);
+	// @bbwt-com-end pricing-links
+	$localize_data['pricingUrls'] = $bb_pricing_urls;
+
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {

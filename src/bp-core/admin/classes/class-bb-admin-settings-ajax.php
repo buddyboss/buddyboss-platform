@@ -620,6 +620,13 @@ class BB_Admin_Settings_Ajax {
 								'poster' => '',
 							);
 
+						// Builds without pricing links (the wordpress.org edition) have no
+						// fallback URL; UpgradeModal then renders no call-to-action link.
+						$registered_fallback_url = '';
+						// @bbwt-com-start pricing-links
+						$registered_fallback_url = 'https://www.buddyboss.com/pricing/';
+						// @bbwt-com-end pricing-links
+
 						$section_modal = array(
 							'tier'        => sanitize_key( $registered_modal['tier'] ?? 'pro' ),
 							'label'       => sanitize_text_field( $registered_modal['label'] ?? $section['title'] ),
@@ -627,7 +634,7 @@ class BB_Admin_Settings_Ajax {
 							'description' => wp_kses_post( $registered_modal['description'] ?? '' ),
 							'image_url'   => esc_url_raw( $registered_modal['image_url'] ?? '' ),
 							'media'       => $registered_media,
-							'url'         => esc_url_raw( $registered_modal['url'] ?? 'https://www.buddyboss.com/pricing/' ),
+							'url'         => esc_url_raw( $registered_modal['url'] ?? $registered_fallback_url ),
 						);
 					}
 
@@ -1303,12 +1310,19 @@ class BB_Admin_Settings_Ajax {
 									'url'    => '',
 									'poster' => '',
 								),
-							'url'         => 'https://www.buddyboss.com/pricing/',
+							// Builds without pricing links (the wordpress.org edition) keep it
+							// empty; UpgradeModal then renders no call-to-action link.
+							'url'         => '',
 						);
+						// @bbwt-com-start pricing-links
+						$field_data['pro_notice']['modal']['url'] = 'https://www.buddyboss.com/pricing/';
+						// @bbwt-com-end pricing-links
 					} elseif ( empty( $field['pro_notice']['link_url'] ) ) {
+						// @bbwt-com-start pricing-links
 						// A field that registered its own upgrade link (e.g. Email Digest's
 						// Start checkout) keeps it when the catalog has no entry.
 						$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+						// @bbwt-com-end pricing-links
 					}
 				}
 			}

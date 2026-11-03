@@ -525,10 +525,15 @@ function bp_check_for_legacy_theme() {
  * @since BuddyBoss 1.0.0
  */
 function bp_print_legacy_theme_deprecated_notice() {
+	// Builds without pricing links (the wordpress.org edition) name the theme without a link.
+	$theme_link = 'BuddyBoss Theme';
+	// @bbwt-com-start pricing-links
+	$theme_link = '<a href="https://www.buddyboss.com/pricing/" target="_blank" rel="noopener">BuddyBoss Theme</a>';
+	// @bbwt-com-end pricing-links
 	$message = sprintf(
 		__( 'You are using an old theme and/or BuddyPress addon that relies on the older %1$s templates, and some things may not work properly. Consider switching to our %2$s and/or removing the BuddyPress addon that is using old methods.', 'buddyboss' ),
 		'<a href="https://www.buddyboss.com/resources/docs/development/theme-development/theme-compatibility/" target="_blank" rel="noopener">BuddyPress Legacy</a>',
-		'<a href="https://www.buddyboss.com/pricing/" target="_blank" rel="noopener">BuddyBoss Theme</a>'
+		$theme_link
 	);
 
 	printf(

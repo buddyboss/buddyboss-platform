@@ -10608,9 +10608,14 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 			? __( 'UPGRADE LAUNCH', 'buddyboss' )
 			: __( 'LAUNCH', 'buddyboss' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
-		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
+		'link_url'   => '',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
+	// @bbwt-com-start pricing-links
+	if ( $is_section ) {
+		$data['link_url'] = 'https://www.buddyboss.com/pricing/';
+	}
+	// @bbwt-com-end pricing-links
 
 	$is_pro_locked = false;
 
