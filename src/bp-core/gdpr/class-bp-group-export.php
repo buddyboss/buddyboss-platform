@@ -258,21 +258,15 @@ final class BP_Group_Export extends BP_Export {
 
 		$table = "{$group_table} item, {$group_members_table} item2";
 
-		$query_select       = '*';
-		$query_select_count = 'COUNT(item.id)';
-		$query_where        = 'item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1';
-
 		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
-		$query = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query = $wpdb->prepare( $query, $user->ID );
-
-		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
-
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		// Table names from $bp->groups; user ID, LIMIT and OFFSET bound as %d.
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(item.id) FROM {$table} WHERE item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1", $user->ID )
+		);
+		$items = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1 LIMIT %d OFFSET %d", $user->ID, (int) $this->items_per_batch, (int) $offset )
+		);
 		// Merge the metas.
 		$items = $this->merge_metas( $items );
 
@@ -312,9 +306,8 @@ final class BP_Group_Export extends BP_Export {
 		$ids_in = array_fill( 0, count( $group_ids ), '%s' );
 		$ids_in = join( ',', $ids_in );
 
-		$query = $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})", $group_ids );
-
-		$results = $wpdb->get_results( $query );
+		// Table name from $bp->groups; one %s placeholder per group ID (IDs read from the groups table in get_data()).
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})", $group_ids ) );
 
 		$metas_by_group = array();
 

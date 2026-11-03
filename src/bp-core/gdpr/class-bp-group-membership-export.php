@@ -158,20 +158,15 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		$table = "{$group_table} item";
 
-		$query_select       = 'item.*';
-		$query_select_count = 'COUNT(item.id)';
-		$query_where        = 'item.user_id=%d OR item.inviter_id=%d';
-
 		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
-		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );
-		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID );
-
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		// Table name from $bp->groups; user IDs, LIMIT and OFFSET bound as %d.
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare( "SELECT COUNT(item.id) FROM {$table} WHERE item.user_id=%d OR item.inviter_id=%d", $user->ID, $user->ID )
+		);
+		$items = $wpdb->get_results(
+			$wpdb->prepare( "SELECT item.* FROM {$table} WHERE item.user_id=%d OR item.inviter_id=%d LIMIT %d OFFSET %d", $user->ID, $user->ID, (int) $this->items_per_batch, (int) $offset )
+		);
 
 		return array(
 			'total'  => $count,
