@@ -319,12 +319,20 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 	return http_build_query( $querystring );
 }
 
+add_action( 'wp_ajax_bb_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
+// Legacy action name, still registered for custom clients; it needs the same nonce.
 add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
 
 /**
  * Save Cover image position for group and member.
  *
+ * Registered for the `bb_save_cover_position` action and the legacy
+ * `save_cover_position` action. Both require the `bb_save_cover_position`
+ * nonce (localized as BP_Nouveau.coverPositionNonce, posted as `nonce`) and a
+ * logged-in user who can edit the group's or member's cover image.
+ *
  * @since BuddyBoss 1.5.1
+ * @since BuddyBoss [BBVERSION] Added the `bb_save_cover_position` action; both actions require a nonce.
  */
 function bp_nouveau_ajax_save_cover_position() {
 
@@ -332,7 +340,17 @@ function bp_nouveau_ajax_save_cover_position() {
 		wp_send_json_error();
 	}
 
-	if ( ! is_user_logged_in() || ! isset( $_POST['position'] ) ) {
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error();
+	}
+
+	// Both action names need the nonce (CSRF protection).
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	if ( ! wp_verify_nonce( $nonce, 'bb_save_cover_position' ) ) {
+		wp_send_json_error();
+	}
+
+	if ( ! isset( $_POST['position'] ) ) {
 		wp_send_json_error();
 	}
 

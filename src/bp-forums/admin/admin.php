@@ -692,15 +692,20 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
 						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo esc_attr( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
 					</p>
-					<script type='text/javascript'>
-						<!--
-						function nextpage() {
-							location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo ( $n + 5 ); ?>';
-						}
-						setTimeout( 'nextpage()', 250 );
-						//-->
-					</script>
 						<?php
+						/*
+						 * Load the next batch of five sites automatically. $n is an integer
+						 * (intval() above), JSON-encoded into the script.
+						 */
+						$bbp_next_batch_js = sprintf(
+							'function nextpage() { location.href = %s; } setTimeout( nextpage, 250 );',
+							wp_json_encode( 'update-core.php?page=bbpress-update&action=bbpress-update&n=' . ( $n + 5 ) )
+						);
+						if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+							wp_print_inline_script_tag( $bbp_next_batch_js );
+						} else {
+							echo '<script type="text/javascript">' . $bbp_next_batch_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the only variable part is JSON-encoded above. WordPress < 5.7 only.
+						}
 
 					endif;
 
