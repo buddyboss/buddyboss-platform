@@ -562,6 +562,7 @@ function bp_version_updater() {
 			bb_update_to_3_0_3();
 		}
 
+		// @bbwt-com-start installers
 		// DB version 23604 — install the BuddyBoss Addons bundle for entitled
 		// customers, once, on the upgrade into this release (PROD-10242). Runs on
 		// every update path — Plugins screen, auto-update, or a direct FTP/copy-paste
@@ -569,6 +570,7 @@ function bp_version_updater() {
 		if ( $raw_db_version < 23604 ) {
 			bb_install_addons_bundle_on_upgrade();
 		}
+		// @bbwt-com-end installers
 
 		// DB version 23605 — the topics and reply REST endpoints now return the
 		// legacy oEmbed for posts without `_link_embed` meta (PROD-10630). Purge
@@ -577,6 +579,7 @@ function bp_version_updater() {
 			bb_purge_forums_api_cache_for_legacy_embed();
 		}
 
+		// @bbwt-com-start installers
 		// DB version 23631 — install BuddyBoss Add-ons for entitled sites that do not have
 		// it (the 23604 step above already ran on 3.4.2+ sites, so it would not run again),
 		// then queue the update of an active Add-ons to the version this Platform requires
@@ -586,6 +589,7 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 			bb_queue_addons_bundle_update();
 		}
+		// @bbwt-com-end installers
 
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
@@ -4633,6 +4637,7 @@ function bb_is_addons_plugin_active() {
 	return is_plugin_active( 'buddyboss-addons/buddyboss-addons.php' );
 }
 
+// @bbwt-com-start installers
 /**
  * One-time upgrade migration: install & activate the BuddyBoss Addons bundle
  * for entitled customers.
@@ -4708,6 +4713,7 @@ function bb_install_addons_bundle_on_upgrade() {
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
 	}
 }
+// @bbwt-com-end installers
 
 /**
  * Purge the App API cache of forum topics and replies.
@@ -4783,6 +4789,7 @@ function bb_is_addons_below_required_version( $version = null ) {
 	return '' !== $version && version_compare( $version, bb_get_addons_required_version(), '<' );
 }
 
+// @bbwt-com-start installers
 /**
  * Update an active BuddyBoss Add-ons below the required version.
  *
@@ -5034,3 +5041,4 @@ function bb_retry_queued_addons_bundle_update_soon( $plugin = '' ) {
 	}
 }
 add_action( 'activated_plugin', 'bb_retry_queued_addons_bundle_update_soon' );
+// @bbwt-com-end installers

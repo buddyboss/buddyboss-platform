@@ -539,10 +539,12 @@ function bb_admin_settings_register_email_digest_card( $state ) {
 				'empty_state_description' => __( 'Email Digest is included in your plan, but the installed version of the BuddyBoss Add-ons plugin does not provide it. Update the add-on to continue.', 'buddyboss' ),
 				'button_label'            => __( 'Update Add-on', 'buddyboss' ),
 				'button_url'              => admin_url( 'update-core.php' ),
+				// @bbwt-com-start installers
 				'addon_action'            => 'bb_email_digest_update_addon',
 				'addon_slug'              => bb_email_digest_addon_plugin_slug(),
 				'addon_nonce_key'         => 'ajaxNonce',
 				'addon_busy_label'        => __( 'Updating…', 'buddyboss' ),
+				// @bbwt-com-end installers
 			);
 			break;
 
@@ -637,6 +639,7 @@ function bb_admin_settings_register_email_digest_signpost() {
 }
 add_action( 'bb_notifications_after_register_settings_fields', 'bb_admin_settings_register_email_digest_signpost' );
 
+// @bbwt-com-start installers
 /**
  * Replace the Update button when there is nothing newer to install.
  *
@@ -794,6 +797,7 @@ function bb_email_digest_ajax_update_addon() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_email_digest_update_addon', 'bb_email_digest_ajax_update_addon' );
+// @bbwt-com-end installers
 
 /**
  * Register the inert replica of the digest settings form.

@@ -352,10 +352,12 @@ function bb_member_blogging_get_upsell_field_data() {
 			$data = array(
 				'empty_state_description' => __( 'Member Blogging is included in your plan. Install the add-on to let your community members create blog posts from the frontend.', 'buddyboss' ),
 				'button_label'            => __( 'Install & Activate', 'buddyboss' ),
+				// @bbwt-com-start installers
 				'addon_action'            => 'bb_member_blogging_install_plugin',
 				'addon_slug'              => bb_member_blogging_plugin_slug(),
 				'addon_nonce_key'         => 'ajaxNonce',
 				'addon_busy_label'        => __( 'Installing…', 'buddyboss' ),
+				// @bbwt-com-end installers
 			);
 			break;
 
@@ -516,6 +518,7 @@ function bb_member_blogging_ajax_activate_plugin() {
 }
 add_action( 'wp_ajax_bb_member_blogging_activate_plugin', 'bb_member_blogging_ajax_activate_plugin' );
 
+// @bbwt-com-start installers
 /**
  * AJAX: install and activate the Member Blogging add-on.
  *
@@ -608,3 +611,4 @@ function bb_member_blogging_ajax_install_plugin() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_bb_member_blogging_install_plugin', 'bb_member_blogging_ajax_install_plugin' );
+// @bbwt-com-end installers
