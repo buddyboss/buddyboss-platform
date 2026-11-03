@@ -22,7 +22,10 @@ defined( 'ABSPATH' ) || exit;
  */
 function bb_advanced_sanitize_telemetry_reporting( $value ) {
 	$value   = sanitize_text_field( $value );
+	$allowed = array( 'anonymous', 'disable' );
+	// @bbwt-com-start telemetry-complete
 	$allowed = array( 'complete', 'anonymous', 'disable' );
+	// @bbwt-com-end telemetry-complete
 
 	return in_array( $value, $allowed, true ) ? $value : 'disable';
 }
@@ -112,8 +115,9 @@ function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
 /**
  * Handle telemetry mode change after save.
  *
- * When the telemetry mode changes to "complete", triggers an immediate
- * telemetry report. Matches legacy behavior in
+ * Dismisses the telemetry notice on any change. On builds with "complete"
+ * reporting, a change to "complete" also triggers an immediate telemetry
+ * report. Matches legacy behavior in
  * BB_Admin_Setting_Performance::bb_admin_send_immediate_telemetry_on_complete().
  *
  * @since BuddyBoss 3.0.0
@@ -150,6 +154,7 @@ function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
 
 	// Dismiss telemetry notice since the user has made an explicit choice.
 	bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
+	// @bbwt-com-start telemetry-complete
 
 	// Send immediate telemetry report when switching TO "complete" mode.
 	if ( 'complete' === $new_value && class_exists( 'BB_Telemetry' ) ) {
@@ -161,6 +166,7 @@ function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
 		$bb_telemetry = BB_Telemetry::instance();
 		$bb_telemetry->bb_send_telemetry_report_to_analytics();
 	}
+	// @bbwt-com-end telemetry-complete
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_handle_telemetry_save', 10, 3 );
 

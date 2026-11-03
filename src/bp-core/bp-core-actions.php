@@ -1345,6 +1345,7 @@ function bb_telemetry_load() {
 
 add_action( 'bp_init', 'bb_telemetry_load' );
 
+// @bbwt-com-start telemetry-complete
 /**
  * Force telemetry into "complete" mode on sites with a paid BuddyBoss product.
  *
@@ -1377,6 +1378,7 @@ function bb_force_telemetry_for_licensed_sites( $mode ) {
 }
 
 add_filter( 'bb_advanced_telemetry_reporting_value', 'bb_force_telemetry_for_licensed_sites' );
+// @bbwt-com-end telemetry-complete
 
 /**
  * Initialize the Topics Manager.

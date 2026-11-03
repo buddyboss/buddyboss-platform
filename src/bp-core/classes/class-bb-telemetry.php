@@ -71,13 +71,33 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			/**
 			 * Filters the telemetry reporting mode.
 			 *
-			 * Pro uses this to force 'complete' mode for paid users.
+			 * Pro uses this to force 'complete' mode for paid users. Builds without
+			 * "complete" reporting (the WordPress.org edition) let it switch
+			 * telemetry off, never on or up (see below).
 			 *
 			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
 			 */
 			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
+
+			/*
+			 * Builds without "complete" reporting (the WordPress.org edition) keep
+			 * telemetry strictly opt-in: it runs only when an administrator saved
+			 * "Anonymous reporting". The filter above may still switch it off, but
+			 * never on or up, and a stored "complete" value is read as "disable".
+			 */
+			$bb_telemetry_opt_in_only = true;
+			// @bbwt-com-start telemetry-complete
+			$bb_telemetry_opt_in_only = false;
+			// @bbwt-com-end telemetry-complete
+
+			if ( $bb_telemetry_opt_in_only ) {
+				add_filter( 'option_bb_advanced_telemetry_reporting', array( __CLASS__, 'bb_telemetry_opt_in_mode' ) );
+
+				$bb_telemetry_saved_mode   = bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
+				self::$bb_telemetry_option = ( 'anonymous' === $bb_telemetry_saved_mode && 'disable' !== self::$bb_telemetry_option ) ? 'anonymous' : 'disable';
+			}
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -108,6 +128,23 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			add_action( 'bb_telemetry_report_retry_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 			add_action( 'admin_notices', array( $this, 'bb_telemetry_admin_notice' ) );
 			add_action( 'wp_ajax_dismiss_bb_telemetry_notice', array( $this, 'bb_telemetry_notice_dismissed' ) );
+		}
+
+		/**
+		 * Read a stored telemetry mode without "complete" reporting.
+		 *
+		 * Used only by builds without "complete" reporting (the WordPress.org
+		 * edition), so a "complete" value saved by an earlier install is shown
+		 * and treated as "disable" rather than as consent.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $mode Stored telemetry mode.
+		 *
+		 * @return mixed Stored mode, or 'disable' instead of 'complete'.
+		 */
+		public static function bb_telemetry_opt_in_mode( $mode ) {
+			return ( 'complete' === $mode ) ? 'disable' : $mode;
 		}
 
 		/**
@@ -203,10 +240,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'is_multisite'  => is_multisite(),
 			);
 
+			// @bbwt-com-start telemetry-complete
 			if ( 'complete' === self::$bb_telemetry_option ) {
 				$bb_telemetry_data['admin_email'] = get_option( 'admin_email' );
 			}
 
+			// @bbwt-com-end telemetry-complete
 			$bb_telemetry_data = $this->bb_telemetry_platform_data( $bb_telemetry_data );
 
 			if ( function_exists( 'bb_telemetry_platform_pro_data' ) ) {
@@ -219,6 +258,34 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			if ( function_exists( 'bbapp_telemetry_data' ) ) {
 				$bb_telemetry_data = bbapp_telemetry_data( $bb_telemetry_data );
+			}
+
+			/*
+			 * Builds without "complete" reporting (the WordPress.org edition) send no
+			 * personal data or credentials, whatever a contributor above added: the
+			 * admin email (BuddyBoss App adds it unconditionally), the legacy licence
+			 * option with its keys (Platform Pro and the Theme), a licence key added
+			 * through `bb_telemetry_license_data`, and the App's connection token,
+			 * AppCenter account id and app id. This runs after every contributor and
+			 * filter that can touch the payload.
+			 */
+			$bb_telemetry_scrub_private = true;
+			// @bbwt-com-start telemetry-complete
+			$bb_telemetry_scrub_private = false;
+			// @bbwt-com-end telemetry-complete
+
+			if ( $bb_telemetry_scrub_private ) {
+				foreach ( array( 'admin_email', 'bboss_updater_saved_licenses', 'app_key', 'vendor_id', 'app_id' ) as $bb_telemetry_private_key ) {
+					unset( $bb_telemetry_data[ $bb_telemetry_private_key ] );
+				}
+
+				if ( isset( $bb_telemetry_data['bb_license'] ) && is_array( $bb_telemetry_data['bb_license'] ) ) {
+					foreach ( $bb_telemetry_data['bb_license'] as $bb_telemetry_product => $bb_telemetry_licence ) {
+						if ( is_array( $bb_telemetry_licence ) ) {
+							unset( $bb_telemetry_data['bb_license'][ $bb_telemetry_product ]['license_key'] );
+						}
+					}
+				}
 			}
 
 			/*
@@ -737,7 +804,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return array Licence data for the Platform and, when present, the Theme.
 		 */
 		public function bb_get_license_data() {
+			$include_key = false;
+			// @bbwt-com-start telemetry-complete
 			$include_key = ( 'complete' === self::$bb_telemetry_option );
+			// @bbwt-com-end telemetry-complete
 
 			$platform_id = self::bb_get_license_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
 			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
