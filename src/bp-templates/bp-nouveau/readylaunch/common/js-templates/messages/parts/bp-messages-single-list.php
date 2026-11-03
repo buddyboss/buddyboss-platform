@@ -23,7 +23,7 @@
 							<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 						<# } #>
 					<# } else { #>
-						<a href="{{data.sender_link}}" class="bp-user-avatar" aria-label="{{{data.sender_name}}}">
+						<a href="{{data.sender_link}}" class="bp-user-avatar" aria-label="{{{data.sender_name}}}"<# if ( ! data.is_user_blocked_by ) { #> data-bb-hp-profile="{{data.sender_id}}"<# } #>>
 							<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
 							<# if ( data.is_user_blocked_by ) { #>
 								<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
@@ -54,7 +54,7 @@
 					<# if ( data.is_deleted || ! data.sender_link ) { #>
 						<strong class="bp-user-deleted">{{{data.sender_name}}}</strong>
 					<# } else { #>
-						<a href="{{data.sender_link}}" class="bp-user-link">
+						<a href="{{data.sender_link}}" class="bp-user-link"<# if ( ! data.is_user_blocked_by ) { #> data-bb-hp-profile="{{data.sender_id}}"<# } #>>
 							<strong>{{{data.sender_name}}}</strong>
 						</a>
 					<# } #>

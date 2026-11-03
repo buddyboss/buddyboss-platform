@@ -38,17 +38,21 @@
 										</a>
 									</div>
 
+									<?php if ( bp_is_active( 'video' ) ) : ?>
 									<div class="post-elements-buttons-item post-video video-support">
 										<a href="#" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-video"></i>
 										</a>
 									</div>
+									<?php endif; ?>
 
+									<?php if ( bp_is_active( 'document' ) ) : ?>
 									<div class="post-elements-buttons-item post-media document-support">
 										<a href="#" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 											<i class="bb-icon-l bb-icon-attach"></i>
 										</a>
 									</div>
+									<?php endif; ?>
 
 									<div class="post-elements-buttons-item post-gif">
 										<div class="gif-media-search">

@@ -16,6 +16,16 @@ require_once $tests_dir_path . '/includes/functions.php';
 require_once $tests_dir_path . '/includes/mock-mailer.php';
 
 function _load_buddypress() {
+	// Prefer the scoped src/vendor tree that src/bp-loader.php loads itself; the root dev
+	// tree registers the same BuddyBossPlatform\* namespaces and would shadow it. See the
+	// matching guard in loader.php.
+	$bb_plugin_dir = dirname( dirname( dirname( dirname( __FILE__ ) ) ) );
+	if (
+		! file_exists( $bb_plugin_dir . '/src/vendor/autoload.php' )
+		&& file_exists( $bb_plugin_dir . '/vendor/autoload.php' )
+	) {
+		require_once $bb_plugin_dir . '/vendor/autoload.php';
+	}
 	require dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/src/bp-loader.php';
 	do_action( 'activate_src/bp-loader.php' );
 }

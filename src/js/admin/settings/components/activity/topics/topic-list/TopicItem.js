@@ -47,7 +47,11 @@ export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDraggin
 			>
 				<BBIcon name="list" />
 			</span>
-			<span className="bb-topic-list__name">{ topic.name }</span>
+			<span className="bb-topic-list__name">
+				<span className="bb-topic-list__name-text" title={ topic.name }>
+					{ topic.name }
+				</span>
+			</span>
 			<span className="bb-topic-list__permission">{ permissionLabel }</span>
 			<div className="bb-topic-list__actions">
 				<DropdownMenu

@@ -1868,5 +1868,21 @@ select.bb-admin-settings__select {
     &__button {
         @include bb-button-primary;
         margin-top: 16px;
+        // Reset native <button> defaults so the AJAX activate variant matches
+        // the <a> link variant visually.
+        border: 0;
+        font: inherit;
+        cursor: pointer;
+
+        &[disabled] {
+            opacity: 0.6;
+            cursor: default;
+        }
+    }
+
+    &__error {
+        font-size: 13px;
+        color: $bb-error-color;
+        margin: 8px 0 0;
     }
 }
