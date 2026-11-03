@@ -8,6 +8,9 @@
  * @version 1.8.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-post-privacy-stage-footer">
 	<div class="privacy-status-actions">

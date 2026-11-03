@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /*
  * Template tag to prepare the activity post form checks capability and enqueue needed scripts.
  */

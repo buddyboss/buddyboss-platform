@@ -11,6 +11,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_before_loop();
 
 if ( bp_has_moderation( bp_ajax_querystring( 'moderation' ) ) ) :

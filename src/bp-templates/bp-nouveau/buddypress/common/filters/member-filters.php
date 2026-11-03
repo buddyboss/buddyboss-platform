@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Check profile type enable?
 $is_member_type_enabled = bp_member_type_enable_disable();
 

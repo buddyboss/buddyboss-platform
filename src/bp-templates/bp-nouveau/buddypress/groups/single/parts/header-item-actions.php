@@ -7,6 +7,10 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div id="item-actions" class="group-item-actions">
 

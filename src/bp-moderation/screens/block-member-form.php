@@ -6,6 +6,9 @@
  * @package BuddyBoss
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="block-member" class="block-member-popup moderation-popup mfp-hide">

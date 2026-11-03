@@ -7,6 +7,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $reply_id             = bbp_get_reply_id();
 $reply_author_id      = bbp_get_reply_author_id( $reply_id );
 $is_user_blocked      = false;

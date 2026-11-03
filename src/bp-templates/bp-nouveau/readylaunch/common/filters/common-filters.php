@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_current_component = bp_current_component();
 
 // Member scope as dropdown.

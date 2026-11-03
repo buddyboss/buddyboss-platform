@@ -6,6 +6,9 @@
  * @since BuddyBoss 2.1.4
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Process a request to view a single message archived thread.
  */

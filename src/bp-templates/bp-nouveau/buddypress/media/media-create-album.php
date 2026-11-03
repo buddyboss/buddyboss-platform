@@ -9,6 +9,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="create-popup-album-wrap popup-on-fly-create-album" style="display: none;">

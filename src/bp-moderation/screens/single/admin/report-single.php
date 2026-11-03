@@ -6,6 +6,9 @@
  * @package BuddyBoss
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $current_tab       = bb_filter_input_string( INPUT_GET, 'tab' );
 $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 $error             = isset( $_REQUEST['error'] ) ? $_REQUEST['error'] : false; // phpcs:ignore

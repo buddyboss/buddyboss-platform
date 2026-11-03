@@ -5,6 +5,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $group_id = apply_filters( 'bb_forum_attachment_group_id', 0 );
 $forum_id = apply_filters( 'bb_forum_attachment_forum_id', 0 );
 $topic_id = apply_filters( 'bb_forum_attachment_topic_id', 0 );

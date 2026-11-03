@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_is_group_create = bp_is_group_create();
 if ( $bp_is_group_create ) : ?>
 

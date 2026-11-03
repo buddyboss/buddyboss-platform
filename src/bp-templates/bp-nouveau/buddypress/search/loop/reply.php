@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $reply_id = get_the_ID();
 $topic_id = bbp_get_reply_topic_id( $reply_id );
 ?>

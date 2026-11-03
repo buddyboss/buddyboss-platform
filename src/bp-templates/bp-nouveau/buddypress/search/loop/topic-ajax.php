@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $topic_id = get_the_ID();
 $total    = bbp_get_topic_reply_count( $topic_id );
 ?>

@@ -6,6 +6,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-editor-toolbar">
 	<div class="bb-rl-editor-toolbar__medium"></div>

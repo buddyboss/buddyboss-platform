@@ -12,6 +12,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-no-results' : '';
 ?>
 

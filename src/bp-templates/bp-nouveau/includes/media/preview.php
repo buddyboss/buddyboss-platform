@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( empty( get_query_var( 'bb-media-preview' ) ) && empty( get_query_var( 'id1' ) ) ) {
 	echo '// Silence is golden.';
 	exit();

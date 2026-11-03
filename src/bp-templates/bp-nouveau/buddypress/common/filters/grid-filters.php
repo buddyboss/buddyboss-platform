@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $post;
 
 $bb_is_member_dir       = bp_is_members_directory();

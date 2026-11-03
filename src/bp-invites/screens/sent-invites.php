@@ -8,6 +8,9 @@
  * @todo how is this page different from send-invites?
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of a user's Invites > Invite by Email page.
  *

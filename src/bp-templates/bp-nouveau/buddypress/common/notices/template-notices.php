@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <aside class="<?php bp_nouveau_template_message_classes(); ?>">
 	<span class="bp-icon" aria-hidden="true"></span>

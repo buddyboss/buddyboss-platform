@@ -8,6 +8,9 @@
  * @version 1.8.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-media">
 	<div class="dropzone closed media-dropzone" id="activity-post-media-uploader"></div>

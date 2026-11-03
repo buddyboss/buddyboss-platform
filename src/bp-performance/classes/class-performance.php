@@ -7,6 +7,9 @@
 
 namespace BuddyBoss\Performance;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 	/**

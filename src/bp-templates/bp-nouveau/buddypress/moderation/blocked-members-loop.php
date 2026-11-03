@@ -11,6 +11,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // phpcs:ignore WordPress.Security.NonceVerification.Missing
 if ( empty( $_POST['page'] ) || 1 === (int) bb_filter_input_string( INPUT_POST, 'page' ) ) {
 	?>

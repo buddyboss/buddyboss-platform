@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $media_template;
 
 $bp_get_media_id          = bp_get_media_id();

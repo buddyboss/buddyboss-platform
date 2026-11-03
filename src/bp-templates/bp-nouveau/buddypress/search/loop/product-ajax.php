@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $product_id    = get_the_ID();
 $product       = wc_get_product( $product_id );
 $product_thumb = get_the_post_thumbnail_url();

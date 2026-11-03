@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_activity_comment">
 	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_activity_thread_permalink() ) ); ?>'>

@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 get_header(); ?>
 
 	<?php do_action( 'bbp_before_main_content' ); ?>

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_is_single_album = bp_is_single_album();
 ?>
 <div id="bp-media-uploader" style="display: none;" class="bp-media-photo-uploader">

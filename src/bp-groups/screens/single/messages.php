@@ -6,6 +6,9 @@
  * @since BuddyBoss 1.2.9
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's Group Messages page.
  *
