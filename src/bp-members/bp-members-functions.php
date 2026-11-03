@@ -925,7 +925,7 @@ function bp_core_get_active_member_count() {
 			$sql = "SELECT ID FROM {$wpdb->users} WHERE user_status != 0";
 		}
 
-		$exclude_users     = $wpdb->get_col( $sql );
+		$exclude_users     = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is one of the two literal statements above (table name $wpdb->users, no variable input).
 		$exclude_users_sql = ! empty( $exclude_users ) ? 'AND user_id NOT IN (' . implode( ',', wp_parse_id_list( $exclude_users ) ) . ')' : '';
 		$count             = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' {$exclude_users_sql}", $bp->members->id ) );
 
@@ -3579,16 +3579,12 @@ function bp_member_type_post_by_type( $member_type ) {
 		return $member_type_post[ $cache_key ];
 	}
 
-	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
-	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
-	$post_id = $wpdb->get_var( $query );
+	$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s", '_bp_member_type_key', $member_type ) );
 
 	// Fallback to legacy way to retrieve profile type from name by using singular label.
 	if ( ! $post_id ) {
 		$name    = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
-		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
-		$query   = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
-		$post_id = $wpdb->get_var( $query );
+		$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s", '_bp_member_type_label_singular_name', $name ) );
 	}
 
 	$member_type_post[ $cache_key ] = apply_filters( 'bp_member_type_post_by_type', $post_id );
@@ -3618,7 +3614,7 @@ function bp_member_type_by_type( $type_id ) {
 	$cache_key  = 'bp_member_type_by_type_' . $type_id;
 	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $member_ids ) {
-		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		$member_ids = $wpdb->get_col( $wpdb->prepare( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d", $type_id ) );
 		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
 	}
 
@@ -5761,26 +5757,24 @@ function bb_is_short_user_unique_identifier( $unique_identifier ) {
 function bb_remove_orphaned_profile_slug( $user_id ) {
 	global $wpdb;
 
-	$p_slug         = bb_core_get_user_slug( $user_id );
-	$table_name     = $wpdb->usermeta;
-	$condition      = array();
-	$condition_join = '';
+	$p_slug = bb_core_get_user_slug( $user_id );
 
 	if ( empty( $p_slug ) || empty( $user_id ) ) {
 		return;
 	}
 
-	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
-	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
-	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
-
-	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
-
-	// Initial deletion query
-	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 500";
-
-	// Execute the initial deletion
-	$wpdb->query( $delete_query );
+	// Initial deletion: LIKE patterns are bound as %s (literal wildcards, same patterns as before).
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$wpdb->usermeta} WHERE (( meta_key LIKE %s AND meta_key != %s ) OR ( meta_key LIKE %s AND LENGTH(meta_key) < 61 ) OR ( meta_key LIKE %s AND meta_value != %s )) AND user_id = %d LIMIT 500",
+			'bb_profile_slug_%',
+			"bb_profile_slug_{$p_slug}",
+			'bb_profile_long_slug_%',
+			'bb_profile_slug',
+			$p_slug,
+			$user_id
+		)
+	);
 
 	// Recursive deletion until no more rows are affected
 	while ( $wpdb->rows_affected > 0 ) {
