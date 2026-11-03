@@ -192,7 +192,7 @@ function bp_admin_repair_friend_count() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_delete is a static literal: usermeta table name from $wpdb, fixed meta_key, no variable input.
 		return array( 1, sprintf( $statement, $result ) );
 	}
 
@@ -254,7 +254,7 @@ function bp_admin_repair_group_count() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_group_count' );";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql_delete is a static literal: usermeta table name from $wpdb, fixed meta_key, no variable input.
 		return array( 1, sprintf( $statement, $result ) );
 	}
 
@@ -399,13 +399,13 @@ function repair_default_profiles_fields() {
 	$nick_name = $wpdb->prepare( "DELETE FROM {$bp_prefix}bp_xprofile_fields WHERE can_delete = %d AND parent_id = %d AND is_required = %d AND name = %s AND type = %s AND id != %d", 0, 0, 1, 'Nickname', 'textbox', $nickname_id );
 
 	// Remove all duplicate first name fields.
-	$wpdb->query( $first_name );
+	$wpdb->query( $first_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $first_name is the return of $wpdb->prepare() above (table from bp_core_get_table_prefix(), every value bound as %d/%s, kept-field id %d).
 
 	// Remove all duplicate last name fields.
-	$wpdb->query( $last_name );
+	$wpdb->query( $last_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $last_name is the return of $wpdb->prepare() above (table from bp_core_get_table_prefix(), every value bound as %d/%s, kept-field id %d).
 
 	// Remove all duplicate nick name fields.
-	$wpdb->query( $nick_name );
+	$wpdb->query( $nick_name ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $nick_name is the return of $wpdb->prepare() above (table from bp_core_get_table_prefix(), every value bound as %d/%s, kept-field id %d).
 
 	// Clear profile completion data
 	bp_core_xprofile_clear_all_user_progress_cache();
@@ -1250,10 +1250,11 @@ function bp_admin_update_activity_favourite() {
 					continue;
 				}
 
+				$user_reaction_table   = $reaction::$user_reaction_table;
 				$migrated_fav_user_ids = $wpdb->get_col(
 					$wpdb->prepare(
-						'SELECT user_id FROM ' . $reaction::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . implode( ',', $fav_user_ids ) . ')',
-						$item_id
+						"SELECT user_id FROM {$user_reaction_table} WHERE item_id = %d AND user_id IN (" . implode( ',', array_fill( 0, count( $fav_user_ids ), '%d' ) ) . ')', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name is BB_Reaction::$user_reaction_table (bp_core_get_table_prefix() . 'bb_user_reactions'); item id and every user id bound as %d.
+						array_merge( array( $item_id ), array_values( $fav_user_ids ) )
 					)
 				);
 
@@ -1387,7 +1388,7 @@ function bp_admin_invitations_table() {
 	// Check for existence of invitations table.
 	$table_name = BP_Invitation_Manager::get_table_name();
 	$query      = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
-	if ( ! $wpdb->get_var( $query ) == $table_name ) {
+	if ( ! $wpdb->get_var( $query ) == $table_name ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is the return of $wpdb->prepare() above (table name bound as %s via esc_like()).
 		return array(
 			'status'  => 2,
 			'message' => sprintf( $statement, $result ),
