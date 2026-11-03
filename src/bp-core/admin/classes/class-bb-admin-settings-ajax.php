@@ -584,6 +584,8 @@ class BB_Admin_Settings_Ajax {
 						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss' ) ),
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
+						// Optional plan tier (e.g. 'start') for the badge style variant.
+						'tier'       => sanitize_key( $section['pro_notice']['tier'] ?? '' ),
 					);
 
 					$section_modal = null;
@@ -592,6 +594,12 @@ class BB_Admin_Settings_Ajax {
 						$catalog_entry = bb_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
 
 						if ( $catalog_entry ) {
+							// Optional catalog badge text (e.g. "UPGRADE START"). The registered
+							// `badge_text` stays the fallback when the entry has none.
+							if ( ! empty( $catalog_entry['upgrade_badge_text'] ) ) {
+								$formatted_section['pro_notice']['badge_text'] = sanitize_text_field( $catalog_entry['upgrade_badge_text'] );
+							}
+
 							$section_modal = bb_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
 							if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
 								$section_modal = bb_admin_apply_addon_upsell_tier( $section_modal, $feature_id );
@@ -621,6 +629,16 @@ class BB_Admin_Settings_Ajax {
 						);
 					}
 
+					// A section that declares its plan tier keeps the modal on the same plan
+					// as its badge when the catalog entry carries no tier, or the default 'pro'.
+					if (
+						! empty( $section_modal ) &&
+						'' !== $formatted_section['pro_notice']['tier'] &&
+						( empty( $section_modal['tier'] ) || 'pro' === $section_modal['tier'] )
+					) {
+						$section_modal['tier'] = $formatted_section['pro_notice']['tier'];
+					}
+
 					if ( ! empty( $section_modal ) ) {
 						$formatted_section['pro_notice']['modal'] = $section_modal;
 					}
@@ -631,6 +649,22 @@ class BB_Admin_Settings_Ajax {
 				if ( ! empty( $section['help_url'] ) ) {
 					$formatted_section['help_url'] = $this->bb_sanitize_help_url( $section['help_url'] );
 				}
+
+				/**
+				 * Filters the section data before it is returned.
+				 *
+				 * Lets a panel adjust its header (e.g. drop an upgrade badge) from runtime
+				 * state that is too costly to resolve at feature registration.
+				 *
+				 * @since BuddyBoss 3.7.0
+				 *
+				 * @param array  $formatted_section Formatted section data.
+				 * @param array  $section           Registered section args.
+				 * @param string $feature_id        Feature ID.
+				 * @param string $side_panel_id     Side panel ID.
+				 * @param string $section_id        Section ID.
+				 */
+				$formatted_section = apply_filters( 'bb_admin_settings_format_section_data', $formatted_section, $section, $feature_id, $side_panel_id, $section_id );
 
 				$formatted_sections[] = $formatted_section;
 			}
@@ -895,8 +929,25 @@ class BB_Admin_Settings_Ajax {
 						continue;
 					}
 					if ( ! empty( $control['name'] ) ) {
-						$control_default                                = $control['default'] ?? '';
-						$field['description_controls'][ $idx ]['value'] = bp_get_option( $control['name'], $control_default );
+						$control_default = $control['default'] ?? '';
+						$control_value   = bp_get_option( $control['name'], $control_default );
+
+						// A stored value the control cannot represent would otherwise render as
+						// whichever <option> comes first. Resolve it the same way a save would.
+						//
+						// Only for controls that opt in with 'resolve_invalid'. A sanitizer that
+						// merely coerces (absint, a clamp) is not a resolver: running it here would
+						// show a value the matching getter does not enforce, which is the same
+						// screen-disagrees-with-behaviour defect this resolution exists to remove.
+						if (
+							! empty( $control['resolve_invalid'] ) &&
+							! empty( $control['sanitize_callback'] ) &&
+							is_callable( $control['sanitize_callback'] )
+						) {
+							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
+						}
+
+						$field['description_controls'][ $idx ]['value'] = $control_value;
 					}
 				}
 			}
@@ -1252,7 +1303,9 @@ class BB_Admin_Settings_Ajax {
 								),
 							'url'         => 'https://www.buddyboss.com/pricing/',
 						);
-					} else {
+					} elseif ( empty( $field['pro_notice']['link_url'] ) ) {
+						// A field that registered its own upgrade link (e.g. Email Digest's
+						// Start checkout) keeps it when the catalog has no entry.
 						$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
 					}
 				}
@@ -1314,6 +1367,12 @@ class BB_Admin_Settings_Ajax {
 					// The registered `button_url` is the fallback for when the catalog has
 					// no entry, so the catalog wins whenever it does.
 					$field_data['button_url'] = $field_data['upgrade_catalog_url'];
+				}
+
+				// Optional catalog button label (e.g. "Upgrade to Start"). The registered
+				// `button_label` stays the fallback when the entry has none.
+				if ( ! empty( $upsell_entry['upgrade_button_label'] ) ) {
+					$field_data['button_label'] = sanitize_text_field( $upsell_entry['upgrade_button_label'] );
 				}
 
 				if ( ! empty( $upsell_entry ) && function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {
@@ -1552,20 +1611,42 @@ class BB_Admin_Settings_Ajax {
 
 		$saved = array();
 
+		// Sentinel for "this option row does not exist"; compared by identity in the repair branch below.
+		$absent = new stdClass();
+
+		// Add-ons module that owns each add-on-provided pro_only field hosted by a
+		// Platform feature (the Reactions feature's own fields map to 'reactions').
+		// A plan can carry some modules and not others, so the plugin-wide Add-ons
+		// lock alone is not enough; bb_addons_provides_module() falls back to it on
+		// Add-ons builds without the per-module API.
+		$addons_field_modules = array(
+			'bb-social-login'                  => 'social-login',
+			'_bb-sso-providers'                => 'social-login',
+			'_bb_enable_activity_post_polls'   => 'polls',
+			'_bb_enable_activity_pinned_posts' => 'pinned-posts',
+			'bb_enable_group_subscriptions'    => 'group-subscription',
+		);
+
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
 
 			// Skip pro_only fields only when NO provider is available — defense-in-depth
 			// against crafted AJAX requests. The UI already disables these fields.
 			// Either provider makes the field legitimately saveable: BuddyBoss
-			// Platform Pro (legacy) OR the BuddyBoss Addons plugin, which now owns
-			// features such as reactions/polls/SSO. Without the addon check, an
+			// Platform Pro (legacy) OR the BuddyBoss Addons module that owns it
+			// (reactions/polls/SSO/pinned posts). Without the addon check, an
 			// addon-only site could never persist a pro_only field (e.g. the
 			// reactions mode), because bb_platform_pro() does not exist there.
+			if ( isset( $addons_field_modules[ $name ] ) ) {
+				$field_module = $addons_field_modules[ $name ];
+			} else {
+				$field_module = 'reactions' === $feature_id ? 'reactions' : '';
+			}
+
 			if (
 				! empty( $field['pro_only'] )
 				&& ! function_exists( 'bb_platform_pro' )
-				&& ! ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+				&& ! ( '' !== $field_module && bb_addons_provides_module( $field_module ) )
 			) {
 				continue;
 			}
@@ -1689,6 +1770,38 @@ class BB_Admin_Settings_Ajax {
 						}
 						bp_update_option( $control_name, $control_value );
 						$saved[ $control_name ] = $control_value;
+					} elseif (
+						array_key_exists( $name, $settings ) &&
+						! empty( $control['resolve_invalid'] ) &&
+						! empty( $control['sanitize_callback'] ) &&
+						is_callable( $control['sanitize_callback'] )
+					) {
+						// The parent field was submitted without its inline control, e.g. only
+						// the toggle was changed. Re-validate what is stored so the pair cannot
+						// be left as "enabled with a duration the dropdown cannot show", which
+						// reads back as the feature being off. A row that does not exist is
+						// left alone: the read path already resolves it to the registered
+						// default, and a filtered default may legitimately sit outside what
+						// the sanitizer accepts.
+						//
+						// Restricted to controls that opt in with 'resolve_invalid'. Applied to
+						// every sanitizer it would rewrite settings the admin never opened —
+						// bb_activity_load_type, for one, stores values supplied through the
+						// public bb_performance_activity_autoload filter, and its sanitizer
+						// returns 'infinite' for anything that filter is not currently offering.
+						$stored = bp_get_option( $control_name, $absent );
+
+						if ( $absent !== $stored && is_scalar( $stored ) ) {
+							$sanitized = call_user_func( $control['sanitize_callback'], $stored );
+
+							// Echo the repaired value back only once it has actually reached the
+							// database. The UI merges $saved into its state, so reporting a value
+							// that failed to write would show the admin a setting the site is not
+							// using — the very failure this repair exists to prevent.
+							if ( (string) $stored !== (string) $sanitized && bp_update_option( $control_name, $sanitized ) ) {
+								$saved[ $control_name ] = $sanitized;
+							}
+						}
 					}
 				}
 			}

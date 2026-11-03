@@ -60,6 +60,7 @@ $media_active = bp_is_active( 'media' );
 						</div>
 					</div>
 
+					<?php if ( bp_is_active( 'document' ) ) : ?>
 					<div class="dropzone closed document document-dropzone" id="bb-rl-ac-reply-post-document-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="bb-rl-ac-reply-post-document-template" style="display:none;">
 						<div class="dz-preview dz-file-preview">
@@ -78,7 +79,9 @@ $media_active = bp_is_active( 'media' );
 							<div class="dz-error-message"><span data-dz-errormessage></span></div>
 						</div>
 					</div>
+					<?php endif; ?>
 
+					<?php if ( bp_is_active( 'video' ) ) : ?>
 					<div class="dropzone closed video video-dropzone" id="bb-rl-ac-reply-post-video-uploader-<?php echo esc_attr( $activity_id ); ?>"></div>
 					<div class="bb-rl-ac-reply-post-video-template" style="display:none;">
 						<div class="dz-preview dz-file-preview well" id="dz-preview-template">
@@ -99,6 +102,7 @@ $media_active = bp_is_active( 'media' );
 							<div class="dz-error-message"><span data-dz-errormessage></span></div>
 						</div>
 					</div>
+					<?php endif; ?>
 					<div id="bb-rl-ac-reply-post-gif-<?php echo esc_attr( $activity_id ); ?>"></div>
 				<?php endif; ?>
 			</div>
@@ -119,16 +123,20 @@ $media_active = bp_is_active( 'media' );
 									<i class="bb-icons-rl-camera"></i>
 								</a>
 							</div>
+							<?php if ( bp_is_active( 'video' ) ) : ?>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
 								<a href="#" id="bb-rl-ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icons-rl-video-camera"></i>
 								</a>
 							</div>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'document' ) ) : ?>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
 								<a href="#" id="bb-rl-ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>">
 									<i class="bb-icons-rl-paperclip-horizontal"></i>
 								</a>
 							</div>
+							<?php endif; ?>
 							<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 								<div class="bb-rl-gif-media-search">
 									<a href="#" id="bb-rl-ac-reply-gif-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip bb-rl-ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">

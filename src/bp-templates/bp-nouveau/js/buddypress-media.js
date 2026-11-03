@@ -39,6 +39,10 @@ window.bp = window.bp || {};
 		 */
 		setupGlobals: function () {
 
+			// Document and video settings are only localized when those components are active.
+			var documentSettings = BP_Nouveau.document || {};
+			var videoSettings    = BP_Nouveau.video || {};
+
 			var bodySelector = $( 'body' );
 
 			// Init current page.
@@ -72,9 +76,9 @@ window.bp = window.bp || {};
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-				maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-				dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
+				maxFiles: typeof documentSettings.maxFiles !== 'undefined' ? documentSettings.maxFiles : 10,
+				maxFilesize: typeof documentSettings.max_upload_size !== 'undefined' ? documentSettings.max_upload_size : 2,
+				dictInvalidFileType: documentSettings.dictInvalidFileType,
 				dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 				previewTemplate: ForumDocumentTemplates,
 				dictCancelUploadConfirmation: BP_Nouveau.media.dictCancelUploadConfirmation,
@@ -84,19 +88,19 @@ window.bp = window.bp || {};
 			this.videoOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
-				dictFileTooBig: BP_Nouveau.video.dictFileTooBig,
-				acceptedFiles: BP_Nouveau.video.video_type,
+				dictFileTooBig: videoSettings.dictFileTooBig,
+				acceptedFiles: videoSettings.video_type,
 				createImageThumbnails: false,
-				dictDefaultMessage: BP_Nouveau.video.dropzone_video_message,
+				dictDefaultMessage: videoSettings.dropzone_video_message,
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFiles: typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-				maxFilesize: typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
-				dictInvalidFileType: BP_Nouveau.video.dictInvalidFileType,
-				dictMaxFilesExceeded: BP_Nouveau.video.video_dict_file_exceeded,
+				maxFiles: typeof videoSettings.maxFiles !== 'undefined' ? videoSettings.maxFiles : 10,
+				maxFilesize: typeof videoSettings.max_upload_size !== 'undefined' ? videoSettings.max_upload_size : 2,
+				dictInvalidFileType: videoSettings.dictInvalidFileType,
+				dictMaxFilesExceeded: videoSettings.video_dict_file_exceeded,
 				previewTemplate: ForumVideoTemplate,
-				dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+				dictCancelUploadConfirmation: videoSettings.dictCancelUploadConfirmation,
 			};
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
@@ -111,8 +115,8 @@ window.bp = window.bp || {};
 					autoProcessQueue: true,
 					addRemoveLinks: true,
 					uploadMultiple: false,
-					maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+					maxFiles: typeof documentSettings.maxFiles !== 'undefined' ? documentSettings.maxFiles : 10,
+					maxFilesize: typeof documentSettings.max_upload_size !== 'undefined' ? documentSettings.max_upload_size : 2,
 					dictInvalidFileType: bp_media_dropzone.dictInvalidFileType,
 					dictMaxFilesExceeded: BP_Nouveau.media.document_dict_file_exceeded,
 					previewTemplate: ForumDocumentTemplate,
@@ -505,6 +509,70 @@ window.bp = window.bp || {};
 				var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
 				$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
 			}
+		},
+
+		/**
+		 * Remove deleted item tiles from the single media album grid.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Array} ids Deleted media/video ids.
+		 */
+		removeAlbumTiles: function ( ids ) {
+			if ( ! ids || ! ids.length ) {
+				return;
+			}
+			$.each(
+				ids,
+				function ( index, value ) {
+					var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
+					if ( $albumItem.length ) {
+						$albumItem.remove();
+					}
+				}
+			);
+		},
+
+		/**
+		 * Handle a delete on the unified media album view (/media/albums/{id}).
+		 *
+		 * Renders the album empty-state when the mixed album has no items left,
+		 * otherwise removes the deleted tiles and refreshes the header counts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} data       Server response data with album counts.
+		 * @param {Array}  deletedIds Deleted media/video ids.
+		 * @return {boolean} True when the media album view was handled.
+		 */
+		handleAlbumDelete: function ( data, deletedIds ) {
+			if ( ! $( '#buddypress #bp-media-single-album' ).length || 'undefined' === typeof data.album_id || 0 >= parseInt( data.album_id, 10 ) ) {
+				return false;
+			}
+
+			var albumTotal = parseInt( data.album_total_count, 10 );
+			var $stream    = $( '#media-stream' );
+
+			// A stale out-of-order response (rapid double delete) must not overwrite
+			// an already-rendered empty state with older, non-zero counts.
+			if ( 0 < albumTotal && ! $stream.find( 'ul.media-list' ).length ) {
+				return true;
+			}
+
+			if ( 0 === albumTotal ) {
+				$( '.bb-photos-actions, .bb-videos-actions' ).hide();
+				if ( data.album_empty_html && data.album_empty_html.length ) {
+					$stream.html( data.album_empty_html );
+				} else {
+					// Album is empty but no markup returned - clear the deleted tiles.
+					this.removeAlbumTiles( deletedIds );
+				}
+			} else {
+				this.removeAlbumTiles( deletedIds );
+			}
+
+			this.updateAlbumCounts( data );
+			return true;
 		},
 
 		loadExistingMedia: function () {
@@ -993,7 +1061,7 @@ window.bp = window.bp || {};
 		},
 
 		deleteDocument: function ( event ) {
-			var target = $( event.currentTarget );
+			var target = $( event.currentTarget ), self = this;
 			event.preventDefault();
 
 			var type = target.attr( 'data-type' );
@@ -1080,8 +1148,9 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-media-elem.document-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
 								} else {
+									self.removeDeletedItemsFromCommentEditData( activityId, 'document', [ id ] );
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
@@ -1089,6 +1158,152 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+
+		/**
+		 * Remove an activity comment that the server deleted together with its
+		 * last photo, document or video, and take it out of the parent activity's
+		 * comment count first - the same update a direct comment delete makes.
+		 *
+		 * The comment can be rendered more than once (feed, "view more comments"
+		 * modal, media theatre), so every copy updates the counts of its own
+		 * activity. The feed card behind the modal often does not render the
+		 * comment (it shows only the latest comments), so when the comment was
+		 * removed from the modal only, the feed card's count drops by the same
+		 * number, and the modal is flagged as updated so closing it re-syncs the
+		 * feed card from the server - as after a direct comment delete.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The deleted activity comment ID.
+		 */
+		removeDeletedActivityComment: function ( commentId ) {
+			var activity       = bp.Nouveau.Activity,
+				canUpdateCount = 'undefined' !== typeof activity && 'function' === typeof activity.updateCommentCountOnDelete && 'function' === typeof activity.decreaseActivityCommentCount,
+				modalDeleted   = {},
+				feedHasCopy    = {};
+
+			$( 'body .activity-comments li#acomment-' + commentId ).each(
+				function () {
+					var $commentLi    = $( this ),
+						$activityItem = $commentLi.closest( '.activity-item' ),
+						$modal        = $commentLi.closest( '#activity-modal' ),
+						$countScope   = $modal.length ? $modal : $activityItem,
+						activityId    = $activityItem.data( 'bp-activity-id' );
+
+					if ( canUpdateCount && $activityItem.length ) {
+						if ( $modal.length ) {
+							modalDeleted[ activityId ] = activity.getDeletedCommentsCount( $commentLi );
+						} else if ( $commentLi.closest( '#activity-stream' ).length ) {
+							feedHasCopy[ activityId ] = true;
+						}
+
+						activity.updateCommentCountOnDelete( $commentLi, $activityItem, $countScope.find( '.activity-state' ), $countScope.find( '.comments-count' ) );
+					}
+
+					$commentLi.remove();
+				}
+			);
+
+			$.each(
+				modalDeleted,
+				function ( activityId, deletedCount ) {
+					// Re-sync the feed card from the server when the modal closes.
+					activity.activityHasUpdates = true;
+					activity.currentActivityId  = activityId;
+
+					// A feed card that rendered the comment was updated by its own copy above.
+					if ( feedHasCopy[ activityId ] ) {
+						return;
+					}
+
+					$( '#activity-stream li.activity-item[data-bp-activity-id="' + activityId + '"]' ).not( '#activity-modal li' ).each(
+						function () {
+							var $feedItem = $( this );
+
+							activity.decreaseActivityCommentCount( $feedItem, $feedItem.find( '.activity-state' ), $feedItem.find( '.comments-count' ), deletedCount );
+						}
+					);
+				}
+			);
+		},
+
+		/**
+		 * Remove deleted photos, documents or videos from the edit data of an
+		 * activity comment the server kept. Without this, clicking Edit before a
+		 * reload shows the deleted item again and saving sends its ID back.
+		 *
+		 * Every rendered copy of the comment (feed, "view more comments" modal)
+		 * carries its own copy of the edit data, so all of them are updated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId The kept activity comment ID.
+		 * @param {string}        type      Edit data key: 'media', 'document' or 'video'.
+		 * @param {Array}         ids       The deleted item IDs.
+		 */
+		removeDeletedItemsFromCommentEditData: function ( commentId, type, ids ) {
+			var deletedIds = $.map(
+				[].concat( ids ),
+				function ( value ) {
+					return parseInt( value, 10 );
+				}
+			);
+
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $commentLi = $( this ),
+						editData   = $commentLi.data( 'bp-activity-comment' );
+
+					if ( ! editData || ! Array.isArray( editData[ type ] ) ) {
+						return;
+					}
+
+					editData[ type ] = editData[ type ].filter(
+						function ( item ) {
+							return -1 === deletedIds.indexOf( parseInt( item.id, 10 ) );
+						}
+					);
+
+					$commentLi.data( 'bp-activity-comment', editData ).attr( 'data-bp-activity-comment', JSON.stringify( editData ) );
+				}
+			);
+		},
+
+		/**
+		 * Re-render the photo or video grid of an activity comment the server
+		 * kept, so its layout classes (`bb-media-length-N`, "+N more") match
+		 * the items that are left. Only the comment's own grid is replaced;
+		 * grids of its replies are not touched.
+		 *
+		 * Photo and document grids share `.bb-activity-media-wrap`, so a
+		 * marker child (the move dialog only the photo grid renders) tells
+		 * them apart.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number|string} commentId    The kept activity comment ID.
+		 * @param {string}        wrapSelector Selector of the grid wrapper.
+		 * @param {string}        marker       Selector of a child only this grid has, or ''.
+		 * @param {string}        content      Fresh grid markup from the server, '' when none is left.
+		 */
+		refreshKeptCommentAttachments: function ( commentId, wrapSelector, marker, content ) {
+			$( 'body li[data-bp-activity-comment-id="' + commentId + '"]' ).each(
+				function () {
+					var $wraps = $( this ).find( '.acomment-content' ).first().children( wrapSelector ).filter(
+						function () {
+							return ! marker || $( this ).children( marker ).length > 0;
+						}
+					);
+
+					if ( content ) {
+						$wraps.first().replaceWith( content );
+						$wraps.slice( 1 ).remove();
+					} else {
+						$wraps.remove();
+					}
+				}
+			);
 		},
 
 		bp_ajax_media_request: function ( event, data ) {
@@ -1412,8 +1627,33 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-media-elem.media-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									self.removeDeletedActivityComment( activityId );
+
+									// The selectors above also clear the "view more comments"
+									// modal's copy of the activity, which leaves the modal open
+									// as an empty shell. When the modal's list has been emptied,
+									// close it through its real close button so the close
+									// handler runs; hide the wrapper directly if a theme
+									// override renamed the button.
+									var $activityModal = $( '#activity-modal:visible' );
+									if ( $activityModal.length && 0 === $activityModal.find( '.bb-modal-activity-body .activity-list li' ).length ) {
+										var $modalCloseButton = $activityModal.find( '.bb-modal-activity-header .bb-close-action-popup' );
+										if ( $modalCloseButton.length ) {
+											// A pin toggled from inside the modal is moot once the
+											// post is deleted - left set, the close-button's sync
+											// handler reloads the whole feed (same reset as the
+											// direct-delete path in buddypress-activity.js).
+											if ( 'undefined' !== typeof bp.Nouveau.Activity ) {
+												bp.Nouveau.Activity.activityPinHasUpdates = false;
+											}
+											$modalCloseButton.trigger( 'click' );
+										} else {
+											$activityModal.closest( '.bb-activity-model-wrapper' ).hide();
+										}
+									}
 								} else {
+									self.removeDeletedItemsFromCommentEditData( activityId, 'media', media );
+									self.refreshKeptCommentAttachments( activityId, '.bb-activity-media-wrap', '.bp-media-move-photo', response.data.media_content );
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
@@ -1469,7 +1709,9 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( 0 !== response.data.media_html_content.length ) {
+									if ( self.handleAlbumDelete( response.data, media ) ) {
+										// Single-album view handled: empty-state or tile removal + counts.
+									} else if ( 0 !== response.data.media_html_content.length ) {
 										if ( 0 === parseInt( response.data.media_personal_count ) ) {
 											$( '.bb-photos-actions' ).hide();
 											$( '#media-stream' ).html( response.data.media_html_content );
@@ -1489,11 +1731,6 @@ window.bp = window.bp || {};
 												$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
 											}
 										} );
-									}
-
-									// Update album counts if deleting from an album.
-									if ( response.data.album_total_count !== undefined ) {
-										self.updateAlbumCounts( response.data );
 									}
 								}
 							}
@@ -1557,7 +1794,9 @@ window.bp = window.bp || {};
 								}
 
 								// inject media.
-								if ( 0 !== response.data.media_html_content.length ) {
+								if ( self.handleAlbumDelete( response.data, media ) ) {
+									// Single-album view handled: empty-state or tile removal + counts.
+								} else if ( 0 !== response.data.media_html_content.length ) {
 									if ( 0 === parseInt( response.data.media_personal_count ) ) {
 										$( '.bb-photos-actions' ).hide();
 										$( '#media-stream' ).html( response.data.media_html_content );
@@ -1577,11 +1816,6 @@ window.bp = window.bp || {};
 											$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
 										}
 									} );
-								}
-
-								// Update album counts if deleting from an album.
-								if ( response.data.album_total_count !== undefined ) {
-									self.updateAlbumCounts( response.data );
 								}
 							} else {
 								$( '#buddypress #media-stream.media' ).prepend( response.data.feedback );
@@ -5992,10 +6226,14 @@ window.bp = window.bp || {};
 								location.reload( true );
 							}
 						} else {
+							target.prop( 'disabled', false ).removeClass( 'loading' );
 							/* jshint ignore:start */
 							alert( response.data.feedback.replace( '&#039;', '\'' ) );
 							/* jshint ignore:end */
 						}
+					},
+					error: function () {
+						target.prop( 'disabled', false ).removeClass( 'loading' );
 					}
 				}
 			);
@@ -6047,10 +6285,14 @@ window.bp = window.bp || {};
 							location.reload( true );
 							//}
 						} else {
+							target.prop( 'disabled', false ).removeClass( 'loading' );
 							/* jshint ignore:start */
 							alert( response.data.feedback.replace( '&#039;', '\'' ) );
 							/* jshint ignore:end */
 						}
+					},
+					error: function () {
+						target.prop( 'disabled', false ).removeClass( 'loading' );
 					}
 				}
 			);
@@ -6105,12 +6347,16 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							window.location.reload( true );
 						} else {
+							target.prop( 'disabled', false ).removeClass( 'loading' );
 							if ( self.current_folder ) {
 								$( '#bp-media-single-album' ).prepend( response.data.feedback );
 							} else {
 								$( '#boss-media-create-album-popup .bb-model-header' ).after( response.data.feedback );
 							}
 						}
+					},
+					error: function () {
+						target.prop( 'disabled', false ).removeClass( 'loading' );
 					}
 				}
 			);
@@ -7976,6 +8222,36 @@ window.bp = window.bp || {};
 
 				$deleted_item.closest( 'li' ).remove();
 
+				// The server cascade-deletes every media/video attached to the activity,
+				// not just the item open in the theater - clear all of its tiles and
+				// refresh the single-album empty-state from the server's counts.
+				var respData = ( data.response && data.response.data ) ? data.response.data : false;
+				if ( respData ) {
+					var deletedIds   = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
+					var albumHandled = false;
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
+						albumHandled = bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+					}
+					if ( ! albumHandled ) {
+						// Directory and other non-album grids render one tile per
+						// cascade-deleted item - remove every sibling tile too, not
+						// just the one open in the theater. Media and video ids are
+						// separate sequences, so target each grid with its own list.
+						$.each(
+							respData.deleted_media_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="media"] .bb-open-media-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+						$.each(
+							respData.deleted_video_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+					}
+				}
+
 				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {
 
 					// No item.
@@ -7989,11 +8265,23 @@ window.bp = window.bp || {};
 				}
 				$( document ).find( '[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
 
-				for ( i = 0; i < self.medias.length; i++ ) {
+				// Remove every slide belonging to the deleted activity - the server
+				// cascade-deletes all of its rows. On current uploads each photo has
+				// its own hidden child activity, so only one slide matches; but data
+				// from older versions (before the per-photo sub-activity system) has
+				// several rows sharing one activity_id, and stopping at the first
+				// match (the old `break`) left sibling slides pointing at deleted
+				// photos - the theater arrows could then open a blank slide.
+				for ( i = self.medias.length - 1; i >= 0; i-- ) {
 					if ( self.medias[ i ].activity_id == data.id ) {
 						self.medias.splice( i, 1 );
-						break;
 					}
+				}
+
+				// Removing several slides can leave the pointer past the end; clamp so
+				// the navigation branches below keep their invariants.
+				if ( self.current_index > self.medias.length ) {
+					self.current_index = self.medias.length;
 				}
 
 				if ( self.current_index == 0 && self.current_index != ( self.medias.length ) ) {
