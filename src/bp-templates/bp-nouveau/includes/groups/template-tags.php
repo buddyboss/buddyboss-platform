@@ -994,38 +994,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			$buttons['remove_member']['button_attr']['href'] = bp_get_group_member_remove_link( $user_id );
 		}
 
-		// Membership button on groups loop or single group's header.
-	} elseif ( 'subscription' === $type ) {
-		if (
-			bb_is_enabled_subscription( 'group' )
-		) {
-			$buttons['group_subscription'] = bb_get_group_subscription_button(
-				array(
-					'id'                => 'group_subscription',
-					'position'          => 50,
-					'component'         => 'groups',
-					'parent_element'    => $parent_element,
-					'parent_attr'       => array(
-						'id'    => '',
-						'class' => $parent_class,
-					),
-					'must_be_logged_in' => true,
-					'button_element'    => $button_element,
-					'show_link_text'    => false,
-					'button_attr'       => array(
-						'data-bp-content-id' => $group->id,
-					),
-				),
-				false
-			);
-
-			if ( 'button' === $button_element ) {
-				unset( $buttons['group_subscription']['button_attr']['href'] );
-			}
-		}
-
-		// Membership button on groups loop or single group's header.
-	} else {
+		// Membership button on groups loop or single group's header. The `subscription` type has no
+		// button here: BuddyBoss Add-ons adds it through the `bp_nouveau_get_groups_buttons` filter.
+	} elseif ( 'subscription' !== $type ) {
 		/*
 		 * This filter workaround is waiting for a core adaptation
 		 * so that we can directly get the groups button arguments
@@ -1473,13 +1444,13 @@ function bp_nouveau_group_template_part() {
 			$template = 'photos';
 		} elseif ( bp_is_group_albums() ) {
 			$template = 'albums';
-		} elseif ( bp_is_group_folders() ) {
+		} elseif ( bp_is_active( 'document' ) && bp_is_group_folders() ) {
 			$template = 'documents';
-		} elseif ( bp_is_group_document() ) {
+		} elseif ( bp_is_active( 'document' ) && bp_is_group_document() ) {
 			$template = 'documents';
 		} elseif ( true === bp_disable_group_messages() && bp_is_group_messages() ) {
 			$template = 'messages';
-		} elseif ( bp_is_group_video() ) {
+		} elseif ( bp_is_active( 'video' ) && bp_is_group_video() ) {
 			$template = 'videos';
 		} elseif ( bp_is_group_video_albums() ) {
 			$template = 'albums';

@@ -202,6 +202,10 @@ class Signup extends BuddypressCommand {
 		$signup  = $this->get_signup_by_identifier( $args[0], $assoc_args );
 		$user_id = bp_core_activate_signup( $signup->activation_key );
 
+		if ( is_wp_error( $user_id ) ) {
+			WP_CLI::error( sprintf( 'Signup not activated: %s', $user_id->get_error_message() ) );
+		}
+
 		if ( $user_id ) {
 			WP_CLI::success( sprintf( 'Signup activated, new user (ID #%d).', $user_id ) );
 		} else {
