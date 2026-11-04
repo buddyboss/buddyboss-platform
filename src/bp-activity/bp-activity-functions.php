@@ -7562,7 +7562,8 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 */
 	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
 		if ( ! $activity instanceof BP_Activity_Activity ) {
-			$activity = new BP_Activity_Activity( absint( $activity ) );
+			// Activity queries return plain row objects; read their ID rather than casting the object.
+			$activity = new BP_Activity_Activity( absint( is_object( $activity ) && isset( $activity->id ) ? $activity->id : $activity ) );
 		}
 
 		if ( empty( $activity->id ) ) {
