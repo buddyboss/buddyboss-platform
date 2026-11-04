@@ -4334,7 +4334,7 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 
 				if ( $bp_get_invitee_email->have_posts() ) {
 
-					$member_type = bb_get_invite_allowed_member_type( get_the_ID() );
+					$member_type = bb_get_invite_allowed_member_type( $bp_get_invitee_email->posts[0]->ID );
 					// Check if user is invited for specific member type.
 					if ( isset( $member_type ) && ! empty( $member_type ) ) {
 
@@ -4515,7 +4515,7 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id ) {
 
 			if ( $bp_get_invitee_email->have_posts() ) {
 
-				$member_type = bb_get_invite_allowed_member_type( get_the_ID() );
+				$member_type = bb_get_invite_allowed_member_type( $bp_get_invitee_email->posts[0]->ID );
 				// Check if user is invited for specific member type.
 				if ( isset( $member_type ) && ! empty( $member_type ) ) {
 					// Assign the invited member type to user.
