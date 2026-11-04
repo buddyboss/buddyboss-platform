@@ -7575,30 +7575,37 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 		$activities = array( $activity );
 		$current    = $activity;
 
+		// Walk up to the post that owns the privacy. A comment points at its root post through item_id.
 		// A post with several photos, videos or documents gives each one a hidden sub-activity
-		// (privacy media/video/document) whose secondary_item_id is the post or comment it belongs to.
-		// Those privacy values carry no rule of their own, so the parent decides.
-		if (
-			in_array( $activity->privacy, array( 'media', 'video', 'document' ), true ) &&
-			! empty( $activity->secondary_item_id ) &&
-			(int) $activity->secondary_item_id !== (int) $activity->id
-		) {
-			$parent = new BP_Activity_Activity( (int) $activity->secondary_item_id );
-			if ( empty( $parent->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $parent;
-				$current      = $parent;
+		// (privacy media/video/document) whose secondary_item_id is the post or comment it belongs to;
+		// those privacy values carry no rule of their own. Comments made on a single media item in the
+		// media viewer have that sub-activity as their root, so the walk can go comment > sub-activity > post.
+		for ( $step = 0; $can_view; $step++ ) {
+			$next_id = 0;
+			if ( 'activity_comment' === $current->type && ! empty( $current->item_id ) ) {
+				$next_id = (int) $current->item_id;
+			} elseif ( in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) && ! empty( $current->secondary_item_id ) ) {
+				$next_id = (int) $current->secondary_item_id;
 			}
-		}
 
-		if ( $can_view && 'activity_comment' === $current->type && ! empty( $current->item_id ) && (int) $current->item_id !== (int) $current->id ) {
-			$root = new BP_Activity_Activity( (int) $current->item_id );
-			if ( empty( $root->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $root;
+			if ( empty( $next_id ) || $next_id === (int) $current->id ) {
+				break;
 			}
+
+			// comment > sub-activity > comment > post is the longest real chain; anything longer is malformed.
+			if ( $step >= 4 ) {
+				$can_view = false;
+				break;
+			}
+
+			$next = new BP_Activity_Activity( $next_id );
+			if ( empty( $next->id ) ) {
+				$can_view = false;
+				break;
+			}
+
+			$activities[] = $next;
+			$current      = $next;
 		}
 
 		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
