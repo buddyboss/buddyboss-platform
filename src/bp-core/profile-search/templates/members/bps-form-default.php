@@ -37,7 +37,33 @@ $F = bp_ps_escaped_form_data( $version = '4.9' );
 if ( ! empty( $options['theme'] ) ) {
 	$accordion = 'bp_ps_accordion_' . $F->unique_id;
 	wp_enqueue_script( 'jquery-ui-accordion' );
-	wp_enqueue_style( 'jquery-ui-theme', 'https://code.jquery.com/ui/1.12.1/themes/' . $options['theme'] . '/jquery-ui.min.css' );
+
+	/*
+	 * The jQuery UI 1.12.1 "base" theme ships with the plugin (no remotely loaded
+	 * assets). The theme picker is gone from the template options, so any other
+	 * stored $options['theme'] value falls back to the bundled base theme.
+	 */
+	$min = bp_core_get_minified_asset_suffix();
+	wp_enqueue_style( 'jquery-ui-theme', buddypress()->plugin_url . "bp-core/css/vendor/jquery-ui/jquery-ui{$min}.css", array(), '1.12.1' );
+
+	// Accordion init and form styles on their enqueued handles (were a raw <script>/<style> here).
+	$accordion_config = array(
+		'icons'       => array(
+			'header'       => 'ui-icon-plus',
+			'activeHeader' => ( 'Yes' === $options['collapsible'] ) ? 'ui-icon-minus' : 'ui-icon-blank',
+		),
+		'active'      => false,
+		'collapsible' => ( 'Yes' === $options['collapsible'] ),
+	);
+	wp_add_inline_script(
+		'jquery-ui-accordion',
+		sprintf(
+			'jQuery(function($){ $(%1$s).accordion(%2$s); });',
+			wp_json_encode( '#' . $accordion ),
+			wp_json_encode( $accordion_config )
+		)
+	);
+	wp_add_inline_style( 'jquery-ui-theme', '.bp-ps-form label {display: inline;} .bp-ps-form input {display: inline;}' );
 	?>
 
 <div id="<?php echo esc_attr( $accordion ); ?>">
