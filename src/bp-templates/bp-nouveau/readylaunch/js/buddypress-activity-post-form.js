@@ -1515,7 +1515,8 @@ window.bp = window.bp || {};
 
 			var contentValidate = (
 				$( $.parseHTML( content ) ).text().trim() !== '' ||
-				content.includes( 'class="emoji"' ) ||
+				// Typed emoji render as img.emoji, while the emoji picker and restored drafts or edits use img.emojioneemoji.
+				0 < $( '<div></div>' ).append( $.parseHTML( content ) ).find( 'img.emoji, img.emojioneemoji, img.bb-rl-emojioneemoji' ).length ||
 				(
 					! _.isUndefined( this.postForm.model.get( 'link_success' ) ) &&
 					true === this.postForm.model.get( 'link_success' )
