@@ -248,7 +248,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 					$new_visibility_level = isset( $new_values[ $field_of_current_set ]['visibility'] ) ? $new_values[ $field_of_current_set ]['visibility'] : '';
 					xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
-					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+					$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bp->table_prefix is the BuddyBoss table prefix; the id is bound (%d).
 
 					if ( 'datebox' === $type && ! empty( $new_data ) ) {
 						$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );
@@ -1311,7 +1311,7 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 							$new_visibility_level = isset( $new_values[ $field_of_current_set ]['visibility'] ) ? $new_values[ $field_of_current_set ]['visibility'] : '';
 							xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
-							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bp->table_prefix is the BuddyBoss table prefix; the id is bound (%d).
 
 							if ( 'datebox' === $type && ! empty( $new_data ) ) {
 								$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );

@@ -463,7 +463,7 @@ class BP_Core_Suspend {
 
 			$cached = bp_core_get_incremented_cache( $blocked_content_sql, 'bp_moderation' );
 			if ( false === $cached ) {
-				$result = $wpdb->get_var( $blocked_content_sql );
+				$result = $wpdb->get_var( $blocked_content_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $blocked_content_sql is $wpdb->prepare()'d above (item id %d, type %s, hidden user ids absint()'d).
 				bp_core_set_incremented_cache( $blocked_content_sql, 'bp_moderation', $result );
 			} else {
 				$result = $cached;

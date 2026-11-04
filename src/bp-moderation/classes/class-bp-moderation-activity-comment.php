@@ -365,9 +365,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$sql           = "{$sql['select']} {$sql['where']}";
 		if ( ! empty( $search_term ) ) {
 			$query_placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$sql               = $wpdb->prepare( $sql, $query_placeholder );
+			$sql               = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- binds the search %s left in the activity where clauses.
 		}
-		$results          = $wpdb->get_results( $sql );
+		$results          = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where_conditions are BP_Activity_Activity::get()'s own prepared clauses (passed through bp_activity_get_where_conditions), the search term is bound above; table names from buddypress().
 		$blocked_item_ids = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $ac_id ) {

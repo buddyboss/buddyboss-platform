@@ -697,8 +697,8 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 ORDER BY m.date_modified DESC {$pag_sql}" );
-		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_banned = 0 AND m.is_confirmed = 1 ORDER BY m.date_modified DESC" );
+		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 ORDER BY m.date_modified DESC {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
+		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_banned = 0 AND m.is_confirmed = 1 ORDER BY m.date_modified DESC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
 
 		return array(
 			'groups' => $paged_groups,
@@ -745,8 +745,8 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_admin = 1 ORDER BY m.date_modified ASC {$pag_sql}" );
-		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_admin = 1 ORDER BY date_modified ASC" );
+		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_admin = 1 ORDER BY m.date_modified ASC {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
+		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_admin = 1 ORDER BY date_modified ASC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
 
 		return array(
 			'groups' => $paged_groups,
@@ -793,8 +793,8 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_mod = 1 ORDER BY m.date_modified ASC {$pag_sql}" );
-		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_mod = 1 ORDER BY date_modified ASC" );
+		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_mod = 1 ORDER BY m.date_modified ASC {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
+		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_confirmed = 1 AND m.is_banned = 0 AND m.is_mod = 1 ORDER BY date_modified ASC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
 
 		return array(
 			'groups' => $paged_groups,
@@ -840,8 +840,8 @@ class BP_Groups_Member {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
-		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_banned = 1  ORDER BY m.date_modified ASC {$pag_sql}" );
-		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_banned = 1 ORDER BY date_modified ASC" );
+		$paged_groups = $wpdb->get_results( "SELECT g.*, gm1.meta_value as total_member_count, gm2.meta_value as last_activity FROM {$bp->groups->table_name_groupmeta} gm1, {$bp->groups->table_name_groupmeta} gm2, {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.id = m.group_id AND g.id = gm1.group_id AND g.id = gm2.group_id AND gm2.meta_key = 'last_activity' AND gm1.meta_key = 'total_member_count'{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_banned = 1  ORDER BY m.date_modified ASC {$pag_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
+		$total_groups = $wpdb->get_var( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id{$hidden_sql}{$filter_sql} AND {$user_id_sql} AND m.is_banned = 1 ORDER BY date_modified ASC" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by code; $filter_sql (LIKE %s), $user_id_sql (%d) and $pag_sql (%d, %d) are $wpdb->prepare()'d above; table names from buddypress().
 
 		return array(
 			'groups' => $paged_groups,
@@ -1271,7 +1271,7 @@ class BP_Groups_Member {
 		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
 
 		// Get the specific user ids.
-		return array_map( 'intval', $wpdb->get_col( "{$sql['select']} {$sql['where']}" ) );
+		return array_map( 'intval', $wpdb->get_col( "{$sql['select']} {$sql['where']}" ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built just above: table name from buddypress(), group_id $wpdb->prepare()'d, constant flags; the join/where filters are public API.
 	}
 
 	/**

@@ -307,7 +307,7 @@ final class BP_Group_Export extends BP_Export {
 		$ids_in = join( ',', $ids_in );
 
 		// Table name from $bp->groups; one %s placeholder per group ID (IDs read from the groups table in get_data()).
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})", $group_ids ) );
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})", $group_ids ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $group_meta_table is the groupmeta table name from buddypress(); $ids_in is the placeholder list built above.
 
 		$metas_by_group = array();
 

@@ -632,7 +632,7 @@ class BP_Media_Album {
 		$total_count    = wp_cache_get( $cache_key, 'bp_media_album' );
 
 		if ( false === $total_count ) {
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = %d", $group_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress().
 			wp_cache_set( $cache_key, $total_count, 'bp_media_album' );
 		}
 

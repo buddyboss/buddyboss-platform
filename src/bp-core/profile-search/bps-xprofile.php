@@ -396,7 +396,7 @@ function bp_ps_gender_setup( $fields ) {
 	global $wpdb;
 	global $bp;
 
-	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' " );
+	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' " ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- constant query; $bp->table_prefix is the BuddyBoss table prefix.
 
 	if ( $exists_gender[0]->count > 0 ) {
 

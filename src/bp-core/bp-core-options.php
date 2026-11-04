@@ -452,10 +452,9 @@ function bp_core_get_root_options() {
 	$root_blog_options_meta = wp_cache_get( 'root_blog_options', 'bp' );
 
 	if ( false === $root_blog_options_meta ) {
-		$blog_options_keys      = "'" . join( "', '", (array) $root_blog_option_keys ) . "'";
 		$blog_options_table     = bp_is_multiblog_mode() ? $wpdb->options : $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'options';
-		$blog_options_query     = "SELECT option_name AS name, option_value AS value FROM {$blog_options_table} WHERE option_name IN ( {$blog_options_keys} )";
-		$root_blog_options_meta = $wpdb->get_results( $blog_options_query );
+		$blog_options_query     = $wpdb->prepare( "SELECT option_name AS name, option_value AS value FROM {$blog_options_table} WHERE option_name IN ( " . implode( ', ', array_fill( 0, count( $root_blog_option_keys ), '%s' ) ) . ' )', $root_blog_option_keys ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- options table from $wpdb; one %s per option name.
+		$root_blog_options_meta = $wpdb->get_results( $blog_options_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $blog_options_query is $wpdb->prepare()'d above.
 
 		// On Multisite installations, some options must always be fetched from sitemeta.
 		if ( is_multisite() ) {
@@ -479,9 +478,8 @@ function bp_core_get_root_options() {
 
 			$current_site           = get_current_site();
 			$network_option_keys    = array_keys( $network_options );
-			$sitemeta_options_keys  = "'" . join( "', '", (array) $network_option_keys ) . "'";
-			$sitemeta_options_query = $wpdb->prepare( "SELECT meta_key AS name, meta_value AS value FROM {$wpdb->sitemeta} WHERE meta_key IN ( {$sitemeta_options_keys} ) AND site_id = %d", $current_site->id );
-			$network_options_meta   = $wpdb->get_results( $sitemeta_options_query );
+			$sitemeta_options_query = $wpdb->prepare( "SELECT meta_key AS name, meta_value AS value FROM {$wpdb->sitemeta} WHERE meta_key IN ( " . implode( ', ', array_fill( 0, count( $network_option_keys ), '%s' ) ) . ' ) AND site_id = %d', array_merge( $network_option_keys, array( $current_site->id ) ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %s per meta key, then the site id.
+			$network_options_meta   = $wpdb->get_results( $sitemeta_options_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sitemeta_options_query is $wpdb->prepare()'d above.
 
 			// Sitemeta comes second in the merge, so that network 'registration' value wins.
 			$root_blog_options_meta = array_merge( $root_blog_options_meta, $network_options_meta );

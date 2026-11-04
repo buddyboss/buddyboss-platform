@@ -784,8 +784,8 @@ function bp_messages_admin_repair_unread_messages_count() {
 
 	$offset           = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$bp               = buddypress();
-	$recipients_query = "SELECT DISTINCT thread_id FROM {$bp->messages->table_name_recipients} LIMIT 50 OFFSET $offset ";
-	$recipients       = $wpdb->get_results( $recipients_query );
+	$recipients_query = $wpdb->prepare( "SELECT DISTINCT thread_id FROM {$bp->messages->table_name_recipients} LIMIT 50 OFFSET %d", $offset ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress().
+	$recipients       = $wpdb->get_results( $recipients_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $recipients_query is $wpdb->prepare()'d above.
 
 	if ( ! empty( $recipients ) ) {
 		foreach ( $recipients as $recipient ) {

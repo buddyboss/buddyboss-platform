@@ -452,7 +452,7 @@ class BP_Email_Tokens {
 
 										$sql['limit'] = 'LIMIT 4';
 
-										$group_user_ids = $wpdb->get_results( "{$sql[ 'select' ]} {$sql[ 'where' ]} {$sql[ 'groupby' ]} {$sql[ 'orderby' ]} {$sql[ 'order' ]} {$sql[ 'limit' ]}" );
+										$group_user_ids = $wpdb->get_results( "{$sql[ 'select' ]} {$sql[ 'where' ]} {$sql[ 'groupby' ]} {$sql[ 'orderby' ]} {$sql[ 'order' ]} {$sql[ 'limit' ]}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- every part is a literal built just above: table name from buddypress(), item_id absint()'d, component $wpdb->prepare()'d (%s).
 
 										$group_user_ids = wp_list_pluck( $group_user_ids, 'user_id' );
 

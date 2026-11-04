@@ -830,7 +830,7 @@ function bp_core_get_total_member_count() {
 
 	if ( false === $count ) {
 		$status_sql = bp_core_get_status_sql();
-		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" );
+		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_sql is the constant clause from bp_core_get_status_sql(); table name from $wpdb.
 		wp_cache_set( 'bp_total_member_count', $count, 'bp' );
 	}
 
@@ -927,7 +927,7 @@ function bp_core_get_active_member_count() {
 
 		$exclude_users     = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is one of the two literal statements above (table name $wpdb->users, no variable input).
 		$exclude_users_sql = ! empty( $exclude_users ) ? 'AND user_id NOT IN (' . implode( ',', wp_parse_id_list( $exclude_users ) ) . ')' : '';
-		$count             = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' {$exclude_users_sql}", $bp->members->id ) );
+		$count             = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' {$exclude_users_sql}", $bp->members->id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $exclude_users_sql is an int list from wp_parse_id_list() or empty; table name from buddypress().
 
 		set_transient( 'bp_active_member_count', $count );
 	}
@@ -2428,8 +2428,8 @@ function bp_members_migrate_signups() {
 
 		// Fetch activation keys separately, to avoid the all_with_meta
 		// overhead.
-		$status_2_ids_sql = implode( ',', $status_2_ids );
-		$ak_data          = $wpdb->get_results( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'activation_key' AND user_id IN ({$status_2_ids_sql})" );
+		$status_2_ids_sql = implode( ',', wp_parse_id_list( $status_2_ids ) );
+		$ak_data          = $wpdb->get_results( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'activation_key' AND user_id IN ({$status_2_ids_sql})" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_2_ids_sql is an int list (ids read from the users table, wp_parse_id_list()'d); table name from $wpdb.
 
 		// Rekey.
 		$activation_keys = array();
@@ -5544,10 +5544,10 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	foreach ( $user_ids as $key => $user_id ) {
 
 		// removed old user meta which have value length 40.
-		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s AND user_id = %d AND LENGTH(meta_value) = 40", 'bb_profile_slug', $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb.
 
 		// Remove duplicate log slug with same value.
-		$wpdb->query( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = {$user_id}" );
+		$wpdb->query( $wpdb->prepare( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE %s AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = %d", $wpdb->esc_like( 'bb_profile_long_slug_' ) . '%', $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb.
 
 		// fetch user slug if already exists.
 		$p_slug = bb_core_get_user_slug( $user_id );

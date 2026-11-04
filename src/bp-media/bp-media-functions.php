@@ -2461,7 +2461,7 @@ function bp_get_attachment_media_id( $attachment_id = 0 ) {
 	$attachment_media_id = wp_cache_get( $cache_key, 'bp_media' );
 
 	if ( false === $attachment_media_id ) {
-		$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+		$attachment_media_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = %d", $attachment_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress().
 		wp_cache_set( $cache_key, $attachment_media_id, 'bp_media' );
 	}
 

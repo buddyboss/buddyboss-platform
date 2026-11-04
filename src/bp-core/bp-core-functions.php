@@ -10024,12 +10024,13 @@ function bb_generate_default_avatar( $args ) {
 function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb;
 
-	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
+	$item_ids     = wp_parse_id_list( $item_ids );
+	$delete_query = $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key = %s", 'default-user-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= $wpdb->prepare( ' AND user_id IN (' . implode( ',', array_fill( 0, count( $item_ids ), '%d' ) ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %d per id.
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- both parts are $wpdb->prepare()'d above (meta_key %s, one %d per user id).
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem   = bb_wp_filesystem();
@@ -10059,12 +10060,13 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb, $bp;
 
+	$item_ids     = wp_parse_id_list( $item_ids );
 	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= $wpdb->prepare( ' AND group_id IN (' . implode( ',', array_fill( 0, count( $item_ids ), '%d' ) ) . ')', $item_ids ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- one %d per id.
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- both parts are $wpdb->prepare()'d above (meta_key %s, one %d per group id).
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem    = bb_wp_filesystem();

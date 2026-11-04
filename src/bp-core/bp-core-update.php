@@ -1001,12 +1001,12 @@ function bp_update_to_1_4_3() {
 	global $wpdb;
 	$bp      = buddypress();
 	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
-	$records = $wpdb->get_col( $squery );
+	$records = $wpdb->get_col( $squery ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- constant query, table names from $wpdb.
 	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
-		$records = reset( $records );
+		$records = wp_parse_id_list( explode( ',', (string) reset( $records ) ) );
 		if ( ! empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ')';
-			$wpdb->query( $update_query );
+			$update_query = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . implode( ',', array_fill( 0, count( $records ), '%d' ) ) . ')', $records ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %d per media id (the stored meta is parsed to ints first).
+			$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $update_query is $wpdb->prepare()'d above.
 		}
 	}
 }
@@ -3102,7 +3102,7 @@ function bb_background_update_group_member_count() {
 
 	// Fetch all groups.
 	$sql       = "SELECT DISTINCT id FROM {$wpdb->base_prefix}bp_groups ORDER BY id DESC";
-	$group_ids = $wpdb->get_col( $sql );
+	$group_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- constant query, table prefix from $wpdb.
 
 	if ( empty( $group_ids ) ) {
 		return;
@@ -3204,9 +3204,10 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 			isset( $result->meta_value ) &&
 			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
 		) {
-			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
+			$ids   = wp_parse_id_list( explode( ',', $result->meta_value ) );
+			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )', array_merge( array( $result->message_id ), $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from $wpdb->base_prefix; one %d per stored media/document id.
 
-			$wpdb->query( $query );
+			$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above.
 		}
 	}
 
@@ -3248,7 +3249,7 @@ function bb_core_update_repair_duplicate_following_notification() {
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
 	$sql .= ' ORDER BY n1.id DESC';
 
-	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) );
+	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the literal query built just above (component name/action as %s), table name from buddypress().
 
 	// Delete the duplicate notifications in chunks (bounded lock time on large sites).
 	foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
@@ -3307,7 +3308,7 @@ function bb_update_to_2_4_10() {
 	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
 
 	// Get the group ids with 0 members.
-	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) );
+	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the literal query built just above (meta key %s, value %d), table names from $wpdb->base_prefix.
 
 	if ( ! empty( $groups ) ) {
 		$admin = get_users(
@@ -3541,17 +3542,21 @@ function bb_core_removed_orphaned_member_slug() {
 
 	$limit = apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 50 );
 
-	$query = "SELECT user_id FROM (
+	$query = $wpdb->prepare(
+		"SELECT user_id FROM (
 		SELECT user_id, COUNT(*) AS count FROM {$wpdb->usermeta}
-		    WHERE meta_key LIKE 'bb_profile_%'
+		    WHERE meta_key LIKE %s
 		    GROUP BY user_id
 		    ORDER BY count DESC
-		    LIMIT {$limit}
+		    LIMIT %d
 		) AS t
-		WHERE count > 3;";
+		WHERE count > 3;",
+		$wpdb->esc_like( 'bb_profile_' ) . '%',
+		absint( $limit )
+	);
 
 	// Retrieve users with more than 3 profile slug metas.
-	$users = $wpdb->get_col( $query );
+	$users = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above (LIMIT %d).
 
 	if (
 		empty( $users ) ||

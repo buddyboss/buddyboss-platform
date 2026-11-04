@@ -155,7 +155,7 @@ function bp_blogs_record_existing_blogs( $args = array() ) {
 			$sql['offset'] = $wpdb->prepare( 'OFFSET %d', $r['offset'] );
 		}
 
-		$blogs = $wpdb->get_results( implode( ' ', $sql ) );
+		$blogs = $wpdb->get_results( implode( ' ', $sql ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- every part of $sql is $wpdb->prepare()'d above (site_id, root blog, LIMIT, OFFSET as %d) or an int list from wp_parse_id_list(); ORDER BY is a constant.
 
 		// Record a single site.
 	} else {
@@ -217,7 +217,7 @@ function bp_blogs_record_existing_blogs( $args = array() ) {
 		$sql['offset'] = $wpdb->prepare( ' OFFSET %d', $r['limit'] + $r['offset'] );
 
 		// Check if there are more blogs to record
-		$blog_ids = $wpdb->get_results( implode( ' ', $sql ) );
+		$blog_ids = $wpdb->get_results( implode( ' ', $sql ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- same prepared parts as above with a prepared OFFSET.
 
 		// We have more blogs; record offset and re-run function
 		if ( ! empty( $blog_ids ) ) {
@@ -1367,9 +1367,7 @@ function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = fa
 	// Legacy - if no meta_key is passed, delete all for the blog_id.
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->blogs->table_name_blogmeta;
-		$sql        = "SELECT meta_key FROM {$table_name} WHERE blog_id = %d";
-		$query      = $wpdb->prepare( $sql, $blog_id );
-		$keys       = $wpdb->get_col( $query );
+		$keys       = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$table_name} WHERE blog_id = %d", $blog_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from buddypress()->blogs.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;

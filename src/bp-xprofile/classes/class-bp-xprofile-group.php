@@ -431,7 +431,7 @@ class BP_XProfile_Group {
 		}
 
 		// Setup IN query from group IDs.
-		$group_ids_in = implode( ',', (array) $group_ids );
+		$group_ids_in = implode( ',', wp_parse_id_list( $group_ids ) );
 
 		// Support arrays and comma-separated strings.
 		$exclude_fields_cs = wp_parse_id_list( $r['exclude_fields'] );
@@ -470,7 +470,7 @@ class BP_XProfile_Group {
 		// exclude_fields parameter. See bp_xprofile_get_hidden_fields_for_user().
 		$hidden_user_fields = bp_xprofile_get_hidden_fields_for_user( $r['user_id'] );
 		$exclude_fields_cs  = array_merge( $exclude_fields_cs, $hidden_user_fields );
-		$exclude_fields_cs  = implode( ',', $exclude_fields_cs );
+		$exclude_fields_cs  = implode( ',', wp_parse_id_list( $exclude_fields_cs ) );
 
 		// Set up NOT IN query for excluded field IDs.
 		if ( ! empty( $exclude_fields_cs ) ) {
@@ -512,7 +512,7 @@ class BP_XProfile_Group {
 		// Fetch the fields.
 		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) || is_admin() ) {
-			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- the three id lists are wp_parse_id_list()'d / intval()'d above; table name from buddypress().
 			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
 		} else {
 			$field_ids = $bp_xprofile_field_ids[ $cache_field_key ];
@@ -884,7 +884,7 @@ class BP_XProfile_Group {
 				$profile_table = $bp->table_prefix . 'bp_xprofile_fields';
 			}
 
-			$levels = $wpdb->get_results(
+			$levels = $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- constant query; $profile_table and $profile_meta_table are the xprofile table names from buddypress().
 				"SELECT xf.id,
 				GROUP_CONCAT(xm.meta_key ORDER BY xf.id) meta_keys,
 				GROUP_CONCAT(xm.meta_value ORDER BY xf.id) meta_values

@@ -124,7 +124,7 @@ class BP_Messages_Notice {
 			$sql = $wpdb->prepare( "UPDATE {$bp->messages->table_name_notices} SET subject = %s, message = %s, is_active = %d WHERE id = %d", $this->subject, $this->message, $this->is_active, $this->id );
 		}
 
-		if ( ! $wpdb->query( $sql ) ) {
+		if ( ! $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is the $wpdb->prepare()'d INSERT or UPDATE above; table name from buddypress().
 			return false;
 		}
 
@@ -195,7 +195,7 @@ class BP_Messages_Notice {
 		$bp  = buddypress();
 		$sql = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_notices} WHERE id = %d", $this->id );
 
-		if ( ! $wpdb->query( $sql ) ) {
+		if ( ! $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above (id as %d); table name from buddypress().
 			return false;
 		}
 

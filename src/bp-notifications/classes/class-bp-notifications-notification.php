@@ -911,7 +911,7 @@ class BP_Notifications_Notification {
 		$cache_group = ( ! empty( $r['is_new'] ) ) ? 'bp_notifications_unread_count' : 'bp_notifications_read_count';
 		$count       = wp_cache_get( $r['user_id'], $cache_group );
 		if ( false === $count ) {
-			$count = (int) $wpdb->get_var( $sql );
+			$count = (int) $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is assembled just above from literals: table name from buddypress(), get_where_sql() binds every value (ids wp_parse_id_list()'d, names/actions and search %s via $wpdb->prepare(), date/meta via WP_Date_Query/WP_Meta_Query); the where filter is public API.
 			wp_cache_set( $r['user_id'], $count, $cache_group );
 		}
 
@@ -1369,6 +1369,6 @@ class BP_Notifications_Notification {
 		$sql = "{$select_sql} {$from_sql} {$where_sql} {$group_sql} {$order_sql}";
 
 		// Return the queried results.
-		return $wpdb->get_results( $sql );
+		return $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- same assembly as get_total_count(): literals, buddypress() table name, every value bound inside get_where_sql(); GROUP/ORDER BY are constants.
 	}
 }

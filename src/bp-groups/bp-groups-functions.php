@@ -5006,7 +5006,7 @@ function bb_get_all_members_for_groups( $args = array() ) {
 		}
 
 		// Get the specific user ids.
-		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built just above: table name from buddypress(), constant flags, group ids from wp_parse_id_list(), LIMIT $wpdb->prepare()'d; the where filter is public API.
 	}
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );

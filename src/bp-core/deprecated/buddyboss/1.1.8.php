@@ -140,7 +140,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
 		'on'     => 'ON tt.term_id = t.term_id',
 		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
 	);
-	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- literal parts built just above; the taxonomy is $wpdb->prepare()'d (%s), table names from $wpdb.
 
 	restore_current_blog();
 

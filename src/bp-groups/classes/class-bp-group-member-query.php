@@ -239,7 +239,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 
 		$sql['order'] = 'first_joined' === $this->query_vars['type'] ? 'ASC' : 'DESC';
 
-		$group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" );
+		$group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built above: table name from buddypress(), group_id/is_confirmed/invite_sent $wpdb->prepare()'d, inviter ids from wp_parse_id_list(), roles from a fixed whitelist, ORDER BY constants.
 
 		$invited_member_ids = array();
 
@@ -495,7 +495,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 
 		$sql['where'] = 'WHERE ' . implode( ' AND ', $sql['where'] );
 
-		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" );
+		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built just above: activity table from buddypress(), member ids from wp_parse_id_list(), group id absint()'d, component $wpdb->prepare()'d, the rest constants.
 
 		return wp_list_pluck( $group_user_ids, 'user_id' );
 	}

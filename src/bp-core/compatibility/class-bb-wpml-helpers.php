@@ -281,15 +281,18 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			) {
 				global $wpdb;
 
-				$sql_query .= " AND EXISTS (
+				// Prepare only the appended clause: $sql_query already carries the search's own prepared LIKE patterns.
+				$sql_query .= $wpdb->prepare(
+					" AND EXISTS (
 						SELECT 1
 						FROM {$wpdb->prefix}icl_translations t
 						WHERE t.element_type = CONCAT('post_', %s)
 						AND t.language_code = %s
 						AND t.element_id = p.ID
-					)";
-
-				$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE );
+					)",
+					$args['post_type'],
+					ICL_LANGUAGE_CODE
+				);
 			} else {
 				add_filter( 'wpml_post_parse_query', array( $this, 'bb_remove_wpml_post_parse_query' ) );
 			}

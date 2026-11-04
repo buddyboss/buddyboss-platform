@@ -1712,10 +1712,10 @@ class BP_Messages_Thread {
 			$message_ids = maybe_unserialize( $thread->message_ids );
 
 			if ( ! empty( $message_ids ) ) {
-				$message_ids = implode( ',', $message_ids );
+				$message_ids = wp_parse_id_list( $message_ids );
 
 				// Add the thread_id to the messages table.
-				if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET thread_id = %d WHERE id IN ({$message_ids})", $thread->id ) ) ) {
+				if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET thread_id = %d WHERE id IN (" . implode( ',', array_fill( 0, count( $message_ids ), '%d' ) ) . ')', array_merge( array( $thread->id ), $message_ids ) ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %d per stored message id.
 					$errors = true;
 				}
 			}
@@ -1923,7 +1923,7 @@ class BP_Messages_Thread {
 			$cached                     = bp_core_get_incremented_cache( $recipient_data_objects_sql, 'bp_messages' );
 
 			if ( false === $cached ) {
-				$recipient_data_objects = $wpdb->get_results( $recipient_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				$recipient_data_objects = $wpdb->get_results( $recipient_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $recipient_data_objects_sql is the literal built just above: table name from buddypress(), ids intval()'d.
 				bp_core_set_incremented_cache( $recipient_data_objects_sql, 'bp_messages', $recipient_data_objects );
 			} else {
 				$recipient_data_objects = $cached;

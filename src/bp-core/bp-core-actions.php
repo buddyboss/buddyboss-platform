@@ -1233,7 +1233,7 @@ function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
 		)
 	);
 
-	$wpdb->query( $del_sql );
+	$wpdb->query( $del_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $del_sql is $wpdb->prepare()'d above (every value bound with %s/%d); table name from the background updater class.
 }
 
 add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );

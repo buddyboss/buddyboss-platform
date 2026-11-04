@@ -121,7 +121,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		$sql['order']   = 'DESC';
 
 		/** LIMIT clause ******************************************************/
-		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" );
+		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- clauses built just above: table name from buddypress(), group_id and is_confirmed $wpdb->prepare()'d, the rest constants.
 
 		return array_merge( $this->group_member_ids, $pending_invites );
 	}

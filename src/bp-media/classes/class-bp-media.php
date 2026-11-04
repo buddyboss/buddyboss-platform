@@ -1307,14 +1307,13 @@ class BP_Media {
 	public static function total_media_count( $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$privacy = bp_media_query_privacy( $user_id );
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
+		$privacy = (array) bp_media_query_privacy( $user_id );
 
 		$cache_key   = 'bp_total_media_count_' . $user_id;
 		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $total_count ) {
-			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN ({$privacy})", $user_id ) );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN (" . implode( ', ', array_fill( 0, count( $privacy ), '%s' ) ) . ')', array_merge( array( $user_id ), $privacy ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %s per privacy value.
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
 
@@ -1395,10 +1394,9 @@ class BP_Media {
 		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $total_count ) {
-			$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
-			$privacy = "'" . implode( "', '", $privacy ) . "'";
+			$privacy = (array) bp_media_query_privacy( $user_id, 0, 'groups' );
 
-			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN ({$privacy})", $user_id ) );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN (" . implode( ', ', array_fill( 0, count( $privacy ), '%s' ) ) . ')', array_merge( array( $user_id ), $privacy ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name from buddypress(); one %s per privacy value.
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
 

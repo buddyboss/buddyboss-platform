@@ -654,7 +654,7 @@ class BP_XProfile_Field {
 		$bp        = buddypress();
 		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id . '_' . $for_editing . '_' . $this->order_by;
 		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
-			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
+			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sort_sql is one of three constant ORDER BY clauses chosen by code; table name from buddypress().
 
 			$bp_get_children_cache[ $cache_key ] = $children;
 		} else {

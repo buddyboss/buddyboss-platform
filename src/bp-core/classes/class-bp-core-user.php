@@ -837,7 +837,7 @@ class BP_Core_User {
 			$user_ids_sql = implode( ',', $uncached_user_ids );
 			$user_count   = count( $uncached_user_ids );
 
-			$last_activities = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}", $bp->members->id ) );
+			$last_activities = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}", $bp->members->id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $user_ids_sql is an int list (wp_parse_id_list(), filtered, then the uncached subset) and $user_count its count; table name from buddypress().
 
 			foreach ( $last_activities as $last_activity ) {
 				wp_cache_set(

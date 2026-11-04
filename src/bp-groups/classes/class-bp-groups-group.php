@@ -1838,7 +1838,7 @@ class BP_Groups_Group {
 		$record = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $record ) {
-			$record = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" );
+			$record = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $hidden_sql is a constant clause chosen by capability; table name from buddypress().
 			wp_cache_set( $cache_key, $record, 'bp_groups' );
 		}
 
