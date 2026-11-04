@@ -2755,22 +2755,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_footer() {
-			?>
-			<script>
-				jQuery( document ).ready( function ( $ ) {
-					var $forgetMeNot = $( '.login p.forgetmenot' );
-					var $lostMeNot = $( '.login p.lostmenot' );
-					$( $lostMeNot ).before( $forgetMeNot );
+			$inline_js = <<<'JS'
+			jQuery( document ).ready( function ( $ ) {
+				var $forgetMeNot = $( '.login p.forgetmenot' );
+				var $lostMeNot = $( '.login p.lostmenot' );
+				$( $lostMeNot ).before( $forgetMeNot );
 
-					var $updatedClose = $( '.bb-rl-updated-close' );
-					if ( $updatedClose.length > 0 ) {
-						$updatedClose.on( 'click', function() {
-							$( this ).closest( '.message' ).hide();
-						} );
-					}
-				} );
-			</script>
-			<?php
+				var $updatedClose = $( '.bb-rl-updated-close' );
+				if ( $updatedClose.length > 0 ) {
+					$updatedClose.on( 'click', function() {
+						$( this ).closest( '.message' ).hide();
+					} );
+				}
+			} );
+JS;
+
+			if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+				wp_print_inline_script_tag( $inline_js );
+			} else {
+				echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+			}
 		}
 
 		/**

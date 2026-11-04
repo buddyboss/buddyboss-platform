@@ -83,14 +83,12 @@ function bp_nouveau_search_enqueue_scripts() {
 }
 
 /**
- * Output search message autocomplete init JS.
+ * Attach the search message autocomplete init JS to the bp-nouveau-search script.
  *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_search_messages_autocomplete_init_jsblock() {
-	?>
-
-	<script>
+	$inline_js = <<<'JS'
 		window.user_profiles = Array();
 		jQuery( document ).ready( function() {
 			var obj = jQuery( '.send-to-input' ).autocomplete( {
@@ -177,9 +175,9 @@ function bp_nouveau_search_messages_autocomplete_init_jsblock() {
 				document.getElementById( 'send-to-usernames' ).value = tosend.join( ' ' );
 			} );
 		} );
-	</script>
+JS;
 
-	<?php
+	wp_add_inline_script( 'bp-nouveau-search', $inline_js );
 }
 
 /**

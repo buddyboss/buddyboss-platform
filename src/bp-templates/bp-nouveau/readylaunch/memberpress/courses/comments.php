@@ -78,19 +78,27 @@ defined( 'ABSPATH' ) || exit;
 	endif; // Check for have_comments().
 	?>
 
-	<script>
-		// Disable 'submit comment' until we have something in the field
-		if ( jQuery( '#submit' ).length ){
-			jQuery( '#submit' ).prop( 'disabled', true );
+	<?php
+	// Disable 'submit comment' until we have something in the field.
+	$inline_js = <<<'JS'
+	if ( jQuery( '#submit' ).length ){
+		jQuery( '#submit' ).prop( 'disabled', true );
 
-			jQuery( '#comment' ).keyup( function() {
-				if ( jQuery.trim( jQuery( '#comment' ).val().length ) > 0 ) {
-					jQuery( '#submit' ).prop( 'disabled', false );
-				} else {
-					jQuery( '#submit' ).prop( 'disabled', true );
-				}
-			});
-		}
-	</script>
+		jQuery( '#comment' ).keyup( function() {
+			if ( jQuery.trim( jQuery( '#comment' ).val().length ) > 0 ) {
+				jQuery( '#submit' ).prop( 'disabled', false );
+			} else {
+				jQuery( '#submit' ).prop( 'disabled', true );
+			}
+		});
+	}
+JS;
+
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
+	?>
 
 </div><!-- #comments -->

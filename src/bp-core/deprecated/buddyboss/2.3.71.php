@@ -23,5 +23,11 @@ function _bp_core_moment_js_config_footer() {
 		return;
 	}
 
-	printf( '<script>%s</script>', bp_core_moment_js_config() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON configuration from wp_json_encode().
+	$inline_js = bp_core_moment_js_config();
+
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON configuration from wp_json_encode(). WordPress < 5.7 only.
+	}
 }
