@@ -7550,8 +7550,10 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 * AJAX handlers that render an activity by a client-supplied ID with `privacy => false`
 	 * and `show_hidden => true` must call this first. Comments are checked against their root post,
 	 * and the hidden media/video/document sub-activities of a multi-item post against their parent.
+	 * Privacy is read from that root or parent only, and forum topic/reply activity also needs forum access.
 	 *
 	 * @since BuddyBoss 3.6.2
+	 * @since BuddyBoss [BBVERSION] Privacy is checked on the root post only, and forum access is checked for forum activity.
 	 *
 	 * @param int|BP_Activity_Activity $activity Activity ID or object.
 	 * @param int                      $user_id  User ID. Default the logged-in user.
@@ -7605,18 +7607,52 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 					$can_view = false;
 					break;
 				}
+			}
+		}
 
-				$privacy = bb_validate_activity_privacy(
+		// Privacy belongs to the post: a comment copies it but keeps the commenter as user_id,
+		// so the friends rule must compare the viewer with the post author, not the commenter.
+		$governing = end( $activities );
+
+		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
+			$privacy = bb_validate_activity_privacy(
+				array(
+					'activity_id'     => $governing->id,
+					'user_id'         => $user_id,
+					'validate_action' => 'view_activity',
+				)
+			);
+			if ( is_wp_error( $privacy ) ) {
+				$can_view = false;
+			}
+		}
+
+		// Forum topics and replies outside groups are stored as public activity; only the forum knows they are private or hidden.
+		if (
+			$can_view &&
+			! bp_current_user_can( 'bp_moderate' ) &&
+			'bbpress' === $governing->component &&
+			(int) $governing->user_id !== (int) $user_id &&
+			function_exists( 'bbp_user_can_view_forum' )
+		) {
+			$forum_id = 0;
+			if ( 'bbp_reply_create' === $governing->type ) {
+				$forum_id = bbp_get_reply_forum_id( (int) $governing->item_id );
+			} elseif ( 'bbp_topic_create' === $governing->type ) {
+				$forum_id = bbp_get_topic_forum_id( (int) $governing->item_id );
+			}
+
+			if (
+				! empty( $forum_id ) &&
+				! bbp_user_can_view_forum(
 					array(
-						'activity_id'     => $item->id,
+						'forum_id'        => $forum_id,
 						'user_id'         => $user_id,
-						'validate_action' => 'view_activity',
+						'check_ancestors' => true,
 					)
-				);
-				if ( is_wp_error( $privacy ) ) {
-					$can_view = false;
-					break;
-				}
+				)
+			) {
+				$can_view = false;
 			}
 		}
 

@@ -430,6 +430,7 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
  * Filter the bp_activity_user_can_delete value to allow moderators to delete activities of a group.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Reads the author from $activity instead of the activity loop.
  *
  * @param bool                       $can_delete     Whether or not the current user has the capability.
  * @param false|BP_Activity_Activity $activity
@@ -438,7 +439,7 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
  */
 function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 
-	// Allow Mods to delete activity of group
+	// Allow Mods to delete activity of group. The author is read from $activity, as AJAX calls have no activity loop.
 	if ( ! $can_delete && is_user_logged_in() && 'groups' === $activity->component ) {
 		$group = groups_get_group( $activity->item_id );
 
@@ -449,7 +450,7 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
 				groups_is_user_admin( get_current_user_id(), $activity->item_id )
 			) &&
-			! groups_is_user_admin( bp_get_activity_user_id(), $activity->item_id )
+			! groups_is_user_admin( $activity->user_id, $activity->item_id )
 		) {
 			$can_delete = true;
 		}
