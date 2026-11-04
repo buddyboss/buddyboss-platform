@@ -7555,8 +7555,8 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 * @since BuddyBoss 3.6.2
 	 * @since BuddyBoss [BBVERSION] Privacy is checked on the root post only, and forum access is checked for forum activity.
 	 *
-	 * @param int|BP_Activity_Activity $activity Activity ID or object.
-	 * @param int                      $user_id  User ID. Default the logged-in user.
+	 * @param int|object $activity Activity ID, BP_Activity_Activity, or an activity row object with an `id`.
+	 * @param int        $user_id  User ID. Default the logged-in user.
 	 *
 	 * @return bool
 	 */
