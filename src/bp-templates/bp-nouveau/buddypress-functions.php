@@ -650,6 +650,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * @since BuddyPress 3.0.0
 	 * @since BuddyBoss 3.6.2 Adds the `invites_revoke` nonce.
+	 * @since BuddyBoss [BBVERSION] Adds the link_preview_error and link_preview_timeout values.
 	 */
 	public function localize_scripts() {
 
@@ -787,6 +788,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		// Add localize variable for more menu text.
 		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
+
+		// Add localize variable for the link preview error when the request fails.
+		$params['link_preview_error'] = esc_html__( 'There was a problem generating a link preview.', 'buddyboss' );
+
+		// Add localize variable for the link preview request time limit in milliseconds, above the server-side fetch time.
+		$params['link_preview_timeout'] = 20000;
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
