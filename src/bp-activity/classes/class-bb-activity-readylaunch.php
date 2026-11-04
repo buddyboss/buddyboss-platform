@@ -275,15 +275,8 @@ class BB_Activity_Readylaunch {
 		$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 		$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
 
-		$privacy_check = bb_validate_activity_privacy(
-			array(
-				'activity_id'     => $activity_id,
-				'validate_action' => 'view_activity',
-			)
-		);
-
-		// Bail if activity privacy is restricted.
-		if ( is_wp_error( $privacy_check ) ) {
+		// The comments rendered belong to parent_comment_id, which need not be activity_id, so the viewer must be able to see both.
+		if ( ! bb_activity_user_can_view( $activity_id ) || ! bb_activity_user_can_view( $parent_comment_id ) ) {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
@@ -293,7 +286,7 @@ class BB_Activity_Readylaunch {
 
 		$activities_template = new stdClass();
 		$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
-		if ( empty( $parent_commment ) ) {
+		if ( empty( $parent_commment->id ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid request.', 'buddyboss' ),

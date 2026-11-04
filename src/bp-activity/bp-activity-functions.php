@@ -7642,17 +7642,23 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 				$forum_id = bbp_get_topic_forum_id( (int) $governing->item_id );
 			}
 
-			if (
-				! empty( $forum_id ) &&
-				! bbp_user_can_view_forum(
-					array(
-						'forum_id'        => $forum_id,
-						'user_id'         => $user_id,
-						'check_ancestors' => true,
-					)
-				)
-			) {
-				$can_view = false;
+			if ( ! empty( $forum_id ) ) {
+				if ( bp_is_active( 'groups' ) && bbp_forum_recursive_group_id( $forum_id ) ) {
+					// Group forums: membership decides.
+					$can_view = bbp_user_can_view_forum(
+						array(
+							'forum_id'        => $forum_id,
+							'user_id'         => $user_id,
+							'check_ancestors' => true,
+						)
+					);
+				} elseif (
+					// bbp_user_can_view_forum() allows every non-group forum, so read the visibility here (ancestors included).
+					( bbp_is_forum_hidden( $forum_id, true ) && ! user_can( $user_id, 'read_hidden_forums' ) ) ||
+					( bbp_is_forum_private( $forum_id, true ) && ! user_can( $user_id, 'read_private_forums' ) )
+				) {
+					$can_view = false;
+				}
 			}
 		}
 
