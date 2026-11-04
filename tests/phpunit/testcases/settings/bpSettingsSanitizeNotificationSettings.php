@@ -153,6 +153,52 @@ class BP_Tests_Settings_BpSettingsSanitizeNotificationSettings extends BP_UnitTe
 		$this->assertSame( 'no', $sanitized['notification_messages_new_message'] );
 	}
 
+	public function test_should_ignore_non_boolean_setting_not_added_via_bp_notification_settings_callback() {
+		$settings = array(
+			'foo' => 'Weekly',
+		);
+
+		add_filter( 'bb_settings_non_boolean_notification_keys', array( $this, 'add_non_boolean_custom_setting' ) );
+		$sanitized = bp_settings_sanitize_notification_settings( $settings );
+		remove_filter( 'bb_settings_non_boolean_notification_keys', array( $this, 'add_non_boolean_custom_setting' ) );
+
+		$this->assertArrayNotHasKey( 'foo', $sanitized );
+	}
+
+	/**
+	 * @dataProvider data_invalid_values
+	 */
+	public function test_should_save_invalid_modern_setting_and_legacy_copy_as_no( $value ) {
+		$user_id = self::factory()->user->create();
+
+		add_filter( 'bb_enable_legacy_notification_preference', '__return_false' );
+		add_action( 'bp_notification_settings', array( $this, 'add_modern_notification_setting' ) );
+		bp_settings_update_notification_settings( $user_id, array( 'bb_new_mention' => $value ) );
+		remove_action( 'bp_notification_settings', array( $this, 'add_modern_notification_setting' ) );
+		remove_filter( 'bb_enable_legacy_notification_preference', '__return_false' );
+
+		$this->assertSame( 'no', bp_get_user_meta( $user_id, 'bb_new_mention', true ) );
+		$this->assertSame( 'no', bp_get_user_meta( $user_id, 'notification_activity_new_mention', true ) );
+	}
+
+	public function test_should_save_yes_modern_setting_and_legacy_copy_as_yes() {
+		$user_id = self::factory()->user->create();
+
+		add_filter( 'bb_enable_legacy_notification_preference', '__return_false' );
+		add_action( 'bp_notification_settings', array( $this, 'add_modern_notification_setting' ) );
+		bp_settings_update_notification_settings( $user_id, array( 'bb_new_mention' => 'yes' ) );
+		remove_action( 'bp_notification_settings', array( $this, 'add_modern_notification_setting' ) );
+		remove_filter( 'bb_enable_legacy_notification_preference', '__return_false' );
+
+		$this->assertSame( 'yes', bp_get_user_meta( $user_id, 'bb_new_mention', true ) );
+		$this->assertSame( 'yes', bp_get_user_meta( $user_id, 'notification_activity_new_mention', true ) );
+	}
+
+	public function add_modern_notification_setting() {
+		echo '<input type="hidden" name="notifications[bb_new_mention]" value="no" />';
+		echo '<input type="checkbox" name="notifications[bb_new_mention]" value="yes" />';
+	}
+
 	public function add_non_boolean_custom_setting( $keys ) {
 		$keys[] = 'foo';
 		return $keys;
