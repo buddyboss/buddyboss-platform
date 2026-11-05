@@ -2771,7 +2771,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -2816,6 +2816,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -3028,7 +3030,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
@@ -3062,6 +3064,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
@@ -3194,6 +3198,10 @@ window.bp = window.bp || {};
 						dictMaxFilesExceeded 		: BP_Nouveau.video.video_dict_file_exceeded,
 						previewTemplate		 		: acCommentVideoTemplate,
 						dictCancelUploadConfirmation: BP_Nouveau.video.dictCancelUploadConfirmation,
+						chunking                    : true,
+						chunkSize                   : 30*1024*1024,
+						retryChunks                 : true,
+						retryChunksLimit            : 3,
 					};
 
 					// init dropzone.
@@ -3288,8 +3296,13 @@ window.bp = window.bp || {};
 								$( file.previewElement ).closest( '.dz-preview' ).addClass( 'dz-complete' );
 							}
 
-							if ( response.data.id ) {
-								file.id                  = response.id;
+							if ( true === file.upload.chunked ) {
+								// Chunked upload: Dropzone passes an empty response, read the final chunk response from the XHR.
+								response = JSON.parse( file.xhr.response );
+							}
+
+							if ( response.data && response.data.id ) {
+								file.id                  = response.data.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.video !== 'undefined' && typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
@@ -3350,6 +3363,8 @@ window.bp = window.bp || {};
 									$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 								} else if ( file.status == 'error' && ( file.xhr && file.xhr.status == 0 ) ) { // update server error text to user friendly.
 									$( file.previewElement ).find( '.dz-error-message span' ).text( BP_Nouveau.media.connection_lost_error );
+								} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+									$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? BP_Nouveau.media.upload_too_large_error : BP_Nouveau.media.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 								}
 							} else {
 								var commentForm = target.closest( '.ac-form' );
