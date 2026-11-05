@@ -440,6 +440,7 @@ class BP_Messages_Thread {
 	 * Get all messages associated with a thread.
 	 *
 	 * @since BuddyPress 2.3.0
+	 * @since BuddyBoss 3.6.2 Checks thread access before reading the cache and no longer caches denials.
 	 *
 	 * @param int  $thread_id The message thread ID.
 	 * @param null $before    Messages to get before a specific date.
@@ -449,17 +450,23 @@ class BP_Messages_Thread {
 	 */
 	public static function get_messages( $thread_id = 0, $before = null, $perpage = 10 ) {
 		$thread_id = (int) $thread_id;
+
+		/*
+		 * If the current user isn't a recipient, return an empty array.
+		 *
+		 * The check runs on every call, before the cache is read: the cache key is
+		 * shared by all users, so a cache hit must not skip it. Denials are not
+		 * cached, so they cannot blank the thread for its real recipients.
+		 */
+		if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			return array();
+		}
+
 		$cache_key = "{$thread_id}{$before}{$perpage}";
 		$messages  = wp_cache_get( $cache_key, 'bp_messages_threads' );
 
-		if ( false === $messages || ! is_array( $messages ) || static::$noCache ) {
-			// if current user isn't the recpient, then return empty array.
-			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
-
-				return array();
-			}
-
+		// An empty cached array may be a denial cached by an older version, so treat it as a miss.
+		if ( false === $messages || ! is_array( $messages ) || empty( $messages ) || static::$noCache ) {
 			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00';
 
 			if ( ! $before ) {
@@ -625,6 +632,9 @@ class BP_Messages_Thread {
 	 * Check if the current user is in the thread's active recipient list
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 3.6.1 Reads only the user's recipient row instead of every recipient of the thread,
+	 *                              unless 'bp_messages_thread_get_recipients' or 'bp_recipients_recipient_get_join_sql'
+	 *                              is filtered.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread.
@@ -635,6 +645,12 @@ class BP_Messages_Thread {
 		$user_id = $user_id ? $user_id : bp_loggedin_user_id();
 		if ( ! $user_id ) {
 			return true;
+		}
+
+		// One recipient row answers this; loading every recipient stalls threads with thousands of members.
+		// A filtered list, or the group-members join added while a group thread loads, keeps the full-list check.
+		if ( ! has_filter( 'bp_messages_thread_get_recipients' ) && ! has_filter( 'bp_recipients_recipient_get_join_sql' ) ) {
+			return bb_messages_is_active_thread_recipient( $thread_id, $user_id );
 		}
 
 		$recipients        = self::get_recipients_for_thread( $thread_id );
@@ -657,6 +673,7 @@ class BP_Messages_Thread {
 	 * @since BuddyPress 1.0.0
 	 * @since BuddyPress 2.7.0 The $user_id parameter was added. Previously the current user
 	 *              was always assumed.
+	 * @since BuddyBoss 3.6.2 Deletes the meta of every message in the thread, not only the first.
 	 *
 	 * @param int $thread_id The message thread ID.
 	 * @param int $user_id   The ID of the user in the thread to mark messages as
@@ -803,10 +820,13 @@ class BP_Messages_Thread {
 			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query ); // db call ok; no-cache ok.
 
-			// Delete messages meta.
-			$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+			// Delete messages meta (one placeholder per ID; IN(%s) only matched the first ID).
+			$message_ids = array_filter( array_map( 'absint', (array) $message_ids ) );
+			if ( ! empty( $message_ids ) ) {
+				$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN (" . implode( ',', array_fill( 0, count( $message_ids ), '%d' ) ) . ')', $message_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+			}
 
 			// Delete thread.
 			$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -880,6 +900,8 @@ class BP_Messages_Thread {
 	 * @type int    $page         The page number to get. Defaults to null.
 	 * @type string $search_terms The search term to use. Defaults to ''.
 	 * @type array  $meta_query   Meta query arguments. See WP_Meta_Query for more details.
+	 * @type bool   $exclude_disabled_group_threads Exclude the group threads that cannot be opened while
+	 *                                "Group Messages" is disabled. Defaults to false. @since BuddyBoss 3.6.1
 	 * }
 	 * @return array|bool Array on success. Boolean false on failure.
 	 */
@@ -1159,6 +1181,14 @@ class BP_Messages_Thread {
 			$where_sql .= ' AND ' . implode( ' AND ', $additional_where );
 		}
 
+		// Hide whole group threads from the lists while "Group Messages" is disabled; the open check refuses them.
+		if ( ! empty( $r['exclude_disabled_group_threads'] ) ) {
+			$disabled_group_thread_ids = bb_messages_get_disabled_group_thread_ids();
+			if ( ! empty( $disabled_group_thread_ids ) ) {
+				$where_sql .= ' AND r.thread_id NOT IN (' . implode( ',', array_map( 'intval', $disabled_group_thread_ids ) ) . ')';
+			}
+		}
+
 		// Process meta query into SQL.
 		$meta_query = self::get_meta_query_sql( $r['meta_query'] );
 		if ( ! empty( $meta_query['join'] ) ) {
@@ -1178,10 +1208,14 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['having_sql'] ) ) {
 			if ( strpos( $r['having_sql'], 'HAVING recipient_list' ) !== false ) {
 				preg_match_all( '!\d+!', $r['having_sql'], $matches );
-				$recipient_list = array_filter( array_unique( bp_array_flatten( $matches ) ) );
+				$recipient_list = array_filter( array_unique( array_map( 'intval', bp_array_flatten( $matches ) ) ) );
 				if ( ! empty( $recipient_list ) ) {
-					$recipient_list = implode( ',', array_unique( $recipient_list ) );
-					$where_sql     .= " AND m.thread_id IN ( SELECT DISTINCT thread_id from {$bp->messages->table_name_recipients} where user_id in ({$recipient_list}) ) ";
+					$recipient_count = count( $recipient_list );
+					$recipient_list  = implode( ',', $recipient_list );
+
+					// Keep only threads whose recipients are exactly these users, using the recipients table alone.
+					// Joining every recipient of a very large thread to its messages for GROUP_CONCAT takes minutes.
+					$where_sql .= " AND m.thread_id IN ( SELECT thread_id FROM ( SELECT thread_id FROM {$bp->messages->table_name_recipients} WHERE thread_id IN ( SELECT thread_id FROM {$bp->messages->table_name_recipients} WHERE user_id IN ({$recipient_list}) ) GROUP BY thread_id HAVING COUNT( DISTINCT user_id ) = {$recipient_count} AND COUNT( DISTINCT CASE WHEN user_id IN ({$recipient_list}) THEN user_id END ) = {$recipient_count} ) AS bb_matched_threads ) ";
 				}
 			}
 			$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';

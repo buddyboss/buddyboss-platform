@@ -3,7 +3,7 @@
  * BuddyBoss Platform - Mothership Loader
  *
  * Main loader class for BuddyBoss Mothership functionality.
- * Handles initialization of licensing and In-Product Notifications services.
+ * Handles initialization of licensing, In-Product Notifications and Insights (NPS) services.
  *
  * @package BuddyBoss\Core\Admin\Mothership
  * @since   BuddyBoss 2.14.0
@@ -27,6 +27,9 @@ use BuddyBossPlatform\GroundLevel\Support\View;
 use BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 use BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store as IPNStore;
+use BuddyBossPlatform\GroundLevel\Insights\InsightsServiceProvider;
+use BuddyBossPlatform\GroundLevel\Insights\Services\NetPromoterScore;
 
 /**
  * Main loader class for BuddyBoss Mothership functionality.
@@ -75,6 +78,55 @@ class BB_Mothership_Loader {
 	private const UPDATE_ERROR_CACHE_TTL = 5 * MINUTE_IN_SECONDS;
 
 	/**
+	 * Fixed prefix for the GroundLevel Insights (NPS survey) service.
+	 *
+	 * Deliberately NOT derived from the dynamic plugin ID, unlike the IPN prefix. The package
+	 * builds the survey-state option, the daily cron hook, the opt-out filter and the script
+	 * handle from this prefix; keying those by license edition would restart the 14-day grace
+	 * period (and re-survey the admin) on every license activation or tier change and leave
+	 * one orphaned daily cron per previous edition. MemberPress uses the same fixed-prefix
+	 * model (`mepr_insights_`). The Mothership product slug stays dynamic — it comes from the
+	 * IPN product-slug parameter, not from this prefix.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @var string
+	 */
+	public const INSIGHTS_PREFIX = 'buddyboss_insights_';
+
+	/**
+	 * Daily cron hook the Insights package schedules to decide whether to file the survey.
+	 *
+	 * Equals `Str::toSnakeCase( self::INSIGHTS_PREFIX . 'nps_check' )`.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @var string
+	 */
+	public const INSIGHTS_NPS_CRON_HOOK = 'buddyboss_insights_nps_check';
+
+	/**
+	 * Filter the Insights package applies to its "should the survey be shown" decision.
+	 *
+	 * Stable across license editions, so sites and white-label integrations can opt out with
+	 * `add_filter( 'buddyboss_insights_should_show_nps_notification', '__return_false' )`.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @var string
+	 */
+	public const INSIGHTS_SHOULD_SHOW_FILTER = 'buddyboss_insights_should_show_nps_notification';
+
+	/**
+	 * REST namespace for the survey submission endpoint (`{namespace}/nps/submit`).
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @var string
+	 */
+	public const INSIGHTS_REST_NAMESPACE = 'buddyboss/insights';
+
+	/**
 	 * Singleton instance.
 	 *
 	 * @var BB_Mothership_Loader|null
@@ -94,6 +146,18 @@ class BB_Mothership_Loader {
 	 * @var \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector
 	 */
 	private $pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+
+	/**
+	 * Whether the Insights (NPS) provider was registered with the container.
+	 *
+	 * False when the package is absent from the vendor tree; the Insights-specific hooks in
+	 * {@see self::setup_hooks()} are only attached when this is true.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @var bool
+	 */
+	private $insights_registered = false;
 
 	/**
 	 * Get singleton instance.
@@ -154,13 +218,22 @@ class BB_Mothership_Loader {
 
 			// Register the BuddyBoss plugin connection so that every GroundLevel service
 			// (Credentials, View, AdminNotices, LicenseManager, ...) can resolve it.
-			$plugin_connector = $this->pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			$this->container->singleton(
-				AbstractPluginConnection::class,
-				static function () use ( $plugin_connector ) {
-					return $plugin_connector;
-				}
-			);
+			$plugin_connector  = $this->pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$connector_factory = static function () use ( $plugin_connector ) {
+				return $plugin_connector;
+			};
+			$this->container->singleton( AbstractPluginConnection::class, $connector_factory );
+
+			// Container IDs are plain strings, so the alias name above only matches what the
+			// vendor services ask for in a php-scoper build. In a non-scoped (dev) checkout
+			// the vendor resolves the un-prefixed `GroundLevel\...\AbstractPluginConnection`,
+			// which ReflectionClass yields for the alias; register the same factory under
+			// that name too, or auto-wiring tries to instantiate the abstract class and every
+			// provider fails to boot.
+			$real_connection_class = ( new \ReflectionClass( AbstractPluginConnection::class ) )->getName();
+			if ( AbstractPluginConnection::class !== $real_connection_class ) {
+				$this->container->singleton( $real_connection_class, $connector_factory );
+			}
 		} catch ( \Throwable $e ) {
 			$message = 'BuddyBoss Mothership container setup failed: ' . $e->getMessage();
 			if ( function_exists( 'bb_error_log' ) ) {
@@ -172,7 +245,7 @@ class BB_Mothership_Loader {
 			return;
 		}
 
-		// Register and boot the Mothership + In-Product Notifications service providers.
+		// Register and boot the Mothership + In-Product Notifications + Insights service providers.
 		$this->register_services();
 
 		// Set up hooks.
@@ -184,7 +257,8 @@ class BB_Mothership_Loader {
 	 *
 	 * GroundLevel 9.1.2 uses the dependency-injection `ServiceProvider` pattern. Booting
 	 * the providers wires the vendor hooks (twice-daily license-status cron, add-on AJAX,
-	 * add-on update injection, and the In-Product Notifications UI). None of these
+	 * add-on update injection, the In-Product Notifications UI and the Insights NPS
+	 * survey). None of these
 	 * duplicate BuddyBoss's own hooks — BuddyBoss wires its own license controller, admin
 	 * pages and the Platform's own update entry separately in {@see self::setup_hooks()}.
 	 *
@@ -224,6 +298,7 @@ class BB_Mothership_Loader {
 			// it explicitly so intent and ordering are obvious.
 			$this->container->provider( MothershipServiceProvider::class );
 			$this->container->provider( IPNServiceProvider::class );
+			$this->register_insights_provider();
 
 			if ( ! $this->should_boot_services() ) {
 				return;
@@ -251,6 +326,184 @@ class BB_Mothership_Loader {
 				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}
+	}
+
+	/**
+	 * Register the GroundLevel Insights provider — the in-product NPS survey.
+	 *
+	 * Mirrors MemberPress/MemberCore: the package files a "How are we doing?" notification in
+	 * the IPN inbox 14 days after install and every 90 days after the last survey event, and
+	 * posts the score/feedback to Mothership at `products/{product_slug}/insights/nps`. It
+	 * therefore depends on IPN (inbox store + view) and Mothership (API request), so it is
+	 * registered after both and before {@see Container::boot()} wires the provider hooks.
+	 *
+	 * Guarded on the provider class (a Platform addition) so a build that drops the package
+	 * from composer degrades to "no survey" instead of handing the container a missing class.
+	 *
+	 * The prefix is the fixed {@see self::INSIGHTS_PREFIX}. The package snake-cases it for the
+	 * survey-state option `buddyboss_insights_nps_data`, the daily cron hook
+	 * {@see self::INSIGHTS_NPS_CRON_HOOK} and the opt-out filter
+	 * {@see self::INSIGHTS_SHOULD_SHOW_FILTER}, and kebab-cases it for the script handle
+	 * (`buddyboss-insights-insights`). The survey notification row itself is filed in the IPN
+	 * inbox store, which IS keyed by license edition (`{plugin_id}_ipn_store`), so a pending
+	 * survey disappears with an edition switch while the timing state carries over — the next
+	 * survey then arrives at the normal recurrence rather than after a fresh 14-day grace.
+	 * The product slug, capability and inbox come from the IPN parameters set in
+	 * {@see self::register_services()}.
+	 *
+	 * Note the "14 days after install" grace runs from the first time the package's cron fires
+	 * on the site, i.e. from the upgrade to the release that ships this, not from the original
+	 * plugin install.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 */
+	private function register_insights_provider(): void {
+		if ( ! class_exists( InsightsServiceProvider::class ) ) {
+			return;
+		}
+
+		// Parameter overrides MUST be set before provider() — see register_services().
+		$this->container->parameters(
+			array(
+				InsightsServiceProvider::PARAM_PRODUCT_NAME => 'BuddyBoss',
+				InsightsServiceProvider::PARAM_PREFIX => self::INSIGHTS_PREFIX,
+				InsightsServiceProvider::PARAM_REST_NAMESPACE => self::INSIGHTS_REST_NAMESPACE,
+			)
+		);
+
+		$this->container->provider( InsightsServiceProvider::class );
+		$this->insights_registered = true;
+	}
+
+	/**
+	 * Build an IPN-prefixed identifier the way the package's `Util::prefixId()` does.
+	 *
+	 * Reads the `ipn.prefix` container PARAMETER rather than resolving the `Util` service:
+	 * parameter keys are plain strings that are identical in a php-scoper build and in a
+	 * non-scoped (dev) checkout, whereas a class-name service key only matches in one of the
+	 * two, so a `has( Util::class )` guard silently fails in dev.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @param string $id Identifier to prefix, e.g. `store`, `clean`, `remote_fetch`.
+	 * @return string The prefixed id (e.g. `bb-web-plus_ipn_store`), or '' if IPN is not registered.
+	 */
+	private function get_ipn_prefixed_id( string $id ): string {
+		if ( ! $this->container || ! $this->container->has( IPNServiceProvider::PARAM_PREFIX ) ) {
+			return '';
+		}
+
+		$prefix = (string) $this->container->get( IPNServiceProvider::PARAM_PREFIX );
+		$sep    = substr( $prefix, -1 );
+		if ( ! in_array( $sep, array( '_', '-' ), true ) ) {
+			$sep     = '_';
+			$prefix .= $sep;
+		}
+
+		return $prefix . 'ipn' . $sep . $id;
+	}
+
+	/**
+	 * Resolve the IPN Store singleton under whichever id the container actually holds.
+	 *
+	 * In a php-scoper build the vendor registers the prefixed class name; in a non-scoped
+	 * checkout it registers the un-prefixed one. Resolving by exact string keeps both working.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @return object|null The Store service, or null when IPN is not registered.
+	 */
+	private function get_ipn_store() {
+		foreach ( array( IPNStore::class, 'GroundLevel\InProductNotifications\Services\Store' ) as $id ) {
+			if ( $this->container->has( $id ) ) {
+				return $this->container->get( $id );
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Sort the IPN store option so the inbox lists the newest notification first.
+	 *
+	 * Bound to `option_{prefix}_ipn_store`. Notification rows are ordered by publish date
+	 * descending; the package's `__lastId` pagination cursor (and any other scalar entry) is
+	 * kept and re-appended untouched. Mothership rows carry ISO-8601 dates with an offset and
+	 * the NPS row carries `Y-m-d H:i:s` in PHP's default (UTC) timezone — strtotime() handles
+	 * both, so no format normalization is needed.
+	 *
+	 * Every store consumer addresses rows by id, so persisting the re-sorted order (which the
+	 * vendor Store does on its next write) has no functional effect.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 *
+	 * @param mixed $value The raw option value.
+	 * @return mixed The sorted store, or the original value if it is not a multi-row array.
+	 */
+	public function sort_ipn_store_newest_first( $value ) {
+		if ( ! is_array( $value ) || count( $value ) < 2 ) {
+			return $value;
+		}
+
+		$rows   = array_filter( $value, 'is_array' );
+		$others = array_diff_key( $value, $rows );
+
+		uasort(
+			$rows,
+			static function ( array $a, array $b ): int {
+				return (int) strtotime( $b['publishesAt'] ?? $b['publishes_at'] ?? '' ) <=> (int) strtotime( $a['publishesAt'] ?? $a['publishes_at'] ?? '' );
+			}
+		);
+
+		return $rows + $others;
+	}
+
+	/**
+	 * Delete an expired NPS survey row before the package decides whether to file a new one.
+	 *
+	 * Bound to {@see self::INSIGHTS_NPS_CRON_HOOK} at priority 5, ahead of the vendor's
+	 * `NetPromoterScore::maybeAddNotification()` at 10. That method returns early while the
+	 * store still holds a `nps_survey` row, and the IPN `Cleaner` can never remove an expired
+	 * row because it iterates `Store::notifications()`, which already filters expired rows out
+	 * before the `isExpired()` check. Without this, a survey that was ignored past its 45-day
+	 * expiry (or scored but not completed) blocks every future survey, defeating the 90-day
+	 * recurrence. Only the expired survey row is touched; unexpired and read rows are left to
+	 * the vendor.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 */
+	public function purge_expired_nps_survey(): void {
+		try {
+			$store = $this->get_ipn_store();
+			if ( ! $store ) {
+				return;
+			}
+
+			$survey = $store->fetch( true )->get( NetPromoterScore::NOTIFICATION_ID );
+			if ( $survey && $survey->isExpired() ) {
+				$store->delete( NetPromoterScore::NOTIFICATION_ID )->persist();
+			}
+		} catch ( \Throwable $e ) {
+			$message = 'BuddyBoss NPS survey cleanup failed: ' . $e->getMessage();
+			if ( function_exists( 'bb_error_log' ) ) {
+				bb_error_log( $message, true );
+			} else {
+				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
+		}
+	}
+
+	/**
+	 * Clear the daily event the Insights package schedules for the NPS survey.
+	 *
+	 * Bound to `bp_deactivation`. The package schedules on every `init` but never unschedules,
+	 * so without this {@see self::INSIGHTS_NPS_CRON_HOOK} keeps firing as a no-op after
+	 * deactivation.
+	 *
+	 * @since BuddyBoss 3.6.0
+	 */
+	public function clear_scheduled_events(): void {
+		wp_clear_scheduled_hook( self::INSIGHTS_NPS_CRON_HOOK );
 	}
 
 	/**
@@ -302,6 +555,27 @@ class BB_Mothership_Loader {
 		add_action( 'deactivated_plugin', array( $this, 'handle_network_deactivation' ), 10, 2 );
 
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+		// Show the IPN inbox newest-first. The GroundLevel Store renders notifications in raw
+		// option order (Mothership delivers oldest-first and the NPS survey is appended last)
+		// and neither Store::notifications() nor the React inbox sorts, so the survey always
+		// sits at the bottom. The Store reads through get_option(), so sorting the option on
+		// read reorders what the inbox receives without touching vendor code. The option name
+		// is rebuilt from the IPN prefix parameter so it tracks the license edition in both
+		// scoped and non-scoped builds — see get_ipn_prefixed_id().
+		$ipn_store_option = $this->get_ipn_prefixed_id( 'store' );
+		if ( '' !== $ipn_store_option ) {
+			add_filter( 'option_' . $ipn_store_option, array( $this, 'sort_ipn_store_newest_first' ) );
+		}
+
+		if ( $this->insights_registered ) {
+			// Free the survey slot when the previous survey expired un-completed (vendor Cleaner
+			// never deletes expired rows), ahead of the vendor's decision at priority 10.
+			add_action( self::INSIGHTS_NPS_CRON_HOOK, array( $this, 'purge_expired_nps_survey' ), 5 );
+
+			// Clear the survey cron when BuddyBoss is deactivated.
+			add_action( 'bp_deactivation', array( $this, 'clear_scheduled_events' ) );
+		}
 
 		// Invalidate the update-check cache on any license change. These fire from
 		// BB_Plugin_Connector::setLicenseActivationStatus()/storeLicenseKey() (and BuddyBoss's

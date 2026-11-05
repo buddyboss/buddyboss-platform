@@ -27,8 +27,17 @@ defined( 'ABSPATH' ) || exit;
  * This runs inline (not deferred) because the feature loader already gates this file
  * behind bb_is_feature_active('reactions'). We only need the additional activity check
  * for the sub-feature level (individual content type toggles).
+ *
+ * Gate on EITHER content-type toggle (posts OR comments). bp_is_activity_like_active()
+ * reflects only the posts toggle, so relying on it would unload the entire reaction
+ * runtime (BB_Reaction class, AJAX handlers, REST routes) whenever post reactions are
+ * disabled — even if comment reactions are still enabled. That broke comment reactions
+ * and the reactions listing ("Reactions are not available.").
  */
-if ( bp_is_active( 'activity' ) && bp_is_activity_like_active() ) {
+if (
+	bp_is_active( 'activity' ) &&
+	( bb_is_reaction_activity_posts_enabled() || bb_is_reaction_activity_comments_enabled() )
+) {
 
 	$bb_reactions_feature_dir = __DIR__;
 

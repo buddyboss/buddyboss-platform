@@ -29,6 +29,15 @@ function messages_action_conversation() {
 		// Check the nonce.
 		check_admin_referer( 'messages_send_message', 'send_message_nonce' );
 
+		// Group threads cannot be replied to while "Group Messages" is disabled, as on the AJAX reply form.
+		// Inbox, or compose for members with no listed threads, so the notice is not dropped by a second redirect.
+		if ( bb_messages_is_disabled_group_thread( $thread_id ) ) {
+			$redirect = bb_messages_get_disabled_group_thread_redirect_url( $thread_id );
+
+			bp_core_add_message( __( 'Group messages have been disabled by a site administrator.', 'buddyboss' ), 'warning' );
+			bp_core_redirect( $redirect );
+		}
+
 		$new_reply = messages_new_message(
 			array(
 				'thread_id' => $thread_id,
