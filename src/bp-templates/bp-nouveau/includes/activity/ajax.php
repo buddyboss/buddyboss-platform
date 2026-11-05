@@ -511,6 +511,7 @@ function bp_nouveau_ajax_delete_activity() {
  * Used for the 'Read More' link on long activity items.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Returns content only to viewers who can see the activity; scheduled activity only to its author or a site moderator.
  *
  * @return string JSON reply.
  */
@@ -552,8 +553,9 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	$activity = $activity_array['activities'][0];
 
-	// A scheduled (unpublished) activity is only readable by its author or a moderator.
-	if ( $want_scheduled && ! bp_activity_user_can_delete( $activity ) ) {
+	// A scheduled (unpublished) activity is only readable by its author or a site moderator.
+	// Not bp_activity_user_can_delete(): group mods can delete, but must not read an organizer's post before it is published.
+	if ( $want_scheduled && bp_loggedin_user_id() !== (int) $activity->user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error( $response );
 	}
 
