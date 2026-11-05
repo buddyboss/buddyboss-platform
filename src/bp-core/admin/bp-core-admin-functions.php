@@ -1517,19 +1517,22 @@ function bp_email_plaintext_metabox( $post ) {
  * @since BuddyPress 1.9.0
  */
 function bp_admin_wp_nav_menu_restrict_items() {
-	?>
-	<script>
-		jQuery( '#menu-to-edit' ).on( 'click', 'a.item-edit', function () {
-			var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
-			var css_class = settings.find( '.edit-menu-item-classes' );
+	$inline_js = <<<'JS'
+jQuery( '#menu-to-edit' ).on( 'click', 'a.item-edit', function () {
+	var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
+	var css_class = settings.find( '.edit-menu-item-classes' );
 
-			if ( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
-				css_class.attr( 'readonly', 'readonly' );
-				settings.find( '.field-url' ).css( 'display', 'none' );
-			}
-		} );
-	</script>
-	<?php
+	if ( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
+		css_class.attr( 'readonly', 'readonly' );
+		settings.find( '.field-url' ).css( 'display', 'none' );
+	}
+} );
+JS;
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
 }
 
 /**
@@ -1721,15 +1724,18 @@ function bp_core_admin_user_manage_spammers() {
  * @since BuddyPress 2.0.0
  */
 function bp_core_admin_user_spammed_js() {
-	?>
-	<script>
-		jQuery( document ).ready( function ( $ ) {
-			$( '.row-actions .ham' ).each( function () {
-				$( this ).closest( 'tr' ).addClass( 'site-spammed' );
-			} );
-		} );
-	</script>
-	<?php
+	$inline_js = <<<'JS'
+jQuery( document ).ready( function ( $ ) {
+	$( '.row-actions .ham' ).each( function () {
+		$( this ).closest( 'tr' ).addClass( 'site-spammed' );
+	} );
+} );
+JS;
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+	}
 }
 
 /**

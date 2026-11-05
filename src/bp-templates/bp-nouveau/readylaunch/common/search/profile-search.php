@@ -293,15 +293,20 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 							<input type="hidden" id="<?php echo esc_attr( $field_id ); ?>_lat" name="<?php echo esc_attr( $field_name . '[lat]' ); ?>" value="<?php echo esc_attr( $field_value['lat'] ); ?>"/>
 							<input type="hidden" id="<?php echo esc_attr( $field_id ); ?>_lng" name="<?php echo esc_attr( $field_name . '[lng]' ); ?>" value="<?php echo esc_attr( $field_value['lng'] ); ?>"/>
 
-							<script>
-								jQuery(function ($) {
-									bp_ps_autocomplete('<?php echo esc_attr( $field_id ); ?>', '<?php echo esc_attr( $field_id ); ?>_lat', '<?php echo esc_attr( $field_id ); ?>_lng');
-									$('#<?php echo esc_attr( $field_id ); ?>_icon').click(function () {
-										bp_ps_locate('<?php echo esc_attr( $field_id ); ?>', '<?php echo esc_attr( $field_id ); ?>_lat', '<?php echo esc_attr( $field_id ); ?>_lng')
-									});
-								});
-							</script>
 							<?php
+							// Location autocomplete and locate handlers for this field, through the script API (was a raw <script>).
+							$inline_js = sprintf(
+								'jQuery( function ( $ ) { bp_ps_autocomplete( %1$s, %2$s, %3$s ); $( %4$s ).click( function () { bp_ps_locate( %1$s, %2$s, %3$s ); } ); } );',
+								wp_json_encode( (string) $field_id ),
+								wp_json_encode( $field_id . '_lat' ),
+								wp_json_encode( $field_id . '_lng' ),
+								wp_json_encode( '#' . $field_id . '_icon' )
+							);
+							if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+								wp_print_inline_script_tag( $inline_js );
+							} else {
+								echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ids are wp_json_encode()'d above. WordPress < 5.7 only.
+							}
 							break;
 
 						case 'selectbox':

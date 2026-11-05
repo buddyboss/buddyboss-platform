@@ -316,37 +316,40 @@ class BP_Nouveau extends BP_Theme_Compat {
 	}
 
 	public function platform_login_scripts() {
-		?>
-		<script>
-			jQuery( document ).ready( function () {
-				if ( jQuery('.popup-modal-register').length ) {
-					jQuery('.popup-modal-register').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedContentPos: true,
-						modal: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-				if ( jQuery('.popup-modal-login').length ) {
-					jQuery('.popup-modal-login').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedBgPos: true,
-						fixedContentPos: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-			});
-		</script>
-		<?php
-
+		// Login/register popups on the login screen, printed through the script API (was a raw <script>).
+		$inline_js = <<<'JS'
+jQuery( document ).ready( function () {
+	if ( jQuery('.popup-modal-register').length ) {
+		jQuery('.popup-modal-register').magnificPopup({
+			type: 'inline',
+			preloader: false,
+			fixedContentPos: true,
+			modal: true
+		});
+		jQuery('.popup-modal-dismiss').click(function (e) {
+			e.preventDefault();
+			$.magnificPopup.close();
+		});
+	}
+	if ( jQuery('.popup-modal-login').length ) {
+		jQuery('.popup-modal-login').magnificPopup({
+			type: 'inline',
+			preloader: false,
+			fixedBgPos: true,
+			fixedContentPos: true
+		});
+		jQuery('.popup-modal-dismiss').click(function (e) {
+			e.preventDefault();
+			$.magnificPopup.close();
+		});
+	}
+});
+JS;
+		if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+			wp_print_inline_script_tag( $inline_js );
+		} else {
+			echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+		}
 	}
 
 	/**

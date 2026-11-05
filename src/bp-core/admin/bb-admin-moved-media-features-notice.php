@@ -440,24 +440,31 @@ function bb_moved_media_features_render_notice() {
 			<?php endif; ?>
 		</p>
 	</div>
-	<script>
-		( function () {
-			var notice = document.querySelector( '.bb-moved-media-features-notice' );
-			if ( ! notice ) {
-				return;
-			}
-			notice.addEventListener( 'click', function ( event ) {
-				if ( ! event.target.classList.contains( 'notice-dismiss' ) ) {
-					return;
-				}
-				var data = new FormData();
-				data.append( 'action', 'bb_dismiss_moved_media_features_notice' );
-				data.append( 'nonce', notice.getAttribute( 'data-nonce' ) );
-				window.fetch( <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>, { method: 'POST', credentials: 'same-origin', body: data } );
-			} );
-		} )();
-	</script>
 	<?php
+	// Dismiss handler, printed right after the notice through the script API (was a raw <script>).
+	$inline_js = <<<'JS'
+( function () {
+	var notice = document.querySelector( '.bb-moved-media-features-notice' );
+	if ( ! notice ) {
+		return;
+	}
+	notice.addEventListener( 'click', function ( event ) {
+		if ( ! event.target.classList.contains( 'notice-dismiss' ) ) {
+			return;
+		}
+		var data = new FormData();
+		data.append( 'action', 'bb_dismiss_moved_media_features_notice' );
+		data.append( 'nonce', notice.getAttribute( 'data-nonce' ) );
+		window.fetch( %s, { method: 'POST', credentials: 'same-origin', body: data } );
+	} );
+} )();
+JS;
+	$inline_js = sprintf( $inline_js, wp_json_encode( admin_url( 'admin-ajax.php' ) ) );
+	if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+		wp_print_inline_script_tag( $inline_js );
+	} else {
+		echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal with a wp_json_encode()'d URL. WordPress < 5.7 only.
+	}
 }
 add_action( 'admin_notices', 'bb_moved_media_features_render_notice' );
 

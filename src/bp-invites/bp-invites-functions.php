@@ -239,16 +239,17 @@ function bp_invites_member_invite_register_screen_message() {
 
 	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
 
-		<?php do_action( 'accept_email_invite_before' ); ?>
-
-		<script>
-			jQuery(document).ready( function() {
-				jQuery("input#signup_email").val("<?php echo esc_js( str_replace( ' ', '+', $email ) ); ?>");
-			});
-		</script>
-
-
 		<?php
+		do_action( 'accept_email_invite_before' );
+
+		// Prefill the signup email through the script API (was a raw <script>).
+		$inline_js = 'jQuery( document ).ready( function () { jQuery( "input#signup_email" ).val( ' . wp_json_encode( str_replace( ' ', '+', $email ) ) . ' ); } );';
+		if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+			wp_print_inline_script_tag( $inline_js );
+		} else {
+			echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the email is wp_json_encode()'d above. WordPress < 5.7 only.
+		}
+
 		$bp_get_invitee_email = bp_invites_member_invite_get_invitations_by_invited_email( $email );
 
 		$inviters = array();
@@ -298,21 +299,27 @@ function bp_invites_member_invite_register_screen_message() {
 			$get_invite_profile_type  = get_post_meta( $post_id, '_bp_invitee_member_type', true );
 			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
-				?>
-				<script>
-					jQuery( document ).ready( function () {
-						// On form submission remove disabled attribute from the select.
-						jQuery( "#signup-form" ).on( "submit", function() {
-							jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
-						} );
 
-						if ( jQuery( ".field_type_membertypes" ).length ) {
-							jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
-							jQuery( ".field_type_membertypes fieldset select" ).val( "<?php echo esc_js( $member_type_post_id ); ?>" );
-						}
-					} );
-				</script>
-				<?php
+				// Lock the profile type select to the invited type (was a raw <script>).
+				$inline_js = <<<'JS'
+jQuery( document ).ready( function () {
+	// On form submission remove disabled attribute from the select.
+	jQuery( "#signup-form" ).on( "submit", function() {
+		jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
+	} );
+
+	if ( jQuery( ".field_type_membertypes" ).length ) {
+		jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
+		jQuery( ".field_type_membertypes fieldset select" ).val( %s );
+	}
+} );
+JS;
+				$inline_js = sprintf( $inline_js, wp_json_encode( (string) $member_type_post_id ) );
+				if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+					wp_print_inline_script_tag( $inline_js );
+				} else {
+					echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the id is wp_json_encode()'d above. WordPress < 5.7 only.
+				}
 
 				// Set member type param for signup fields display.
 				add_filter(

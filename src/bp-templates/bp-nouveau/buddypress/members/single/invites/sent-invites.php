@@ -91,8 +91,15 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	</aside>
 	<?php
 }
+
+// Drop the feedback query string from the address bar, through the script API (was a raw <script>).
+$inline_js = 'window.history.replaceState( null, null, window.location.pathname );';
+if ( function_exists( 'wp_print_inline_script_tag' ) ) {
+	wp_print_inline_script_tag( $inline_js );
+} else {
+	echo '<script>' . $inline_js . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static JS literal. WordPress < 5.7 only.
+}
 ?>
-<script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">
 	<?php esc_html_e( 'Sent Invites', 'buddyboss' ); ?>
 </h2>
