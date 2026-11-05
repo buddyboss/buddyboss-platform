@@ -4790,6 +4790,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + bbRlMedia.invalid_media_type + '. ' + ( response ? response : '' ) + '</div>' ) );
@@ -5056,6 +5058,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + bbRlMedia.invalid_file_type + '. ' + ( response ? response : '' ) + '<div>' ) );
@@ -5356,6 +5360,8 @@ window.bp = window.bp || {};
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							} else if( file.status == 'error' && ( file.xhr && file.xhr.status == 0) ) { // update server error text to user friendly
 								$( file.previewElement ).find( '.dz-error-message span' ).text( bbRlMedia.connection_lost_error );
+							} else if ( 'error' === file.status && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML.
+								$( file.previewElement ).find( '.dz-error-message span' ).text( ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) ) );
 							}
 						} else {
 							Backbone.trigger( 'onError', ( '<div>' + bbRlVideo.invalid_video_type + '. ' + ( response ? response : '' ) + '<div>' ) );
