@@ -28,9 +28,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 */
 	if ( function_exists( 'wc4bp_is_subpage' ) && wc4bp_is_subpage( 'checkout' ) ) {
 		?>
-		<?php echo wp_kses_post( do_shortcode( '[woocommerce_checkout]' ) ); ?>
+		<?php echo do_shortcode( '[woocommerce_checkout]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shortcode output is escaped by WooCommerce; wp_kses_post() strips its form fields. ?>
 	<?php } else { ?>
-		<?php echo wp_kses_post( do_shortcode( '[woocommerce_cart]' ) ); ?>
+		<?php echo do_shortcode( '[woocommerce_cart]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Shortcode output is escaped by WooCommerce; wp_kses_post() strips its form fields. ?>
 	<?php } ?>
 
 	<?php do_action( 'wc4bp_after_cart_body' ); ?>
