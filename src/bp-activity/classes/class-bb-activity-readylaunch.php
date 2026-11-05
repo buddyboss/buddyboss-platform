@@ -423,6 +423,11 @@ class BB_Activity_Readylaunch {
 	 * @return array
 	 */
 	public function bb_rl_activity_sync_from_modal_args( $args ) {
+		// The legacy entry template renders comments inline, so keep them for legacy UIs.
+		if ( BB_Readylaunch::bb_rl_is_legacy_template_ajax() ) {
+			return $args;
+		}
+
 		$args['display_comments'] = false;
 
 		return $args;
