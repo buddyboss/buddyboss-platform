@@ -44,6 +44,74 @@ export function forceRemoveEditor( editorId ) {
 }
 
 /**
+ * Convert TinyMCE HTML to the storage format used by plain-text fields.
+ *
+ * Mirrors what WordPress does on the editor's SaveContent event: `<br>` becomes
+ * a line break and paragraphs become blank lines, while inline tags are kept.
+ * Use for values that are rendered through wpautop() and edited elsewhere in a
+ * plain textarea (e.g. group descriptions).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} html Editor HTML.
+ * @returns {string} Content with paragraphs and line breaks as newlines.
+ */
+export function removeEditorParagraphs( html ) {
+	if ( window.wp && window.wp.editor && window.wp.editor.removep ) {
+		return window.wp.editor.removep( html || '' );
+	}
+	return html;
+}
+
+/**
+ * Convert stored plain-text content to editor HTML.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} text Stored content with newline-based formatting.
+ * @returns {string} Content with paragraphs and `<br>` tags.
+ */
+function addEditorParagraphs( text ) {
+	if ( window.wp && window.wp.editor && window.wp.editor.autop ) {
+		return window.wp.editor.autop( text || '' );
+	}
+	return text;
+}
+
+/**
+ * Read the current content of a RichTextEditor, from either the Visual or the Code tab.
+ *
+ * While the Code tab is active TinyMCE is hidden and still holds the old Visual
+ * content, so `tinymce.get( id ).getContent()` misses anything typed there.
+ * `wp.editor.getContent()` saves the Visual editor when it is showing and
+ * returns the textarea value, which covers both tabs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string}  id    Editor ID.
+ * @param {boolean} autop Return line breaks as newlines instead of `<p>`/`<br>` tags.
+ * @returns {string|null} Editor content, or null when the editor is not initialized.
+ */
+export function getEditorContent( id, autop ) {
+	var editor = window.tinymce ? window.tinymce.get( id ) : null;
+	if ( ! editor ) {
+		return null;
+	}
+
+	if ( autop && window.wp && window.wp.editor && window.wp.editor.getContent ) {
+		return removeEditorParagraphs( window.wp.editor.getContent( id ) );
+	}
+
+	if ( editor.isHidden() ) {
+		// The Code tab textarea holds wpautop-stripped content; restore the tags.
+		var textarea = document.getElementById( id );
+		return addEditorParagraphs( textarea ? textarea.value : '' );
+	}
+
+	return editor.getContent();
+}
+
+/**
  * Rich Text Editor wrapper for TinyMCE.
  *
  * @param {Object}   props          Component props.
@@ -51,9 +119,10 @@ export function forceRemoveEditor( editorId ) {
  * @param {string}   props.label    Field label.
  * @param {string}   props.value    Current value.
  * @param {Function} props.onChange  Change handler.
+ * @param {boolean}  props.autop    Store line breaks as newlines instead of `<p>`/`<br>` tags.
  * @returns {JSX.Element} Rich text editor.
  */
-export function RichTextEditor( { id, label, value, onChange } ) {
+export function RichTextEditor( { id, label, value, onChange, autop } ) {
 	var containerRef = useRef( null );
 	var editorInitialized = useRef( false );
 
@@ -64,6 +133,9 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 	// Keep onChange in a ref so the TinyMCE event handler always calls the latest callback.
 	var onChangeRef = useRef( onChange );
 	onChangeRef.current = onChange;
+
+	var autopRef = useRef( autop );
+	autopRef.current = autop;
 
 	// Initialize TinyMCE on mount.
 	useEffect( function () {
@@ -88,13 +160,17 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 								// Explicitly set content when TinyMCE is fully ready.
 								editor.on( 'init', function () {
 									var initVal = initialValueRef.current || '';
+									if ( autopRef.current ) {
+										initVal = addEditorParagraphs( initVal );
+									}
 									if ( initVal !== editor.getContent() ) {
 										editor.setContent( initVal );
 									}
 								} );
 
 								editor.on( 'change keyup', function () {
-									onChangeRef.current( editor.getContent() );
+									var content = editor.getContent();
+									onChangeRef.current( autopRef.current ? removeEditorParagraphs( content ) : content );
 								} );
 							},
 						},

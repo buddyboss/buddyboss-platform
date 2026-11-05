@@ -93,6 +93,11 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'get_value'         => function ( $group ) {
 				return $group->description;
 			},
+			// Store line breaks as newlines (like the front-end textarea) so they
+			// survive bp_groups_filter_kses(), which does not allow <p> or <br>.
+			'get_extra_data'    => function () {
+				return array( 'autop' => true );
+			},
 			'save_value'        => function ( $group, $value ) {
 				$group->description = $value;
 			},

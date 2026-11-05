@@ -19,6 +19,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { getEditorContent } from '../common/RichTextEditor';
 import { GroupMembersTab } from './GroupMembersTab';
 import { GroupTopicsTab } from './GroupTopicsTab';
 
@@ -302,6 +303,52 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 	};
 
 	/**
+	 * Read the current content of a richtext field's editor.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Registered field.
+	 * @returns {string|null} Editor content, or null when the editor is not mounted.
+	 */
+	var getRichTextFieldContent = function ( field ) {
+		return getEditorContent(
+			'bb-admin-edit-' + field.id + '-' + group.id,
+			!! ( field.extra_data && field.extra_data.autop )
+		);
+	};
+
+	/**
+	 * Store richtext editor content before switching tabs.
+	 *
+	 * Editors on the previous tab are removed when the tab changes, and Code tab
+	 * edits never reach the TinyMCE change handler, so without this they are lost.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleTabSelect = function () {
+		if ( ! group || ! Array.isArray( group.registered_fields ) ) {
+			return;
+		}
+
+		var updates = {};
+		group.registered_fields.forEach( function ( field ) {
+			if ( 'richtext' !== field.type || field.readonly ) {
+				return;
+			}
+			var content = getRichTextFieldContent( field );
+			if ( null !== content ) {
+				updates[ field.id ] = content;
+			}
+		} );
+
+		if ( Object.keys( updates ).length ) {
+			setRegisteredValues( function ( prev ) {
+				return Object.assign( {}, prev, updates );
+			} );
+		}
+	};
+
+	/**
 	 * Handle group save — collects all registered field values and sends to server.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -322,11 +369,11 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 
 				var val = registeredValues[ field.id ];
 
-				// For richtext fields, pull latest content from TinyMCE.
-				if ( 'richtext' === field.type && window.tinymce ) {
-					var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + group.id );
-					if ( editorInstance ) {
-						val = editorInstance.getContent();
+				// For richtext fields, pull latest content from the editor (Visual or Code tab).
+				if ( 'richtext' === field.type ) {
+					var editorContent = getRichTextFieldContent( field );
+					if ( null !== editorContent ) {
+						val = editorContent;
 					}
 				}
 
@@ -407,6 +454,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					<TabPanel
 						className="bb-group-edit-modal__tabs"
 						tabs={ tabs }
+						onSelect={ handleTabSelect }
 					>
 						{ renderTabContent }
 					</TabPanel>
