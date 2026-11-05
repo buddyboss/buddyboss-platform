@@ -437,16 +437,24 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			'activity_id'       => $request['id'],
 			'user_id'           => bp_loggedin_user_id(),
 			'skip_notification' => true,
+			// Without it a refused comment comes back as false and is reported as created (PROD-10649).
+			'error_type'        => 'wp_error',
 		);
 
 		$comment_id = bp_activity_new_comment( $args );
 
-		if ( is_wp_error( $comment_id ) ) {
+		if ( is_wp_error( $comment_id ) || empty( $comment_id ) ) {
+			$status_by_code = array(
+				'bp_activity_comment_not_allowed' => 403,
+				'invalid_parent_activity'         => 400,
+			);
+			$error_code     = is_wp_error( $comment_id ) ? $comment_id->get_error_code() : '';
+
 			return new WP_Error(
 				'comment_error',
-				esc_html( $comment_id->get_error_message() ),
+				is_wp_error( $comment_id ) ? esc_html( $comment_id->get_error_message() ) : __( 'There was an error posting your reply. Please try again.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => isset( $status_by_code[ $error_code ] ) ? $status_by_code[ $error_code ] : 500,
 				)
 			);
 		}
@@ -513,6 +521,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.7.1 The user must be able to read the activity being commented on.
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -533,6 +542,15 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					__( 'Invalid activity ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
+					)
+				);
+			} elseif ( ! $this->activity_endpoint->user_can_read_activity( $activity ) ) {
+				// Commenting returns the whole thread, so the user must be able to read the activity.
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to create an activity comment.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
 					)
 				);
 			} elseif (
@@ -1159,26 +1177,23 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return boolean
 	 * @since 0.1.0
+	 * @since BuddyBoss 3.7.1 Checks the parent activity's group access, and a comment against its root activity.
 	 */
 	protected function can_see( $request ) {
 
-		// Check if the user can read the activity as per privacy settings.
-		if ( ! empty( $request['id'] ) && function_exists( 'bb_validate_activity_privacy' ) ) {
-			$privacy_check = bb_validate_activity_privacy(
-				array(
-					'activity_id'     => $request['id'],
-					'validate_action' => 'view_activity',
-					'user_id'         => bp_loggedin_user_id(),
-				)
-			);
+		// The activity in the route must be readable, both to list its comments and to read one.
+		$activity = new BP_Activity_Activity( (int) $request['id'] );
+		if ( ! empty( $activity->id ) && ! $this->activity_endpoint->user_can_read_activity( $activity ) ) {
+			return false;
+		}
 
-			if ( is_wp_error( $privacy_check ) ) {
-				return false;
-			}
+		if ( empty( $request['comment_id'] ) ) {
+			return true;
 		}
 
 		$activity_comment = $this->get_activity_comment_object( $request );
 
-		return ( ! empty( $activity_comment ) && bp_activity_user_can_read( $activity_comment, bp_loggedin_user_id() ) );
+		// A missing comment is left to the callback, which answers 404 as before.
+		return ( empty( $activity_comment->id ) || $this->activity_endpoint->user_can_read_activity( $activity_comment ) );
 	}
 }
