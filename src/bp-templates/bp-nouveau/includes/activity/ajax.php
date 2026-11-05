@@ -533,6 +533,11 @@ function bp_nouveau_ajax_get_single_activity_content() {
 		wp_send_json_error( $response );
 	}
 
+	// Without an ID the lookup would query the whole stream and tie up a worker for a long time.
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
 	$args = array(
 		'activity_ids'     => $_POST['id'],
 		'display_comments' => 'stream',

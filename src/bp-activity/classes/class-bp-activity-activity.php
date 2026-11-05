@@ -2268,6 +2268,11 @@ class BP_Activity_Activity {
 	 * it is written, so a group made private later leaves its older comments at 0. A comment
 	 * counts as visible only while that item is visible too.
 	 *
+	 * The item is read with a correlated scalar subquery on the primary key, which only runs
+	 * for comment rows; a missing item or a NULL value counts as visible, like the row's own
+	 * check. A `NOT EXISTS` form is materialized by MariaDB into full scans of the activity
+	 * table, one per scope branch, and doubled the feed query on a 200k-row table.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $alias Alias of the activity table in the outer query, without the dot.
@@ -2277,7 +2282,7 @@ class BP_Activity_Activity {
 	public static function get_visible_sitewide_sql( $alias = 'a' ) {
 		$table = buddypress()->activity->table_name;
 
-		return "( {$alias}.hide_sitewide = 0 AND ( {$alias}.type <> 'activity_comment' OR NOT EXISTS ( SELECT 1 FROM {$table} hp WHERE hp.id = {$alias}.item_id AND hp.hide_sitewide = 1 ) ) )";
+		return "( {$alias}.hide_sitewide = 0 AND ( {$alias}.type <> 'activity_comment' OR COALESCE( ( SELECT hp.hide_sitewide FROM {$table} hp WHERE hp.id = {$alias}.item_id ), 0 ) = 0 ) )";
 	}
 
 	/**
