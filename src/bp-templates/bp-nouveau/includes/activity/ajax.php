@@ -511,6 +511,7 @@ function bp_nouveau_ajax_delete_activity() {
  * Used for the 'Read More' link on long activity items.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Returns content only to viewers who can see the activity; scheduled activity only to its author or a site moderator.
  *
  * @return string JSON reply.
  */
@@ -538,9 +539,10 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	);
 
 	// Check scheduled status.
-	$post_status = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-	if ( ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status() ) {
-		$args['status'] = $post_status;
+	$post_status    = filter_input( INPUT_POST, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+	$want_scheduled = ! empty( $post_status ) && sanitize_text_field( wp_unslash( $post_status ) ) === bb_get_activity_scheduled_status();
+	if ( $want_scheduled ) {
+		$args['status'] = bb_get_activity_scheduled_status();
 	}
 
 	$activity_array = bp_activity_get_specific( $args );
@@ -550,6 +552,17 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	}
 
 	$activity = $activity_array['activities'][0];
+
+	// A scheduled (unpublished) activity is only readable by its author or a site moderator.
+	// Not bp_activity_user_can_delete(): group mods can delete, but must not read an organizer's post before it is published.
+	if ( $want_scheduled && bp_loggedin_user_id() !== (int) $activity->user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// The content is returned without privacy filters, so confirm the viewer can see this activity.
+	if ( ! bb_activity_user_can_view( (int) $activity->id ) ) {
+		wp_send_json_error( $response );
+	}
 
 	/**
 	 * Fires before the return of an activity's full, non-excerpted content via a POST request.
@@ -1724,15 +1737,8 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	$activity_id       = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
 	$parent_comment_id = ! empty( $_POST['parent_comment_id'] ) ? (int) $_POST['parent_comment_id'] : 0;
 
-	$privacy_check = bb_validate_activity_privacy(
-		array(
-			'activity_id'     => $activity_id,
-			'validate_action' => 'view_activity',
-		)
-	);
-
-	// Bail if activity privacy restrict.
-	if ( is_wp_error( $privacy_check ) ) {
+	// The comments rendered belong to parent_comment_id, which need not be activity_id, so the viewer must be able to see both.
+	if ( ! bb_activity_user_can_view( $activity_id ) || ! bb_activity_user_can_view( $parent_comment_id ) ) {
 		wp_send_json_error(
 			array(
 				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
@@ -1742,7 +1748,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 
 	$activities_template = new stdClass();
 	$parent_commment     = new BP_Activity_Activity( $parent_comment_id );
-	if ( empty( $parent_commment ) ) {
+	if ( empty( $parent_commment->id ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),

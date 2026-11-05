@@ -427,6 +427,7 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
  * Filter the bp_activity_user_can_delete value to allow moderators to delete activities of a group.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Reads the activity loop only when one exists.
  *
  * @param bool                       $can_delete     Whether or not the current user has the capability.
  * @param false|BP_Activity_Activity $activity
@@ -437,7 +438,12 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 
 	// Allow Mods to delete activity of group
 	if ( ! $can_delete && is_user_logged_in() && 'groups' === $activity->component ) {
+		global $activities_template;
+
 		$group = groups_get_group( $activity->item_id );
+
+		// The author check reads the activity loop; AJAX and REST calls have none (no PHP 8 warning, same result as before).
+		$loop_author_id = ! empty( $activities_template->activity ) ? bp_get_activity_user_id() : 0;
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
 		if (
@@ -446,7 +452,7 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
 				groups_is_user_admin( get_current_user_id(), $activity->item_id )
 			) &&
-			! groups_is_user_admin( bp_get_activity_user_id(), $activity->item_id )
+			! groups_is_user_admin( $loop_author_id, $activity->item_id )
 		) {
 			$can_delete = true;
 		}

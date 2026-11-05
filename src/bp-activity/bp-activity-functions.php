@@ -7561,17 +7561,20 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 	 * AJAX handlers that render an activity by a client-supplied ID with `privacy => false`
 	 * and `show_hidden => true` must call this first. Comments are checked against their root post,
 	 * and the hidden media/video/document sub-activities of a multi-item post against their parent.
+	 * Privacy is read from that root or parent only, and forum topic/reply activity also needs forum access.
 	 *
 	 * @since BuddyBoss 3.6.2
+	 * @since BuddyBoss [BBVERSION] Privacy is checked on the root post only, and forum access is checked for forum activity.
 	 *
-	 * @param int|BP_Activity_Activity $activity Activity ID or object.
-	 * @param int                      $user_id  User ID. Default the logged-in user.
+	 * @param int|object $activity Activity ID, BP_Activity_Activity, or an activity row object with an `id`.
+	 * @param int        $user_id  User ID. Default the logged-in user.
 	 *
 	 * @return bool
 	 */
 	function bb_activity_user_can_view( $activity, $user_id = 0 ) {
 		if ( ! $activity instanceof BP_Activity_Activity ) {
-			$activity = new BP_Activity_Activity( absint( $activity ) );
+			// Activity queries return plain row objects; read their ID rather than casting the object.
+			$activity = new BP_Activity_Activity( absint( is_object( $activity ) && isset( $activity->id ) ? $activity->id : $activity ) );
 		}
 
 		if ( empty( $activity->id ) ) {
@@ -7584,30 +7587,37 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 		$activities = array( $activity );
 		$current    = $activity;
 
+		// Walk up to the post that owns the privacy. A comment points at its root post through item_id.
 		// A post with several photos, videos or documents gives each one a hidden sub-activity
-		// (privacy media/video/document) whose secondary_item_id is the post or comment it belongs to.
-		// Those privacy values carry no rule of their own, so the parent decides.
-		if (
-			in_array( $activity->privacy, array( 'media', 'video', 'document' ), true ) &&
-			! empty( $activity->secondary_item_id ) &&
-			(int) $activity->secondary_item_id !== (int) $activity->id
-		) {
-			$parent = new BP_Activity_Activity( (int) $activity->secondary_item_id );
-			if ( empty( $parent->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $parent;
-				$current      = $parent;
+		// (privacy media/video/document) whose secondary_item_id is the post or comment it belongs to;
+		// those privacy values carry no rule of their own. Comments made on a single media item in the
+		// media viewer have that sub-activity as their root, so the walk can go comment > sub-activity > post.
+		for ( $step = 0; $can_view; $step++ ) {
+			$next_id = 0;
+			if ( 'activity_comment' === $current->type && ! empty( $current->item_id ) ) {
+				$next_id = (int) $current->item_id;
+			} elseif ( in_array( $current->privacy, array( 'media', 'video', 'document' ), true ) && ! empty( $current->secondary_item_id ) ) {
+				$next_id = (int) $current->secondary_item_id;
 			}
-		}
 
-		if ( $can_view && 'activity_comment' === $current->type && ! empty( $current->item_id ) && (int) $current->item_id !== (int) $current->id ) {
-			$root = new BP_Activity_Activity( (int) $current->item_id );
-			if ( empty( $root->id ) ) {
-				$can_view = false;
-			} else {
-				$activities[] = $root;
+			if ( empty( $next_id ) || $next_id === (int) $current->id ) {
+				break;
 			}
+
+			// comment > sub-activity > comment > post is the longest real chain; anything longer is malformed.
+			if ( $step >= 4 ) {
+				$can_view = false;
+				break;
+			}
+
+			$next = new BP_Activity_Activity( $next_id );
+			if ( empty( $next->id ) ) {
+				$can_view = false;
+				break;
+			}
+
+			$activities[] = $next;
+			$current      = $next;
 		}
 
 		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -7616,17 +7626,57 @@ if ( ! function_exists( 'bb_activity_user_can_view' ) ) {
 					$can_view = false;
 					break;
 				}
+			}
+		}
 
-				$privacy = bb_validate_activity_privacy(
-					array(
-						'activity_id'     => $item->id,
-						'user_id'         => $user_id,
-						'validate_action' => 'view_activity',
-					)
-				);
-				if ( is_wp_error( $privacy ) ) {
+		// Privacy belongs to the post: a comment copies it but keeps the commenter as user_id,
+		// so the friends rule must compare the viewer with the post author, not the commenter.
+		$governing = end( $activities );
+
+		if ( $can_view && ! bp_current_user_can( 'bp_moderate' ) ) {
+			$privacy = bb_validate_activity_privacy(
+				array(
+					'activity_id'     => $governing->id,
+					'user_id'         => $user_id,
+					'validate_action' => 'view_activity',
+				)
+			);
+			if ( is_wp_error( $privacy ) ) {
+				$can_view = false;
+			}
+		}
+
+		// Forum topics and replies outside groups are stored as public activity; only the forum knows they are private or hidden.
+		if (
+			$can_view &&
+			! bp_current_user_can( 'bp_moderate' ) &&
+			'bbpress' === $governing->component &&
+			(int) $governing->user_id !== (int) $user_id &&
+			function_exists( 'bbp_user_can_view_forum' )
+		) {
+			$forum_id = 0;
+			if ( 'bbp_reply_create' === $governing->type ) {
+				$forum_id = bbp_get_reply_forum_id( (int) $governing->item_id );
+			} elseif ( 'bbp_topic_create' === $governing->type ) {
+				$forum_id = bbp_get_topic_forum_id( (int) $governing->item_id );
+			}
+
+			if ( ! empty( $forum_id ) ) {
+				if ( bp_is_active( 'groups' ) && bbp_forum_recursive_group_id( $forum_id ) ) {
+					// Group forums: membership decides.
+					$can_view = bbp_user_can_view_forum(
+						array(
+							'forum_id'        => $forum_id,
+							'user_id'         => $user_id,
+							'check_ancestors' => true,
+						)
+					);
+				} elseif (
+					// bbp_user_can_view_forum() allows every non-group forum, so read the visibility here (ancestors included).
+					( bbp_is_forum_hidden( $forum_id, true ) && ! user_can( $user_id, 'read_hidden_forums' ) ) ||
+					( bbp_is_forum_private( $forum_id, true ) && ! user_can( $user_id, 'read_private_forums' ) )
+				) {
 					$can_view = false;
-					break;
 				}
 			}
 		}
