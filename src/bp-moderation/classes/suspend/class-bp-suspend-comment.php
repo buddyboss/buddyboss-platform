@@ -59,6 +59,10 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
 		add_filter( 'comments_clauses', array( $this, 'bb_blocked_comments_pre_query' ), 10, 2 );
 		add_filter( 'get_comment_excerpt', array( $this, 'bb_blocked_get_comment_excerpt' ), 10, 3 );
+
+		// Lift the suspended-comment link restriction while the admin Reported Content screen resolves the comment link.
+		add_action( 'bb_moderation_before_get_related_' . $this->item_type, array( $this, 'remove_comment_link_check' ) );
+		add_action( 'bb_moderation_after_get_related_' . $this->item_type, array( $this, 'add_comment_link_check' ) );
 	}
 
 	/**
@@ -331,6 +335,24 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Remove the suspended comment link check.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function remove_comment_link_check() {
+		remove_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10 );
+	}
+
+	/**
+	 * Add the suspended comment link check.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function add_comment_link_check() {
+		add_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10, 2 );
 	}
 
 	/**
