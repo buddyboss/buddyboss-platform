@@ -76,6 +76,17 @@ class BB_DRM_Event {
 	public $created_at = null;
 
 	/**
+	 * Per-request cache of latest() results, keyed by event name.
+	 *
+	 * A null value means "no row" and is cached too.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
+	 */
+	private static $latest_cache = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss 2.16.0
@@ -181,6 +192,8 @@ class BB_DRM_Event {
 				array( '%d' )
 			);
 
+			self::flush_latest_cache( $this->event );
+
 			do_action( 'bb_drm_event_update', $this );
 			return $this->id;
 		} else {
@@ -220,6 +233,8 @@ class BB_DRM_Event {
 						array( '%d' )
 					);
 
+					self::flush_latest_cache( $this->event );
+
 					do_action( 'bb_drm_event_update', $this );
 					return $this->id;
 				}
@@ -229,6 +244,8 @@ class BB_DRM_Event {
 			if ( $result ) {
 				$this->id         = $wpdb->insert_id;
 				$this->created_at = $data['created_at'];
+
+				self::flush_latest_cache( $this->event );
 
 				do_action( 'bb_drm_event_create', $this );
 				do_action( 'bb_drm_event', $this );
@@ -266,10 +283,8 @@ class BB_DRM_Event {
 			array( '%d' )
 		);
 
-		// Clear cache when event is destroyed.
 		if ( $result ) {
-			$cache_key = 'bb_drm_latest_' . md5( $this->event );
-			wp_cache_delete( $cache_key, 'bb_drm_events' );
+			self::flush_latest_cache( $this->event );
 		}
 
 		return (bool) $result;
@@ -334,9 +349,10 @@ class BB_DRM_Event {
 	/**
 	 * Get the latest event for a given event name.
 	 *
-	 * Uses multi-level caching to prevent duplicate database queries:
-	 * 1. Static cache (per-request)
-	 * 2. WordPress object cache (persistent)
+	 * The result is cached for the current request, because the DRM feature
+	 * checks call this many times per page load. Every write in this class
+	 * flushes the cache; code that writes the table directly must call
+	 * flush_latest_cache().
 	 *
 	 * @since BuddyBoss 2.16.0
 	 *
@@ -346,24 +362,10 @@ class BB_DRM_Event {
 	public static function latest( $event ) {
 		global $wpdb;
 
-		// Level 1: Static cache for per-request performance.
-		static $cache = array();
-
-		// Return cached result if available.
-		if ( array_key_exists( $event, $cache ) ) {
-			return $cache[ $event ];
+		if ( array_key_exists( $event, self::$latest_cache ) ) {
+			return self::$latest_cache[ $event ];
 		}
 
-		// Level 2: WordPress object cache for persistence across calls.
-		$cache_key = 'bb_drm_latest_' . md5( $event );
-		$cached    = wp_cache_get( $cache_key, 'bb_drm_events' );
-
-		if ( false !== $cached ) {
-			$cache[ $event ] = $cached;
-			return $cached;
-		}
-
-		// Level 3: Query database.
 		$table_name = self::get_table_name();
 		$result     = $wpdb->get_row(
 			$wpdb->prepare(
@@ -372,21 +374,29 @@ class BB_DRM_Event {
 			)
 		);
 
-		if ( $result ) {
-			$event_obj = new self( $result );
-			$cache[ $event ] = $event_obj;
-			
-			// Cache in WordPress object cache for 5 minutes.
-			wp_cache_set( $cache_key, $event_obj, 'bb_drm_events', 300 );
-			
-			return $event_obj;
+		// Do not cache a failed read (e.g. missing table), only a real result or "no row".
+		if ( ! empty( $wpdb->last_error ) ) {
+			return $result ? new self( $result ) : null;
 		}
 
-		// Cache null result too to prevent repeated queries for non-existent events.
-		$cache[ $event ] = null;
-		wp_cache_set( $cache_key, null, 'bb_drm_events', 300 );
-		
-		return null;
+		self::$latest_cache[ $event ] = $result ? new self( $result ) : null;
+
+		return self::$latest_cache[ $event ];
+	}
+
+	/**
+	 * Flush the per-request latest() cache.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $event Optional. Event name to flush. Default empty, flushes all events.
+	 */
+	public static function flush_latest_cache( $event = '' ) {
+		if ( '' === $event ) {
+			self::$latest_cache = array();
+		} else {
+			unset( self::$latest_cache[ $event ] );
+		}
 	}
 
 	/**
@@ -628,6 +638,8 @@ class BB_DRM_Event {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
+		self::flush_latest_cache();
+
 		// Check if table was created successfully.
 		return $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
 	}
@@ -658,6 +670,10 @@ class BB_DRM_Event {
 		global $wpdb;
 
 		$table_name = self::get_table_name();
-		return (bool) $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
+		$result     = (bool) $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
+
+		self::flush_latest_cache();
+
+		return $result;
 	}
 }
