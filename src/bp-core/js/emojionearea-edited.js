@@ -1153,7 +1153,16 @@ document = window.document || {};
 		}
 
 		self.setText( source[sourceValFunc]() );
-		source[sourceValFunc](self.getText());
+
+		// Only write the plain-text round trip back into actual form fields. For any other
+		// source element (e.g. a rich-text contenteditable host such as a MediumEditor instance),
+		// "text" is just a fallback read accessor above for bookkeeping/placeholder purposes and
+		// must not be used to overwrite the element's content, since jQuery's .text() setter
+		// replaces all child markup (paragraphs, bold, lists, etc.) with a single flattened
+		// text node, destroying any formatting already present in the element.
+		if (source.is( "TEXTAREA" ) || source.is( "INPUT" )) {
+			source[sourceValFunc](self.getText());
+		}
 		calcButtonPosition.apply( self );
 
 		// if in standalone mode and no value is set, initialise with a placeholder
