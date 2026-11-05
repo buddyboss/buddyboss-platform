@@ -1062,6 +1062,7 @@ function bp_get_profile_field_data( $args = '' ) {
  * Get all profile field groups.
  *
  * @since BuddyPress 2.1.0
+ * @since BuddyBoss [BBVERSION] The cache holds field properties instead of field objects.
  *
  * @return array $groups
  */
@@ -1084,10 +1085,67 @@ function bp_profile_get_field_groups() {
 		$cache_key = $member_types;
 	}
 
-	$groups = wp_cache_get( $cache_key, 'bp_xprofile_groups' );
+	/*
+	 * The cache holds the fields' public properties, not BP_XProfile_Field objects:
+	 * a cached object can only be read back while its class name exists. Anything
+	 * else (e.g. objects cached by an older version) is treated as a miss and replaced.
+	 */
+	$groups = false;
+	$cached = wp_cache_get( $cache_key, 'bp_xprofile_groups' );
+	if ( is_array( $cached ) && isset( $cached['bb_fields_as_arrays'], $cached['groups'] ) && is_array( $cached['groups'] ) ) {
+		$groups = array();
+		foreach ( $cached['groups'] as $cached_group ) {
+			$group = is_object( $cached_group ) ? clone $cached_group : $cached_group;
+			if ( is_object( $group ) && isset( $group->fields ) && is_array( $group->fields ) ) {
+				$fields = array();
+				foreach ( $group->fields as $properties ) {
+					if ( ! is_array( $properties ) ) {
+						$fields[] = $properties;
+						continue;
+					}
+					$field = new BP_XProfile_Field();
+					foreach ( $properties as $property => $value ) {
+						$field->{$property} = $value;
+					}
+					$field->type_obj            = bp_xprofile_create_field_type( $field->type );
+					$field->type_obj->field_obj = $field;
+					$fields[]                   = $field;
+				}
+				$group->fields = $fields;
+			}
+			$groups[] = $group;
+		}
+	}
+
 	if ( false === $groups ) {
 		$groups = bp_xprofile_get_groups( array( 'fetch_fields' => true ) );
-		wp_cache_set( $cache_key, $groups, 'bp_xprofile_groups' );
+
+		$to_cache = array();
+		foreach ( (array) $groups as $group ) {
+			$cached_group = is_object( $group ) ? clone $group : $group;
+			if ( is_object( $cached_group ) && isset( $cached_group->fields ) && is_array( $cached_group->fields ) ) {
+				$fields = array();
+				foreach ( $cached_group->fields as $field ) {
+					if ( ! $field instanceof BP_XProfile_Field ) {
+						$fields[] = $field;
+						continue;
+					}
+					$properties = get_object_vars( $field );
+					unset( $properties['type_obj'] );
+					$fields[] = $properties;
+				}
+				$cached_group->fields = $fields;
+			}
+			$to_cache[] = $cached_group;
+		}
+		wp_cache_set(
+			$cache_key,
+			array(
+				'bb_fields_as_arrays' => 1,
+				'groups'              => $to_cache,
+			),
+			'bp_xprofile_groups'
+		);
 	}
 
 	/**
