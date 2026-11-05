@@ -550,7 +550,7 @@ function bp_nouveau_ajax_media_delete() {
 	$response          = array();
 	$can_view_activity = $activity_id && bp_is_active( 'activity' ) && bb_activity_user_can_view( (int) $activity_id );
 	if ( $can_view_activity ) {
-		$response = bp_media_get_activity_media( $_POST['activity_id'] );
+		$response = bp_media_get_activity_media( (int) $activity_id );
 
 		// A comment kept after the delete shows its grid with the comment
 		// thumbnail limit, so return the markup the comment template renders.
