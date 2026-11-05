@@ -130,9 +130,11 @@
 		font-weight: 400;
 		color: $bb-link-color;
 		line-height: 20px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		// Wrap instead of clipping with ellipsis - the full name should be
+		// readable directly in the list, not just via the title tooltip.
+		min-width: 0;
+		white-space: normal;
+		word-break: break-word;
 		text-decoration: none;
 
 		&:hover {
@@ -1170,6 +1172,7 @@ input.bb-admin-meta-field__search-input {
 .bb-topic-list__global-icon {
 	display: inline-flex;
 	align-items: center;
+	flex-shrink: 0;
 	margin-left: 6px;
 	color: #757575;
 	font-size: 16px;

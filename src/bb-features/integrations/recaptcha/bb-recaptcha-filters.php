@@ -79,6 +79,45 @@ function bb_recaptcha_validate_login( $user ) {
 		}
 	}
 
+	/*
+	 * Scope enforcement to endpoints BuddyBoss actually renders the widget into.
+	 *
+	 * A missing token cannot be forgiven on the strength of the request body: a
+	 * third-party form that never had a widget and a request whose widget was
+	 * stripped look identical in $_POST. Deciding from the endpoint instead keeps
+	 * bb_recaptcha_verification_front() fail-closed everywhere it is reached,
+	 * while leaving genuinely uncovered forms working rather than locked out.
+	 */
+	$protected = bb_recaptcha_is_protected_login_request();
+
+	// Note the uncovered endpoint for developers (WP_DEBUG only).
+	if ( ! $protected ) {
+		bb_recaptcha_log_uncovered_login();
+	}
+
+	/**
+	 * Filters whether reCAPTCHA verification should run for this login submission.
+	 *
+	 * By this point the request is a standard WordPress login (the `log` field is
+	 * present), reCAPTCHA is connected, and it is enabled for login. The default
+	 * is whether the endpoint renders the widget - see
+	 * bb_recaptcha_is_protected_login_request(). Return false to skip verification
+	 * for a specific custom login form that BuddyBoss does not render the widget
+	 * on (e.g. a third-party front-end login that reuses the WordPress `log`/`pwd`
+	 * field names). This must be a server-side decision; never key it on a
+	 * client-submitted field, or the check can be bypassed.
+	 *
+	 * @since BuddyBoss 3.4.2
+	 * @since BuddyBoss 3.4.3 Default changed from true to whether the
+	 *                              endpoint renders the reCAPTCHA widget.
+	 *
+	 * @param bool             $verify Whether to run reCAPTCHA verification.
+	 * @param WP_User|WP_Error $user   The user object from the authenticate filter.
+	 */
+	if ( ! apply_filters( 'bb_recaptcha_verify_login', $protected, $user ) ) {
+		return $user;
+	}
+
 	// Validate the recaptcha.
 	$captcha = bb_recaptcha_verification_front( 'bb_login' );
 	if ( is_wp_error( $captcha ) ) {
@@ -91,7 +130,8 @@ function bb_recaptcha_validate_login( $user ) {
 /**
  * Validate the activation process with reCAPTCHA if enabled.
  *
- * @sicne BuddyBoss 2.5.60
+ * @since BuddyBoss 2.5.60
+ * @since BuddyBoss 3.7.0 Skip verification in wp-admin (outside admin-ajax) and under WP-CLI.
  *
  * @param bool $retval The return value to be validated.
  *
@@ -102,6 +142,17 @@ function bb_recaptcha_validate_activate( $retval ) {
 
 	// Bypass recaptcha for rest api.
 	if ( apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ) {
+		return $retval;
+	}
+
+	// Bypass in wp-admin: BuddyBoss never renders the activation widget there (Users → Pending Signups).
+	// Exclude admin-ajax.php, where is_admin() is also true for anonymous nopriv requests.
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		return $retval;
+	}
+
+	// Bypass for WP-CLI (`wp bp signup activate`), which has no browser to render the widget.
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		return $retval;
 	}
 

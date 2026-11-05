@@ -387,6 +387,7 @@ class BP_Activity_Activity {
 	 * @since BuddyPress 1.2.0
 	 * @since BuddyPress 2.4.0 Introduced the `$fields` parameter.
 	 * @since BuddyPress 2.9.0 Introduced the `$order_by` parameter.
+	 * @since BuddyBoss [BBVERSION] Site-wide visibility of a listed comment also requires the item it belongs to be visible.
 	 *
 	 * @see BP_Activity_Activity::get_filter_sql() for a description of the
 	 *      'filter' parameter.
@@ -649,7 +650,12 @@ class BP_Activity_Activity {
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
-			$where_conditions['hidden_sql'] = 'a.hide_sitewide = 0';
+			// Comments are only listed on their own outside threaded mode; check their item there (PROD-10649).
+			if ( false !== $r['display_comments'] && 'threaded' !== $r['display_comments'] ) {
+				$where_conditions['hidden_sql'] = self::get_visible_sitewide_sql( 'a' );
+			} else {
+				$where_conditions['hidden_sql'] = 'a.hide_sitewide = 0';
+			}
 		}
 
 		// Exclude specified items.
@@ -1003,7 +1009,9 @@ class BP_Activity_Activity {
 				}
 			}
 
-			$activities[] = $activity;
+			if ( ! empty( $activity ) ) {
+				$activities[] = $activity;
+			}
 		}
 
 		$user_ids  = wp_list_pluck( $activities, 'user_id' );
@@ -1795,6 +1803,9 @@ class BP_Activity_Activity {
 
 				$descendants = $wpdb->get_results( $sql );
 
+				// The legacy SELECT joins the raw xprofile name; resolve it for the current viewer.
+				$descendants = self::append_user_fullnames( $descendants );
+
 				// We use the mptt BETWEEN clause to limit returned
 				// descendants to the correct part of the tree.
 			} else {
@@ -2023,9 +2034,116 @@ class BP_Activity_Activity {
 			) {
 				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
 			}
+		} else {
+			// Cache hit. The cached tree carries every name-bearing value resolved for the viewer
+			// who populated the cache, but those values depend on the current viewer (last-name
+			// visibility), so re-resolve them for this request instead of serving another
+			// viewer's names.
+			$comments = self::bb_refresh_comment_tree_viewer_fields( $comments );
 		}
 
 		return $comments;
+	}
+
+	/**
+	 * Re-resolve every viewer-dependent name value on a nested activity comment tree.
+	 *
+	 * The comment tree is cached per activity in the persistent, global `bp_activity_comments`
+	 * group with no viewer in the key, so one request's tree is served verbatim to the next
+	 * visitor — including a logged-out one. Three values on each node carry a member's name and
+	 * must therefore be rebuilt for the current viewer rather than served from the cache:
+	 *
+	 * - `user_fullname`, resolved by bp_core_get_user_displayname(), which redacts a name part
+	 *   the viewer may not see;
+	 * - `action`, the rendered sentence ("<a…>Name</a> posted a new activity comment") that the
+	 *   REST endpoint returns as `title`. get_activity_data() generates it through
+	 *   bp_activity_generate_action_string() -> bp_core_get_userlink() ->
+	 *   bp_core_get_user_displayname(), so it is resolved for whoever populated the cache;
+	 * - `display_name`, the raw wp_users column get_activity_data() copies onto each node. It is
+	 *   the same for every viewer, but it is refreshed here so a rename is not served stale — the
+	 *   cache is invalidated only when a comment is added, edited or deleted, never when a name
+	 *   or its visibility changes, which is also why this re-resolution belongs on every read.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param array $comments Nested comment tree as returned by get_activity_comments().
+	 * @return array The same tree with its name values resolved for the current viewer.
+	 */
+	protected static function bb_refresh_comment_tree_viewer_fields( $comments ) {
+		if ( empty( $comments ) || ! is_array( $comments ) || ! bp_is_active( 'xprofile' ) ) {
+			return $comments;
+		}
+
+		$nodes = array();
+		self::bb_flatten_comment_tree( $comments, $nodes );
+
+		if ( empty( $nodes ) ) {
+			return $comments;
+		}
+
+		// Resolve the whole tree in one batch first. bp_core_get_user_displaynames() calls
+		// cache_users() and bb_core_prime_user_displayname_caches(), which fill the WP user,
+		// xprofile-data and visibility caches that the per-node action regeneration below reads
+		// back one member at a time — so rebuilding the action strings costs no extra queries.
+		$fullnames = (array) bp_core_get_user_displaynames( wp_list_pluck( $nodes, 'user_id' ) );
+
+		foreach ( $nodes as $node ) {
+			$user_id = isset( $node->user_id ) ? (int) $node->user_id : 0;
+
+			if ( $user_id && ! empty( $fullnames[ $user_id ] ) ) {
+				$node->user_fullname = $fullnames[ $user_id ];
+			}
+
+			if ( $user_id && isset( $node->display_name ) ) {
+				// The raw wp_users row, read straight from the `users` cache group that
+				// cache_users() filled above. get_userdata() resolves to the same value, but wraps
+				// the row in a WP_User whose construction also loads and maps the member's
+				// capabilities — work nothing here reads, paid once per node.
+				$user_data = BP_Core_User::get_core_userdata( $user_id );
+
+				// Only when the user still exists: get_activity_data() leaves the property alone
+				// for a deleted user, and the cache-hit path must not diverge from it.
+				if ( ! empty( $user_data ) ) {
+					$node->display_name = $user_data->display_name;
+				}
+			}
+
+			// Regenerate unconditionally, keeping the cached string only when no format callback
+			// is registered for the type (bp_activity_generate_action_string() returns false).
+			// This is what BP_Activity_Activity::get() already does to every top-level activity in
+			// the same response through generate_action_strings(), and unlike a "only when the
+			// stored action column was empty" rule it also disinfects trees written by an earlier
+			// version — the group is persistent and has no TTL, so a leaking entry would otherwise
+			// survive the upgrade until the activity's comments changed.
+			$generated_action = bp_activity_generate_action_string( $node );
+			if ( false !== $generated_action ) {
+				$node->action = $generated_action;
+			}
+		}
+
+		return $comments;
+	}
+
+	/**
+	 * Collect every comment object of a nested comment tree into a flat list.
+	 *
+	 * @since BuddyBoss 3.5.0
+	 *
+	 * @param array $comments Nested comment tree (objects with a `children` array).
+	 * @param array $nodes    Accumulator, passed by reference.
+	 */
+	private static function bb_flatten_comment_tree( $comments, &$nodes ) {
+		foreach ( (array) $comments as $comment ) {
+			if ( ! is_object( $comment ) ) {
+				continue;
+			}
+
+			$nodes[] = $comment;
+
+			if ( ! empty( $comment->children ) ) {
+				self::bb_flatten_comment_tree( $comment->children, $nodes );
+			}
+		}
 	}
 
 	/**
@@ -2141,6 +2259,30 @@ class BP_Activity_Activity {
 		}
 
 		return $activity_feed;
+	}
+
+	/**
+	 * SQL condition for an activity that is visible site wide.
+	 *
+	 * A comment copies the hide_sitewide value of the item it belongs to (its item_id) only when
+	 * it is written, so a group made private later leaves its older comments at 0. A comment
+	 * counts as visible only while that item is visible too.
+	 *
+	 * The item is read with a correlated scalar subquery on the primary key, which only runs
+	 * for comment rows; a missing item or a NULL value counts as visible, like the row's own
+	 * check. A `NOT EXISTS` form is materialized by MariaDB into full scans of the activity
+	 * table, one per scope branch, and doubled the feed query on a 200k-row table.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $alias Alias of the activity table in the outer query, without the dot.
+	 *
+	 * @return string SQL condition.
+	 */
+	public static function get_visible_sitewide_sql( $alias = 'a' ) {
+		$table = buddypress()->activity->table_name;
+
+		return "( {$alias}.hide_sitewide = 0 AND ( {$alias}.type <> 'activity_comment' OR COALESCE( ( SELECT hp.hide_sitewide FROM {$table} hp WHERE hp.id = {$alias}.item_id ), 0 ) = 0 ) )";
 	}
 
 	/**

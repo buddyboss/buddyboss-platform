@@ -86,6 +86,12 @@ add_action(
 				),
 			),
 			array(
+				'bb_get_draft_activity' => array(
+					'function' => 'bb_nouveau_ajax_get_draft_activity',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
@@ -325,6 +331,87 @@ function bp_nouveau_ajax_delete_activity() {
 		wp_send_json_error( $response );
 	}
 
+	// Capture the album context of this activity's media/videos before deletion,
+	// so a single-album view can refresh its empty-state after the activity (and
+	// its cascade-deleted items) is removed (e.g. deleting the last photo or
+	// video from the theater opened on the album view). The attached ids are
+	// read from activity meta first (usually primed) so the media/video tables
+	// are only queried for the ~1% of deletes that actually carry attachments.
+	$activity_album_id     = 0;
+	$activity_album_group  = 0;
+	$deleted_media_ids     = array();
+	$deleted_video_ids     = array();
+	if ( empty( $_POST['is_comment'] ) && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+		$attached_media_meta = bp_is_active( 'media' ) ? bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
+		$attached_video_meta = bp_is_active( 'video' ) ? bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
+
+		// Batch uploads attach each item to its own child activity, which carries
+		// only the bp_media_activity/bp_video_activity marker - never the plural
+		// ids meta - so the marker must also open the capture path.
+		$is_media_activity = '' !== (string) $attached_media_meta
+			|| ( bp_is_active( 'media' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) );
+		$is_video_activity = '' !== (string) $attached_video_meta
+			|| ( bp_is_active( 'video' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) );
+
+		// The row lookups below serve two consumers: the album context (only used
+		// by the two single-album screens) and the fallback ids for marker-only
+		// child activities. Skip them when neither applies - i.e. the common feed
+		// delete, whose ids already came from the plural meta.
+		$in_single_album_view = bp_is_single_album() || bp_is_single_video_album();
+
+		if ( $is_media_activity && class_exists( 'BP_Media' ) ) {
+			if ( '' !== (string) $attached_media_meta ) {
+				$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
+			}
+			if ( $in_single_album_view || empty( $deleted_media_ids ) ) {
+				$activity_media = BP_Media::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_media['medias'] ) ) {
+					$first_media          = current( $activity_media['medias'] );
+					$activity_album_id    = (int) $first_media->album_id;
+					$activity_album_group = (int) $first_media->group_id;
+
+					// A marker-only child activity owns exactly one media row.
+					if ( empty( $deleted_media_ids ) ) {
+						$deleted_media_ids = array( (int) $first_media->id );
+					}
+				}
+			}
+		}
+
+		// Photos and videos live in separate tables; a video-only activity finds
+		// no BP_Media rows, so fall back to the video table for the album context.
+		if ( $is_video_activity && class_exists( 'BP_Video' ) ) {
+			if ( '' !== (string) $attached_video_meta ) {
+				$deleted_video_ids = array_map( 'intval', array_filter( explode( ',', $attached_video_meta ) ) );
+			}
+			if ( ( $in_single_album_view && empty( $activity_album_id ) ) || empty( $deleted_video_ids ) ) {
+				$activity_video = BP_Video::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_video['videos'] ) ) {
+					$first_video = current( $activity_video['videos'] );
+					if ( empty( $activity_album_id ) ) {
+						$activity_album_id    = (int) $first_video->album_id;
+						$activity_album_group = (int) $first_video->group_id;
+					}
+
+					// A marker-only child activity owns exactly one video row.
+					if ( empty( $deleted_video_ids ) ) {
+						$deleted_video_ids = array( (int) $first_video->id );
+					}
+				}
+			}
+		}
+	}
+
 	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
@@ -378,6 +465,50 @@ function bp_nouveau_ajax_delete_activity() {
 		$response['activity']           = $activity_html;
 		$response['parent_activity_id'] = $parent_activity_id;
 	}
+
+	// Refresh the single-album empty-state when this activity's media/videos
+	// emptied the album. The theater delete on the album view removes the whole
+	// activity via this handler, so the album grid needs the album-scoped
+	// empty-state (the media/video delete handlers cannot see this path). The
+	// deleted ids let the client clear every tile of a multi-item activity -
+	// the server cascade-deletes them all, not just the one open in the theater.
+	if ( ! empty( $deleted_media_ids ) || ! empty( $deleted_video_ids ) ) {
+		// Always returned: directory and other non-album grids use these to clear
+		// every tile of a multi-item activity, whatever page the delete came from.
+		$response['deleted_media_ids'] = $deleted_media_ids;
+		$response['deleted_video_ids'] = $deleted_video_ids;
+	}
+
+	if ( ! empty( $activity_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
+		// Counts and empty-state markup are only consumed by the two single-album
+		// screens, so skip their queries/render when the delete came from anywhere
+		// else (feed, directories) - under admin-ajax these route checks resolve
+		// from the referer, i.e. the page the delete request originated on.
+		// bp_is_single_video_album() is also true on the media album screen
+		// (bp_is_video_component() returns true for the media component), so the
+		// video-album branch must additionally rule out the media album route.
+		$in_video_album = bp_is_single_video_album() && ! bp_is_single_album();
+		if ( $in_video_album || bp_is_single_album() ) {
+			$album_counts                  = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
+			$response['album_id']          = $activity_album_id;
+			$response['album_total_count'] = (int) $album_counts['album_total_count'];
+			$response['album_media_count'] = (int) $album_counts['album_media_count'];
+			$response['album_video_count'] = (int) $album_counts['album_video_count'];
+
+			// The standalone video album screen only lists videos, so it is "empty"
+			// when no videos remain even if the mixed album still holds photos; the
+			// unified media album screen is empty only when everything is gone.
+			$response['album_empty_html'] = '';
+			if ( $in_video_album ) {
+				if ( 0 === (int) $album_counts['album_video_count'] && function_exists( 'bb_nouveau_video_get_album_empty_state' ) ) {
+					$response['album_empty_html'] = bb_nouveau_video_get_album_empty_state();
+				}
+			} elseif ( 0 === (int) $album_counts['album_total_count'] ) {
+				$response['album_empty_html'] = bb_nouveau_media_get_album_empty_state();
+			}
+		}
+	}
+
 	wp_send_json_success( $response );
 }
 
@@ -386,6 +517,7 @@ function bp_nouveau_ajax_delete_activity() {
  * Used for the 'Read More' link on long activity items.
  *
  * @since BuddyPress 3.0.0
+ * @since BuddyBoss [BBVERSION] Only returns content the user can read, in its group and thread.
  *
  * @return string JSON reply.
  */
@@ -404,6 +536,11 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	// Nonce check!
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Without an ID the lookup would query the whole stream and tie up a worker for a long time.
+	if ( empty( $_POST['id'] ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -426,6 +563,11 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	$activity = $activity_array['activities'][0];
 
+	// Guests can call this, so only return content the user can read, in its group and thread.
+	if ( ! bb_activity_user_can_view( (int) $activity->id ) ) {
+		wp_send_json_error( $response );
+	}
+
 	/**
 	 * Fires before the return of an activity's full, non-excerpted content via a POST request.
 	 *
@@ -440,9 +582,17 @@ function bp_nouveau_ajax_get_single_activity_content() {
 
 	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		// Video and Document ship in the BuddyBoss Add-ons plugin; only re-add when loaded.
+		if ( function_exists( 'bp_video_activity_append_video' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
+		}
+		if ( function_exists( 'bp_document_activity_append_document' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
+		}
+		// The GIF feature ships in the BuddyBoss Add-ons plugin; only re-add when it is loaded.
+		if ( function_exists( 'bp_media_activity_append_gif' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		}
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
@@ -558,7 +708,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 		// determine depth.
 		$depth     = 1;
 		$parent_id = (int) $activities_template->activities[0]->secondary_item_id;
-		while ( $parent_id !== (int) $activities_template->activities[0]->item_id ) {
+		while ( $parent_id && $parent_id !== (int) $activities_template->activities[0]->item_id ) {
 			$depth++;
 			$p_obj     = new BP_Activity_Activity( $parent_id );
 			$parent_id = (int) $p_obj->secondary_item_id;
@@ -695,18 +845,25 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$activity_id = ! empty( $_POST['id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['id'] ) ) : 0;
-	if ( bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) ) {
-		$topic_id = ! empty( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		if ( empty( $topic_id ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
-		}
+	// A chosen topic is checked even when a topic is not required. Nothing is checked or saved while topics are off.
+	$topics_enabled = bb_is_enabled_activity_topics();
+	$topic_id       = $topics_enabled && isset( $_POST['topic_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) : 0;
+	if ( $topics_enabled && bb_is_activity_topic_required() && isset( $_POST['topic_id'] ) && empty( $topic_id ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Please select a topic before posting.', 'buddyboss' ) ) );
+	}
+	if ( ! empty( $topic_id ) ) {
 		$existing_topic_id = bb_activity_topics_manager_instance()->bb_get_activity_topic( $activity_id );
 		if (
 			empty( $existing_topic_id ) ||
 			(int) $existing_topic_id !== (int) $topic_id
 		) {
-			$object  = ! empty( $_POST['object'] ) ? sanitize_text_field( wp_unslash( $_POST['object'] ) ) : '';
+			// Resolve the object the same way the posting code below does, so the topic is checked for the feed it is saved to.
+			$object  = ! empty( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 			$item_id = ! empty( $_POST['item_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : 0;
+			if ( empty( $object ) && bp_is_group() ) {
+				$object  = 'group';
+				$item_id = bp_get_current_group_id();
+			}
 
 			$args = array(
 				'topic_id'  => $topic_id,
@@ -1118,16 +1275,33 @@ function bp_nouveau_ajax_post_update() {
 		);
 	}
 
-	// Delete draft activity.
-	delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
+	// Delete draft activity - only the composer's own draft, and only a version it showed.
+	$draft_activity_meta_key = bb_draft_activity_publish_key( $draft_activity_meta_key, bp_loggedin_user_id() );
+
+	if ( '' !== $draft_activity_meta_key ) {
+		delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
+	}
+
+	$activity_args = array(
+		'include'     => $activity_id,
+		'show_hidden' => $is_private,
+	);
+
+	/*
+	 * In ReadyLaunch, activity comments are displayed only inside the activity modal
+	 * (or on the single activity screen), never inline in the feed. The feed loop
+	 * enforces this with 'display_comments=false' (see readylaunch/activity/activity-loop.php).
+	 *
+	 * Mirror that here so a re-rendered (newly posted or edited) activity injected back
+	 * into the stream stays consistent and doesn't render a comment thread whose reply
+	 * form is absent in this context, which would leave the "Comment"/"Reply" buttons dead.
+	 */
+	if ( bb_is_readylaunch_enabled() && ! bp_is_single_activity() ) {
+		$activity_args['display_comments'] = false;
+	}
 
 	ob_start();
-	if ( bp_has_activities(
-		array(
-			'include'     => $activity_id,
-			'show_hidden' => $is_private,
-		)
-	) ) {
+	if ( bp_has_activities( $activity_args ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
@@ -1152,6 +1326,7 @@ function bp_nouveau_ajax_post_update() {
 			'is_private'       => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
 			'is_directory'     => bp_is_activity_directory(),
 			'is_user_activity' => bp_is_user_activity(),
+			'draft_kept'       => '' === $draft_activity_meta_key,
 		)
 	);
 }
@@ -1159,51 +1334,278 @@ function bp_nouveau_ajax_post_update() {
 /**
  * Save activity draft data.
  *
+ * Responds with `draft_activity` (the accepted entry, or one whose `data` is
+ * false after a discard) plus `evicted_draft_keys` — the draft keys the
+ * per-user budget removed to make room — and `evicted_drafts`, those drafts'
+ * stored entries keyed the same way, which the client keeps in localStorage so
+ * an eviction never loses a draft.
+ *
+ * Refuses with a `message` when the entry exceeds the per-draft cap or when
+ * the member's total user meta would pass the platform budget, and with an
+ * empty error when the nonce or the draft key does not validate.
+ *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
+ * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
+ *                              the `evicted_draft_keys` response field.
  */
 function bb_nouveau_ajax_post_draft_activity() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
 		wp_send_json_error();
 	}
 
 	$draft_activity = $_REQUEST['draft_activity'] ?? '';
 
 	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
-		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+		// The composer posts two ways and they arrive in different slash
+		// states. The in-page XHR sends an object, which jQuery serializes to
+		// draft_activity[data][content] and PHP rebuilds as a nested array
+		// whose leaves WordPress has already slashed. The unload beacon sends
+		// one JSON.stringify() string, and the decode here UNSLASHES
+		// everything - after which update_metadata() unslashes once more on
+		// write and eats the member's backslashes.
+		//
+		// So the same keystrokes were stored differently depending on whether
+		// the save came from the autosave tick or from closing the tab:
+		// `path C:\temp\notes` survived the XHR and became
+		// `path C:tempnotes` through the beacon. Re-slash so both transports
+		// hand this handler one state (S4).
+		$draft_activity = wp_slash( json_decode( stripslashes( $draft_activity ), true ) );
 	}
 
+	$evicted_draft_keys = array();
+	$evicted_drafts     = array();
+
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
+		/*
+		 * The client's data_key names the usermeta row this handler writes or deletes, so it
+		 * must never reach bp_update_user_meta()/bp_delete_user_meta() unchecked - an arbitrary
+		 * key (e.g. wp_capabilities) would let a member overwrite any of their own meta,
+		 * including their role. Only the keys the composers actually use are allowed:
+		 * draft_user, draft_user_{id} and draft_group_{id}. A non-scalar key (a crafted array)
+		 * becomes '' and is rejected cleanly rather than emitting an "Array to string" notice.
+		 *
+		 * @since BuddyBoss 3.6.1
+		 */
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		if ( ! preg_match( '/^draft_(user|group)(_\d+)?$/D', $submitted_data_key ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' ),
+				)
+			);
+		}
+
+		$draft_user_id = bp_loggedin_user_id();
+
+		// The client's data_key decides which usermeta row is written; accept it
+		// only when it matches the server-derived shape for its object and, for
+		// SAVES, the user passes that object's posting rules. Deletes validate
+		// shape only ('manage'): the slim discard payload carries no data member
+		// to resolve a group ID from, and a member who lost posting rights must
+		// still be able to discard their own stored draft (hardening).
+		$draft_context = ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) ? 'save' : 'manage';
+
+		// Coerce only scalars. A crafted request can submit data_key/object as
+		// arrays, and casting an array to string emits an "Array to string
+		// conversion" notice before the validation below rejects it; a
+		// non-scalar becomes '' and fails validation cleanly (GH review C2).
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		$submitted_object   = is_scalar( $draft_activity['object'] ) ? (string) $draft_activity['object'] : '';
+		$submitted_item_id  = ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) && isset( $draft_activity['data']['item_id'] ) ) ? $draft_activity['data']['item_id'] : 0;
+
+		if ( ! bb_draft_validate_activity_data_key( $submitted_data_key, $submitted_object, $submitted_item_id, $draft_user_id, $draft_context ) ) {
+			// Reached by a member who lost posting rights mid-session, so it
+			// carries the same approved save-failed text as the composers.
+			wp_send_json_error(
+				array(
+					'message' => __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' ),
+				)
+			);
+		}
 
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
+
+			// Protect the member's uploads BEFORE any cap can refuse this draft.
+			// The caps judge the draft's text; they must not decide whether a file
+			// the member already uploaded survives the orphan cron
+			// ({@see bb_draft_protect_payload_attachments()}, BLOCKER-1).
+			bb_draft_protect_payload_attachments(
+				array(
+					'media'    => $draft_activity['data']['media'] ?? array(),
+					'document' => $draft_activity['data']['document'] ?? array(),
+					'video'    => $draft_activity['data']['video'] ?? array(),
+				),
+				$draft_user_id
+			);
+
+			// Never replace a stored version this composer did not show: a
+			// lazy fetch that had not landed, a handed-back copy older than a
+			// save from another device, a second tab behind the first. The
+			// uploads above stay protected; the stored draft is returned so the
+			// browser can keep it (bb_draft_base_matches()).
+			$stored_draft_entry = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+
+			if ( ! bb_draft_base_matches( $stored_draft_entry, bb_draft_request_base() ) ) {
+				/**
+				 * Fires when a draft save is refused because a newer version is stored.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int    $user_id  User ID.
+				 * @param string $data_key Draft key ("meta_key" or "meta_key:inner_key").
+				 */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bb_draft_conflict_message(),
+						'conflict'       => true,
+						'draft_activity' => $stored_draft_entry,
+						'evicted_drafts' => bb_draft_handback( $draft_user_id ),
+					)
+				);
+			}
+
+			// A held draft of this key that this browser has not received yet
+			// would be dropped unseen by this save. Hand it back instead: the
+			// browser merges it with the member's text and saves again.
+			if ( bb_draft_save_waits_for_handback( $draft_user_id, $draft_activity['data_key'] ) ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
+
+				wp_send_json_error(
+					array(
+						'message'        => bb_draft_conflict_message(),
+						'conflict'       => true,
+						'held'           => true,
+						'evicted_drafts' => bb_draft_handback_for_key( $draft_user_id, $draft_activity['data_key'] ),
+					)
+				);
+			}
+
+			// The client attachment lists arrive as JSON and each entry costs a
+			// per-ID ownership lookup, so they must be bounded. This REFUSES an
+			// over-bound list instead of silently storing a truncated one: the
+			// slice this replaces mutated the very array that gets stored, so
+			// entries past the bound were dropped from the draft the member
+			// would restore AND never stamped - and unstamped is exactly what
+			// bp_media_delete_orphaned_attachments() hard-deletes. On a site
+			// whose Upload Limit is 60, a member attaching 60 photos kept 50
+			// and lost 10 files six hours later (H4).
+			//
+			// Ordered AFTER the protection pass on purpose: a refusal must not
+			// decide whether files the member already uploaded survive the
+			// orphan cron (BLOCKER-1).
+			foreach ( array( 'media', 'document', 'video' ) as $bounded_type ) {
+				if (
+					isset( $draft_activity['data'][ $bounded_type ] ) &&
+					is_array( $draft_activity['data'][ $bounded_type ] ) &&
+					bb_draft_max_attachments_per_type( $bounded_type ) < count( $draft_activity['data'][ $bounded_type ] )
+				) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+						)
+					);
+				}
+			}
+
+			// Owner-gate the feature image before the caps run, mirroring the
+			// BLOCKER-1 ordering the media/document/video lists use. When Pro is
+			// present its richer per-object check runs in the block below, which
+			// errors on an image the member may not edit and drops one they may
+			// edit but do not own; a verified owner is merely protected early here. When Pro is ABSENT that block is
+			// skipped entirely, so a foreign attachment id used to be stored
+			// straight into the member's own draft row - here it is dropped the
+			// same way an unowned media id is (GH review C1).
+			if ( ! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ) {
+				$feature_image_id = (int) $draft_activity['data']['bb_activity_post_feature_image']['id'];
+
+				if ( bb_user_can_manage_draft_attachment( $feature_image_id, false, $draft_user_id ) ) {
+					update_post_meta( $feature_image_id, 'bb_activity_post_feature_image_draft', '1' );
+				} elseif ( ! function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					// Core-only: no Pro per-object check will run, so a foreign
+					// or unknown id must not be stored.
+					unset( $draft_activity['data']['bb_activity_post_feature_image'] );
+				}
+			}
+
+			// Collected again during validation and re-applied after the caps.
+			// Idempotent, and it covers IDs the normalisation below resolves.
+			$stamp_attachment_ids   = array();
+			$stamp_feature_image_id = 0;
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
 				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
+					// Attachment IDs arrive as client JSON - only the owner may stamp them.
+					if ( empty( $new_media_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_media_attachment['id'], false, $draft_user_id ) ) {
+						unset( $draft_activity['data']['media'][ $media_key ] );
+						continue;
+					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
 					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
-						update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
 					}
+
+					$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 				}
+				$draft_activity['data']['media'] = array_values( $draft_activity['data']['media'] );
 			}
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['document'] ) && ! empty( $draft_activity['data']['document'] ) ) {
 				foreach ( $draft_activity['data']['document'] as $document_key => $new_document_attachment ) {
+					// Attachment IDs arrive as client JSON - only the owner may stamp them.
+					if ( empty( $new_document_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_document_attachment['id'], false, $draft_user_id ) ) {
+						unset( $draft_activity['data']['document'][ $document_key ] );
+						continue;
+					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
 					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
-						update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
 					}
+
+					$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 				}
+				$draft_activity['data']['document'] = array_values( $draft_activity['data']['document'] );
 			}
 
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['video'] ) && ! empty( $draft_activity['data']['video'] ) ) {
 				foreach ( $draft_activity['data']['video'] as $video_key => $new_video_attachment ) {
+					// Attachment IDs arrive as client JSON - only the owner may stamp them.
+					if ( empty( $new_video_attachment['id'] ) || ! bb_user_can_manage_draft_attachment( $new_video_attachment['id'], false, $draft_user_id ) ) {
+						unset( $draft_activity['data']['video'][ $video_key ] );
+						continue;
+					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
 					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
-						update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
 					}
+
+					$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 				}
+				$draft_activity['data']['video'] = array_values( $draft_activity['data']['video'] );
 			}
 
 			// Set feature image draft meta key to avoid delete from cron job 'bb_activity_post_feature_image_delete_orphaned_attachments_hook'.
@@ -1214,9 +1616,22 @@ function bb_nouveau_ajax_post_draft_activity() {
 						array(
 							'action'        => 'edit',
 							'attachment_id' => $attachment_id,
-							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
-							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
-							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
+							// The permission SUBJECT and CONTEXT are the authenticated,
+							// server-validated draft, never the raw client payload.
+							// The Pro callee feeds all three into
+							// bb_check_{group,activity,attachment}_permissions() as
+							// "who/what is asking", so a crafted value would evaluate
+							// the edit right under a different identity or context.
+							// user_id is bp_loggedin_user_id(); object/group_id use
+							// $submitted_object / $submitted_item_id - the top-level
+							// fields bb_draft_validate_activity_data_key() already
+							// authorized above - not the sibling data.object /
+							// data.item_id fields, which are never validated for a
+							// 'user'-object draft and could be crafted to an
+							// arbitrary group in the same POST (GH review).
+							'user_id'       => $draft_user_id,
+							'object'        => $submitted_object,
+							'group_id'      => ( 'group' === $submitted_object ) ? (int) $submitted_item_id : 0,
 						)
 					);
 					if (
@@ -1230,61 +1645,322 @@ function bb_nouveau_ajax_post_draft_activity() {
 							)
 						);
 					}
-					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
-					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					// Only the owner's attachment may be flagged as drafted (PROD-10561).
+					// Pro's check answers "may this member edit it?", which a
+					// moderator passes for someone else's PUBLISHED image, so a
+					// draft would otherwise store - and later publish with - a
+					// file that is not theirs. Drop it from the draft (V23).
+					if ( bb_user_can_manage_draft_attachment( $attachment_id, false, $draft_user_id ) ) {
+						$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
+						$stamp_feature_image_id = (int) $attachment_id;
+					} else {
+						unset( $draft_activity['data']['bb_activity_post_feature_image'] );
+					}
 				}
 			}
 
-			bp_update_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'], $draft_activity );
+			/**
+			 * Filters which draft data members carry member-authored HTML content.
+			 *
+			 * Extension keys registered through the composer's draft events (for
+			 * example the Pro feature image or polls data) are intentionally NOT
+			 * listed - only content fields are stripped and sanitized.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string[] $content_keys Draft data keys holding HTML content.
+			 */
+			$draft_content_keys = apply_filters( 'bb_draft_activity_content_keys', array( 'content' ) );
+
+			// Reject on RAW width before sanitizing. bp_activity_filter_kses() is
+			// the expensive step (measured ~1.5s on 4MB of plain HTML) and it ran
+			// on the full client payload before any cap could refuse it - a CPU
+			// amplifier on an endpoint every open composer hits every 20s. Data
+			// URLs are stripped first, so the pasted-bitmap case stays cheap and
+			// is still judged on its post-strip width (M4).
+			foreach ( $draft_content_keys as $draft_content_key ) {
+				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
+					// Unslash across the call, then re-slash. This handler keeps the
+					// payload SLASHED for its whole length, but the forum caller
+					// hands the same helper UNSLASHED content - and two of the
+					// helper's three rules match on `=\s*"`, which a backslash
+					// between the `=` and the quote defeats. So on this path the
+					// base64 rule fired while the non-base64 data: rule and the
+					// empty-<img> cleanup silently did not, and an SVG or
+					// percent-encoded data URI over the cap was refused on every
+					// 20-second autosave while the identical content saved fine in
+					// the forum composer. One predicate, two slash states, opposite
+					// outcomes. The round trip is byte-lossless, and re-slashing
+					// before returning keeps this function's all-slashed invariant
+					// (and update_metadata()'s own wp_unslash()) exactly as it was.
+					$draft_activity['data'][ $draft_content_key ] = wp_slash(
+						bb_draft_strip_data_urls( wp_unslash( $draft_activity['data'][ $draft_content_key ] ) )
+					);
+				}
+			}
+
+			// Document preview text is never restored; it must not count
+			// toward the cap or be stored.
+			$draft_activity = bb_draft_strip_document_render_fields( $draft_activity );
+
+			// Measured unslashed: this handler keeps the payload slashed, but
+			// update_metadata() stores it unslashed, and the forum handler
+			// measures that same stored width (V21).
+			$raw_draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
+
+			if ( $raw_draft_size > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $raw_draft_size, 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					)
+				);
+			}
+
+			foreach ( $draft_content_keys as $draft_content_key ) {
+				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
+					// Same allowed tags as the publish path (bp_activity_content_before_save).
+					$draft_activity['data'][ $draft_content_key ] = bp_activity_filter_kses( $draft_activity['data'][ $draft_content_key ] );
+				}
+			}
+
+			/**
+			 * Free-text draft fields sanitized as PLAIN text, mirroring the publish
+			 * path which runs sanitize_text_field() on post_title. The content field
+			 * is HTML and handled by the kses pass above; these are short single-line
+			 * values that went to storage unsanitized before - harmless while a draft
+			 * is only ever read back to its owner, but the public draft-loaded /
+			 * draft-collect events hand them to third-party listeners that may render
+			 * them without escaping (M17).
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string[] $text_keys Draft data keys holding plain text.
+			 */
+			$draft_text_keys = apply_filters(
+				'bb_draft_activity_text_keys',
+				array( 'post_title', 'link_title', 'link_description', 'item_name' )
+			);
+
+			foreach ( $draft_text_keys as $draft_text_key ) {
+				if ( isset( $draft_activity['data'][ $draft_text_key ] ) && is_string( $draft_activity['data'][ $draft_text_key ] ) ) {
+					$draft_activity['data'][ $draft_text_key ] = sanitize_text_field( $draft_activity['data'][ $draft_text_key ] );
+				}
+			}
+
+			$draft_activity['_draft_saved_at'] = time();
+			$draft_activity['_draft_rev']      = bb_draft_sanitize_rev( $draft_activity['_draft_rev'] ?? '' );
+
+			// Browser-side bookkeeping is never stored with the draft.
+			unset( $draft_activity['bb_draft_pending_sync'], $draft_activity['_draft_base'] );
+
+			$draft_size = strlen( maybe_serialize( wp_unslash( $draft_activity ) ) );
+
+			if ( $draft_size > bb_draft_max_size() ) {
+
+				/**
+				 * Fires when a draft save is rejected by a size cap.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int    $user_id  User whose draft was rejected.
+				 * @param string $data_key Draft key: the usermeta key for an activity draft,
+				 *                         "bb_user_topic_reply_draft:{inner key}" for a forum
+				 *                         draft - the same shape `evicted_draft_keys` uses.
+				 * @param int    $size     Serialized draft size in bytes.
+				 * @param string $reason   Which cap rejected it, and why it cannot be
+				 *                         resolved by the member where relevant:
+				 *                         'per_draft'      - the single-draft size cap;
+				 *                         'drafts_over_cap' - their own drafts are over
+				 *                         budget and eviction could not recover enough;
+				 *                         'meta_budget'    - their NON-draft stored meta
+				 *                         leaves no room, which discarding drafts cannot fix.
+				 */
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					)
+				);
+			}
+
+			$draft_budget = bb_draft_enforce_user_budget( $draft_user_id, $draft_activity['data_key'], $draft_size, bb_draft_is_beacon_request() ? 'beacon' : 'save' );
+
+			if ( empty( $draft_budget['allowed'] ) ) {
+				$budget_reason = ! empty( $draft_budget['reason'] ) ? $draft_budget['reason'] : 'drafts_over_cap';
+
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $draft_size, $budget_reason );
+
+				// Two different refusals, and telling them apart matters. When the
+				// member's NON-draft stored data is what leaves no room, discarding
+				// drafts cannot help - the eviction loop only ever deletes drafts -
+				// so sending them to do that is advice that cannot work and reads as
+				// blame for something they did not do. Members cannot see or fix
+				// that stored data either, so the message only tells them what they
+				// can do: keep their text. bb_draft_cap_rejected above still logs it.
+				$budget_message = 'meta_budget' === $budget_reason
+					? __( 'Your draft could not be saved. Please copy your text before leaving this page.', 'buddyboss' )
+					: __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' );
+
+				wp_send_json_error(
+					array(
+						'message' => $budget_message,
+						// A refusal after a mid-loop eviction race may have deleted
+						// some drafts; hand the keys back so the client can drop them
+						// from its localStorage/UI rather than list drafts that are
+						// gone (H1).
+						'evicted_draft_keys' => $draft_budget['evicted'],
+						'evicted_drafts'     => bb_draft_handback( $draft_user_id, $draft_budget['entries'] ),
+					)
+				);
+			}
+
+			$evicted_draft_keys = $draft_budget['evicted'];
+			$evicted_drafts     = $draft_budget['entries'];
+
+			// Every cap accepted the save - apply the deferred protection stamps now.
+			foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
+				update_post_meta( $stamp_attachment_id, 'bb_media_draft', '1' );
+			}
+			if ( $stamp_feature_image_id ) {
+				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', '1' );
+			}
+
+			// Strip the OTHER shape's attachment keys before storing. This handler
+			// validates, caps and ownership-checks only its own shape (media /
+			// document / video), so a foreign bbp_* key would be stored
+			// uninspected - and the global reference scan
+			// (bb_draft_collect_attachment_ids()) reads BOTH shapes, so a member
+			// could pin another member's stamped attachment against cleanup forever
+			// by referencing its id from a forum-shape key in their own activity
+			// draft (L6). The two shapes are mutually exclusive, so this only ever
+			// drops injected keys.
+			if ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) ) {
+				unset(
+					$draft_activity['data']['bbp_media'],
+					$draft_activity['data']['bbp_document'],
+					$draft_activity['data']['bbp_video']
+				);
+			}
+
+			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
+			bb_draft_flush_user_meta_sizes( $draft_user_id );
+
+			// These deferred stamps add references the orphan-stamp sweep's
+			// cached referenced-set must not miss (H3): bb_draft_protect_payload_
+			// attachments() only invalidates when IT stamps something, and a
+			// text-only primary leaves that empty while these sibling stamps
+			// still add references. Drop the cache AFTER the draft write above -
+			// the reference only exists once the draft is stored, so invalidating
+			// before it let a sweep rebuild the set without the new reference and
+			// pin it for the TTL (F3). Matches the forum handler's order.
+			// Keyed on every attachment the STORED draft keeps, resolved through
+			// the same collector the sweep's scan uses, so the two agree by
+			// construction (F7). Handing it over lets the helper skip the token
+			// bump when the cached set already covers all of them, so an ordinary
+			// autosave of an unchanged attachment list no longer aborts a running
+			// sweep (H-4).
+			// No separate append for the feature image: bb_draft_collect_attachment_ids()
+			// already returns it when the draft carries one, and the sweep builds
+			// its cached referenced-set through that SAME collector
+			// ({@see bb_drafts_collect_referenced_attachment_ids()}), so both sides
+			// of the superset comparison agree by construction. Appending it again
+			// would only duplicate an id already in the list.
+			//
+			// The sweep DOES cover a feature image that carries only
+			// `bb_activity_post_feature_image_draft`: its candidate query selects
+			// `d.meta_key IN ( 'bb_media_draft', 'bb_activity_post_feature_image_draft' )`
+			// and pairs each marker with its own "saved" flag
+			// ({@see bb_drafts_release_orphaned_draft_stamps()}). This comment used
+			// to claim the opposite, which mattered because the coupled Platform
+			// Pro reaper change depends on exactly that coverage - a stale note
+			// denying it is how a correct fix gets reverted in a later round.
+			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
+				bb_draft_invalidate_referenced_cache( bb_draft_collect_attachment_ids( $draft_activity ) );
+			}
+
+			// The replaced draft's attachment stamps are deliberately NOT released.
+			// A replace is not proof the file is unused: a second tab or device
+			// still drafting with it saves a list without it, and releasing the
+			// stamp then let the orphan cron delete a photo that tab still showed.
+			// Stamps a draft no longer references are released by the
+			// orphan-stamp sweep after retention, as in 3.6.1.
 		} else {
-			bp_delete_user_meta( bp_loggedin_user_id(), $draft_activity['data_key'] );
+			// Dispose strictly from the STORED draft - the client payload's
+			// attachment lists are never used for deletion, so a crafted request
+			// cannot delete attachments the draft never referenced.
+			$stored_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
 
-			// Delete media when discard the activity.
-			if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] && ! empty( $draft_activity['data'] ) ) {
+			// A discard only removes the version the composer showed. A composer
+			// that never loaded the stored draft (a failed fetch, a stale tab)
+			// must not delete it, or its attachments, on the member's behalf.
+			if ( ! bb_draft_base_matches( $stored_draft, bb_draft_request_base() ) ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_conflict_rejected', $draft_user_id, $draft_activity['data_key'] );
 
-				$medias    = $draft_activity['data']['media'] ?? array();
-				$documents = $draft_activity['data']['document'] ?? array();
-				$videos    = $draft_activity['data']['video'] ?? array();
+				wp_send_json_error(
+					array(
+						'message'        => bb_draft_conflict_message(),
+						'conflict'       => true,
+						'draft_activity' => $stored_draft,
+						'evicted_drafts' => bb_draft_handback( $draft_user_id ),
+					)
+				);
+			}
 
-				// Delete the medias.
-				if ( ! empty( $medias ) ) {
-					foreach ( $medias as $media ) {
-						if ( ! empty( $media['id'] ) && 0 < (int) $media['id'] ) {
-							wp_delete_attachment( $media['id'], true );
+			if ( is_array( $stored_draft ) && ! empty( $stored_draft['data'] ) && is_array( $stored_draft['data'] ) ) {
+
+				// Never hard-delete an attachment a DIFFERENT stored draft row of this
+				// member still references. Ownership alone is not enough - the member owns
+				// the file, but another of their drafts may still need it, and this is a
+				// PERMANENT wp_delete_attachment(). Matches the cross-row retain every
+				// stamp-release path applies (L7/L11). The same goes for a file an
+				// evicted draft, handed back to the browser, still uses.
+				$discard_retained_ids = bb_draft_collect_other_row_referenced_ids( $draft_user_id, $draft_activity['data_key'] );
+
+				// Delete media when discard the activity.
+				if ( isset( $draft_activity['delete_media'] ) && 'true' === $draft_activity['delete_media'] ) {
+					foreach ( array( 'media', 'document', 'video' ) as $stored_type ) {
+						if ( empty( $stored_draft['data'][ $stored_type ] ) || ! is_array( $stored_draft['data'][ $stored_type ] ) ) {
+							continue;
+						}
+						foreach ( $stored_draft['data'][ $stored_type ] as $stored_attachment ) {
+							if (
+								! empty( $stored_attachment['id'] ) &&
+								! in_array( (int) $stored_attachment['id'], $discard_retained_ids, true ) &&
+								! bb_draft_attachment_is_eviction_protected( $stored_attachment['id'] ) &&
+								bb_user_can_manage_draft_attachment( $stored_attachment['id'], true, $draft_user_id )
+							) {
+								wp_delete_attachment( (int) $stored_attachment['id'], true );
+							}
 						}
 					}
 				}
 
-				// Delete the documents.
-				if ( ! empty( $documents ) ) {
-					foreach ( $documents as $document ) {
-						if ( ! empty( $document['id'] ) && 0 < (int) $document['id'] ) {
-							wp_delete_attachment( $document['id'], true );
-						}
-					}
-				}
-
-				// Delete the videos.
-				if ( ! empty( $videos ) ) {
-					foreach ( $videos as $video ) {
-						if ( ! empty( $video['id'] ) && 0 < (int) $video['id'] ) {
-							wp_delete_attachment( $video['id'], true );
-						}
-					}
+				// Delete feature image when discard the activity.
+				if (
+					! empty( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
+					! in_array( (int) $stored_draft['data']['bb_activity_post_feature_image']['id'], $discard_retained_ids, true ) &&
+					! bb_draft_attachment_is_eviction_protected( $stored_draft['data']['bb_activity_post_feature_image']['id'] ) &&
+					isset( $draft_activity['allow_delete_post_feature_image'] ) &&
+					true === (bool) $draft_activity['allow_delete_post_feature_image'] &&
+					bb_user_can_manage_draft_attachment( $stored_draft['data']['bb_activity_post_feature_image']['id'], true, $draft_user_id )
+				) {
+					wp_delete_attachment( (int) $stored_draft['data']['bb_activity_post_feature_image']['id'], true );
 				}
 			}
 
-			// Delete feature image when discard the activity.
-			if (
-				! empty( $draft_activity['data']['bb_activity_post_feature_image'] ) &&
-				isset( $draft_activity['allow_delete_post_feature_image'] ) &&
-				true === (bool) $draft_activity['allow_delete_post_feature_image']
-			) {
-				$attachment_id = isset( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ? $draft_activity['data']['bb_activity_post_feature_image']['id'] : 0;
-				if ( 0 < (int) $attachment_id ) {
-					wp_delete_attachment( $attachment_id, true );
-				}
-			}
+			// Removal goes through the shared disposal path, which releases the
+			// draft stamps from any attachments NOT hard-deleted above (already
+			// deleted ones are skipped by its ownership check), deletes the row,
+			// and invalidates the memoized meta sizes. Hand-rolling those three
+			// steps here is what let this path drift from the maintenance ones
+			//.
+			bb_draft_dispose( $draft_user_id, $draft_activity['data_key'] );
 
 			$draft_activity['data'] = false;
 		}
@@ -1292,7 +1968,76 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 	wp_send_json_success(
 		array(
-			'draft_activity' => $draft_activity,
+			'draft_activity'     => $draft_activity,
+			'evicted_draft_keys' => $evicted_draft_keys,
+			'evicted_drafts'     => bb_draft_handback( $draft_user_id ?? bp_loggedin_user_id(), $evicted_drafts ),
+		)
+	);
+}
+
+/**
+ * Fetch the logged-in member's stored activity draft for one draft key.
+ *
+ * Used by the composer's lazy restore: the draft is no longer echoed into
+ * page HTML, so when localStorage is empty and `has_draft` is localized as
+ * true the JS requests the server copy through this endpoint. The key is
+ * validated with the same key-shape rules as the save path; posting
+ * capability is deliberately NOT required - a member who lost posting
+ * rights must still be able to read their own stored draft.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_nouveau_ajax_get_draft_activity() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	$user_id  = bp_loggedin_user_id();
+	$data_key = isset( $_POST['data_key'] ) ? sanitize_text_field( wp_unslash( $_POST['data_key'] ) ) : '';
+	$object   = isset( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
+	$item_id  = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0;
+
+	if ( ! bb_draft_validate_activity_data_key( $data_key, $object, $item_id, $user_id, 'manage' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_activity = bp_get_user_meta( $user_id, $data_key, true );
+	$owed           = bb_draft_handback( $user_id );
+
+	// A held draft of this key may still wait in the overflow (F-03).
+	if ( ! isset( $owed[ $data_key ] ) ) {
+		$owed = array_merge(
+			$owed,
+			bb_draft_promote_evicted(
+				$user_id,
+				function ( $key ) use ( $data_key ) {
+					return $key === $data_key;
+				}
+			)
+		);
+	}
+
+	// Nothing stored, but this key was evicted and its hand-back never reached
+	// the browser: restore the held copy (V06).
+	if ( ( empty( $draft_activity ) || ! is_array( $draft_activity ) ) && isset( $owed[ $data_key ] ) && is_array( $owed[ $data_key ] ) ) {
+		$draft_activity = $owed[ $data_key ];
+	} elseif ( ! is_array( $draft_activity ) || empty( $draft_activity ) ) {
+		// A row that is not a draft (corrupt, or a legacy empty value) can never
+		// be restored, but its presence makes every page view fetch it again.
+		// Read again first, bypassing the cache: a save to this key from another
+		// tab may have just replaced it with a real draft.
+		$fresh_draft = bb_draft_fresh_value( $user_id, $data_key );
+
+		if ( null !== $fresh_draft && ( ! is_array( $fresh_draft ) || empty( $fresh_draft ) ) ) {
+			bb_draft_dispose( $user_id, $data_key );
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'draft_activity' => ( ! empty( $draft_activity ) && is_array( $draft_activity ) ) ? $draft_activity : false,
+			// Evictions whose hand-back never reached this browser.
+			'evicted_drafts' => $owed,
 		)
 	);
 }
@@ -1505,6 +2250,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
  * Get more comments.
  *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION] The activity and the parent comment must be readable, in their group and thread.
  *
  * @return void
  */
@@ -1571,6 +2317,19 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 			)
 		);
 	}
+
+	// Guests can call this, so the activity and the comment whose replies are loaded must
+	// both be readable, in their group and thread.
+	if (
+		! bb_activity_user_can_view( $activity_id ) ||
+		! bb_activity_user_can_view( $parent_commment )
+	) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
+			)
+		);
+	}
 	$comments = BP_Activity_Activity::append_comments(
 		array( $parent_commment ),
 		'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
@@ -1629,6 +2388,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
  * Get particular activity to sync when activity modal is closed.
  *
  * @since BuddyBoss 2.5.80
+ * @since BuddyBoss [BBVERSION] Refuses activities the current user cannot view.
  *
  * @return void
  */
@@ -1659,6 +2419,15 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	}
 
 	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+
+	// Guests can call this, so check the activity and its root post before rendering it (PROD-10649).
+	if ( ! bb_activity_user_can_view( $activity_id ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
+	}
 
 	$args = array(
 		'in'               => $activity_id,
