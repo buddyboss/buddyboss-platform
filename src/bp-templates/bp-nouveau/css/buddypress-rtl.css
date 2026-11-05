@@ -1664,6 +1664,21 @@ a.layout-grid-view {
   font-size: 12px;
   margin-right: 5px;
 }
+#whats-new-form .bb-draft-save-feedback,
+#whats-new-form .bb-draft-retention-note {
+  display: none;
+}
+#whats-new-form.focus-in .bb-draft-save-feedback,
+#whats-new-form.focus-in .bb-draft-retention-note {
+  display: flex;
+}
+#whats-new-form.focus-in .bb-draft-save-feedback ~ .bb-draft-retention-note {
+  display: none;
+}
+
+.bb-draft-save-feedback ~ .bb-draft-retention-note.bp-feedback {
+  display: none;
+}
 
 #whats-new-form.focus-in--privacy #whats-new-privacy-stage {
   display: block;
@@ -3958,6 +3973,7 @@ input.search-query-input {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 10px 0;
+  overflow-wrap: break-word;
 }
 
 .activity-list .activity-item .activity-content .activity-header,
