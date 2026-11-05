@@ -6086,6 +6086,8 @@ function bb_bp_get_add_follow_button( $button ) {
  * Function to send email and notification to followers when new activity post created.
  *
  * @since BuddyBoss 2.2.3
+ * @since BuddyBoss [BBVERSION] Accepts 'activity_id' and loads the activity from it when no
+ *                              'activity' object is passed (queued jobs store the id).
  *
  * @param array $args Array of arguments.
  */
@@ -6094,12 +6096,20 @@ function bb_activity_following_post_notification( $args ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'activity'  => '',
-			'usernames' => array(),
-			'item_id'   => '',
-			'paged'     => 1,
+			'activity'    => '',
+			'activity_id' => 0,
+			'usernames'   => array(),
+			'item_id'     => '',
+			'paged'       => 1,
 		)
 	);
+
+	if ( empty( $r['activity'] ) && ! empty( $r['activity_id'] ) ) {
+		$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
+		if ( ! empty( $activity->id ) ) {
+			$r['activity'] = $activity;
+		}
+	}
 
 	$per_page       = apply_filters( 'bb_following_min_count', 20 );
 	$follower_users = bp_get_followers(
@@ -6277,11 +6287,21 @@ function bb_is_group_activity_comment( $comment = 0 ) {
  *
  * @since BuddyBoss 2.3.70
  * @since BuddyBoss 2.4.70 removed the $paged parameter.
+ * @since BuddyBoss [BBVERSION] Queues the activity id instead of the activity object.
  *
  * @param array $args  Array of arguments.
  */
 function bb_activity_create_following_post_notification( $args ) {
 	global $bb_background_updater;
+
+	// Store the id, not the object: a stored BP_Activity_Activity can only be read back
+	// while that class name exists. bb_activity_following_post_notification() loads it again.
+	if ( ! empty( $args['activity'] ) && is_object( $args['activity'] ) ) {
+		if ( empty( $args['activity_id'] ) && ! empty( $args['activity']->id ) ) {
+			$args['activity_id'] = (int) $args['activity']->id;
+		}
+		unset( $args['activity'] );
+	}
 
 	$bb_background_updater->data(
 		array(
