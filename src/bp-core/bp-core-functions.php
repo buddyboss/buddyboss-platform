@@ -7650,6 +7650,35 @@ function bb_enabled_legacy_email_preference() {
 }
 
 /**
+ * Get the admin "main" setting of each saved notification type.
+ *
+ * Rows of the `bb_enabled_notification` option that have no `main` key (for example
+ * a Settings 2.0 save that only changed an email/web/app sub-type) are skipped, so the
+ * notification type falls back to its registered default.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $enabled_all_notification Saved `bb_enabled_notification` option value.
+ *
+ * @return array Map of notification key => 'yes'|'no'.
+ */
+function bb_get_enabled_notification_main_settings( $enabled_all_notification ) {
+	$enabled_notification = array();
+
+	if ( empty( $enabled_all_notification ) || ! is_array( $enabled_all_notification ) ) {
+		return $enabled_notification;
+	}
+
+	foreach ( $enabled_all_notification as $key => $value ) {
+		if ( is_array( $value ) && isset( $value['main'] ) ) {
+			$enabled_notification[ $key ] = $value['main'];
+		}
+	}
+
+	return array_filter( $enabled_notification );
+}
+
+/**
  * Render the notification settings on the front end.
  *
  * @since BuddyBoss 1.9.3
@@ -7670,7 +7699,7 @@ function bb_render_notification( $notification_group ) {
 	}
 
 	$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-	$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+	$enabled_notification          = bb_get_enabled_notification_main_settings( $enabled_all_notification );
 	$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 	$options['fields'] = array_filter(
@@ -8065,7 +8094,7 @@ function bb_get_modern_notification_admin_settings_is_enabled( $notification_key
 		}
 
 		$default_enabled_notifications = array_column( $options['fields'], 'default', 'key' );
-		$enabled_notification          = array_filter( array_combine( array_keys( $enabled_all_notification ), array_column( $enabled_all_notification, 'main' ) ) );
+		$enabled_notification          = bb_get_enabled_notification_main_settings( $enabled_all_notification );
 		$enabled_notification          = array_merge( $default_enabled_notifications, $enabled_notification );
 
 		$fields = array_filter(
