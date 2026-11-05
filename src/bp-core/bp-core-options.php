@@ -99,9 +99,6 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
 
-		// Group Subscriptions.
-		'bb_enable_group_subscriptions'              => true,
-
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
 
@@ -2445,28 +2442,6 @@ function bb_get_default_custom_upload_group_cover() {
 }
 
 /**
- * Is group subscription turned off?
- *
- * @since BuddyBoss 2.2.8
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- *
- * @return bool True if group subscription is enabled, otherwise false.
- */
-function bb_enable_group_subscriptions( $default = true ) {
-
-	/**
-	 * Filters whether group subscription is turned off.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 *
-	 * @param bool $value Whether group subscription is turned off.
-	 */
-	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
-}
-
-/**
  * Get profile slug format.
  *
  * @since BuddyBoss 2.3.1
@@ -2629,7 +2604,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 		 * call, before the module loads at bp_include:20.
 		 */
 		$provider_available =
-			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			bb_addons_provides_module( 'pinned-posts' )
 			|| (
 				function_exists( 'bb_activity_pin_unpin_post' )
 				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' )
@@ -2858,7 +2833,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 		// licensed site would report emotions "available" with nothing behind it.
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
-			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| bb_addons_provides_module( 'reactions' )
 			|| (
 				function_exists( 'bp_register_reaction' )
 				&& function_exists( 'bbp_pro_is_license_valid' )

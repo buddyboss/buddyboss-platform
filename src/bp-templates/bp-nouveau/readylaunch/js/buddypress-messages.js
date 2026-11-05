@@ -6,6 +6,27 @@ window.bp = window.bp || {};
 
 ( function( exports, $ ) {
 
+	/**
+	 * Paste replacements that keep the text of a pasted table.
+	 *
+	 * Spreadsheet copies (Google Sheets, Excel, Numbers) are an HTML table, and
+	 * the table tags are in this editor's cleanTags, which removes them WITH
+	 * their text: the paste inserted nothing (F-07). Run before MediumEditor's
+	 * own clean-up, these turn each row into a paragraph and separate cells
+	 * with a space, and drop the sheet's inline <style> block.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var bbTablePasteReplacements = [
+		[ new RegExp( /<style[^>]*>[\s\S]*?<\/style>/gi ), '' ],
+		[ new RegExp( /<\/?(?:colgroup|col)\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<\/?(?:table|thead|tbody|tfoot|caption)\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<tr\b[^>]*>/gi ), '<p>' ],
+		[ new RegExp( /<\/tr>/gi ), '</p>' ],
+		[ new RegExp( /<t[dh]\b[^>]*>/gi ), '' ],
+		[ new RegExp( /<\/t[dh]>/gi ), ' ' ]
+	];
+
 	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
@@ -2347,6 +2368,7 @@ window.bp = window.bp || {};
 									[new RegExp( /<\/h[1-6]/gi ), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								preCleanReplacements: bbTablePasteReplacements,
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav', 'img' ],
 								unwrapTags: []
 							},
@@ -3337,7 +3359,8 @@ window.bp = window.bp || {};
 
 			initialize: function( options ) {
 				this.options = options || {};
-				this.giphy   = new window.Giphy( bbRlMedia.gif_api_key );
+				// The GIPHY library ships with BuddyBoss Add-ons; without it the picker cannot search.
+				this.giphy   = 'undefined' !== typeof window.Giphy ? new window.Giphy( bbRlMedia.gif_api_key ) : null;
 
 				this.gifDataItems = new bp.Collections.GifDatas();
 				this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -3376,6 +3399,10 @@ window.bp = window.bp || {};
 			},
 
 			searchGif: function( q ) {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.q 		= q;
 				self.offset = 0;
@@ -3445,6 +3472,10 @@ window.bp = window.bp || {};
 			},
 
 			loadTrending: function() {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self 	= this;
 				self.offset = 0;
 				self.q 		= null;
