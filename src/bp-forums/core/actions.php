@@ -437,9 +437,9 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  *
  * @since BuddyBoss 2.0.4
  * @since BuddyBoss 3.6.1 Only flags or deletes the user's own unsaved draft attachments.
- * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
+ * @since BuddyBoss 3.7.1 Added the size caps, the key validation and
  *                              the `evicted_draft_keys` response field.
- * @since BuddyBoss [BBVERSION] Writes merge onto a fresh read of the row
+ * @since BuddyBoss 3.7.1 Writes merge onto a fresh read of the row
  *                              instead of writing the whole row back.
  */
 function bb_post_topic_reply_draft() {
@@ -1639,7 +1639,7 @@ function bb_post_topic_reply_draft() {
  * longer echoed into forum page HTML, so the JS requests it once through
  * this endpoint before initializing the topic/reply forms.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  */
 function bb_get_topic_reply_drafts() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {

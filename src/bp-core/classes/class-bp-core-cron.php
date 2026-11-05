@@ -99,4 +99,21 @@ class BP_Core_Cron {
 			}
 		}
 	}
+
+	/**
+	 * Schedule a single cron event if it isn't already scheduled.
+	 *
+	 * @since BuddyBoss 3.7.1
+	 *
+	 * @param array $cron Cron array with 'hook' and 'recurrence' keys.
+	 */
+	protected function schedule_single( $cron ) {
+		// Schedule if not scheduled already.
+		if (
+			! wp_next_scheduled( $cron['hook'] )
+			&& apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true )
+		) {
+			wp_schedule_event( time(), $cron['recurrence'], $cron['hook'] );
+		}
+	}
 }
