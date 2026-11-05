@@ -1070,7 +1070,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				}
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_messages_video_support_enabled() ) {
+			if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
 				$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
 
 				if ( ! empty( $video_ids ) ) {
@@ -2708,7 +2708,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		if (
-			bp_is_active( 'media' ) &&
+			bp_is_active( 'document' ) &&
 			(
 				(
 					$group_id &&
@@ -2929,7 +2929,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->user_can_upload_media           = bb_user_has_access_upload_media( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_document        = bb_user_has_access_upload_document( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_video           = bb_user_has_access_upload_video( 0, $login_user_id, 0, $thread_id, 'message' );
-	$thread->user_can_upload_gif             = bb_user_has_access_upload_gif( 0, $login_user_id, 0, $thread_id, 'message' );
+	$thread->user_can_upload_gif             = bb_media_gif_picker_available() && bb_user_has_access_upload_gif( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->user_can_upload_emoji           = bb_user_has_access_upload_emoji( 0, $login_user_id, 0, $thread_id, 'message' );
 	$thread->is_thread_archived              = ( 0 < $is_thread_archived ) ? true : false;
 

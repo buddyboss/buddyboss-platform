@@ -105,6 +105,10 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 			)
 		);
 
+		if ( 'video' === $type && ! class_exists( 'BP_Video' ) ) {
+			$this->markTestSkipped( 'The video component is not loaded (it ships in BuddyBoss Add-ons).' );
+		}
+
 		$media                = 'video' === $type ? new BP_Video() : new BP_Media();
 		$media->blog_id       = get_current_blog_id();
 		$media->attachment_id = $attachment_id;
@@ -142,6 +146,10 @@ class BP_Tests_Activity_Comment_Attachment_Delete extends BP_UnitTestCase {
 				'post_type'      => 'attachment',
 			)
 		);
+
+		if ( ! class_exists( 'BP_Document' ) ) {
+			$this->markTestSkipped( 'The document component is not loaded (it ships in BuddyBoss Add-ons).' );
+		}
 
 		$document                = new BP_Document();
 		$document->blog_id       = get_current_blog_id();
