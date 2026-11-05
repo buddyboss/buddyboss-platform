@@ -33,7 +33,13 @@ class BB_Tests_Settings_BbNotificationSettingsUserId extends BP_UnitTestCase {
 	}
 
 	protected function go_to_notification_settings( $user_id ) {
-		$this->go_to( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() . '/notifications/' );
+		$this->go_to_url( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() . '/notifications/' );
+	}
+
+	protected function go_to_url( $url ) {
+		// go_to() re-runs init, which registers the ReadyLaunch header block a second time.
+		$this->setExpectedIncorrectUsage( 'WP_Block_Type_Registry::register' );
+		$this->go_to( $url );
 	}
 
 	public function test_member_on_own_screen() {
@@ -60,7 +66,7 @@ class BB_Tests_Settings_BbNotificationSettingsUserId extends BP_UnitTestCase {
 
 	public function test_no_displayed_member_uses_logged_in_member() {
 		self::set_current_user( $this->admin );
-		$this->go_to( home_url( '/' ) );
+		$this->go_to_url( home_url( '/' ) );
 
 		$this->assertSame( $this->admin, bb_get_notification_settings_user_id() );
 	}
@@ -135,6 +141,27 @@ class BB_Tests_Settings_BbNotificationSettingsUserId extends BP_UnitTestCase {
 
 		$this->assertSame( 'no', bp_get_user_meta( $this->member, 'enable_notification', true ), 'Save on the member\'s screen stores the submitted value for that member.' );
 		$this->assertSame( 'yes', bp_get_user_meta( $this->admin, 'enable_notification', true ), 'The admin\'s own preference is left alone.' );
+	}
+
+	public function test_legacy_activity_mentions_row_shows_the_displayed_members_name() {
+		if ( ! bp_is_active( 'activity' ) || ! bp_activity_do_mentions() ) {
+			$this->markTestSkipped( 'Activity mentions are not active in this test environment.' );
+		}
+
+		add_filter( 'bb_enable_legacy_notification_preference', '__return_true' );
+
+		self::set_current_user( $this->admin );
+		$this->go_to_notification_settings( $this->member );
+
+		ob_start();
+		bp_activity_screen_notification_settings();
+		$html = ob_get_clean();
+
+		remove_filter( 'bb_enable_legacy_notification_preference', '__return_true' );
+
+		// esc_html__() encodes the quotes around the mention name.
+		$this->assertStringContainsString( '&quot;@' . bp_activity_get_user_mentionname( $this->member ) . '&quot;', $html, 'The legacy label names the member being edited.' );
+		$this->assertStringNotContainsString( '&quot;@' . bp_activity_get_user_mentionname( $this->admin ) . '&quot;', $html, 'The legacy label must not name the admin.' );
 	}
 
 	/**
