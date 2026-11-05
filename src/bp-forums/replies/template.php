@@ -1214,9 +1214,9 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
 		$author_name = __( 'Anonymous', 'buddyboss' );
 	}
 
-	// Encode possible UTF8 display names.
-	if ( seems_utf8( $author_name ) === false ) {
-		$author_name = utf8_encode( $author_name );
+	// Encode possible UTF8 display names (utf8_encode() is deprecated since PHP 8.2).
+	if ( seems_utf8( $author_name ) === false && function_exists( 'mb_convert_encoding' ) ) {
+		$author_name = mb_convert_encoding( $author_name, 'UTF-8', 'ISO-8859-1' );
 	}
 
 	return apply_filters( 'bbp_get_reply_author_display_name', $author_name, $reply_id );
