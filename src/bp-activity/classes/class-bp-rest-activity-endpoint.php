@@ -2851,7 +2851,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * (privacy media/video/document), so a comment on one of them is readable only when
 	 * the post or comment the sub-activity belongs to (secondary_item_id) is.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param BP_Activity_Activity|object $activity Activity object.
 	 *

@@ -236,7 +236,7 @@ class BB_Activity_Readylaunch {
 	 * Load more comments for the activity.
 	 *
 	 * @since BuddyBoss 2.9.00
-	 * @since BuddyBoss [BBVERSION] The activity and the parent comment must be readable, in their group and thread.
+	 * @since BuddyBoss 3.7.1 The activity and the parent comment must be readable, in their group and thread.
 	 */
 	public function bb_rl_activity_loadmore_comments() {
 		if ( ! bp_is_post_request() ) {

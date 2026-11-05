@@ -113,7 +113,7 @@ class BP_Core_Cron {
 	/**
 	 * Schedule a single cron event if it isn't already scheduled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param array $cron Cron array with 'hook' and 'recurrence' keys.
 	 */

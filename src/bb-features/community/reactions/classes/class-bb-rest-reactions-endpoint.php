@@ -1007,7 +1007,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * reaction data, so both follow the activity's group and privacy rules. Item types other
 	 * than activity posts and comments are left to their own checks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param string $item_type Reaction item type.
 	 * @param int    $item_id   Reaction item ID.

@@ -521,7 +521,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] The user must be able to read the activity being commented on.
+	 * @since BuddyBoss 3.7.1 The user must be able to read the activity being commented on.
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
@@ -1177,7 +1177,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 *
 	 * @return boolean
 	 * @since 0.1.0
-	 * @since BuddyBoss [BBVERSION] Checks the parent activity's group access, and a comment against its root activity.
+	 * @since BuddyBoss 3.7.1 Checks the parent activity's group access, and a comment against its root activity.
 	 */
 	protected function can_see( $request ) {
 

@@ -1148,7 +1148,7 @@ function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
  * Set up activity arguments for use with the 'media' scope.
  *
  * @since BuddyBoss 1.4.2
- * @since BuddyBoss [BBVERSION] Only matches when specific activity IDs are requested.
+ * @since BuddyBoss 3.7.1 Only matches when specific activity IDs are requested.
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.

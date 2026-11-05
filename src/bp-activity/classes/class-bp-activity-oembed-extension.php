@@ -78,7 +78,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * Validates the URL to determine if the activity item is valid.
 	 *
 	 * @since BuddyPress 2.6.0
-	 * @since BuddyBoss [BBVERSION] Refuses activities the current user cannot view.
+	 * @since BuddyBoss 3.7.1 Refuses activities the current user cannot view.
 	 *
 	 * @param  string $url The URL to check.
 	 * @return int|bool Activity ID on success; boolean false on failure.
