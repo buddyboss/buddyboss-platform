@@ -426,7 +426,11 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			$new_field_column_data_types
 		);
 		if ( $inserted ) {
-			$new_field_id    = $wpdb->insert_id;
+			$new_field_id = $wpdb->insert_id;
+
+			// A field was added: invalidate every cached bp_profile_get_field_groups() key.
+			wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
+
 			$metas_cache_key = 'field_meta_' . $template_field_id;
 			if ( ! isset( $metas_cache[ $metas_cache_key ] ) ) {
 				$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $template_field_id ), ARRAY_A );

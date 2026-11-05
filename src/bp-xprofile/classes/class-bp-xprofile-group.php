@@ -794,6 +794,7 @@ class BP_XProfile_Group {
 
 		// Purge profile field group cache.
 		wp_cache_delete( 'all', 'bp_xprofile_groups' );
+		wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 
 		$bp = buddypress();
 

@@ -192,6 +192,8 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 function xprofile_clear_profile_groups_object_cache( $group_obj ) {
 	wp_cache_delete( 'all', 'bp_xprofile_groups' );
 	wp_cache_delete( $group_obj->id, 'bp_xprofile_groups' );
+	// Invalidates the per-profile-type keys of bp_profile_get_field_groups() too.
+	wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 	wp_cache_delete( 'bp_xprofile_delete_for_group_' . $group_obj->id, 'bp_xprofile' );
 }
 add_action( 'xprofile_group_after_delete', 'xprofile_clear_profile_groups_object_cache' );
@@ -214,6 +216,8 @@ function xprofile_clear_profile_field_object_cache( $field_obj ) {
 	// the global 'all' cache.
 	wp_cache_delete( 'all', 'bp_xprofile_groups' );
 	wp_cache_delete( $field_obj->group_id, 'bp_xprofile_groups' );
+	// Invalidates the per-profile-type keys of bp_profile_get_field_groups() too.
+	wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 	wp_cache_delete( 'bp_xprofile_field_get_type_' . $field_obj->id, 'bp_xprofile' );
 	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $field_obj->id, 'bp_xprofile' );
 	wp_cache_delete( 'bp_xprofile_delete_for_group_' . $field_obj->group_id, 'bp_xprofile' );
@@ -225,9 +229,13 @@ add_action( 'xprofile_fields_deleted_field', 'xprofile_clear_profile_field_objec
  * Clears member_type cache when a field's profile types are updated.
  *
  * @since BuddyPress 2.4.0
+ * @since BuddyBoss [BBVERSION] Also invalidates the cached profile field groups.
  */
 function bp_xprofile_clear_member_type_cache() {
 	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
+
+	// Which fields each profile type sees has changed.
+	wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 }
 add_action( 'bp_xprofile_field_set_member_type', 'bp_xprofile_clear_member_type_cache' );
 
@@ -271,6 +279,8 @@ add_action( 'update_option_bp-xprofile-fullname-field-name', 'xprofile_clear_ful
  * Clear a field's caches.
  *
  * @since BuddyPress 2.4.0
+ * @since BuddyBoss [BBVERSION] Also invalidates the cached profile field groups, and runs
+ *                              after a field is deleted.
  *
  * @param int|BP_XProfile_Field $field A field ID or a field object.
  * @return bool False on failure.
@@ -290,8 +300,12 @@ function bp_xprofile_clear_field_cache( $field ) {
 	wp_cache_delete( $field_id, 'xprofile_meta' );
 	wp_cache_delete( 'bp_xprofile_field_get_type_' . $field_id, 'bp_xprofile' );
 	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $field_id, 'bp_xprofile' );
+
+	// Invalidates every cached bp_profile_get_field_groups() key ('all' and per profile type).
+	wp_cache_delete( 'last_changed', 'bp_xprofile_groups' );
 }
 add_action( 'xprofile_field_after_save', 'bp_xprofile_clear_field_cache' );
+add_action( 'xprofile_field_after_delete', 'bp_xprofile_clear_field_cache' );
 
 /**
  * Clear the field-name cache.

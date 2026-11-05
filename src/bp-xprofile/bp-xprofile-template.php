@@ -1062,7 +1062,8 @@ function bp_get_profile_field_data( $args = '' ) {
  * Get all profile field groups.
  *
  * @since BuddyPress 2.1.0
- * @since BuddyBoss [BBVERSION] The cache holds field properties instead of field objects.
+ * @since BuddyBoss [BBVERSION] The cache holds field properties instead of field objects, and
+ *                              every key (also the per-profile-type ones) is invalidated on change.
  *
  * @return array $groups
  */
@@ -1089,10 +1090,20 @@ function bp_profile_get_field_groups() {
 	 * The cache holds the fields' public properties, not BP_XProfile_Field objects:
 	 * a cached object can only be read back while its class name exists. Anything
 	 * else (e.g. objects cached by an older version) is treated as a miss and replaced.
+	 *
+	 * Only 'all' is deleted by name when groups or fields change; the per-profile-type
+	 * keys are invalidated through the group's last_changed value stored with the entry.
 	 */
+	$last_changed = wp_cache_get_last_changed( 'bp_xprofile_groups' );
+
 	$groups = false;
 	$cached = wp_cache_get( $cache_key, 'bp_xprofile_groups' );
-	if ( is_array( $cached ) && isset( $cached['bb_fields_as_arrays'], $cached['groups'] ) && is_array( $cached['groups'] ) ) {
+	if (
+		is_array( $cached ) &&
+		isset( $cached['bb_fields_as_arrays'], $cached['groups'], $cached['last_changed'] ) &&
+		is_array( $cached['groups'] ) &&
+		$cached['last_changed'] === $last_changed
+	) {
 		$groups = array();
 		foreach ( $cached['groups'] as $cached_group ) {
 			$group = is_object( $cached_group ) ? clone $cached_group : $cached_group;
@@ -1142,6 +1153,7 @@ function bp_profile_get_field_groups() {
 			$cache_key,
 			array(
 				'bb_fields_as_arrays' => 1,
+				'last_changed'        => $last_changed,
 				'groups'              => $to_cache,
 			),
 			'bp_xprofile_groups'
