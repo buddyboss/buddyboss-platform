@@ -1,0 +1,165 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Login Redirects
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Global Redirects section — constrain fields to match Figma.
+#section-global_redirects {
+
+	.bb-async-select {
+		max-width: 300px;
+	}
+
+	// Custom URL input (grouped no-label field below dropdown).
+	.bb-admin-settings-form__field--grouped.bb-admin-settings-form__field--no-label {
+
+		.bb-admin-settings-form__field-input-wrapper input[type="text"] {
+			max-width: 300px;
+		}
+	}
+}
+
+// `.bb-async-select__input-wrapper` override removed — the searchable
+// select was refactored to a button-trigger + in-dropdown-search pattern
+// (Settings 2.0 design directive: searchable selects must not allow
+// inline searching; search lives inside the dropdown). The new trigger
+// renders its own chevron icon (`.bb-async-select__trigger-chevron`),
+// so painting a second background-image chevron on the (now non-existent)
+// `<input>` is no longer needed.
+
+// Profile Type Redirects — paginated list with per-type login/logout dropdowns.
+//
+// The shared `.bb-admin-feature-settings__section-description` carries 24px
+// padding-bottom + 24px margin-bottom (~48px total) below it by default. In
+// Figma, that empty band is replaced by a thin horizontal divider (matching
+// the row-to-row separators) between the description and the first row.
+//
+// Override the spacing AND add the divider, scoped to this section only via
+// the id selector so no other section's description picks up a stray border.
+#section-profile_type_redirects > .bb-admin-feature-settings__section-body
+	> .bb-admin-feature-settings__section-description {
+	padding-bottom: 24px;
+	margin-bottom: 0;
+	border-bottom: 1px solid $bb-border-secondary-color;
+}
+
+.bb-profile-type-redirects {
+	width: 100%;
+
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 24px 0;
+		width: 100%;
+	}
+
+	&__empty {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		padding: 16px 0;
+	}
+
+	&__row {
+		display: flex;
+		gap: 24px;
+		padding: 24px 0;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&--saving {
+			opacity: 0.6;
+			pointer-events: none;
+		}
+	}
+
+	&__type {
+		flex: 0 0 200px;
+		display: flex;
+		align-items: flex-start;
+		padding-top: 28px;
+	}
+
+	&__badge {
+		display: inline-block;
+		padding: 4px 12px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__fields {
+		flex: 1;
+		display: flex;
+		gap: 24px;
+	}
+
+	&__field {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	&__field-label {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-secondary-color;
+	}
+
+	// Pagination — right-aligned, minimal style matching Figma.
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 4px;
+		padding: 16px 0 0;
+	}
+
+	&__page-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 32px;
+		height: 32px;
+		padding: 0 8px;
+		background: none;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-md;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		&:hover:not(:disabled) {
+			border-color: $bb-border-secondary-color;
+		}
+
+		&:disabled {
+			color: $bb-text-disabled-color;
+			cursor: default;
+		}
+
+		&--active {
+			border-color: $bb-border-secondary-color;
+			font-weight: 600;
+		}
+	}
+
+	&__page-ellipsis {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 24px;
+		height: 32px;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+}

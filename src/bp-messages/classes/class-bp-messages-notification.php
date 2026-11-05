@@ -92,6 +92,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{{sender.name}}} sent you a message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new private message', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
+				'group'               => 'messages',
 			),
 			'bb_messages_new'
 		);
@@ -108,6 +109,7 @@ class BP_Messages_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "You have {{{unread.count}}} unread messages.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 					'situation_label'     => __( 'A member receives a new private message', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
+					'group'               => 'messages',
 				),
 				'bb_messages_new'
 			);

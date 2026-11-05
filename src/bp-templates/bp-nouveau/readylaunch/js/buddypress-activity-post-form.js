@@ -170,7 +170,16 @@ window.bp = window.bp || {};
 			this.dropzone = null;
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
-			window.Dropzone.autoDiscover = false;
+			// Guarded — `bp-media-dropzone` (which loads the Dropzone library) is only
+			// enqueued when at least one media feature is active (see
+			// bp-templates/bp-nouveau/includes/media/functions.php). When all of
+			// profile/group/messages media + group docs/albums + GIF + emoji are off,
+			// Dropzone is undefined and the unguarded assignment throws TypeError,
+			// halting `start()` so the post form composer never renders. Mirrors
+			// the same guard pattern used at buddypress-activity.js:76.
+			if ( 'undefined' !== typeof window.Dropzone ) {
+				window.Dropzone.autoDiscover = false;
+			}
 
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 				this.dropzone_options = {
@@ -373,6 +382,40 @@ window.bp = window.bp || {};
 			}
 
 			bp.Views.ActivityHeader.prototype.resetMultiMediaOptions();
+		},
+
+		/**
+		 * Puts the fresh topic list into a restored draft and keeps the stored choice only when it is still in that list.
+		 *
+		 * A draft stores a copy of the topic list taken when it was saved. Topics can be deleted, renamed,
+		 * reordered or restricted after that, so the list and the choice are taken from the current page instead.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} draftTopics Draft topics data: topic_id, topic_name and topic_lists. Changed in place.
+		 * @param {Array}  freshLists  Topic list localized for the current page.
+		 */
+		reconcileDraftTopics: function ( draftTopics, freshLists ) {
+			freshLists              = _.isArray( freshLists ) ? freshLists : [];
+			draftTopics.topic_lists = freshLists;
+
+			var draftTopicId = parseInt( draftTopics.topic_id, 10 ) || 0;
+			if ( ! draftTopicId ) {
+				return;
+			}
+
+			var chosenTopic = _.find( freshLists, function ( topic ) {
+				return parseInt( topic.topic_id, 10 ) === draftTopicId;
+			} );
+
+			if ( chosenTopic ) {
+				// Pick up a rename made after the draft was saved.
+				draftTopics.topic_name = chosenTopic.name;
+			} else {
+				// The topic was deleted or the member can no longer post in it.
+				draftTopics.topic_id   = 0;
+				draftTopics.topic_name = '';
+			}
 		},
 
 		displayEditDraftActivityData: function ( activity_data, bpActivityEvent, activity_URL_preview ) {
@@ -581,9 +624,12 @@ window.bp = window.bp || {};
 
 			// Inject GIF.
 			if ( ! _.isUndefined( activity_data.gif ) && Object.keys( activity_data.gif ).length ) {
-				// close and destroy existing media instance.
-				self.activityToolbar.toggleGifSelector( bpActivityEvent );
-				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
+				// Open the GIF picker when it is available. The saved GIF goes on the form model either
+				// way, so it is kept on save without a GIF provider.
+				if ( ! _.isUndefined( self.activityToolbar ) ) {
+					self.activityToolbar.toggleGifSelector( bpActivityEvent );
+				}
+				self.postForm.model.set( 'gif_data', activity_data.gif );
 
 				// Make tool box button disable.
 				self.bbMakeToolBoxButtonDisabled(
@@ -799,11 +845,31 @@ window.bp = window.bp || {};
 			) {
 				activity_data.topics.topic_id   = activity_data.topics.topic_id || 0;
 				activity_data.topics.topic_name = activity_data.topics.topic_name || '';
+
+				var isEditActivity = 0 < parseInt( activity_data.id, 10 );
 				if (
+					isEditActivity &&
 					activity_data.item_id &&
 					'groups' === activity_data.object
 				) {
+					// Edit a group post: keep the fresh group topic list supplied with the activity (PROD-8796).
 					activity_data.topics.topic_lists = activity_data.topics.topic_lists;
+				} else if (
+					! isEditActivity &&
+					activity_data.item_id &&
+					'groups' === activity_data.object
+				) {
+					// Group draft: the page list belongs to this group only on the group's own page.
+					// Elsewhere there is no fresh list for the group, so the draft's list is kept.
+					if (
+						'group' === BP_Nouveau.activity.params.object &&
+						parseInt( BP_Nouveau.activity.params.item_id, 10 ) === parseInt( activity_data.item_id, 10 )
+					) {
+						self.reconcileDraftTopics( activity_data.topics, BP_Nouveau.activity.params.topics.topic_lists );
+					}
+				} else if ( ! isEditActivity ) {
+					// Draft: use the fresh list for this page and drop a stored choice that is no longer in it.
+					self.reconcileDraftTopics( activity_data.topics, BP_Nouveau.activity.params.topics.topic_lists );
 				} else {
 					activity_data.topics.topic_lists = BP_Nouveau.activity.params.topics.topic_lists;
 				}
@@ -1011,10 +1077,8 @@ window.bp = window.bp || {};
 
 			self.postForm.model.set( 'content', content, {silent: true} );
 
-			var activityPostTitle = self.postForm.$el.find( '#bb-rl-whats-new-title' ).val();
-			if ( activityPostTitle ) {
-				self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
-			}
+			var activityPostTitle = self.postForm.$el.find( '#bb-rl-whats-new-title' ).val() || '';
+			self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
 
 			// Silently add meta.
 			self.postForm.model.set( meta, {silent: true} );
@@ -2329,7 +2393,9 @@ window.bp = window.bp || {};
 				}
 
 				this.options = options || {};
-				this.giphy   = new window.Giphy( bbRlMedia.gif_api_key );
+				// The GIPHY library ships with BuddyBoss Add-ons. Without it the view still keeps
+				// an attached GIF (activity and comment edits) but cannot search.
+				this.giphy   = 'undefined' !== typeof window.Giphy ? new window.Giphy( bbRlMedia.gif_api_key ) : null;
 
 				this.gifDataItems = new bp.Collections.GifDatas();
 				this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -2376,6 +2442,10 @@ window.bp = window.bp || {};
 			},
 
 			searchGif: function ( q ) {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self    = this;
 				self.q      = q;
 				self.offset = 0;
@@ -2474,6 +2544,10 @@ window.bp = window.bp || {};
 			},
 
 			loadTrending: function () {
+				if ( ! this.giphy ) {
+					return;
+				}
+
 				var self    = this;
 				self.offset = 0;
 				self.q      = null;
@@ -3486,7 +3560,7 @@ window.bp = window.bp || {};
 				this.$el.html( this.template( this.model.toJSON() ) );
 				var whats_new_form = $( '#bb-rl-whats-new-form' );
 
-				if ( ! _.isUndefined( bbRlActivity.params.object ) && 'group' === bbRlActivity.params.object && 'group' === bbRlActivity.params.object ) {
+				if ( ! _.isUndefined( bbRlActivity.params.object ) && 'group' === bbRlActivity.params.object ) {
 					this.model.set(
 						{
 							item_name : bbRlActivity.params.item_name,
@@ -3497,13 +3571,14 @@ window.bp = window.bp || {};
 					var group_name = bbRlActivity.params.item_name;
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( group_name );
 
-					this.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					var $privacy_point = this.$el.find( '#bb-rl-activity-privacy-point' );
+					$privacy_point.removeClass().addClass( 'group bb-rl-activity-edit-group' );
 					// Display image of the group.
 					if ( bbRlActivity.params.group_avatar && false === bbRlActivity.params.group_avatar.includes( 'mystery-group' ) ) {
-						this.$el.find( '#bb-rl-activity-privacy-point span.bb-rl-bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bbRlActivity.params.group_avatar + '" alt=""/>' );
+						$privacy_point.find( 'span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bbRlActivity.params.group_avatar + '" alt="' + _.escape( group_name ) + '"/>' );
 					} else {
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon img' ).remove();
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
+						$privacy_point.find( 'span.group-bb-rl-privacy-point-icon img' ).remove();
+						$privacy_point.find( 'span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
 					}
 
 					bp.draft_activity.data.item_id            = bbRlActivity.params.item_id;
@@ -3526,13 +3601,14 @@ window.bp = window.bp || {};
 
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( bp.draft_activity.data.item_name );
 
-					this.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					var $privacy_point_draft = this.$el.find( '#bb-rl-activity-privacy-point' );
+					$privacy_point_draft.removeClass().addClass( 'group bb-rl-activity-edit-group' );
 					// display image of the group.
 					if ( bp.draft_activity.data.group_image && false === bp.draft_activity.data.group_image.includes( 'mystery-group' ) ) {
-						this.$el.find( '#bb-rl-activity-privacy-point span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bp.draft_activity.data.group_image + '" alt=""/>' );
+						$privacy_point_draft.find( 'span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bp.draft_activity.data.group_image + '" alt="' + _.escape( bp.draft_activity.data.item_name ) + '"/>' );
 					} else {
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon img' ).remove();
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
+						$privacy_point_draft.find( 'span.group-bb-rl-privacy-point-icon img' ).remove();
+						$privacy_point_draft.find( 'span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
 					}
 				}
 
@@ -4502,11 +4578,16 @@ window.bp = window.bp || {};
 					this.activityMedia = new bp.Views.ActivityMedia( { model: this.model } );
 					this.views.add( this.activityMedia );
 
-					this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
-					this.views.add( this.activityDocument );
+					// The document and video templates ship with BuddyBoss Add-ons; skip their views without them.
+					if ( document.getElementById( 'tmpl-activity-document' ) ) {
+						this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
+						this.views.add( this.activityDocument );
+					}
 
-					this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
-					this.views.add( this.activityVideo );
+					if ( document.getElementById( 'tmpl-activity-video' ) ) {
+						this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
+						this.views.add( this.activityVideo );
+					}
 				}
 
 				this.activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: this.model } );
@@ -5392,7 +5473,8 @@ window.bp = window.bp || {};
 
 			postUpdate: function ( event ) {
 				var self = this,
-					meta = {}, edit = false;
+					meta = {}, edit = false,
+					$form = ( event && event.target && $( event.target ).is( 'form' ) ) ? $( event.target ) : self.$el;
 
 				if ( event ) {
 					if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
@@ -5405,9 +5487,9 @@ window.bp = window.bp || {};
 				// unset all errors before submit.
 				self.model.unset( 'errors' );
 
-				// Set the content and meta.
+				// Set the content and meta from the submitted form.
 				_.each(
-					self.$el.serializeArray(),
+					$form.serializeArray(),
 					function ( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
@@ -5428,7 +5510,7 @@ window.bp = window.bp || {};
 				);
 
 				// Post content.
-				var $whatsNew        = self.$el.find( '#bb-rl-whats-new' ),
+				var $whatsNew        = $form.find( '#bb-rl-whats-new' ),
 					atwho_query      = $whatsNew.find( 'span.atwho-query' ),
 					atwhoQueryLength = atwho_query.length;
 				for ( var i = 0; i < atwhoQueryLength; i++ ) {
@@ -5458,16 +5540,15 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
-				var postTitle = self.$el.find( '#bb-rl-whats-new-title' );
-				if ( postTitle.length && postTitle.val() !== '' ) {
-					postTitle = postTitle.val();
+				var postTitle = $form.find( '#bb-rl-whats-new-title' ).val() || '';
+				if ( postTitle.length > 0 ) {
 					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
 					// Maximum 80 characters allowed.
 					if ( postTitle.length > maxPostTitleLength ) {
 						postTitle = postTitle.slice( 0, maxPostTitleLength );
 					}
-					self.model.set( 'post_title', postTitle, { silent: true } );
 				}
+				self.model.set( 'post_title', postTitle, { silent: true } );
 
 				// Silently add meta.
 				self.model.set( meta, { silent: true } );
@@ -5571,6 +5652,12 @@ window.bp = window.bp || {};
 				var topicSelector = $( '#buddypress .whats-new-topic-selector .bb-rl-topic-selector-list li' );
 				if ( topicSelector.length ) {
 					var topicId   = topicSelector.find( 'a.selected' ).data( 'topic-id' ) || 0;
+					var topics    = self.model.get( 'topics' );
+
+					// Editing a post whose topic the author can no longer pick: it is not in the list, so keep it.
+					if ( ! topicId && 0 < parseInt( data.id, 10 ) && topics && 0 < parseInt( topics.topic_id, 10 ) ) {
+						topicId = topics.topic_id;
+					}
 					data.topic_id = topicId;
 				}
 
@@ -5628,6 +5715,20 @@ window.bp = window.bp || {};
 						data  : data
 					}
 				);
+
+				// Force post_title from visible input right before send - ensures cleared title is always sent.
+				var $titleEl = $form.find( 'input#bb-rl-whats-new-title, input.bb-rl-whats-new-title' ).first();
+				if ( ! $titleEl.length ) {
+					$titleEl = $( 'input#bb-rl-whats-new-title, input.bb-rl-whats-new-title' ).filter( ':visible' ).first();
+				}
+				data.post_title = $titleEl.length ? ( $titleEl.val() || '' ).trim() : ( self.model.get( 'post_title' ) || '' );
+				if ( data.post_title.length > 0 && BP_Nouveau.activity.params.activity_post_title_maxlength ) {
+					data.post_title = data.post_title.slice( 0, BP_Nouveau.activity.params.activity_post_title_maxlength );
+				}
+				// Explicit flag when user cleared title during edit - ensures empty is saved even if empty params are stripped.
+				if ( edit && data.post_title.length === 0 ) {
+					data.post_title_cleared = 1;
+				}
 
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {

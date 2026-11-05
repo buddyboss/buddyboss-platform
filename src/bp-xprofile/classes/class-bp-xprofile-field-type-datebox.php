@@ -451,14 +451,16 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 			switch ( $setting ) {
 				case 'range_relative_start':
 				case 'range_relative_end':
-					$op_key = $setting . '_type';
-					if ( isset( $settings[ $op_key ] ) && 'past' === $settings[ $op_key ] ) {
-						$value = 0 - intval( $settings[ $setting ] );
-					} else {
-						$value = intval( $settings[ $setting ] );
-					}
+					if ( isset( $settings[ $setting ] ) ) {
+						$op_key = $setting . '_type';
+						if ( isset( $settings[ $op_key ] ) && 'past' === $settings[ $op_key ] ) {
+							$value = 0 - intval( $settings[ $setting ] );
+						} else {
+							$value = intval( $settings[ $setting ] );
+						}
 
-					$saved_settings[ $setting ] = $value;
+						$saved_settings[ $setting ] = $value;
+					}
 					break;
 
 				default:

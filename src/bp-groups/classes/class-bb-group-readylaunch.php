@@ -49,7 +49,6 @@ class BB_Group_Readylaunch {
 	 * @since BuddyBoss 2.9.00
 	 */
 	public function __construct() {
-		add_filter( 'bb_group_subscription_button_args', array( $this, 'bb_rl_update_group_subscription_button' ), 10, 1 );
 		add_filter( 'bb_nouveau_get_groups_bubble_buttons', array( $this, 'bb_rl_get_groups_bubble_buttons' ), 10, 2 );
 		add_filter( 'bb_group_creation_tab_number', array( $this, 'bb_group_creation_tab_number' ), 10, 2 );
 
@@ -68,28 +67,6 @@ class BB_Group_Readylaunch {
 		add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bb_rl_modify_group_request_membership_response' ), 10 );
 
 		add_action( 'wp_ajax_groups_membership_requested', 'bp_nouveau_ajax_joinleave_group' );
-	}
-
-	/**
-	 * Update group subscription button for ReadyLaunch.
-	 *
-	 * @since BuddyBoss 2.9.00
-	 *
-	 * @param array $button Button arguments.
-	 *
-	 * @return array Modified button arguments.
-	 */
-	public function bb_rl_update_group_subscription_button( $button ) {
-		$link_class    = ! empty( $button['link_class'] ) ? $button['link_class'] : '';
-		$is_subscribed = false !== strpos( $link_class, 'subscribed' ) && false === strpos( $link_class, 'not-subscribed' );
-		$icon_class    = $is_subscribed ? 'bb-icons-rl-bell-slash' : 'bb-icons-rl-bell';
-
-		$button['link_text']                           = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', '<i class="' . $icon_class . '"></i>', $button['link_text'] );
-		$button['button_attr']['data-title']           = $button['data-balloon'];
-		$button['button_attr']['data-title-displayed'] = str_replace( '<i class="bb-icon-l bb-icon-bell"></i>', $button['button_attr']['data-title'], $button['button_attr']['data-title-displayed'] );
-		$button['data-balloon-pos']                    = 'left';
-
-		return $button;
 	}
 
 	/**

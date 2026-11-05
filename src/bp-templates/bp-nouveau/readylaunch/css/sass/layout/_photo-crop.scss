@@ -304,6 +304,19 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 			.bb-rl-drag-drop-wrapper {
 				width: 104px;
 				height: 104px;
+
+				.drag-drop-buttons {
+					margin: 0;
+				}
+
+				.drag-drop-info,
+				.drag-drop-subtitle {
+					display: none;
+				}
+			}
+
+			#drag-drop-area {
+				height: auto;
 			}
 		}
 

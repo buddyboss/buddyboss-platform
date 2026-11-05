@@ -231,6 +231,10 @@
 		display: flex;
 		flex-wrap: wrap;
 
+		&:has(.bbp-topic-tags) {
+			margin: var(--bb-rl-space-100) 0;
+		}
+
 		.bbp-topic-tags {
 			width: 100%;
 			margin-bottom: var(--bb-rl-space-200);
@@ -395,6 +399,11 @@
 				margin-bottom: 0;
 				border-bottom: 0;
 			}
+		}
+
+		.bb_more_dropdown.open {
+			top: inherit;
+			bottom: 100%;
 		}
 	}
 
@@ -638,10 +647,6 @@
 
 	.bp-pagination-links {
 		margin-left: 0;
-
-		span {
-			margin-bottom: var(--bb-rl-space-200);
-		}
 	}
 }
 
