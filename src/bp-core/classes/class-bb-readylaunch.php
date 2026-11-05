@@ -93,6 +93,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$this->load_template_stack();
 
+			// AJAX from legacy-template UIs on non-RL pages (e.g. theme Elementor activity widget)
+			// must get legacy markup back, not RL templates.
+			if ( self::bb_rl_is_legacy_template_ajax() ) {
+				$this->bb_rl_restore_default_template_stack();
+			}
+
 			/*
 			 * Only load ReadyLaunch login/registration integration when enabled in settings.
 			 * When disabled, the theme's default login/register styling and templates are used.
@@ -298,6 +304,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 
 			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
+		}
+
+		/**
+		 * Whether the current AJAX request comes from a legacy (non-ReadyLaunch) template UI.
+		 *
+		 * Legacy JS sends `bb_legacy_template` so the response is rendered with the
+		 * default template stack, e.g. from the theme's Elementor activity widget.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool True when the request asks for legacy template markup.
+		 */
+		public static function bb_rl_is_legacy_template_ajax() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			return wp_doing_ajax() && ! empty( $_POST['bb_legacy_template'] );
 		}
 
 		/**
