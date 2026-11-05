@@ -236,6 +236,7 @@ class BB_Activity_Readylaunch {
 	 * Load more comments for the activity.
 	 *
 	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss [BBVERSION] The activity and the parent comment must be readable, in their group and thread.
 	 */
 	public function bb_rl_activity_loadmore_comments() {
 		if ( ! bp_is_post_request() ) {
@@ -297,6 +298,19 @@ class BB_Activity_Readylaunch {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid request.', 'buddyboss' ),
+				)
+			);
+		}
+
+		// Guests can call this, so the activity and the comment whose replies are loaded must
+		// both be readable, in their group and thread.
+		if (
+			! bb_activity_user_can_view( $activity_id ) ||
+			! bb_activity_user_can_view( $parent_commment )
+		) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Sorry, You are not allowed to view more comments.', 'buddyboss' ),
 				)
 			);
 		}
