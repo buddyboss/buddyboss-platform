@@ -461,6 +461,7 @@ class BP_XProfile_Component extends BP_Component {
 	 * Setup cache groups.
 	 *
 	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss [BBVERSION] Adds the xprofile group, field and data meta cache groups.
 	 */
 	public function setup_cache_groups() {
 
@@ -472,6 +473,10 @@ class BP_XProfile_Component extends BP_Component {
 				'bp_xprofile_fields',
 				'bp_xprofile_groups',
 				'xprofile_meta',
+				// The groups get_metadata() caches the xprofile meta types in (one network-wide table).
+				'xprofile_group_meta',
+				'xprofile_field_meta',
+				'xprofile_data_meta',
 				'field_children_options',
 			)
 		);
