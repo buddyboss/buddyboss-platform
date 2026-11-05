@@ -279,8 +279,9 @@ add_action( 'update_option_bp-xprofile-fullname-field-name', 'xprofile_clear_ful
  * Clear a field's caches.
  *
  * @since BuddyPress 2.4.0
- * @since BuddyBoss [BBVERSION] Also invalidates the cached profile field groups, and runs
- *                              after a field is deleted.
+ * @since BuddyBoss [BBVERSION] Also invalidates the cached profile field groups, runs after a
+ *                              field is deleted, and clears the field meta from its real cache
+ *                              group (xprofile_field_meta, was xprofile_meta).
  *
  * @param int|BP_XProfile_Field $field A field ID or a field object.
  * @return bool False on failure.
@@ -297,7 +298,8 @@ function bp_xprofile_clear_field_cache( $field ) {
 	}
 
 	wp_cache_delete( $field_id, 'bp_xprofile_fields' );
-	wp_cache_delete( $field_id, 'xprofile_meta' );
+	// Field meta is cached by get_metadata( 'xprofile_field', ... ) in this group.
+	wp_cache_delete( $field_id, 'xprofile_field_meta' );
 	wp_cache_delete( 'bp_xprofile_field_get_type_' . $field_id, 'bp_xprofile' );
 	wp_cache_delete( 'bp_xprofile_is_valid_field_' . $field_id, 'bp_xprofile' );
 
