@@ -3663,7 +3663,7 @@ function bp_get_email( $email_type ) {
  * process the request without any errors.
  *
  * @since BuddyPress 2.5.0
- * @since BuddyBoss [BBVERSION] Added the `bb_pre_send_email` filter, which can stop a validated
+ * @since BuddyBoss [BBVERSION] Added the `bb_pre_bp_send_email` filter, which can stop a validated
  *                              email before any mail transport runs.
  *
  * @param string                   $email_type Type of email being sent.
@@ -3771,7 +3771,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 * @param string|array|int|WP_User $to         The recipient passed to bp_send_email().
 	 * @param array                    $args       Extra parameters, notably `tokens`.
 	 */
-	$pre_send = apply_filters( 'bb_pre_send_email', null, $email, $email_type, $to, $args );
+	$pre_send = apply_filters( 'bb_pre_bp_send_email', null, $email, $email_type, $to, $args );
 	if ( null !== $pre_send ) {
 		return $pre_send;
 	}
@@ -3892,10 +3892,10 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 }
 
 /**
- * Whether bp_send_email() applies the `bb_pre_send_email` filter.
+ * Whether bp_send_email() applies the `bb_pre_bp_send_email` filter.
  *
  * A capability marker. Plugins that hold or reroute BuddyBoss emails should gate their
- * `bb_pre_send_email` callback on function_exists() of this function and keep their older
+ * `bb_pre_bp_send_email` callback on function_exists() of this function and keep their older
  * route (such as `pre_wp_mail`) for Platform versions without the filter.
  *
  * @since BuddyBoss [BBVERSION]

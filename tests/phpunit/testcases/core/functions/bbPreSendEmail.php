@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the `bb_pre_send_email` filter in bp_send_email().
+ * Tests for the `bb_pre_bp_send_email` filter in bp_send_email().
  *
  * @group core
  * @group BP_Email
@@ -68,7 +68,7 @@ class BB_Tests_Core_Functions_BbPreSendEmail extends BP_UnitTestCase_Emails {
 	public function test_null_sends_as_usual_and_passes_the_email() {
 		$seen = array();
 		add_filter(
-			'bb_pre_send_email',
+			'bb_pre_bp_send_email',
 			function ( $pre, $email, $email_type, $to ) use ( &$seen ) {
 				$seen = array( $email instanceof BP_Email, $email_type, $to );
 
@@ -84,7 +84,7 @@ class BB_Tests_Core_Functions_BbPreSendEmail extends BP_UnitTestCase_Emails {
 	}
 
 	public function test_true_stops_the_send_before_wp_mail() {
-		add_filter( 'bb_pre_send_email', '__return_true' );
+		add_filter( 'bb_pre_bp_send_email', '__return_true' );
 
 		$this->assertTrue( $this->send() );
 		$this->assertSame( 0, $this->pre_wp_mail_calls, 'wp_mail() must not run when the filter returns true.' );
@@ -92,7 +92,7 @@ class BB_Tests_Core_Functions_BbPreSendEmail extends BP_UnitTestCase_Emails {
 
 	public function test_wp_error_is_returned_to_the_caller() {
 		add_filter(
-			'bb_pre_send_email',
+			'bb_pre_bp_send_email',
 			function () {
 				return new WP_Error( 'held', 'Held for testing.' );
 			}
@@ -107,7 +107,7 @@ class BB_Tests_Core_Functions_BbPreSendEmail extends BP_UnitTestCase_Emails {
 
 	public function test_true_stops_the_delivery_class_path_too() {
 		add_filter( 'bp_email_use_bp_mail', '__return_true' );
-		add_filter( 'bb_pre_send_email', '__return_true' );
+		add_filter( 'bb_pre_bp_send_email', '__return_true' );
 
 		$delivered = false;
 		$record    = function () use ( &$delivered ) {
@@ -126,7 +126,7 @@ class BB_Tests_Core_Functions_BbPreSendEmail extends BP_UnitTestCase_Emails {
 	public function test_not_applied_when_validation_fails() {
 		$called = false;
 		add_filter(
-			'bb_pre_send_email',
+			'bb_pre_bp_send_email',
 			function ( $pre ) use ( &$called ) {
 				$called = true;
 
