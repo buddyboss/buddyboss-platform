@@ -496,13 +496,24 @@ class BP_Messages_Notice {
 	 * Returns the active notice that should be displayed on the front end.
 	 *
 	 * @since BuddyPress 1.0.0
+	 * @since BuddyBoss [BBVERSION] The cache holds the notice's properties, not the object.
 	 *
 	 * @return object The BP_Messages_Notice object.
 	 */
 	public static function get_active() {
-		$notice = wp_cache_get( 'active_notice', 'bp_messages' );
+		$cached = wp_cache_get( 'active_notice', 'bp_messages' );
 
-		if ( false === $notice ) {
+		// The cache stores an array of properties: a cached object can only be read back
+		// while its class name exists. Anything else (e.g. an object cached by an older
+		// version) is treated as a miss and replaced.
+		if ( is_array( $cached ) ) {
+			$notice = new BP_Messages_Notice();
+			foreach ( $cached as $property => $value ) {
+				if ( property_exists( $notice, $property ) ) {
+					$notice->$property = $value;
+				}
+			}
+		} else {
 			$notices = self::get(
 				array(
 					'fields'    => 'ids',
@@ -515,7 +526,7 @@ class BP_Messages_Notice {
 			$notice_id = ! empty( $notices['notices'] ) ? current( $notices['notices'] ) : false;
 			$notice    = new BP_Messages_Notice( $notice_id );
 
-			wp_cache_set( 'active_notice', $notice, 'bp_messages' );
+			wp_cache_set( 'active_notice', get_object_vars( $notice ), 'bp_messages' );
 		}
 
 		/**
