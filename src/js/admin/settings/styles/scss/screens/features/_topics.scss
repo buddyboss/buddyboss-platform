@@ -2,8 +2,20 @@
    Topic List Field
    ---------------------------------------------------------------- */
 
+/*
+ * The settings field column (`flex: 1`) keeps its default `min-width: auto`,
+ * so an unbroken topic name would set its width and push the list out of the
+ * card. Let the column shrink only when it holds the topic list; other fields
+ * keep their content-based sizing.
+ */
+.bb-admin-settings-form__field-content:has(.bb-topic-list) {
+    min-width: 0;
+}
+
    .bb-topic-list {
     width: 100%;
+    min-width: 0; // Shrink as a flex item of .bb-admin-settings-form__field-input-wrapper.
+    contain: inline-size; // Keep a long topic name from setting the width of the page's main column.
 
     &__items {
         display: flex;
@@ -58,14 +70,23 @@
 
     &__name {
         flex: 1;
+        min-width: 0;
         font-size: 12px;
         font-weight: 500;
         color: $bb-text-secondary-color;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         display: flex;
         align-items: center;
+    }
+
+    // The text sits in its own flex item: `text-overflow` does not apply to the
+    // anonymous flex item of a `display: flex` parent, and a separate item keeps
+    // the group "global" icon visible after the ellipsis.
+    &__name-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     &__permission {
