@@ -208,20 +208,33 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * and data exists in the queue.
 		 *
 		 * @since BuddyBoss 2.5.20
+		 * @since BuddyBoss [BBVERSION] Process the queue within the cron request instead of dispatching
+		 *                              another loopback request, so the queue still runs on hosts that block loopback requests.
+		 *                              Return instead of exiting, so the rest of the WP-Cron run still executes,
+		 *                              and skip a paused or cancelled queue.
 		 */
 		public function handle_cron_healthcheck() {
 			if ( $this->is_processing() ) {
 				// Background process already running.
-				exit;
+				return;
 			}
 
 			if ( $this->is_queue_empty() ) {
 				// No data to process.
 				$this->clear_scheduled_event();
-				exit;
+				return;
 			}
 
-			$this->dispatch();
+			if ( $this->is_paused() || $this->is_cancelled() ) {
+				// Do not process a paused or cancelled queue; leave its rows untouched.
+				return;
+			}
+
+			// Process here: this cron run is the fallback for when the loopback dispatch failed.
+			// Do not let handle() end the WP-Cron request with wp_die().
+			add_filter( $this->identifier . '_wp_die', '__return_false' );
+			$this->handle();
+			remove_filter( $this->identifier . '_wp_die', '__return_false' );
 		}
 
 		/**
