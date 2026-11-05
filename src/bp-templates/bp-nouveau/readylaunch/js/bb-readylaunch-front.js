@@ -852,6 +852,9 @@ window.bp = window.bp || {};
 						function ( file, response ) {
 							if ( file.accepted ) {
 								var errorMessage = response && response.data && response.data.feedback || bbRlMedia.connection_lost_error;
+								if ( ! ( response && response.data && response.data.feedback ) && file.xhr && file.xhr.status >= 400 && 'string' === typeof response ) { // Non-JSON error body (e.g. proxy 413 page): show a readable message instead of raw HTML or "connection lost".
+									errorMessage = ( 413 === file.xhr.status ? bbRlMedia.upload_too_large_error : bbRlMedia.upload_server_error.replace( '{{statusCode}}', file.xhr.status ) );
+								}
 								$( file.previewElement ).find( '.dz-error-message span' ).text( errorMessage );
 							} else {
 								var bbRlErrorMessage = bbRlMedia.invalid_media_type + '. ' + ( response || '' );
@@ -1045,6 +1048,11 @@ window.bp = window.bp || {};
 							if ( dropzoneObj ) {
 								dropzoneObj.files.push( mockFile );
 								dropzoneObj.emit( 'addedfile', mockFile );
+								// A draft keeps the upload response's formatted size ("14 KB"), which
+								// Dropzone's numeric formatter shows as "0 b"; show the stored text.
+								if ( mockFile.previewElement && mockFile.size && ! _.isFinite( Number( mockFile.size ) ) ) {
+									$( mockFile.previewElement ).find( '[data-dz-size]' ).text( String( mockFile.size ) );
+								}
 
 								// Handle thumbnails for media files.
 								if ( 'media' === fileType ) {
