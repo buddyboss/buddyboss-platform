@@ -1443,7 +1443,7 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
  * run before the per-draft cap and the expensive kses pass runs only on a
  * payload the cap has already accepted (M4).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $draft_entry Draft entry with a `data` member.
  * @return array Entry with data URLs removed from its content fields.
@@ -1473,7 +1473,7 @@ function bb_forums_strip_draft_data_urls( $draft_entry ) {
  * by draft expiry and size-budget eviction. Extension data members are
  * left untouched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $draft_entry Draft entry with a `data` member.
  * @return array Sanitized draft entry.
@@ -1488,7 +1488,7 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
 		/**
 		 * Filters which forum draft data members carry member-authored HTML content.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @param string[] $content_keys Draft data keys holding HTML content.
 		 */
@@ -1513,7 +1513,7 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
 		 * with the rest of the draft sanitization and one .html()-vs-.val() mistake
 		 * in any consumer of this usermeta row away from a stored-XSS (M21).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @param string[] $text_keys Draft data keys holding plain text.
 		 */
@@ -1546,7 +1546,7 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
  * that never happened must not unprotect attachments or notify listeners
  * (H4).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array  $draft_row   Aggregated draft row (inner key => draft entry).
  * @param string $protect_key Inner key that must not be evicted.
@@ -1747,7 +1747,7 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
  * This gives the publish path the save handler's three steps: drop the cache,
  * re-read, and remove only the one key - so a concurrent sibling survives.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id        Owning user ID.
  * @param string $draft_data_key Inner draft key just published.

@@ -587,12 +587,16 @@ function bp_version_updater() {
 			bb_queue_addons_bundle_update();
 		}
 
+		// DB version 23632 — the activity REST endpoints now refuse comments whose root
+		// activity the user cannot read (PROD-10649). Purge their App API cache so comments
+		// cached before the update are not served for 30 days.
 		// Heal oversized/aggregate-oversized draft usermeta rows and
 		// start the draft retention machinery.
 		// Gated above 23631, the db_version 3.7.0 shipped with, so sites
 		// already on 3.7.0 still run it.
 		if ( $raw_db_version < 23641 ) {
 			bb_drafts_cleanup_on_upgrade();
+			bb_purge_activity_api_cache_for_comment_access();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -4754,7 +4758,7 @@ function bb_purge_forums_api_cache_for_legacy_embed() {
  * last synchronous slice so the updater firing more than once inside an
  * upgrade window cannot repeat it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */
@@ -4795,6 +4799,26 @@ function bb_drafts_cleanup_on_upgrade() {
 	// nothing left to do.
 	if ( ! empty( $result['complete'] ) ) {
 		bb_draft_oneshot_unschedule();
+	}
+}
+
+/**
+ * Purge the App API cache of activities.
+ *
+ * The activity REST endpoints now refuse an activity comment to users who cannot read
+ * its root activity, such as non-members of a private or hidden group. Responses cached
+ * before the update still hold those comments for up to 30 days, and the cache is read
+ * before the REST permission check, so clear them once on the upgrade (PROD-10649).
+ *
+ * `bp-activity` also matches the per-item `bp-activity_<id>` groups.
+ *
+ * @since BuddyBoss 3.7.1
+ *
+ * @return void
+ */
+function bb_purge_activity_api_cache_for_comment_access() {
+	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
+		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-activity' );
 	}
 }
 

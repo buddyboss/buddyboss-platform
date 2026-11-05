@@ -41,7 +41,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Taken from the main query before bbPress renders anything, so a forum
 		 * shortcode on an ordinary page cannot change it. Null until then.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 * @var bool|null
 		 */
 		private $bb_rl_owns_forum_page = null;
@@ -312,7 +312,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Legacy JS sends `bb_legacy_template` so the response is rendered with the
 		 * default template stack, e.g. from the theme's Elementor activity widget.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @return bool True when the request asks for legacy template markup.
 		 */
@@ -3593,7 +3593,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * this handle, but that page stays on the theme template and must keep
 		 * the default pack.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @param array $scripts Handle => attributes map bbPress is about to enqueue.
 		 * @return array
@@ -3625,7 +3625,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * uses it to keep the default forum draft pack on an ordinary page that
 		 * embeds a topic or forum by shortcode.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @param string $template Template path.
 		 * @return string Unchanged template path.

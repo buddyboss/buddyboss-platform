@@ -11,7 +11,7 @@
  * store and centralize how a stored draft is disposed of.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  */
 
 // Exit if accessed directly.
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * `draft_*` usermeta, so a bare prefix match must never be used to count,
  * evict, or delete rows.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $meta_key Usermeta key.
  * @return bool True when the key is a BuddyBoss draft key.
@@ -52,7 +52,7 @@ function bb_draft_is_draft_meta_key( $meta_key ) {
  * then decline to act rather than guess — see
  * {@see bb_draft_get_rows_batch()}.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return array {
  *     @type string $prefix     Text the filter prepends.
@@ -128,7 +128,7 @@ function bb_draft_meta_key_wrap() {
  * it let a stray unfiltered row hand {@see bb_draft_dispose()} a key that
  * re-filtered onto a DIFFERENT, live row (N2).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $stored_key Key as stored in the usermeta table.
  * @return string Logical draft key, or '' when the key is not a BuddyBoss draft.
@@ -165,7 +165,7 @@ function bb_draft_logical_meta_key( $stored_key ) {
 /**
  * SQL fragments matching the draft keys as they are actually stored.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return array {
  *     @type bool     $invertible Whether the stored keys can be recognised at all.
@@ -207,7 +207,7 @@ function bb_draft_meta_key_sql() {
  * Applies to one activity draft row and to one inner topic/reply draft
  * inside the aggregated forum draft row.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int Size limit in bytes.
  */
@@ -216,7 +216,7 @@ function bb_draft_max_size() {
 	/**
 	 * Filters the maximum stored size of a single draft.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $max_size Size limit in bytes. Default 100 KB. A value of 0 or less
 	 *                       falls back to the default rather than refusing or
@@ -233,7 +233,7 @@ function bb_draft_max_size() {
  * All draft keys share the user's single meta cache entry, so per-draft
  * caps alone cannot bound it — a member can hold one draft per group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int Size limit in bytes.
  */
@@ -242,7 +242,7 @@ function bb_draft_user_total_max_size() {
 	/**
 	 * Filters the maximum combined stored size of a user's drafts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $max_size Size limit in bytes. Default 300 KB. A value of 0 or less
 	 *                       falls back to the default rather than refusing or
@@ -262,7 +262,7 @@ function bb_draft_user_total_max_size() {
  * of headroom below the platform limit, which also covers what the measured
  * total does not count ({@see bb_draft_get_user_meta_sizes()}).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int Budget in bytes.
  */
@@ -271,7 +271,7 @@ function bb_draft_user_meta_budget() {
 	/**
 	 * Filters the total user-meta budget draft saves must respect.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $budget Budget in bytes. Default 800 KB. A value of 0 or less
 	 *                       falls back to the default rather than refusing or
@@ -298,7 +298,7 @@ function bb_draft_user_meta_budget() {
  * the forum caller normalises earlier and passes unslashed content directly. Any
  * new caller must do one or the other.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $content Draft content, UNSLASHED.
  * @return string Content without data-URL images, in the slash state it was given.
@@ -407,7 +407,7 @@ function bb_draft_strip_data_urls( $content ) {
  *
  * The floor of 50 keeps the previous behaviour for every site at or below it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $type Optional. Attachment type the cap is being read for -
  *                     'media', 'document' or 'video'. Each has its own
@@ -438,7 +438,7 @@ function bb_draft_max_attachments_per_type( $type = 'media' ) {
 	/**
 	 * Filters how many attachments of one type a draft payload may carry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int    $max  Maximum entries per attachment type.
 	 * @param string $type Attachment type: 'media', 'document' or 'video'.
@@ -466,7 +466,7 @@ function bb_draft_max_attachments_per_type( $type = 'media' ) {
  * per-ID lookup runs, so a crafted payload cannot stamp other members'
  * attachments or force thousands of uncached queries.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $lists   Attachment lists keyed by type ('media'/'document'/'video'),
  *                       each an array of entries carrying an `id`. An unkeyed list
@@ -564,7 +564,7 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
  * {@see bb_draft_user_meta_budget()} defaults to 800 KB against a ~1 MB
  * platform item limit, which is what absorbs it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * The result is memoized per request because a single save asks for it more
  * than once; {@see bb_draft_flush_user_meta_sizes()} clears it after a write.
@@ -645,7 +645,7 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
  * key. Size bookkeeping that walks a row element by element has to account
  * for both, or it drifts above the real width and evicts too much.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $key Array key.
  * @return int Bytes the key occupies in a serialized array.
@@ -678,7 +678,7 @@ function bb_draft_serialized_key_bytes( $key ) {
  * ever re-read within the same request by the save pipeline, so a stale
  * memo would make a second cap decision on pre-write numbers.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return void
@@ -695,7 +695,7 @@ function bb_draft_flush_user_meta_sizes( $user_id ) {
  * `['id' => N]` plus the feature image) and the forum shape (`bbp_media`/
  * `bbp_document`/`bbp_video` JSON strings of the same).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $draft Draft array containing a `data` member.
  * @return int[] Attachment IDs.
@@ -774,7 +774,7 @@ function bb_draft_collect_attachment_ids( $draft ) {
  * screenshots), so a heal that deleted such a row instead destroyed the
  * member's text and photos when removing the image alone made it fit (V09).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $draft Draft entry.
  * @return array The draft with any poster frames and data URLs removed.
@@ -847,7 +847,7 @@ function bb_draft_shed_preview_frames( $draft ) {
  * per-draft cap on their own and the member was told to remove content they
  * never typed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $draft Draft entry, activity (`document`) or forum (`bbp_document` JSON).
  * @return array The draft without those fields.
@@ -903,7 +903,7 @@ function bb_draft_strip_document_render_fields( $draft ) {
  * checks the stored row first and leaves a newer one alone: a live save has
  * already passed the size caps.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id  User ID.
  * @param string $meta_key Draft meta key.
@@ -928,7 +928,7 @@ function bb_draft_row_unchanged( $user_id, $meta_key, $read ) {
  * a row that is genuinely too large still falls through to disposal and the
  * healing guarantee is unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id  Owning user ID.
  * @param string $meta_key Draft usermeta key.
@@ -997,7 +997,7 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
  * store it, and its files stay protected meanwhile. A row that is not a
  * draft array has nothing to restore and is deleted as before.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id  Owning user ID.
  * @param string $meta_key Draft usermeta key.
@@ -1048,7 +1048,7 @@ function bb_draft_hold_oversized_draft( $user_id, $meta_key ) {
  * pasted screenshots keeps them all. The forum row is shed per inner draft.
  * Only rows that changed are written.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return int Number of draft rows rewritten.
@@ -1125,7 +1125,7 @@ function bb_draft_shed_user_drafts( $user_id ) {
  * reflects the rows already removed this pass - an attachment shared by two
  * evicted rows is retained while the first goes and released when the last does.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int         $user_id       User ID.
  * @param string      $exclude_key   Meta key of the entry being disposed.
@@ -1203,7 +1203,7 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
  * held: the L7 gap, reopened through every release path bb_draft_dispose() did
  * not itself cover.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * Delegates to {@see bb_draft_collect_other_referenced_ids()} rather than
  * repeating its loop: both compute the retain set that decides whether a
@@ -1236,7 +1236,7 @@ function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key 
  * forum handler's eviction branch already apply this whole-row exclusion
  * themselves.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $draft          Draft array.
  * @param int   $user_id        Owning user ID.
@@ -1302,7 +1302,7 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
  * `$retain_entries`; the eviction path in the forum handler already applies
  * this same whole-row exclusion.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $previous_entry Draft entry being replaced.
  * @param array $current_entry  Draft entry replacing it.
@@ -1357,7 +1357,7 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
  * row, pass `$inner_key` to remove one inner draft; an emptied aggregate row
  * is deleted rather than stored as an empty array.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * `$inner_key` is the WHOLE-ROW sentinel when empty, so a caller iterating a
  * stored row must never hand it an empty key: a legacy row carrying an
@@ -1518,7 +1518,7 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
  * decide in memory, write once, then release the attachment stamps of the
  * removed entries that no surviving inner draft still references.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int      $user_id                  Owning user ID.
  * @param string[] $inner_keys               Inner draft keys to remove.
@@ -1609,7 +1609,7 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
  * response it never reads. Anything that is not a short alphanumeric token is
  * replaced with a server-generated one.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param mixed $rev Client-supplied revision id.
  * @return string Revision id.
@@ -1628,7 +1628,7 @@ function bb_draft_sanitize_rev( $rev ) {
  * `none` means the composer knew of no stored draft. An empty string is a
  * draft loaded from a legacy entry that has no revision yet.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param mixed $raw Comma-separated list, or an array.
  * @return array|null Revision list, or null when the client sent none (an old
@@ -1656,7 +1656,7 @@ function bb_draft_parse_base( $raw ) {
 /**
  * The draft base the current request was built on.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return array|null See {@see bb_draft_parse_base()}.
  */
@@ -1675,7 +1675,7 @@ function bb_draft_request_base() {
  * replaced would otherwise overwrite that draft without the member ever seeing
  * it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param mixed      $stored Stored entry, or empty when there is none.
  * @param array|null $base   Revisions the write was built on, or null (unchecked).
@@ -1705,7 +1705,7 @@ function bb_draft_base_matches( $stored, $base ) {
  * A request without the key (a cached older script) keeps the legacy
  * behaviour and clears `$fallback_key`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $fallback_key Key the publish handler derived from the posted object.
  * @param int    $user_id      Publishing user ID.
@@ -1736,7 +1736,7 @@ function bb_draft_activity_publish_key( $fallback_key, $user_id ) {
 /**
  * The member-facing message for a refused, conflicting draft save.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return string
  */
@@ -1747,7 +1747,7 @@ function bb_draft_conflict_message() {
 /**
  * Name of the option holding a member's recently evicted drafts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return string
@@ -1759,7 +1759,7 @@ function bb_draft_evicted_hold_option( $user_id ) {
 /**
  * How long an evicted draft is held for a hand-back that did not arrive.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int Seconds.
  */
@@ -1767,7 +1767,7 @@ function bb_draft_evicted_hold_seconds() {
 	/**
 	 * Filters how long evicted drafts are held for a lost hand-back.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $seconds Hold time in seconds. Default 7 days. A value below one
 	 *                     hour falls back to one hour: an evicted draft is
@@ -1783,7 +1783,7 @@ function bb_draft_evicted_hold_seconds() {
  * bulk-loaded meta that Release A keeps small. On single-site it is stored
  * with autoload off; on multisite it is network-wide, like the drafts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return array Map of evicted key => array( 'entry' => array, 'at' => int ).
@@ -1798,7 +1798,7 @@ function bb_draft_get_evicted_hold( $user_id ) {
 /**
  * Name of the option holding a member's held drafts that did not fit the hold.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return string
@@ -1810,7 +1810,7 @@ function bb_draft_evicted_overflow_option( $user_id ) {
 /**
  * Name of the option listing the keys in a member's overflow hold.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return string
@@ -1826,7 +1826,7 @@ function bb_draft_evicted_overflow_keys_option( $user_id ) {
  * list instead of the overflow itself, which can hold a large legacy forum
  * row's drafts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return string[]
@@ -1845,7 +1845,7 @@ function bb_draft_get_evicted_overflow_keys( $user_id ) {
 /**
  * Read a member's held drafts that wait for room in the hold.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int  $user_id User ID.
  * @param bool $force   Optional. Read the option even when the member's flag
@@ -1868,7 +1868,7 @@ function bb_draft_get_evicted_overflow( $user_id, $force = false ) {
 /**
  * Write a member's held evicted drafts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int        $user_id  User ID.
  * @param array      $hold     Map as returned by {@see bb_draft_get_evicted_hold()}.
@@ -1931,7 +1931,7 @@ function bb_draft_set_evicted_hold( $user_id, $hold, $overflow = null ) {
  * Store a member's held drafts, keeping the newest within the hold's size cap
  * and the rest in the overflow option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int   $user_id User ID.
  * @param array $held    Every held draft, map like {@see bb_draft_get_evicted_hold()}.
@@ -1949,7 +1949,7 @@ function bb_draft_store_evicted_hold( $user_id, $held ) {
  * Reads the hold option only when the member's meta flag says something is
  * held, so ordinary page views cost nothing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id User ID.
  * @param string $key     Evicted key ("meta_key" or "meta_key:inner_key").
@@ -1999,7 +1999,7 @@ function bb_draft_get_held_entry( $user_id, $key ) {
  * A refused save keeps its own acknowledgement of the key from ending the
  * hold in the same request ({@see bb_draft_withhold_request_ack()}).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id     User ID.
  * @param string $evicted_key Key like `evicted_draft_keys` ("meta_key" or "meta_key:inner_key").
@@ -2040,7 +2040,7 @@ function bb_draft_save_waits_for_handback( $user_id, $evicted_key ) {
  * request is changed: the browser keeps the acknowledgement queued and sends
  * it again with a later request, once the hand-back is stored.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $evicted_key Key like `evicted_draft_keys`.
  * @return void
@@ -2059,7 +2059,7 @@ function bb_draft_withhold_request_ack( $evicted_key ) {
  *
  * Includes the held draft even when it waits in the overflow.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id     User ID.
  * @param string $evicted_key The refused key.
@@ -2091,7 +2091,7 @@ function bb_draft_handback_for_key( $user_id, $evicted_key ) {
  * the drafts are handed back and acknowledged like any held draft. They may
  * take the hold over its size cap until acknowledged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int      $user_id User ID.
  * @param callable $wanted  Receives an evicted key, returns whether to move it.
@@ -2142,7 +2142,7 @@ function bb_draft_promote_evicted( $user_id, $wanted ) {
  * change. Waits briefly for a holder, then proceeds regardless, so a lock
  * left behind by a dead request never blocks a save.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id User ID.
  * @return bool Whether this request took the lock (and must release it).
@@ -2164,7 +2164,7 @@ function bb_draft_lock_evicted_hold( $user_id ) {
 /**
  * Release the lock taken by {@see bb_draft_lock_evicted_hold()}.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int  $user_id User ID.
  * @param bool $locked  Whether the lock was taken.
@@ -2183,7 +2183,7 @@ function bb_draft_unlock_evicted_hold( $user_id, $locked ) {
  * back. If that response is lost, the draft would be gone; holding it lets the
  * next save or fetch hand it back again.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int   $user_id User ID.
  * @param array $entries Evicted entries keyed like `evicted_draft_keys`.
@@ -2237,7 +2237,7 @@ function bb_draft_hold_evicted( $user_id, $entries ) {
  * it ({@see bb_draft_save_waits_for_handback()}). The id is generated once,
  * when the entry is first held or handed back, and stays with it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $entries Entries keyed like `evicted_draft_keys`.
  * @return array The entries, each array entry with a `_draft_rev`.
@@ -2267,7 +2267,7 @@ function bb_draft_stamp_handback_revs( $entries ) {
  * A single draft larger than the cap waits in the overflow too, and its
  * composer's fetch hands it back ({@see bb_draft_promote_evicted()}).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $hold Map as returned by {@see bb_draft_get_evicted_hold()}.
  * @return array {
@@ -2282,7 +2282,7 @@ function bb_draft_split_evicted_hold( $hold ) {
 	 * Drafts over this size wait in the member's overflow hold until the
 	 * browser has taken back the ones in the hold.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $max_bytes Serialized bytes. Default the per-user draft budget.
 	 */
@@ -2337,7 +2337,7 @@ function bb_draft_split_evicted_hold( $hold ) {
  * Drops entries the browser acknowledged, entries past the hold time, and
  * entries whose key holds a stored draft again (the member saved it since).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int      $user_id User ID.
  * @param string[] $acked   Keys the browser reports it has stored.
@@ -2396,7 +2396,7 @@ function bb_draft_pending_evicted( $user_id, $acked = array() ) {
  * Drops entries the browser acknowledged, entries past the hold time, and
  * entries whose key holds a stored draft again (the member saved it since).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int      $user_id User ID.
  * @param array    $hold    Map like {@see bb_draft_get_evicted_hold()}.
@@ -2435,7 +2435,7 @@ function bb_draft_drop_settled_evicted( $user_id, $hold, $acked = array() ) {
 /**
  * Keys the browser reports it stored from a hand-back.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return string[]
  */
@@ -2453,7 +2453,7 @@ function bb_draft_request_acked_evictions() {
 /**
  * Drop a member's held drafts past the hold time.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $hold   Held and overflow entries, like {@see bb_draft_get_evicted_hold()}.
  * @param int   $cutoff Entries held before this timestamp have expired.
@@ -2477,7 +2477,7 @@ function bb_draft_prune_expired_hold_entries( $hold, $cutoff ) {
  * Runs on the daily draft cleanup so holds of members who never come back
  * do not accumulate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */
@@ -2569,7 +2569,7 @@ add_action( 'bb_draft_cleanup_hook', 'bb_drafts_prune_evicted_holds', 20 );
  * options and would keep the drafts' text until the hold time ran out. Their
  * files are released by the orphan-stamp sweep once nothing references them.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $user_id Deleted user ID.
  * @return void
@@ -2591,7 +2591,7 @@ if ( ! is_multisite() ) {
  * evictions ({@see bb_draft_hold_evicted()}), and returns every eviction still
  * owed - so a hand-back lost with an earlier response is sent again.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int   $user_id User ID.
  * @param array $fresh   Entries evicted by this request.
@@ -2612,7 +2612,7 @@ function bb_draft_handback( $user_id, $fresh = array() ) {
 /**
  * Read a draft meta value bypassing the object cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id  User ID.
  * @param string $meta_key Logical draft meta key, wrapped here through
@@ -2652,7 +2652,7 @@ function bb_draft_fresh_value( $user_id, $meta_key, $refresh_cache = false ) {
  * retention, because the handed-back copy in the browser still references
  * them ({@see bb_drafts_release_orphaned_draft_stamps()}).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $entries Evicted entries.
  * @param int   $user_id Owning user ID.
@@ -2674,7 +2674,7 @@ function bb_draft_mark_evicted_attachments( $entries, $user_id ) {
  * Name of the network option listing files of drafts evicted by the upgrade
  * heal on multisite.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return string
  */
@@ -2694,7 +2694,7 @@ function bb_draft_eviction_file_ledger_option() {
  * the window the marker gives on single-site. A same-numbered attachment on
  * another blog is only kept longer, never released early.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $entries   Evicted entries.
  * @param int   $user_id   Owning user ID.
@@ -2737,7 +2737,7 @@ function bb_draft_protect_evicted_attachments( $entries, $user_id, $from_root = 
 /**
  * Attachment IDs in the eviction file ledger that are still in their window.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int[]
  */
@@ -2773,7 +2773,7 @@ function bb_draft_get_evicted_attachment_ledger_ids() {
  * the eviction time plus the draft retention, or for ever when expiry is off.
  * The sweep releases the stamp once that window ends.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $attachment_id Attachment ID.
  * @return bool True when the file must keep its draft stamp.
@@ -2815,7 +2815,7 @@ function bb_draft_attachment_is_eviction_protected( $attachment_id ) {
  * it, because the browser never reads that response. The budget uses it to
  * refuse rather than evict, since an evicted draft could not be handed back.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return bool True for a page-unload save.
  */
@@ -2863,7 +2863,7 @@ function bb_draft_is_beacon_request() {
  * convenience. Moot for the activity caller either way, since an activity
  * draft is one draft per meta row (M4).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int    $user_id     User ID.
  * @param string $current_key Meta key about to be written (protected from eviction).
@@ -3113,7 +3113,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		/**
 		 * Fires when a stored draft is evicted to keep a user under the draft size budget.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @param int    $user_id     User whose draft was evicted.
 		 * @param string $evicted_key Evicted draft key ("meta_key" or "meta_key:inner_key").
@@ -3154,7 +3154,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
  *   which is a filter defaulting to true and is not a per-user capability.
  *   This mirrors the publish path; do not read it as a per-member gate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $data_key     Client-supplied draft key.
  * @param string $draft_object Draft object ('user' or 'group').
@@ -3226,7 +3226,7 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
  * reply, so a draft key naming one is refused like a key naming nothing. That
  * keeps the key check from answering "does this hidden post exist?" (V24).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param WP_Post $post Forum, topic or reply.
  * @return bool
@@ -3248,7 +3248,7 @@ function bb_draft_post_accepts_drafts( $post ) {
  * what lets the save handler apply the SAME per-object, per-forum rules the
  * publish path applies, rather than one loose site-wide check.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $data_key Client-supplied inner draft key.
  * @return array|false {
@@ -3349,7 +3349,7 @@ function bb_draft_topic_reply_key_context( $data_key ) {
  * query. It changes no behaviour - every guard still runs per key, and a key
  * naming a post that does not exist still resolves to false, just from cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string[] $data_keys Draft keys about to be resolved.
  * @return void
@@ -3402,7 +3402,7 @@ function bb_draft_prime_topic_reply_key_posts( $data_keys ) {
  * gate is skipped when the key carries no resolvable forum, which is the
  * documented bare-shape case.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $key_context Resolved context from {@see bb_draft_topic_reply_key_context()}.
  * @param int   $user_id     Acting user ID.
@@ -3429,7 +3429,7 @@ function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
 	/**
 	 * Filters whether a member may save a forum topic/reply draft.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param bool  $can_save    Whether the save is allowed.
 	 * @param array $key_context Resolved draft key context.
@@ -3460,7 +3460,7 @@ function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
  * say nothing about whether there is content to restore — the same line the
  * composer draws when it decides whether a draft is worth saving.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param array $entry Stored forum draft entry (`object`, `data`, ...).
  * @return bool True when the entry holds restorable content.
@@ -3534,7 +3534,7 @@ function bb_draft_topic_reply_entry_has_payload( $entry ) {
  * to disable expiry - would put the cutoff at the current time and make the
  * next cleanup run delete every draft on the site.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int Retention window in days; 0 when expiry is disabled.
  */
@@ -3545,7 +3545,7 @@ function bb_draft_retention_days() {
 	 *
 	 * Return 0 (or a negative value) to disable age-based draft expiry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $days Retention window in days. Default 30.
 	 */
@@ -3557,7 +3557,7 @@ function bb_draft_retention_days() {
 /**
  * Draft retention window in seconds.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int Retention window in seconds; 0 when expiry is disabled.
  */
@@ -3571,7 +3571,7 @@ function bb_draft_retention_seconds() {
  * Draft rows originate from client JSON; a crafted serialized object must
  * decode as an inert incomplete class, never a live instance.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param mixed $value Possibly serialized value.
  * @return mixed Unserialized value, or the input when not serialized.
@@ -3595,7 +3595,7 @@ function bb_draft_safe_unserialize( $value ) {
  * only on a clean budget break - so the next run restarts at the same window
  * and dies again, and the sweep never progresses.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int Byte budget for one window's values. Default 10 MB.
  */
@@ -3604,7 +3604,7 @@ function bb_draft_batch_max_bytes() {
 	/**
 	 * Filters the byte budget for one draft maintenance window.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $max_bytes Byte budget. Default 10 MB.
 	 */
@@ -3629,7 +3629,7 @@ function bb_draft_batch_max_bytes() {
  * {@see bb_draft_meta_key_wrap()} so they match the keys the writers really
  * stored; when that wrap cannot be inverted the batch returns nothing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * Values are fetched in a SECOND query, for the trimmed window only, so the
  * windowing query never carries `meta_value` and the payload pulled into PHP
@@ -3861,7 +3861,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
  *
  * @return array { @type int $deleted @type bool $complete @type bool $locked }
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $time_budget Seconds to spend this run; 0 for unlimited.
  */
@@ -4117,7 +4117,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  * 5MB row with 40 inner drafts that was ~200MB of serialization and 40
  * multi-MB UPDATEs inside an upgrade request (H2).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int  $user_id                  Owning user ID.
  * @param bool $defer_attachment_release Optional. The caller is the root-only
@@ -4345,7 +4345,7 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
  * this heals) so support can tell affected customers when their mu-plugin
  * workarounds are safe to remove.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $time_budget Seconds to spend this run; 0 for unlimited.
  * @return array { @type int $healed @type bool $complete }
@@ -4642,7 +4642,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
  * mirroring bb_draft_cleanup_hook's root-only gate. The synchronous slice itself
  * still runs on the current blog - it operates on the global usermeta either way.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $delay Seconds from now to run.
  * @return void
@@ -4670,7 +4670,7 @@ function bb_draft_oneshot_schedule( $delay ) {
  * Companion to {@see bb_draft_oneshot_schedule()} - the event lives on the root
  * blog's cron table, so it must be looked up and cleared there too (L10).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */
@@ -4735,7 +4735,7 @@ function bb_draft_oneshot_unschedule() {
  * root-blog-only, so the race needs two cron workers on one blog of a site
  * running no object cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $timeout Lock lifetime in seconds.
  * @return bool True when this caller now holds the lock.
@@ -4761,7 +4761,7 @@ function bb_draft_acquire_stamp_sweep_lock( $timeout ) {
  * superset, and the 6-hour orphan cron deleted a member's file out of a draft
  * they were still writing. Scope the lock to the resource, not to the caller.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $key     Lock key, without any prefix.
  * @param int    $timeout Lock lifetime in seconds.
@@ -4798,7 +4798,7 @@ function bb_draft_acquire_lock( $key, $timeout, $network = false ) {
  * lock released on some return paths and not others is held until its TTL, which
  * on these sweeps means a whole day of doing nothing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $key     Lock key, without any prefix.
  * @param bool   $network Whether the lock was taken network-wide. Default false.
@@ -4820,7 +4820,7 @@ function bb_draft_release_lock( $key, $network = false ) {
  * cannot grow a site option without bound; crossing it makes the sweep fall back
  * to abstaining, which is the safe direction.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  */
 const BB_DRAFT_PENDING_REFERENCE_CAP = 5000;
 
@@ -4840,7 +4840,7 @@ const BB_DRAFT_PENDING_REFERENCE_CAP = 5000;
  * unaffected, because the set is a performance aid and never an authority the
  * sweep cannot rebuild.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  */
 const BB_DRAFT_REFERENCED_CACHE_MAX_IDS = 50000;
 
@@ -4855,7 +4855,7 @@ const BB_DRAFT_REFERENCED_CACHE_MAX_IDS = 50000;
  * network, so a save on blog A can add a reference that blog B's in-flight scan
  * would otherwise miss. A per-blog transient would not be visible to it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return bool True while a scan is in progress.
  */
@@ -4877,7 +4877,7 @@ function bb_draft_reference_scan_is_active() {
  * Over-collection is harmless and deliberate: an id recorded here that turns out
  * not to be referenced just keeps its stamp for one more cycle.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int[] $attachment_ids Attachment IDs the just-written draft keeps.
  * @return void
@@ -4918,7 +4918,7 @@ function bb_draft_record_pending_reference_ids( $attachment_ids ) {
 	 * exactly the busy networks where the abstention repeats. Zero or less means
 	 * no cap, matching `bb_draft_referenced_cache_max_ids`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $cap Maximum IDs. Default BB_DRAFT_PENDING_REFERENCE_CAP.
 	 */
@@ -4946,7 +4946,7 @@ function bb_draft_record_pending_reference_ids( $attachment_ids ) {
  * token and re-check it ({@see bb_draft_reference_scan_token()}) before trusting
  * the ledger - otherwise it cannot tell its own window from a replacement.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return string Token identifying the window that was just opened.
  */
@@ -4973,7 +4973,7 @@ function bb_draft_reference_scan_begin() {
  * {@see bb_draft_reference_scan_begin()} and re-checks it before it trusts the
  * ledger. Anything other than an exact match means abstain.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return string The open window's token, or '' when no window is open.
  */
@@ -5000,7 +5000,7 @@ function bb_draft_reference_scan_token() {
  * identical reason. The ownership check matters: a stale run must not resurrect
  * a window that now belongs to somebody else.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $token The token this caller received from `begin()`.
  * @return bool True when the window is still this caller's and was extended.
@@ -5022,7 +5022,7 @@ function bb_draft_reference_scan_refresh( $token ) {
  * mid-drain protects its own attachments straight away instead of waiting for
  * the next run.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return array{ids:int[],overflow:bool} Recorded IDs, and whether the cap was hit.
  */
@@ -5045,7 +5045,7 @@ function bb_draft_peek_pending_reference_ids() {
 /**
  * Close a reference-scan window and return what was recorded during it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param string $token Optional. The token this caller received from
  *                      {@see bb_draft_reference_scan_begin()}. When given, the
@@ -5098,7 +5098,7 @@ function bb_draft_reference_scan_end( $token = '' ) {
  * storage moved somewhere non-durable, which is exactly the regression the
  * durability requirement exists to prevent.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return string The current token, or '' when no invalidation has been recorded.
  */
@@ -5182,7 +5182,7 @@ function bb_draft_get_referenced_cache_token() {
  * is the correct conservative default for any caller that cannot enumerate the
  * kept set.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int[]|null $kept_attachment_ids Attachment IDs the just-written draft
  *                                        still references. Default null
@@ -5245,7 +5245,7 @@ function bb_draft_invalidate_referenced_cache( $kept_attachment_ids = null ) {
  * uncollectable (M3). This builds the authoritative "still referenced" set so
  * the sweep below can release exactly the stamps nothing points at.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int           $time_budget Seconds to spend; 0 for unlimited.
  * @param int           $started_at  Run start time; 0 uses now.
@@ -5266,7 +5266,7 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 	/**
 	 * Filters the row batch size for the draft reference scan.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $batch_size Draft rows read per window. Default 200.
 	 */
@@ -5349,7 +5349,7 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 /**
  * Collect the attachment IDs of every member's unexpired held evicted drafts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return int[]|false Attachment IDs, or false when the holds could not be read.
  */
@@ -5443,7 +5443,7 @@ function bb_drafts_collect_held_attachment_ids() {
  * stamp (a leak), never wrongly release an in-use file. Expiry being disabled
  * ({@see bb_draft_retention_days()} = 0) switches this off too.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @param int $time_budget Seconds to spend this run; 0 for unlimited.
  * @return array {
@@ -5692,7 +5692,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		 * depend on it (stamping invalidates the cache); it only bounds how long
 		 * a released reference lingers as safe over-protection.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @param int $ttl Cache lifetime in seconds. Default 12 hours.
 		 */
@@ -5706,7 +5706,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		 * Filters the maximum number of attachment IDs the referenced-set cache
 		 * will hold before it declines to cache at all.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.7.1
 		 *
 		 * @param int $max_ids Maximum IDs. Default BB_DRAFT_REFERENCED_CACHE_MAX_IDS.
 		 */
@@ -5753,7 +5753,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	/**
 	 * Filters the candidate batch size for the orphan-stamp sweep.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 *
 	 * @param int $batch_size Attachments examined per query. Default 200.
 	 */
@@ -5998,7 +5998,7 @@ add_action( 'bb_draft_stamp_release_retry', 'bb_drafts_release_orphaned_draft_st
  * retry the same blog can lose every day indefinitely and its stamped orphans
  * are never released.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */
@@ -6063,7 +6063,7 @@ function bb_draft_reschedule_stamp_sweep() {
  *   sweep reads network-global usermeta, so one root-blog run covers every user
  *   network-wide; per-subsite events would duplicate the same sweep.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */
@@ -6093,7 +6093,7 @@ add_action( 'bp_init', 'bb_drafts_schedule_cleanup' );
  * left in place: it does not repeat, and clearing it would leave an unfinished
  * upgrade heal with nothing to resume it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.7.1
  *
  * @return void
  */
@@ -6117,7 +6117,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	 * [--status]
 	 * : Report completion state and row counts without changing anything.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.7.1
 	 */
 	WP_CLI::add_command(
 		'bb drafts cleanup',
