@@ -1970,7 +1970,6 @@ function bboss_discussion_page_show_notice_in_avatar_section() {
 		$avatar_notice_html .= '<p>' . $avatar_notice . '</p>';
 		$avatar_notice_html .= '</div>';
 		$avatar_notice_html .= '</div>';
-		?>
 
 		// Pass the (sanitized) notice markup to JS via wp_json_encode() and attach
 		// the DOM-injection behaviour through a dependency-only (src-less) handle,
@@ -1987,7 +1986,7 @@ function bboss_discussion_page_show_notice_in_avatar_section() {
 			wp_json_encode( wp_kses_post( $avatar_notice_html ) )
 		);
 
-		wp_register_script( 'bb-discussion-avatar-notice', false, array( 'jquery' ), bp_get_version(), true );
+		wp_register_script( 'bb-discussion-avatar-notice', false, array( 'jquery' ), bboss_get_version(), true );
 		wp_enqueue_script( 'bb-discussion-avatar-notice' );
 		wp_add_inline_script( 'bb-discussion-avatar-notice', $inline_js );
 	}
@@ -2017,7 +2016,7 @@ function bboss_discussion_page_show_notice_in_avatar_section() {
  *
  * @param $post_id
  */
-function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
+function bboss_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 
 	// if called by autosave, then bail here.
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -2035,19 +2034,19 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 	}
 
 	// update!
-	$forum_page_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
+	$forum_page_id = (int) bboss_get_option( '_bbp_root_slug_custom_slug' );
 
 	if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
 		$slug = get_page_uri( $post_id );
 		if ( '' !== $slug ) {
-			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
-			bp_update_option( 'rewrite_rules', '' );
+			bboss_update_option( '_bbp_root_slug', urldecode( $slug ) );
+			bboss_update_option( 'rewrite_rules', '' );
 		}
 	}
 }
 
 // Set the forum slug on edit page from backend.
-add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
+add_action( 'save_post', 'bboss_change_forum_slug_quickedit_save_page', 10, 2 );
 
 /**
  * Adds a BuddyPress category to house BuddyPress blocks.
@@ -2057,7 +2056,7 @@ add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
  * @param array               $categories          Array of block categories.
  * @param string|WP_Post|null $editor_name_or_post Post being loaded.
  */
-function bp_block_category( $categories = array(), $editor_name_or_post = null ) {
+function bboss_block_category( $categories = array(), $editor_name_or_post = null ) {
 	if ( $editor_name_or_post instanceof WP_Post ) {
 		$post_types = array( 'post', 'page' );
 
@@ -2085,22 +2084,22 @@ function bp_block_category( $categories = array(), $editor_name_or_post = null )
  *
  * @since BuddyBoss 1.8.3
  */
-function bb_block_init_category_filter() {
+function bboss_block_init_category_filter() {
 	if ( function_exists( 'get_default_block_categories' ) ) {
-		add_filter( 'block_categories_all', 'bp_block_category', 1, 2 );
+		add_filter( 'block_categories_all', 'bboss_block_category', 1, 2 );
 	} else {
-		add_filter( 'block_categories', 'bp_block_category', 1, 2 );
+		add_filter( 'block_categories', 'bboss_block_category', 1, 2 );
 	}
 }
 
-add_action( 'bp_init', 'bb_block_init_category_filter' );
+add_action( 'bp_init', 'bboss_block_init_category_filter' );
 
-function bp_document_ajax_check_file_mime_type() {
+function bboss_document_ajax_check_file_mime_type() {
 	// Verify nonce and capability.
 	check_ajax_referer( 'bb_admin_settings', 'nonce' );
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+	if ( ! bboss_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss-platform' ) ) );
 	}
 
 	$response = array();
@@ -2120,7 +2119,7 @@ function bp_document_ajax_check_file_mime_type() {
 	wp_send_json_success( $response );
 }
 
-add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_file_mime_type' );
+add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bboss_document_ajax_check_file_mime_type' );
 
 /**
  * Output the tabs in the admin area.
@@ -2129,7 +2128,7 @@ add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
-function bp_core_admin_moderation_tabs( $active_tab = '' ) {
+function bboss_core_admin_moderation_tabs( $active_tab = '' ) {
 
 	$tabs_html    = '';
 	$idle_class   = 'nav-tab';
@@ -2142,7 +2141,7 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
-	$tabs = apply_filters( 'bp_core_admin_moderation_tabs', bp_core_get_moderation_admin_tabs( $active_tab ) );
+	$tabs = apply_filters( 'bp_core_admin_moderation_tabs', bboss_core_get_moderation_admin_tabs( $active_tab ) );
 
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
@@ -2170,21 +2169,21 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
  *
  * @return array
  */
-function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
+function bboss_core_get_moderation_admin_tabs( $active_tab = '' ) {
 
 	$tabs = array();
 
-	if ( bp_is_moderation_member_blocking_enable() ) {
+	if ( bboss_is_moderation_member_blocking_enable() ) {
 		$tabs[] = array(
-			'href'  => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ),
-			'name'  => esc_html__( 'Flagged Members', 'buddyboss' ),
+			'href'  => bboss_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ),
+			'name'  => esc_html__( 'Flagged Members', 'buddyboss-platform' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
 
 	$tabs[] = array(
-		'href'  => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=reported_content' ),
-		'name'  => esc_html__( 'Reported Content', 'buddyboss' ),
+		'href'  => bboss_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=reported_content' ),
+		'name'  => esc_html__( 'Reported Content', 'buddyboss-platform' ),
 		'class' => 'bp-reported-content',
 	);
 
@@ -2208,7 +2207,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
  *
  * @return string
  */
-function bb_get_pro_label_notice( $type = 'default' ) {
+function bboss_get_pro_label_notice( $type = 'default' ) {
 	static $retval = array();
 
 	if ( isset( $retval[ $type ] ) ) {
@@ -2220,9 +2219,9 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
-			esc_html__( 'Update to', 'buddyboss' ),
-			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss' ),
-			esc_html__( 'to unlock', 'buddyboss' )
+			esc_html__( 'Update to', 'buddyboss-platform' ),
+			esc_html__( 'BuddyBoss Platform Pro 1.2.0', 'buddyboss-platform' ),
+			esc_html__( 'to unlock', 'buddyboss-platform' )
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
@@ -2234,38 +2233,38 @@ function bb_get_pro_label_notice( $type = 'default' ) {
 			) ||
 			(
 				'schedule_posts' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_schedule_posts_version(), '<' )
 			) ||
 			(
 				'polls' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_poll_version(), '<' )
 			) ||
 			(
 				'sso' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_sso_version(), '<' )
 			) ||
 			(
 				'group_activity_topics' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_group_activity_topics_version(), '<' )
 			) ||
 			(
 				'post_feature_image' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <strong>%2$s</strong> %3$s</span>',
-			esc_html__( 'Update', 'buddyboss' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
-			esc_html__( 'to unlock', 'buddyboss' )
+			esc_html__( 'Update', 'buddyboss-platform' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' ),
+			esc_html__( 'to unlock', 'buddyboss-platform' )
 		);
 	} elseif ( ! function_exists( 'bb_platform_pro' ) || ( function_exists( 'bb_pro_should_lock_features' ) ? bb_pro_should_lock_features() : ! bbp_pro_is_license_valid() ) ) {
 		$bb_pro_notice = sprintf(
 			'<br/><span class="bb-head-notice"> %1$s <a target="_blank" href="https://www.buddyboss.com/platform/">%2$s</a> %3$s</span>',
-			esc_html__( 'Install', 'buddyboss' ),
-			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss' ),
-			esc_html__( 'to unlock', 'buddyboss' )
+			esc_html__( 'Install', 'buddyboss-platform' ),
+			esc_html__( 'BuddyBoss Platform Pro', 'buddyboss-platform' ),
+			esc_html__( 'to unlock', 'buddyboss-platform' )
 		);
 	}
 
@@ -2284,7 +2283,7 @@ function bb_get_pro_label_notice( $type = 'default' ) {
  *
  * @return string
  */
-function bb_get_pro_fields_class( $type = 'default' ) {
+function bboss_get_pro_fields_class( $type = 'default' ) {
 	static $retval = array();
 
 	if ( isset( $retval[ $type ] ) ) {
@@ -2312,23 +2311,23 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 			) ||
 			(
 				'schedule_posts' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_schedule_posts_version(), '<' )
 			) ||
 			(
 				'polls' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_poll_version(), '<' )
 			) ||
 			(
 				'sso' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_sso_version(), '<' )
 			) ||
 			(
 				'group_activity_topics' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_group_activity_topics_version(), '<' )
 			) ||
 			(
 				'post_feature_image' === $type &&
-				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+				version_compare( bb_platform_pro()->version, bboss_pro_post_feature_image_version(), '<' )
 			)
 		)
 	) {
@@ -2341,7 +2340,7 @@ function bb_get_pro_fields_class( $type = 'default' ) {
 }
 
 
-add_action( 'admin_head', 'bb_disable_multiple_select_situation', 99999 );
+add_action( 'admin_head', 'bboss_disable_multiple_select_situation', 99999 );
 
 /**
  * Disable the multi select in situation.
@@ -2350,16 +2349,14 @@ add_action( 'admin_head', 'bb_disable_multiple_select_situation', 99999 );
  *
  * @return void
  */
-function bb_disable_multiple_select_situation() {
+function bboss_disable_multiple_select_situation() {
 
 	global $typenow;
 
-	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
-		?>
-
+	if ( function_exists( 'bboss_get_email_post_type' ) && bboss_get_email_post_type() === $typenow ) {
 		// Pass the email post type to JS via wp_json_encode() and attach the
 		// behaviour through a dependency-only (src-less) handle instead of a raw
-		// inline <script> tag.
+		// inline <script> tag (the handler runs on DOM ready, so the footer is fine).
 		$inline_js = sprintf(
 			'jQuery( document ).ready( function ( $ ) {
 	jQuery( document ).on( \'change\', \'#taxonomy-\' + %s + \'-type input[type="checkbox"]\', function () {
@@ -2367,10 +2364,12 @@ function bb_disable_multiple_select_situation() {
 		jQuery( group ).not( this ).prop( \'checked\', false );
 	} );
 } );',
-			wp_json_encode( bp_get_email_post_type() )
+			wp_json_encode( bboss_get_email_post_type() )
 		);
 
-		<?php
+		wp_register_script( 'bb-email-type-single-select', false, array( 'jquery' ), bboss_get_version(), true );
+		wp_enqueue_script( 'bb-email-type-single-select' );
+		wp_add_inline_script( 'bb-email-type-single-select', $inline_js );
 	}
 }
 
